@@ -1,0 +1,18 @@
+@if(editable && !readonly()){
+<thy-select
+  [(ngModel)]="value"
+  [thyAutoExpand]="true"
+  (thyOnExpandStatusChange)="updateValue($event)"
+>
+  <thy-option
+    *ngFor="let option of selectOptions()"
+    [thyValue]="option.value"
+    [thyLabelText]="option.name"
+  >
+  </thy-option>
+</thy-select>
+}@else {
+<thy-tag [thyColor]="selectedOption()?.color">{{
+  selectedOption()?.name
+}}</thy-tag>
+}

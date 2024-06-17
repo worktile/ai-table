@@ -1,0 +1,48 @@
+{
+  "name": "v-table",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build:v-table",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^18.0.0",
+    "@angular/cdk": "^18.0.2",
+    "@angular/common": "^18.0.0",
+    "@angular/compiler": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "@changesets/cli": "^2.27.5",
+    "@tethys/cdk": "^17.0.8",
+    "date-fns": "^3.6.0",
+    "i": "^0.3.7",
+    "ng-packagr": "^18.0.0",
+    "ngx-tethys": "^17.0.8",
+    "npm": "^10.8.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.6.3",
+    "y-websocket": "^2.0.3",
+    "yjs": "^13.6.16",
+    "zone.js": "~0.14.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.0.3",
+    "@angular/cli": "^18.0.3",
+    "@angular/compiler-cli": "^18.0.0",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.4.2"
+  }
+}
