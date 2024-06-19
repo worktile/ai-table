@@ -86,21 +86,21 @@ export class ActionManager<TData> {
         }
         //  将操作记录到 undoStack 中
         //  发送操作给协同方/ 服务端
-        this.sharedType.doc!.transact(() => {
-            const node: SyncNode = this.sharedType;
-            let children: Y.Array<SyncElement>;
-            if (node instanceof Y.Array) {
-                children = node;
-            } else {
-                children = (node as SyncElement).get("children");
-            }
-            // 根据 ret.
-            const index = (this.value() as any).rows.findIndex(
-                (item: { id: any }) => item.id === ret.actions.recordId
-            );
-            const data = children.get(index);
-            data.set(ret.actions.fieldId, ret.actions.data);
-        });
+        // this.sharedType.doc!.transact(() => {
+        //     const node: SyncNode = this.sharedType;
+        //     let children: Y.Array<SyncElement>;
+        //     if (node instanceof Y.Array) {
+        //         children = node;
+        //     } else {
+        //         children = (node as SyncElement).get("children");
+        //     }
+        //     // 根据 ret.
+        //     const index = (this.value() as any).rows.findIndex(
+        //         (item: { id: any }) => item.id === ret.actions.recordId
+        //     );
+        //     const data = children.get(index);
+        //     data.set(ret.actions.fieldId, ret.actions.data);
+        // });
         if (!this.isInitializeSharedType) {
             this.isInitializeSharedType = true;
         }

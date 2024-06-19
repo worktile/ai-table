@@ -9,7 +9,7 @@
     <div class="grid-column-blank" (click)="addColumn()">+</div>
   </div>
   @for (row of value().rows; track row.id; let index=$index) {
-  <div class="grid-row d-flex">
+  <div class="grid-row d-flex" #rowElement>
     <div class="grid-row-index">
       {{ index + 1 }}
     </div>
@@ -17,6 +17,10 @@
     {
     <div class="grid-cell" #cell>
       <!-- 使用壳子组件 -->
+      <!-- <div class="grid-cell">
+      <v-table-text [value]="data.value" [recordId]="row.id" [fieldId]="data.key"></v-table-text>
+
+      </div> -->
       <!-- <grid-cell
         [value]="data.value"
         [type]="data.type"
@@ -25,27 +29,60 @@
         [gridOptions]="options().grid"
         [selectOptions]="data['options']"
       ></grid-cell> -->
+
       <!-- 直接绑定数据 -->
-      <div class="grid-cell">
+      <!-- <div class="grid-cell">
         <div class="text-column">
           <span class="d-block">{{ data.value }}</span>
         </div>
-      </div>
+      </div> -->
+
       <!-- 使用模版 -->
       <!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
+
+      <!-- 使用 ngComponentOutlet -->
+      <!-- <div class="grid-cell">
+        <ng-container
+        [ngComponentOutlet]="getComponent(data.type)"
+        [ngComponentOutletInputs]="{
+          value: data.value,
+          recordId: row.id,
+          fieldId: data.key,
+          selectOptions: data['options']
+        }"
+      />
+     </div> -->
+    
+
+      <!-- 使用 defer -->
+      @defer (on viewport(rowElement)) {
+        <div class="grid-cell">
+          <ng-container
+            [ngComponentOutlet]="getComponent(data.type)"
+            [ngComponentOutletInputs]="{
+              value: data.value,
+              recordId: row.id,
+              fieldId: data.key,
+              selectOptions: data['options']
+            }"
+          />
+        </div>
+      } @placeholder {
+        <span class="grid-cell">{{ data.value}}</span>
+      }
     </div>
     }
     <div class="grid-column-blank"></div>
   </div>
   }
+
   <div class="grid-row-insert grid-row" (click)="addRow()">+</div>
 </div>
-
 
 <ng-template #text let-data="data">
   <div class="grid-cell">
     <div class="text-column">
-      <span class="d-block">{{ data.value }}</span>      
+      <span class="d-block">{{ data.value }}</span>
     </div>
-  </div> 
+  </div>
 </ng-template>
