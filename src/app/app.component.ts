@@ -1,13 +1,9 @@
-import {
-    Component,
-    OnInit,
-    signal,
-    WritableSignal,
-} from "@angular/core";
+import { Component, OnInit, signal, WritableSignal } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { ColumnType, VTableComponent } from "../../packages/core";
 import { ResourceType } from "../../packages/core/types/core";
 import { SelectComponent } from "../../packages/core/components/grid/columns/select/select.component";
+import { AfterViewInit } from "@angular/core";
 
 const LOCAL_STORAGE_KEY = "v-table-data";
 
@@ -21,53 +17,51 @@ const initValue = {
             name: "文本",
             type: ColumnType.text,
         },
-        {
-            id: "column-2",
-            name: "单选",
-            type: ColumnType.select,
-            options: [
-                {
-                    value: "1",
-                    name: "开始",
-                    color: "#5dcfff",
-                },
-                {
-                    value: "2",
-                    name: "进行中",
-                    color: "#ffcd5d",
-                },
-                {
-                    value: "3",
-                    name: "已完成",
-                    color: "#73d897",
-                },
-            ],
-        },
     ],
     rows: [
         {
-            id: "row-1",
+            id: "row-0",
             value: {
                 "column-1": "文本 1-1",
                 "column-2": "1",
-            },
-        },
-        {
-            id: "row-2",
-            value: {
-                "column-1": "文本 2-1",
-                "column-2": "2",
-            },
-        },
-        {
-            id: "row-3",
-            value: {
-                "column-1": "文本 3-1",
-                "column-2": "3",
+                "column-3": "文本 1-1",
+                "column-4": "1",
+                "column-5": "文本 1-1",
+                "column-6": "1",
+                "column-7": "文本 1-1",
+                "column-8": "1",
+                "column-9": "文本 1-1",
+                "column-10": "1",
             },
         },
     ],
 };
+
+console.time("build data");
+
+initValue.columns = [];
+for (let index = 0; index < 30; index++) {
+    initValue.columns.push({
+        id: `column-${index}`,
+        name: "文本",
+        type: ColumnType.text,
+    });
+}
+
+initValue.rows = [];
+for (let index = 0; index < 40 * 3 * 2; index++) {
+    const value: any = {};
+    initValue.columns.forEach((column, columnIndex) => {
+        value[`${column.id}`] = `text-${index}-${columnIndex}`;
+    });
+    initValue.rows.push({
+        id: `row-${index + 1}`,
+        value: value,
+    });
+}
+
+console.timeEnd("build data");
+
 @Component({
     selector: "app-root",
     standalone: true,
@@ -75,7 +69,7 @@ const initValue = {
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
     value!: WritableSignal<any>;
 
     options = {
@@ -91,7 +85,12 @@ export class AppComponent implements OnInit {
     constructor() {}
 
     ngOnInit(): void {
+        console.time("render");
         this.value = signal(this.getLocalStorage());
+    }
+
+    ngAfterViewInit() {
+        console.timeEnd("render");
     }
 
     change(value: any) {

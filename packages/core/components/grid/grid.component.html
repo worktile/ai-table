@@ -24,6 +24,16 @@
         [gridOptions]="options().grid"
         [selectOptions]="data['options']"
       ></grid-cell>
+      <!-- <div class="grid-cell">
+        <div class="text-column">
+          <span class="d-block">{{ data.value }}</span>
+        </div>
+      </div> -->
+      <!-- <div>
+        <span>{{ data.value }}</span>
+      </div>  -->
+      <!-- {{ data.value }} -->
+      <!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
     </div>
     }
     <div class="grid-column-blank"></div>
@@ -31,3 +41,12 @@
   }
   <div class="grid-row-insert grid-row" (click)="addRow()">+</div>
 </div>
+
+
+<ng-template #text let-data="data">
+  <div class="grid-cell">
+    <div class="text-column">
+      <span class="d-block">{{ data.value }}</span>      
+    </div>
+  </div> 
+</ng-template>

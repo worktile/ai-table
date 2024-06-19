@@ -35,7 +35,7 @@ export class VTableComponent implements OnInit {
     constructor(private actionManager: ActionManager<any>) {}
 
     ngOnInit(): void {
-        this.initSharedType();
+        // this.initSharedType();
         this.actionManager.init(this.value(), this.sharedType);
         this.actionManager.change$.subscribe({
             next: (value) => {
