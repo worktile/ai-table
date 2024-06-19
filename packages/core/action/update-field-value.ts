@@ -1,4 +1,4 @@
-import { signal } from "@angular/core";
+import { Signal, signal } from "@angular/core";
 import { ActionDef, ActionName } from "../types/actions";
 import { ResourceType } from "../types/core";
 
@@ -13,7 +13,7 @@ export interface UpdateFieldValueOptions {
 export const updateFieldValue: ActionDef<any, UpdateFieldValueOptions> = {
     execute: (context, options) => {
         const { recordId, fieldId } = options;
-        const data = signal(context.data);
+        const data = context.data;
         data.update((value: { rows: any[] }) => {
             const row = value.rows.find(
                 (item: { id: string }) => item.id === recordId
@@ -21,7 +21,7 @@ export const updateFieldValue: ActionDef<any, UpdateFieldValueOptions> = {
             if (row) {
                 row.value[fieldId] = options.data;
             }
-            return value;
+            return {...value};
         });
         return {
             resourceType: ResourceType.grid,

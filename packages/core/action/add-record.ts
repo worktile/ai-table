@@ -6,17 +6,17 @@ import { ColumnType, GridData } from "../types";
 export interface AddRecordOptions {
     type: ActionName.AddRecord;
     data: {
-        id: string;
+        index: number;
+        value: any;
     };
 }
 
 export const AddRecord: ActionDef<any, AddRecordOptions> = {
     execute: (context, options) => {
-        const data = signal(context.data);
-        const newRecord = getNewRecord(data(), options.data.id);
-        data.update((value) => {
-            value.rows.push(newRecord);
-            return value;
+        const data = context.data;
+        data.update((item) => {
+            item.rows.splice(options.data.index, 0, options.data.value);
+            return {...item};
         });
 
         return {
@@ -27,7 +27,7 @@ export const AddRecord: ActionDef<any, AddRecordOptions> = {
     },
 };
 
-function getNewRecord(value: GridData, recordId: string) {
+export function getNewRecord(value: GridData, recordId: string) {
     const columns = value.columns;
     const newCells = columns.map((item) => {
         return {

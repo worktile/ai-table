@@ -1,4 +1,4 @@
-import { Signal } from "@angular/core";
+import { WritableSignal } from "@angular/core";
 import { ResourceType } from "./core";
 
 export class Actions {
@@ -14,13 +14,13 @@ export enum ActionName {
 }
 
 export type ActionsType = {
-    [key in keyof typeof Actions]: (typeof Actions)[key] extends string
-        ? (typeof Actions)[key]
+    [key in keyof typeof ActionName]: (typeof ActionName)[key] extends string
+        ? (typeof ActionName)[key]
         : never;
-}[keyof typeof Actions];
+}[keyof typeof ActionName];
 
 export interface ActionExecuteContext<TData> {
-    data: TData;
+    data: WritableSignal<TData>;
 }
 
 export interface ICollaCommandExecuteResultBase {

@@ -1,14 +1,9 @@
 import { NgIf } from "@angular/common";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostListener
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, HostListener } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ThyInputModule } from "ngx-tethys/input";
 import { ThyAutofocusDirective } from "ngx-tethys/shared";
 import { AbstractCell } from "../../core/abstract-cell";
-import { UpdateOptions } from "../../../../types/core";
 
 @Component({
     selector: "v-table-text",
@@ -36,8 +31,6 @@ export class TextComponent extends AbstractCell<string> {
 
     updateTextValue() {
         this.editable = false;
-        this.setValue(
-            this.value(),
-            false
-        );    }
+        this.setValue(this.value(), false);
+    }
 }

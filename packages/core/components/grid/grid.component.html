@@ -8,22 +8,22 @@
     }
     <div class="grid-column-blank" (click)="addColumn()">+</div>
   </div>
-  @for (row of value().rows; track row.id; let index=$index) {
+  @for (row of rows(); track row.id; let index=$index) {
   <div class="grid-row d-flex">
     <div class="grid-row-index">
       {{ index + 1 }}
     </div>
-    @for (data of row.value | columnProperties : value().columns; track $index)
-    {
+    @for (data of row.data; track $index) {
     <div class="grid-cell" #cell>
-      <grid-cell
-        [value]="data.value"
-        [type]="data.type"
-        [recordId]="row.id"
-        [fieldId]="data.key"
-        [gridOptions]="options().grid"
-        [selectOptions]="data['options']"
-      ></grid-cell>
+      <ng-container
+        [ngComponentOutlet]="getComponent(data.type)"
+        [ngComponentOutletInputs]="{
+          value: data.value,
+          recordId: row.id,
+          fieldId: data.key,
+          selectOptions:data['options']
+        }"
+      />
     </div>
     }
     <div class="grid-column-blank"></div>

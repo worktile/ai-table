@@ -1,10 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    effect,
+    computed,
     input,
     OnInit,
-    output,
 } from "@angular/core";
 import {
     CommonModule,
@@ -16,10 +15,11 @@ import { TextComponent } from "./columns/text/text.component";
 import { ColumnPropertiesPipe } from "../../pipes";
 import { ColumnType, GridData } from "../../types";
 import { SelectComponent } from "./columns/select/select.component";
-import { GridCellComponent } from "./columns/grid-cell";
 import { ActionName } from "../../types/actions";
 import { ActionManager } from "../../service/action-manage.service";
 import { idCreator } from "../../utils";
+import { GridColumnMap } from "../../constants/grid";
+import { getNewRecord } from "../../action/add-record";
 
 @Component({
     selector: "grid",
@@ -33,9 +33,9 @@ import { idCreator } from "../../utils";
         NgClass,
         NgComponentOutlet,
         CommonModule,
-        GridCellComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ColumnPropertiesPipe],
 })
 export class GridComponent implements OnInit {
     value = input.required<GridData>();
@@ -44,16 +44,32 @@ export class GridComponent implements OnInit {
 
     ColumnType = ColumnType;
 
-    constructor(private actionManager: ActionManager<any>) {}
+    rows = computed(() => {
+        return this.value().rows.map((row) => {
+            return {
+                id: row.id,
+                data: this.columnProperties.transform(
+                    row.value,
+                    this.value().columns
+                ),
+            };
+        });
+    });
 
-    ngOnInit(): void {
-    }
+    constructor(
+        private actionManager: ActionManager<any>,
+        private columnProperties: ColumnPropertiesPipe
+    ) {}
+
+    ngOnInit(): void {}
 
     addRow() {
+        const id = idCreator();
         this.actionManager.execute({
             type: ActionName.AddRecord,
             data: {
-                id: idCreator(),
+                index: this.value().rows.length,
+                value: getNewRecord(this.value(), id),
             },
         });
     }
@@ -67,5 +83,13 @@ export class GridComponent implements OnInit {
                 name: "新增文本",
             },
         });
+    }
+
+    getComponent(type: ColumnType) {
+        const componentMap = {
+            ...GridColumnMap,
+            ...this.options().grid.componentMap,
+        };
+        return componentMap[type].component;
     }
 }

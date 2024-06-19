@@ -1,4 +1,10 @@
-import { Injectable, signal, WritableSignal } from "@angular/core";
+import {
+    effect,
+    Injectable,
+    Signal,
+    signal,
+    WritableSignal,
+} from "@angular/core";
 import { ActionOptions } from "../action";
 import { ACTION_MAP } from "../constants/action";
 import {
@@ -12,9 +18,11 @@ import {
 } from "../types/actions";
 import { ResourceType } from "../types/core";
 import { Subject } from "rxjs";
-import { getSharedType } from "../utils/yjs";
+import { getSharedType, YjsVTable } from "../utils/yjs";
 import { SharedType, SyncElement, SyncNode } from "../utils/convert";
 import * as Y from "yjs";
+import setField from "../utils/apply-to-yjs/set-field";
+import { ApplyToYjsMapper } from "../utils/apply-to-yjs";
 
 @Injectable({
     providedIn: "root",
@@ -26,7 +34,7 @@ export class ActionManager<TData> {
 
     change$ = new Subject<TData>();
 
-    isInitializeSharedType = false;
+    undoManager!: Y.UndoManager;
 
     private readonly _actions: { [name: string]: Action } = {};
 
@@ -37,9 +45,24 @@ export class ActionManager<TData> {
         });
     }
 
-    init(value: any, sharedType: SharedType) {
-        this.value = signal(value);
+    init(value: WritableSignal<TData>) {
+        this.value = value;
+    }
+
+    initSharedType(sharedType: SharedType) {
         this.sharedType = sharedType;
+        this.undoManager = new Y.UndoManager(this.sharedType, {
+            captureTimeout: 300,
+            deleteFilter: () => true,
+        });
+
+        this.undoManager.on("stack-item-added", (event) => {
+            console.log("add", event);
+        });
+
+        this.undoManager.on("stack-item-popped", (event) => {
+            console.log("pop", event);
+        });
     }
 
     register(name: string, commandDef: ActionDef) {
@@ -64,7 +87,6 @@ export class ActionManager<TData> {
     ): ActionExecuteResult<R> | null {
         const ret = this._execute<R>(options, ResourceType.grid);
         if (ret) {
-            // add undoStack
             this.change$.next(ret.data);
         }
         return ret;
@@ -80,29 +102,20 @@ export class ActionManager<TData> {
             return null;
         }
         let ret: ActionDefExecuteResult<R> | null = null;
-        ret = action.execute({ data: this.value() }, options);
+        ret = action.execute({ data: this.value }, options);
         if (!ret) {
             return null;
         }
-        //  将操作记录到 undoStack 中
-        //  发送操作给协同方/ 服务端
-        this.sharedType.doc!.transact(() => {
-            const node: SyncNode = this.sharedType;
-            let children: Y.Array<SyncElement>;
-            if (node instanceof Y.Array) {
-                children = node;
-            } else {
-                children = (node as SyncElement).get("children");
-            }
-            // 根据 ret.
-            const index = (this.value() as any).rows.findIndex(
-                (item: { id: any }) => item.id === ret.actions.recordId
-            );
-            const data = children.get(index);
-            data.set(ret.actions.fieldId, ret.actions.data);
-        });
-        if (!this.isInitializeSharedType) {
-            this.isInitializeSharedType = true;
+        if (!YjsVTable.isRemote(this.value) && !YjsVTable.isUndo(this.value)) {
+            YjsVTable.asLocal(this.value, () => {
+                this.sharedType.doc!.transact(() => {
+                    ApplyToYjsMapper[ret.actions.type as ActionName](
+                        this.sharedType,
+                        this.value,
+                        ret
+                    );
+                });
+            });
         }
         return this._executeActions(
             type,

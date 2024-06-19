@@ -21,7 +21,8 @@
         height: 44px;
         display: flex;
         align-items: center;
-        width: 300px;
+        max-width: 300px;
+        min-width: 40px;
         border-left: 1px solid variables.$gray-200;
         justify-content: center;
     }

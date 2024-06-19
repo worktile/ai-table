@@ -1,1 +1,3 @@
-<v-table (change)="change($event)" [value]="value()" [options]="options"></v-table>
+<!-- {{ value().rows[2].value['column-1'] }} -->
+
+<v-table (valueChange)="change($event)" [value]="value()" [options]="options"></v-table>

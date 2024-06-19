@@ -14,7 +14,7 @@ export interface AddColumnOptions {
 
 export const AddColumn: ActionDef<any, AddColumnOptions> = {
     execute: (context, options) => {
-        const data = signal(context.data);
+        const data = context.data;
         const newColumn = options.data;
         data.update((value) => {
             value.columns.push(newColumn);
@@ -30,7 +30,7 @@ export const AddColumn: ActionDef<any, AddColumnOptions> = {
                     },
                 };
             });
-            return value;
+            return {...value};
         });
 
         return {

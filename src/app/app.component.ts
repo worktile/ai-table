@@ -1,5 +1,8 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    model,
     OnInit,
     signal,
     WritableSignal,
@@ -74,6 +77,7 @@ const initValue = {
     imports: [RouterOutlet, VTableComponent],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
     value!: WritableSignal<any>;
@@ -88,18 +92,17 @@ export class AppComponent implements OnInit {
         },
     };
 
-    constructor() {}
+    constructor(public cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.value = signal(this.getLocalStorage());
     }
 
     change(value: any) {
+        this.value.set(value);
         localStorage.setItem(`${LOCAL_STORAGE_KEY}`, JSON.stringify(value));
-    }
+        this.cdr.detectChanges();
 
-    setLocalData(data: string) {
-        localStorage.setItem(`${LOCAL_STORAGE_KEY}`, data);
     }
 
     getLocalStorage() {

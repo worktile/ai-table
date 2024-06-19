@@ -42,7 +42,6 @@ export abstract class AbstractCell<TValue> implements OnInit {
         if (this._previousData === value) {
             return;
         }
-        this._previousData = this.value();
         if (!silent) {
             this.actionManager.execute<TValue>({
                 type: ActionName.UpdateFieldValue,
@@ -52,5 +51,6 @@ export abstract class AbstractCell<TValue> implements OnInit {
                 previousData: this._previousData,
             });
         }
+        this._previousData = value;
     }
 }
