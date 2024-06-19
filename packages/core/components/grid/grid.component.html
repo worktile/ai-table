@@ -16,23 +16,22 @@
     @for (data of row.value | columnProperties : value().columns; track $index)
     {
     <div class="grid-cell" #cell>
-      <grid-cell
+      <!-- 使用壳子组件 -->
+      <!-- <grid-cell
         [value]="data.value"
         [type]="data.type"
         [recordId]="row.id"
         [fieldId]="data.key"
         [gridOptions]="options().grid"
         [selectOptions]="data['options']"
-      ></grid-cell>
-      <!-- <div class="grid-cell">
+      ></grid-cell> -->
+      <!-- 直接绑定数据 -->
+      <div class="grid-cell">
         <div class="text-column">
           <span class="d-block">{{ data.value }}</span>
         </div>
-      </div> -->
-      <!-- <div>
-        <span>{{ data.value }}</span>
-      </div>  -->
-      <!-- {{ data.value }} -->
+      </div>
+      <!-- 使用模版 -->
       <!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
     </div>
     }
