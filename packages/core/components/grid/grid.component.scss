@@ -2,6 +2,7 @@
 
 .v-table-grid {
     padding: 20px;
+    display: table;
     .grid-column-header {
         border-top: 1px solid variables.$gray-200;
     }
@@ -11,18 +12,14 @@
     }
 
     .grid-cell {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 100%;
         height: 100%;
-    }
-    .grid-cell {
         height: 44px;
         display: flex;
         align-items: center;
         width: 100px;
         max-width: 300px;
+        flex: none;
         border-left: 1px solid variables.$gray-200;
         justify-content: center;
     }
@@ -37,6 +34,7 @@
     .grid-row-index,
     .grid-column-checkbox {
         width: 44px;
+        flex: none;
         display: flex;
         justify-content: center;
         align-items: center;
