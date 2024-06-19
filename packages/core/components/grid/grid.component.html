@@ -34,7 +34,7 @@
       </div> -->
 
       <!-- 使用模版 -->
-      <!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
+      <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template>
 
       <!-- 使用组件 -->
       <!-- <div class="grid-cell">
@@ -59,7 +59,7 @@
      </div> -->
 
       <!-- 使用 defer -->
-      @defer (on viewport(rowElement)) {
+      <!-- @defer (on viewport(rowElement)) {
       <div class="grid-cell">
         <ng-container
           [ngComponentOutlet]="getComponent(data.type)"
@@ -73,7 +73,7 @@
       </div>
       } @placeholder {
       <span class="grid-cell">{{ data.value }}</span>
-      }
+      } -->
     </div>
     }
     <div class="grid-column-blank"></div>

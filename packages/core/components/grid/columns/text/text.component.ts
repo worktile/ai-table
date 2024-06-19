@@ -27,12 +27,12 @@ export class TextComponent extends AbstractCell<string> {
         super();
     }
 
-    @HostListener("dblclick", ["$event"])
-    dblclick(event: MouseEvent) {
-        if (!this.editable && !this.readonly()) {
-            this.editable = true;
-        }
-    }
+    // @HostListener("dblclick", ["$event"])
+    // dblclick(event: MouseEvent) {
+    //     if (!this.editable && !this.readonly()) {
+    //         this.editable = true;
+    //     }
+    // }
 
     updateTextValue() {
         this.editable = false;
