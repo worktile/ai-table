@@ -1,50 +1,47 @@
-import { signal } from "@angular/core";
-import { ActionDef, ActionName } from "../types/actions";
-import { ResourceType } from "../types/core";
-import { ColumnType, GridData } from "../types";
+import {
+    ActionDef,
+    ActionName,
+    ActionOptionsBase,
+    RecordPath,
+    VTableFieldType,
+    VTableRecord,
+    VTableValue,
+} from "../types";
 
-export interface AddRecordOptions {
+export interface AddRecordOptions extends ActionOptionsBase {
     type: ActionName.AddRecord;
+    path: [RecordPath];
     data: {
         id: string;
     };
 }
 
-export const AddRecord: ActionDef<any, AddRecordOptions> = {
+export const addRecord: ActionDef<AddRecordOptions> = {
     execute: (context, options) => {
-        const data = signal(context.data);
-        const newRecord = getNewRecord(data(), options.data.id);
-        data.update((value) => {
-            value.rows.push(newRecord);
-            return value;
+        const [recordIndex] = options.path;
+        const newRecord = getNewRecord(context(), options.data.id);
+        context.update((value) => {
+            value.records.splice(recordIndex, 0, newRecord);
+            return { ...value };
         });
 
         return {
-            resourceType: ResourceType.grid,
-            data: data(),
-            actions: options,
+            action: options,
         };
     },
 };
 
-function getNewRecord(value: GridData, recordId: string) {
-    const columns = value.columns;
-    const newCells = columns.map((item) => {
-        return {
-            columnId: item.id,
-            value: "",
-        };
-    });
-    const newRow: {
-        id: string;
-        value: { [key: string]: any };
-    } = {
+function getDefaultValueByType(type: VTableFieldType) {
+    return "";
+}
+
+function getNewRecord(value: VTableValue, recordId: string) {
+    const newRow: VTableRecord = {
         id: recordId,
         value: {},
     };
-    newCells.forEach((cell) => {
-        newRow.value[cell.columnId] = cell.value;
+    value.fields.map((item) => {
+        newRow.value[item.id] = getDefaultValueByType(item.type);
     });
-
     return newRow;
 }

@@ -1,10 +1,9 @@
-import { AddColumn } from "../action/add-column";
-import { AddRecord } from "../action/add-record";
-import { updateFieldValue } from "../action/update-field-value";
-import { ActionDef, ActionName } from "../types/actions";
+import { WritableSignal } from "@angular/core";
+import { ActionOptions, updateFieldValue } from "../action";
+import { ActionDef, ActionName, VTableValue } from "../types";
+import { addRecord } from "../action/add-record";
 
-export const ACTION_MAP: { [name: string]: ActionDef } = {
+export const ACTION_MAP: Record<ActionName, ActionDef<any>> = {
     [ActionName.UpdateFieldValue]: updateFieldValue,
-    [ActionName.AddRecord]: AddRecord,
-    [ActionName.AddColumn]: AddColumn,
+    [ActionName.AddRecord]: addRecord,
 };

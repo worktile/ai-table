@@ -1,0 +1,74 @@
+<div class="grid-header d-flex">
+  <div class="grid-column-checkbox grid-cell">
+    <input type="checkbox" />
+  </div>
+  @for (field of value().fields; track field.id) {
+    <div class="grid-cell">{{ field.name }}</div>
+  }
+  <div class="grid-column-blank">+</div>
+</div>
+<div class="grid-body d-flex">
+  @for (record of value().records; track record.id; let index = $index) {
+    <div class="grid-row d-flex">
+      <div class="grid-row-index">
+        {{ index + 1 }}
+      </div>
+      @for (field of value().fields; track $index) {
+        <div
+          class="grid-cell"
+          [attr.type]="[field.type]"
+          [attr.fieldId]="[field.id]"
+          [attr.recordId]="[record.id]"
+          #cell
+        >
+          @if (
+            gridConfig()?.cellRenderer &&
+            gridConfig()!.cellRenderer![field.type]
+          ) {
+            <ng-container
+              [ngComponentOutlet]="getViewComponent(field.type)"
+              [ngComponentOutletInputs]="{
+                value: record.value[field.id],
+                field: field,
+                record: record,
+              }"
+            />
+          } @else {
+            @switch (field.type) {
+              @case (VTableFieldType.SingleSelect) {
+                <ng-template
+                  *ngTemplateOutlet="
+                    singleSelect;
+                    context: {
+                      $implicit: {
+                        value: record.value[field.id],
+                        field: field,
+                        record: record,
+                      },
+                    }
+                  "
+                >
+                </ng-template>
+              }
+              @default {
+                {{ record.value[field.id] }}
+              }
+            }
+          }
+        </div>
+      }
+      <div class="grid-column-blank"></div>
+    </div>
+  }
+  <div class="grid-row-insert grid-row" (click)="addRecord()">+</div>
+</div>
+
+<div #activeBorder class="active-border"></div>
+
+<ng-template #singleSelect let-data>
+  @if (data.value | selectOption: data.field.options; as selectedOption) {
+    <thy-tag [thyColor]="selectedOption!.color!">{{
+      selectedOption.name
+    }}</thy-tag>
+  }
+</ng-template>

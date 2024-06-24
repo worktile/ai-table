@@ -1,5 +1,5 @@
 {
-    "name": "@v-table/core",
+    "name": "@v-table/grid",
     "version": "0.0.0",
     "peerDependencies": {
         "@angular/common": "^18.0.0",

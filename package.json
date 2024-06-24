@@ -1,10 +1,15 @@
 {
   "name": "v-table",
   "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build:v-table",
+    "build:core": "ng build:core && cpx \"./packages/core/src/**/*.scss\" ./dist/core/",
+    "build:grid": "ng build:grid",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -21,6 +26,7 @@
     "@angular/router": "^18.0.0",
     "@changesets/cli": "^2.27.5",
     "@tethys/cdk": "^17.0.8",
+    "@tethys/icons": "^1.4.62",
     "date-fns": "^3.6.0",
     "i": "^0.3.7",
     "ng-packagr": "^18.0.0",
@@ -43,6 +49,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.3.2",
     "typescript": "~5.4.2"
   }
 }

@@ -20,7 +20,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "@v-table/core",
+            "prefix": "v-table",
             "style": "camelCase"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "@v-table",
+            "prefix": "v-table",
             "style": "kebab-case"
           }
         ]

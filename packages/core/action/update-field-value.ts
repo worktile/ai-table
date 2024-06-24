@@ -1,32 +1,27 @@
-import { signal } from "@angular/core";
-import { ActionDef, ActionName } from "../types/actions";
-import { ResourceType } from "../types/core";
+import {
+    ActionDef,
+    ActionName,
+    ActionOptionsBase,
+    FieldPath,
+    RecordPath,
+} from "../types/action";
 
-export interface UpdateFieldValueOptions {
+export interface UpdateFieldValueOptions extends ActionOptionsBase {
     type: ActionName.UpdateFieldValue;
-    recordId: string;
-    fieldId: string;
-    data: any;
+    path: [RecordPath, FieldPath];
     previousData: any;
 }
 
-export const updateFieldValue: ActionDef<any, UpdateFieldValueOptions> = {
+export const updateFieldValue: ActionDef<UpdateFieldValueOptions> = {
     execute: (context, options) => {
-        const { recordId, fieldId } = options;
-        const data = signal(context.data);
-        data.update((value: { rows: any[] }) => {
-            const row = value.rows.find(
-                (item: { id: string }) => item.id === recordId
-            );
-            if (row) {
-                row.value[fieldId] = options.data;
-            }
-            return value;
+        context.update((value) => {
+            const [recordIndex, fieldIndex] = options.path;
+            const fieldId = value.fields[fieldIndex].id;
+            value.records[recordIndex].value[fieldId] = options.data;
+            return { ...value };
         });
         return {
-            resourceType: ResourceType.grid,
-            data: data(),
-            actions: options,
+            action: options,
         };
     },
 };
