@@ -27,23 +27,19 @@
       ></grid-cell> -->
 
       <!-- 直接绑定数据 -->
-      <!-- <div class="grid-cell">
+      <div class="grid-cell">
         <div class="text-column">
           <span class="d-block">{{ data.value }}</span>
         </div>
-      </div> -->
+      </div>
 
       <!-- 使用模版 -->
-      <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template>
+      <!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
 
       <!-- 使用组件 -->
-      <!-- <div class="grid-cell">
-        <v-table-text
-          [value]="data.value"
-          [recordId]="row.id"
-          [fieldId]="data.key"
-        ></v-table-text>
-      </div> -->
+      <!-- <v-table-text
+        [value]="data.value"
+      ></v-table-text> -->
 
       <!-- 使用 ngComponentOutlet -->
       <!-- <div class="grid-cell">
@@ -83,8 +79,19 @@
   <div class="grid-row-insert grid-row" (click)="addRow()">+</div>
 </div>
 
+<!-- <ng-template [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ data }"></ng-template> -->
+
 <ng-template #text let-data="data">
-  <div class="grid-cell">
+  <!-- <div class="grid-cell">
+    <div class="text-column">
+      <span class="d-block">{{ data.value }}</span>
+    </div>
+  </div> -->
+  <ng-template [ngTemplateOutlet]="text2" [ngTemplateOutletContext]="{ data }"></ng-template>
+</ng-template>
+
+<ng-template #text2 let-data="data">
+  <div class="grid-cell 22">
     <div class="text-column">
       <span class="d-block">{{ data.value }}</span>
     </div>

@@ -49,7 +49,7 @@ for (let index = 0; index < 30; index++) {
 }
 
 initValue.rows = [];
-for (let index = 0; index < 40 * 3 * 2; index++) {
+for (let index = 0; index < 300 * 3 * 2; index++) {
     const value: any = {};
     initValue.columns.forEach((column, columnIndex) => {
         value[`${column.id}`] = `text-${index}-${columnIndex}`;

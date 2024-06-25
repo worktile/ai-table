@@ -67,6 +67,10 @@ export class GridComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    clickHandle() {
+        
+    }
+
     addRow() {
         this.actionManager.execute({
             type: ActionName.AddRecord,
