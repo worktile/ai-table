@@ -19,6 +19,10 @@
     "target": "ES2022",
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
+    "paths": {
+      "@v-table/core": ["./dist/core"],
+      "@v-table/grid": ["./dist/grid"]
+  }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

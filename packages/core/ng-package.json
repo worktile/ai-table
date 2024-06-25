@@ -1,8 +1,8 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/v-table/core",
+  "dest": "../../dist/core",
   "lib": {
-    "entryFile": "index.ts"
+    "entryFile": "src/index.ts"
   },
   "allowedNonPeerDependencies": ["@tethys/cdk"]
 }

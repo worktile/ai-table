@@ -3,15 +3,17 @@ import {
     Component,
     computed,
     OnInit,
-    Signal,
     signal,
     WritableSignal,
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { VTableGridComponent } from "../../packages/grid/grid.component";
-import { GridConfig } from "../../packages/grid";
-import { VTableFieldType, VTableValue } from "../../packages/core";
-import { buildGridData } from "../../packages/grid/utils/build";
+import {
+    V_TABLE_ACTION_MAP_TOKEN,
+    VTableFieldType,
+    VTableValue,
+} from "@v-table/core";
+import { VTableGridComponent, GridConfig } from "../../packages/grid/src";
+import { buildGridData } from "../../packages/grid/src/utils/build";
 
 const LOCAL_STORAGE_KEY = "v-table-data";
 
@@ -130,7 +132,7 @@ console.timeEnd("build data");
     standalone: true,
     imports: [RouterOutlet, VTableGridComponent],
     templateUrl: "./app.component.html",
-    styleUrl: "./app.component.scss",
+    styleUrl: "./app.component.scss"
 })
 export class AppComponent implements OnInit, AfterViewInit {
     value!: WritableSignal<VTableValue>;
