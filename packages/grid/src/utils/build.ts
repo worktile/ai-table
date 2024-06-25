@@ -1,9 +1,9 @@
 import { VTableValue, VTableViewType } from "@v-table/core";
-import { GridData } from "../types";
+import { GridData, GridView } from "../types";
 
-export const buildGridData = (value: VTableValue, gridId: string): GridData => {
+export const buildGridData = (value: VTableValue, gridView: GridView): GridData => {
     return {
-        id: gridId,
+        id: gridView.id,
         type: VTableViewType.Grid,
         fields: value.fields,
         records: value.records,

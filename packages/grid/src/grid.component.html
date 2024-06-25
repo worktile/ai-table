@@ -36,19 +36,14 @@
           } @else {
             @switch (field.type) {
               @case (VTableFieldType.SingleSelect) {
-                <ng-template
-                  *ngTemplateOutlet="
-                    singleSelect;
-                    context: {
-                      $implicit: {
-                        value: record.value[field.id],
-                        field: field,
-                        record: record,
-                      },
-                    }
-                  "
-                >
-                </ng-template>
+                @if (
+                  record.value[field.id] | selectOption: field["options"];
+                  as selectedOption
+                ) {
+                  <thy-tag [thyColor]="selectedOption!.color!">{{
+                    selectedOption.name
+                  }}</thy-tag>
+                }
               }
               @default {
                 {{ record.value[field.id] }}
@@ -64,11 +59,3 @@
 </div>
 
 <div #activeBorder class="active-border"></div>
-
-<ng-template #singleSelect let-data>
-  @if (data.value | selectOption: data.field.options; as selectedOption) {
-    <thy-tag [thyColor]="selectedOption!.color!">{{
-      selectedOption.name
-    }}</thy-tag>
-  }
-</ng-template>

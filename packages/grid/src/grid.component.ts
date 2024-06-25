@@ -24,7 +24,7 @@ import { thyPopoverScrollStrategyFactory } from "./utils/global";
 import { getCellInfo } from "./utils/cell";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ThyIconRegistry } from "ngx-tethys/icon";
-import { DBL_CLICK_TYPE } from "./constants";
+import { DBL_CLICK_EDIT_TYPE } from "./constants";
 import {
     ActionName,
     idCreator,
@@ -129,7 +129,7 @@ export class VTableGridComponent extends VTableComponent<GridData> {
             ".grid-cell",
         ) as HTMLElement;
         const type = cellDom && cellDom.getAttribute("type")!;
-        if (type && DBL_CLICK_TYPE.includes(Number(type))) {
+        if (type && DBL_CLICK_EDIT_TYPE.includes(Number(type))) {
             this.openEdit(cellDom);
         }
     }

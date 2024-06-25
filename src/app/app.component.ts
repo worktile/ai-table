@@ -8,9 +8,9 @@ import {
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import {
-    V_TABLE_ACTION_MAP_TOKEN,
     VTableFieldType,
     VTableValue,
+    VTableViewType,
 } from "@v-table/core";
 import { VTableGridComponent, GridConfig } from "../../packages/grid/src";
 import { buildGridData } from "../../packages/grid/src/utils/build";
@@ -132,7 +132,7 @@ console.timeEnd("build data");
     standalone: true,
     imports: [RouterOutlet, VTableGridComponent],
     templateUrl: "./app.component.html",
-    styleUrl: "./app.component.scss"
+    styleUrl: "./app.component.scss",
 })
 export class AppComponent implements OnInit, AfterViewInit {
     value!: WritableSignal<VTableValue>;
@@ -147,7 +147,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
     gridValue = computed(() => {
-        return buildGridData(this.value(), "grid-1");
+        return buildGridData(this.value(), {
+            id: "grid-1",
+            type: VTableViewType.Grid,
+        });
     });
 
     constructor() {}
