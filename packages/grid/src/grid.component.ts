@@ -9,7 +9,8 @@ import {
     OnInit,
     output,
     Signal,
-    signal
+    signal,
+    WritableSignal
 } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { GridConfig } from './types';
@@ -60,9 +61,7 @@ export class VTableGridComponent implements OnInit {
         actions: VTableAction[];
     }>();
 
-    vTable: Signal<VTable> = computed(() => {
-        return createVTable(this.value);
-    });
+    vTable!: Signal<VTable>;
 
     gridValue = computed(() => {
         return buildGridData(this.value(), {
@@ -78,7 +77,6 @@ export class VTableGridComponent implements OnInit {
         private elementRef: ElementRef<HTMLElement>
     ) {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
-        // 注册 symbol SVG 雪碧图
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
         effect(() => {
             this.contextChange.emit({
@@ -90,6 +88,11 @@ export class VTableGridComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeEventListener();
+        this.initVTable();
+    }
+
+    initVTable() {
+        this.vTable = signal(createVTable(this.value));
     }
 
     addRecord() {
@@ -124,7 +127,7 @@ export class VTableGridComponent implements OnInit {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
-        const { field, record } = getCellInfo(this.gridValue, fieldId, recordId);
+        const { field, record } = getCellInfo(this.value, fieldId, recordId);
         const component = this.getEditorComponent(field().type);
         this.thyPopover.open(component, {
             origin: cellDom,

@@ -20,7 +20,7 @@ export abstract class AbstractCellEditor<TValue, TFieldType extends VTableField 
 
     _cellValue = computed(() => {
         return this.record().value[this.fieldId()];
-    }, {});
+    });
 
     cellValue!: TValue;
 

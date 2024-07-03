@@ -1,9 +1,8 @@
-import { VTableField, VTableRecord } from '@v-table/core';
-import { GridData } from '../types';
+import { VTableField, VTableRecord, VTableValue } from '@v-table/core';
 import { computed, Signal } from '@angular/core';
 
 export function getCellInfo(
-    value: Signal<GridData>,
+    value: Signal<VTableValue>,
     fieldId: string,
     recordId: string
 ): {

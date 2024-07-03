@@ -1,5 +1,4 @@
 import { ActionName, VTable, VTableAction, VTableValue } from '../types';
-import { createDraft, finishDraft } from 'immer';
 
 const apply = (value: VTableValue, options: VTableAction) => {
     switch (options.type) {
@@ -9,7 +8,6 @@ const apply = (value: VTableValue, options: VTableAction) => {
             value.records[recordIndex].value[fieldId] = options.newProperties.value;
             break;
         }
-
         case ActionName.AddRecord: {
             const [recordIndex] = options.path;
             value.records.splice(recordIndex, 0, options.record);
@@ -20,14 +18,9 @@ const apply = (value: VTableValue, options: VTableAction) => {
 
 export const GeneralActions = {
     transform(vTable: VTable, op: VTableAction): void {
-        const data = createDraft(vTable.value());
-        try {
-            apply(data, op);
-        } finally {
-            vTable.value.update(() => {
-                const value = finishDraft(data);
-                return value;
-            });
-        }
+        vTable.value.update((value) => {
+            apply(value, op);
+            return { ...value };
+        });
     }
 };
