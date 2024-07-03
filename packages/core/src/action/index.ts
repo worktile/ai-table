@@ -1,7 +1,9 @@
-import { AddRecordOptions } from "./add-record";
-import { UpdateFieldValueOptions } from "./update-field-value";
+import { FieldActions } from "./field";
+import { GeneralActions } from "./general";
+import { RecordActions } from "./record";
 
-export * from "./update-field-value";
-export * from "./add-record";
-
-export type ActionOptions = UpdateFieldValueOptions | AddRecordOptions;
+export const Actions = {
+    ...GeneralActions,
+    ...FieldActions,
+    ...RecordActions
+};

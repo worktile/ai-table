@@ -1,64 +1,41 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    input,
-    model,
-    OnInit,
-} from "@angular/core";
-import {
-    ActionManager,
-    ActionName,
-    UpdateFieldValueOptions,
-    VTableField,
-    VTableRecord,
-    VTableValue,
-    VTableViewType,
-} from "@v-table/core";
-import { ThyPopoverRef } from "ngx-tethys/popover";
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit } from '@angular/core';
+import { Actions, VTable, VTableField, VTableNode, VTableRecord } from '@v-table/core';
+import { ThyPopoverRef } from 'ngx-tethys/popover';
+import { GridCellPath } from '../../types';
 
 @Component({
-    selector: "abstract-cell",
+    selector: 'abstract-cell',
     template: ``,
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export abstract class AbstractCellEditor<TValue, TFieldType extends VTableField = VTableField> implements OnInit {
-    value = model.required<TValue>();
+    fieldId = input.required<string>();
 
     field = input.required<TFieldType>();
 
     record = input.required<VTableRecord>();
 
-    protected _previousData!: TValue;
+    vTable = input.required<VTable>();
 
-    get previousData(): TValue {
-        return this._previousData;
-    }
+    _cellValue = computed(() => {
+        return this.record().value[this.fieldId()];
+    }, {});
 
-    protected actionManager = inject(ActionManager<VTableValue>);
+    cellValue!: TValue;
 
     protected thyPopoverRef = inject(ThyPopoverRef<AbstractCellEditor<TValue>>);
 
     ngOnInit(): void {
-        this._previousData = this.value();
+        this.cellValue = this._cellValue();
     }
 
-    public setValue(value: TValue) {
+    updateFieldValue() {
+        const path = VTableNode.findPath(this.vTable(), this.field(), this.record()) as GridCellPath;
+        Actions.updateFieldValue(this.vTable(), { value: this.cellValue }, path);
+    }
+
+    closePopover() {
         this.thyPopoverRef.close();
-        if (this.previousData === value) {
-            return;
-        }
-        const data = this.actionManager.value() as VTableValue;
-        const recordIndex = data.records.indexOf(this.record());
-        const fieldIndex = data.fields.indexOf(this.field());
-        this.actionManager.execute<UpdateFieldValueOptions>({
-            type: ActionName.UpdateFieldValue,
-            path: [recordIndex, fieldIndex],
-            data: this.value(),
-            previousData: this._previousData,
-            viewType: VTableViewType.Grid,
-        });
-        this._previousData = value;
     }
 }

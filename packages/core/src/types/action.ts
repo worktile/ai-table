@@ -1,10 +1,10 @@
-import { WritableSignal } from "@angular/core";
-import { VTableValue, VTableViewType } from "./core";
-import { ActionOptions } from "../action";
+import { VTableRecord, VTableViewType } from "./core";
 
 export type RecordPath = number;
 
 export type FieldPath = number;
+
+export type Path = [RecordPath] | [FieldPath] | [RecordPath, FieldPath];
 
 export interface ActionExecuteResultBase {
     viewType: VTableViewType;
@@ -15,29 +15,27 @@ export enum ActionName {
     AddRecord,
 }
 
-export interface ActionOptionsBase<T = any> extends ActionExecuteResultBase {
-    type: ActionName;
-    path: [RecordPath] | [FieldPath] | [RecordPath, FieldPath];
-    data: T;
-}
-
-export interface ActionDefExecuteResult {
-    action: ActionOptionsBase;
-}
-
-export interface ActionDef<T extends ActionOptionsBase = ActionOptions> {
-    readonly execute: (
-        context: WritableSignal<VTableValue>,
-        options: T,
-    ) => ActionDefExecuteResult | null;
-}
-
 export enum ExecuteType {
     Execute,
     Undo,
     Redo,
 }
 
-export interface ActionExecuteResult extends ActionDefExecuteResult {
-    executeType: ExecuteType;
-}
+export type UpdateFieldValueAction = {
+    type: ActionName.UpdateFieldValue;
+    path: [RecordPath, FieldPath];
+    properties: {
+        value: any;
+    };
+    newProperties: {
+        value: any;
+    };
+};
+
+export type AddRecordAction = {
+    type: ActionName.AddRecord;
+    path: [RecordPath];
+    record: VTableRecord;
+};
+
+export type VTableAction = UpdateFieldValueAction | AddRecordAction;

@@ -1,111 +1,99 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
+    effect,
     ElementRef,
     input,
     model,
-    signal,
-    viewChild,
-} from "@angular/core";
-import {
-    CommonModule,
-    NgClass,
-    NgComponentOutlet,
-    NgForOf,
-} from "@angular/common";
-import { GridConfig, GridData } from "./types";
-
-import { SelectOptionPipe } from "./pipes/grid";
-import { ThyTag } from "ngx-tethys/tag";
-import { GRID_CELL_EDITOR_MAP } from "./constants/editor";
-import { THY_POPOVER_SCROLL_STRATEGY, ThyPopover } from "ngx-tethys/popover";
-import { Overlay } from "@angular/cdk/overlay";
-import { thyPopoverScrollStrategyFactory } from "./utils/global";
-import { getCellInfo } from "./utils/cell";
-import { DomSanitizer } from "@angular/platform-browser";
-import { ThyIconRegistry } from "ngx-tethys/icon";
-import { DBL_CLICK_EDIT_TYPE } from "./constants";
-import {
-    ActionName,
-    idCreator,
-    VTableComponent,
-    VTableFieldType,
-    VTableViewType,
-    V_TABLE_ACTION_MAP_TOKEN,
-    addRecord,
-    ActionManager,
-} from "@v-table/core";
+    OnInit,
+    output,
+    Signal,
+    signal
+} from '@angular/core';
+import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
+import { GridConfig } from './types';
+import { SelectOptionPipe } from './pipes/grid';
+import { ThyTag } from 'ngx-tethys/tag';
+import { GRID_CELL_EDITOR_MAP } from './constants/editor';
+import { THY_POPOVER_SCROLL_STRATEGY, ThyPopover } from 'ngx-tethys/popover';
+import { Overlay } from '@angular/cdk/overlay';
+import { thyPopoverScrollStrategyFactory } from './utils/global';
+import { getCellInfo } from './utils/cell';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ThyIconRegistry } from 'ngx-tethys/icon';
+import { DBL_CLICK_EDIT_TYPE } from './constants';
+import { VTableFieldType, VTableViewType, VTableValue, createVTable, VTable, VTableAction, Actions, getDefaultRecord } from '@v-table/core';
+import { fromEvent } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { buildGridData } from './utils';
 
 @Component({
-    selector: "v-table-grid",
-    templateUrl: "./grid.component.html",
+    selector: 'v-table-grid',
+    templateUrl: './grid.component.html',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: "v-table-grid",
+        class: 'v-table-grid'
     },
-    imports: [
-        NgForOf,
-        NgClass,
-        NgComponentOutlet,
-        CommonModule,
-        SelectOptionPipe,
-        ThyTag,
-    ],
+    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag],
     providers: [
         ThyPopover,
         {
             provide: THY_POPOVER_SCROLL_STRATEGY,
             deps: [Overlay],
-            useFactory: thyPopoverScrollStrategyFactory,
-        },
-        ActionManager,
-        // extend action
-        // {
-        //     provide: V_TABLE_ACTION_MAP_TOKEN,
-        //     useValue: {
-        //         [ActionName.AddRecord]: addRecord,
-        //     },
-        // },
-    ],
+            useFactory: thyPopoverScrollStrategyFactory
+        }
+    ]
 })
-export class VTableGridComponent extends VTableComponent<GridData> {
-    override value = model.required<GridData>();
+export class VTableGridComponent implements OnInit {
+    value = model.required<VTableValue>();
 
-    gridConfig = input<GridConfig>();
+    gridConfig = input.required<GridConfig>();
 
     VTableFieldType = VTableFieldType;
 
-    activeBorder = viewChild<ElementRef>("activeBorder");
+    takeUntilDestroyed = takeUntilDestroyed();
+
+    contextChange = output<{
+        value: VTableValue;
+        actions: VTableAction[];
+    }>();
+
+    vTable: Signal<VTable> = computed(() => {
+        return createVTable(this.value);
+    });
+
+    gridValue = computed(() => {
+        return buildGridData(this.value(), {
+            id: this.value().id,
+            type: VTableViewType.Grid
+        });
+    });
 
     constructor(
         private thyPopover: ThyPopover,
         private iconRegistry: ThyIconRegistry,
         private sanitizer: DomSanitizer,
+        private elementRef: ElementRef<HTMLElement>
     ) {
-        super();
-        this.iconRegistry.addSvgIconSet(
-            this.sanitizer.bypassSecurityTrustResourceUrl(
-                "assets/icons/defs/svg/sprite.defs.svg",
-            ),
-        );
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
         // 注册 symbol SVG 雪碧图
-        this.iconRegistry.addSvgIconSet(
-            this.sanitizer.bypassSecurityTrustResourceUrl(
-                "assets/icons/symbol/svg/sprite.defs.svg",
-            ),
-        );
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
+        effect(() => {
+            this.contextChange.emit({
+                value: this.value(),
+                actions: this.vTable().actions
+            });
+        });
+    }
+
+    ngOnInit(): void {
+        this.initializeEventListener();
     }
 
     addRecord() {
-        this.actionManager.execute({
-            type: ActionName.AddRecord,
-            path: [this.value().records.length],
-            viewType: VTableViewType.Grid,
-            data: {
-                id: idCreator(),
-            },
-        });
+        Actions.addRecord(this.vTable(), getDefaultRecord(this.value()), [this.value().records.length]);
     }
 
     getEditorComponent(type: VTableFieldType) {
@@ -116,19 +104,17 @@ export class VTableGridComponent extends VTableComponent<GridData> {
         return GRID_CELL_EDITOR_MAP[type];
     }
 
-    getViewComponent(type: VTableFieldType) {
-        const cellRender = this.gridConfig()?.cellRenderer;
-        if (cellRender && cellRender[type]) {
-            return cellRender[type]!.view;
-        }
-        return null;
+    initializeEventListener() {
+        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'dblclick')
+            .pipe(this.takeUntilDestroyed)
+            .subscribe((event) => {
+                this.dblClick(event as MouseEvent);
+            });
     }
 
-    override dblClick(event: MouseEvent): void {
-        const cellDom = (event.target as HTMLElement).closest(
-            ".grid-cell",
-        ) as HTMLElement;
-        const type = cellDom && cellDom.getAttribute("type")!;
+    dblClick(event: MouseEvent): void {
+        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
+        const type = cellDom && cellDom.getAttribute('type')!;
         if (type && DBL_CLICK_EDIT_TYPE.includes(Number(type))) {
             this.openEdit(cellDom);
         }
@@ -136,45 +122,33 @@ export class VTableGridComponent extends VTableComponent<GridData> {
 
     openEdit(cellDom: HTMLElement) {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
-        const fieldId = cellDom.getAttribute("fieldId")!;
-        const recordId = cellDom.getAttribute("recordId")!;
-        const { field, record } = getCellInfo(this.value(), fieldId, recordId);
-        const component = this.getEditorComponent(field.type);
+        const fieldId = cellDom.getAttribute('fieldId')!;
+        const recordId = cellDom.getAttribute('recordId')!;
+        const { field, record } = getCellInfo(this.gridValue, fieldId, recordId);
+        const component = this.getEditorComponent(field().type);
         this.thyPopover.open(component, {
             origin: cellDom,
             originPosition: {
                 x: x - 1,
                 y: y + 1,
                 width: width + 2,
-                height: height + 2,
+                height: height + 2
             },
-            width: width + 2 + "px",
-            height: height + 2 + "px",
-            placement: "top",
+            width: width + 2 + 'px',
+            height: height + 2 + 'px',
+            placement: 'top',
             offset: -(height + 4),
             initialState: {
-                value: signal(record.value[fieldId]),
-                field: signal(field),
-                record: signal(record),
+                fieldId: signal(fieldId),
+                field: field,
+                record: record,
+                vTable: this.vTable
             },
-            panelClass: "grid-cell-editor",
+            panelClass: 'grid-cell-editor',
             outsideClosable: false,
             hasBackdrop: false,
             manualClosure: true,
-            animationDisabled: true,
+            animationDisabled: true
         });
-    }
-
-    override mousedown(event: MouseEvent) {
-        const cellDom = (event.target as HTMLElement).closest(".grid-cell");
-        const activeCells = (
-            this.elementRef.nativeElement as HTMLElement
-        ).querySelectorAll(".cell-active");
-        Array.from(activeCells).forEach((item) => {
-            item.classList.remove("cell-active");
-        });
-        if (cellDom) {
-            cellDom.classList.add("cell-active");
-        }
     }
 }

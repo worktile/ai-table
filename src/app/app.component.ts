@@ -1,76 +1,64 @@
-import {
-    AfterViewInit,
-    Component,
-    computed,
-    OnInit,
-    signal,
-    WritableSignal,
-} from "@angular/core";
-import { RouterOutlet } from "@angular/router";
-import {
-    VTableFieldType,
-    VTableValue,
-    VTableViewType,
-} from "@v-table/core";
-import { VTableGridComponent, GridConfig } from "../../packages/grid/src";
-import { buildGridData } from "../../packages/grid/src/utils/build";
+import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { VTableFieldType, VTableValue } from '@v-table/core';
+import { VTableGridComponent, GridConfig } from '../../packages/grid/src';
 
-const LOCAL_STORAGE_KEY = "v-table-data";
+const LOCAL_STORAGE_KEY = 'v-table-data';
 
 const initValue: VTableValue = {
-    id: "1",
+    id: '1',
     records: [
         {
-            id: "row-1",
+            id: 'row-1',
             value: {
-                "column-1": "文本 1-1",
-                "column-2": "1",
-            },
+                'column-1': '文本 1-1',
+                'column-2': '1'
+            }
         },
         {
-            id: "row-2",
+            id: 'row-2',
             value: {
-                "column-1": "文本 2-1",
-                "column-2": "2",
-            },
+                'column-1': '文本 2-1',
+                'column-2': '2'
+            }
         },
         {
-            id: "row-3",
+            id: 'row-3',
             value: {
-                "column-1": "文本 3-1",
-                "column-2": "3",
-            },
-        },
+                'column-1': '文本 3-1',
+                'column-2': '3'
+            }
+        }
     ],
     fields: [
         {
-            id: "column-1",
-            name: "文本",
-            type: VTableFieldType.Text,
+            id: 'column-1',
+            name: '文本',
+            type: VTableFieldType.Text
         },
         {
-            id: "column-2",
-            name: "单选",
+            id: 'column-2',
+            name: '单选',
             type: VTableFieldType.SingleSelect,
             options: [
                 {
-                    id: "1",
-                    name: "开始",
-                    color: "#5dcfff",
+                    id: '1',
+                    name: '开始',
+                    color: '#5dcfff'
                 },
                 {
-                    id: "2",
-                    name: "进行中",
-                    color: "#ffcd5d",
+                    id: '2',
+                    name: '进行中',
+                    color: '#ffcd5d'
                 },
                 {
-                    id: "3",
-                    name: "已完成",
-                    color: "#73d897",
-                },
-            ],
-        },
-    ],
+                    id: '3',
+                    name: '已完成',
+                    color: '#73d897'
+                }
+            ]
+        }
+    ]
 };
 
 // const initValue = {
@@ -102,7 +90,7 @@ const initValue: VTableValue = {
 //     ],
 // };
 
-console.time("build data");
+console.time('build data');
 
 // initValue.fields = [];
 // for (let index = 0; index < 5; index++) {
@@ -125,14 +113,14 @@ console.time("build data");
 //     });
 // }
 
-console.timeEnd("build data");
+console.timeEnd('build data');
 
 @Component({
-    selector: "app-root",
+    selector: 'app-root',
     standalone: true,
     imports: [RouterOutlet, VTableGridComponent],
-    templateUrl: "./app.component.html",
-    styleUrl: "./app.component.scss",
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
     value!: WritableSignal<VTableValue>;
@@ -143,32 +131,22 @@ export class AppComponent implements OnInit, AfterViewInit {
             //     view: SelectComponent,
             //     edit: SelectComponent,
             // },
-        },
-    });
-
-    gridValue = computed(() => {
-        return buildGridData(this.value(), {
-            id: "grid-1",
-            type: VTableViewType.Grid,
-        });
+        }
     });
 
     constructor() {}
 
     ngOnInit(): void {
         this.value = signal(this.getLocalStorage());
-        console.time("render");
+        console.time('render');
     }
 
     ngAfterViewInit() {
-        console.timeEnd("render");
+        console.timeEnd('render');
     }
 
     change(data: any) {
-        localStorage.setItem(
-            `${LOCAL_STORAGE_KEY}`,
-            JSON.stringify(data.value),
-        );
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}`, JSON.stringify(data.value));
     }
 
     setLocalData(data: string) {

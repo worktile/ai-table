@@ -1,8 +1,11 @@
+import { WritableSignal } from '@angular/core';
+import { VTableAction } from './action';
+
 export enum VTableFieldType {
     // NotSupport = 0,
     Text = 1,
     // Number = 2,
-    SingleSelect = 3,
+    SingleSelect = 3
     // MultiSelect = 4,
     // DateTime = 5,
     // Attachment = 6,
@@ -32,11 +35,11 @@ export enum VTableStatType {
     Checked = 14,
     UnChecked = 15,
     PercentChecked = 16,
-    PercentUnChecked = 17,
+    PercentUnChecked = 17
 }
 
 export enum VTableViewType {
-    Grid = 1,
+    Grid = 1
     // Kanban = 2,
     // Gallery = 3,
     // Form = 4,
@@ -47,12 +50,12 @@ export enum VTableViewType {
 
 export enum VTableOrderType {
     DESC = 0,
-    ASC = 1,
+    ASC = 1
 }
 
 export enum VTableConditionType {
     OR = 0,
-    AND = 1,
+    AND = 1
 }
 
 export interface SelectOption {
@@ -61,11 +64,10 @@ export interface SelectOption {
     color?: string;
 }
 
-export interface VTableOperation {
+export interface VTableOption {
     groupInfo?: {
         fieldId: string;
         order: VTableOrderType;
-        collapse?: boolean;
     }[];
     sort?: {
         fieldId: string;
@@ -101,4 +103,10 @@ export interface VTableValue {
     id: string;
     records: VTableRecord[];
     fields: VTableField[];
+}
+
+export interface VTable {
+    value: WritableSignal<VTableValue>;
+    actions: VTableAction[];
+    apply: (action: VTableAction) => void;
 }

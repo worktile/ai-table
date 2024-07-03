@@ -1,19 +1,23 @@
-import { VTableField, VTableRecord } from "@v-table/core";
-import { GridData } from "../types";
+import { VTableField, VTableRecord } from '@v-table/core';
+import { GridData } from '../types';
+import { computed, Signal } from '@angular/core';
 
 export function getCellInfo(
-    value: GridData,
+    value: Signal<GridData>,
     fieldId: string,
-    recordId: string,
+    recordId: string
 ): {
-    field: VTableField;
-    record: VTableRecord;
+    field: Signal<VTableField>;
+    record: Signal<VTableRecord>;
 } {
-    const field = value.fields.find((item) => item.id === fieldId)!;
-    const record = value.records.find((item) => item.id === recordId)!;
+    const field = computed(() => {
+        return value().fields.find((item) => item.id === fieldId)!;
+    });
+    const record = computed(() => {
+        return value().records.find((item) => item.id === recordId)!;
+    });
     return {
         field,
-        record,
-
+        record
     };
 }

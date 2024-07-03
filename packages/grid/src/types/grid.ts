@@ -1,26 +1,19 @@
-import {
-    VTableField,
-    VTableFieldType,
-    VTableOperation,
-    VTableRecord,
-    VTableViewType,
-} from "@v-table/core";
+import { FieldPath, RecordPath, VTableFieldType, VTableOption, VTableValue, VTableViewType } from '@v-table/core';
 
 export enum RowHeightLevel {
     Short = 1,
     Medium = 2,
     Tall = 3,
-    ExtraTall = 4,
+    ExtraTall = 4
 }
 
-export interface GridView extends VTableOperation {
+export interface GridView extends VTableOption {
     id: string;
     type: VTableViewType.Grid;
     rowHeight?: RowHeightLevel;
 }
 
 export interface GridCellRenderSchema {
-    view: any;
     edit: any;
 }
 
@@ -29,7 +22,6 @@ export interface GridConfig {
     readonly?: boolean;
 }
 
-export interface GridData extends GridView {
-    fields: VTableField[];
-    records: VTableRecord[];
-}
+export type GridData = GridView & VTableValue;
+
+export type GridCellPath = [RecordPath, FieldPath];
