@@ -1,1 +1,9 @@
-<v-table-grid [value]="value()" [gridConfig]="gridConfig()" (contextChange)="change($event)"></v-table-grid>
+<v-table-grid
+    [(recordsValue)]="recordsValue"
+    [(fieldsValue)]="fieldsValue"
+    [(gridView)]="gridView"
+    [gridConfig]="gridConfig()"
+    (contextChange)="contextChange($event)"
+    (fieldsValueChange)="fieldsValueChange($event)"
+    (recordsValueChange)="recordsValueChange($event)"
+></v-table-grid>

@@ -1,4 +1,4 @@
-import { FieldPath, RecordPath, VTableFieldType, VTableOption, VTableValue, VTableViewType } from '@v-table/core';
+import { FieldPath, RecordPath, VTableFields, VTableFieldType, VTableOption, VTableRecords, VTableValue, VTableViewType } from '@v-table/core';
 
 export enum RowHeightLevel {
     Short = 1,
@@ -14,6 +14,7 @@ export interface GridView extends VTableOption {
 }
 
 export interface GridCellRenderSchema {
+    // view?: any
     edit: any;
 }
 

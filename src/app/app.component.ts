@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { VTableFieldType, VTableValue } from '@v-table/core';
+import { VTableContextChangeOptions, VTableFields, VTableFieldType, VTableRecords, VTableViewType } from '@v-table/core';
 import { VTableGridComponent, GridConfig } from '../../packages/grid/src';
+import { GridView } from '@v-table/grid';
 
 const LOCAL_STORAGE_KEY = 'v-table-data';
 
-const initValue: VTableValue = {
-    id: '1',
+const initValue = {
     records: [
         {
             id: 'row-1',
@@ -61,37 +61,7 @@ const initValue: VTableValue = {
     ]
 };
 
-// const initValue = {
-//     id: "grid",
-//     name: "表格视图",
-//     fields: [
-//         {
-//             id: "column-1",
-//             name: "文本",
-//             type: VTableFieldType.Text,
-//         },
-//     ],
-//     records: [
-//         {
-//             id: "row-0",
-//             value: {
-//                 "column-1": "文本 1-1",
-//                 "column-2": "1",
-//                 "column-3": "文本 1-1",
-//                 "column-4": "1",
-//                 "column-5": "文本 1-1",
-//                 "column-6": "1",
-//                 "column-7": "文本 1-1",
-//                 "column-8": "1",
-//                 "column-9": "文本 1-1",
-//                 "column-10": "1",
-//             },
-//         },
-//     ],
-// };
-
-console.time('build data');
-
+// console.time('build data');
 // initValue.fields = [];
 // for (let index = 0; index < 5; index++) {
 //     initValue.fields.push({
@@ -100,7 +70,6 @@ console.time('build data');
 //         type: VTableFieldType.Text,
 //     });
 // }
-
 // initValue.records = [];
 // for (let index = 0; index < 40 * 3 * 2*30; index++) {
 //     const value: any = {};
@@ -112,8 +81,7 @@ console.time('build data');
 //         value: value,
 //     });
 // }
-
-console.timeEnd('build data');
+// console.timeEnd('build data');
 
 @Component({
     selector: 'app-root',
@@ -123,8 +91,6 @@ console.timeEnd('build data');
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
-    value!: WritableSignal<VTableValue>;
-
     gridConfig: WritableSignal<GridConfig> = signal({
         cellRenderer: {
             // [VTableFieldType.SingleSelect]: {
@@ -134,10 +100,22 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
     });
 
+    recordsValue!: WritableSignal<VTableRecords>;
+
+    fieldsValue!: WritableSignal<VTableFields>;
+
+    gridView!: WritableSignal<GridView>;
+
     constructor() {}
 
     ngOnInit(): void {
-        this.value = signal(this.getLocalStorage());
+        const value = this.getLocalStorage();
+        this.recordsValue = signal(value.records);
+        this.fieldsValue = signal(value.fields);
+        this.gridView = signal({
+            id: 'grid-1',
+            type: VTableViewType.Grid
+        });
         console.time('render');
     }
 
@@ -145,8 +123,22 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.timeEnd('render');
     }
 
-    change(data: any) {
-        localStorage.setItem(`${LOCAL_STORAGE_KEY}`, JSON.stringify(data.value));
+    contextChange(data: VTableContextChangeOptions<any>) {
+        localStorage.setItem(
+            `${LOCAL_STORAGE_KEY}`,
+            JSON.stringify({
+                fields: data.fields,
+                records: data.records
+            })
+        );
+    }
+
+    fieldsValueChange(data: VTableFields) {
+        console.log('fieldsValueChange', this.fieldsValue() === data);
+    }
+
+    recordsValueChange(data: VTableRecords) {
+        console.log('recordsValueChange', this.recordsValue() === data);
     }
 
     setLocalData(data: string) {

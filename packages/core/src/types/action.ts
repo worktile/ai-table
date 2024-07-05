@@ -1,4 +1,4 @@
-import { VTableRecord, VTableViewType } from "./core";
+import { VTableRecord, VTableViewType } from './core';
 
 export type RecordPath = number;
 
@@ -11,14 +11,14 @@ export interface ActionExecuteResultBase {
 }
 
 export enum ActionName {
-    UpdateFieldValue,
-    AddRecord,
+    UpdateFieldValue = 'update_field_value',
+    AddRecord = 'add_record'
 }
 
 export enum ExecuteType {
     Execute,
     Undo,
-    Redo,
+    Redo
 }
 
 export type UpdateFieldValueAction = {

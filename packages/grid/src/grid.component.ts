@@ -9,22 +9,32 @@ import {
     OnInit,
     output,
     Signal,
-    signal,
-    WritableSignal
+    signal
 } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { GridConfig } from './types';
+import { GridConfig, GridView } from './types';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { GRID_CELL_EDITOR_MAP } from './constants/editor';
 import { THY_POPOVER_SCROLL_STRATEGY, ThyPopover } from 'ngx-tethys/popover';
 import { Overlay } from '@angular/cdk/overlay';
 import { thyPopoverScrollStrategyFactory } from './utils/global';
-import { getCellInfo } from './utils/cell';
+import { getRecordOrField } from './utils/cell';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { DBL_CLICK_EDIT_TYPE } from './constants';
-import { VTableFieldType, VTableViewType, VTableValue, createVTable, VTable, VTableAction, Actions, getDefaultRecord } from '@v-table/core';
+import {
+    VTableFieldType,
+    createVTable,
+    VTable,
+    Actions,
+    getDefaultRecord,
+    VTableRecords,
+    VTableFields,
+    VTableField,
+    VTableRecord,
+    VTableContextChangeOptions
+} from '@v-table/core';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
@@ -48,7 +58,11 @@ import { buildGridData } from './utils';
     ]
 })
 export class VTableGridComponent implements OnInit {
-    value = model.required<VTableValue>();
+    recordsValue = model.required<VTableRecords>();
+
+    fieldsValue = model.required<VTableFields>();
+
+    gridView = model.required<GridView>();
 
     gridConfig = input.required<GridConfig>();
 
@@ -56,18 +70,12 @@ export class VTableGridComponent implements OnInit {
 
     takeUntilDestroyed = takeUntilDestroyed();
 
-    contextChange = output<{
-        value: VTableValue;
-        actions: VTableAction[];
-    }>();
+    contextChange = output<VTableContextChangeOptions<GridView>>();
 
-    vTable!: Signal<VTable>;
+    vTable!: VTable;
 
     gridValue = computed(() => {
-        return buildGridData(this.value(), {
-            id: this.value().id,
-            type: VTableViewType.Grid
-        });
+        return buildGridData(this.recordsValue(), this.fieldsValue(), this.gridView());
     });
 
     constructor(
@@ -76,12 +84,13 @@ export class VTableGridComponent implements OnInit {
         private sanitizer: DomSanitizer,
         private elementRef: ElementRef<HTMLElement>
     ) {
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
+        this.registryIcon();
         effect(() => {
             this.contextChange.emit({
-                value: this.value(),
-                actions: this.vTable().actions
+                fields: this.fieldsValue(),
+                records: this.recordsValue(),
+                view: this.gridView(),
+                actions: this.vTable.actions
             });
         });
     }
@@ -91,12 +100,17 @@ export class VTableGridComponent implements OnInit {
         this.initVTable();
     }
 
+    registryIcon() {
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
+    }
+
     initVTable() {
-        this.vTable = signal(createVTable(this.value));
+        this.vTable = createVTable<GridView>(this.recordsValue, this.fieldsValue, this.gridView);
     }
 
     addRecord() {
-        Actions.addRecord(this.vTable(), getDefaultRecord(this.value()), [this.value().records.length]);
+        Actions.addRecord(this.vTable, getDefaultRecord(this.fieldsValue()), [this.recordsValue().length]);
     }
 
     getEditorComponent(type: VTableFieldType) {
@@ -127,7 +141,8 @@ export class VTableGridComponent implements OnInit {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
-        const { field, record } = getCellInfo(this.value, fieldId, recordId);
+        const field = getRecordOrField(this.fieldsValue, fieldId) as Signal<VTableField>;
+        const record = getRecordOrField(this.recordsValue, recordId) as Signal<VTableRecord>;
         const component = this.getEditorComponent(field().type);
         this.thyPopover.open(component, {
             origin: cellDom,
@@ -145,7 +160,7 @@ export class VTableGridComponent implements OnInit {
                 fieldId: signal(fieldId),
                 field: field,
                 record: record,
-                vTable: this.vTable
+                vTable: signal(this.vTable)
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: false,

@@ -99,14 +99,29 @@ export interface VTableRecord {
     value: Record<string, any>;
 }
 
+export type VTableRecords = VTableRecord[];
+
+export type VTableFields = VTableField[];
+
 export interface VTableValue {
-    id: string;
-    records: VTableRecord[];
-    fields: VTableField[];
+    records: VTableRecords;
+    fields: VTableFields;
 }
 
-export interface VTable {
-    value: WritableSignal<VTableValue>;
+export interface VTable<T extends VTableOption = VTableOption> {
+    records: WritableSignal<VTableRecords>;
+    fields: WritableSignal<VTableFields>;
+    view: WritableSignal<T>;
     actions: VTableAction[];
     apply: (action: VTableAction) => void;
+    applyFields: (action: VTableAction) => void;
+    applyRecords: (action: VTableAction) => void;
+    applyView: (action: VTableAction) => void;
+}
+
+export interface VTableContextChangeOptions<T> {
+    records: VTableRecord[];
+    fields: VTableField[];
+    view: T;
+    actions: VTableAction[];
 }

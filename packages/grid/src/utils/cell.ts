@@ -1,22 +1,8 @@
-import { VTableField, VTableRecord, VTableValue } from '@v-table/core';
+import { VTableField, VTableFields, VTableRecord, VTableRecords } from '@v-table/core';
 import { computed, Signal } from '@angular/core';
 
-export function getCellInfo(
-    value: Signal<VTableValue>,
-    fieldId: string,
-    recordId: string
-): {
-    field: Signal<VTableField>;
-    record: Signal<VTableRecord>;
-} {
-    const field = computed(() => {
-        return value().fields.find((item) => item.id === fieldId)!;
+export function getRecordOrField(value: Signal<VTableRecords | VTableFields>, id: string): Signal<VTableField | VTableRecord> {
+    return computed(() => {
+        return value().find((item) => item.id === id)!;
     });
-    const record = computed(() => {
-        return value().records.find((item) => item.id === recordId)!;
-    });
-    return {
-        field,
-        record
-    };
 }
