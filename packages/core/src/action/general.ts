@@ -42,8 +42,8 @@ const apply = (records: VTableRecords, fields: VTableFields, options: VTableActi
 
 export const GeneralActions = {
     transformRecords(vTable: VTable, op: VTableAction): void {
-        const records = createDraft(vTable.records());
-        vTable.records.update(() => {
+        vTable.records.update((value) => {
+            const records = createDraft(value);
             applyRecords(vTable, records, op);
             return finishDraft(records);
         });
