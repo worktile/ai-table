@@ -6,7 +6,6 @@
         "outDir": "./out-tsc/app",
         "types": [],
         "paths": {
-          "@v-table/core": ["./packages/core/src/index"],
           "@v-table/grid": ["./packages/grid/src/index"]
       }
     },

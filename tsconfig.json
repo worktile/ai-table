@@ -20,7 +20,6 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
     "paths": {
-      "@v-table/core": ["./dist/core"],
       "@v-table/grid": ["./dist/grid"]
   }
   },
