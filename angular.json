@@ -78,51 +78,6 @@
                 }
             }
         },
-        "core": {
-            "projectType": "library",
-            "root": "packages/core",
-            "sourceRoot": "packages/core/src",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "project": "packages/core/ng-package.json",
-                        "tsConfig": "packages/core/tsconfig.lib.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "packages/core/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "packages/core/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "packages/core/test.ts",
-                        "tsConfig": "packages/core/tsconfig.spec.json",
-                        "karmaConfig": "packages/core/karma.conf.js",
-                        "codeCoverage": true,
-                        "codeCoverageExclude": [
-                            "packages/core/testing/**/*",
-                            "packages/core/test/**/*"
-                        ]
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/store/**/*.ts",
-                            "packages/store/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
         "grid": {
             "projectType": "library",
             "root": "packages/grid",

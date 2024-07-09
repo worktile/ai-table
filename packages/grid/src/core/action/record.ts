@@ -1,16 +1,12 @@
 import { ActionName, AddRecordAction, FieldPath, RecordPath, UpdateFieldValueAction, VTable, VTableNode, VTableRecord } from '../types';
 
-export function updateFieldValue(vTable: VTable, props: { value: any }, path: [RecordPath, FieldPath]) {
+export function updateFieldValue(vTable: VTable, value: any, path: [RecordPath, FieldPath]) {
     const node = VTableNode.get(vTable, path);
-    if (node !== props.value) {
-        const properties = {
-            value: node
-        };
-        const newProperties = props;
+    if (node !== value) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
-            properties,
-            newProperties,
+            fieldValue: node,
+            newFieldValue: value,
             path
         };
         vTable.applyRecords(operation);

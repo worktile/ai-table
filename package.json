@@ -8,7 +8,6 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build:v-table",
-    "build:core": "ng build core && cpx \"./packages/core/src/**/*.scss\" ./dist/core/",
     "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

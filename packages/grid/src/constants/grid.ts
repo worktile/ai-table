@@ -1,4 +1,4 @@
-import { VTableFieldType } from '@v-table/core';
+import { VTableFieldType }  from '../core';;
 
 export const DEFAULT_COLUMN_WIDTH = 200;
 

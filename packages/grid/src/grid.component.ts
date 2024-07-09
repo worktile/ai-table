@@ -1,18 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    ElementRef,
-    input,
-    model,
-    OnInit,
-    output,
-    Signal,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, Signal, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { GridConfig, GridView } from './types';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { GRID_CELL_EDITOR_MAP } from './constants/editor';
@@ -23,22 +10,23 @@ import { getRecordOrField } from './utils/cell';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { DBL_CLICK_EDIT_TYPE } from './constants';
-import {
-    VTableFieldType,
-    createVTable,
-    VTable,
-    Actions,
-    getDefaultRecord,
-    VTableRecords,
-    VTableFields,
-    VTableField,
-    VTableRecord,
-    VTableContextChangeOptions,
-    idCreator
-} from '@v-table/core';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
+import { VTableGridCellRenderSchema, VTableRowHeight } from './types';
+import {
+    Actions,
+    createVTable,
+    getDefaultRecord,
+    idCreator,
+    VTable,
+    VTableContextChangeOptions,
+    VTableField,
+    VTableFields,
+    VTableFieldType,
+    VTableRecord,
+    VTableRecords
+} from './core';
 
 @Component({
     selector: 'v-table-grid',
@@ -59,24 +47,26 @@ import { buildGridData } from './utils';
     ]
 })
 export class VTableGridComponent implements OnInit {
-    recordsValue = model.required<VTableRecords>();
+    vtRecords = model.required<VTableRecords>();
 
-    fieldsValue = model.required<VTableFields>();
+    vtFields = model.required<VTableFields>();
 
-    gridView = model.required<GridView>();
+    vtRowHeight = input<VTableRowHeight>();
 
-    gridConfig = input.required<GridConfig>();
+    vtFiledRenderers = input<Partial<Record<VTableFieldType, VTableGridCellRenderSchema>>>();
+
+    vtReadonly = input<boolean>();
 
     VTableFieldType = VTableFieldType;
 
     takeUntilDestroyed = takeUntilDestroyed();
 
-    contextChange = output<VTableContextChangeOptions<GridView>>();
-
     vTable!: VTable;
 
-    gridValue = computed(() => {
-        return buildGridData(this.recordsValue(), this.fieldsValue(), this.gridView());
+    contextChange = output<VTableContextChangeOptions>();
+
+    gridData = computed(() => {
+        return buildGridData(this.vtRecords(), this.vtFields());
     });
 
     constructor(
@@ -86,14 +76,6 @@ export class VTableGridComponent implements OnInit {
         private elementRef: ElementRef<HTMLElement>
     ) {
         this.registryIcon();
-        effect(() => {
-            this.contextChange.emit({
-                fields: this.fieldsValue(),
-                records: this.recordsValue(),
-                view: this.gridView(),
-                actions: this.vTable.actions
-            });
-        });
     }
 
     ngOnInit(): void {
@@ -107,11 +89,18 @@ export class VTableGridComponent implements OnInit {
     }
 
     initVTable() {
-        this.vTable = createVTable<GridView>(this.recordsValue, this.fieldsValue, this.gridView);
+        this.vTable = createVTable(this.vtRecords, this.vtFields);
+        this.vTable.onChange = () => {
+            this.contextChange.emit({
+                records: this.vtRecords(),
+                fields: this.vtFields(),
+                actions: this.vTable.actions
+            })
+        };
     }
 
     addRecord() {
-        Actions.addRecord(this.vTable, getDefaultRecord(this.fieldsValue()), [this.recordsValue().length]);
+        Actions.addRecord(this.vTable, getDefaultRecord(this.vtFields()), [this.vtRecords().length]);
     }
 
     addField() {
@@ -122,14 +111,14 @@ export class VTableGridComponent implements OnInit {
                 name: '新增文本',
                 type: VTableFieldType.Text
             },
-            [this.fieldsValue().length]
+            [this.vtFields().length]
         );
     }
 
     getEditorComponent(type: VTableFieldType) {
-        const cellRender = this.gridConfig()?.cellRenderer;
-        if (cellRender && cellRender[type]) {
-            return cellRender[type]!.edit;
+        const filedRenderers = this.vtFiledRenderers();
+        if (filedRenderers && filedRenderers[type]) {
+            return filedRenderers[type]!.edit;
         }
         return GRID_CELL_EDITOR_MAP[type];
     }
@@ -154,8 +143,8 @@ export class VTableGridComponent implements OnInit {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
-        const field = getRecordOrField(this.fieldsValue, fieldId) as Signal<VTableField>;
-        const record = getRecordOrField(this.recordsValue, recordId) as Signal<VTableRecord>;
+        const field = getRecordOrField(this.vtFields, fieldId) as Signal<VTableField>;
+        const record = getRecordOrField(this.vtRecords, recordId) as Signal<VTableRecord>;
         const component = this.getEditorComponent(field().type);
         this.thyPopover.open(component, {
             origin: cellDom,

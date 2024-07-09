@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit } from '@angular/core';
-import { Actions, VTable, VTableField, VTableNode, VTableRecord } from '@v-table/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { GridCellPath } from '../../types';
+import { Actions, VTable, VTableField, VTableNode, VTableRecord } from '../../core';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -32,7 +32,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends VTableFi
 
     updateFieldValue() {
         const path = VTableNode.findPath(this.vTable(), this.field(), this.record()) as GridCellPath;
-        Actions.updateFieldValue(this.vTable(), { value: this.cellValue }, path);
+        Actions.updateFieldValue(this.vTable(), this.cellValue, path);
     }
 
     closePopover() {

@@ -25,12 +25,8 @@ export enum ExecuteType {
 export type UpdateFieldValueAction = {
     type: ActionName.UpdateFieldValue;
     path: [RecordPath, FieldPath];
-    properties: {
-        value: any;
-    };
-    newProperties: {
-        value: any;
-    };
+    fieldValue: any;
+    newFieldValue: any;
 };
 
 export type AddRecordAction = {

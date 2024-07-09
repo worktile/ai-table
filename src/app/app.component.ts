@@ -1,8 +1,6 @@
-import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { VTableContextChangeOptions, VTableFields, VTableFieldType, VTableRecords, VTableViewType } from '@v-table/core';
-import { VTableGridComponent, GridConfig } from '../../packages/grid/src';
-import { GridView } from '@v-table/grid';
+import { VTableFields, VTableFieldType, VTableGridComponent, VTableRecords } from '@v-table/grid';
 
 const LOCAL_STORAGE_KEY = 'v-table-data';
 
@@ -91,31 +89,16 @@ const initValue = {
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
-    gridConfig: WritableSignal<GridConfig> = signal({
-        cellRenderer: {
-            // [VTableFieldType.SingleSelect]: {
-            //     view: SelectComponent,
-            //     edit: SelectComponent,
-            // },
-        }
-    });
+    records!: WritableSignal<VTableRecords>;
 
-    recordsValue!: WritableSignal<VTableRecords>;
-
-    fieldsValue!: WritableSignal<VTableFields>;
-
-    gridView!: WritableSignal<GridView>;
+    fields!: WritableSignal<VTableFields>;
 
     constructor() {}
 
     ngOnInit(): void {
         const value = this.getLocalStorage();
-        this.recordsValue = signal(value.records);
-        this.fieldsValue = signal(value.fields);
-        this.gridView = signal({
-            id: 'grid-1',
-            type: VTableViewType.Grid
-        });
+        this.records = signal(value.records);
+        this.fields = signal(value.fields);
         console.time('render');
     }
 
@@ -123,7 +106,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.timeEnd('render');
     }
 
-    contextChange(data: VTableContextChangeOptions<any>) {
+    contextChange(data: any) {
         localStorage.setItem(
             `${LOCAL_STORAGE_KEY}`,
             JSON.stringify({
@@ -131,14 +114,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                 records: data.records
             })
         );
-    }
-
-    fieldsValueChange(data: VTableFields) {
-        console.log('fieldsValueChange', this.fieldsValue() === data);
-    }
-
-    recordsValueChange(data: VTableRecords) {
-        console.log('recordsValueChange', this.recordsValue() === data);
     }
 
     setLocalData(data: string) {

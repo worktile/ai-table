@@ -58,30 +58,10 @@ export enum VTableConditionType {
     AND = 1
 }
 
-export interface SelectOption {
+export interface VTableSelectOption {
     id: string;
     name: string;
     color?: string;
-}
-
-export interface VTableOption {
-    groupInfo?: {
-        fieldId: string;
-        order: VTableOrderType;
-    }[];
-    sort?: {
-        fieldId: string;
-        order: VTableOrderType;
-        keepSort?: boolean;
-    }[];
-    filter?: {
-        condition: VTableConditionType;
-        operation: {
-            fieldId: string;
-            option: any;
-            value: any;
-        }[];
-    };
 }
 
 export interface VTableField {
@@ -92,7 +72,7 @@ export interface VTableField {
     hidden?: boolean;
     frozen?: boolean;
     statType?: VTableStatType;
-    [key: string]: SelectOption[] | any;
+    [key: string]: VTableSelectOption[] | any;
 }
 
 export interface VTableRecord {
@@ -109,20 +89,19 @@ export interface VTableValue {
     fields: VTableFields;
 }
 
-export interface VTable<T extends VTableOption = VTableOption> {
+export interface VTable {
     records: WritableSignal<VTableRecords>;
     fields: WritableSignal<VTableFields>;
-    view: WritableSignal<T>;
     actions: VTableAction[];
+    onChange: () => void;
     apply: (action: VTableAction) => void;
     applyFields: (action: VTableAction) => void;
     applyRecords: (action: VTableAction) => void;
     applyView: (action: VTableAction) => void;
 }
 
-export interface VTableContextChangeOptions<T> {
+export interface VTableContextChangeOptions{
     records: VTableRecord[];
     fields: VTableField[];
-    view: T;
     actions: VTableAction[];
 }

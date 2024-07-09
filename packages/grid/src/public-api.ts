@@ -3,3 +3,4 @@ export * from './types';
 export * from './pipes';
 export * from './constants';
 export * from './utils';
+export * from './core';

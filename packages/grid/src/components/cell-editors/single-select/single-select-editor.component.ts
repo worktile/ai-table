@@ -6,10 +6,10 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyOption } from 'ngx-tethys/shared';
-import { SelectOption, VTableField } from '@v-table/core';
+import { VTableSelectOption, VTableField } from '../../../core';
 
 export interface VTableSingleSelectField extends VTableField {
-    options: SelectOption[];
+    options: VTableSelectOption[];
 }
 
 @Component({

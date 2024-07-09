@@ -6,7 +6,7 @@ const applyRecords = (vTable: VTable, records: VTableRecords, options: VTableAct
         case ActionName.UpdateFieldValue: {
             const [recordIndex, fieldIndex] = options.path;
             const fieldId = vTable.fields()[fieldIndex].id;
-            records[recordIndex].value[fieldId] = options.newProperties.value;
+            records[recordIndex].value[fieldId] = options.newFieldValue;
             break;
         }
         case ActionName.AddRecord: {
