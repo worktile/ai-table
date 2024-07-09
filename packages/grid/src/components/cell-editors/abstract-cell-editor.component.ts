@@ -4,12 +4,12 @@ import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { GridCellPath } from '../../types';
 
 @Component({
-    selector: 'abstract-cell',
+    selector: 'abstract-edit-cell',
     template: ``,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export abstract class AbstractCellEditor<TValue, TFieldType extends VTableField = VTableField> implements OnInit {
+export abstract class AbstractEditCellEditor<TValue, TFieldType extends VTableField = VTableField> implements OnInit {
     fieldId = input.required<string>();
 
     field = input.required<TFieldType>();
@@ -24,7 +24,7 @@ export abstract class AbstractCellEditor<TValue, TFieldType extends VTableField 
 
     cellValue!: TValue;
 
-    protected thyPopoverRef = inject(ThyPopoverRef<AbstractCellEditor<TValue>>);
+    protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>);
 
     ngOnInit(): void {
         this.cellValue = this._cellValue();

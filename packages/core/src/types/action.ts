@@ -1,4 +1,4 @@
-import { VTableRecord, VTableViewType } from './core';
+import { VTableField, VTableRecord, VTableViewType } from './core';
 
 export type RecordPath = number;
 
@@ -12,7 +12,8 @@ export interface ActionExecuteResultBase {
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',
-    AddRecord = 'add_record'
+    AddRecord = 'add_record',
+    AddField = 'add_field'
 }
 
 export enum ExecuteType {
@@ -38,4 +39,10 @@ export type AddRecordAction = {
     record: VTableRecord;
 };
 
-export type VTableAction = UpdateFieldValueAction | AddRecordAction;
+export type AddFieldAction = {
+    type: ActionName.AddField;
+    path: [FieldPath];
+    field: VTableField;
+};
+
+export type VTableAction = UpdateFieldValueAction | AddRecordAction | AddFieldAction;

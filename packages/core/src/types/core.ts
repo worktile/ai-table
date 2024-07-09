@@ -72,6 +72,7 @@ export interface VTableOption {
     sort?: {
         fieldId: string;
         order: VTableOrderType;
+        keepSort?: boolean;
     }[];
     filter?: {
         condition: VTableConditionType;

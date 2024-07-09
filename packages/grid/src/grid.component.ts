@@ -33,7 +33,8 @@ import {
     VTableFields,
     VTableField,
     VTableRecord,
-    VTableContextChangeOptions
+    VTableContextChangeOptions,
+    idCreator
 } from '@v-table/core';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -111,6 +112,18 @@ export class VTableGridComponent implements OnInit {
 
     addRecord() {
         Actions.addRecord(this.vTable, getDefaultRecord(this.fieldsValue()), [this.recordsValue().length]);
+    }
+
+    addField() {
+        Actions.addField(
+            this.vTable,
+            {
+                id: idCreator(),
+                name: '新增文本',
+                type: VTableFieldType.Text
+            },
+            [this.fieldsValue().length]
+        );
     }
 
     getEditorComponent(type: VTableFieldType) {

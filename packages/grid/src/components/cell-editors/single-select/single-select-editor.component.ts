@@ -2,7 +2,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThySelect } from 'ngx-tethys/select';
-import { AbstractCellEditor } from '../abstract-cell-editor.component';
+import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyOption } from 'ngx-tethys/shared';
@@ -24,7 +24,7 @@ export interface VTableSingleSelectField extends VTableField {
     },
     imports: [NgIf, NgForOf, FormsModule, ThySelect, ThyOption, ThyTag, ThyIcon]
 })
-export class SingleSelectCellEditorComponent extends AbstractCellEditor<string, VTableSingleSelectField> {
+export class SingleSelectCellEditorComponent extends AbstractEditCellEditor<string, VTableSingleSelectField> {
     selectOptions = computed(() => {
         return this.field().options;
     });
