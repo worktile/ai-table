@@ -1,0 +1,83 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'ngx-tethys/styles/index.scss';
+@use 'ngx-tethys/styles/variables.scss';
+
+.ai-table-grid {
+    margin: 20px;
+    display: table;
+    width: 100%;
+
+    .grid-header {
+        border-top: 1px solid variables.$gray-200;
+    }
+
+    .grid-body {
+        flex-direction: column;
+    }
+    .grid-row,
+    .grid-header {
+        border-bottom: 1px solid variables.$gray-200;
+    }
+
+    .grid-row {
+        &:hover {
+            background-color: variables.$gray-80;
+            cursor: pointer;
+        }
+    }
+
+    .grid-cell {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        width: 300px;
+        border-left: 1px solid variables.$gray-200;
+        justify-content: center;
+    }
+    .grid-column-blank {
+        flex: 1;
+        min-width: 180px;
+        display: flex;
+        padding-left: 8px;
+        align-items: center;
+        border-left: 1px solid variables.$gray-200;
+    }
+    .grid-row-index,
+    .grid-column-checkbox {
+        width: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: variables.$gray-500;
+        border-left: none;
+    }
+
+    .grid-row-insert {
+        height: 44px;
+        display: flex;
+        padding-left: 15px;
+        align-items: center;
+    }
+
+    .text-column {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cell-active {
+        border: 1px solid variables.$primary;
+        margin-left: 0.5px;
+    }
+}
+
+.grid-cell-editor {
+    .form-control,
+    .thy-select-custom,
+    .select-control-rendered {
+        height: 100%;
+        border-radius: 0;
+    }
+}

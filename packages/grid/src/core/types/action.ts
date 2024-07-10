@@ -1,0 +1,40 @@
+import { AITableField, AITableRecord } from './core';
+
+export type RecordPath = number;
+
+export type FieldPath = number;
+
+export type Path = [RecordPath] | [FieldPath] | [RecordPath, FieldPath];
+
+export enum ActionName {
+    UpdateFieldValue = 'update_field_value',
+    AddRecord = 'add_record',
+    AddField = 'add_field'
+}
+
+export enum ExecuteType {
+    Execute,
+    Undo,
+    Redo
+}
+
+export type UpdateFieldValueAction = {
+    type: ActionName.UpdateFieldValue;
+    path: [RecordPath, FieldPath];
+    fieldValue: any;
+    newFieldValue: any;
+};
+
+export type AddRecordAction = {
+    type: ActionName.AddRecord;
+    path: [RecordPath];
+    record: AITableRecord;
+};
+
+export type AddFieldAction = {
+    type: ActionName.AddField;
+    path: [FieldPath];
+    field: AITableField;
+};
+
+export type AITableAction = UpdateFieldValueAction | AddRecordAction | AddFieldAction;
