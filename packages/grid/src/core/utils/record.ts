@@ -1,9 +1,9 @@
-import { VTableFields, VTableRecord } from '../types';
+import { AITableFields, AITableRecord } from '../types';
 import { getDefaultFiledValue } from './field';
 import { idCreator } from './id-creator';
 
-export function getDefaultRecord(fields: VTableFields) {
-    const newRow: VTableRecord = {
+export function getDefaultRecord(fields: AITableFields) {
+    const newRow: AITableRecord = {
         id: idCreator(),
         value: {}
     };

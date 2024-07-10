@@ -20,7 +20,7 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
     "paths": {
-      "@v-table/grid": ["./dist/grid"]
+      "@ai-table/grid": ["./dist/grid"]
   }
   },
   "angularCompilerOptions": {

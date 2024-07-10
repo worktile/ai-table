@@ -1,12 +1,12 @@
-import { ActionName, AddFieldAction, FieldPath, VTable, VTableField } from '../types';
+import { ActionName, AddFieldAction, FieldPath, AITable, AITableField } from '../types';
 
-export function addField(vTable: VTable, field: VTableField, path: [FieldPath]) {
+export function addField(aiTable: AITable, field: AITableField, path: [FieldPath]) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
         path
     };
-    vTable.apply(operation);
+    aiTable.apply(operation);
 }
 
 export const FieldActions = {

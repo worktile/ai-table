@@ -16,7 +16,7 @@
             @for (field of gridData().fields; track $index) {
                 <div class="grid-cell" [attr.type]="[field.type]" [attr.fieldId]="[field.id]" [attr.recordId]="[record.id]" #cell>
                     @switch (field.type) {
-                        @case (VTableFieldType.SingleSelect) {
+                        @case (AITableFieldType.SingleSelect) {
                             @if (record.value[field.id] | selectOption: field['options']; as selectedOption) {
                                 <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.name }}</thy-tag>
                             }

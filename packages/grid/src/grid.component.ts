@@ -9,52 +9,52 @@ import { DBL_CLICK_EDIT_TYPE } from './constants';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { VTableGridCellRenderSchema, VTableRowHeight } from './types';
+import { AITableGridCellRenderSchema, AITableRowHeight } from './types';
 import {
     Actions,
-    createVTable,
+    createAITable,
     getDefaultRecord,
     idCreator,
-    VTable,
-    VTableChangeOptions,
-    VTableField,
-    VTableFields,
-    VTableFieldType,
-    VTableRecord,
-    VTableRecords
+    AITable,
+    AITableChangeOptions,
+    AITableField,
+    AITableFields,
+    AITableFieldType,
+    AITableRecord,
+    AITableRecords
 } from './core';
 
 @Component({
-    selector: 'v-table-grid',
+    selector: 'ai-table-grid',
     templateUrl: './grid.component.html',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'v-table-grid'
+        class: 'ai-table-grid'
     },
     imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule]
 })
-export class VTableGridComponent implements OnInit {
-    vtRecords = model.required<VTableRecords>();
+export class AITableGridComponent implements OnInit {
+    aiRecords = model.required<AITableRecords>();
 
-    vtFields = model.required<VTableFields>();
+    aiFields = model.required<AITableFields>();
 
-    vtRowHeight = input<VTableRowHeight>();
+    aiRowHeight = input<AITableRowHeight>();
 
-    vtFiledRenderers = input<Partial<Record<VTableFieldType, VTableGridCellRenderSchema>>>();
+    aiFiledRenderers = input<Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>>();
 
-    vtReadonly = input<boolean>();
+    aiReadonly = input<boolean>();
 
-    VTableFieldType = VTableFieldType;
+    AITableFieldType = AITableFieldType;
 
     takeUntilDestroyed = takeUntilDestroyed();
 
-    vTable!: VTable;
+    aiTable!: AITable;
 
-    onChange = output<VTableChangeOptions>();
+    onChange = output<AITableChangeOptions>();
 
     gridData = computed(() => {
-        return buildGridData(this.vtRecords(), this.vtFields());
+        return buildGridData(this.aiRecords(), this.aiFields());
     });
 
     constructor(
@@ -64,38 +64,38 @@ export class VTableGridComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeEventListener();
-        this.initVTable();
+        this.initAITable();
     }
 
-    initVTable() {
-        this.vTable = createVTable(this.vtRecords, this.vtFields);
-        this.vTable.onChange = () => {
+    initAITable() {
+        this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiTable.onChange = () => {
             this.onChange.emit({
-                records: this.vtRecords(),
-                fields: this.vtFields(),
-                actions: this.vTable.actions
+                records: this.aiRecords(),
+                fields: this.aiFields(),
+                actions: this.aiTable.actions
             });
         };
     }
 
     addRecord() {
-        Actions.addRecord(this.vTable, getDefaultRecord(this.vtFields()), [this.vtRecords().length]);
+        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
     addField() {
         Actions.addField(
-            this.vTable,
+            this.aiTable,
             {
                 id: idCreator(),
                 name: '新增文本',
-                type: VTableFieldType.Text
+                type: AITableFieldType.Text
             },
-            [this.vtFields().length]
+            [this.aiFields().length]
         );
     }
 
-    getEditorComponent(type: VTableFieldType) {
-        const filedRenderers = this.vtFiledRenderers();
+    getEditorComponent(type: AITableFieldType) {
+        const filedRenderers = this.aiFiledRenderers();
         if (filedRenderers && filedRenderers[type]) {
             return filedRenderers[type]!.edit;
         }
@@ -122,8 +122,8 @@ export class VTableGridComponent implements OnInit {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
-        const field = getRecordOrField(this.vtFields, fieldId) as Signal<VTableField>;
-        const record = getRecordOrField(this.vtRecords, recordId) as Signal<VTableRecord>;
+        const field = getRecordOrField(this.aiFields, fieldId) as Signal<AITableField>;
+        const record = getRecordOrField(this.aiRecords, recordId) as Signal<AITableRecord>;
         const component = this.getEditorComponent(field().type);
         this.thyPopover.open(component, {
             origin: cellDom,
@@ -140,7 +140,7 @@ export class VTableGridComponent implements OnInit {
             initialState: {
                 field: field,
                 record: record,
-                vTable: signal(this.vTable)
+                aiTable: signal(this.aiTable)
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: false,

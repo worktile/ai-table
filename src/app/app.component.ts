@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
-import { VTableFields, VTableFieldType, VTableGridComponent, VTableRecords } from '@v-table/grid';
+import { AITableFields, AITableFieldType, AITableGridComponent, AITableRecords } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 
-const LOCAL_STORAGE_KEY = 'v-table-data';
+const LOCAL_STORAGE_KEY = 'ai-table-data';
 
 const initValue = {
     records: [
@@ -34,12 +34,12 @@ const initValue = {
         {
             id: 'column-1',
             name: '文本',
-            type: VTableFieldType.Text
+            type: AITableFieldType.Text
         },
         {
             id: 'column-2',
             name: '单选',
-            type: VTableFieldType.SingleSelect,
+            type: AITableFieldType.SingleSelect,
             options: [
                 {
                     id: '1',
@@ -67,7 +67,7 @@ const initValue = {
 //     initValue.fields.push({
 //         id: `column-${index}`,
 //         name: "文本",
-//         type: VTableFieldType.Text,
+//         type: AITableFieldType.Text,
 //     });
 // }
 // initValue.records = [];
@@ -86,14 +86,14 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, VTableGridComponent],
+    imports: [RouterOutlet, AITableGridComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
-    records!: WritableSignal<VTableRecords>;
+    records!: WritableSignal<AITableRecords>;
 
-    fields!: WritableSignal<VTableFields>;
+    fields!: WritableSignal<AITableFields>;
 
     constructor(
         private iconRegistry: ThyIconRegistry,

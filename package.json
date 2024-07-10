@@ -1,5 +1,5 @@
 {
-  "name": "v-table",
+  "name": "ai-table",
   "version": "0.0.0",
   "workspaces": [
     "packages/*"
@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build:v-table",
+    "build": "ng build:ai-table",
     "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

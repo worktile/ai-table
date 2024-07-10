@@ -1,5 +1,5 @@
-import { VTableFieldType } from '../types';
+import { AITableFieldType } from '../types';
 
-export function getDefaultFiledValue(type: VTableFieldType) {
+export function getDefaultFiledValue(type: AITableFieldType) {
     return '';
 }

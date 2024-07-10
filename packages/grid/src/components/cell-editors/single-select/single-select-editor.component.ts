@@ -6,10 +6,10 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyOption } from 'ngx-tethys/shared';
-import { VTableSelectOption, VTableField } from '../../../core';
+import { AITableSelectOption, AITableField } from '../../../core';
 
-export interface VTableSingleSelectField extends VTableField {
-    options: VTableSelectOption[];
+export interface AITableSingleSelectField extends AITableField {
+    options: AITableSelectOption[];
 }
 
 @Component({
@@ -24,7 +24,7 @@ export interface VTableSingleSelectField extends VTableField {
     },
     imports: [NgIf, NgForOf, FormsModule, ThySelect, ThyOption, ThyTag, ThyIcon]
 })
-export class SingleSelectCellEditorComponent extends AbstractEditCellEditor<string, VTableSingleSelectField> {
+export class SingleSelectCellEditorComponent extends AbstractEditCellEditor<string, AITableSingleSelectField> {
     selectOptions = computed(() => {
         return this.field().options;
     });

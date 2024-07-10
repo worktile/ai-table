@@ -1,10 +1,10 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { FieldPath, Path, RecordPath, VTable, VTableField, VTableRecord } from '../types';
+import { FieldPath, Path, RecordPath, AITable, AITableField, AITableRecord } from '../types';
 
-export const VTableQueries = {
-    findPath(vTable: VTable, field?: VTableField, record?: VTableRecord): Path {
-        const recordIndex = record && vTable.records().indexOf(record);
-        const fieldIndex = field && vTable.fields().indexOf(field);
+export const AITableQueries = {
+    findPath(aiTable: AITable, field?: AITableField, record?: AITableRecord): Path {
+        const recordIndex = record && aiTable.records().indexOf(record);
+        const fieldIndex = field && aiTable.fields().indexOf(field);
         if (!isUndefinedOrNull(recordIndex) && recordIndex > -1 && !isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
             return [recordIndex!, fieldIndex!];
         }
@@ -16,11 +16,11 @@ export const VTableQueries = {
         }
         throw new Error(`Unable to find the path: ${JSON.stringify({ ...(field || {}), ...(record || {}) })}`);
     },
-    getFieldValue(vTable: VTable, path: [RecordPath, FieldPath]): any {
-        if (!vTable || !vTable.records() || !vTable.fields()) {
+    getFieldValue(aiTable: AITable, path: [RecordPath, FieldPath]): any {
+        if (!aiTable || !aiTable.records() || !aiTable.fields()) {
             throw new Error(`Cannot find a descendant at path [${path}]`);
         }
-        const fieldId = vTable.fields()[path[1]].id;
-        return vTable.records()[path[0]].value[fieldId];
+        const fieldId = aiTable.fields()[path[1]].id;
+        return aiTable.records()[path[0]].value[fieldId];
     }
 };

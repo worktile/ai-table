@@ -1,5 +1,5 @@
 ---
-"v-table": patch
+"ai-table": patch
 ---
 
-init v-table
+init ai-table

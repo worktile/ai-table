@@ -1,7 +1,7 @@
 import { WritableSignal } from '@angular/core';
-import { VTableAction } from './action';
+import { AITableAction } from './action';
 
-export enum VTableFieldType {
+export enum AITableFieldType {
     // NotSupport = 0,
     Text = 1,
     // Number = 2,
@@ -17,7 +17,7 @@ export enum VTableFieldType {
     // Member = 13,
 }
 
-export enum VTableStatType {
+export enum AITableStatType {
     None = 0,
     CountAll = 1,
     Empty = 2,
@@ -38,47 +38,47 @@ export enum VTableStatType {
     PercentUnChecked = 17
 }
 
-export interface VTableSelectOption {
+export interface AITableSelectOption {
     id: string;
     name: string;
     color?: string;
 }
 
-export interface VTableField {
+export interface AITableField {
     id: string;
     name: string;
-    type: VTableFieldType;
+    type: AITableFieldType;
     width?: string;
     hidden?: boolean;
     frozen?: boolean;
-    statType?: VTableStatType;
-    [key: string]: VTableSelectOption[] | any;
+    statType?: AITableStatType;
+    [key: string]: AITableSelectOption[] | any;
 }
 
-export interface VTableRecord {
+export interface AITableRecord {
     id: string;
     value: Record<string, any>;
 }
 
-export type VTableRecords = VTableRecord[];
+export type AITableRecords = AITableRecord[];
 
-export type VTableFields = VTableField[];
+export type AITableFields = AITableField[];
 
-export interface VTableValue {
-    records: VTableRecords;
-    fields: VTableFields;
+export interface AITableValue {
+    records: AITableRecords;
+    fields: AITableFields;
 }
 
-export interface VTable {
-    records: WritableSignal<VTableRecords>;
-    fields: WritableSignal<VTableFields>;
-    actions: VTableAction[];
+export interface AITable {
+    records: WritableSignal<AITableRecords>;
+    fields: WritableSignal<AITableFields>;
+    actions: AITableAction[];
     onChange: () => void;
-    apply: (action: VTableAction) => void;
+    apply: (action: AITableAction) => void;
 }
 
-export interface VTableChangeOptions{
-    records: VTableRecord[];
-    fields: VTableField[];
-    actions: VTableAction[];
+export interface AITableChangeOptions{
+    records: AITableRecord[];
+    fields: AITableField[];
+    actions: AITableAction[];
 }

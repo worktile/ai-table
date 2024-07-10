@@ -1,3 +1,3 @@
-import { VTable } from '../types';
+import { AITable } from '../types';
 
-export const FLUSHING = new WeakMap<VTable, boolean>();
+export const FLUSHING = new WeakMap<AITable, boolean>();

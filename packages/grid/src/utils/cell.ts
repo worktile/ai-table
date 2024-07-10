@@ -1,7 +1,7 @@
 import { computed, Signal } from '@angular/core';
-import { VTableField, VTableFields, VTableRecord, VTableRecords } from '../core';
+import { AITableField, AITableFields, AITableRecord, AITableRecords } from '../core';
 
-export function getRecordOrField(value: Signal<VTableRecords | VTableFields>, id: string): Signal<VTableField | VTableRecord> {
+export function getRecordOrField(value: Signal<AITableRecords | AITableFields>, id: string): Signal<AITableField | AITableRecord> {
     return computed(() => {
         return value().find((item) => item.id === id)!;
     });

@@ -1,4 +1,4 @@
-import { VTableField, VTableRecord } from './core';
+import { AITableField, AITableRecord } from './core';
 
 export type RecordPath = number;
 
@@ -28,13 +28,13 @@ export type UpdateFieldValueAction = {
 export type AddRecordAction = {
     type: ActionName.AddRecord;
     path: [RecordPath];
-    record: VTableRecord;
+    record: AITableRecord;
 };
 
 export type AddFieldAction = {
     type: ActionName.AddField;
     path: [FieldPath];
-    field: VTableField;
+    field: AITableField;
 };
 
-export type VTableAction = UpdateFieldValueAction | AddRecordAction | AddFieldAction;
+export type AITableAction = UpdateFieldValueAction | AddRecordAction | AddFieldAction;

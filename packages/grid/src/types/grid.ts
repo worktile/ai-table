@@ -1,20 +1,20 @@
-import { FieldPath, RecordPath, VTableField, VTableRecord } from '../core';
+import { FieldPath, RecordPath, AITableField, AITableRecord } from '../core';
 
-export enum VTableRowHeight {
+export enum AITableRowHeight {
     Short = 1,
     Medium = 2,
     Tall = 3,
     ExtraTall = 4
 }
 
-export interface VTableGridCellRenderSchema {
+export interface AITableGridCellRenderSchema {
     edit: any;
 }
 
-export interface VTableGridData {
+export interface AITableGridData {
     type: 'grid';
-    fields: VTableField[];
-    records: VTableRecord[];
+    fields: AITableField[];
+    records: AITableRecord[];
 }
 
 export type GridCellPath = [RecordPath, FieldPath];

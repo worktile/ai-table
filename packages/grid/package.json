@@ -1,5 +1,5 @@
 {
-    "name": "@v-table/grid",
+    "name": "@ai-table/grid",
     "version": "0.0.0",
     "peerDependencies": {
         "@angular/common": "^18.0.0",

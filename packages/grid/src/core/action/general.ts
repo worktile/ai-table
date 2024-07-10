@@ -1,11 +1,11 @@
-import { ActionName, VTable, VTableAction, VTableFields, VTableRecords } from '../types';
+import { ActionName, AITable, AITableAction, AITableFields, AITableRecords } from '../types';
 import { createDraft, finishDraft } from 'immer';
 
-const apply = (vTable: VTable, records: VTableRecords, fields: VTableFields, options: VTableAction) => {
+const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
     switch (options.type) {
         case ActionName.UpdateFieldValue: {
             const [recordIndex, fieldIndex] = options.path;
-            const fieldId = vTable.fields()[fieldIndex].id;
+            const fieldId = aiTable.fields()[fieldIndex].id;
             records[recordIndex].value[fieldId] = options.newFieldValue;
             break;
         }
@@ -36,14 +36,14 @@ const apply = (vTable: VTable, records: VTableRecords, fields: VTableFields, opt
 };
 
 export const GeneralActions = {
-    transform(vTable: VTable, op: VTableAction): void {
-        const records = createDraft(vTable.records());
-        const fields = createDraft(vTable.fields());
-        apply(vTable, records, fields, op);
-        vTable.fields.update(() => {
+    transform(aiTable: AITable, op: AITableAction): void {
+        const records = createDraft(aiTable.records());
+        const fields = createDraft(aiTable.fields());
+        apply(aiTable, records, fields, op);
+        aiTable.fields.update(() => {
             return finishDraft(fields);
         });
-        vTable.records.update(() => {
+        aiTable.records.update(() => {
             return finishDraft(records);
         });
     }

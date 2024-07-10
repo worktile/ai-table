@@ -1,7 +1,7 @@
-import { VTableFields, VTableRecords }  from '../core';;
-import { VTableGridData } from '../types';
+import { AITableFields, AITableRecords }  from '../core';;
+import { AITableGridData } from '../types';
 
-export const buildGridData = (recordValue: VTableRecords, fieldsValue: VTableFields): VTableGridData => {
+export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
     return {
         type: 'grid',
         fields: fieldsValue,
