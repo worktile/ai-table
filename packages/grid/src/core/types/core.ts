@@ -38,26 +38,6 @@ export enum VTableStatType {
     PercentUnChecked = 17
 }
 
-export enum VTableViewType {
-    Grid = 1
-    // Kanban = 2,
-    // Gallery = 3,
-    // Form = 4,
-    // Calendar = 5,
-    // Gantt = 6,
-    // OrgChart = 7,
-}
-
-export enum VTableOrderType {
-    DESC = 0,
-    ASC = 1
-}
-
-export enum VTableConditionType {
-    OR = 0,
-    AND = 1
-}
-
 export interface VTableSelectOption {
     id: string;
     name: string;
@@ -95,12 +75,9 @@ export interface VTable {
     actions: VTableAction[];
     onChange: () => void;
     apply: (action: VTableAction) => void;
-    applyFields: (action: VTableAction) => void;
-    applyRecords: (action: VTableAction) => void;
-    applyView: (action: VTableAction) => void;
 }
 
-export interface VTableContextChangeOptions{
+export interface VTableChangeOptions{
     records: VTableRecord[];
     fields: VTableField[];
     actions: VTableAction[];

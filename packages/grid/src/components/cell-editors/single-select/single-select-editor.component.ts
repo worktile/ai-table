@@ -14,7 +14,7 @@ export interface VTableSingleSelectField extends VTableField {
 
 @Component({
     selector: 'single-select-cell-editor',
-    template: `<thy-select [(ngModel)]="cellValue" [thyAutoExpand]="true" (thyOnExpandStatusChange)="updateValue($event)">
+    template: `<thy-select [(ngModel)]="modelValue" [thyAutoExpand]="true" (thyOnExpandStatusChange)="updateValue($event)">
         <thy-option *ngFor="let option of selectOptions()" [thyValue]="option.id" [thyLabelText]="option.name"> </thy-option>
     </thy-select> `,
     standalone: true,

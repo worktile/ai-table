@@ -1,7 +1,8 @@
-import { ActionName, AddRecordAction, FieldPath, RecordPath, UpdateFieldValueAction, VTable, VTableNode, VTableRecord } from '../types';
+import { ActionName, AddRecordAction, FieldPath, RecordPath, UpdateFieldValueAction, VTable, VTableRecord } from '../types';
+import { VTableQueries } from '../utils';
 
 export function updateFieldValue(vTable: VTable, value: any, path: [RecordPath, FieldPath]) {
-    const node = VTableNode.get(vTable, path);
+    const node = VTableQueries.getFieldValue(vTable, path);
     if (node !== value) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
@@ -9,7 +10,7 @@ export function updateFieldValue(vTable: VTable, value: any, path: [RecordPath, 
             newFieldValue: value,
             path
         };
-        vTable.applyRecords(operation);
+        vTable.apply(operation);
     }
 }
 
@@ -19,7 +20,7 @@ export function addRecord(vTable: VTable, record: VTableRecord, path: [RecordPat
         record,
         path
     };
-    vTable.applyRecords(operation);
+    vTable.apply(operation);
 }
 
 export const RecordActions = {

@@ -5,7 +5,6 @@ import { ThyTag } from 'ngx-tethys/tag';
 import { GRID_CELL_EDITOR_MAP } from './constants/editor';
 import { THY_POPOVER_SCROLL_STRATEGY, ThyPopover } from 'ngx-tethys/popover';
 import { Overlay } from '@angular/cdk/overlay';
-import { thyPopoverScrollStrategyFactory } from './utils/global';
 import { getRecordOrField } from './utils/cell';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
@@ -20,7 +19,7 @@ import {
     getDefaultRecord,
     idCreator,
     VTable,
-    VTableContextChangeOptions,
+    VTableChangeOptions,
     VTableField,
     VTableFields,
     VTableFieldType,
@@ -42,7 +41,7 @@ import {
         {
             provide: THY_POPOVER_SCROLL_STRATEGY,
             deps: [Overlay],
-            useFactory: thyPopoverScrollStrategyFactory
+            useFactory: (overlay: Overlay) => overlay.scrollStrategies.close()
         }
     ]
 })
@@ -63,7 +62,7 @@ export class VTableGridComponent implements OnInit {
 
     vTable!: VTable;
 
-    contextChange = output<VTableContextChangeOptions>();
+    onChange = output<VTableChangeOptions>();
 
     gridData = computed(() => {
         return buildGridData(this.vtRecords(), this.vtFields());
@@ -91,7 +90,7 @@ export class VTableGridComponent implements OnInit {
     initVTable() {
         this.vTable = createVTable(this.vtRecords, this.vtFields);
         this.vTable.onChange = () => {
-            this.contextChange.emit({
+            this.onChange.emit({
                 records: this.vtRecords(),
                 fields: this.vtFields(),
                 actions: this.vTable.actions
@@ -159,7 +158,6 @@ export class VTableGridComponent implements OnInit {
             placement: 'top',
             offset: -(height + 4),
             initialState: {
-                fieldId: signal(fieldId),
                 field: field,
                 record: record,
                 vTable: signal(this.vTable)

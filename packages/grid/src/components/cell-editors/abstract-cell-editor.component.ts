@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit } from '@angular/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { GridCellPath } from '../../types';
-import { Actions, VTable, VTableField, VTableNode, VTableRecord } from '../../core';
+import { Actions, VTable, VTableField, VTableQueries, VTableRecord } from '../../core';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -10,29 +10,26 @@ import { Actions, VTable, VTableField, VTableNode, VTableRecord } from '../../co
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export abstract class AbstractEditCellEditor<TValue, TFieldType extends VTableField = VTableField> implements OnInit {
-    fieldId = input.required<string>();
-
     field = input.required<TFieldType>();
 
     record = input.required<VTableRecord>();
 
     vTable = input.required<VTable>();
 
-    _cellValue = computed(() => {
-        return this.record().value[this.fieldId()];
-    });
-
-    cellValue!: TValue;
+    modelValue!: TValue;
 
     protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>);
 
     ngOnInit(): void {
-        this.cellValue = this._cellValue();
+        this.modelValue = computed(() => {
+            const path = VTableQueries.findPath(this.vTable(), this.field(), this.record()) as GridCellPath;
+            return VTableQueries.getFieldValue(this.vTable(), path);
+        })();
     }
 
     updateFieldValue() {
-        const path = VTableNode.findPath(this.vTable(), this.field(), this.record()) as GridCellPath;
-        Actions.updateFieldValue(this.vTable(), this.cellValue, path);
+        const path = VTableQueries.findPath(this.vTable(), this.field(), this.record()) as GridCellPath;
+        Actions.updateFieldValue(this.vTable(), this.modelValue, path);
     }
 
     closePopover() {

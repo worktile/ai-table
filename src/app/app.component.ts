@@ -106,7 +106,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.timeEnd('render');
     }
 
-    contextChange(data: any) {
+    onChange(data: any) {
         localStorage.setItem(
             `${LOCAL_STORAGE_KEY}`,
             JSON.stringify({

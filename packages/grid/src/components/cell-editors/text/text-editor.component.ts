@@ -10,7 +10,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     template: `<input
         thyInput
         [thyAutofocus]="true"
-        [(ngModel)]="cellValue"
+        [(ngModel)]="modelValue"
         (thyEnter)="updateValue()"
         (blur)="updateValue()"
         placeholder=""

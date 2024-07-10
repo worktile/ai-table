@@ -1,4 +1,4 @@
-import { FieldPath, RecordPath, VTableField, VTableRecord, VTableViewType }  from '../core';;
+import { FieldPath, RecordPath, VTableField, VTableRecord } from '../core';
 
 export enum VTableRowHeight {
     Short = 1,
@@ -12,7 +12,7 @@ export interface VTableGridCellRenderSchema {
 }
 
 export interface VTableGridData {
-    type: VTableViewType.Grid;
+    type: 'grid';
     fields: VTableField[];
     records: VTableRecord[];
 }
