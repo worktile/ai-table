@@ -23,6 +23,7 @@ import {
     AITableRecord,
     AITableRecords
 } from './core';
+import { FieldConfigComponent } from './components/field-config/field-config.component';
 
 @Component({
     selector: 'ai-table-grid',
@@ -32,7 +33,7 @@ import {
     host: {
         class: 'ai-table-grid'
     },
-    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule]
+    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule, FieldConfigComponent]
 })
 export class AITableGridComponent implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -82,16 +83,18 @@ export class AITableGridComponent implements OnInit {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
-    addField() {
-        Actions.addField(
-            this.aiTable,
-            {
-                id: idCreator(),
-                name: '新增文本',
-                type: AITableFieldType.Text
-            },
-            [this.aiFields().length]
-        );
+    addField(event: Event) {
+        this.thyPopover.open(FieldConfigComponent, {
+            origin: event.currentTarget as HTMLElement,
+            manualClosure: true,
+            placement: 'bottomLeft',
+            initialState: {
+                fields: this.aiFields(),
+                confirmAction: (field: AITableField) => {
+                    Actions.addField(this.aiTable, field, [this.aiFields().length]);
+                }
+            }
+        });
     }
 
     getEditorComponent(type: AITableFieldType) {

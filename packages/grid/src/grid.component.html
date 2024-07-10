@@ -5,7 +5,7 @@
     @for (field of gridData().fields; track field.id) {
         <div class="grid-cell">{{ field.name }}</div>
     }
-    <div class="grid-column-blank" (click)="addField()">+</div>
+    <div class="grid-column-blank" (click)="addField($event)">+</div>
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record.id; let index = $index) {
