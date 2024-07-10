@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { VTableFields, VTableFieldType, VTableGridComponent, VTableRecords } from '@v-table/grid';
+import { ThyIconRegistry } from 'ngx-tethys/icon';
 
 const LOCAL_STORAGE_KEY = 'v-table-data';
 
@@ -93,13 +95,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     fields!: WritableSignal<VTableFields>;
 
-    constructor() {}
+    constructor(
+        private iconRegistry: ThyIconRegistry,
+        private sanitizer: DomSanitizer
+    ) {
+        this.registryIcon();
+    }
 
     ngOnInit(): void {
         const value = this.getLocalStorage();
         this.records = signal(value.records);
         this.fields = signal(value.fields);
         console.time('render');
+    }
+
+    registryIcon() {
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
     }
 
     ngAfterViewInit() {

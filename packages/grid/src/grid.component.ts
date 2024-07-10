@@ -3,11 +3,8 @@ import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/comm
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { GRID_CELL_EDITOR_MAP } from './constants/editor';
-import { THY_POPOVER_SCROLL_STRATEGY, ThyPopover } from 'ngx-tethys/popover';
-import { Overlay } from '@angular/cdk/overlay';
+import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { getRecordOrField } from './utils/cell';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { DBL_CLICK_EDIT_TYPE } from './constants';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,15 +32,7 @@ import {
     host: {
         class: 'v-table-grid'
     },
-    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag],
-    providers: [
-        ThyPopover,
-        {
-            provide: THY_POPOVER_SCROLL_STRATEGY,
-            deps: [Overlay],
-            useFactory: (overlay: Overlay) => overlay.scrollStrategies.close()
-        }
-    ]
+    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule]
 })
 export class VTableGridComponent implements OnInit {
     vtRecords = model.required<VTableRecords>();
@@ -70,21 +59,12 @@ export class VTableGridComponent implements OnInit {
 
     constructor(
         private thyPopover: ThyPopover,
-        private iconRegistry: ThyIconRegistry,
-        private sanitizer: DomSanitizer,
         private elementRef: ElementRef<HTMLElement>
-    ) {
-        this.registryIcon();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.initializeEventListener();
         this.initVTable();
-    }
-
-    registryIcon() {
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
     }
 
     initVTable() {
@@ -94,7 +74,7 @@ export class VTableGridComponent implements OnInit {
                 records: this.vtRecords(),
                 fields: this.vtFields(),
                 actions: this.vTable.actions
-            })
+            });
         };
     }
 
