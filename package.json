@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build:ai-table",
+    "build": "npm run build:grid",
     "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -28,7 +28,6 @@
     "@tethys/icons": "^1.4.62",
     "cpx": "^1.5.0",
     "date-fns": "^3.6.0",
-    "i": "^0.3.7",
     "ng-packagr": "^18.0.0",
     "ngx-tethys": "^17.0.8",
     "npm": "^10.8.1",

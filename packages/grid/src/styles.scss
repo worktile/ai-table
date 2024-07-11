@@ -3,7 +3,6 @@
 @use 'ngx-tethys/styles/variables.scss';
 
 .ai-table-grid {
-    margin: 20px;
     display: table;
     width: 100%;
 
@@ -22,7 +21,6 @@
     .grid-row {
         &:hover {
             background-color: variables.$gray-80;
-            cursor: pointer;
         }
     }
 
@@ -33,12 +31,13 @@
         width: 300px;
         border-left: 1px solid variables.$gray-200;
         justify-content: center;
+        cursor: pointer;
     }
     .grid-column-blank {
         flex: 1;
         min-width: 180px;
         display: flex;
-        padding-left: 8px;
+        padding-left: 14px;
         align-items: center;
         border-left: 1px solid variables.$gray-200;
     }
@@ -55,7 +54,7 @@
     .grid-row-insert {
         height: 44px;
         display: flex;
-        padding-left: 15px;
+        padding-left: 16px;
         align-items: center;
     }
 
@@ -70,6 +69,11 @@
     .cell-active {
         border: 1px solid variables.$primary;
         margin-left: 0.5px;
+    }
+
+    .thy-icon-plus {
+        font-size: 14px;
+        color: variables.$gray-600;
     }
 }
 
