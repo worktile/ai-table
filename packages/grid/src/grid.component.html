@@ -21,6 +21,9 @@
                                 <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.name }}</thy-tag>
                             }
                         }
+                        @case (AITableFieldType.DateTime) {
+                            {{ record.value[field.id] | thyDatePickerFormat }}
+                        }
                         @default {
                             {{ record.value[field.id] }}
                         }
