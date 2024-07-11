@@ -24,6 +24,7 @@ import {
     AITableRecords
 } from './core';
 import { FieldConfigComponent } from './components/field-config/field-config.component';
+import { ThyIcon } from 'ngx-tethys/icon';
 
 @Component({
     selector: 'ai-table-grid',
@@ -33,7 +34,7 @@ import { FieldConfigComponent } from './components/field-config/field-config.com
     host: {
         class: 'ai-table-grid'
     },
-    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule, FieldConfigComponent]
+    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule, ThyIcon, FieldConfigComponent]
 })
 export class AITableGridComponent implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -89,7 +90,7 @@ export class AITableGridComponent implements OnInit {
             manualClosure: true,
             placement: 'bottomLeft',
             initialState: {
-                fields: this.aiFields(),
+                fields: this.aiFields,
                 confirmAction: (field: AITableField) => {
                     Actions.addField(this.aiTable, field, [this.aiFields().length]);
                 }

@@ -2,16 +2,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, WritableSignal, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInput, ThyInputCount, ThyInputGroup, ThyInputDirective } from 'ngx-tethys/input';
-import {
-    ThyFormDirective,
-    ThyFormGroup,
-    ThyConfirmValidatorDirective,
-    ThyUniqueCheckValidator,
-    ThyFormValidatorConfig,
-    ThyFormValidatorLoader,
-    THY_FORM_CONFIG_PROVIDER,
-    ThyFormGroupFooter
-} from 'ngx-tethys/form';
+import { ThyConfirmValidatorDirective, ThyUniqueCheckValidator, ThyFormValidatorConfig, ThyFormModule } from 'ngx-tethys/form';
 import {
     ThyDropdownDirective,
     ThyDropdownMenuComponent,
@@ -20,12 +11,12 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-
 import { of } from 'rxjs';
 import { AITableField, AITableFieldType, AITableFields, idCreator } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { FieldTypes, FieldTypesMap } from '../../core/constants/field';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyListItem } from 'ngx-tethys/list';
 
 @Component({
     selector: 'app-field-config',
@@ -41,9 +32,6 @@ import { ThyPopoverRef } from 'ngx-tethys/popover';
         ThyInputGroup,
         ThyInputCount,
         ThyInputDirective,
-        ThyFormDirective,
-        ThyFormGroup,
-        ThyFormGroupFooter,
         ThyConfirmValidatorDirective,
         ThyUniqueCheckValidator,
         ThyDropdownDirective,
@@ -51,17 +39,23 @@ import { ThyPopoverRef } from 'ngx-tethys/popover';
         ThyDropdownMenuItemDirective,
         ThyDropdownMenuItemNameDirective,
         ThyDropdownMenuItemIconDirective,
-        ThyButton
+        ThyButton,
+        ThyFormModule,
+        ThyListItem
     ],
-    providers: [ThyFormValidatorLoader, THY_FORM_CONFIG_PROVIDER],
     host: {
-        class: 'd-block p-4'
-    }
+        class: 'field-config d-block pl-5 pr-5 pb-5 pt-4'
+    },
+    styles: [
+        `
+            :host {
+                width: 350px;
+            }
+        `
+    ]
 })
 export class FieldConfigComponent implements OnInit {
-    fieldMaxLength = 32;
-
-    @Input({ required: true }) fields: AITableFields | null = null;
+    fields = input.required<AITableFields>();
 
     @Input({ required: true }) confirmAction: ((field: AITableField) => void) | null = null;
 
@@ -71,11 +65,13 @@ export class FieldConfigComponent implements OnInit {
         return FieldTypesMap[this.field().type];
     });
 
+    fieldMaxLength = 32;
+
     validatorConfig: ThyFormValidatorConfig = {
         validationMessages: {
             fieldName: {
                 required: '列名不能为空',
-                thyUniqueCheck: '不能与其他列重名'
+                thyUniqueCheck: '列名已存在'
             }
         }
     };
@@ -90,7 +86,7 @@ export class FieldConfigComponent implements OnInit {
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.fields?.find((field) => field.name === fieldName));
+        return of(!!this.fields()?.find((field) => field.name === fieldName));
     };
 
     selectFieldType(fieldType: AITableFieldType) {
