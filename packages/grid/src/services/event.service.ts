@@ -1,32 +1,26 @@
-import { ChangeDetectorRef, Injectable, signal, Signal } from '@angular/core';
+import { Injectable, signal, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from '../constants';
 import { getRecordOrField } from '../utils';
-import { AITable, AITableField, AITableFieldType, AITableGridStore, AITableRecord } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { ThyPopover } from 'ngx-tethys/popover';
 import { AITableGridCellRenderSchema } from '../types';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class AITableGridEventService {
     aiTable!: AITable;
 
-    aiFiledRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
+    aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
 
     takeUntilDestroyed = takeUntilDestroyed();
 
-    constructor(
-        private thyPopover: ThyPopover,
-        private aiTableGridStore: AITableGridStore,
-        private cdr: ChangeDetectorRef
-    ) {}
+    constructor(private thyPopover: ThyPopover) {}
 
-    initialize(aiTable: AITable, aiFiledRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
+    initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
         this.aiTable = aiTable;
-        this.aiFiledRenderers = aiFiledRenderers;
+        this.aiFieldRenderers = aiFieldRenderers;
     }
 
     registerEvents(element: HTMLElement) {
@@ -46,8 +40,8 @@ export class AITableGridEventService {
     }
 
     private getEditorComponent(type: AITableFieldType) {
-        if (this.aiFiledRenderers && this.aiFiledRenderers[type]) {
-            return this.aiFiledRenderers[type]!.edit;
+        if (this.aiFieldRenderers && this.aiFieldRenderers[type]) {
+            return this.aiFieldRenderers[type]!.edit;
         }
         return GRID_CELL_EDITOR_MAP[type];
     }

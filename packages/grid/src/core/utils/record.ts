@@ -1,5 +1,5 @@
 import { AITableFields, AITableRecord } from '../types';
-import { getDefaultFiledValue } from './field';
+import { getDefaultFieldValue } from './field';
 import { idCreator } from './id-creator';
 
 export function getDefaultRecord(fields: AITableFields) {
@@ -8,7 +8,7 @@ export function getDefaultRecord(fields: AITableFields) {
         value: {}
     };
     fields.map((item) => {
-        newRow.value[item.id] = getDefaultFiledValue(item.type);
+        newRow.value[item.id] = getDefaultFieldValue(item.type);
     });
     return newRow;
 }

@@ -1,5 +1,5 @@
 import { AITableFieldType } from '../types';
 
-export function getDefaultFiledValue(type: AITableFieldType) {
+export function getDefaultFieldValue(type: AITableFieldType) {
     return '';
 }

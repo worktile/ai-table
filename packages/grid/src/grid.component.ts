@@ -38,7 +38,7 @@ export class AITableGridComponent implements OnInit {
 
     aiRowHeight = input<AITableRowHeight>();
 
-    aiFiledRenderers = input<Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>>();
+    aiFieldRenderers = input<Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>>();
 
     aiReadonly = input<boolean>();
 
@@ -61,7 +61,7 @@ export class AITableGridComponent implements OnInit {
 
     ngOnInit(): void {
         this.initAITable();
-        this.aiTableGridEventService.initialize(this.aiTable, this.aiFiledRenderers());
+        this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldRenderers());
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
     }
 
