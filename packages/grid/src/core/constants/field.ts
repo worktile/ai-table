@@ -16,6 +16,11 @@ export const BasicFieldTypes = [
         type: AITableFieldType.Number,
         name: '数字',
         icon: 'hashtag'
+    },
+    {
+        type: AITableFieldType.DateTime,
+        name: '日期',
+        icon: 'calendar'
     }
 ];
 
