@@ -24,6 +24,20 @@
                         @case (AITableFieldType.DateTime) {
                             {{ record.value[field.id] | thyDatePickerFormat }}
                         }
+                        @case (AITableFieldType.Rating) {
+                            <thy-rate [(ngModel)]="record.value[field.id]"></thy-rate>
+                        }
+                        @case (AITableFieldType.Link) {
+                            <a
+                                class="d-block pl-4 pr-4"
+                                thyStopPropagation
+                                thyFlexibleText
+                                [thyTooltipContent]="record.value[field.id]?.text"
+                                [href]="record.value[field.id]?.url"
+                                target="_blank"
+                                >{{ record.value[field.id]?.text }}</a
+                            >
+                        }
                         @default {
                             {{ record.value[field.id] }}
                         }

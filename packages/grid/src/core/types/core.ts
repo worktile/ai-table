@@ -7,13 +7,13 @@ export enum AITableFieldType {
     Number = 2,
     SingleSelect = 3,
     // MultiSelect = 4,
-    DateTime = 5
+    DateTime = 5,
     // Attachment = 6,
-    // Link = 7,
+    Link = 7,
     // Email = 9,
     // Phone = 10,
     // Checkbox = 11,
-    // Rating = 12,
+    Rating = 12
     // Member = 13
 }
 

@@ -12,14 +12,20 @@ const initValue = {
             id: 'row-1',
             value: {
                 'column-1': '文本 1-1',
-                'column-2': '1'
+                'column-2': '1',
+                'column-3': {
+                    url: 'https://www.baidu.com',
+                    text: '百度链接'
+                },
+                'column-4': 3
             }
         },
         {
             id: 'row-2',
             value: {
                 'column-1': '文本 2-1',
-                'column-2': '2'
+                'column-2': '2',
+                'column-4': 1
             }
         },
         {
@@ -57,6 +63,16 @@ const initValue = {
                     color: '#73d897'
                 }
             ]
+        },
+        {
+            id: 'column-3',
+            name: '链接',
+            type: AITableFieldType.Link
+        },
+        {
+            id: 'column-4',
+            name: '评分',
+            type: AITableFieldType.Rating
         }
     ]
 };

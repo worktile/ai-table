@@ -21,6 +21,12 @@ import {
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
 import { FieldPropertyEditorComponent } from './components/field-property-editor/field-property-editor.component';
+import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
+import { ThyRate } from 'ngx-tethys/rate';
+import { FormsModule } from '@angular/forms';
+import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
+import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 
 @Component({
     selector: 'ai-table-grid',
@@ -35,13 +41,19 @@ import { FieldPropertyEditorComponent } from './components/field-property-editor
         NgClass,
         NgComponentOutlet,
         CommonModule,
+        FormsModule,
         SelectOptionPipe,
         ThyTag,
         ThyPopoverModule,
         ThyIcon,
-        FieldPropertyEditorComponent
+        ThyRate,
+        FieldPropertyEditorComponent,
+        ThyDatePickerFormatPipe,
+        ThyTooltipModule,
+        ThyFlexibleText,
+        ThyStopPropagationDirective
     ],
-    providers: [AITableGridEventService]
+    providers: [ThyTooltipService, AITableGridEventService]
 })
 export class AITableGridComponent implements OnInit {
     aiRecords = model.required<AITableRecords>();
