@@ -20,7 +20,7 @@ import {
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
-import { FieldConfigComponent } from './components/field-config/field-config.component';
+import { FieldPropertyEditorComponent } from './components/field-property-editor/field-property-editor.component';
 
 @Component({
     selector: 'ai-table-grid',
@@ -30,7 +30,17 @@ import { FieldConfigComponent } from './components/field-config/field-config.com
     host: {
         class: 'ai-table-grid'
     },
-    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule, ThyIcon, FieldConfigComponent],
+    imports: [
+        NgForOf,
+        NgClass,
+        NgComponentOutlet,
+        CommonModule,
+        SelectOptionPipe,
+        ThyTag,
+        ThyPopoverModule,
+        ThyIcon,
+        FieldPropertyEditorComponent
+    ],
     providers: [AITableGridEventService]
 })
 export class AITableGridComponent implements OnInit {
@@ -84,7 +94,7 @@ export class AITableGridComponent implements OnInit {
     }
 
     addField(event: Event) {
-        this.thyPopover.open(FieldConfigComponent, {
+        this.thyPopover.open(FieldPropertyEditorComponent, {
             origin: event.currentTarget as HTMLElement,
             manualClosure: true,
             placement: 'bottomLeft',

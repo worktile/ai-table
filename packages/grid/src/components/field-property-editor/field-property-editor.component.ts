@@ -19,8 +19,8 @@ import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
 
 @Component({
-    selector: 'app-field-config',
-    templateUrl: './field-config.component.html',
+    selector: 'field-property-editor',
+    templateUrl: './field-property-editor.component.html',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
@@ -44,7 +44,7 @@ import { ThyListItem } from 'ngx-tethys/list';
         ThyListItem
     ],
     host: {
-        class: 'field-config d-block pl-5 pr-5 pb-5 pt-4'
+        class: 'field-property-editor d-block pl-5 pr-5 pb-5 pt-4'
     },
     styles: [
         `
@@ -54,7 +54,7 @@ import { ThyListItem } from 'ngx-tethys/list';
         `
     ]
 })
-export class FieldConfigComponent implements OnInit {
+export class FieldPropertyEditorComponent implements OnInit {
     fields = input.required<AITableFields>();
 
     @Input({ required: true }) confirmAction: ((field: AITableField) => void) | null = null;
@@ -78,7 +78,7 @@ export class FieldConfigComponent implements OnInit {
 
     selectableFields = FieldTypes;
 
-    protected thyPopoverRef = inject(ThyPopoverRef<FieldConfigComponent>);
+    protected thyPopoverRef = inject(ThyPopoverRef<FieldPropertyEditorComponent>);
 
     constructor() {}
 
