@@ -1,0 +1,43 @@
+<form thyForm name="createPropertyForm" [thyFormValidatorConfig]="validatorConfig" thyLayout="vertical">
+    <thy-form-group thyLabelRequired thyLabelText="表格列名">
+        <thy-input-group>
+            <input
+                thyInput
+                thyAutofocus
+                name="fieldName"
+                [maxlength]="fieldMaxLength"
+                [(ngModel)]="field().name"
+                required
+                placeholder="输入列名称"
+                [thyUniqueCheck]="checkUniqueName"
+            />
+            <ng-template #suffix>
+                <thy-input-count></thy-input-count>
+            </ng-template>
+        </thy-input-group>
+    </thy-form-group>
+    <thy-form-group thyLabelText="列类型">
+        <div class="ml-n5 mr-n5">
+            <thy-list-item [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" class="justify-content-between">
+                <span>
+                    <thy-icon [thyIconName]="fieldType().icon" class="text-desc mr-2"></thy-icon>
+                    <span>{{ fieldType().name }}</span>
+                </span>
+                <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
+            </thy-list-item>
+        </div>
+    </thy-form-group>
+    <thy-form-group-footer thyAlign="right">
+        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">取消</button>
+        <button thyButton="primary" (thyFormSubmit)="addField()" thySize="sm">确定</button>
+    </thy-form-group-footer>
+</form>
+
+<thy-dropdown-menu #menu>
+    @for (item of selectableFields; track item.type) {
+        <a thyDropdownMenuItem href="javascript:;" (click)="selectFieldType(item.type)">
+            <thy-icon [thyIconName]="item.icon"></thy-icon>
+            <span thyDropdownMenuItemName>{{ item.name }}</span>
+        </a>
+    }
+</thy-dropdown-menu>

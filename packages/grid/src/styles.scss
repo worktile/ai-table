@@ -41,6 +41,15 @@
         align-items: center;
         border-left: 1px solid variables.$gray-200;
     }
+
+    .grid-header {
+        .grid-column-blank {
+            &:hover {
+                background-color: variables.$gray-80;
+            }
+        }
+    }
+
     .grid-row-index,
     .grid-column-checkbox {
         width: 44px;

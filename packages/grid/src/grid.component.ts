@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, model, OnInit, output } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
 import { AITableGridCellRenderSchema, AITableRowHeight } from './types';
@@ -15,10 +15,12 @@ import {
     AITableChangeOptions,
     AITableFields,
     AITableFieldType,
-    AITableRecords
+    AITableRecords,
+    AITableField
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
+import { FieldPropertyEditorComponent } from './components/field-property-editor/field-property-editor.component';
 
 @Component({
     selector: 'ai-table-grid',
@@ -28,7 +30,17 @@ import { AITableGridEventService } from './services/event.service';
     host: {
         class: 'ai-table-grid'
     },
-    imports: [NgForOf, NgClass, NgComponentOutlet, CommonModule, SelectOptionPipe, ThyTag, ThyPopoverModule, ThyIcon],
+    imports: [
+        NgForOf,
+        NgClass,
+        NgComponentOutlet,
+        CommonModule,
+        SelectOptionPipe,
+        ThyTag,
+        ThyPopoverModule,
+        ThyIcon,
+        FieldPropertyEditorComponent
+    ],
     providers: [AITableGridEventService]
 })
 export class AITableGridComponent implements OnInit {
@@ -56,7 +68,8 @@ export class AITableGridComponent implements OnInit {
 
     constructor(
         private elementRef: ElementRef,
-        private aiTableGridEventService: AITableGridEventService
+        private aiTableGridEventService: AITableGridEventService,
+        private thyPopover: ThyPopover
     ) {}
 
     ngOnInit(): void {
@@ -80,15 +93,17 @@ export class AITableGridComponent implements OnInit {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
-    addField(event: MouseEvent) {
-        Actions.addField(
-            this.aiTable,
-            {
-                id: idCreator(),
-                name: '新增文本',
-                type: AITableFieldType.Text
-            },
-            [this.aiFields().length]
-        );
+    addField(event: Event) {
+        this.thyPopover.open(FieldPropertyEditorComponent, {
+            origin: event.currentTarget as HTMLElement,
+            manualClosure: true,
+            placement: 'bottomLeft',
+            initialState: {
+                fields: this.aiFields,
+                confirmAction: (field: AITableField) => {
+                    Actions.addField(this.aiTable, field, [this.aiFields().length]);
+                }
+            }
+        });
     }
 }

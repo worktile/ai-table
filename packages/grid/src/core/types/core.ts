@@ -4,7 +4,7 @@ import { AITableAction } from './action';
 export enum AITableFieldType {
     // NotSupport = 0,
     Text = 1,
-    // Number = 2,
+    Number = 2,
     SingleSelect = 3
     // MultiSelect = 4,
     // DateTime = 5,
@@ -77,7 +77,7 @@ export interface AITable {
     apply: (action: AITableAction) => void;
 }
 
-export interface AITableChangeOptions{
+export interface AITableChangeOptions {
     records: AITableRecord[];
     fields: AITableField[];
     actions: AITableAction[];
