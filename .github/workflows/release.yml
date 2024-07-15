@@ -27,6 +27,7 @@ jobs:
       - uses: hmarr/auto-approve-action@v4
         with:
           review-message: 'Auto approve sync PRs to auto merge them'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
   publish:
     if: startsWith(github.head_ref, 'release-auto-')
     needs: [autoApprove]
