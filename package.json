@@ -9,8 +9,13 @@
         "start": "ng serve",
         "build": "npm run build:grid",
         "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
+        "release": "wpm release --release-branch-format release-auto-v{{version}}",
+        "release-next": "wpm release --release-branch-format release-auto-next-v{{version}}",
+        "release-manual": "wpm release",
+        "release-next-manual": "wpm release --release-branch-format release-next-v{{version}}",
         "watch": "ng build --watch --configuration development",
-        "test": "ng test"
+        "pub": "cd dist/grid && npm publish",
+        "test": "ng test grid"
     },
     "private": true,
     "dependencies": {
@@ -23,18 +28,14 @@
         "@angular/platform-browser": "^18.0.0",
         "@angular/platform-browser-dynamic": "^18.0.0",
         "@angular/router": "^18.0.0",
-        "@changesets/cli": "^2.27.5",
         "@tethys/cdk": "^17.0.8",
         "@tethys/icons": "^1.4.62",
-        "cpx": "^1.5.0",
+        "immer": "^10.0.3",
         "date-fns": "^3.6.0",
-        "ng-packagr": "^18.0.0",
         "ngx-tethys": "^17.0.8",
         "npm": "^10.8.1",
         "rxjs": "~7.8.0",
         "tslib": "^2.6.3",
-        "y-websocket": "^2.0.3",
-        "yjs": "^13.6.16",
         "zone.js": "~0.14.3"
     },
     "devDependencies": {
@@ -49,6 +50,10 @@
         "karma-jasmine": "~5.1.0",
         "karma-jasmine-html-reporter": "~2.1.0",
         "prettier": "^3.3.2",
-        "typescript": "~5.4.2"
+        "typescript": "~5.4.2",
+        "ng-packagr": "^18.0.0",
+        "cpx": "^1.5.0",
+        "@worktile/pkg-manager": "^0.1.0",
+        "chalk": "^2.4.2"
     }
 }
