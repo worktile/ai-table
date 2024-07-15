@@ -14,11 +14,6 @@ on:
   status: {}
 
 jobs:
-  console_log:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo `${{toJSON(secrets)}}`
-      - run: echo `${{toJSON(github.actor)}}`
   autoApprove:
     if: startsWith(github.head_ref, 'release-auto-')
     runs-on: ubuntu-latest
@@ -28,8 +23,6 @@ jobs:
       - uses: hmarr/auto-approve-action@v4
         with:
           review-message: 'Auto approve sync PRs to auto merge them'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish:
     if: startsWith(github.head_ref, 'release-auto-')
     needs: [autoApprove]
