@@ -1,6 +1,6 @@
 {
     "name": "ai-table",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "workspaces": [
         "packages/*"
     ],
@@ -9,10 +9,10 @@
         "start": "ng serve",
         "build": "npm run build:grid",
         "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
-        "release": "wpm release --release-branch-format release-auto-v{{version}}",
-        "release-next": "wpm release --release-branch-format release-auto-next-v{{version}}",
-        "release-manual": "wpm release",
-        "release-next-manual": "wpm release --release-branch-format release-next-v{{version}}",
+        "release": "npm run build && wpm release --release-branch-format release-auto-v{{version}}",
+        "release-next": "npm run build && wpm release --release-branch-format release-auto-next-v{{version}}",
+        "release-manual": "npm run build && wpm release",
+        "release-next-manual": "npm run build && wpm release --release-branch-format release-next-v{{version}}",
         "watch": "ng build --watch --configuration development",
         "pub": "cd dist/grid && npm publish",
         "test": "ng test grid"
