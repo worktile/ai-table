@@ -98,13 +98,12 @@
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "packages/grid/test.ts",
+                        "main": "packages/grid/src/test.ts",
                         "tsConfig": "packages/grid/tsconfig.spec.json",
                         "karmaConfig": "packages/grid/karma.conf.js",
                         "codeCoverage": true,
                         "codeCoverageExclude": [
-                            "packages/grid/testing/**/*",
-                            "packages/core/test/**/*"
+                            "packages/grid/testing/**/*"
                         ]
                     }
                 },
