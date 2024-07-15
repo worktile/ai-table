@@ -14,7 +14,8 @@
         "release-manual": "npm run build && wpm release",
         "release-next-manual": "npm run build && wpm release --release-branch-format release-next-v{{version}}",
         "watch": "ng build --watch --configuration development",
-        "pub": "cd dist/grid && npm publish",
+        "pub": "wpm publish && npm run pub-only",
+        "pub-only": "cd dist/grid && npm publish",
         "test": "ng test grid"
     },
     "private": true,
