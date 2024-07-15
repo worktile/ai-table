@@ -21,6 +21,16 @@ export const BasicFieldTypes = [
         type: AITableFieldType.DateTime,
         name: '日期',
         icon: 'calendar'
+    },
+    {
+        type: AITableFieldType.Rating,
+        name: '评分',
+        icon: 'star-circle'
+    },
+    {
+        type: AITableFieldType.Link,
+        name: '链接',
+        icon: 'link-insert'
     }
 ];
 
