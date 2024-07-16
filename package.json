@@ -19,6 +19,10 @@
         "test": "ng test grid"
     },
     "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/worktile/ai-table"
+    },
     "dependencies": {
         "@angular/animations": "^18.0.0",
         "@angular/cdk": "^18.0.2",
