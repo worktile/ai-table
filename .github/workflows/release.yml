@@ -61,11 +61,6 @@ jobs:
         with:
           path: 'package.json'
           prop_path: 'version'
-      - name: send message to webhook
-        uses: joelwmale/webhook-action@master
-        with:
-          url: 'https://hook-rc.pingcode.com/api/flow/w/http/357bdd4f00f34bfab2f878ad3b9e8b48'
-          body: '{ "version": "${{ steps.read-version.outputs.prop }}", "name": "ai-table" }'
   autoMerge:
     if: startsWith(github.head_ref, 'release-auto-')
     needs: [publish]
