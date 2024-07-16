@@ -15,10 +15,9 @@
         "release-next-manual": "npm run build && wpm release --release-branch-format release-next-v{{version}}",
         "watch": "ng build --watch --configuration development",
         "pub": "wpm publish && npm run pub-only",
-        "pub-only": "cd dist/grid && npm publish",
+        "pub-only": "cd dist/grid && npm publish --access=public",
         "test": "ng test grid"
     },
-    "private": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/worktile/ai-table"
