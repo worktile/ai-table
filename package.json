@@ -16,7 +16,8 @@
         "watch": "ng build --watch --configuration development",
         "pub": "wpm publish && npm run pub-only",
         "pub-only": "cd dist/grid && npm publish --access=public",
-        "test": "ng test grid"
+        "test": "ng test grid",
+        "ci:test": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
     },
     "repository": {
         "type": "git",
