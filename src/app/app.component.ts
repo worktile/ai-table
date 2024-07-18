@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -9,11 +9,8 @@ import {
     AITableField,
     AITable,
     AIFieldConfig,
-    deleteField,
-    duplicateField,
-    editFieldProperty,
-    insertAfter,
-    insertBefore
+    EditFieldPropertyItem,
+    DividerMenuItem
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -134,28 +131,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
         fieldMenus: [
-            editFieldProperty,
-            duplicateField,
-            insertBefore,
-            insertAfter,
-            {
-                id: 'groupFields',
-                name: '按本列分组',
-                icon: 'group-setup',
-                exec: (aiTable: AITable, field: AITableField) => {},
-                hidden: (aiTable: AITable, type: AITableFieldType) => false,
-                disabled: (aiTable: AITable, type: AITableFieldType) => false
-            },
+            EditFieldPropertyItem,
+            DividerMenuItem,
             {
                 id: 'filterFields',
                 name: '按本列筛选',
                 icon: 'filter-line',
-                exec: (aiTable: AITable, field: AITableField) => {},
-                hidden: (aiTable: AITable, type: AITableFieldType) => false,
-                disabled: (aiTable: AITable, type: AITableFieldType) => false,
-                hasDivider: true
-            },
-            deleteField
+                exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
+                disabled: (aiTable: AITable, field: Signal<AITableField>) => false
+            }
         ]
     };
 

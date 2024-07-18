@@ -1,16 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    OnInit,
-    TemplateRef,
-    WritableSignal,
-    computed,
-    inject,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef, computed, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInput, ThyInputCount, ThyInputGroup, ThyInputDirective } from 'ngx-tethys/input';
 import { ThyConfirmValidatorDirective, ThyUniqueCheckValidator, ThyFormValidatorConfig, ThyFormModule } from 'ngx-tethys/form';
@@ -22,9 +11,8 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-import { AITable, AITableField, AITableFieldType, Actions, idCreator } from '../../core';
+import { AITable, AITableField, AITableFieldType, AITableQueries, Actions, Fields, FieldsMap, createDefaultFieldName } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { FieldTypes, FieldTypesMap } from '../../core/constants/field';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
 import { of } from 'rxjs';
@@ -66,19 +54,17 @@ import { of } from 'rxjs';
         `
     ]
 })
-export class AITableFieldPropertyEditor implements OnInit {
-    @Input() aiTable!: AITable;
+export class AITableFieldPropertyEditor {
+    aiField = model.required<AITableField>();
 
-    @Input() aiField!: AITableField;
+    @Input() aiTable!: AITable;
 
     @Input() aiExternalTemplate: TemplateRef<any> | null = null;
 
-    aiFieldInitialized = output<WritableSignal<AITableField>>();
-
-    field!: WritableSignal<AITableField>;
+    @Input() isUpdate!: boolean;
 
     fieldType = computed(() => {
-        return FieldTypesMap[this.field().type];
+        return FieldsMap[this.aiField().type];
     });
 
     fieldMaxLength = 32;
@@ -92,35 +78,26 @@ export class AITableFieldPropertyEditor implements OnInit {
         }
     };
 
-    selectableFields = FieldTypes;
+    selectableFields = Fields;
 
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldPropertyEditor>);
 
     constructor() {}
 
-    ngOnInit() {
-        if (this.aiField) {
-            this.field = signal(this.aiField);
-        } else {
-            this.field = signal({ id: idCreator(), type: AITableFieldType.Text, name: '' });
-        }
-        this.aiFieldInitialized.emit(this.field);
-    }
-
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField?.id !== field.id));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?.id !== field.id));
     };
 
     selectFieldType(fieldType: AITableFieldType) {
-        this.field.update((item) => ({ ...item, type: fieldType }));
+        this.aiField.update((item) => ({ ...item, type: fieldType, name: createDefaultFieldName(this.aiTable, fieldType) }));
     }
 
     editFieldProperty() {
-        if (this.aiField) {
+        if (this.isUpdate) {
             //TODO: updateField
         } else {
-            Actions.addField(this.aiTable, this.field(), [this.aiTable.fields().length]);
+            Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
         }
         this.thyPopoverRef.close();
     }

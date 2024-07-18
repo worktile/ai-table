@@ -1,12 +1,11 @@
-import { ElementRef, WritableSignal } from '@angular/core';
-import { AITable, AITableField, AITableFieldType } from '../core';
+import { ElementRef, Signal, WritableSignal } from '@angular/core';
+import { AITable, AITableField } from '../core';
 
 export interface AITableFieldMenu {
     id: string;
-    name: string;
-    icon: string;
-    exec: (aiTable: AITable, field: AITableField, origin?: HTMLElement | ElementRef<any>) => void;
-    hidden?: (aiTable: AITable, type: AITableFieldType) => boolean;
-    disabled?: (aiTable: AITable, type: AITableFieldType) => boolean;
-    hasDivider?: boolean;
+    name?: string;
+    icon?: string;
+    exec?: (aiTable: AITable, field: WritableSignal<AITableField>, origin?: HTMLElement | ElementRef<any>) => void;
+    hidden?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
+    disabled?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
 }

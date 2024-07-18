@@ -14,7 +14,8 @@ import {
     AITableChangeOptions,
     AITableFields,
     AITableFieldType,
-    AITableRecords
+    AITableRecords,
+    createDefaultField
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
@@ -89,7 +90,7 @@ export class AITableGrid implements OnInit {
         return buildGridData(this.aiRecords(), this.aiFields());
     });
 
-    divEl = viewChild<ElementRef>('el'); 
+    divEl = viewChild<ElementRef>('el');
 
     constructor(
         private elementRef: ElementRef,
@@ -131,6 +132,7 @@ export class AITableGrid implements OnInit {
     }
 
     addField(gridColumnBlank: HTMLElement) {
-        this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable);
+        const field = signal(createDefaultField(this.aiTable, AITableFieldType.Text));
+        this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
     }
 }

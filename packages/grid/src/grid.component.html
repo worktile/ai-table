@@ -7,18 +7,14 @@
             {{ field.name }}
             <a thyAction thyActiveClass="active" thyIcon="more-vertical" [thyDropdown]="fieldMenu" href="javascript:;">
                 <thy-dropdown-menu #fieldMenu>
-                    <field-menu
-                        [origin]="fieldAction"
-                        [field]="field"
-                        [field]="field"
-                        [aiTable]="aiTable"
-                        [fieldMenus]="fieldMenus"
-                    ></field-menu>
+                    <field-menu [origin]="fieldAction" [field]="field" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
                 </thy-dropdown-menu>
             </a>
         </div>
     }
-    <div class="grid-column-blank cursor-pointer"  #gridColumnBlank  (click)="addField(gridColumnBlank)"><thy-icon thyIconName="plus"></thy-icon></div>
+    <div class="grid-column-blank cursor-pointer" #gridColumnBlank (click)="addField(gridColumnBlank)">
+        <thy-icon thyIconName="plus"></thy-icon>
+    </div>
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record.id; let index = $index) {

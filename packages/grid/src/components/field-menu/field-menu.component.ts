@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ElementRef, signal } from '@angular/core';
 import { AITableFieldMenu } from '../../types/field';
 import { AITableField, AITable } from '../../core';
 import {
@@ -34,6 +34,7 @@ export class FieldMenu {
     @Input() origin!: HTMLElement | ElementRef<any>;
 
     execute(menu: AITableFieldMenu) {
-        menu.exec(this.aiTable, this.field, this.origin);
+        const field = signal({ ...this.field });
+        menu.exec && menu.exec(this.aiTable, field, this.origin);
     }
 }
