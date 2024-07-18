@@ -1,4 +1,4 @@
-import { AITableFieldType } from '../core';
+import { AITable, AITableFieldType } from '../core';
 
 export const DEFAULT_COLUMN_WIDTH = 200;
 

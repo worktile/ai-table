@@ -1,0 +1,13 @@
+<ai-table-field-property-editor
+    [aiTable]="aiTable"
+    [aiField]="aiField"
+    [aiExternalTemplate]="aiExternalTemplate"
+    (aiFieldInitialized)="aiFieldInitialized($event)"
+>
+</ai-table-field-property-editor>
+
+<ng-template #aiExternalTemplate>
+    @if (field().type === AITableFieldType.SingleSelect) {
+        下拉选项选择
+    }
+</ng-template>

@@ -1,6 +1,6 @@
-import { ActionName, AddFieldAction, FieldPath, AITable, AITableField } from '../types';
+import { ActionName, AddFieldAction, AIFieldPath, AITable, AITableField } from '../types';
 
-export function addField(aiTable: AITable, field: AITableField, path: [FieldPath]) {
+export function addField(aiTable: AITable, field: AITableField, path: AIFieldPath) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,

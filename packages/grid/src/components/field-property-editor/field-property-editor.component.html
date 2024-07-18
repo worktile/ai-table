@@ -27,9 +27,15 @@
             </thy-list-item>
         </div>
     </thy-form-group>
+    <ng-container *ngIf="aiExternalTemplate; else defaultTemplate">
+        <ng-container *ngTemplateOutlet="aiExternalTemplate"></ng-container>
+    </ng-container>
+    <ng-template #defaultTemplate>
+        <div>渲染内容</div>
+    </ng-template>
     <thy-form-group-footer thyAlign="right">
         <button thyButton="link-secondary" (click)="cancel()" thySize="sm">取消</button>
-        <button thyButton="primary" (thyFormSubmit)="addField()" thySize="sm">确定</button>
+        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">确定</button>
     </thy-form-group-footer>
 </form>
 
