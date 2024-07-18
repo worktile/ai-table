@@ -25,11 +25,11 @@ import { ThyDivider } from 'ngx-tethys/divider';
     ]
 })
 export class FieldMenu {
-    @Input() field!: AITableField;
+    @Input({ required: true }) field!: AITableField;
 
-    @Input() aiTable!: AITable;
+    @Input({ required: true }) aiTable!: AITable;
 
-    @Input() fieldMenus!: AITableFieldMenu[];
+    @Input({ required: true }) fieldMenus!: AITableFieldMenu[];
 
     @Input() origin!: HTMLElement | ElementRef<any>;
 

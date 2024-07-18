@@ -177,7 +177,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         );
     }
 
-    aiTableInitialized(aiTable: any) {
+    aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable;
     }
 
@@ -189,6 +189,4 @@ export class AppComponent implements OnInit, AfterViewInit {
         const data = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         return data ? JSON.parse(data) : initValue;
     }
-
-    fieldEdit(data: AITableField) {}
 }

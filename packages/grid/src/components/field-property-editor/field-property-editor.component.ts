@@ -1,5 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef, computed, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInput, ThyInputCount, ThyInputGroup, ThyInputDirective } from 'ngx-tethys/input';
 import { ThyConfirmValidatorDirective, ThyUniqueCheckValidator, ThyFormValidatorConfig, ThyFormModule } from 'ngx-tethys/form';
@@ -11,7 +11,7 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-import { AITable, AITableField, AITableFieldType, AITableQueries, Actions, Fields, FieldsMap, createDefaultFieldName } from '../../core';
+import { AITable, AITableField, AITableFieldType, Actions, Fields, FieldsMap, createDefaultFieldName } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
@@ -57,11 +57,11 @@ import { of } from 'rxjs';
 export class AITableFieldPropertyEditor {
     aiField = model.required<AITableField>();
 
-    @Input() aiTable!: AITable;
+    @Input({ required: true }) aiTable!: AITable;
 
     @Input() aiExternalTemplate: TemplateRef<any> | null = null;
 
-    @Input() isUpdate!: boolean;
+    @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     fieldType = computed(() => {
         return FieldsMap[this.aiField().type];

@@ -13,7 +13,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     record = input.required<AITableRecord>();
 
-    @Input() aiTable!: AITable;
+    @Input({ required: true }) aiTable!: AITable;
 
     modelValue!: TValue;
 

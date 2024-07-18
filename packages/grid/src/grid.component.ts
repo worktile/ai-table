@@ -90,8 +90,6 @@ export class AITableGrid implements OnInit {
         return buildGridData(this.aiRecords(), this.aiFields());
     });
 
-    divEl = viewChild<ElementRef>('el');
-
     constructor(
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
@@ -107,7 +105,6 @@ export class AITableGrid implements OnInit {
     initAITable() {
         this.aiTable = createAITable(this.aiRecords, this.aiFields);
         this.aiTableInitialized.emit(this.aiTable);
-        AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
         this.aiTable.onChange = () => {
             this.onChange.emit({
                 records: this.aiRecords(),
@@ -121,6 +118,7 @@ export class AITableGrid implements OnInit {
         this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldPropertyEditor);
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
         this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
+        AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
     }
 
     buildFieldMenus() {

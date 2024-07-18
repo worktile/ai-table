@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, WritableSignal, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, WritableSignal, booleanAttribute, model } from '@angular/core';
 import { AITableField, AITableFieldType, AITableFieldPropertyEditor, AITable } from '@ai-table/grid';
 
 @Component({
@@ -11,9 +11,9 @@ import { AITableField, AITableFieldType, AITableFieldPropertyEditor, AITable } f
 export class FieldPropertyEditor {
     aiField = model.required<AITableField>();
 
-    @Input() aiTable!: AITable;
+    @Input({ required: true }) aiTable!: AITable;
 
-    @Input() isUpdate!: boolean;
+    @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     field!: WritableSignal<AITableField>;
 
