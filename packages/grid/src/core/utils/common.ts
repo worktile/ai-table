@@ -8,6 +8,7 @@ export function createAITable(records: WritableSignal<AITableRecords>, fields: W
         records,
         fields,
         actions: [],
+        selection: new Map(),
         onChange: () => {},
         apply: (action: AITableAction) => {
             aiTable.actions.push(action);

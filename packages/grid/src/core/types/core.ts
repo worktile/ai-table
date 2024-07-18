@@ -57,6 +57,7 @@ export interface AITableField {
 
 export interface AITableRecord {
     id: string;
+    checked?: boolean;
     value: Record<string, any>;
 }
 
@@ -73,6 +74,7 @@ export interface AITable {
     records: WritableSignal<AITableRecords>;
     fields: WritableSignal<AITableFields>;
     actions: AITableAction[];
+    selection: Map<string, {}>;
     onChange: () => void;
     apply: (action: AITableAction) => void;
 }

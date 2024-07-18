@@ -25,6 +25,7 @@ const initValue = {
             value: {
                 'column-1': '文本 2-1',
                 'column-2': '2',
+                'column-3': {},
                 'column-4': 1
             }
         },
@@ -32,7 +33,9 @@ const initValue = {
             id: 'row-3',
             value: {
                 'column-1': '文本 3-1',
-                'column-2': '3'
+                'column-2': '3',
+                'column-3': {},
+                'column-4': 1
             }
         }
     ],

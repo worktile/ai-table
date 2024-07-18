@@ -1,20 +1,45 @@
 <div class="grid-header d-flex">
     <div class="grid-column-checkbox grid-cell">
-        <input type="checkbox" />
+        <label thyCheckbox thyLabelText="" [(ngModel)]="isSelectedAll" (ngModelChange)="toggleSelectAll()"></label>
     </div>
     @for (field of gridData().fields; track field.id) {
-        <div class="grid-cell">{{ field.name }}</div>
+        <div class="grid-cell grid-column-field" (click)="selectCol(field)" [ngClass]="selectedHeader.has(field.name) ? 'highlight' : ''">
+            {{ field.name }}
+        </div>
     }
     <div class="grid-column-blank cursor-pointer" (click)="addField($event)"><thy-icon thyIconName="plus"></thy-icon></div>
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record.id; let index = $index) {
         <div class="grid-row d-flex">
-            <div class="grid-row-index">
-                {{ index + 1 }}
+            <div class="grid-row-index" [ngClass]="selection.has(record.id) && record.checked ? 'highlight' : ''">
+                <label
+                    [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
+                    thyCheckbox
+                    thyLabelText=""
+                    [(ngModel)]="record.checked"
+                    (ngModelChange)="selectRow()"
+                ></label>
+                <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>
             @for (field of gridData().fields; track $index) {
-                <div class="grid-cell" [attr.type]="[field.type]" [attr.fieldId]="[field.id]" [attr.recordId]="[record.id]" #cell>
+                <div
+                    class="grid-cell"
+                    [ngClass]="{
+                        highlight:
+                            selection.get(record.id)?.hasOwnProperty(field.id) ||
+                            ((selection.get(record.id) | selectedOneField) && selection.size === 1 && selection.has(record.id)),
+                        isSelected:
+                            (selection.get(record.id) | selectedOneField) &&
+                            selection.size === 1 &&
+                            selection.get(record.id)?.hasOwnProperty(field.id)
+                    }"
+                    [attr.type]="[field.type]"
+                    [attr.fieldId]="[field.id]"
+                    [attr.recordId]="[record.id]"
+                    #cell
+                    (click)="selectCell(record.id, field.id)"
+                >
                     @switch (field.type) {
                         @case (AITableFieldType.SingleSelect) {
                             @if (record.value[field.id] | selectOption: field['options']; as selectedOption) {
@@ -42,6 +67,7 @@
                             {{ record.value[field.id] }}
                         }
                     }
+                    <div class="autofill-container"></div>
                 </div>
             }
             <div class="grid-column-blank"></div>

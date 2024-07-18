@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, model, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { SelectOptionPipe } from './pipes/grid';
+import { SelectedOneFieldPipe, SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,7 +10,6 @@ import {
     Actions,
     createAITable,
     getDefaultRecord,
-    idCreator,
     AITable,
     AITableChangeOptions,
     AITableFields,
@@ -27,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 
 @Component({
     selector: 'ai-table-grid',
@@ -43,6 +43,7 @@ import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
         CommonModule,
         FormsModule,
         SelectOptionPipe,
+        SelectedOneFieldPipe,
         ThyTag,
         ThyPopoverModule,
         ThyIcon,
@@ -51,6 +52,7 @@ import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
         ThyDatePickerFormatPipe,
         ThyTooltipModule,
         ThyFlexibleText,
+        ThyCheckboxModule,
         ThyStopPropagationDirective
     ],
     providers: [ThyTooltipService, AITableGridEventService]
@@ -71,6 +73,12 @@ export class AITableGridComponent implements OnInit {
     takeUntilDestroyed = takeUntilDestroyed();
 
     aiTable!: AITable;
+
+    isSelectedAll = false;
+
+    selection = new Map<string, {}>();
+
+    selectedHeader = new Set();
 
     onChange = output<AITableChangeOptions>();
 
@@ -103,6 +111,56 @@ export class AITableGridComponent implements OnInit {
 
     addRecord() {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
+    }
+
+    toggleAllCheckbox(checked: boolean) {
+        const data = this.gridData().records.map((item) => {
+            return { ...item, checked: checked };
+        });
+        this.gridData().records = data;
+    }
+
+    clearSelection() {
+        this.selection.clear();
+        this.selectedHeader.clear();
+    }
+
+    selectCell(recordId: string, fieldId: string) {
+        this.clearSelection();
+        this.toggleAllCheckbox(false);
+        this.selection.set(recordId, { [fieldId]: '' });
+    }
+
+    selectCol(field: any) {
+        this.clearSelection();
+        this.toggleAllCheckbox(false);
+        // 选择表头
+        this.selectedHeader.add(field.name);
+        this.aiRecords().forEach((item) => {
+            const value = item.value[field.id];
+            this.selection.set(item.id, { [field.id]: value });
+        });
+    }
+
+    selectRow() {
+        this.clearSelection();
+        this.gridData().records.forEach((record) => {
+            if (record.checked) {
+                this.selection.set(record.id, record.value);
+            }
+        });
+    }
+
+    toggleSelectAll() {
+        this.clearSelection();
+        if (this.isSelectedAll) {
+            this.toggleAllCheckbox(true);
+            this.aiRecords().forEach((item) => {
+                this.selection.set(item.id, item.value);
+            });
+        } else {
+            this.toggleAllCheckbox(false);
+        }
     }
 
     addField(event: Event) {
