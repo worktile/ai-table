@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/ai-table",
+                        "outputPath": "dist/demo",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": ["zone.js"],
@@ -39,19 +39,23 @@
                     },
                     "configurations": {
                         "production": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "extractLicenses": true,
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
-                                    "maximumError": "1MB"
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
                                     "maximumWarning": "2kB",
                                     "maximumError": "4kB"
                                 }
-                            ],
-                            "outputHashing": "all"
+                            ]
                         },
                         "development": {
                             "optimization": false,
@@ -62,6 +66,9 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
+                    "options": {
+                        "port": 6100
+                    },
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
@@ -102,18 +109,13 @@
                         "tsConfig": "packages/grid/tsconfig.spec.json",
                         "karmaConfig": "packages/grid/karma.conf.js",
                         "codeCoverage": true,
-                        "codeCoverageExclude": [
-                            "packages/grid/testing/**/*"
-                        ]
+                        "codeCoverageExclude": ["packages/grid/testing/**/*"]
                     }
                 },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "packages/store/**/*.ts",
-                            "packages/store/**/*.html"
-                        ]
+                        "lintFilePatterns": ["packages/store/**/*.ts", "packages/store/**/*.html"]
                     }
                 }
             }
