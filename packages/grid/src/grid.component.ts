@@ -1,11 +1,23 @@
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, input, model, OnInit, output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    input,
+    model,
+    OnInit,
+    output,
+    signal,
+    viewChild
+} from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectedOneFieldPipe, SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AITableGridCellRenderSchema, AITableRowHeight, AITableSelection } from './types';
+import { AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
 import {
     Actions,
     createAITable,
@@ -16,18 +28,24 @@ import {
     AITableFieldType,
     AITableRecords,
     AITableField,
-    AITableRecord
+    AITableRecord,
+    createDefaultField
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
-import { FieldPropertyEditorComponent } from './components/field-property-editor/field-property-editor.component';
+import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyRate } from 'ngx-tethys/rate';
 import { FormsModule } from '@angular/forms';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
-import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { FieldMenu } from './components/field-menu/field-menu.component';
+import { ThyAction } from 'ngx-tethys/action';
+import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
+import { DefaultFieldMenus } from './constants';
+import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.servive';
 
 @Component({
@@ -45,28 +63,31 @@ import { AITableGridSelectionService } from './services/selection.servive';
         CommonModule,
         FormsModule,
         SelectOptionPipe,
-        SelectedOneFieldPipe,
         ThyTag,
         ThyPopoverModule,
         ThyIcon,
         ThyRate,
-        FieldPropertyEditorComponent,
+        AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
         ThyTooltipModule,
         ThyFlexibleText,
-        ThyCheckboxModule,
-        ThyStopPropagationDirective
+        ThyStopPropagationDirective,
+        FieldMenu,
+        ThyAction,
+        ThyDropdownDirective,
+        ThyDropdownMenuComponent,
+        ThyCheckboxModule
     ],
-    providers: [ThyTooltipService, AITableGridEventService, AITableGridSelectionService]
+    providers: [ThyTooltipService, AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGridComponent implements OnInit {
+export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
 
     aiRowHeight = input<AITableRowHeight>();
 
-    aiFieldRenderers = input<Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>>();
+    aiFieldConfig = input<AIFieldConfig>();
 
     aiReadonly = input<boolean>();
 
@@ -84,6 +105,10 @@ export class AITableGridComponent implements OnInit {
 
     onChange = output<AITableChangeOptions>();
 
+    aiTableInitialized = output<AITable>();
+
+    fieldMenus!: AITableFieldMenu[];
+
     gridData = computed(() => {
         return buildGridData(this.aiRecords(), this.aiFields());
     });
@@ -92,7 +117,8 @@ export class AITableGridComponent implements OnInit {
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
         private thyPopover: ThyPopover,
-        public aiTableGridSelectionService: AITableGridSelectionService
+        public aiTableGridSelectionService: AITableGridSelectionService,
+        private aiTableGridFieldService: AITableGridFieldService
     ) {
         effect(
             () => {
@@ -105,12 +131,13 @@ export class AITableGridComponent implements OnInit {
 
     ngOnInit(): void {
         this.initAITable();
-        this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldRenderers());
-        this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
+        this.initService();
+        this.buildFieldMenus();
     }
 
     initAITable() {
         this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiTableInitialized.emit(this.aiTable);
         this.aiTable.onChange = () => {
             this.onChange.emit({
                 records: this.aiRecords(),
@@ -118,6 +145,17 @@ export class AITableGridComponent implements OnInit {
                 actions: this.aiTable.actions
             });
         };
+    }
+
+    initService() {
+        this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldPropertyEditor);
+        this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
+        this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
+        AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
+    }
+
+    buildFieldMenus() {
+        this.fieldMenus = this.aiFieldConfig()?.fieldMenus ?? DefaultFieldMenus;
     }
 
     addRecord() {
@@ -160,17 +198,8 @@ export class AITableGridComponent implements OnInit {
         }
     }
 
-    addField(event: Event) {
-        this.thyPopover.open(FieldPropertyEditorComponent, {
-            origin: event.currentTarget as HTMLElement,
-            manualClosure: true,
-            placement: 'bottomLeft',
-            initialState: {
-                fields: this.aiFields,
-                confirmAction: (field: AITableField) => {
-                    Actions.addField(this.aiTable, field, [this.aiFields().length]);
-                }
-            }
-        });
+    addField(gridColumnBlank: HTMLElement) {
+        const field = signal(createDefaultField(this.aiTable, AITableFieldType.Text));
+        this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
     }
 }

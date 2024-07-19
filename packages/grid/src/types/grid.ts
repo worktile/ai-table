@@ -1,4 +1,5 @@
-import { FieldPath, RecordPath, AITableField, AITableRecord } from '../core';
+import { AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITableFieldMenu } from './field';
 
 export enum AITableRowHeight {
     Short = 1,
@@ -8,7 +9,7 @@ export enum AITableRowHeight {
 }
 
 export interface AITableGridCellRenderSchema {
-    edit: any;
+    editor: any;
 }
 
 export interface AITableGridData {
@@ -17,10 +18,13 @@ export interface AITableGridData {
     records: AITableRecord[];
 }
 
-export type GridCellPath = [RecordPath, FieldPath];
-
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;
     selectedCells: Map<string, {}>;
+}
+export interface AIFieldConfig {
+    fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
+    fieldPropertyEditor?: any;
+    fieldMenus?: AITableFieldMenu[];
 }

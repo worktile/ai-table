@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, signal, Signal } from '@angular/core';
+import { Injectable, Renderer2, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from '../constants';
@@ -156,7 +156,7 @@ export class AITableGridEventService {
 
     private getEditorComponent(type: AITableFieldType) {
         if (this.aiFieldRenderers && this.aiFieldRenderers[type]) {
-            return this.aiFieldRenderers[type]!.edit;
+            return this.aiFieldRenderers[type]!.editor;
         }
         return GRID_CELL_EDITOR_MAP[type];
     }
@@ -183,7 +183,7 @@ export class AITableGridEventService {
             initialState: {
                 field: field,
                 record: record,
-                aiTable: signal(this.aiTable)
+                aiTable: this.aiTable
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: false,

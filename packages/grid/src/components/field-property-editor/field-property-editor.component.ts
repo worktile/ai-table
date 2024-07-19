@@ -1,5 +1,5 @@
-import { NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit, WritableSignal, computed, inject, input, signal } from '@angular/core';
+import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInput, ThyInputCount, ThyInputGroup, ThyInputDirective } from 'ngx-tethys/input';
 import { ThyConfirmValidatorDirective, ThyUniqueCheckValidator, ThyFormValidatorConfig, ThyFormModule } from 'ngx-tethys/form';
@@ -11,15 +11,14 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-import { of } from 'rxjs';
-import { AITableField, AITableFieldType, AITableFields, idCreator } from '../../core';
+import { AITable, AITableField, AITableFieldType, Actions, Fields, FieldsMap, createDefaultFieldName } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { FieldTypes, FieldTypesMap } from '../../core/constants/field';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
+import { of } from 'rxjs';
 
 @Component({
-    selector: 'field-property-editor',
+    selector: 'ai-table-field-property-editor',
     templateUrl: './field-property-editor.component.html',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +40,8 @@ import { ThyListItem } from 'ngx-tethys/list';
         ThyDropdownMenuItemIconDirective,
         ThyButton,
         ThyFormModule,
-        ThyListItem
+        ThyListItem,
+        NgTemplateOutlet
     ],
     host: {
         class: 'field-property-editor d-block pl-5 pr-5 pb-5 pt-4'
@@ -54,15 +54,17 @@ import { ThyListItem } from 'ngx-tethys/list';
         `
     ]
 })
-export class FieldPropertyEditorComponent implements OnInit {
-    fields = input.required<AITableFields>();
+export class AITableFieldPropertyEditor {
+    aiField = model.required<AITableField>();
 
-    @Input({ required: true }) confirmAction: ((field: AITableField) => void) | null = null;
+    @Input({ required: true }) aiTable!: AITable;
 
-    field: WritableSignal<AITableField> = signal({ id: idCreator(), type: AITableFieldType.Text, name: '' });
+    @Input() aiExternalTemplate: TemplateRef<any> | null = null;
+
+    @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     fieldType = computed(() => {
-        return FieldTypesMap[this.field().type];
+        return FieldsMap[this.aiField().type];
     });
 
     fieldMaxLength = 32;
@@ -76,25 +78,27 @@ export class FieldPropertyEditorComponent implements OnInit {
         }
     };
 
-    selectableFields = FieldTypes;
+    selectableFields = Fields;
 
-    protected thyPopoverRef = inject(ThyPopoverRef<FieldPropertyEditorComponent>);
+    protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldPropertyEditor>);
 
     constructor() {}
 
-    ngOnInit() {}
-
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.fields()?.find((field) => field.name === fieldName));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?.id !== field.id));
     };
 
     selectFieldType(fieldType: AITableFieldType) {
-        this.field.update((item) => ({ ...item, type: fieldType }));
+        this.aiField.update((item) => ({ ...item, type: fieldType, name: createDefaultFieldName(this.aiTable, fieldType) }));
     }
 
-    addField() {
-        this.confirmAction!(this.field());
+    editFieldProperty() {
+        if (this.isUpdate) {
+            //TODO: updateField
+        } else {
+            Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
+        }
         this.thyPopoverRef.close();
     }
 
