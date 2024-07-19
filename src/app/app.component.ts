@@ -1,8 +1,20 @@
-import { AfterViewInit, Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
-import { AITableFields, AITableFieldType, AITableGridComponent, AITableRecords } from '@ai-table/grid';
+import {
+    AITableFields,
+    AITableFieldType,
+    AITableGrid,
+    AITableRecords,
+    AITableField,
+    AITable,
+    AIFieldConfig,
+    EditFieldPropertyItem,
+    DividerMenuItem
+} from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
+import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -25,6 +37,7 @@ const initValue = {
             value: {
                 'column-1': '文本 2-1',
                 'column-2': '2',
+                'column-3': {},
                 'column-4': 1
             }
         },
@@ -32,7 +45,9 @@ const initValue = {
             id: 'row-3',
             value: {
                 'column-1': '文本 3-1',
-                'column-2': '3'
+                'column-2': '3',
+                'column-3': {},
+                'column-4': null
             }
         }
     ],
@@ -102,7 +117,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGridComponent],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -111,9 +126,28 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     fields!: WritableSignal<AITableFields>;
 
+    aiTable!: AITable;
+
+    aiFieldConfig: AIFieldConfig = {
+        fieldPropertyEditor: FieldPropertyEditor,
+        fieldMenus: [
+            EditFieldPropertyItem,
+            DividerMenuItem,
+            {
+                id: 'filterFields',
+                name: '按本列筛选',
+                icon: 'filter-line',
+                exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
+                disabled: (aiTable: AITable, field: Signal<AITableField>) => false
+            }
+        ]
+    };
+
     constructor(
         private iconRegistry: ThyIconRegistry,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private thyPopover: ThyPopover
     ) {
         this.registryIcon();
     }
@@ -127,7 +161,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/symbol/svg/sprite.defs.svg'));
     }
 
     ngAfterViewInit() {
@@ -142,6 +175,10 @@ export class AppComponent implements OnInit, AfterViewInit {
                 records: data.records
             })
         );
+    }
+
+    aiTableInitialized(aiTable: AITable) {
+        this.aiTable = aiTable;
     }
 
     setLocalData(data: string) {

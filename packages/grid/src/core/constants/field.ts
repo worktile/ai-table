@@ -1,7 +1,7 @@
-import { AITableFieldType } from '../types';
+import { AITableFieldInfo, AITableFieldType } from '../types';
 import { helpers } from 'ngx-tethys/util';
 
-export const BasicFieldTypes = [
+export const BasicFields = [
     {
         type: AITableFieldType.Text,
         name: '文本',
@@ -34,6 +34,6 @@ export const BasicFieldTypes = [
     }
 ];
 
-export const FieldTypes = [...BasicFieldTypes];
+export const Fields: AITableFieldInfo[] = [...BasicFields];
 
-export const FieldTypesMap = helpers.keyBy([...FieldTypes], 'type');
+export const FieldsMap = helpers.keyBy([...BasicFields], 'type');

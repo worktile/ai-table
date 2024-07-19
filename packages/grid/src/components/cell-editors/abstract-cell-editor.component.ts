@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Input, input, OnInit } from '@angular/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { GridCellPath } from '../../types';
-import { Actions, AITable, AITableField, AITableQueries, AITableRecord } from '../../core';
+import { Actions, AIFieldValuePath, AITable, AITableField, AITableQueries, AITableRecord } from '../../core';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -14,7 +13,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     record = input.required<AITableRecord>();
 
-    aiTable = input.required<AITable>();
+    @Input({ required: true }) aiTable!: AITable;
 
     modelValue!: TValue;
 
@@ -22,14 +21,14 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     ngOnInit(): void {
         this.modelValue = computed(() => {
-            const path = AITableQueries.findPath(this.aiTable(), this.field(), this.record()) as GridCellPath;
-            return AITableQueries.getFieldValue(this.aiTable(), path);
+            const path = AITableQueries.findPath(this.aiTable, this.field(), this.record()) as AIFieldValuePath;
+            return AITableQueries.getFieldValue(this.aiTable, path);
         })();
     }
 
     updateFieldValue() {
-        const path = AITableQueries.findPath(this.aiTable(), this.field(), this.record()) as GridCellPath;
-        Actions.updateFieldValue(this.aiTable(), this.modelValue, path);
+        const path = AITableQueries.findPath(this.aiTable, this.field(), this.record()) as AIFieldValuePath;
+        Actions.updateFieldValue(this.aiTable, this.modelValue, path);
     }
 
     closePopover() {

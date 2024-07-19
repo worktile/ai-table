@@ -1,10 +1,12 @@
 import { AITableField, AITableRecord } from './core';
 
-export type RecordPath = number;
+export type AIRecordPath = [number];
 
-export type FieldPath = number;
+export type AIFieldPath = [number];
 
-export type Path = [RecordPath] | [FieldPath] | [RecordPath, FieldPath];
+export type AIFieldValuePath = [number, number];
+
+export type Path = AIRecordPath | AIFieldPath | AIFieldValuePath;
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',
@@ -20,20 +22,20 @@ export enum ExecuteType {
 
 export type UpdateFieldValueAction = {
     type: ActionName.UpdateFieldValue;
-    path: [RecordPath, FieldPath];
+    path: AIFieldValuePath;
     fieldValue: any;
     newFieldValue: any;
 };
 
 export type AddRecordAction = {
     type: ActionName.AddRecord;
-    path: [RecordPath];
+    path: AIRecordPath;
     record: AITableRecord;
 };
 
 export type AddFieldAction = {
     type: ActionName.AddField;
-    path: [FieldPath];
+    path: AIFieldPath;
     field: AITableField;
 };
 

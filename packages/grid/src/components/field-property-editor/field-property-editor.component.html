@@ -6,7 +6,7 @@
                 thyAutofocus
                 name="fieldName"
                 [maxlength]="fieldMaxLength"
-                [(ngModel)]="field().name"
+                [(ngModel)]="aiField().name"
                 required
                 placeholder="输入列名称"
                 [thyUniqueCheck]="checkUniqueName"
@@ -27,9 +27,15 @@
             </thy-list-item>
         </div>
     </thy-form-group>
+    <ng-container *ngIf="aiExternalTemplate; else defaultTemplate">
+        <ng-container *ngTemplateOutlet="aiExternalTemplate"></ng-container>
+    </ng-container>
+    <ng-template #defaultTemplate>
+        <!-- TODO: 内部属性渲染 -->
+    </ng-template>
     <thy-form-group-footer thyAlign="right">
         <button thyButton="link-secondary" (click)="cancel()" thySize="sm">取消</button>
-        <button thyButton="primary" (thyFormSubmit)="addField()" thySize="sm">确定</button>
+        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">确定</button>
     </thy-form-group-footer>
 </form>
 

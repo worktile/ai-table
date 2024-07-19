@@ -82,3 +82,9 @@ export interface AITableChangeOptions {
     fields: AITableField[];
     actions: AITableAction[];
 }
+
+export interface AITableFieldInfo {
+    type: AITableFieldType;
+    name: string;
+    icon: string;
+}

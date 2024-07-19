@@ -1,1 +1,9 @@
-<ai-table-grid [(aiRecords)]="records" [(aiFields)]="fields" (onChange)="onChange($event)"></ai-table-grid>
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    (onChange)="onChange($event)"
+    [aiFieldConfig]="aiFieldConfig"
+    (aiTableInitialized)="aiTableInitialized($event)"
+></ai-table-grid>
+
+
