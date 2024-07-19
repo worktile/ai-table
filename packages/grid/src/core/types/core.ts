@@ -44,10 +44,14 @@ export interface AITableSelectOption {
     color?: string;
 }
 
-export interface AITableField {
-    id: string;
-    name: string;
+export interface AITableBasicField {
     type: AITableFieldType;
+    name: string;
+    icon: string;
+}
+
+export interface AITableField extends AITableBasicField {
+    id: string;
     width?: string;
     hidden?: boolean;
     frozen?: boolean;
@@ -81,10 +85,4 @@ export interface AITableChangeOptions {
     records: AITableRecord[];
     fields: AITableField[];
     actions: AITableAction[];
-}
-
-export interface AITableFieldInfo {
-    type: AITableFieldType;
-    name: string;
-    icon: string;
 }

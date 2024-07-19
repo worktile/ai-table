@@ -55,11 +55,13 @@ const initValue = {
         {
             id: 'column-1',
             name: '文本',
+            icon: 'text',
             type: AITableFieldType.Text
         },
         {
             id: 'column-2',
             name: '单选',
+            icon: 'check-circle',
             type: AITableFieldType.SingleSelect,
             options: [
                 {
@@ -82,11 +84,13 @@ const initValue = {
         {
             id: 'column-3',
             name: '链接',
+            icon: 'link-insert',
             type: AITableFieldType.Link
         },
         {
             id: 'column-4',
             name: '评分',
+            icon: 'star-circle',
             type: AITableFieldType.Rating
         }
     ]

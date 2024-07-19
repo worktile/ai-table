@@ -4,7 +4,7 @@
     </div>
     @for (field of gridData().fields; track field.id) {
         <div class="grid-cell grid-field" #fieldAction>
-            {{ field.name }}
+            <span> {{ field.name }}</span>
             <a thyAction thyActiveClass="active" thyIcon="more-vertical" [thyDropdown]="fieldMenu" href="javascript:;">
                 <thy-dropdown-menu #fieldMenu>
                     <field-menu [origin]="fieldAction" [field]="field" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>

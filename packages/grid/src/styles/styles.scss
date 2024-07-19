@@ -34,6 +34,12 @@
         justify-content: center;
         cursor: pointer;
     }
+    
+    .grid-field {
+        justify-content: space-between;
+        padding: 0 12px;
+    }
+
     .grid-column-blank {
         flex: 1;
         min-width: 180px;
