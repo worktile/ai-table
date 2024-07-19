@@ -18,3 +18,9 @@ export interface AITableGridData {
 }
 
 export type GridCellPath = [RecordPath, FieldPath];
+
+export interface AITableSelection {
+    selectedRecords: Map<string, boolean>;
+    selectedFields: Map<string, boolean>;
+    selectedCells: Map<string, {}>;
+}

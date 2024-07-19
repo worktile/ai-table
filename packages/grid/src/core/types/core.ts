@@ -1,5 +1,6 @@
 import { WritableSignal } from '@angular/core';
 import { AITableAction } from './action';
+import { AITableSelection } from '../../types';
 
 export enum AITableFieldType {
     // NotSupport = 0,
@@ -74,7 +75,7 @@ export interface AITable {
     records: WritableSignal<AITableRecords>;
     fields: WritableSignal<AITableFields>;
     actions: AITableAction[];
-    selection: Map<string, {}>;
+    selection: WritableSignal<AITableSelection>;
     onChange: () => void;
     apply: (action: AITableAction) => void;
 }

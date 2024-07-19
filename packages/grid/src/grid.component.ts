@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, input, model, OnInit, output } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectedOneFieldPipe, SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AITableGridCellRenderSchema, AITableRowHeight } from './types';
+import { AITableGridCellRenderSchema, AITableRowHeight, AITableSelection } from './types';
 import {
     Actions,
     createAITable,
@@ -15,7 +15,8 @@ import {
     AITableFields,
     AITableFieldType,
     AITableRecords,
-    AITableField
+    AITableField,
+    AITableRecord
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
@@ -27,6 +28,7 @@ import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
+import { AITableGridSelectionService } from './services/selection.servive';
 
 @Component({
     selector: 'ai-table-grid',
@@ -55,7 +57,7 @@ import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
         ThyCheckboxModule,
         ThyStopPropagationDirective
     ],
-    providers: [ThyTooltipService, AITableGridEventService]
+    providers: [ThyTooltipService, AITableGridEventService, AITableGridSelectionService]
 })
 export class AITableGridComponent implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -76,9 +78,9 @@ export class AITableGridComponent implements OnInit {
 
     isSelectedAll = false;
 
-    selection = new Map<string, {}>();
-
-    selectedHeader = new Set();
+    get selection() {
+        return this.aiTableGridSelectionService.selection();
+    }
 
     onChange = output<AITableChangeOptions>();
 
@@ -89,8 +91,17 @@ export class AITableGridComponent implements OnInit {
     constructor(
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
-        private thyPopover: ThyPopover
-    ) {}
+        private thyPopover: ThyPopover,
+        public aiTableGridSelectionService: AITableGridSelectionService
+    ) {
+        effect(
+            () => {
+                this.aiTable.selection.set(this.aiTableGridSelectionService.selection());
+                console.log('跟新啦', this.aiTable.selection());
+            },
+            { allowSignalWrites: true }
+        );
+    }
 
     ngOnInit(): void {
         this.initAITable();
@@ -120,43 +131,29 @@ export class AITableGridComponent implements OnInit {
         this.gridData().records = data;
     }
 
-    clearSelection() {
-        this.selection.clear();
-        this.selectedHeader.clear();
-    }
-
     selectCell(recordId: string, fieldId: string) {
-        this.clearSelection();
         this.toggleAllCheckbox(false);
-        this.selection.set(recordId, { [fieldId]: '' });
+        this.isSelectedAll = false;
+        this.aiTableGridSelectionService.selectCell(recordId, fieldId);
     }
 
     selectCol(field: any) {
-        this.clearSelection();
         this.toggleAllCheckbox(false);
-        // 选择表头
-        this.selectedHeader.add(field.name);
-        this.aiRecords().forEach((item) => {
-            const value = item.value[field.id];
-            this.selection.set(item.id, { [field.id]: value });
-        });
+        this.isSelectedAll = false;
+        this.aiTableGridSelectionService.selectCol(field.id);
     }
 
-    selectRow() {
-        this.clearSelection();
-        this.gridData().records.forEach((record) => {
-            if (record.checked) {
-                this.selection.set(record.id, record.value);
-            }
-        });
+    selectRow(record: AITableRecord) {
+        this.aiTableGridSelectionService.selectRow(record.id);
+        this.isSelectedAll = this.selection.selectedRecords.size === this.aiRecords().length;
     }
 
     toggleSelectAll() {
-        this.clearSelection();
+        this.aiTableGridSelectionService.clearSelection();
         if (this.isSelectedAll) {
             this.toggleAllCheckbox(true);
             this.aiRecords().forEach((item) => {
-                this.selection.set(item.id, item.value);
+                this.selectRow(item);
             });
         } else {
             this.toggleAllCheckbox(false);

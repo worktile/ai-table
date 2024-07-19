@@ -32,6 +32,9 @@
                 display: none;
             }
         }
+        &.highlight {
+            background: variables.$secondary-item-active;
+        }
     }
 
     .grid-cell {
@@ -84,9 +87,6 @@
         }
     }
     .grid-row-index {
-        &.highlight {
-            background: rgba(102, 152, 255, 0.1);
-        }
         .checked-box {
             display: block;
         }

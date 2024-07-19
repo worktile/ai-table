@@ -3,7 +3,7 @@
         <label thyCheckbox thyLabelText="" [(ngModel)]="isSelectedAll" (ngModelChange)="toggleSelectAll()"></label>
     </div>
     @for (field of gridData().fields; track field.id) {
-        <div class="grid-cell grid-column-field" (click)="selectCol(field)" [ngClass]="selectedHeader.has(field.name) ? 'highlight' : ''">
+        <div class="grid-cell grid-column-field" (click)="selectCol(field)" [attr.fieldId]="field.id">
             {{ field.name }}
         </div>
     }
@@ -12,28 +12,19 @@
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record.id; let index = $index) {
         <div class="grid-row d-flex">
-            <div class="grid-row-index" [ngClass]="selection.has(record.id) && record.checked ? 'highlight' : ''">
+            <div class="grid-row-index">
                 <label
                     [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
                     thyCheckbox
                     thyLabelText=""
                     [(ngModel)]="record.checked"
-                    (ngModelChange)="selectRow()"
+                    (ngModelChange)="selectRow(record)"
                 ></label>
                 <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>
             @for (field of gridData().fields; track $index) {
                 <div
                     class="grid-cell"
-                    [ngClass]="{
-                        highlight:
-                            selection.get(record.id)?.hasOwnProperty(field.id) ||
-                            ((selection.get(record.id) | selectedOneField) && selection.size === 1 && selection.has(record.id)),
-                        isSelected:
-                            (selection.get(record.id) | selectedOneField) &&
-                            selection.size === 1 &&
-                            selection.get(record.id)?.hasOwnProperty(field.id)
-                    }"
                     [attr.type]="[field.type]"
                     [attr.fieldId]="[field.id]"
                     [attr.recordId]="[record.id]"
