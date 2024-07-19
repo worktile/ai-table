@@ -6,8 +6,9 @@
     ],
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve demo",
         "build": "npm run build:grid",
+        "build:demo": "ng build demo --configuration production",
         "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
         "release": "npm run build && wpm release --release-branch-format release-auto-v{{version}}",
         "release-next": "npm run build && wpm release --release-branch-format release-auto-next-v{{version}}",
