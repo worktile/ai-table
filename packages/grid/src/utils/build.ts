@@ -1,12 +1,12 @@
 import { AITableFields, AITableRecords } from '../core';
-import { AITableGridData } from '../types';
+import { AITableGridData, AITableSelection } from '../types';
 
-export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
+export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields, selection: AITableSelection): AITableGridData => {
     return {
         type: 'grid',
         fields: fieldsValue,
         records: recordValue.map((item) => {
-            return { ...item, checked: false };
+            return { ...item, checked: selection.selectedRecords.has(item.id) };
         })
     };
 };

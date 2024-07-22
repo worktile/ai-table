@@ -1,23 +1,11 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    ElementRef,
-    input,
-    model,
-    OnInit,
-    output,
-    signal,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, signal, viewChild } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { SelectedOneFieldPipe, SelectOptionPipe } from './pipes/grid';
+import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
-import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
+import { AIFieldConfig, AITableFieldMenu, AITableRowHeight, AITableSelection } from './types';
 import {
     Actions,
     createAITable,
@@ -27,8 +15,6 @@ import {
     AITableFields,
     AITableFieldType,
     AITableRecords,
-    AITableField,
-    AITableRecord,
     createDefaultField
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
@@ -97,10 +83,8 @@ export class AITableGrid implements OnInit {
 
     aiTable!: AITable;
 
-    isSelectedAll = false;
-
-    get selection() {
-        return this.aiTableGridSelectionService.selection();
+    get isSelectedAll() {
+        return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
     }
 
     onChange = output<AITableChangeOptions>();
@@ -110,29 +94,25 @@ export class AITableGrid implements OnInit {
     fieldMenus!: AITableFieldMenu[];
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
+        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
     });
 
     constructor(
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
-        private thyPopover: ThyPopover,
         public aiTableGridSelectionService: AITableGridSelectionService,
         private aiTableGridFieldService: AITableGridFieldService
-    ) {
-        effect(
-            () => {
-                this.aiTable.selection.set(this.aiTableGridSelectionService.selection());
-                console.log('跟新啦', this.aiTable.selection());
-            },
-            { allowSignalWrites: true }
-        );
-    }
+    ) {}
 
     ngOnInit(): void {
         this.initAITable();
         this.initService();
         this.buildFieldMenus();
+        this.aiTableGridEventService.mousedownEvent$.subscribe((event) => {
+            if (event?.target) {
+                this.aiTableGridSelectionService.updateSelect(event);
+            }
+        });
     }
 
     initAITable() {
@@ -149,6 +129,7 @@ export class AITableGrid implements OnInit {
 
     initService() {
         this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldPropertyEditor);
+        this.aiTableGridSelectionService.initialize(this.aiTable);
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
         this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
@@ -162,40 +143,12 @@ export class AITableGrid implements OnInit {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
-    toggleAllCheckbox(checked: boolean) {
-        const data = this.gridData().records.map((item) => {
-            return { ...item, checked: checked };
-        });
-        this.gridData().records = data;
+    selectRow(recordId: string) {
+        this.aiTableGridSelectionService.selectRow(recordId);
     }
 
-    selectCell(recordId: string, fieldId: string) {
-        this.toggleAllCheckbox(false);
-        this.isSelectedAll = false;
-        this.aiTableGridSelectionService.selectCell(recordId, fieldId);
-    }
-
-    selectCol(field: any) {
-        this.toggleAllCheckbox(false);
-        this.isSelectedAll = false;
-        this.aiTableGridSelectionService.selectCol(field.id);
-    }
-
-    selectRow(record: AITableRecord) {
-        this.aiTableGridSelectionService.selectRow(record.id);
-        this.isSelectedAll = this.selection.selectedRecords.size === this.aiRecords().length;
-    }
-
-    toggleSelectAll() {
-        this.aiTableGridSelectionService.clearSelection();
-        if (this.isSelectedAll) {
-            this.toggleAllCheckbox(true);
-            this.aiRecords().forEach((item) => {
-                this.selectRow(item);
-            });
-        } else {
-            this.toggleAllCheckbox(false);
-        }
+    toggleSelectAll(checked: boolean) {
+        this.aiTableGridSelectionService.toggleSelectAll(checked);
     }
 
     addField(gridColumnBlank: HTMLElement) {
