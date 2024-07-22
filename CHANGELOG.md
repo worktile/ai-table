@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.3](https://github.com/worktile/ai-table/compare/0.0.2...0.0.3) (2024-07-22)
+
+
+### Features
+
+* support add and extend field #WIK-16038 ([#10](https://github.com/worktile/ai-table/issues/10)) ([74edbbb](https://github.com/worktile/ai-table/commit/74edbbbca3f387454bb22f436eaef0f67367b5e1)), closes [#WIK-16038](https://github.com/worktile/ai-table/issues/WIK-16038)
+
+
+
 ## 0.0.2 (2024-07-16)
 
 
