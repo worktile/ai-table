@@ -10,13 +10,3 @@ export class SelectOptionPipe implements PipeTransform {
         return options.find((item) => item.id === id);
     }
 }
-
-@Pipe({
-    name: 'selectedOneField',
-    standalone: true
-})
-export class SelectedOneFieldPipe implements PipeTransform {
-    transform(fields: any) {
-        return Object.keys(fields ?? {}).length === 1;
-    }
-}
