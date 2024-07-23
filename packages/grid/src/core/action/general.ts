@@ -3,7 +3,7 @@ import { createDraft, finishDraft } from 'immer';
 import { addRecordFn, updateFieldValueFn } from './record';
 import { addFieldFn } from './field';
 
-export const defaultMethods: any = {
+export const defaultMethods = {
     [ActionName.UpdateFieldValue]: updateFieldValueFn,
     [ActionName.AddField]: addFieldFn,
     [ActionName.AddRecord]: addRecordFn
