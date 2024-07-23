@@ -1,3 +1,7 @@
+<div>
+    {{ views()[0].name }}
+</div>
+
 <ai-table-grid
     [(aiRecords)]="records"
     [(aiFields)]="fields"
@@ -6,4 +10,4 @@
     (aiTableInitialized)="aiTableInitialized($event)"
 ></ai-table-grid>
 
-
+<button (click)="setView()">修改视图</button>

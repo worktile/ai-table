@@ -15,6 +15,9 @@ import {
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
+import { withView } from './plugins/with-view';
+import { ViewActions } from './action/view';
+import { AIViewTable } from './types';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -126,7 +129,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     fields!: WritableSignal<AITableFields>;
 
-    aiTable!: AITable;
+    aiTable!: AIViewTable;
+
+    views!: WritableSignal<any>;
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -156,6 +161,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         const value = this.getLocalStorage();
         this.records = signal(value.records);
         this.fields = signal(value.fields);
+        this.views = signal([
+            {
+                name: 'default view'
+            }
+        ]);
         console.time('render');
     }
 
@@ -178,7 +188,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     aiTableInitialized(aiTable: AITable) {
-        this.aiTable = aiTable;
+        this.aiTable = withView(aiTable, this.views);
     }
 
     setLocalData(data: string) {
@@ -188,5 +198,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     getLocalStorage() {
         const data = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         return data ? JSON.parse(data) : initValue;
+    }
+
+    setView() {
+        ViewActions.setView(
+            this.aiTable,
+            {
+                name: 'new view'
+            },
+            [0]
+        );
     }
 }
