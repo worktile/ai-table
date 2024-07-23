@@ -1,7 +1,6 @@
 import { AITableFields, AITableRecords } from '@ai-table/grid';
-import { isArray, isObject } from 'ngx-tethys/util';
+import { isArray, isNumber, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import { connectProvider } from './provider';
 
 export type SyncMapElement = Y.Map<any>;
 export type SyncArrayElement = Y.Array<SyncMapElement>;
@@ -30,12 +29,12 @@ export function toSharedType(
     }
 ): void {
     const fieldSharedType = new Y.Array();
-    sharedType.set('fields', fieldSharedType);
     fieldSharedType.insert(0, data.fields.map(toSyncElement));
+    sharedType.set('fields', fieldSharedType);
 
     const recordSharedType = new Y.Array();
-    sharedType.set('records', recordSharedType);
     recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+    sharedType.set('records', recordSharedType);
 }
 
 export function toSyncElement(node: any): SyncMapElement {
@@ -52,7 +51,8 @@ export function toSyncElement(node: any): SyncMapElement {
             element.set(key, mapElement);
         } else {
             let textElement = new Y.Text(node[key]);
-            if (key === 'type') {
+            // Handle the issue of numbers being converted to empty strings
+            if (isNumber(node[key])) {
                 textElement = new Y.Text(node[key].toString());
             }
             element.set(key, textElement);
@@ -65,6 +65,7 @@ export function toRecordSyncElement(node: any) {
     const element = new Y.Map();
     for (const key in node) {
         if (key === 'value') {
+            // To save memory, convert map to array.
             const arrayElement: SyncArrayElement = new Y.Array();
             const recordArray: { id: string; fieldValue: any }[] = [];
             for (const fieldId in node[key]) {

@@ -54,7 +54,7 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': null
+                'column-4': ''
             }
         }
     ],
@@ -85,17 +85,17 @@ const initValue = {
                     color: '#73d897'
                 }
             ]
+        },
+        {
+            id: 'column-3',
+            name: '链接',
+            type: AITableFieldType.Link
+        },
+        {
+            id: 'column-4',
+            name: '评分',
+            type: AITableFieldType.Rating
         }
-        // {
-        //     id: 'column-3',
-        //     name: '链接',
-        //     type: AITableFieldType.Link
-        // },
-        // {
-        //     id: 'column-4',
-        //     name: '评分',
-        //     type: AITableFieldType.Rating
-        // }
     ]
 };
 
@@ -137,7 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     sharedType!: SharedType | null;
 
-    provider!: WebsocketProvider;
+    provider!: WebsocketProvider | null;
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -185,7 +185,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedType.observeDeep((events: any) => {
             if (!YjsAITable.isLocal(this.aiTable)) {
                 if (!isInitialized) {
-                    const data =  translateSharedTypeToTable(this.sharedType!);
+                    const data = translateSharedTypeToTable(this.sharedType!);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
                     isInitialized = true;
@@ -215,10 +215,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 records: data.records
             })
         );
-        if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
-            YjsAITable.asLocal(this.aiTable, () => {
-                applyActionOps(this.sharedType!, data.actions, this.aiTable);
-            });
+        if (this.provider) {
+            if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
+                YjsAITable.asLocal(this.aiTable, () => {
+                    applyActionOps(this.sharedType!, data.actions, this.aiTable);
+                });
+            }
         }
     }
 
@@ -235,7 +237,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         return data ? JSON.parse(data) : initValue;
     }
 
+
+    disconnect() {
+        if (this.provider) {
+            this.provider.disconnect();
+            this.provider = null;
+        }
+    }
+
     ngOnDestroy(): void {
-        this.provider.disconnect();
+        this.disconnect();
     }
 }
