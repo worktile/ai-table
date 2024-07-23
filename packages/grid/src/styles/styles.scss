@@ -9,10 +9,6 @@
 
     .grid-header {
         border-top: 1px solid variables.$gray-200;
-        .grid-column-field {
-            justify-content: left;
-            padding-left: 12px;
-        }
     }
 
     .grid-body {
@@ -46,7 +42,7 @@
         align-items: center;
         width: 300px;
         border-left: 1px solid variables.$gray-200;
-        justify-content: center;
+        padding-left: 12px;
         position: relative;
         cursor: pointer;
         .autofill-container {
