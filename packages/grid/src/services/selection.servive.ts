@@ -27,12 +27,12 @@ export class AITableGridSelectionService {
         this.aiTable.selection().selectedCells.set(recordId, { [fieldId]: true });
     }
 
-    selectCol(fieldId: string) {
+    selectField(fieldId: string) {
         this.clearSelection();
         this.aiTable.selection().selectedFields.set(fieldId, true);
     }
 
-    selectRow(recordId: string) {
+    selectRecord(recordId: string) {
         if (this.aiTable.selection().selectedRecords.has(recordId)) {
             this.aiTable.selection().selectedRecords.delete(recordId);
         } else {
@@ -49,7 +49,7 @@ export class AITableGridSelectionService {
         this.clearSelection();
         if (checked) {
             this.aiTable.records().forEach((item) => {
-                this.selectRow(item.id);
+                this.selectRecord(item.id);
             });
         }
     }
@@ -81,7 +81,7 @@ export class AITableGridSelectionService {
         highlightCells?.forEach((cell) => {
             operation === 'remove' ? this.renderer.removeClass(cell, 'highlight') : this.renderer.addClass(cell, 'highlight');
         });
-        operation === 'remove' ? this.renderer.removeClass(dom, 'isSelected') : this.renderer.addClass(dom, 'isSelected');
+        operation === 'remove' ? this.renderer.removeClass(dom, 'selected') : this.renderer.addClass(dom, 'selected');
     }
 
     updateColClass(dom: Element, operation: string) {
@@ -155,7 +155,7 @@ export class AITableGridSelectionService {
         }
 
         if (cell?.type === 'col') {
-            this.selectCol(fieldId);
+            this.selectField(fieldId);
             this.updateColClass(cell.element, 'add');
         }
 

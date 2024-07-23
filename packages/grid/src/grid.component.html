@@ -25,7 +25,7 @@
                     thyCheckbox
                     thyLabelText=""
                     [ngModel]="record.checked"
-                    (ngModelChange)="selectRow(record.id)"
+                    (ngModelChange)="selectRecord(record.id)"
                 ></label>
                 <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>

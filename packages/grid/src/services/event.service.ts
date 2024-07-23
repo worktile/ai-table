@@ -16,7 +16,7 @@ export class AITableGridEventService {
 
     takeUntilDestroyed = takeUntilDestroyed();
 
-    mousedownEvent$ = new Subject<MouseEvent>();
+    clickEvent$ = new Subject<MouseEvent>();
 
     constructor(private thyPopover: ThyPopover) {}
 
@@ -35,7 +35,7 @@ export class AITableGridEventService {
         fromEvent<MouseEvent>(element, 'click')
             .pipe(this.takeUntilDestroyed)
             .subscribe((event) => {
-                this.mousedownEvent$.next(event as MouseEvent);
+                this.clickEvent$.next(event as MouseEvent);
             });
     }
 

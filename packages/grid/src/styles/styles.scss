@@ -11,6 +11,7 @@
         border-top: 1px solid variables.$gray-200;
         .grid-column-field {
             justify-content: left;
+            padding-left: 12px;
         }
     }
 
@@ -62,7 +63,7 @@
         &.highlight {
             background: variables.$secondary-item-active;
         }
-        &.isSelected {
+        &.selected {
             border: 2px solid variables.$primary;
             background: variables.$white;
             .autofill-container {

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, NgZone, OnInit, output, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenu, AITableRowHeight, AITableSelection } from './types';
+import { AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
 import {
     Actions,
     createAITable,
@@ -101,17 +101,20 @@ export class AITableGrid implements OnInit {
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
         public aiTableGridSelectionService: AITableGridSelectionService,
-        private aiTableGridFieldService: AITableGridFieldService
+        private aiTableGridFieldService: AITableGridFieldService,
+        private ngZone: NgZone
     ) {}
 
     ngOnInit(): void {
         this.initAITable();
         this.initService();
         this.buildFieldMenus();
-        this.aiTableGridEventService.mousedownEvent$.subscribe((event) => {
-            if (event?.target) {
-                this.aiTableGridSelectionService.updateSelect(event);
-            }
+        this.ngZone.runOutsideAngular(() => {
+            this.aiTableGridEventService.clickEvent$.pipe(this.takeUntilDestroyed).subscribe((event) => {
+                if ((event as MouseEvent)?.target) {
+                    this.aiTableGridSelectionService.updateSelect(event as MouseEvent);
+                }
+            });
         });
     }
 
@@ -143,8 +146,8 @@ export class AITableGrid implements OnInit {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
-    selectRow(recordId: string) {
-        this.aiTableGridSelectionService.selectRow(recordId);
+    selectRecord(recordId: string) {
+        this.aiTableGridSelectionService.selectRecord(recordId);
     }
 
     toggleSelectAll(checked: boolean) {
