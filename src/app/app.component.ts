@@ -13,8 +13,15 @@ import {
     DividerMenuItem
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
+import { FormsModule } from '@angular/forms';
+import { ThySelect } from 'ngx-tethys/select';
+import { ThyOption } from 'ngx-tethys/shared';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
+import { NgFor } from '@angular/common';
+import { updateRowHeightFn } from './action/view';
+import { CustomActions } from './action';
+import { CustomActionName } from './types/views';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -117,12 +124,14 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor],
+    imports: [RouterOutlet, AITableGrid, ThyOption, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
     records!: WritableSignal<AITableRecords>;
+
+    selected?: string;
 
     fields!: WritableSignal<AITableFields>;
 
@@ -143,6 +152,23 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
         ]
     };
+
+    listOfOption = [
+        {
+            value: 'short',
+            text: 'short'
+        },
+        {
+            value: 'medium',
+            text: 'medium'
+        },
+        {
+            value: 'tall',
+            text: 'tall'
+        }
+    ];
+
+    customAction = { [CustomActionName.updateRowHeight]: updateRowHeightFn };
 
     constructor(
         private iconRegistry: ThyIconRegistry,
@@ -188,5 +214,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     getLocalStorage() {
         const data = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         return data ? JSON.parse(data) : initValue;
+    }
+
+    changeRowHeight(event: string) {
+        CustomActions.updateRowHeight(this.aiTable, { rowHeight: 'short' } as any, 'rowHeight', event);
     }
 }

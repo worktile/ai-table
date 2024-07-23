@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
+import { AICustomAction, AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
 import {
     Actions,
     createAITable,
@@ -74,6 +74,8 @@ export class AITableGrid implements OnInit {
 
     aiReadonly = input<boolean>();
 
+    aiCustomAction = input<AICustomAction>();
+
     AITableFieldType = AITableFieldType;
 
     takeUntilDestroyed = takeUntilDestroyed();
@@ -103,7 +105,7 @@ export class AITableGrid implements OnInit {
     }
 
     initAITable() {
-        this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiTable = createAITable(this.aiRecords, this.aiFields, this.aiCustomAction ? this.aiCustomAction() : {});
         this.aiTableInitialized.emit(this.aiTable);
         this.aiTable.onChange = () => {
             this.onChange.emit({

@@ -1,4 +1,15 @@
-import { ActionName, AddRecordAction, AIRecordPath, UpdateFieldValueAction, AITable, AITableRecord, AIFieldValuePath } from '../types';
+import {
+    ActionName,
+    AddRecordAction,
+    AIRecordPath,
+    UpdateFieldValueAction,
+    AITable,
+    AITableRecord,
+    AIFieldValuePath,
+    AITableRecords,
+    AITableFields,
+    AITableAction
+} from '../types';
 import { AITableQueries } from '../utils';
 
 export function updateFieldValue(aiTable: AITable, value: any, path: AIFieldValuePath) {
@@ -23,7 +34,20 @@ export function addRecord(aiTable: AITable, record: AITableRecord, path: AIRecor
     aiTable.apply(operation);
 }
 
+export const addRecordFn = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
+    const [recordIndex] = options.path;
+    records.splice(recordIndex, 0, (options as any).record);
+};
+
+export const updateFieldValueFn = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
+    const [recordIndex, fieldIndex] = options.path;
+    const fieldId = aiTable.fields()[fieldIndex as number].id;
+    records[recordIndex].value[fieldId] = (options as any).newFieldValue;
+};
+
 export const RecordActions = {
     addRecord,
-    updateFieldValue
+    updateFieldValue,
+    addRecordFn,
+    updateFieldValueFn
 };

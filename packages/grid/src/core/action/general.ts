@@ -1,34 +1,22 @@
 import { ActionName, AITable, AITableAction, AITableFields, AITableRecords } from '../types';
 import { createDraft, finishDraft } from 'immer';
+import { addRecordFn, updateFieldValueFn } from './record';
+import { addFieldFn } from './field';
 
-const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
-    switch (options.type) {
-        case ActionName.UpdateFieldValue: {
-            const [recordIndex, fieldIndex] = options.path;
-            const fieldId = aiTable.fields()[fieldIndex].id;
-            records[recordIndex].value[fieldId] = options.newFieldValue;
-            break;
-        }
-        case ActionName.AddRecord: {
-            const [recordIndex] = options.path;
-            records.splice(recordIndex, 0, options.record);
-            break;
-        }
-        case ActionName.AddField: {
-            const [fieldIndex] = options.path;
-            const newField = options.field;
-            fields.splice(fieldIndex, 0, newField);
-            const newRecord = {
-                [newField.id]: ''
-            };
-            records.forEach((item) => {
-                item.value = {
-                    ...item.value,
-                    ...newRecord
-                };
-            });
-        }
-    }
+export const defaultMethods: any = {
+    [ActionName.UpdateFieldValue]: updateFieldValueFn,
+    [ActionName.AddField]: addFieldFn,
+    [ActionName.AddRecord]: addRecordFn
+};
+
+export const mergeMethods = (customMethods?: {}) => {
+    return { ...defaultMethods, ...customMethods };
+};
+
+const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction, aiCustomAction = {}) => {
+    const allMethods = mergeMethods(aiCustomAction);
+    const func = allMethods[options.type];
+    func(aiTable, records, fields, options);
     return {
         records,
         fields
@@ -36,10 +24,10 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
 };
 
 export const GeneralActions = {
-    transform(aiTable: AITable, op: AITableAction): void {
+    transform(aiTable: AITable, op: AITableAction, aiCustomAction = {}): void {
         const records = createDraft(aiTable.records());
         const fields = createDraft(aiTable.fields());
-        apply(aiTable, records, fields, op);
+        apply(aiTable, records, fields, op, aiCustomAction);
         aiTable.fields.update(() => {
             return finishDraft(fields);
         });

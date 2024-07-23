@@ -1,4 +1,4 @@
-import { AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITable, AITableField, AITableFields, AITableFieldType, AITableRecord, AITableRecords } from '../core';
 import { AITableFieldMenu } from './field';
 
 export enum AITableRowHeight {
@@ -6,6 +6,10 @@ export enum AITableRowHeight {
     Medium = 2,
     Tall = 3,
     ExtraTall = 4
+}
+
+export interface AICustomAction {
+    [key: string]: (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: any) => void;
 }
 
 export interface AITableGridCellRenderSchema {
