@@ -18,10 +18,13 @@ export interface AITableGridData {
     records: AITableRecord[];
 }
 
+export interface AITableSelection {
+    selectedRecords: Map<string, boolean>;
+    selectedFields: Map<string, boolean>;
+    selectedCells: Map<string, {}>;
+}
 export interface AIFieldConfig {
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldPropertyEditor?: any;
     fieldMenus?: AITableFieldMenu[];
 }
-
-

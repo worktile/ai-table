@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, OnInit, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, NgZone, OnInit, output, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
 import { SelectOptionPipe } from './pipes/grid';
 import { ThyTag } from 'ngx-tethys/tag';
@@ -25,12 +25,14 @@ import { ThyRate } from 'ngx-tethys/rate';
 import { FormsModule } from '@angular/forms';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
+import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
 import { DefaultFieldMenus } from './constants';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
+import { AITableGridSelectionService } from './services/selection.servive';
 
 @Component({
     selector: 'ai-table-grid',
@@ -59,9 +61,10 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
         FieldMenu,
         ThyAction,
         ThyDropdownDirective,
-        ThyDropdownMenuComponent
+        ThyDropdownMenuComponent,
+        ThyCheckboxModule
     ],
-    providers: [ThyTooltipService, AITableGridEventService, AITableGridFieldService]
+    providers: [ThyTooltipService, AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -80,6 +83,10 @@ export class AITableGrid implements OnInit {
 
     aiTable!: AITable;
 
+    get isSelectedAll() {
+        return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
+    }
+
     onChange = output<AITableChangeOptions>();
 
     aiTableInitialized = output<AITable>();
@@ -87,19 +94,28 @@ export class AITableGrid implements OnInit {
     fieldMenus!: AITableFieldMenu[];
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
+        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
     });
 
     constructor(
         private elementRef: ElementRef,
         private aiTableGridEventService: AITableGridEventService,
-        private aiTableGridFieldService: AITableGridFieldService
+        public aiTableGridSelectionService: AITableGridSelectionService,
+        private aiTableGridFieldService: AITableGridFieldService,
+        private ngZone: NgZone
     ) {}
 
     ngOnInit(): void {
         this.initAITable();
         this.initService();
         this.buildFieldMenus();
+        this.ngZone.runOutsideAngular(() => {
+            this.aiTableGridEventService.mousedownEvent$.pipe(this.takeUntilDestroyed).subscribe((event) => {
+                if ((event as MouseEvent)?.target) {
+                    this.aiTableGridSelectionService.updateSelect(event as MouseEvent);
+                }
+            });
+        });
     }
 
     initAITable() {
@@ -116,6 +132,7 @@ export class AITableGrid implements OnInit {
 
     initService() {
         this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldPropertyEditor);
+        this.aiTableGridSelectionService.initialize(this.aiTable);
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
         this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
@@ -127,6 +144,14 @@ export class AITableGrid implements OnInit {
 
     addRecord() {
         Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
+    }
+
+    selectRecord(recordId: string) {
+        this.aiTableGridSelectionService.selectRecord(recordId);
+    }
+
+    toggleSelectAll(checked: boolean) {
+        this.aiTableGridSelectionService.toggleSelectAll(checked);
     }
 
     addField(gridColumnBlank: HTMLElement) {

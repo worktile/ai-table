@@ -1,6 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from '../constants';
 import { getRecordOrField } from '../utils';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
@@ -16,6 +16,8 @@ export class AITableGridEventService {
 
     takeUntilDestroyed = takeUntilDestroyed();
 
+    mousedownEvent$ = new Subject<MouseEvent>();
+
     constructor(private thyPopover: ThyPopover) {}
 
     initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
@@ -28,6 +30,12 @@ export class AITableGridEventService {
             .pipe(this.takeUntilDestroyed)
             .subscribe((event) => {
                 this.dblClick(event as MouseEvent);
+            });
+
+        fromEvent<MouseEvent>(element, 'mousedown')
+            .pipe(this.takeUntilDestroyed)
+            .subscribe((event) => {
+                this.mousedownEvent$.next(event as MouseEvent);
             });
     }
 

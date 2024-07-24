@@ -47,7 +47,7 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': null
+                'column-4': 1
             }
         }
     ],
