@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, Signal, WritableSignal, signal } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent, Subject } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from '../constants';
