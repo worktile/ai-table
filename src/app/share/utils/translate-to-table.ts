@@ -1,34 +1,24 @@
-import { Path } from '@ai-table/grid';
+import { AITableFields, AITableRecords, Path } from '@ai-table/grid';
 import { SharedType } from '../shared';
 
-export const translateRecord = (arrayRecord: []) => {
-    const obj: Record<string, any> = {};
-    arrayRecord.forEach((item: any) => {
-        obj[item.id] = item.fieldValue;
+export const translateRecord = (arrayRecord: any[], fields: AITableFields) => {
+    const fieldIds = fields.map((item) => item.id);
+    const recordValue: Record<string, any> = {};
+    fieldIds.forEach((item, index) => {
+        recordValue[item] = arrayRecord[index + 1] || '';
     });
-
-    return obj;
+    return recordValue;
 };
 
 export const translateSharedTypeToTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();
-    const records = data['records'].map((record: any) => {
+    const fields: AITableFields = data['fields'];
+    const records: AITableRecords = data['records'].map((record: any) => {
         return {
-            id: record.id,
-            value: translateRecord(record.value)
+            id: record[0],
+            value: translateRecord(record, fields)
         };
     });
-    const fields = data['fields'].map((item: any) => {
-        const newField = {
-            ...item,
-            type: Number(item.type)
-        };
-        if (newField.options) {
-            newField.options = Object.values(newField.options);
-        }
-        return newField;
-    });
-
     return {
         records,
         fields

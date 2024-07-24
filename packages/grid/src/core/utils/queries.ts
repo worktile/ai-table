@@ -20,7 +20,10 @@ export const AITableQueries = {
         if (!aiTable || !aiTable.records() || !aiTable.fields()) {
             throw new Error(`Cannot find a descendant at path [${path}]`);
         }
-        const fieldId = aiTable.fields()[path[1]].id;
-        return aiTable.records()[path[0]].value[fieldId];
+        const field = aiTable.fields()[path[1]];
+        if(!field){
+            throw new Error(`Cannot find a descendant at path [${path}]`);
+        }
+        return aiTable.records()[path[0]].value[field.id];
     }
 };

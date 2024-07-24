@@ -1,6 +1,5 @@
-import { SharedType, toSyncElement } from '../shared';
-import { AddFieldAction } from '@ai-table/grid';
-import * as Y from 'yjs';
+import { SharedType, SyncArrayElement, toSyncElement } from '../shared';
+import { AddFieldAction, getDefaultFieldValue } from '@ai-table/grid';
 
 export default function addField(sharedType: SharedType, action: AddFieldAction): SharedType {
     const fields = sharedType.get('fields');
@@ -8,16 +7,12 @@ export default function addField(sharedType: SharedType, action: AddFieldAction)
     if (fields) {
         fields.insert(path, [toSyncElement(action.field)]);
     }
-    const records = sharedType.get('records');
+    const records = sharedType.get('records') as SyncArrayElement;
     if (records) {
-        records.forEach((item) => {
-            const value = item.get('value') as Y.Array<any>;
-            const newRecord = {
-                id: action.field.id,
-                fieldValue: ''
-            };
-            value.insert(path, [toSyncElement(newRecord)]);
-        });
+        for (let value of records) {
+            const newRecord = getDefaultFieldValue(action.field.type);
+            value.insert(path + 1, [newRecord]);
+        }
     }
 
     return sharedType;

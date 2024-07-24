@@ -5,7 +5,7 @@ export default function addRecord(sharedType: SharedType, action: AddRecordActio
     const records = sharedType.get('records');
     if (records) {
         const path = action.path[0];
-        records.insert(path, [toRecordSyncElement(action.record)])
+        records.insert(path, [toRecordSyncElement(action.record)]);
     }
 
     return sharedType;
