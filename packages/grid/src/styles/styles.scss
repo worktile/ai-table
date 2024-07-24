@@ -37,14 +37,14 @@
     .grid-cell {
         min-height: 44px;
         max-height: 148px;
-        overflow: auto;
         display: flex;
         align-items: center;
         width: 300px;
         border-left: 1px solid variables.$gray-200;
-        padding-left: 12px;
+        padding: 0 12px;
         position: relative;
         cursor: pointer;
+        justify-content: space-between;
         .autofill-container {
             position: absolute;
             width: 4px;
@@ -67,6 +67,18 @@
             }
         }
     }
+
+    .grid-field {
+        .grid-field-action {
+            visibility: hidden;
+        }
+        &:hover {
+            .grid-field-action {
+                visibility: visible;
+            }
+        }
+    }
+
     .grid-column-blank {
         flex: 1;
         min-width: 180px;
