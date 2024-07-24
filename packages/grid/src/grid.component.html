@@ -3,7 +3,12 @@
         <label thyCheckbox thyLabelText="" [ngModel]="isSelectedAll" (ngModelChange)="toggleSelectAll($event)"></label>
     </div>
     @for (field of gridData().fields; track field.id) {
-        <div class="grid-cell grid-column-field" #fieldAction [attr.fieldId]="field.id">
+        <div
+            class="grid-cell grid-column-field"
+            #fieldAction
+            [attr.fieldId]="field.id"
+            [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field.id) }"
+        >
             {{ field.name }}
             <a thyAction thyActiveClass="active" thyIcon="more-vertical" [thyDropdown]="fieldMenu" href="javascript:;">
                 <thy-dropdown-menu #fieldMenu>
@@ -18,7 +23,7 @@
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record.id; let index = $index) {
-        <div class="grid-row d-flex">
+        <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record.id) }">
             <div class="grid-row-index">
                 <label
                     [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
@@ -30,7 +35,17 @@
                 <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>
             @for (field of gridData().fields; track $index) {
-                <div class="grid-cell" [attr.type]="[field.type]" [attr.fieldId]="[field.id]" [attr.recordId]="[record.id]" #cell>
+                <div
+                    class="grid-cell"
+                    [ngClass]="{
+                        highlight: aiTable.selection().selectedCells.has(record.id) || aiTable.selection().selectedFields.has(field.id),
+                        selected: aiTable.selection().selectedCells.get(record.id)?.hasOwnProperty(field.id)
+                    }"
+                    [attr.type]="[field.type]"
+                    [attr.fieldId]="[field.id]"
+                    [attr.recordId]="[record.id]"
+                    #cell
+                >
                     @switch (field.type) {
                         @case (AITableFieldType.SingleSelect) {
                             @if (record.value[field.id] | selectOption: field['options']; as selectedOption) {

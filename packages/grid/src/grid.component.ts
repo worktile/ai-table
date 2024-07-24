@@ -110,7 +110,7 @@ export class AITableGrid implements OnInit {
         this.initService();
         this.buildFieldMenus();
         this.ngZone.runOutsideAngular(() => {
-            this.aiTableGridEventService.clickEvent$.pipe(this.takeUntilDestroyed).subscribe((event) => {
+            this.aiTableGridEventService.mousedownEvent$.pipe(this.takeUntilDestroyed).subscribe((event) => {
                 if ((event as MouseEvent)?.target) {
                     this.aiTableGridSelectionService.updateSelect(event as MouseEvent);
                 }
