@@ -51,31 +51,18 @@ export class AITableGridSelectionService {
         }
     }
 
-    cellType(cell: HTMLElement) {
-        const cellDom = cell.closest('.grid-cell');
-        const colDom = cell.closest('.grid-column-field');
-        if (cellDom && cellDom.getAttribute('fieldid') && cellDom.getAttribute('recordid')) {
-            return { type: 'cell', element: cellDom };
+    updateSelect(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+        const cellDom = target.closest('.grid-cell');
+        const colDom = target.closest('.grid-column-field');
+        if (cellDom) {
+            const fieldId = cellDom.getAttribute('fieldId');
+            const recordId = cellDom.getAttribute('recordId');
+            fieldId && recordId && this.selectCell(recordId, fieldId);
         }
         if (colDom) {
-            return { type: 'col', element: colDom };
-        }
-        return {};
-    }
-
-    updateSelect(event: MouseEvent) {
-        const cell = this.cellType(event.target as HTMLElement);
-        let fieldId = '';
-        let recordId = '';
-        if (cell.type) {
-            fieldId = cell.element.getAttribute('fieldId')!;
-            recordId = cell.element.getAttribute('recordId')!;
-        }
-        if (cell?.type === 'cell') {
-            this.selectCell(recordId, fieldId);
-        }
-        if (cell?.type === 'col') {
-            this.selectField(fieldId);
+            const fieldId = colDom.getAttribute('fieldId');
+            fieldId && this.selectField(fieldId);
         }
     }
 }
