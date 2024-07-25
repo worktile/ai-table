@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AITableSelectOption }  from '../core';;
+import { AITableSelectOption } from '../core';
 
 @Pipe({
     name: 'selectOption',

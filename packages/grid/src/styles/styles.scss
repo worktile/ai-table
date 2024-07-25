@@ -22,17 +22,50 @@
     .grid-row {
         &:hover {
             background-color: variables.$gray-80;
+            .unchecked-box {
+                display: block;
+            }
+            .grid-row-number {
+                display: none;
+            }
+        }
+        &.highlight {
+            background: variables.$secondary-item-active;
         }
     }
 
     .grid-cell {
-        height: 44px;
+        min-height: 44px;
+        max-height: 148px;
+        overflow: auto;
         display: flex;
         align-items: center;
         width: 300px;
         border-left: 1px solid variables.$gray-200;
-        justify-content: center;
+        padding-left: 12px;
+        position: relative;
         cursor: pointer;
+        .autofill-container {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            right: 0;
+            bottom: 0;
+            background: variables.$primary;
+            cursor: crosshair;
+            z-index: 100;
+            display: none;
+        }
+        &.highlight {
+            background: variables.$secondary-item-active;
+        }
+        &.selected {
+            border: 2px solid variables.$primary;
+            background: variables.$white;
+            .autofill-container {
+                display: block;
+            }
+        }
     }
     .grid-column-blank {
         flex: 1;
@@ -48,6 +81,21 @@
             &:hover {
                 background-color: variables.$gray-80;
             }
+        }
+    }
+    .grid-row-index {
+        .checked-box {
+            display: block;
+        }
+        .unchecked-box {
+            display: none;
+        }
+        .grid-row-no-number {
+            display: none;
+        }
+
+        .grid-row-number {
+            display: block;
         }
     }
 
