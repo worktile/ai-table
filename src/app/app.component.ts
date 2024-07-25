@@ -15,6 +15,13 @@ import {
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
+import { withCustomApply } from './plugins/custom-action.plugin';
+import { ThyOption } from 'ngx-tethys/shared';
+import { ThySelect } from 'ngx-tethys/select';
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { CustomActions } from './action';
+import { AITableView, RowHeight } from './types/view';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -117,7 +124,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -127,6 +134,27 @@ export class AppComponent implements OnInit, AfterViewInit {
     fields!: WritableSignal<AITableFields>;
 
     aiTable!: AITable;
+
+    selected?: string;
+
+    view: AITableView = { rowHeight: RowHeight.short, id: 'view1', name: '表格1' };
+
+    plugins = [withCustomApply];
+
+    listOfOption = [
+        {
+            value: 'short',
+            text: 'short'
+        },
+        {
+            value: 'medium',
+            text: 'medium'
+        },
+        {
+            value: 'tall',
+            text: 'tall'
+        }
+    ];
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -188,5 +216,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     getLocalStorage() {
         const data = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         return data ? JSON.parse(data) : initValue;
+    }
+
+    changeRowHeight(event: string) {
+        CustomActions.updateRowHeight(this.aiTable as any, this.view, 'rowHeight', event);
+        console.log(this.view);
     }
 }

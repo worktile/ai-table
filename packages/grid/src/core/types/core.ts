@@ -91,3 +91,5 @@ export interface AITableFieldInfo {
     name: string;
     icon: string;
 }
+
+export type AIPlugin = (aiTable: AITable) => AITable;
