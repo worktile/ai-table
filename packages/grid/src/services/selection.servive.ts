@@ -54,7 +54,7 @@ export class AITableGridSelectionService {
     updateSelect(event: MouseEvent) {
         const target = event.target as HTMLElement;
         const cellDom = target.closest('.grid-cell');
-        const colDom = target.closest('.grid-column-field');
+        const colDom = target.closest('.grid-field');
         if (cellDom) {
             const fieldId = cellDom.getAttribute('fieldId');
             const recordId = cellDom.getAttribute('recordId');

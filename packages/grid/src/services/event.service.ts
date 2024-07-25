@@ -73,6 +73,7 @@ export class AITableGridEventService {
             height: height + 2 + 'px',
             placement: 'top',
             offset: -(height + 4),
+            minWidth: width,
             initialState: {
                 field: field,
                 record: record,
