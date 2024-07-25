@@ -186,6 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!YjsAITable.isLocal(this.aiTable)) {
                 if (!isInitialized) {
                     const data = translateSharedTypeToTable(this.sharedType!);
+                    console.log(123, data);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
                     isInitialized = true;

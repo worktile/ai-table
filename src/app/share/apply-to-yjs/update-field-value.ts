@@ -5,9 +5,10 @@ export default function updateFieldValue(sharedType: SharedType, action: UpdateF
     const records = sharedType.get('records');
     if (records) {
         const record = records?.get(action.path[0]) as SyncArrayElement;
-        const index = action.path[1] + 1;
-        record.delete(index);
-        record.insert(index, [action.newFieldValue]);
+        const customField = record.get(1);
+        const index = action.path[1];
+        customField.delete(index);
+        customField.insert(index, [action.newFieldValue]);
     }
 
     return sharedType;

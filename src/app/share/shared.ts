@@ -33,7 +33,7 @@ export function toSharedType(
     sharedType.set('fields', fieldSharedType);
     fieldSharedType.insert(0, data.fields.map(toSyncElement));
 
-    const recordSharedType = new Y.Array();
+    const recordSharedType = new Y.Array<Y.Array<any>>();
     sharedType.set('records', recordSharedType);
     recordSharedType.insert(0, data.records.map(toRecordSyncElement));
 }
@@ -57,13 +57,19 @@ export function toSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toRecordSyncElement(record: AITableRecord): Y.Array<any> {
-    // To save memory, convert map to array.
-    const element = new Y.Array();
-    const recordArray = [record['id']];
+export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>> {
+    const fixedFieldArray = new Y.Array();
+    fixedFieldArray.insert(0, [record['id']]);
+
+    const customFieldArray = new Y.Array();
+    const customFields = [];
     for (const fieldId in record['value']) {
-        recordArray.push(record['value'][fieldId]);
+        customFields.push(record['value'][fieldId]);
     }
-    element.insert(0, recordArray);
+    customFieldArray.insert(0, customFields);
+
+    // To save memory, convert map to array.
+    const element = new Y.Array<Y.Array<any>>();
+    element.insert(0, [fixedFieldArray, customFieldArray]);
     return element;
 }

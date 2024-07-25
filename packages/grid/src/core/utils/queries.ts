@@ -14,15 +14,22 @@ export const AITableQueries = {
         if (!isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
             return [fieldIndex] as AIFieldPath;
         }
-        throw new Error(`Unable to find the path: ${JSON.stringify({ ...(field || {}), ...(record || {}) })}`);
+        throw new Error(`can not find the path: ${JSON.stringify({ ...(field || {}), ...(record || {}) })}`);
     },
     getFieldValue(aiTable: AITable, path: [number, number]): any {
-        if (!aiTable || !aiTable.records() || !aiTable.fields()) {
-            throw new Error(`Cannot find a descendant at path [${path}]`);
+        if (!aiTable) {
+            throw new Error(`aiTable does not exist [${path}]`);
         }
+        if (!aiTable.records()) {
+            throw new Error(`aiTable has no records [${path}]`);
+        }
+        if (!aiTable.fields()) {
+            throw new Error(`aiTable has no fields [${path}]`);
+        }
+
         const field = aiTable.fields()[path[1]];
-        if(!field){
-            throw new Error(`Cannot find a descendant at path [${path}]`);
+        if (!field) {
+            throw new Error(`can not find field at path [${path}]`);
         }
         return aiTable.records()[path[0]].value[field.id];
     }

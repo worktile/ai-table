@@ -11,7 +11,8 @@ export default function addField(sharedType: SharedType, action: AddFieldAction)
     if (records) {
         for (let value of records) {
             const newRecord = getDefaultFieldValue(action.field.type);
-            value.insert(path + 1, [newRecord]);
+            const customField = value.get(1);
+            customField.insert(path, [newRecord]);
         }
     }
 

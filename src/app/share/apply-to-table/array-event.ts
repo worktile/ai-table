@@ -20,9 +20,9 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                     if (targetPath.length) {
                         try {
                             delta.insert?.map((item: any) => {
-                                const path = [targetPath[0], offset - 1] as AIFieldValuePath;
+                                const path = [targetPath[0], offset] as AIFieldValuePath;
                                 const fieldValue = AITableQueries.getFieldValue(aiTable, path);
-                                 // To exclude insert triggered by field inserts.
+                                // To exclude insert triggered by field inserts.
                                 if (fieldValue !== item) {
                                     actions.push({
                                         type: ActionName.UpdateFieldValue,
@@ -36,12 +36,13 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                     } else {
                         delta.insert?.map((item: Y.Array<any>, index) => {
                             const data = item.toJSON();
+                            const [fixedField, customField] = data;
                             actions.push({
                                 type: ActionName.AddRecord,
                                 path: [offset + index],
                                 record: {
-                                    id: data[0],
-                                    value: translateRecord(data, aiTable.fields())
+                                    id: fixedField[0],
+                                    value: translateRecord(customField, aiTable.fields())
                                 }
                             });
                         });
