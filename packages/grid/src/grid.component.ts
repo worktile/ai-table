@@ -15,7 +15,8 @@ import {
     AITableFields,
     AITableFieldType,
     AITableRecords,
-    createDefaultField
+    createDefaultField,
+    AIPlugin
 } from './core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableGridEventService } from './services/event.service';
@@ -77,6 +78,8 @@ export class AITableGrid implements OnInit {
 
     aiReadonly = input<boolean>();
 
+    aiPlugins = input<AIPlugin[]>();
+
     AITableFieldType = AITableFieldType;
 
     takeUntilDestroyed = takeUntilDestroyed();
@@ -120,6 +123,9 @@ export class AITableGrid implements OnInit {
 
     initAITable() {
         this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiPlugins()?.forEach((plugin) => {
+            this.aiTable = plugin(this.aiTable);
+        });
         this.aiTableInitialized.emit(this.aiTable);
         this.aiTable.onChange = () => {
             this.onChange.emit({

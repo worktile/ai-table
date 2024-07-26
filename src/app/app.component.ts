@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -15,6 +15,13 @@ import {
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
+import { withCustomApply } from './plugins/custom-action.plugin';
+import { ThyOption } from 'ngx-tethys/shared';
+import { ThySelect } from 'ngx-tethys/select';
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { CustomActions } from './action';
+import { AITableView, AIViewTable, RowHeight } from './types/view';
 import { WebsocketProvider } from 'y-websocket';
 import { connectProvider } from './share/provider';
 import { SharedType, getSharedType } from './share/shared';
@@ -124,7 +131,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -135,6 +142,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     aiTable!: AITable;
 
+    views = signal([
+        { rowHeight: RowHeight.short, id: 'view1', name: '表格1', isActive: true },
+        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' }
+    ]);
+
+    plugins = [withCustomApply];
+
+    listOfOption = [
+        {
+            value: 'short',
+            text: 'short'
+        },
+        {
+            value: 'medium',
+            text: 'medium'
+        },
+        {
+            value: 'tall',
+            text: 'tall'
+        }
+    ];
     sharedType!: SharedType | null;
 
     provider!: WebsocketProvider | null;
@@ -154,6 +182,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         ]
     };
+
+    activeView = computed(() => {
+        return { ...this.views().find((view) => view?.isActive) } as AITableView;
+    });
 
     constructor(
         private iconRegistry: ThyIconRegistry,
@@ -227,6 +259,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable;
+        (this.aiTable as AIViewTable).views = this.views;
     }
 
     setLocalData(data: string) {
@@ -238,6 +271,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         return data ? JSON.parse(data) : initValue;
     }
 
+    changeRowHeight(event: string) {
+        CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
+    }
 
     disconnect() {
         if (this.provider) {
