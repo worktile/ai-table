@@ -6,7 +6,7 @@ export const withCustomApply = (aiTable: AITable) => {
     const viewTable = aiTable as AIViewTable;
     viewTable.viewApply = (action: AIViewAction) => {
         aiTable.actions.push(action as unknown as AITableAction);
-        CustomActions.applyView(aiTable, action);
+        CustomActions.transform(viewTable, action);
         if (!FLUSHING.get(aiTable)) {
             FLUSHING.set(aiTable, true);
             Promise.resolve().then(() => {

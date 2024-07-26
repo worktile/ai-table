@@ -1,25 +1,38 @@
-import { AITable } from '@ai-table/grid';
-import { AITableView, ViewActionName } from '../types/view';
+import { AITableView, AIViewAction, ViewActionName } from '../types/view';
 import { AIViewTable } from '../types/view';
+import { createDraft, finishDraft } from 'immer';
 
-export function updateRowHeight(aiTable: AIViewTable, view: AITableView, key: string, value: any) {
-    const operation = {
-        type: ViewActionName.updateRowHeight,
-        view: view,
-        key: key,
-        value: value
-    };
-    aiTable.viewApply(operation);
+export function setView(aiTable: AIViewTable, newView: AITableView, path: [number]) {
+    const [index] = path;
+    const view = aiTable.views()[index];
+    if (JSON.stringify(view) !== JSON.stringify(newView)) {
+        const operation = {
+            type: ViewActionName.setView,
+            view,
+            newView,
+            path
+        };
+        aiTable.viewApply(operation);
+    }
 }
 
-export const applyView = (aiTable: AITable, options: any) => {
-    const view = options.view;
-    const key = options.key;
-    const value = options.value;
-    view[key] = value;
+export const GeneralActions = {
+    transform(aiTable: AIViewTable, op: AIViewAction): void {
+        const views = createDraft(aiTable.views());
+        applyView(aiTable, views, op);
+        aiTable.views.update(() => {
+            return finishDraft(views);
+        });
+    }
+};
+
+export const applyView = (aiTable: AIViewTable, views: AITableView[], options: AIViewAction) => {
+    const [viewIndex] = options.path;
+    views[viewIndex] = options.newView;
+    return views;
 };
 
 export const ViewActions = {
-    updateRowHeight,
+    setView,
     applyView
 };

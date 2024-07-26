@@ -1,5 +1,6 @@
 import { AITable } from '@ai-table/grid';
 import { Direction } from '@angular/cdk/bidi';
+import { Signal, WritableSignal } from '@angular/core';
 
 export enum RowHeight {
     short = 'short',
@@ -30,16 +31,17 @@ export interface AITableView {
 }
 
 export enum ViewActionName {
-    updateRowHeight = 'update_row_height'
+    setView = 'set_view'
 }
 
 export interface AIViewAction {
-    type: ViewActionName.updateRowHeight;
+    type: ViewActionName.setView;
     view: AITableView;
-    key: string;
-    value: any;
+    newView: AITableView;
+    path: [number];
 }
 
 export interface AIViewTable extends AITable {
+    views: WritableSignal<AITableView[]>;
     viewApply: (action: AIViewAction) => void;
 }

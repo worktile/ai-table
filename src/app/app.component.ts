@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, computed, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -21,7 +21,7 @@ import { ThySelect } from 'ngx-tethys/select';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { CustomActions } from './action';
-import { AITableView, RowHeight } from './types/view';
+import { AITableView, AIViewTable, RowHeight } from './types/view';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -135,9 +135,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     aiTable!: AITable;
 
-    selected?: string;
-
-    view: AITableView = { rowHeight: RowHeight.short, id: 'view1', name: '表格1' };
+    views = signal([
+        { rowHeight: RowHeight.short, id: 'view1', name: '表格1', isActive: true },
+        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' }
+    ]);
 
     plugins = [withCustomApply];
 
@@ -171,6 +172,10 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
         ]
     };
+
+    activeView = computed(() => {
+        return { ...this.views().find((view) => view?.isActive) } as AITableView;
+    });
 
     constructor(
         private iconRegistry: ThyIconRegistry,
@@ -207,6 +212,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable;
+        (this.aiTable as AIViewTable).views = this.views;
     }
 
     setLocalData(data: string) {
@@ -219,7 +225,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     changeRowHeight(event: string) {
-        CustomActions.updateRowHeight(this.aiTable as any, this.view, 'rowHeight', event);
-        console.log(this.view);
+        CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
     }
 }

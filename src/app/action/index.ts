@@ -1,6 +1,7 @@
-import { updateRowHeight, applyView } from './view';
+import { setView, applyView, GeneralActions } from './view';
 
 export const CustomActions = {
-    updateRowHeight,
-    applyView
+    setView,
+    applyView,
+    ...GeneralActions
 };
