@@ -5,32 +5,38 @@ export const BasicFields = [
     {
         type: AITableFieldType.Text,
         name: '文本',
-        icon: 'font'
+        icon: 'font',
+        width: 300
     },
     {
         type: AITableFieldType.SingleSelect,
         name: '单选',
-        icon: 'check-circle'
+        icon: 'check-circle',
+        width: 200
     },
     {
         type: AITableFieldType.Number,
         name: '数字',
-        icon: 'hashtag'
+        icon: 'hashtag',
+        width: 200
     },
     {
         type: AITableFieldType.DateTime,
         name: '日期',
-        icon: 'calendar'
+        icon: 'calendar',
+        width: 200
     },
     {
         type: AITableFieldType.Rating,
         name: '评分',
-        icon: 'star-circle'
+        icon: 'star-circle',
+        width: 200
     },
     {
         type: AITableFieldType.Link,
         name: '链接',
-        icon: 'link-insert'
+        icon: 'link-insert',
+        width: 300
     }
 ];
 

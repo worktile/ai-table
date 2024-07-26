@@ -49,7 +49,8 @@ export interface AITableField {
     id: string;
     name: string;
     type: AITableFieldType;
-    width?: string;
+    icon?: string;
+    width?: number;
     hidden?: boolean;
     frozen?: boolean;
     statType?: AITableStatType;
@@ -90,6 +91,7 @@ export interface AITableFieldInfo {
     type: AITableFieldType;
     name: string;
     icon: string;
+    width: number;
 }
 
 export type AIPlugin = (aiTable: AITable) => AITable;
