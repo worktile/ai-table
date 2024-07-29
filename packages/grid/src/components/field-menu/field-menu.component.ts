@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ElementRef, signal, Signal } from '@angular/core';
 import { AITableFieldMenu } from '../../types/field';
-import { AITable } from '../../core';
+import { AITable, AITableField } from '../../core';
 import {
     ThyDropdownMenuItemDirective,
     ThyDropdownMenuItemNameDirective,
@@ -9,7 +9,7 @@ import {
 } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyDivider } from 'ngx-tethys/divider';
-import { AITableField, getRecordOrField } from '@ai-table/grid';
+import { getRecordOrField } from '../../utils';
 
 @Component({
     selector: 'field-menu',
