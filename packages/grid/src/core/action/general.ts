@@ -28,6 +28,17 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                 };
             });
         }
+
+        case ActionName.SetField: {
+            const [fieldIndex] = options.path;
+            if (fieldIndex > -1) {
+                fields.splice(fieldIndex, 1, {
+                    ...fields[fieldIndex],
+                    ...options.newField
+                });
+            }
+            break;
+        }
     }
     return {
         records,

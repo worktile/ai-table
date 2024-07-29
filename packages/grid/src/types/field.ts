@@ -5,7 +5,7 @@ export interface AITableFieldMenu {
     id: string;
     name?: string;
     icon?: string;
-    exec?: (aiTable: AITable, field: WritableSignal<AITableField>, origin?: HTMLElement | ElementRef<any>) => void;
+    exec?: (aiTable: AITable, field: Signal<AITableField>, origin?: HTMLElement | ElementRef<any>) => void;
     hidden?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
     disabled?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
 }

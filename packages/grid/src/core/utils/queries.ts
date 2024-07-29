@@ -32,5 +32,12 @@ export const AITableQueries = {
             throw new Error(`can not find field at path [${path}]`);
         }
         return aiTable.records()[path[0]].value[field.id];
+    },
+
+    getField(aiTable: AITable, path: AIFieldPath): AITableField {
+        if (!aiTable) {
+            throw new Error(`aiTable does not exist [${path}]`);
+        }
+        return aiTable.fields()[path[0]];
     }
 };
