@@ -1,4 +1,4 @@
-import { ActionName, AddFieldAction, AIFieldPath, AITable, AITableField } from '../types';
+import { ActionName, AddFieldAction, AIFieldPath, AITable, AITableField, SetFieldAction } from '../types';
 import { AITableQueries } from '../utils';
 
 export function addField(aiTable: AITable, field: AITableField, path: AIFieldPath) {

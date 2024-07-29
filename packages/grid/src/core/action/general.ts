@@ -27,6 +27,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                     ...newRecord
                 };
             });
+            break;
         }
 
         case ActionName.SetField: {
