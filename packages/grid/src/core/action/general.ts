@@ -27,7 +27,22 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                     ...newRecord
                 };
             });
+            break;
         }
+        case ActionName.RemoveField: {
+            const [fieldIndex] = options.path;
+            const fieldId = aiTable.fields()[fieldIndex].id;
+            fields.splice(fieldIndex, 1);
+            records.forEach((item) => {
+                delete item.value[fieldId];
+            });
+            break;
+        }
+        case ActionName.RemoveRecord: {
+            const [recordIndex] = options.path;
+            records.splice(recordIndex, 1);
+            break;
+        }   
     }
     return {
         records,

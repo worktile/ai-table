@@ -10,7 +10,9 @@ import {
     AITable,
     AIFieldConfig,
     EditFieldPropertyItem,
-    DividerMenuItem
+    DividerMenuItem,
+    RemoveFieldItem,
+    Actions
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -29,6 +31,7 @@ import { YjsAITable } from './share/yjs-table';
 import applyActionOps from './share/apply-to-yjs';
 import { applyYjsEvents } from './share/apply-to-table';
 import { translateSharedTypeToTable } from './share/utils/translate-to-table';
+import { ThyAction } from 'ngx-tethys/action';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -131,7 +134,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption, ThyAction],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -179,7 +182,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},
                 hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
                 disabled: (aiTable: AITable, field: Signal<AITableField>) => false
-            }
+            },
+            DividerMenuItem,
+            RemoveFieldItem
         ]
     };
 
@@ -218,7 +223,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!YjsAITable.isLocal(this.aiTable)) {
                 if (!isInitialized) {
                     const data = translateSharedTypeToTable(this.sharedType!);
-                    console.log(123, data);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
                     isInitialized = true;
@@ -273,6 +277,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     changeRowHeight(event: string) {
         CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
+    }
+
+    removeRecord() {
+        const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
+        recordIds.forEach((item) => {
+            const path = this.aiTable.records().findIndex((record) => record.id === item);
+            Actions.removeRecord(this.aiTable, [path]);
+        });
     }
 
     disconnect() {

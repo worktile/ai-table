@@ -1,7 +1,7 @@
-import { AITable, AITableField } from '../core';
+import { Actions, AIFieldPath, AITable, AITableField, AITableQueries } from '../core';
 import { AITableFieldMenu } from '../types/field';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services/field.service';
-import { ElementRef, WritableSignal } from '@angular/core';
+import { ElementRef, Signal, WritableSignal } from '@angular/core';
 
 export const DividerMenuItem = {
     id: 'divider'
@@ -17,4 +17,14 @@ export const EditFieldPropertyItem = {
     }
 };
 
-export const DefaultFieldMenus: AITableFieldMenu[] = [EditFieldPropertyItem];
+export const RemoveFieldItem = {
+    id: 'removeField',
+    name: '删除列',
+    icon: 'trash',
+    exec: (aiTable: AITable, field: Signal<AITableField>) => {
+        const path = AITableQueries.findPath(aiTable, field()) as AIFieldPath;
+        Actions.removeField(aiTable, path);
+    }
+};
+
+export const DefaultFieldMenus: AITableFieldMenu[] = [EditFieldPropertyItem, RemoveFieldItem];
