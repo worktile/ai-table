@@ -1,5 +1,5 @@
 import { AITable, AITableField } from '../core';
-import { AITableFieldMenu } from '../types/field';
+import { AITableFieldMenuItem } from '../types/field';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services/field.service';
 import { ElementRef, signal, Signal, WritableSignal } from '@angular/core';
 
@@ -18,4 +18,4 @@ export const EditFieldPropertyItem = {
     }
 };
 
-export const DefaultFieldMenus: AITableFieldMenu[] = [EditFieldPropertyItem];
+export const DefaultFieldMenus: AITableFieldMenuItem[] = [EditFieldPropertyItem];

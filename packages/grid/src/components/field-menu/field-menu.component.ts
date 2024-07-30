@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ElementRef, signal, Signal } from '@angular/core';
-import { AITableFieldMenu } from '../../types/field';
+import { AITableFieldMenuItem } from '../../types/field';
 import { AITable, AITableField } from '../../core';
 import {
     ThyDropdownMenuItemDirective,
@@ -30,11 +30,11 @@ export class FieldMenu {
 
     @Input({ required: true }) aiTable!: AITable;
 
-    @Input({ required: true }) fieldMenus!: AITableFieldMenu[];
+    @Input({ required: true }) fieldMenus!: AITableFieldMenuItem[];
 
     @Input() origin!: HTMLElement | ElementRef<any>;
 
-    execute(menu: AITableFieldMenu) {
+    execute(menu: AITableFieldMenuItem) {
         const field = getRecordOrField(this.aiTable.fields, this.fieldId) as Signal<AITableField>;
         menu.exec && menu.exec(this.aiTable, field, this.origin);
     }

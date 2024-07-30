@@ -1,7 +1,7 @@
-import { ElementRef, Signal, WritableSignal } from '@angular/core';
+import { ElementRef, Signal } from '@angular/core';
 import { AITable, AITableField } from '../core';
 
-export interface AITableFieldMenu {
+export interface AITableFieldMenuItem {
     id: string;
     name?: string;
     icon?: string;

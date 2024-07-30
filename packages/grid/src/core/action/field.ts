@@ -11,14 +11,14 @@ export function addField(aiTable: AITable, field: AITableField, path: AIFieldPat
 }
 
 export function setField(aiTable: AITable, value: Partial<AITableField>, path: AIFieldPath) {
-    const node = AITableQueries.getField(aiTable, path);
-    if (node) {
-        const field: Partial<AITableField> = {};
+    const field = AITableQueries.getField(aiTable, path);
+    if (field) {
+        const oldField: Partial<AITableField> = {};
         const newField: Partial<AITableField> = {};
         for (const k in value) {
-            if (node[k] !== value[k]) {
-                if (node.hasOwnProperty(k)) {
-                    field[k] = node[k];
+            if (field[k] !== value[k]) {
+                if (field.hasOwnProperty(k)) {
+                    oldField[k] = field[k];
                 }
                 newField[k] = value[k];
             }
@@ -26,7 +26,7 @@ export function setField(aiTable: AITable, value: Partial<AITableField>, path: A
 
         const operation: SetFieldAction = {
             type: ActionName.SetField,
-            field,
+            field: oldField,
             newField,
             path
         };
@@ -34,7 +34,6 @@ export function setField(aiTable: AITable, value: Partial<AITableField>, path: A
         aiTable.apply(operation);
     }
 }
-
 
 export const FieldActions = {
     addField,

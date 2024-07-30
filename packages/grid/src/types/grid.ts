@@ -1,5 +1,5 @@
 import { AITableField, AITableFieldType, AITableRecord } from '../core';
-import { AITableFieldMenu } from './field';
+import { AITableFieldMenuItem } from './field';
 
 export enum AITableRowHeight {
     Short = 1,
@@ -26,5 +26,5 @@ export interface AITableSelection {
 export interface AIFieldConfig {
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldPropertyEditor?: any;
-    fieldMenus?: AITableFieldMenu[];
+    fieldMenus?: AITableFieldMenuItem[];
 }
