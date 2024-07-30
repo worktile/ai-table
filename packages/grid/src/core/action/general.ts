@@ -7,7 +7,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         case ActionName.UpdateFieldValue: {
             const [recordIndex, fieldIndex] = options.path;
             const fieldId = aiTable.fields()[fieldIndex].id;
-            records[recordIndex].value[fieldId] = options.newFieldValue;
+            records[recordIndex].values[fieldId] = options.newFieldValue;
             break;
         }
         case ActionName.AddRecord: {
@@ -23,8 +23,8 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                 [newField.id]: ''
             };
             records.forEach((item) => {
-                item.value = {
-                    ...item.value,
+                item.values = {
+                    ...item.values,
                     ...newRecord
                 };
             });

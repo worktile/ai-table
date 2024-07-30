@@ -5,10 +5,10 @@ export const DEFAULT_COLUMN_WIDTH = 200;
 export const MIN_COLUMN_WIDTH = 80;
 
 export const DBL_CLICK_EDIT_TYPE = [
-    AITableFieldType.Text,
-    AITableFieldType.Number,
-    AITableFieldType.SingleSelect,
-    AITableFieldType.DateTime
+    AITableFieldType.text,
+    AITableFieldType.number,
+    AITableFieldType.select,
+    AITableFieldType.date
 ];
 
 export const RowHeight = {
