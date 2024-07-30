@@ -65,13 +65,13 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                 if(isViewsTranslate){
                     delta.insert?.map((item: Y.Map<any>, index) => {
                         const data = item.toJSON();
-                        const view = (aiTable as AIViewTable).views()[index]
+                        const view = (aiTable as AIViewTable).views()[offset]
                         if (event.path.includes('views')) {
                             actions.push({
                                 type: ViewActionName.setView,
                                 view ,
                                 newView: data,
-                                path: [index]
+                                path: [offset]
                             } as any);
                         }
                     });
