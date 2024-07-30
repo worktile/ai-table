@@ -10,7 +10,8 @@ import {
     AITable,
     AIFieldConfig,
     EditFieldPropertyItem,
-    DividerMenuItem
+    DividerMenuItem,
+    Actions
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -280,6 +281,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.provider.disconnect();
             this.provider = null;
         }
+    }
+
+    moveField() {
+        Actions.moveField(this.aiTable, [1], [3]);
+    }
+
+    moveRecord() {
+        const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
+        selectedRecordIds.reverse().forEach((item) => {
+            const recordIndex = this.aiTable.records().findIndex((record) => record.id === item);
+            Actions.moveRecord(this.aiTable, [1], [recordIndex]);
+        });
     }
 
     ngOnDestroy(): void {

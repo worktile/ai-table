@@ -1,7 +1,10 @@
-行高:
+<!-- 行高:
 <thy-select [(ngModel)]="activeView().rowHeight" style="width: 200px" (ngModelChange)="changeRowHeight($event)">
     <thy-option *ngFor="let option of listOfOption" [thyValue]="option.value" [thyLabelText]="option.text"> </thy-option>
-</thy-select>
+</thy-select> -->
+<button (click)="moveRecord()">移动选中行到第二行</button>
+
+<button (click)="moveField()">移动选中列到第二列</button>
 <ai-table-grid
     [(aiRecords)]="records"
     [(aiFields)]="fields"
@@ -10,3 +13,4 @@
     [aiPlugins]="plugins"
     (aiTableInitialized)="aiTableInitialized($event)"
 ></ai-table-grid>
+
