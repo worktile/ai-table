@@ -12,6 +12,8 @@ export enum ActionName {
     UpdateFieldValue = 'update_field_value',
     AddRecord = 'add_record',
     AddField = 'add_field',
+    RemoveField = 'remove_field',
+    RemoveRecord = 'remove_record',
     SetField = 'set_field'
 }
 
@@ -40,6 +42,17 @@ export type AddFieldAction = {
     field: AITableField;
 };
 
+export type RemoveFieldAction = {
+    type: ActionName.RemoveField;
+    path: AIFieldPath;
+};
+
+export type RemoveRecordAction = {
+    type: ActionName.RemoveRecord;
+    path: AIRecordPath;
+};
+
+
 export type SetFieldAction = {
     type: ActionName.SetField;
     path: AIFieldPath;
@@ -51,4 +64,6 @@ export type AITableAction =
     | UpdateFieldValueAction
     | AddRecordAction
     | AddFieldAction
+    | RemoveRecordAction
+    | RemoveFieldAction
     | SetFieldAction;
