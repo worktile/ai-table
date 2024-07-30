@@ -1,21 +1,19 @@
 import { WritableSignal } from '@angular/core';
 import { AITableAction } from './action';
 import { AITableSelection } from '../../types';
+import { Id } from 'ngx-tethys/types';
 
 export enum AITableFieldType {
-    // NotSupport = 0,
-    Text = 1,
-    Number = 2,
-    SingleSelect = 3,
-    // MultiSelect = 4,
-    DateTime = 5,
-    // Attachment = 6,
-    Link = 7,
-    // Email = 9,
-    // Phone = 10,
-    // Checkbox = 11,
-    Rating = 12
-    // Member = 13
+    text = 'text', // 包含多行文本
+    richText = 'rich_text', // 包含多行文本
+    select = 'select', // 包含单选和多选
+    number = 'number',
+    date = 'date',
+    member = 'member', // 包含单个和多个
+    // cascadeSelect = "cascade_select", // 包含单选和多选，参数复杂后续再进行设计
+    progress = 'progress',
+    rate = 'rate',
+    link = 'link'
 }
 
 export enum AITableStatType {
@@ -45,7 +43,7 @@ export interface AITableSelectOption {
     color?: string;
 }
 
-export interface AITableField {
+export interface AITableField<T = unknown> {
     id: string;
     name: string;
     type: AITableFieldType;
@@ -54,13 +52,38 @@ export interface AITableField {
     hidden?: boolean;
     frozen?: boolean;
     statType?: AITableStatType;
-    [key: string]: AITableSelectOption[] | any;
+    isMultiple?: boolean;
+    [key: string]: T | any;
 }
+
+export type TextFieldValue = string;
+
+export type SelectFieldValue = Id[]; // 数字
+
+export type NumberFieldValue = number;
+
+export type DateFieldValue = { timestamp: number }; // 时间戳
+
+export type MemberFieldValue = Id[];
+
+export type ProgressFieldValue = number; // [0,1]
+
+export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
+
+export type FieldValue =
+    | TextFieldValue
+    | SelectFieldValue
+    | NumberFieldValue
+    | DateFieldValue
+    | MemberFieldValue
+    | ProgressFieldValue
+    | RateFieldValue
+    | any;
 
 export interface AITableRecord {
     id: string;
     checked?: boolean;
-    value: Record<string, any>;
+    values: Record<string, FieldValue>;
 }
 
 export type AITableRecords = AITableRecord[];

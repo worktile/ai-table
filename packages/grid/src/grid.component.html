@@ -14,7 +14,14 @@
                 <thy-icon [thyIconName]="field.icon!" class="mr-2 text-muted"></thy-icon>
                 <span>{{ field.name }}</span>
             </span>
-            <a class="grid-field-action" thyAction thyActiveClass="active" thyIcon="more-vertical" [thyDropdown]="fieldMenu" href="javascript:;">
+            <a
+                class="grid-field-action"
+                thyAction
+                thyActiveClass="active"
+                thyIcon="more-vertical"
+                [thyDropdown]="fieldMenu"
+                href="javascript:;"
+            >
                 <thy-dropdown-menu #fieldMenu>
                     <field-menu [origin]="fieldAction" [fieldId]="field.id" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
                 </thy-dropdown-menu>
@@ -52,30 +59,30 @@
                     #cell
                 >
                     @switch (field.type) {
-                        @case (AITableFieldType.SingleSelect) {
-                            @if (record.value[field.id] | selectOption: field['options']; as selectedOption) {
+                        @case (AITableFieldType.select) {
+                            @if (!field.isMultiple && record.values[field.id] | selectOption: field['options']; as selectedOption) {
                                 <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.name }}</thy-tag>
                             }
                         }
-                        @case (AITableFieldType.DateTime) {
-                            {{ record.value[field.id] | thyDatePickerFormat }}
+                        @case (AITableFieldType.date) {
+                            {{ record.values[field.id] | thyDatePickerFormat }}
                         }
-                        @case (AITableFieldType.Rating) {
-                            <thy-rate [(ngModel)]="record.value[field.id]"></thy-rate>
+                        @case (AITableFieldType.rate) {
+                            <thy-rate [(ngModel)]="record.values[field.id]"></thy-rate>
                         }
-                        @case (AITableFieldType.Link) {
+                        @case (AITableFieldType.link) {
                             <a
                                 class="d-block"
                                 thyStopPropagation
                                 thyFlexibleText
-                                [thyTooltipContent]="record.value[field.id]?.text"
-                                [href]="record.value[field.id]?.url"
+                                [thyTooltipContent]="record.values[field.id]?.text"
+                                [href]="record.values[field.id]?.url"
                                 target="_blank"
-                                >{{ record.value[field.id]?.text }}</a
+                                >{{ record.values[field.id]?.text }}</a
                             >
                         }
                         @default {
-                            <span class="text-truncate"> {{ record.value[field.id] }}</span>
+                            <span class="text-truncate"> {{ record.values[field.id] }}</span>
                         }
                     }
                     <div class="autofill-container"></div>
