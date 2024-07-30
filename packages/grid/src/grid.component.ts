@@ -161,7 +161,7 @@ export class AITableGrid implements OnInit {
     }
 
     addField(gridColumnBlank: HTMLElement) {
-        const field = signal(createDefaultField(this.aiTable, AITableFieldType.Text));
+        const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
         this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
     }
 }

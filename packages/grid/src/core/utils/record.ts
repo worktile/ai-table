@@ -5,10 +5,10 @@ import { idCreator } from './id-creator';
 export function getDefaultRecord(fields: AITableFields) {
     const newRow: AITableRecord = {
         id: idCreator(),
-        value: {}
+        values: {}
     };
     fields.map((item) => {
-        newRow.value[item.id] = getDefaultFieldValue(item.type);
+        newRow.values[item.id] = getDefaultFieldValue(item.type);
     });
     return newRow;
 }
