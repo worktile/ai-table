@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal , effect, untracked } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -19,9 +19,9 @@ import { withCustomApply } from './plugins/custom-action.plugin';
 import { ThyOption } from 'ngx-tethys/shared';
 import { ThySelect } from 'ngx-tethys/select';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { JsonPipe, NgFor } from '@angular/common';
 import { CustomActions } from './action';
-import { AITableView, AIViewTable, RowHeight } from './types/view';
+import { AITableView, AIViewTable, Direction, RowHeight } from './types/view';
 import { WebsocketProvider } from 'y-websocket';
 import { connectProvider } from './share/provider';
 import { SharedType, getSharedType } from './share/shared';
@@ -29,6 +29,8 @@ import { YjsAITable } from './share/yjs-table';
 import applyActionOps from './share/apply-to-yjs';
 import { applyYjsEvents } from './share/apply-to-table';
 import { translateSharedTypeToTable } from './share/utils/translate-to-table';
+import { ThyButton } from 'ngx-tethys/button';
+   
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -43,7 +45,7 @@ const initValue = {
                     url: 'https://www.baidu.com',
                     text: '百度链接'
                 },
-                'column-4': 3
+                'column-4': 1
             }
         },
         {
@@ -52,7 +54,7 @@ const initValue = {
                 'column-1': '文本 2-1',
                 'column-2': '2',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 3
             }
         },
         {
@@ -61,7 +63,7 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 2
             }
         }
     ],
@@ -131,7 +133,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption, ThyButton , JsonPipe],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -184,7 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     activeView = computed(() => {
-        return { ...this.views().find((view) => view?.isActive) } as AITableView;
+        return { ...this.views().find((view: AITableView) => view?.isActive) } as AITableView;
     });
 
     constructor(
@@ -193,6 +195,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         private thyPopover: ThyPopover
     ) {
         this.registryIcon();
+        effect(()=>{
+           const sortCondition = this.activeView().sortCondition;
+            if(sortCondition){
+                untracked(()=>{
+                    const {sortBy, direction} = sortCondition?.conditions[0] 
+                    const records = this.records().sort((a:any,b:any)=>{ return  direction === Direction.ascending ? a.value[sortBy] - b.value[sortBy] : b.value[sortBy] - a.value[sortBy] });
+                    this.records.set([...records])
+                })
+           }
+        },{allowSignalWrites:true})
     }
 
     ngOnInit(): void {
@@ -208,7 +220,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedType = getSharedType(
             {
                 records: this.records(),
-                fields: this.fields()
+                fields: this.fields(),
+                views: this.views()
             },
             !!isInitializeSharedType
         );
@@ -221,6 +234,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log(123, data);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
+                    this.views.set(data.views);
                     isInitialized = true;
                 } else {
                     applyYjsEvents(this.aiTable, events);
@@ -280,6 +294,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.provider.disconnect();
             this.provider = null;
         }
+    }
+
+    sort(){
+        const direction =  this.activeView().sortCondition?.conditions[0].direction
+        const sortCondition = { keepSort:true , conditions:[{sortBy: 'column-4', direction: direction=== Direction.ascending ? Direction.descending:  Direction.ascending}]}
+        this.activeView().sortCondition = sortCondition
+        CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
     }
 
     ngOnDestroy(): void {

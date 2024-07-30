@@ -1,11 +1,16 @@
 import { AITable } from '@ai-table/grid';
-import { Direction } from '@angular/cdk/bidi';
 import { Signal, WritableSignal } from '@angular/core';
 
 export enum RowHeight {
     short = 'short',
     medium = 'medium',
     tall = 'tall'
+}
+
+export enum Direction {
+    default = 0,
+    ascending = 1,
+    descending = -1
 }
 
 export interface AITableView {

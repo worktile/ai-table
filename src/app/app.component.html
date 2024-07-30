@@ -2,6 +2,11 @@
 <thy-select [(ngModel)]="activeView().rowHeight" style="width: 200px" (ngModelChange)="changeRowHeight($event)">
     <thy-option *ngFor="let option of listOfOption" [thyValue]="option.value" [thyLabelText]="option.text"> </thy-option>
 </thy-select>
+
+{{ activeView().sortCondition | json }}
+
+<thy-button thyButton="primary" (click)="sort()">排序</thy-button>
+
 <ai-table-grid
     [(aiRecords)]="records"
     [(aiFields)]="fields"
