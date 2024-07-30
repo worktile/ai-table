@@ -17,7 +17,7 @@ export const translateSharedTypeToTable = (sharedType: SharedType) => {
         const [fixedField, customField] = record;
         return {
             id: fixedField[0],
-            value: translateRecord(customField, fields)
+            values: translateRecord(customField, fields)
         };
     });
     return {

@@ -42,7 +42,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                                 path: [offset + index],
                                 record: {
                                     id: fixedField[0],
-                                    value: translateRecord(customField, aiTable.fields())
+                                    values: translateRecord(customField, aiTable.fields())
                                 }
                             });
                         });

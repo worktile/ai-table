@@ -7,7 +7,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             const [recordIndex, fieldIndex] = options.path;
             if (fieldIndex > -1 && recordIndex > -1) {
                 const fieldId = aiTable.fields()[fieldIndex].id;
-                records[recordIndex].value[fieldId] = options.newFieldValue;
+                records[recordIndex].values[fieldId] = options.newFieldValue;
             }
             break;
         }
@@ -27,8 +27,8 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                     [newField.id]: ''
                 };
                 records.forEach((item) => {
-                    item.value = {
-                        ...item.value,
+                    item.values = {
+                        ...item.values,
                         ...newRecord
                     };
                 });
@@ -42,7 +42,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                 const fieldId = aiTable.fields()[fieldIndex].id;
                 fields.splice(fieldIndex, 1);
                 records.forEach((item) => {
-                    delete item.value[fieldId];
+                    delete item.values[fieldId];
                 });
             }
             break;
@@ -51,6 +51,17 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             const [recordIndex] = options.path;
             if (recordIndex > -1) {
                 records.splice(recordIndex, 1);
+            }
+            break;
+        }
+
+        case ActionName.SetField: {
+            const [fieldIndex] = options.path;
+            if (fieldIndex > -1) {
+                fields.splice(fieldIndex, 1, {
+                    ...fields[fieldIndex],
+                    ...options.newField
+                });
             }
             break;
         }

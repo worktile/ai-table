@@ -11,11 +11,11 @@ import {
 import { AITableQueries } from '../utils';
 
 export function updateFieldValue(aiTable: AITable, value: any, path: AIFieldValuePath) {
-    const node = AITableQueries.getFieldValue(aiTable, path);
-    if (node !== value) {
+    const field = AITableQueries.getFieldValue(aiTable, path);
+    if (field !== value) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
-            fieldValue: node,
+            fieldValue: field,
             newFieldValue: value,
             path
         };
