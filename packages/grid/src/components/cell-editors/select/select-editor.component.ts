@@ -1,5 +1,5 @@
 import { NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThySelect } from 'ngx-tethys/select';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -8,7 +8,7 @@ import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyOption } from 'ngx-tethys/shared';
 import { AITableSelectOption, AITableField } from '../../../core';
 
-export interface AITableSingleSelectField extends AITableField {
+export interface AITableSingleSelectField extends AITableField<AITableSelectOption> {
     options: AITableSelectOption[];
 }
 
@@ -24,7 +24,9 @@ export interface AITableSingleSelectField extends AITableField {
     },
     imports: [NgIf, NgForOf, FormsModule, ThySelect, ThyOption, ThyTag, ThyIcon]
 })
-export class SingleSelectCellEditorComponent extends AbstractEditCellEditor<string, AITableSingleSelectField> {
+export class SelectCellEditorComponent extends AbstractEditCellEditor<string, AITableSingleSelectField> {
+    @Input() isMultiple!: boolean;
+
     selectOptions = computed(() => {
         return this.field().options;
     });

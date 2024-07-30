@@ -63,8 +63,8 @@ export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>
 
     const customFieldArray = new Y.Array();
     const customFields = [];
-    for (const fieldId in record['value']) {
-        customFields.push(record['value'][fieldId]);
+    for (const fieldId in record['values']) {
+        customFields.push(record['values'][fieldId]);
     }
     customFieldArray.insert(0, customFields);
 

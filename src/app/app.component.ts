@@ -36,7 +36,7 @@ const initValue = {
     records: [
         {
             id: 'row-1',
-            value: {
+            values: {
                 'column-1': '文本 1-1',
                 'column-2': '1',
                 'column-3': {
@@ -48,7 +48,7 @@ const initValue = {
         },
         {
             id: 'row-2',
-            value: {
+            values: {
                 'column-1': '文本 2-1',
                 'column-2': '2',
                 'column-3': {},
@@ -57,7 +57,7 @@ const initValue = {
         },
         {
             id: 'row-3',
-            value: {
+            values: {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
@@ -69,12 +69,12 @@ const initValue = {
         {
             id: 'column-1',
             name: '文本',
-            type: AITableFieldType.Text
+            type: AITableFieldType.text
         },
         {
             id: 'column-2',
             name: '单选',
-            type: AITableFieldType.SingleSelect,
+            type: AITableFieldType.select,
             options: [
                 {
                     id: '1',
@@ -96,12 +96,12 @@ const initValue = {
         {
             id: 'column-3',
             name: '链接',
-            type: AITableFieldType.Link
+            type: AITableFieldType.link
         },
         {
             id: 'column-4',
             name: '评分',
-            type: AITableFieldType.Rating
+            type: AITableFieldType.rate
         }
     ]
 };
@@ -112,7 +112,7 @@ const initValue = {
 //     initValue.fields.push({
 //         id: `column-${index}`,
 //         name: "文本",
-//         type: AITableFieldType.Text,
+//         type: AITableFieldType.text,
 //     });
 // }
 // initValue.records = [];
