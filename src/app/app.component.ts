@@ -195,16 +195,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         private thyPopover: ThyPopover
     ) {
         this.registryIcon();
-        effect(()=>{
-           const sortCondition = this.activeView().sortCondition;
-            if(sortCondition){
-                untracked(()=>{
-                    const {sortBy, direction} = sortCondition?.conditions[0] 
-                    const records = this.records().sort((a:any,b:any)=>{ return  direction === Direction.ascending ? a.value[sortBy] - b.value[sortBy] : b.value[sortBy] - a.value[sortBy] });
-                    this.records.set([...records])
-                })
-           }
-        },{allowSignalWrites:true})
     }
 
     ngOnInit(): void {
@@ -262,6 +252,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 records: data.records
             })
         );
+
+        if(data.actions[0].type === 'set_view'){
+            const sortCondition = this.activeView().sortCondition;
+            if(sortCondition){
+                const {sortBy, direction} = sortCondition.conditions[0] 
+                const records = this.records().sort((a:any,b:any)=>{ return  direction === Direction.ascending ? a.value[sortBy] - b.value[sortBy] : b.value[sortBy] - a.value[sortBy] });
+                this.records.set([...records])
+            }
+        }
+
         if (this.provider) {
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
