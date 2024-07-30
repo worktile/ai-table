@@ -16,6 +16,7 @@ import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
 import { of } from 'rxjs';
+import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 
 @Component({
     selector: 'ai-table-field-property-editor',
@@ -41,7 +42,8 @@ import { of } from 'rxjs';
         ThyButton,
         ThyFormModule,
         ThyListItem,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        ThyAutofocusDirective
     ],
     host: {
         class: 'field-property-editor d-block pl-5 pr-5 pb-5 pt-4'
@@ -95,7 +97,8 @@ export class AITableFieldPropertyEditor {
 
     editFieldProperty() {
         if (this.isUpdate) {
-            //TODO: updateField
+            const path = this.aiTable.fields().findIndex((item) => item.id === this.aiField().id);
+            Actions.setField(this.aiTable, this.aiField(), [path]);
         } else {
             Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
         }
