@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal , effect, untracked } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal, isDevMode } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -10,7 +10,9 @@ import {
     AITable,
     AIFieldConfig,
     EditFieldPropertyItem,
-    DividerMenuItem
+    DividerMenuItem,
+    RemoveFieldItem,
+    Actions
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -30,7 +32,7 @@ import applyActionOps from './share/apply-to-yjs';
 import { applyYjsEvents } from './share/apply-to-table';
 import { translateSharedTypeToTable } from './share/utils/translate-to-table';
 import { ThyButton } from 'ngx-tethys/button';
-   
+import { ThyAction } from 'ngx-tethys/action';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -38,7 +40,7 @@ const initValue = {
     records: [
         {
             id: 'row-1',
-            value: {
+            values: {
                 'column-1': '文本 1-1',
                 'column-2': '1',
                 'column-3': {
@@ -50,7 +52,7 @@ const initValue = {
         },
         {
             id: 'row-2',
-            value: {
+            values: {
                 'column-1': '文本 2-1',
                 'column-2': '2',
                 'column-3': {},
@@ -59,7 +61,7 @@ const initValue = {
         },
         {
             id: 'row-3',
-            value: {
+            values: {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
@@ -71,12 +73,12 @@ const initValue = {
         {
             id: 'column-1',
             name: '文本',
-            type: AITableFieldType.Text
+            type: AITableFieldType.text
         },
         {
             id: 'column-2',
             name: '单选',
-            type: AITableFieldType.SingleSelect,
+            type: AITableFieldType.select,
             options: [
                 {
                     id: '1',
@@ -98,12 +100,12 @@ const initValue = {
         {
             id: 'column-3',
             name: '链接',
-            type: AITableFieldType.Link
+            type: AITableFieldType.link
         },
         {
             id: 'column-4',
             name: '评分',
-            type: AITableFieldType.Rating
+            type: AITableFieldType.rate
         }
     ]
 };
@@ -114,7 +116,7 @@ const initValue = {
 //     initValue.fields.push({
 //         id: `column-${index}`,
 //         name: "文本",
-//         type: AITableFieldType.Text,
+//         type: AITableFieldType.text,
 //     });
 // }
 // initValue.records = [];
@@ -133,7 +135,7 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption, ThyButton , JsonPipe],
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption, ThyButton , JsonPipe, ThyAction],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
@@ -181,7 +183,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},
                 hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
                 disabled: (aiTable: AITable, field: Signal<AITableField>) => false
-            }
+            },
+            DividerMenuItem,
+            RemoveFieldItem
         ]
     };
 
@@ -206,7 +210,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     initSharedType() {
-        const isInitializeSharedType = localStorage.getItem('ai-table-shared-type');
+        const isInitializeSharedType = false;
         this.sharedType = getSharedType(
             {
                 records: this.records(),
@@ -216,12 +220,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             !!isInitializeSharedType
         );
         let isInitialized = false;
-        this.provider = connectProvider(this.sharedType.doc!);
+        this.provider = connectProvider(this.sharedType.doc!, isDevMode());
         this.sharedType.observeDeep((events: any) => {
             if (!YjsAITable.isLocal(this.aiTable)) {
                 if (!isInitialized) {
                     const data = translateSharedTypeToTable(this.sharedType!);
-                    console.log(123, data);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
                     this.views.set(data.views);
@@ -287,6 +290,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     changeRowHeight(event: string) {
         CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
+    }
+
+    removeRecord() {
+        const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
+        recordIds.forEach((item) => {
+            const path = this.aiTable.records().findIndex((record) => record.id === item);
+            Actions.removeRecord(this.aiTable, [path]);
+        });
     }
 
     disconnect() {

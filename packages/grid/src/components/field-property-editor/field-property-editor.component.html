@@ -3,7 +3,7 @@
         <thy-input-group>
             <input
                 thyInput
-                thyAutofocus
+                [thyAutofocus]="true"
                 name="fieldName"
                 [maxlength]="fieldMaxLength"
                 [(ngModel)]="aiField().name"

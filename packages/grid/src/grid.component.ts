@@ -5,7 +5,7 @@ import { ThyTag } from 'ngx-tethys/tag';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenu, AITableRowHeight } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
 import {
     Actions,
     createAITable,
@@ -94,7 +94,7 @@ export class AITableGrid implements OnInit {
 
     aiTableInitialized = output<AITable>();
 
-    fieldMenus!: AITableFieldMenu[];
+    fieldMenus!: AITableFieldMenuItem[];
 
     gridData = computed(() => {
         return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
@@ -161,7 +161,7 @@ export class AITableGrid implements OnInit {
     }
 
     addField(gridColumnBlank: HTMLElement) {
-        const field = signal(createDefaultField(this.aiTable, AITableFieldType.Text));
+        const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
         this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
     }
 }
