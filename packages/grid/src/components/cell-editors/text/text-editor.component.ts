@@ -7,14 +7,9 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 
 @Component({
     selector: 'text-cell-editor',
-    template: `<input
-        thyInput
-        [thyAutofocus]="true"
-        [(ngModel)]="modelValue"
-        (thyEnter)="updateValue()"
-        (blur)="updateValue()"
-        placeholder=""
-    /> `,
+    template: `
+        <input thyInput placeholder="" [thyAutofocus]="true" [(ngModel)]="modelValue" (thyEnter)="updateValue()" (blur)="updateValue()" />
+    `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgIf, FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective]

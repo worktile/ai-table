@@ -1,39 +1,40 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, NgZone, OnInit, output, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { SelectOptionPipe } from './pipes/grid';
-import { ThyTag } from 'ngx-tethys/tag';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, NgZone, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { FormsModule } from '@angular/forms';
+import { ThyAction } from 'ngx-tethys/action';
+import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
+import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
+import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
+import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
+import { ThyIcon } from 'ngx-tethys/icon';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyProgress } from 'ngx-tethys/progress';
+import { ThyRate } from 'ngx-tethys/rate';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { ThyTag } from 'ngx-tethys/tag';
+import { ProgressEditorComponent } from './components';
+import { FieldMenu } from './components/field-menu/field-menu.component';
+import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
+import { DefaultFieldMenus } from './constants';
 import {
     Actions,
-    createAITable,
-    getDefaultRecord,
+    AIPlugin,
     AITable,
     AITableChangeOptions,
     AITableFields,
     AITableFieldType,
     AITableRecords,
+    createAITable,
     createDefaultField,
-    AIPlugin
+    getDefaultRecord
 } from './core';
-import { ThyIcon } from 'ngx-tethys/icon';
+import { SelectOptionPipe } from './pipes/grid';
 import { AITableGridEventService } from './services/event.service';
-import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
-import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
-import { ThyRate } from 'ngx-tethys/rate';
-import { FormsModule } from '@angular/forms';
-import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
-import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
-import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
-import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { FieldMenu } from './components/field-menu/field-menu.component';
-import { ThyAction } from 'ngx-tethys/action';
-import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
-import { DefaultFieldMenus } from './constants';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.servive';
+import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { buildGridData } from './utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -54,18 +55,19 @@ import { AITableGridSelectionService } from './services/selection.servive';
         ThyPopoverModule,
         ThyIcon,
         ThyRate,
+        ThyProgress,
         AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
-        ThyTooltipModule,
         ThyFlexibleText,
         ThyStopPropagationDirective,
         FieldMenu,
         ThyAction,
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
-        ThyCheckboxModule
+        ThyCheckboxModule,
+        ProgressEditorComponent
     ],
-    providers: [ThyTooltipService, AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();

@@ -1,12 +1,12 @@
 import { Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, Subject } from 'rxjs';
-import { DBL_CLICK_EDIT_TYPE } from '../constants';
-import { getRecordOrField } from '../utils';
-import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
+import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
+import { debounceTime, fromEvent, Subject } from 'rxjs';
+import { DBL_CLICK_EDIT_TYPE, MOUSEOVER_EDIT_TYPE } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
-import { ThyPopover } from 'ngx-tethys/popover';
+import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableGridCellRenderSchema } from '../types';
+import { getRecordOrField } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -32,6 +32,12 @@ export class AITableGridEventService {
                 this.dblClick(event as MouseEvent);
             });
 
+        fromEvent<MouseEvent>(element, 'mouseover')
+            .pipe(debounceTime(100), this.takeUntilDestroyed)
+            .subscribe((event) => {
+                this.mouseoverHandle(event as MouseEvent);
+            });
+
         fromEvent<MouseEvent>(element, 'mousedown')
             .pipe(this.takeUntilDestroyed)
             .subscribe((event) => {
@@ -41,7 +47,7 @@ export class AITableGridEventService {
 
     private dblClick(event: MouseEvent) {
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && cellDom.getAttribute('type')! as AITableFieldType;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
         if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.openEdit(cellDom);
         }
@@ -61,7 +67,7 @@ export class AITableGridEventService {
         const field = getRecordOrField(this.aiTable.fields, fieldId) as Signal<AITableField>;
         const record = getRecordOrField(this.aiTable.records, recordId) as Signal<AITableRecord>;
         const component = this.getEditorComponent(field().type);
-        this.thyPopover.open(component, {
+        const ref = this.thyPopover.open(component, {
             origin: cellDom,
             originPosition: {
                 x: x - 1,
@@ -85,5 +91,20 @@ export class AITableGridEventService {
             manualClosure: true,
             animationDisabled: true
         });
+        return ref;
+    }
+
+    mouseoverRef!: ThyPopoverRef<any>;
+
+    private mouseoverHandle(event: MouseEvent) {
+        if (this.mouseoverRef) {
+            this.mouseoverRef?.close();
+        }
+
+        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
+        if (type && MOUSEOVER_EDIT_TYPE.includes(type)) {
+            this.mouseoverRef = this.openEdit(cellDom);
+        }
     }
 }

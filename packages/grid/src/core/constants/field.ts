@@ -1,5 +1,5 @@
-import { AITableFieldInfo, AITableFieldType } from '../types';
 import { helpers } from 'ngx-tethys/util';
+import { AITableFieldInfo, AITableFieldType } from '../types';
 
 export const BasicFields = [
     {
@@ -37,6 +37,12 @@ export const BasicFields = [
         name: '链接',
         icon: 'link-insert',
         width: 300
+    },
+    {
+        type: AITableFieldType.progress,
+        name: '进度',
+        icon: 'progress',
+        width: 200
     }
 ];
 

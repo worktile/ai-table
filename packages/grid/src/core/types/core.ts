@@ -1,7 +1,7 @@
 import { WritableSignal } from '@angular/core';
-import { AITableAction } from './action';
-import { AITableSelection } from '../../types';
 import { Id } from 'ngx-tethys/types';
+import { AITableSelection } from '../../types';
+import { AITableAction } from './action';
 
 export enum AITableFieldType {
     text = 'text', // 包含多行文本

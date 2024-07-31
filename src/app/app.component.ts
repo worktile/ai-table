@@ -1,37 +1,47 @@
-import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal, isDevMode } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { RouterOutlet } from '@angular/router';
 import {
+    Actions,
+    AIFieldConfig,
+    AITable,
+    AITableField,
     AITableFields,
     AITableFieldType,
     AITableGrid,
     AITableRecords,
-    AITableField,
-    AITable,
-    AIFieldConfig,
-    EditFieldPropertyItem,
     DividerMenuItem,
-    RemoveFieldItem,
-    Actions
+    EditFieldPropertyItem,
+    RemoveFieldItem
 } from '@ai-table/grid';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    isDevMode,
+    OnDestroy,
+    OnInit,
+    Signal,
+    signal,
+    WritableSignal
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
+import { ThyAction } from 'ngx-tethys/action';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
-import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyPopover } from 'ngx-tethys/popover';
+import { ThySelect } from 'ngx-tethys/select';
+import { ThyOption } from 'ngx-tethys/shared';
+import { WebsocketProvider } from 'y-websocket';
+import { CustomActions } from './action';
 import { FieldPropertyEditor } from './component/field-property-editor/field-property-editor.component';
 import { withCustomApply } from './plugins/custom-action.plugin';
-import { ThyOption } from 'ngx-tethys/shared';
-import { ThySelect } from 'ngx-tethys/select';
-import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
-import { CustomActions } from './action';
-import { AITableView, AIViewTable, RowHeight } from './types/view';
-import { WebsocketProvider } from 'y-websocket';
-import { connectProvider } from './share/provider';
-import { SharedType, getSharedType } from './share/shared';
-import { YjsAITable } from './share/yjs-table';
-import applyActionOps from './share/apply-to-yjs';
 import { applyYjsEvents } from './share/apply-to-table';
+import applyActionOps from './share/apply-to-yjs';
+import { connectProvider } from './share/provider';
+import { getSharedType, SharedType } from './share/shared';
 import { translateSharedTypeToTable } from './share/utils/translate-to-table';
-import { ThyAction } from 'ngx-tethys/action';
+import { YjsAITable } from './share/yjs-table';
+import { AITableView, AIViewTable, RowHeight } from './types/view';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -46,7 +56,8 @@ const initValue = {
                     url: 'https://www.baidu.com',
                     text: '百度链接'
                 },
-                'column-4': 3
+                'column-4': 3,
+                'column-5': 10
             }
         },
         {
@@ -55,7 +66,8 @@ const initValue = {
                 'column-1': '文本 2-1',
                 'column-2': '2',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 1,
+                'column-5': 20
             }
         },
         {
@@ -64,7 +76,8 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 1,
+                'column-5': 50
             }
         }
     ],
@@ -105,6 +118,11 @@ const initValue = {
             id: 'column-4',
             name: '评分',
             type: AITableFieldType.rate
+        },
+        {
+            id: 'column-5',
+            name: '进度',
+            type: AITableFieldType.progress
         }
     ]
 };
@@ -114,12 +132,12 @@ const initValue = {
 // for (let index = 0; index < 5; index++) {
 //     initValue.fields.push({
 //         id: `column-${index}`,
-//         name: "文本",
+//         name: '文本',
 //         type: AITableFieldType.text,
 //     });
 // }
 // initValue.records = [];
-// for (let index = 0; index < 40 * 3 * 2*30; index++) {
+// for (let index = 0; index < 40 * 3 * 2 * 30; index++) {
 //     const value: any = {};
 //     initValue.fields.forEach((column, columnIndex) => {
 //         value[`${column.id}`] = `text-${index}-${columnIndex}`;
@@ -134,9 +152,10 @@ const initValue = {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThySelect, FormsModule, NgFor, ThyOption, ThyAction],
+    imports: [RouterOutlet, AITableGrid, FieldPropertyEditor, ThySelect, FormsModule, ThyOption, ThyAction],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+    styleUrl: './app.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     records!: WritableSignal<AITableRecords>;
@@ -166,6 +185,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             text: 'tall'
         }
     ];
+
     sharedType!: SharedType | null;
 
     provider!: WebsocketProvider | null;
