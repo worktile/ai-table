@@ -6,17 +6,17 @@ import {
     AITable,
     AITableRecord,
     AIFieldValuePath,
-    MoveFieldAction,
-    MoveRecordAction
+    MoveRecordAction,
+    RemoveRecordAction
 } from '../types';
 import { AITableQueries } from '../utils';
 
 export function updateFieldValue(aiTable: AITable, value: any, path: AIFieldValuePath) {
-    const node = AITableQueries.getFieldValue(aiTable, path);
-    if (node !== value) {
+    const field = AITableQueries.getFieldValue(aiTable, path);
+    if (field !== value) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
-            fieldValue: node,
+            fieldValue: field,
             newFieldValue: value,
             path
         };
@@ -36,7 +36,15 @@ export function addRecord(aiTable: AITable, record: AITableRecord, path: AIRecor
 export function moveRecord(aiTable: AITable, newPath: AIRecordPath, path: AIRecordPath) {
     const operation: MoveRecordAction = {
         type: ActionName.MoveRecord,
-        newPath,
+        path,
+        newPath
+    };
+    aiTable.apply(operation);
+}
+
+export function removeRecord(aiTable: AITable, path: AIRecordPath) {
+    const operation: RemoveRecordAction = {
+        type: ActionName.RemoveRecord,
         path
     };
     aiTable.apply(operation);
@@ -45,5 +53,6 @@ export function moveRecord(aiTable: AITable, newPath: AIRecordPath, path: AIReco
 export const RecordActions = {
     addRecord,
     updateFieldValue,
-    moveRecord
+    moveRecord,
+    removeRecord
 };

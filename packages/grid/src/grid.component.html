@@ -10,7 +10,7 @@
             [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field.id) }"
             [ngStyle]="{ width: field.width + 'px' }"
         >
-            <span>
+            <span class="text-truncate">
                 <thy-icon [thyIconName]="field.icon!" class="mr-2 text-muted"></thy-icon>
                 <span>{{ field.name }}</span>
             </span>
@@ -23,7 +23,7 @@
                 href="javascript:;"
             >
                 <thy-dropdown-menu #fieldMenu>
-                    <field-menu [origin]="fieldAction" [field]="field" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
+                    <field-menu [origin]="fieldAction" [fieldId]="field.id" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
                 </thy-dropdown-menu>
             </a>
         </div>

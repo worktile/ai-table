@@ -18,13 +18,16 @@ export const AITableQueries = {
     },
     getFieldValue(aiTable: AITable, path: [number, number]): any {
         if (!aiTable) {
-            throw new Error(`aiTable does not exist [${path}]`);
+            throw new Error(`aiTable does not exist`);
         }
         if (!aiTable.records()) {
-            throw new Error(`aiTable has no records [${path}]`);
+            throw new Error(`aiTable has no records`);
         }
         if (!aiTable.fields()) {
-            throw new Error(`aiTable has no fields [${path}]`);
+            throw new Error(`aiTable has no fields`);
+        }
+        if (!path) {
+            throw new Error(`path does not exist as path [${path}]`);
         }
 
         const field = aiTable.fields()[path[1]];
@@ -32,5 +35,15 @@ export const AITableQueries = {
             throw new Error(`can not find field at path [${path}]`);
         }
         return aiTable.records()[path[0]].values[field.id];
+    },
+
+    getField(aiTable: AITable, path: AIFieldPath): AITableField {
+        if (!aiTable) {
+            throw new Error(`aiTable does not exist`);
+        }
+        if (!path) {
+            throw new Error(`path does not exist as path [${path}]`);
+        }
+        return aiTable.fields()[path[0]];
     }
 };
