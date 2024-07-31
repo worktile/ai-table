@@ -33,7 +33,7 @@ export function addRecord(aiTable: AITable, record: AITableRecord, path: AIRecor
     aiTable.apply(operation);
 }
 
-export function moveRecord(aiTable: AITable, newPath: AIRecordPath, path: AIRecordPath) {
+export function moveRecord(aiTable: AITable, path: AIRecordPath, newPath: AIRecordPath) {
     const operation: MoveRecordAction = {
         type: ActionName.MoveRecord,
         path,

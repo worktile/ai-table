@@ -12,7 +12,11 @@ import {
     EditFieldPropertyItem,
     DividerMenuItem,
     RemoveFieldItem,
-    Actions
+    Actions,
+    AIRecordPath,
+    AITableRecord,
+    AITableQueries,
+    AIFieldPath
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -295,14 +299,35 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     moveField() {
-        Actions.moveField(this.aiTable, [1], [3]);
+        const newIndex = 2;
+        const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
+        const selectedRecords = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item.id));
+        selectedRecords.forEach((item) => {
+            const path = AITableQueries.findPath(this.aiTable, item) as AIFieldPath;
+            Actions.moveField(this.aiTable, path, [newIndex]);
+        });
     }
 
     moveRecord() {
         const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        selectedRecordIds.reverse().forEach((item) => {
-            const recordIndex = this.aiTable.records().findIndex((record) => record.id === item);
-            Actions.moveRecord(this.aiTable, [1], [recordIndex]);
+        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item.id));
+        const selectedRecordsAfterNewPath: AITableRecord[] = [];
+        let offset = 0;
+        const newIndex = 2;
+        selectedRecords.forEach((item) => {
+            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            if (path[0] < newIndex) {
+                Actions.moveRecord(this.aiTable, path, [newIndex]);
+                offset = 1;
+            } else {
+                selectedRecordsAfterNewPath.push(item);
+            }
+        });
+
+        selectedRecordsAfterNewPath.reverse().forEach((item) => {
+            const newPath = [newIndex + offset] as AIRecordPath;
+            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            Actions.moveRecord(this.aiTable, path, newPath);
         });
     }
 

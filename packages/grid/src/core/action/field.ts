@@ -19,7 +19,7 @@ export function addField(aiTable: AITable, field: AITableField, path: AIFieldPat
     aiTable.apply(operation);
 }
 
-export function moveField(aiTable: AITable, newPath: AIFieldPath, path: AIFieldPath) {
+export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldPath) {
     const operation: MoveFieldAction = {
         type: ActionName.MoveField,
         path,

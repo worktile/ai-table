@@ -2,9 +2,9 @@
 <thy-select [(ngModel)]="activeView().rowHeight" style="width: 200px" (ngModelChange)="changeRowHeight($event)">
     <thy-option *ngFor="let option of listOfOption" [thyValue]="option.value" [thyLabelText]="option.text"> </thy-option>
 </thy-select> -->
-<button (click)="moveRecord()">移动选中行到第二行</button>
-<button (click)="moveField()">移动选中列到第二列</button>
 <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
+<a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
+<a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveField()">移动选中列到第三列</a>
 <ai-table-grid
     [(aiRecords)]="records"
     [(aiFields)]="fields"
