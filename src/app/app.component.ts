@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, computed, OnInit, Signal, signal, WritableSignal, isDevMode } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -213,7 +213,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     initSharedType() {
-        const isInitializeSharedType = localStorage.getItem('ai-table-shared-type');
+        const isInitializeSharedType = false;
         this.sharedType = getSharedType(
             {
                 records: this.records(),
@@ -222,7 +222,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             !!isInitializeSharedType
         );
         let isInitialized = false;
-        this.provider = connectProvider(this.sharedType.doc!);
+        this.provider = connectProvider(this.sharedType.doc!, isDevMode());
         this.sharedType.observeDeep((events: any) => {
             if (!YjsAITable.isLocal(this.aiTable)) {
                 if (!isInitialized) {
