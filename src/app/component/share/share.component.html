@@ -1,0 +1,18 @@
+<div class="d-flex align-items-center mb-2">
+    <input thyInput [(ngModel)]="room" [disabled]="!!provider" placeholder="请输入房间号" style="width: 300px" />
+    <a thyAction class="ml-2" [thyIcon]="provider ? 'unlink-insert' : 'link-insert'" href="javascript:;" (click)="handleShared()">{{
+        provider ? '断开连接' : '连接协同'
+    }}</a>
+</div>
+<hr>
+<a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
+<a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
+<a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveField()">移动选中列到第三列</a>
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    (onChange)="onChange($event)"
+    [aiFieldConfig]="aiFieldConfig"
+    [aiPlugins]="plugins"
+    (aiTableInitialized)="aiTableInitialized($event)"
+></ai-table-grid>

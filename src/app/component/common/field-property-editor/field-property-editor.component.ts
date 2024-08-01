@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, WritableSignal, booleanAttribute, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, WritableSignal, booleanAttribute, computed, model } from '@angular/core';
 import { AITableField, AITableFieldType, AITableFieldPropertyEditor, AITable } from '@ai-table/grid';
 
 @Component({
