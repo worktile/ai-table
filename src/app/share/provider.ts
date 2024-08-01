@@ -1,5 +1,6 @@
-import { WebsocketProvider } from 'y-websocket';
+// import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
+import { WebsocketProvider } from './y-websocket';
 
 export const getProvider = (doc: Y.Doc, room: string, isDev: boolean) => {
     // 在线地址：wss://demos.yjs.dev/ws

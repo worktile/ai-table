@@ -4,7 +4,9 @@
     "compileOnSave": false,
     "compilerOptions": {
         "outDir": "./dist/out-tsc",
-        "strict": true,
+        "strict": false,        // 关闭所有严格类型检查选项
+        "noImplicitAny": false, // 允许隐式的 any 类型
+        "strictPropertyInitialization": false,
         "noImplicitOverride": true,
         "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,

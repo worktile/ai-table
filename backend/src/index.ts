@@ -1,9 +1,7 @@
 import * as Y from 'yjs';
 import * as WebSocket from 'ws';
 import http, { Server } from 'http';
-const ywsUtils = require('y-websocket/bin/utils');
-const setupWSConnection = ywsUtils.setupWSConnection;
-const docs = ywsUtils.docs as Map<string, Y.Doc & { conns: Map<any, any> }>;
+import { docs, setupWSConnection } from './utils';
 const port = (process.env['PORT'] || 3000) as number;
 
 const server: Server = http.createServer((request, response) => {

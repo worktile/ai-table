@@ -39,7 +39,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         }
         case ActionName.MoveRecord: {
             if (isPathEqual(options.path, options.newPath)) {
-                return;
+                // return;
             }
             const record = records[options.path[0]];
             records.splice(options.path[0], 1);
@@ -48,7 +48,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         }
         case ActionName.MoveField: {
             if (isPathEqual(options.path, options.newPath)) {
-                return;
+                // return;
             }
             const field = fields[options.path[0]];
             fields.splice(options.path[0], 1);
