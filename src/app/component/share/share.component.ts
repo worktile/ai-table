@@ -24,7 +24,7 @@ export class ShareComponent extends CommonComponent implements OnInit, AfterView
 
     provider!: WebsocketProvider | null;
 
-    room = 'collaboration-room-1';
+    room = 'room-1';
 
     override ngOnInit(): void {
         const value = this.getLocalStorage();
