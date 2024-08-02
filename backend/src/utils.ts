@@ -181,7 +181,7 @@ exports.getYDoc = getYDoc;
  * @param {WSSharedDoc} doc
  * @param {Uint8Array} message
  */
-const messageListener = (conn, doc, message) => {
+const messageListener = (conn, doc: WSSharedDoc, message) => {
     try {
         const encoder = encoding.createEncoder();
         const decoder = decoding.createDecoder(message);

@@ -288,7 +288,7 @@ export class WebsocketProvider extends Observable<string> {
         this.serverUrl = serverUrl;
         this.bcChannel = serverUrl + '/' + roomname;
         this.doc = doc;
-        this.params = params
+        this.params = params;
         this._WS = WebSocketPolyfill;
         this.awareness = awareness;
         this.wsconnected = false;

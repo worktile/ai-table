@@ -8,6 +8,5 @@ export default function addRecord(sharedType: SharedType, action: AddRecordActio
         const path = action.path[0];
         records.insert(path, [toRecordSyncElement(action.record as DemoAIRecord)]);
     }
-
     return sharedType;
 }
