@@ -42,7 +42,7 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { SelectOptionPipe } from './pipes/grid';
+import { SelectOptionPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.servive';
@@ -195,7 +195,8 @@ export class AITableGrid implements OnInit {
     private dblClick(event: MouseEvent) {
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
         const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
+        const readonly = cellDom && cellDom.getAttribute('readonly')!;
+        if (type && !readonly && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.aiTableGridEventService.openEdit(cellDom);
         }
     }

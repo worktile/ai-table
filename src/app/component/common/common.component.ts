@@ -40,7 +40,12 @@ const initValue = {
                     text: '百度链接'
                 },
                 'column-4': 3,
-                'column-5': 10
+                'column-5': 10,
+                'column-6': 1722749936,
+                'column-7': 1716453658,
+                // 'column-8': '多行文本',
+                'column-9': 10,
+                'column-10': 1705628012
             }
         },
         {
@@ -50,7 +55,11 @@ const initValue = {
                 'column-2': '2',
                 'column-3': {},
                 'column-4': 1,
-                'column-5': 20
+                'column-5': 20,
+                'column-6': 1705628012,
+                'column-7': 1716453658,
+                'column-9': 10,
+                'column-10': 1705628012
             }
         },
         {
@@ -60,7 +69,11 @@ const initValue = {
                 'column-2': '3',
                 'column-3': {},
                 'column-4': 1,
-                'column-5': 50
+                'column-5': 50,
+                'column-6': 1705628012,
+                'column-7': 1716453658,
+                'column-9': 10,
+                'column-10': 1705628012
             }
         }
     ],
@@ -106,6 +119,30 @@ const initValue = {
             id: 'column-5',
             name: '进度',
             type: AITableFieldType.progress
+        },
+        {
+            type: AITableFieldType.date,
+            format: 'YYYY-MM-DD HH:mm:ss',
+            readonly: true,
+            id: 'column-6',
+            name: '创建时间'
+        },
+        {
+            type: AITableFieldType.date,
+            format: 'YYYY-MM-DD HH:mm:ss',
+            readonly: true,
+            id: 'column-7',
+            name: '更新时间'
+        },
+        {
+            type: AITableFieldType.number,
+            id: 'column-9',
+            name: '数字'
+        },
+        {
+            type: AITableFieldType.date,
+            id: 'column-10',
+            name: '日期'
         }
     ]
 };
@@ -127,7 +164,7 @@ const initValue = {
 //     });
 //     initValue.records.push({
 //         id: `row-${index + 1}`,
-//         value: value,
+//         values: value,
 //     });
 // }
 // console.timeEnd('build data');

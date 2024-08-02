@@ -10,7 +10,7 @@ export enum AITableFieldType {
     number = 'number',
     date = 'date',
     member = 'member', // 包含单个和多个
-    // cascadeSelect = "cascade_select", // 包含单选和多选，参数复杂后续再进行设计
+    // cascadeSelect = 'cascade_select', // 包含单选和多选，参数复杂后续再进行设计
     progress = 'progress',
     rate = 'rate',
     link = 'link'
@@ -52,6 +52,7 @@ export interface AITableField<T = unknown> {
     hidden?: boolean;
     frozen?: boolean;
     statType?: AITableStatType;
+    readonly?: boolean;
     isMultiple?: boolean;
     [key: string]: T | any;
 }

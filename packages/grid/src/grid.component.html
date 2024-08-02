@@ -45,7 +45,7 @@
                 ></label>
                 <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>
-            @for (field of gridData().fields; track $index) {
+            @for (field of gridData().fields; track field.id) {
                 <div
                     #cell
                     class="grid-cell"
@@ -55,6 +55,7 @@
                     }"
                     [attr.type]="[field.type]"
                     [attr.fieldId]="[field.id]"
+                    [attr.readonly]="[field?.readonly]"
                     [attr.recordId]="[record.id]"
                     [ngStyle]="{ width: field.width + 'px' }"
                 >
@@ -65,7 +66,15 @@
                             }
                         }
                         @case (AITableFieldType.date) {
-                            {{ record.values[field.id] | thyDatePickerFormat }}
+                            @if (field?.readonly) {
+                                <div class="d-block user-select-none">
+                                    <span class="text-truncate">
+                                        {{ record.values[field.id] | thyDatePickerFormat: 'yyyy-MM-dd HH:mm' }}
+                                    </span>
+                                </div>
+                            } @else {
+                                {{ record.values[field.id] | thyDatePickerFormat }}
+                            }
                         }
                         @case (AITableFieldType.rate) {
                             <thy-rate [(ngModel)]="record.values[field.id]"></thy-rate>
