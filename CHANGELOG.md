@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.4](https://github.com/worktile/ai-table/compare/0.0.3...0.0.4) (2024-08-02)
+
+
+### Features
+
+* **action:** add  AIPlugin ([#18](https://github.com/worktile/ai-table/issues/18)) ([024fa5f](https://github.com/worktile/ai-table/commit/024fa5fa8502febddef9b0b8ac1cc4802dc30451))
+* add shared demo ([#15](https://github.com/worktile/ai-table/issues/15)) ([488a8e1](https://github.com/worktile/ai-table/commit/488a8e182daa5d0d8709153b87e3256c4c7239b5))
+* apply icon and width #WIK-16166 ([cf46f10](https://github.com/worktile/ai-table/commit/cf46f102e5471ca19ed873e4daf0642cb4066ec3)), closes [#WIK-16166](https://github.com/worktile/ai-table/issues/WIK-16166)
+* **core:** add set_field action #WIK-16194 ([#20](https://github.com/worktile/ai-table/issues/20)) ([6b34150](https://github.com/worktile/ai-table/commit/6b34150b78058da8b8f1b9e60e97524b6165abee)), closes [#WIK-16194](https://github.com/worktile/ai-table/issues/WIK-16194)
+* **core:** support move_record and move_field #WIK-16196 ([#24](https://github.com/worktile/ai-table/issues/24)) ([3ebf3fc](https://github.com/worktile/ai-table/commit/3ebf3fc7801fb7780cc118388f5418ae8992a483)), closes [#WIK-16196](https://github.com/worktile/ai-table/issues/WIK-16196)
+* **core:** support remove_field and remove_record #WIK-16192 ([#19](https://github.com/worktile/ai-table/issues/19)) ([2bc106e](https://github.com/worktile/ai-table/commit/2bc106ebbae3305e17ec2592ab3422c3042a46b4)), closes [#WIK-16192](https://github.com/worktile/ai-table/issues/WIK-16192)
+* **demo:** add shared demo #WIK-16223 ([#27](https://github.com/worktile/ai-table/issues/27)) ([009a234](https://github.com/worktile/ai-table/commit/009a2348d9336fb111605b04c9ac18087a53725c)), closes [#WIK-16223](https://github.com/worktile/ai-table/issues/WIK-16223)
+* **demo:** add ws server ([#23](https://github.com/worktile/ai-table/issues/23)) ([bd7bf6b](https://github.com/worktile/ai-table/commit/bd7bf6b1db525954dd5e35f4f83343066382640d))
+* **selection:** add selection feature #WIK-16060 ([#12](https://github.com/worktile/ai-table/issues/12)) ([0392723](https://github.com/worktile/ai-table/commit/039272385a3b32f6d0a874e863a9a1d87301f8c0)), closes [#WIK-16060](https://github.com/worktile/ai-table/issues/WIK-16060)
+* **types:** adjust field type and record value #WIK-16187 ([#21](https://github.com/worktile/ai-table/issues/21)) ([2938add](https://github.com/worktile/ai-table/commit/2938add3ebf4497b0367b6499bc8c163c395dc3b)), closes [#WIK-16187](https://github.com/worktile/ai-table/issues/WIK-16187)
+
+
+
 ## [0.0.3](https://github.com/worktile/ai-table/compare/0.0.2...0.0.3) (2024-07-22)
 
 
