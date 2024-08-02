@@ -1,0 +1,21 @@
+@use 'ngx-tethys/styles/variables.scss';
+
+.progress-editor {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 12px;
+
+    .thy-slider {
+        flex: 1;
+        padding: 2px 0;
+    }
+    .progress-text {
+        display: inline-block;
+        margin-left: 8px;
+        width: 40px;
+        white-space: nowrap;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+}

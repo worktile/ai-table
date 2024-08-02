@@ -1,40 +1,30 @@
 import {
-    AfterViewInit,
-    Component,
-    OnDestroy,
-    computed,
-    OnInit,
-    Signal,
-    signal,
-    WritableSignal,
-    output,
-} from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { RouterOutlet } from '@angular/router';
-import {
+    Actions,
+    AIFieldConfig,
+    AIFieldPath,
+    AIRecordPath,
+    AITable,
+    AITableField,
     AITableFields,
     AITableFieldType,
     AITableGrid,
-    AITableRecords,
-    AITableField,
-    AITable,
-    AIFieldConfig,
-    EditFieldPropertyItem,
-    DividerMenuItem,
-    RemoveFieldItem,
-    Actions,
-    AIFieldPath,
-    AIRecordPath,
     AITableQueries,
-    AITableRecord
+    AITableRecord,
+    AITableRecords,
+    DividerMenuItem,
+    EditFieldPropertyItem,
+    RemoveFieldItem
 } from '@ai-table/grid';
+import { AfterViewInit, Component, computed, OnDestroy, OnInit, output, Signal, signal, WritableSignal } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
+import { ThyAction } from 'ngx-tethys/action';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { CustomActions } from '../../action';
 import { withCustomApply } from '../../plugins/custom-action.plugin';
 import { AITableView, AIViewTable, RowHeight } from '../../types/view';
 import { FieldPropertyEditor } from './field-property-editor/field-property-editor.component';
-import { ThyAction } from 'ngx-tethys/action';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
@@ -49,7 +39,8 @@ const initValue = {
                     url: 'https://www.baidu.com',
                     text: '百度链接'
                 },
-                'column-4': 3
+                'column-4': 3,
+                'column-5': 10
             }
         },
         {
@@ -58,7 +49,8 @@ const initValue = {
                 'column-1': '文本 2-1',
                 'column-2': '2',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 1,
+                'column-5': 20
             }
         },
         {
@@ -67,7 +59,8 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': 1
+                'column-4': 1,
+                'column-5': 50
             }
         }
     ],
@@ -108,6 +101,11 @@ const initValue = {
             id: 'column-4',
             name: '评分',
             type: AITableFieldType.rate
+        },
+        {
+            id: 'column-5',
+            name: '进度',
+            type: AITableFieldType.progress
         }
     ]
 };
