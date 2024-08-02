@@ -50,7 +50,6 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> impl
 
     constructor() {
         super();
-        console.log('ProgressEditorComponent');
     }
 
     updateValue(value: number) {

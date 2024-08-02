@@ -1,8 +1,7 @@
-import { Injectable, Signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyPopover } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
-import { DBL_CLICK_EDIT_TYPE, MOUSEOVER_EDIT_TYPE } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableGridCellRenderSchema } from '../types';
@@ -14,11 +13,17 @@ export class AITableGridEventService {
 
     aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
 
-    takeUntilDestroyed = takeUntilDestroyed();
+    dblClickEvent$ = new Subject<MouseEvent>();
 
     mousedownEvent$ = new Subject<MouseEvent>();
 
-    constructor(private thyPopover: ThyPopover) {}
+    mouseoverEvent$ = new Subject<MouseEvent>();
+
+    globalMouseoverEvent$ = new Subject<MouseEvent>();
+
+    private destroyRef = inject(DestroyRef);
+
+    private thyPopover = inject(ThyPopover);
 
     initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
         this.aiTable = aiTable;
@@ -27,30 +32,28 @@ export class AITableGridEventService {
 
     registerEvents(element: HTMLElement) {
         fromEvent<MouseEvent>(element, 'dblclick')
-            .pipe(this.takeUntilDestroyed)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                this.dblClick(event as MouseEvent);
+                this.dblClickEvent$.next(event);
             });
 
         fromEvent<MouseEvent>(element, 'mouseover')
-            .pipe(debounceTime(100), this.takeUntilDestroyed)
+            .pipe(debounceTime(80), takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                this.mouseoverHandle(event as MouseEvent);
+                this.mouseoverEvent$.next(event);
+            });
+
+        fromEvent<MouseEvent>(document, 'mouseover')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                this.globalMouseoverEvent$.next(event);
             });
 
         fromEvent<MouseEvent>(element, 'mousedown')
-            .pipe(this.takeUntilDestroyed)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                this.mousedownEvent$.next(event as MouseEvent);
+                this.mousedownEvent$.next(event);
             });
-    }
-
-    private dblClick(event: MouseEvent) {
-        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
-            this.openEdit(cellDom);
-        }
     }
 
     private getEditorComponent(type: AITableFieldType) {
@@ -60,7 +63,7 @@ export class AITableGridEventService {
         return GRID_CELL_EDITOR_MAP[type];
     }
 
-    private openEdit(cellDom: HTMLElement) {
+    openEdit(cellDom: HTMLElement) {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
@@ -92,19 +95,5 @@ export class AITableGridEventService {
             animationDisabled: true
         });
         return ref;
-    }
-
-    mouseoverRef!: ThyPopoverRef<any>;
-
-    private mouseoverHandle(event: MouseEvent) {
-        if (this.mouseoverRef) {
-            this.mouseoverRef?.close();
-        }
-
-        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && MOUSEOVER_EDIT_TYPE.includes(type)) {
-            this.mouseoverRef = this.openEdit(cellDom);
-        }
     }
 }
