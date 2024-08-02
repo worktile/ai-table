@@ -1,10 +1,10 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AITableGrid } from '@ai-table/grid';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ViewService } from '../../service/view.service';
+import { TableService } from '../../service/table.service';
 
 const initViews = [
     { id: 'view1', name: '表格视图1', isActive: true },
@@ -16,20 +16,20 @@ const initViews = [
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyAction, ThyTabs, ThyTab, ThyPopoverModule],
     templateUrl: './basic.component.html',
-    providers: [ViewService]
+    providers: [TableService]
 })
 export class BasicComponent implements OnInit {
     router = inject(Router);
 
-    viewService = inject(ViewService);
+    tableService = inject(TableService);
 
     ngOnInit(): void {
-        this.viewService.initViews(initViews);
+        this.tableService.initViews(initViews);
         this.router.navigate(['/view1']);
     }
 
     activeTabChange(data: any) {
-        this.viewService.updateActiveView(data);
-        this.router.navigateByUrl(`/${this.viewService.activeView().id}`);
+        this.tableService.updateActiveView(data);
+        this.router.navigateByUrl(`/${this.tableService.activeView().id}`);
     }
 }

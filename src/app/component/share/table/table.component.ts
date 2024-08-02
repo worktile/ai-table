@@ -9,10 +9,10 @@ import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
 import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { setActiveViewPositions, setLocalData } from '../../../utils/utils';
-import { ShareService } from '../../../service/share.service';
+import { setActiveViewPositions } from '../../../utils/utils';
 import { DemoAIField, DemoAIRecord, UpdateFieldTypes, UpdateRecordTypes } from '../../../types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TableService } from '../../../service/table.service';
 
 @Component({
     selector: 'ai-share-table-demo',
@@ -30,46 +30,38 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     templateUrl: './table.component.html'
 })
 export class ShareTableComponent extends CommonTableComponent {
-    shareService = inject(ShareService);
-
     takeUntilDestroyed = takeUntilDestroyed();
 
     override ngOnInit(): void {
-        this.viewService.activeViewChange$.pipe(this.takeUntilDestroyed).subscribe(() => {
-            this.shareService.setRecords();
-            this.shareService.setFields();
+        this.tableService.activeViewChange$.pipe(this.takeUntilDestroyed).subscribe(() => {
+            this.tableService.setRecords();
+            this.tableService.setFields();
         });
         console.time('render');
     }
 
     override aiTableInitialized(aiTable: AITable) {
         super.aiTableInitialized(aiTable);
-        this.shareService.setAITable(aiTable);
+        this.tableService.setAITable(aiTable);
     }
 
     override setPositions(actions: AITableAction[]) {
         if (actions.some((item) => UpdateRecordTypes.includes(item.type))) {
-            const records = setActiveViewPositions(this.shareService.records(), this.viewService.activeView().id) as DemoAIRecord[];
-            this.shareService.setRecords(records);
+            const records = setActiveViewPositions(this.tableService.records(), this.tableService.activeView().id) as DemoAIRecord[];
+            this.tableService.setRecords(records);
         }
         if (actions.some((item) => UpdateFieldTypes.includes(item.type))) {
-            const fields = setActiveViewPositions(this.shareService.fields(), this.viewService.activeView().id) as DemoAIField[];
-            this.shareService.setFields(fields);
+            const fields = setActiveViewPositions(this.tableService.fields(), this.tableService.activeView().id) as DemoAIField[];
+            this.tableService.setFields(fields);
         }
     }
 
     override onChange(data: AITableChangeOptions) {
         this.setPositions(data.actions);
-        setLocalData(
-            JSON.stringify({
-                fields: this.shareService.fields(),
-                records: this.shareService.records()
-            })
-        );
-        if (this.shareService.sharedType) {
+        if (this.tableService.sharedType) {
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
-                    applyActionOps(this.shareService.sharedType!, data.actions, this.aiTable);
+                    applyActionOps(this.tableService.sharedType!, data.actions, this.aiTable);
                 });
             }
         }

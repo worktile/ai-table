@@ -24,8 +24,8 @@ import { AIViewTable } from '../../types/view';
 import { FieldPropertyEditor } from './field-property-editor/field-property-editor.component';
 import { ThyAction } from 'ngx-tethys/action';
 import { DemoAIField, DemoAIRecord, UpdateFieldTypes, UpdateRecordTypes } from '../../types';
-import { ViewService } from '../../service/view.service';
-import { getLocalStorage, getSortFieldsAndRecordsByPositions, setActiveViewPositions, setLocalData } from '../../utils/utils';
+import { getDefaultValue, getSortFieldsAndRecordsByPositions, setActiveViewPositions } from '../../utils/utils';
+import { TableService } from '../../service/table.service';
 
 @Component({
     selector: 'common-ai-table',
@@ -79,15 +79,15 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
 
     sanitizer = inject(DomSanitizer);
 
-    viewService = inject(ViewService);
+    tableService = inject(TableService);
 
     constructor() {
         this.registryIcon();
     }
 
     ngOnInit(): void {
-        const value = getLocalStorage();
-        const { records, fields } = getSortFieldsAndRecordsByPositions(value.records, value.fields, this.viewService.activeView().id);
+        const value = getDefaultValue();
+        const { records, fields } = getSortFieldsAndRecordsByPositions(value.records, value.fields, this.tableService.activeView().id);
         this.records = signal(records);
         this.fields = signal(fields);
         console.time('render');
@@ -103,12 +103,6 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
 
     onChange(data: AITableChangeOptions) {
         this.setPositions(data.actions);
-        setLocalData(
-            JSON.stringify({
-                fields: this.fields(),
-                records: this.records()
-            })
-        );
     }
 
     prevent(event: Event) {
@@ -118,16 +112,16 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
 
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable;
-        (this.aiTable as AIViewTable).views = this.viewService.views;
+        (this.aiTable as AIViewTable).views = this.tableService.views;
     }
 
     setPositions(actions: AITableAction[]) {
         if (actions.some((item) => UpdateRecordTypes.includes(item.type))) {
-            const records = setActiveViewPositions(this.records(), this.viewService.activeView().id) as DemoAIRecord[];
+            const records = setActiveViewPositions(this.records(), this.tableService.activeView().id) as DemoAIRecord[];
             this.records.set(records);
         }
         if (actions.some((item) => UpdateFieldTypes.includes(item.type))) {
-            const fields = setActiveViewPositions(this.fields(), this.viewService.activeView().id) as DemoAIField[];
+            const fields = setActiveViewPositions(this.fields(), this.tableService.activeView().id) as DemoAIField[];
             this.fields.set(fields);
         }
     }

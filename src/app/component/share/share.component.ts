@@ -6,11 +6,10 @@ import { AITableGrid } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
-import { ViewService } from '../../service/view.service';
 import { DemoAIRecord, DemoAIField } from '../../types';
-import { ShareService } from '../../service/share.service';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { getLocalStorage } from '../../utils/utils';
+import { getDefaultValue } from '../../utils/utils';
+import { TableService } from '../../service/table.service';
 
 const initViews = [
     { id: 'view1', name: '表格视图1', isActive: true },
@@ -22,7 +21,7 @@ const initViews = [
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyAction, ThyTabs, ThyTab, ThyPopoverModule, FormsModule, ThyInputDirective],
     templateUrl: './share.component.html',
-    providers: [ViewService, ShareService]
+    providers: [TableService]
 })
 export class ShareComponent implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
@@ -35,27 +34,25 @@ export class ShareComponent implements OnInit, OnDestroy {
 
     router = inject(Router);
 
-    viewService = inject(ViewService);
-
-    shareService = inject(ShareService);
+    tableService = inject(TableService);
 
     ngOnInit(): void {
         this.router.navigate(['/share/view1']);
-        this.viewService.initViews(initViews);
-        const value = getLocalStorage();
-        this.shareService.initRecordsAndFields(value.records, value.fields);
+        this.tableService.initViews(initViews);
+        const value = getDefaultValue();
+        this.tableService.initRecordsAndFields(value.records, value.fields);
     }
 
     activeTabChange(data: any) {
-        this.viewService.updateActiveView(data);
-        this.router.navigateByUrl(`/share/${this.viewService.activeView().id}`);
+        this.tableService.updateActiveView(data);
+        this.router.navigateByUrl(`/share/${this.tableService.activeView().id}`);
     }
 
     handleShared() {
-        this.shareService.handleShared(this.room);
+        this.tableService.handleShared(this.room);
     }
 
     ngOnDestroy(): void {
-        this.shareService.disconnect();
+        this.tableService.disconnect();
     }
 }

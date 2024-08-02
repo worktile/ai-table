@@ -7,18 +7,22 @@ export type SyncArrayElement = Y.Array<Y.Array<any>>;
 export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
 export type SharedType = Y.Map<SyncElement>;
 
-export const getSharedType = (
+
+export const createSharedType = () => {
+    const doc = new Y.Doc();
+    const sharedType = doc.getMap<any>('ai-table');
+    return sharedType;
+};
+
+export const initSharedType = (
+    doc: Y.Doc,
     initializeValue: {
         fields: DemoAIField[];
         records: DemoAIRecord[];
     },
-    isInitializeSharedType: boolean
 ) => {
-    const doc = new Y.Doc();
     const sharedType = doc.getMap<any>('ai-table');
-    if (!isInitializeSharedType) {
-        toSharedType(sharedType, initializeValue);
-    }
+    toSharedType(sharedType, initializeValue);
     return sharedType;
 };
 
@@ -29,14 +33,33 @@ export function toSharedType(
         records: DemoAIRecord[];
     }
 ): void {
-    const fieldSharedType = new Y.Array();
-    sharedType.set('fields', fieldSharedType);
-    fieldSharedType.insert(0, data.fields.map(toSyncElement));
-
-    const recordSharedType = new Y.Array<Y.Array<any>>();
-    sharedType.set('records', recordSharedType);
-    recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+    sharedType.doc!.transact(() => {
+        const fieldSharedType = new Y.Array();
+        fieldSharedType.insert(0, data.fields.map(toSyncElement));
+        sharedType.set('fields', fieldSharedType);
+        const recordSharedType = new Y.Array<Y.Array<any>>();
+        sharedType.set('records', recordSharedType);
+        recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+    });
 }
+
+
+
+// export function toSharedType(
+//     sharedType: Y.Map<any>,
+//     data: {
+//         fields: DemoAIField[];
+//         records: DemoAIRecord[];
+//     }
+// ): void {
+//     const fieldSharedType = new Y.Array();
+//     sharedType.set('fields', fieldSharedType);
+//     fieldSharedType.insert(0, data.fields.map(toSyncElement));
+
+//     const recordSharedType = new Y.Array<Y.Array<any>>();
+//     sharedType.set('records', recordSharedType);
+//     recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+// }
 
 export function toSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();

@@ -1,4 +1,4 @@
-@if (viewService.activeView()) {
+@if (tableService.activeView()) {
     <div (mousedown)="prevent($event)">
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
         <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
