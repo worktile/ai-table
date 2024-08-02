@@ -45,5 +45,15 @@ export const AITableQueries = {
             throw new Error(`path does not exist as path [${path}]`);
         }
         return aiTable.fields()[path[0]];
+    },
+
+    getRecord(aiTable: AITable, path: AIRecordPath): AITableRecord {
+        if (!aiTable) {
+            throw new Error(`aiTable does not exist`);
+        }
+        if (!path) {
+            throw new Error(`path does not exist as path [${path}]`);
+        }
+        return aiTable.records()[path[0]];
     }
 };

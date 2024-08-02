@@ -1,4 +1,13 @@
-import { ActionName, AddFieldAction, AIFieldPath, AITable, AITableField, RemoveFieldAction, SetFieldAction } from '../types';
+import {
+    ActionName,
+    AddFieldAction,
+    AIFieldPath,
+    AITable,
+    AITableField,
+    MoveFieldAction,
+    RemoveFieldAction,
+    SetFieldAction
+} from '../types';
 import { AITableQueries } from '../utils';
 
 export function addField(aiTable: AITable, field: AITableField, path: AIFieldPath) {
@@ -6,6 +15,15 @@ export function addField(aiTable: AITable, field: AITableField, path: AIFieldPat
         type: ActionName.AddField,
         field,
         path
+    };
+    aiTable.apply(operation);
+}
+
+export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldPath) {
+    const operation: MoveFieldAction = {
+        type: ActionName.MoveField,
+        path,
+        newPath
     };
     aiTable.apply(operation);
 }
@@ -45,6 +63,7 @@ export function setField(aiTable: AITable, value: Partial<AITableField>, path: A
 
 export const FieldActions = {
     addField,
+    moveField,
     removeField,
     setField
 };

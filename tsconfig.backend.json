@@ -1,0 +1,19 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2017",
+        "moduleResolution": "node",
+        "strict": false,
+        "alwaysStrict": true,
+        "outDir": "./dist",
+        "baseUrl": "./backend/src/",
+        "rootDir": ".",
+        "types": [ "node"],
+        "importHelpers": true,
+        "esModuleInterop": true
+    },
+    "files": ["backend/src/index.ts"],
+    "include": ["backend/src/**/*.d.ts"]
+}

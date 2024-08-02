@@ -1,5 +1,5 @@
 import { Actions } from '../action';
-import { AITable, AITableAction, AITableFields, AITableRecords } from '../types';
+import { AITable, AITableAction, AITableFields, AITableRecords, Path } from '../types';
 import { FLUSHING } from './weak-map';
 import { WritableSignal, signal } from '@angular/core';
 
@@ -29,4 +29,8 @@ export function createAITable(records: WritableSignal<AITableRecords>, fields: W
         }
     };
     return aiTable;
+}
+
+export function isPathEqual(path: Path, another: Path): boolean {
+    return path.length === another.length && path.every((n, i) => n === another[i]);
 }

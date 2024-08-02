@@ -1,13 +1,1 @@
-<!-- 行高:
-<thy-select [(ngModel)]="activeView().rowHeight" style="width: 200px" (ngModelChange)="changeRowHeight($event)">
-    <thy-option *ngFor="let option of listOfOption" [thyValue]="option.value" [thyLabelText]="option.text"> </thy-option>
-</thy-select> -->
-<a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
-<ai-table-grid
-    [(aiRecords)]="records"
-    [(aiFields)]="fields"
-    (onChange)="onChange($event)"
-    [aiFieldConfig]="aiFieldConfig"
-    [aiPlugins]="plugins"
-    (aiTableInitialized)="aiTableInitialized($event)"
-></ai-table-grid>
+<router-outlet></router-outlet>
