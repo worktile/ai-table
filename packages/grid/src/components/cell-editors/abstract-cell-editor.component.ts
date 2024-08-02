@@ -32,6 +32,6 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
     }
 
     closePopover() {
-        this.thyPopoverRef.close();
+        this.thyPopoverRef?.close();
     }
 }

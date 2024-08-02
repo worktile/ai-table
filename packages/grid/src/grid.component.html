@@ -47,6 +47,7 @@
             </div>
             @for (field of gridData().fields; track $index) {
                 <div
+                    #cell
                     class="grid-cell"
                     [ngClass]="{
                         highlight: aiTable.selection().selectedCells.has(record.id) || aiTable.selection().selectedFields.has(field.id),
@@ -56,7 +57,6 @@
                     [attr.fieldId]="[field.id]"
                     [attr.recordId]="[record.id]"
                     [ngStyle]="{ width: field.width + 'px' }"
-                    #cell
                 >
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
@@ -73,13 +73,25 @@
                         @case (AITableFieldType.link) {
                             <a
                                 class="d-block"
+                                target="_blank"
+                                [href]="record.values[field.id]?.url"
                                 thyStopPropagation
                                 thyFlexibleText
                                 [thyTooltipContent]="record.values[field.id]?.text"
-                                [href]="record.values[field.id]?.url"
-                                target="_blank"
-                                >{{ record.values[field.id]?.text }}</a
                             >
+                                {{ record.values[field.id]?.text }}
+                            </a>
+                        }
+                        @case (AITableFieldType.progress) {
+                            <thy-progress
+                                class="w-100"
+                                [thyValue]="record.values[field.id]"
+                                [thySize]="record.values[field.id]?.config?.size || 'md'"
+                                [thyMax]="record.values[field.id]?.config?.max || 100"
+                                [thyType]="record.values[field.id]?.config?.progressType || 'success'"
+                            >
+                                <span> {{ record.values[field.id] }}{{ record.values[field.id]?.config?.suffix || '%' }} </span>
+                            </thy-progress>
                         }
                         @default {
                             <span class="text-truncate"> {{ record.values[field.id] }}</span>
