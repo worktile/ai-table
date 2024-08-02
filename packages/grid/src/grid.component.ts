@@ -33,7 +33,7 @@ import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
 import { DefaultFieldMenus } from './constants';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.servive';
+import { AITableGridSelectionService } from './services/selection.service';
 
 @Component({
     selector: 'ai-table-grid',

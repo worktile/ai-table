@@ -41,7 +41,7 @@ export class AITableGridEventService {
 
     private dblClick(event: MouseEvent) {
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && cellDom.getAttribute('type')! as AITableFieldType;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
         if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.openEdit(cellDom);
         }

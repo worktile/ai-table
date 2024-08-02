@@ -1,98 +1,61 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, signal, isDevMode } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnDestroy, OnInit, WritableSignal, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
-import { applyYjsEvents } from '../../share/apply-to-table';
-import applyActionOps from '../../share/apply-to-yjs';
-import { connectProvider } from '../../share/provider';
-import { SharedType, getSharedType } from '../../share/shared';
-import { translateSharedTypeToTable } from '../../share/utils/translate-to-table';
-import { YjsAITable } from '../../share/yjs-table';
-import { CommonComponent } from '../common/common.component';
 import { ThyAction } from 'ngx-tethys/action';
-import { AITable, AITableGrid } from '@ai-table/grid';
-import { ThyInputDirective } from 'ngx-tethys/input';
+import { AITableGrid } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
+import { ViewService } from '../../service/view.service';
+import { DemoAIRecord, DemoAIField } from '../../types';
+import { ShareService } from '../../service/share.service';
+import { ThyInputDirective } from 'ngx-tethys/input';
+import { getLocalStorage } from '../../utils/utils';
+
+const initViews = [
+    { id: 'view1', name: '表格视图1', isActive: true },
+    { id: 'view2', name: '表格视图2' }
+];
 
 @Component({
     selector: 'ai-table-share',
     standalone: true,
-    imports: [RouterOutlet, CommonComponent, AITableGrid, ThyAction, FormsModule, ThyInputDirective],
-    templateUrl: './share.component.html'
+    imports: [RouterOutlet, AITableGrid, ThyAction, ThyTabs, ThyTab, ThyPopoverModule, FormsModule, ThyInputDirective],
+    templateUrl: './share.component.html',
+    providers: [ViewService, ShareService]
 })
-export class ShareComponent extends CommonComponent implements OnInit, AfterViewInit, OnDestroy {
-    sharedType!: SharedType | null;
-
+export class ShareComponent implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'room-1';
+    room = 'share-room-1';
 
-    override ngOnInit(): void {
-        const value = this.getLocalStorage();
-        this.records = signal(value.records);
-        this.fields = signal(value.fields);
-        console.time('shared-render');
+    records!: WritableSignal<DemoAIRecord[]>;
+
+    fields!: WritableSignal<DemoAIField[]>;
+
+    router = inject(Router);
+
+    viewService = inject(ViewService);
+
+    shareService = inject(ShareService);
+
+    ngOnInit(): void {
+        this.router.navigate(['/share/view1']);
+        this.viewService.initViews(initViews);
+        const value = getLocalStorage();
+        this.shareService.initRecordsAndFields(value.records, value.fields);
     }
 
-    override ngAfterViewInit() {
-        console.timeEnd('shared-render');
-    }
-
-    initialized(aiTable: AITable) {
-        this.aiTable = aiTable;
+    activeTabChange(data: any) {
+        this.viewService.updateActiveView(data);
+        this.router.navigateByUrl(`/share/${this.viewService.activeView().id}`);
     }
 
     handleShared() {
-        if (this.provider) {
-            this.disconnect();
-            return;
-        }
-        const isInitializeSharedType = false;
-        this.sharedType = getSharedType(
-            {
-                records: this.records(),
-                fields: this.fields()
-            },
-            !!isInitializeSharedType
-        );
-        let isInitialized = false;
-        this.provider = connectProvider(this.sharedType.doc!, this.room, isDevMode());
-        this.sharedType.observeDeep((events: any) => {
-            if (!YjsAITable.isLocal(this.aiTable)) {
-                if (!isInitialized) {
-                    const data = translateSharedTypeToTable(this.sharedType!);
-                    this.records.set(data.records);
-                    this.fields.set(data.fields);
-                    isInitialized = true;
-                    console.log(this.fields());
-                } else {
-                    applyYjsEvents(this.aiTable, events);
-                }
-            }
-        });
-        if (!isInitializeSharedType) {
-            localStorage.setItem('ai-table-shared-type', 'true');
-        }
+        this.shareService.handleShared(this.room);
     }
 
-    override onChange(data: any) {
-        super.onChange(data);
-        if (this.provider) {
-            if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
-                YjsAITable.asLocal(this.aiTable, () => {
-                    applyActionOps(this.sharedType!, data.actions, this.aiTable);
-                });
-            }
-        }
-    }
-
-    disconnect() {
-        if (this.provider) {
-            this.provider.disconnect();
-            this.provider = null;
-        }
-    }
-
-    override ngOnDestroy(): void {
-        this.disconnect();
+    ngOnDestroy(): void {
+        this.shareService.disconnect();
     }
 }

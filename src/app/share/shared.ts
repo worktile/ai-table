@@ -1,6 +1,6 @@
-import { AITableFields, AITableRecord, AITableRecords } from '@ai-table/grid';
 import { isArray, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
+import { DemoAIField, DemoAIRecord } from '../types';
 
 export type SyncMapElement = Y.Map<any>;
 export type SyncArrayElement = Y.Array<Y.Array<any>>;
@@ -9,8 +9,8 @@ export type SharedType = Y.Map<SyncElement>;
 
 export const getSharedType = (
     initializeValue: {
-        fields: AITableFields;
-        records: AITableRecords;
+        fields: DemoAIField[];
+        records: DemoAIRecord[];
     },
     isInitializeSharedType: boolean
 ) => {
@@ -25,8 +25,8 @@ export const getSharedType = (
 export function toSharedType(
     sharedType: Y.Map<any>,
     data: {
-        fields: AITableFields;
-        records: AITableRecords;
+        fields: DemoAIField[];
+        records: DemoAIRecord[];
     }
 ): void {
     const fieldSharedType = new Y.Array();
@@ -57,7 +57,7 @@ export function toSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>> {
+export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>> {
     const fixedFieldArray = new Y.Array();
     fixedFieldArray.insert(0, [record['id']]);
 
@@ -68,8 +68,15 @@ export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>
     }
     customFieldArray.insert(0, customFields);
 
+    const positionArray = new Y.Array();
+    const positions = [];
+    for (const viewId in record['positions']) {
+        positions.push(record['positions'][viewId]);
+    }
+    positionArray.insert(0, positions);
+
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
-    element.insert(0, [fixedFieldArray, customFieldArray]);
+    element.insert(0, [fixedFieldArray, customFieldArray, positionArray]);
     return element;
 }
