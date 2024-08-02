@@ -9,6 +9,12 @@
 
     .grid-header {
         border-top: 1px solid variables.$gray-200;
+
+        .grid-field:not(.highlight) {
+            &:hover {
+                background-color: variables.$gray-80;
+            }
+        }
     }
 
     .grid-body {
@@ -47,10 +53,11 @@
         justify-content: space-between;
         .autofill-container {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 8px;
+            height: 8px;
             right: 0;
             bottom: 0;
+            border: 2px solid variables.$white;
             background: variables.$primary;
             cursor: crosshair;
             z-index: 100;
@@ -142,7 +149,7 @@
     }
 
     .thy-icon-plus {
-        font-size: 14px;
+        font-size: 16px;
         color: variables.$gray-600;
     }
 }

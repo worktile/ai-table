@@ -1,12 +1,12 @@
 import { Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ThyPopover } from 'ngx-tethys/popover';
 import { fromEvent, Subject } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from '../constants';
-import { getRecordOrField } from '../utils';
-import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
-import { ThyPopover } from 'ngx-tethys/popover';
+import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableGridCellRenderSchema } from '../types';
+import { getRecordOrField } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -37,11 +37,17 @@ export class AITableGridEventService {
             .subscribe((event) => {
                 this.mousedownEvent$.next(event as MouseEvent);
             });
+
+        fromEvent<MouseEvent>(document, 'mousedown')
+            .pipe(this.takeUntilDestroyed)
+            .subscribe((event) => {
+                this.mousedownEvent$.next(event as MouseEvent);
+            });
     }
 
     private dblClick(event: MouseEvent) {
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && cellDom.getAttribute('type')! as AITableFieldType;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
         if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.openEdit(cellDom);
         }
@@ -83,7 +89,8 @@ export class AITableGridEventService {
             outsideClosable: false,
             hasBackdrop: false,
             manualClosure: true,
-            animationDisabled: true
+            animationDisabled: true,
+            autoAdaptive: true
         });
     }
 }

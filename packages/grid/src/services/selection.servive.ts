@@ -64,5 +64,9 @@ export class AITableGridSelectionService {
             const fieldId = colDom.getAttribute('fieldId');
             fieldId && this.selectField(fieldId);
         }
+
+        if (!cellDom && !colDom) {
+            this.clearSelection();
+        }
     }
 }
