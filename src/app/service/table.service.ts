@@ -93,7 +93,7 @@ export class TableService {
         this.provider.connect();
         this.provider.once('synced', () => {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
-                console.log(123);
+                console.log('init shared type');
                 initSharedType(this.sharedType!.doc!, {
                     records: this.records(),
                     fields: this.fields()
