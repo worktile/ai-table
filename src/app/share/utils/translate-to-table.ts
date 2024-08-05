@@ -20,9 +20,11 @@ export const translateSharedTypeToTable = (sharedType: SharedType) => {
             values: translateRecord(customField, fields)
         };
     });
+    const views = data['views']
     return {
         records,
-        fields
+        fields,
+        views
     };
 };
 

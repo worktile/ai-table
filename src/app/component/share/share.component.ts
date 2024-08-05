@@ -50,7 +50,8 @@ export class ShareComponent extends CommonComponent implements OnInit, AfterView
         this.sharedType = getSharedType(
             {
                 records: this.records(),
-                fields: this.fields()
+                fields: this.fields(),
+                views: this.views()
             },
             !!isInitializeSharedType
         );
@@ -62,6 +63,7 @@ export class ShareComponent extends CommonComponent implements OnInit, AfterView
                     const data = translateSharedTypeToTable(this.sharedType!);
                     this.records.set(data.records);
                     this.fields.set(data.fields);
+                    this.views.set(data.views);
                     isInitialized = true;
                     console.log(this.fields());
                 } else {

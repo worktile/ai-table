@@ -23,7 +23,7 @@ import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { CustomActions } from '../../action';
 import { withCustomApply } from '../../plugins/custom-action.plugin';
-import { AITableView, AIViewTable, RowHeight } from '../../types/view';
+import { AITableView, AIViewTable, Direction, RowHeight } from '../../types/view';
 import { FieldPropertyEditor } from './field-property-editor/field-property-editor.component';
 
 const LOCAL_STORAGE_KEY = 'ai-table-data';
@@ -59,7 +59,7 @@ const initValue = {
                 'column-1': '文本 3-1',
                 'column-2': '3',
                 'column-3': {},
-                'column-4': 1,
+                'column-4': 2,
                 'column-5': 50
             }
         }
@@ -146,8 +146,8 @@ export class CommonComponent implements OnInit, AfterViewInit, OnDestroy {
     aiTable!: AITable;
 
     views = signal([
+        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' },
         { rowHeight: RowHeight.short, id: 'view1', name: '表格1', isActive: true },
-        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' }
     ]);
 
     plugins = [withCustomApply];
@@ -221,6 +221,14 @@ export class CommonComponent implements OnInit, AfterViewInit, OnDestroy {
                 records: data.records
             })
         );
+        if(data.actions[0].type === 'set_view'){
+            const sortCondition = this.activeView().sortCondition;
+            if(sortCondition){
+                const {sortBy, direction} = sortCondition.conditions[0] 
+                const records = this.records().sort((a:AITableRecord,b:AITableRecord)=>{ return  direction === Direction.ascending ? a.values[sortBy] - b.values[sortBy] : b.values[sortBy] - a.values[sortBy] });
+                this.records.set([...records])
+            }
+        }
     }
 
     aiTableInitialized(aiTable: AITable) {
@@ -281,6 +289,12 @@ export class CommonComponent implements OnInit, AfterViewInit, OnDestroy {
             const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
             Actions.moveRecord(this.aiTable, path, newPath);
         });
+    }
+
+    sort(){
+        const direction =  this.activeView().sortCondition?.conditions[0].direction
+        const sortCondition = { keepSort:true , conditions:[{sortBy: 'column-4', direction: direction=== Direction.ascending ? Direction.descending:  Direction.ascending}]}
+        CustomActions.setView(this.aiTable as any, {sortCondition}, [1]);
     }
 
     ngOnDestroy(): void {}
