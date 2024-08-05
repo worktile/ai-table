@@ -21,6 +21,8 @@ export class AITableGridEventService {
 
     globalMouseoverEvent$ = new Subject<MouseEvent>();
 
+    globalMousedownEvent$ = new Subject<MouseEvent>();
+
     private destroyRef = inject(DestroyRef);
 
     private thyPopover = inject(ThyPopover);
@@ -53,6 +55,12 @@ export class AITableGridEventService {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.mousedownEvent$.next(event);
+            });
+
+        fromEvent<MouseEvent>(document, 'mousedown')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                this.globalMousedownEvent$.next(event as MouseEvent);
             });
     }
 
@@ -92,7 +100,8 @@ export class AITableGridEventService {
             outsideClosable: false,
             hasBackdrop: false,
             manualClosure: true,
-            animationDisabled: true
+            animationDisabled: true,
+            autoAdaptive: true
         });
         return ref;
     }
