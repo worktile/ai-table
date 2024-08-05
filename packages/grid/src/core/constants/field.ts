@@ -43,6 +43,20 @@ export const BasicFields = [
         name: '进度',
         icon: 'progress',
         width: 200
+    },
+    {
+        type: AITableFieldType.date,
+        name: '创建时间',
+        icon: 'calendar',
+        readonly: true,
+        width: 200
+    },
+    {
+        type: AITableFieldType.date,
+        name: '更新时间',
+        icon: 'calendar',
+        readonly: true,
+        width: 200
     }
 ];
 
