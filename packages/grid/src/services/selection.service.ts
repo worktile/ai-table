@@ -58,7 +58,8 @@ export class AITableGridSelectionService {
         }
         const cellDom = target.closest('.grid-cell');
         const colDom = target.closest('.grid-field');
-        const recordDom = target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox';
+        const recordDom =
+            target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox' && target.closest('.grid-row-index');
         const fieldAction = target.closest('.grid-field-action');
         if (cellDom) {
             const fieldId = cellDom.getAttribute('fieldId');
