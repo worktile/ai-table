@@ -147,6 +147,10 @@
 }
 
 .grid-cell-editor {
+    .thy-popover-container {
+        box-shadow: none;
+        border-radius: inherit;
+    }
     .form-control,
     .thy-select-custom,
     .select-control-rendered {

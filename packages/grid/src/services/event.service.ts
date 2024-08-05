@@ -86,7 +86,7 @@ export class AITableGridEventService {
                 width: width + 2,
                 height: height + 2
             },
-            width: width + 2 + 'px',
+            width: width + 1 + 'px',
             height: height + 2 + 'px',
             placement: 'top',
             offset: -(height + 4),
