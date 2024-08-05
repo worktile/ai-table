@@ -59,7 +59,8 @@ export function getDefaultValue() {
                         url: 'https://www.baidu.com',
                         text: '百度链接'
                     },
-                    'column-4': 3
+                    'column-4': 3,
+                    'column-5': 10
                 }
             },
             {
@@ -72,7 +73,8 @@ export function getDefaultValue() {
                     'column-1': '文本 2-1',
                     'column-2': '2',
                     'column-3': {},
-                    'column-4': 1
+                    'column-4': 1,
+                    'column-5': 50
                 }
             },
             {
@@ -85,7 +87,8 @@ export function getDefaultValue() {
                     'column-1': '文本 3-1',
                     'column-2': '3',
                     'column-3': {},
-                    'column-4': 1
+                    'column-4': 1,
+                    'column-5': 100
                 }
             }
         ],
@@ -142,6 +145,15 @@ export function getDefaultValue() {
                     view2: 4
                 },
                 type: AITableFieldType.rate
+            },
+            {
+                id: 'column-5',
+                name: '进度',
+                positions:{
+                    view1: 4,
+                    view2: 0
+                },
+                type: AITableFieldType.progress
             }
         ]
     };

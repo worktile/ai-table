@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, WritableSignal, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
@@ -24,7 +24,7 @@ const initViews = [
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-room-2';
+    room = 'share-room-3';
 
     router = inject(Router);
 

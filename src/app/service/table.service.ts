@@ -9,6 +9,7 @@ import { translateSharedTypeToTable } from '../share/utils/translate-to-table';
 import { YjsAITable } from '../share/yjs-table';
 import { AITable } from '@ai-table/grid';
 import { AITableView } from '../types/view';
+import { createDraft, finishDraft } from 'immer';
 
 @Injectable()
 export class TableService {
@@ -34,7 +35,8 @@ export class TableService {
 
     updateActiveView(activeViewId: string) {
         this.views.update((value) => {
-            value.forEach((item) => {
+            const draftViews = createDraft(value);
+            draftViews.forEach((item) => {
                 if (item.isActive && item.id !== activeViewId) {
                     item.isActive = false;
                 }
@@ -42,7 +44,7 @@ export class TableService {
                     item.isActive = true;
                 }
             });
-            return [...value];
+            return finishDraft(draftViews);
         });
     }
 
@@ -73,6 +75,7 @@ export class TableService {
                         const data = translateSharedTypeToTable(this.sharedType!);
                         this.buildRenderRecords(data.records);
                         this.buildRenderFields(data.fields);
+                        this.views.set(data.views);
                         isInitialized = true;
                     } else {
                         applyYjsEvents(this.aiTable, events);
@@ -88,7 +91,8 @@ export class TableService {
                 const value = getDefaultValue();
                 initSharedType(this.sharedType!.doc!, {
                     records: value.records,
-                    fields: value.fields
+                    fields: value.fields,
+                    views: this.views()
                 });
             }
         });

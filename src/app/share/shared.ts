@@ -1,6 +1,7 @@
 import { isArray, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
 import { DemoAIField, DemoAIRecord, Positions } from '../types';
+import { AITableView } from '../types/view';
 
 export type SyncMapElement = Y.Map<any>;
 export type SyncArrayElement = Y.Array<Y.Array<any>>;
@@ -18,6 +19,7 @@ export const initSharedType = (
     initializeValue: {
         fields: DemoAIField[];
         records: DemoAIRecord[];
+        views: AITableView[];
     }
 ) => {
     const sharedType = doc.getMap<any>('ai-table');
@@ -30,15 +32,21 @@ export function toSharedType(
     data: {
         fields: DemoAIField[];
         records: DemoAIRecord[];
+        views: AITableView[];
     }
 ): void {
     sharedType.doc!.transact(() => {
         const fieldSharedType = new Y.Array();
         fieldSharedType.insert(0, data.fields.map(toSyncElement));
         sharedType.set('fields', fieldSharedType);
+        
         const recordSharedType = new Y.Array<Y.Array<any>>();
         sharedType.set('records', recordSharedType);
         recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+
+        const viewsSharedType = new Y.Array();
+        sharedType.set('views', viewsSharedType);
+        viewsSharedType.insert(0, data.views.map(toSyncElement))
     });
 }
 

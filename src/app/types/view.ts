@@ -1,6 +1,11 @@
 import { AITable } from '@ai-table/grid';
-import { Direction } from '@angular/cdk/bidi';
 import { WritableSignal } from '@angular/core';
+
+export enum Direction {
+    default = 0,
+    ascending = 1,
+    descending = -1
+}
 
 export interface AITableView {
     id: string;
@@ -27,12 +32,14 @@ export enum ViewActionName {
     setView = 'set_view'
 }
 
-export interface AIViewAction {
+export interface SetAIViewAction {
     type: ViewActionName.setView;
-    view: AITableView;
-    newView: AITableView;
+    view: Partial<AITableView>;
+    newView: Partial<AITableView>;
     path: [number];
 }
+
+export type AIViewAction = SetAIViewAction;
 
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;

@@ -4,7 +4,6 @@ import {
     AIFieldPath,
     AIRecordPath,
     AITable,
-    AITableChangeOptions,
     AITableField,
     AITableGrid,
     AITableQueries,
@@ -13,7 +12,7 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { Component, inject, Signal, WritableSignal } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -25,9 +24,10 @@ import { withCustomApply } from '../../../plugins/custom-action.plugin';
 import { TableService } from '../../../service/table.service';
 import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
-import { AIViewTable } from '../../../types/view';
+import { AIViewAction, AIViewTable, Direction } from '../../../types/view';
 import { getDefaultValue } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
+import { CustomActions } from '../../../action';
 
 @Component({
     selector: 'demo-table-content',
@@ -103,7 +103,7 @@ export class DemoTableContent {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
     }
 
-    onChange(data: AITableChangeOptions) {
+    onChange(data: any) {
         // TODO：获取当前的 view 和 path，转换为 sharedType 中原数据的 path
         if (this.tableService.sharedType) {
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
@@ -112,6 +112,15 @@ export class DemoTableContent {
                 });
             }
         }
+    }
+
+    sort() {
+        const direction = this.tableService.activeView().sortCondition?.conditions[0].direction;
+        const sortCondition = {
+            keepSort: false,
+            conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
+        };
+        CustomActions.setView(this.aiTable as any, { sortCondition }, [1]);
     }
 
     prevent(event: Event) {

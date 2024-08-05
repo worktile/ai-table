@@ -52,7 +52,11 @@ export class AITableGridSelectionService {
     }
 
     updateSelect(event: MouseEvent) {
-        const target = event.target as HTMLElement;
+        const target = event?.target as HTMLElement;
+        if (!target) {
+            return;
+        }
+
         const cellDom = target.closest('.grid-cell');
         const colDom = target.closest('.grid-field');
         if (cellDom) {
@@ -63,6 +67,9 @@ export class AITableGridSelectionService {
         if (colDom) {
             const fieldId = colDom.getAttribute('fieldId');
             fieldId && this.selectField(fieldId);
+        }
+        if (!cellDom && !colDom) {
+            this.clearSelection();
         }
     }
 }
