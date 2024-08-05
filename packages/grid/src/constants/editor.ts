@@ -14,9 +14,9 @@ export const GRID_CELL_EDITOR_MAP: Record<AITableFieldType, any> = {
     [AITableFieldType.richText]: TextCellEditorComponent,
     [AITableFieldType.select]: SelectCellEditorComponent,
     [AITableFieldType.number]: NumberCellEditorComponent,
-    [AITableFieldType.member]: null,
     [AITableFieldType.date]: DateTimeCellEditorComponent,
     [AITableFieldType.rate]: RatingCellEditorComponent,
     [AITableFieldType.link]: LinkCellEditorComponent,
-    [AITableFieldType.progress]: ProgressEditorComponent
+    [AITableFieldType.progress]: ProgressEditorComponent,
+    [AITableFieldType.member]: null
 };

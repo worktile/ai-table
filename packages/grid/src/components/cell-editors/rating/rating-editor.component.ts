@@ -8,11 +8,13 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     template: ` <thy-rate [(ngModel)]="modelValue" (ngModelChange)="updateValue()"></thy-rate> `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ThyRate]
+    imports: [FormsModule, ThyRate],
+    host: {
+        class: 'd-flex align-items-center h-100 px-3'
+    }
 })
 export class RatingCellEditorComponent extends AbstractEditCellEditor<number> {
     updateValue() {
         this.updateFieldValue();
-        this.closePopover();
     }
 }
