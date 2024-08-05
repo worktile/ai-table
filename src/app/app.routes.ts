@@ -1,29 +1,17 @@
 import { Routes } from '@angular/router';
-import { BasicComponent } from './component/basic/basic.component';
-import { ShareComponent } from './component/share/share.component';
-import { TableComponent } from './component/basic/table/table.component';
-import { ShareTableComponent } from './component/share/table/table.component';
+import { DemoTableContent } from './component/common/content/content.component';
+import { DemoTable } from './component/table.component';
 
 export const routes: Routes = [
     {
-        path: 'share',
-        component: ShareComponent,
-        children:[
-            {
-                path: ':viewId',
-                component: ShareTableComponent,
-            }
-        ]
-    },
-    {
         path: '',
-        component: BasicComponent,
+        component: DemoTable,
         children:[
             {
                 path: ':viewId',
-                component: TableComponent,
+                component: DemoTableContent,
             }
         ]
-    },
+    }
  
 ];

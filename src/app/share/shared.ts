@@ -1,12 +1,11 @@
 import { isArray, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import { DemoAIField, DemoAIRecord } from '../types';
+import { DemoAIField, DemoAIRecord, Positions } from '../types';
 
 export type SyncMapElement = Y.Map<any>;
 export type SyncArrayElement = Y.Array<Y.Array<any>>;
 export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
 export type SharedType = Y.Map<SyncElement>;
-
 
 export const createSharedType = () => {
     const doc = new Y.Doc();
@@ -19,7 +18,7 @@ export const initSharedType = (
     initializeValue: {
         fields: DemoAIField[];
         records: DemoAIRecord[];
-    },
+    }
 ) => {
     const sharedType = doc.getMap<any>('ai-table');
     toSharedType(sharedType, initializeValue);
@@ -42,24 +41,6 @@ export function toSharedType(
         recordSharedType.insert(0, data.records.map(toRecordSyncElement));
     });
 }
-
-
-
-// export function toSharedType(
-//     sharedType: Y.Map<any>,
-//     data: {
-//         fields: DemoAIField[];
-//         records: DemoAIRecord[];
-//     }
-// ): void {
-//     const fieldSharedType = new Y.Array();
-//     sharedType.set('fields', fieldSharedType);
-//     fieldSharedType.insert(0, data.fields.map(toSyncElement));
-
-//     const recordSharedType = new Y.Array<Y.Array<any>>();
-//     sharedType.set('records', recordSharedType);
-//     recordSharedType.insert(0, data.records.map(toRecordSyncElement));
-// }
 
 export function toSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
@@ -91,15 +72,17 @@ export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>>
     }
     customFieldArray.insert(0, customFields);
 
-    const positionArray = new Y.Array();
+    const positionsArray: Y.Array<Positions> = new Y.Array();
     const positions = [];
     for (const viewId in record['positions']) {
-        positions.push(record['positions'][viewId]);
+        positions.push({
+            [viewId]: record['positions'][viewId]
+        });
     }
-    positionArray.insert(0, positions);
+    positionsArray.insert(0, positions);
 
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
-    element.insert(0, [fixedFieldArray, customFieldArray, positionArray]);
+    element.insert(0, [fixedFieldArray, customFieldArray, positionsArray]);
     return element;
 }

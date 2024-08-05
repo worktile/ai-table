@@ -2,7 +2,7 @@ import { AITableFieldType } from '@ai-table/grid';
 import { DemoAIField, DemoAIRecord } from '../types';
 const LOCAL_STORAGE_KEY = 'ai-table-data';
 
-export function sortDataByPositions(data: DemoAIRecord[] | DemoAIField[], activeViewId: string) {
+export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
     if (hasPositions) {
         return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
@@ -11,8 +11,8 @@ export function sortDataByPositions(data: DemoAIRecord[] | DemoAIField[], active
 }
 
 export function getSortFieldsAndRecordsByPositions(records: DemoAIRecord[], fields: DemoAIField[], activeViewId: string) {
-    const newRecords = sortDataByPositions(records, activeViewId) as DemoAIRecord[];
-    const newFields = sortDataByPositions(fields, activeViewId) as DemoAIField[];
+    const newRecords = sortDataByView(records, activeViewId) as DemoAIRecord[];
+    const newFields = sortDataByView(fields, activeViewId) as DemoAIField[];
     return {
         records: newRecords,
         fields: newFields

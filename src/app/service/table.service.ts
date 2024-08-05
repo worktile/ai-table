@@ -3,12 +3,11 @@ import { createSharedType, initSharedType, SharedType } from '../share/shared';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../share/provider';
 import { DemoAIField, DemoAIRecord } from '../types';
-import { sortDataByPositions } from '../utils/utils';
+import { getDefaultValue, sortDataByView } from '../utils/utils';
 import { applyYjsEvents } from '../share/apply-to-table';
 import { translateSharedTypeToTable } from '../share/utils/translate-to-table';
 import { YjsAITable } from '../share/yjs-table';
 import { AITable } from '@ai-table/grid';
-import { Subject } from 'rxjs';
 import { AITableView } from '../types/view';
 
 @Injectable()
@@ -26,45 +25,37 @@ export class TableService {
     sharedType!: SharedType | null;
 
     activeView = computed(() => {
-        const activeView = this.views().find((view) => view?.isActive) as AITableView;
-        return activeView;
+        return this.views().find((view) => view?.isActive) as AITableView;
     });
 
-    activeViewChange$ = new Subject<AITableView>();
-
-
-    initViews(views: AITableView[]) {
+    initData(views: AITableView[]) {
         this.views = signal(views);
     }
 
     updateActiveView(activeViewId: string) {
         this.views.update((value) => {
-            const result = value.map((item) => {
-                return {
-                    ...item,
-                    isActive: item.id === activeViewId
-                };
+            value.forEach((item) => {
+                if (item.isActive && item.id !== activeViewId) {
+                    item.isActive = false;
+                }
+                if (!item.isActive && item.id === activeViewId) {
+                    item.isActive = true;
+                }
             });
-            return result;
+            return [...value];
         });
-        this.activeViewChange$.next(this.activeView());
     }
 
     setAITable(aiTable: AITable) {
         this.aiTable = aiTable;
     }
 
-    initRecordsAndFields(records: DemoAIRecord[], fields: DemoAIField[]) {
-        this.records = signal(sortDataByPositions(records, this.activeView().id) as DemoAIRecord[]);
-        this.fields = signal(sortDataByPositions(fields, this.activeView().id) as DemoAIField[]);
+    buildRenderRecords(records?: DemoAIRecord[]) {
+        this.records = signal(sortDataByView(records ?? this.records(), this.activeView().id) as DemoAIRecord[]);
     }
 
-    setRecords(records?: DemoAIRecord[]) {
-        this.records.set(sortDataByPositions(records ?? this.records(), this.activeView().id) as DemoAIRecord[]);
-    }
-
-    setFields(fields?: DemoAIField[]) {
-        this.fields.set(sortDataByPositions(fields ?? this.fields(), this.activeView().id) as DemoAIField[]);
+    buildRenderFields(fields?: DemoAIField[]) {
+        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView().id) as DemoAIField[]);
     }
 
     handleShared(room: string) {
@@ -79,9 +70,9 @@ export class TableService {
             this.sharedType.observeDeep((events: any) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
-                        const data = translateSharedTypeToTable(this.sharedType!, this.views());
-                        this.records.set(data.records);
-                        this.fields.set(data.fields);
+                        const data = translateSharedTypeToTable(this.sharedType!);
+                        this.buildRenderRecords(data.records);
+                        this.buildRenderFields(data.fields);
                         isInitialized = true;
                     } else {
                         applyYjsEvents(this.aiTable, events);
@@ -94,9 +85,10 @@ export class TableService {
         this.provider.once('synced', () => {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
                 console.log('init shared type');
+                const value = getDefaultValue();
                 initSharedType(this.sharedType!.doc!, {
-                    records: this.records(),
-                    fields: this.fields()
+                    records: value.records,
+                    fields: value.fields
                 });
             }
         });

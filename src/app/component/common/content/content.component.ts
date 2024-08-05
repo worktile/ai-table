@@ -1,43 +1,41 @@
-import { AfterViewInit, Component, OnInit, Signal, signal, WritableSignal, inject } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { RouterOutlet } from '@angular/router';
 import {
-    AITableGrid,
-    AITableField,
-    AITable,
-    AIFieldConfig,
-    EditFieldPropertyItem,
-    DividerMenuItem,
-    RemoveFieldItem,
     Actions,
+    AIFieldConfig,
     AIFieldPath,
     AIRecordPath,
+    AITable,
+    AITableChangeOptions,
+    AITableField,
+    AITableGrid,
     AITableQueries,
     AITableRecord,
-    AITableChangeOptions,
-    AITableAction
+    DividerMenuItem,
+    EditFieldPropertyItem,
+    RemoveFieldItem
 } from '@ai-table/grid';
-import { ThyIconRegistry } from 'ngx-tethys/icon';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { withCustomApply } from '../../plugins/custom-action.plugin';
-import { AIViewTable } from '../../types/view';
-import { FieldPropertyEditor } from './field-property-editor/field-property-editor.component';
+import { Component, inject, Signal, WritableSignal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
-import { DemoAIField, DemoAIRecord, UpdateFieldTypes, UpdateRecordTypes } from '../../types';
-import { getDefaultValue, getSortFieldsAndRecordsByPositions, setActiveViewPositions } from '../../utils/utils';
-import { TableService } from '../../service/table.service';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { FormsModule } from '@angular/forms';
+import { ThyInputDirective } from 'ngx-tethys/input';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ThyIconRegistry } from 'ngx-tethys/icon';
+import { withCustomApply } from '../../../plugins/custom-action.plugin';
+import { TableService } from '../../../service/table.service';
+import applyActionOps from '../../../share/apply-to-yjs';
+import { YjsAITable } from '../../../share/yjs-table';
+import { AIViewTable } from '../../../types/view';
+import { getDefaultValue } from '../../../utils/utils';
+import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 
 @Component({
-    selector: 'common-ai-table',
+    selector: 'demo-table-content',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction],
-    template: ''
+    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction, FormsModule, ThyInputDirective],
+    templateUrl: './content.component.html'
 })
-export class CommonTableComponent implements OnInit, AfterViewInit {
-    records!: WritableSignal<DemoAIRecord[]>;
-
-    fields!: WritableSignal<DemoAIField[]>;
-
+export class DemoTableContent {
     aiTable!: AITable;
 
     plugins = [withCustomApply];
@@ -86,10 +84,14 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        const value = getDefaultValue();
-        const { records, fields } = getSortFieldsAndRecordsByPositions(value.records, value.fields, this.tableService.activeView().id);
-        this.records = signal(records);
-        this.fields = signal(fields);
+        if (this.tableService.sharedType) {
+            this.tableService.buildRenderRecords();
+            this.tableService.buildRenderFields();
+        } else {
+            const value = getDefaultValue();
+            this.tableService.buildRenderRecords(value.records);
+            this.tableService.buildRenderFields(value.fields);
+        }
         console.time('render');
     }
 
@@ -102,7 +104,14 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
     }
 
     onChange(data: AITableChangeOptions) {
-        this.setPositions(data.actions);
+        // TODO：获取当前的 view 和 path，转换为 sharedType 中原数据的 path
+        if (this.tableService.sharedType) {
+            if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
+                YjsAITable.asLocal(this.aiTable, () => {
+                    applyActionOps(this.tableService.sharedType!, data.actions, this.aiTable);
+                });
+            }
+        }
     }
 
     prevent(event: Event) {
@@ -113,17 +122,7 @@ export class CommonTableComponent implements OnInit, AfterViewInit {
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable;
         (this.aiTable as AIViewTable).views = this.tableService.views;
-    }
-
-    setPositions(actions: AITableAction[]) {
-        if (actions.some((item) => UpdateRecordTypes.includes(item.type))) {
-            const records = setActiveViewPositions(this.records(), this.tableService.activeView().id) as DemoAIRecord[];
-            this.records.set(records);
-        }
-        if (actions.some((item) => UpdateFieldTypes.includes(item.type))) {
-            const fields = setActiveViewPositions(this.fields(), this.tableService.activeView().id) as DemoAIField[];
-            this.fields.set(fields);
-        }
+        this.tableService.setAITable(aiTable);
     }
 
     removeRecord() {

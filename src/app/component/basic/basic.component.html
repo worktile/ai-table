@@ -1,9 +1,0 @@
-<thy-tabs (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView().id">
-    @for (item of tableService.views(); track $index) {
-        <thy-tab [thyTitle]="item.name" [id]="item.id">
-            @if (item.isActive) {
-                <router-outlet></router-outlet>
-            }
-        </thy-tab>
-    }
-</thy-tabs>

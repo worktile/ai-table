@@ -6,10 +6,8 @@ import { AITableGrid } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
-import { DemoAIRecord, DemoAIField } from '../../types';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { getDefaultValue } from '../../utils/utils';
-import { TableService } from '../../service/table.service';
+import { TableService } from '../service/table.service';
 
 const initViews = [
     { id: 'view1', name: '表格视图1', isActive: true },
@@ -17,35 +15,29 @@ const initViews = [
 ];
 
 @Component({
-    selector: 'ai-table-share',
+    selector: 'demo-ai-table',
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyAction, ThyTabs, ThyTab, ThyPopoverModule, FormsModule, ThyInputDirective],
-    templateUrl: './share.component.html',
+    templateUrl: './table.component.html',
     providers: [TableService]
 })
-export class ShareComponent implements OnInit, OnDestroy {
+export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-room-1';
-
-    records!: WritableSignal<DemoAIRecord[]>;
-
-    fields!: WritableSignal<DemoAIField[]>;
+    room = 'share-room-2';
 
     router = inject(Router);
 
     tableService = inject(TableService);
 
     ngOnInit(): void {
-        this.router.navigate(['/share/view1']);
-        this.tableService.initViews(initViews);
-        const value = getDefaultValue();
-        this.tableService.initRecordsAndFields(value.records, value.fields);
+        this.router.navigate(['/view1']);
+        this.tableService.initData(initViews);
     }
 
     activeTabChange(data: any) {
         this.tableService.updateActiveView(data);
-        this.router.navigateByUrl(`/share/${this.tableService.activeView().id}`);
+        this.router.navigateByUrl(`/${this.tableService.activeView().id}`);
     }
 
     handleShared() {
