@@ -3,3 +3,12 @@
         height: 100%;
     }
 }
+
+.text-cell-editor {
+    display: block;
+
+    textarea {
+        min-height: 44px;
+        resize: none;
+    }
+}

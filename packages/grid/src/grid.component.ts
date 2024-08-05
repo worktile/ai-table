@@ -1,39 +1,54 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, NgZone, OnInit, output, signal } from '@angular/core';
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
-import { SelectOptionPipe } from './pipes/grid';
-import { ThyTag } from 'ngx-tethys/tag';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    ElementRef,
+    inject,
+    input,
+    model,
+    NgZone,
+    OnInit,
+    output,
+    signal
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { buildGridData } from './utils';
-import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { FormsModule } from '@angular/forms';
+import { ThyAction } from 'ngx-tethys/action';
+import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
+import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
+import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
+import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
+import { ThyIcon } from 'ngx-tethys/icon';
+import { ThyPopoverModule, ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyProgress } from 'ngx-tethys/progress';
+import { ThyRate } from 'ngx-tethys/rate';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { ThyTag } from 'ngx-tethys/tag';
+import { mergeWith } from 'rxjs/operators';
+import { ProgressEditorComponent } from './components';
+import { FieldMenu } from './components/field-menu/field-menu.component';
+import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
+import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
 import {
     Actions,
-    createAITable,
-    getDefaultRecord,
+    AIPlugin,
     AITable,
     AITableChangeOptions,
     AITableFields,
     AITableFieldType,
     AITableRecords,
+    createAITable,
     createDefaultField,
-    AIPlugin
+    getDefaultRecord
 } from './core';
-import { ThyIcon } from 'ngx-tethys/icon';
+import { SelectOptionPipe } from './pipes/grid';
 import { AITableGridEventService } from './services/event.service';
-import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
-import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
-import { ThyRate } from 'ngx-tethys/rate';
-import { FormsModule } from '@angular/forms';
-import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
-import { ThyTooltipModule, ThyTooltipService } from 'ngx-tethys/tooltip';
-import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
-import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { FieldMenu } from './components/field-menu/field-menu.component';
-import { ThyAction } from 'ngx-tethys/action';
-import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
-import { DefaultFieldMenus } from './constants';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.servive';
+import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { buildGridData } from './utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -54,18 +69,19 @@ import { AITableGridSelectionService } from './services/selection.servive';
         ThyPopoverModule,
         ThyIcon,
         ThyRate,
+        ThyProgress,
         AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
-        ThyTooltipModule,
         ThyFlexibleText,
         ThyStopPropagationDirective,
         FieldMenu,
         ThyAction,
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
-        ThyCheckboxModule
+        ThyCheckboxModule,
+        ProgressEditorComponent
     ],
-    providers: [ThyTooltipService, AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -82,8 +98,6 @@ export class AITableGrid implements OnInit {
 
     AITableFieldType = AITableFieldType;
 
-    takeUntilDestroyed = takeUntilDestroyed();
-
     aiTable!: AITable;
 
     get isSelectedAll() {
@@ -96,29 +110,24 @@ export class AITableGrid implements OnInit {
 
     fieldMenus!: AITableFieldMenuItem[];
 
+    mouseoverRef!: ThyPopoverRef<any>;
+
     gridData = computed(() => {
         return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
     });
 
-    constructor(
-        private elementRef: ElementRef,
-        private aiTableGridEventService: AITableGridEventService,
-        public aiTableGridSelectionService: AITableGridSelectionService,
-        private aiTableGridFieldService: AITableGridFieldService,
-        private ngZone: NgZone
-    ) {}
+    private ngZone = inject(NgZone);
+    private elementRef = inject(ElementRef);
+    private destroyRef = inject(DestroyRef);
+    private aiTableGridFieldService = inject(AITableGridFieldService);
+    private aiTableGridEventService = inject(AITableGridEventService);
+    public aiTableGridSelectionService = inject(AITableGridSelectionService);
 
     ngOnInit(): void {
         this.initAITable();
         this.initService();
         this.buildFieldMenus();
-        this.ngZone.runOutsideAngular(() => {
-            this.aiTableGridEventService.mousedownEvent$.pipe(this.takeUntilDestroyed).subscribe((event) => {
-                if ((event as MouseEvent)?.target) {
-                    this.aiTableGridSelectionService.updateSelect(event as MouseEvent);
-                }
-            });
-        });
+        this.subscribeEvents();
     }
 
     initAITable() {
@@ -163,5 +172,54 @@ export class AITableGrid implements OnInit {
     addField(gridColumnBlank: HTMLElement) {
         const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
         this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
+    }
+
+    private subscribeEvents() {
+        this.ngZone.runOutsideAngular(() => {
+            this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+                this.dblClick(event);
+            });
+            this.aiTableGridEventService.mousedownEvent$
+                .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => {
+                    this.aiTableGridSelectionService.updateSelect(event);
+                });
+
+            this.aiTableGridEventService.mouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+                this.mouseoverHandle(event);
+            });
+            this.aiTableGridEventService.globalMouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+                this.closeHoverCellEditor(event);
+            });
+        });
+    }
+
+    private dblClick(event: MouseEvent) {
+        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
+        if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
+            this.aiTableGridEventService.openEdit(cellDom);
+        }
+    }
+
+    private mouseoverHandle(event: MouseEvent) {
+        if (this.mouseoverRef) {
+            this.mouseoverRef?.close();
+        }
+        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
+        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
+        if (type && MOUSEOVER_EDIT_TYPE.includes(type)) {
+            this.mouseoverRef = this.aiTableGridEventService.openEdit(cellDom);
+        }
+    }
+
+    private closeHoverCellEditor(e: MouseEvent) {
+        if (this.mouseoverRef) {
+            const hasGrid = e.target && (e.target as HTMLElement).closest('.ai-table-grid');
+            const hasCellEditor = e.target && (e.target as HTMLElement).closest('.grid-cell-editor');
+            if (!hasGrid && !hasCellEditor) {
+                this.mouseoverRef.close();
+            }
+        }
     }
 }

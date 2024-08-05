@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ElementRef, signal, Signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ElementRef, Signal } from '@angular/core';
 import { AITableFieldMenuItem } from '../../types/field';
 import { AITable, AITableField } from '../../core';
 import {

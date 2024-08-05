@@ -20,7 +20,8 @@
         "useDefineForClassFields": false,
         "lib": ["ES2022", "dom"],
         "paths": {
-            "@ai-table/grid": ["./dist/grid"]
+            "@ai-table/grid": ["./packages/grid/src/public-api"],
+            "@ai-table/grid/*": ["./packages/grid/src/*"]
         }
     },
     "angularCompilerOptions": {
