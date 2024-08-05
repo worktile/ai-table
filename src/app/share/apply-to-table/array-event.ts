@@ -42,7 +42,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                                 type: ActionName.AddRecord,
                                 path: [offset + index],
                                 record: {
-                                    id: fixedField[0],
+                                    _id: fixedField[0],
                                     values: translateRecord(customField, aiTable.fields())
                                 }
                             });

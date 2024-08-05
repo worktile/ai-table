@@ -43,15 +43,15 @@ export class DemoTableContent {
     listOfOption = [
         {
             value: 'short',
-            text: 'short'
+            name: 'short'
         },
         {
             value: 'medium',
-            text: 'medium'
+            name: 'medium'
         },
         {
             value: 'tall',
-            text: 'tall'
+            name: 'tall'
         }
     ];
 
@@ -61,7 +61,7 @@ export class DemoTableContent {
             EditFieldPropertyItem,
             DividerMenuItem,
             {
-                id: 'filterFields',
+                _id: 'filterFields',
                 name: '按本列筛选',
                 icon: 'filter-line',
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},
@@ -138,7 +138,7 @@ export class DemoTableContent {
     removeRecord() {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
         recordIds.forEach((item) => {
-            const path = this.aiTable.records().findIndex((record) => record.id === item);
+            const path = this.aiTable.records().findIndex((record) => record._id === item);
             Actions.removeRecord(this.aiTable, [path]);
         });
     }
@@ -146,7 +146,7 @@ export class DemoTableContent {
     moveField() {
         const newIndex = 2;
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedRecords = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item.id));
+        const selectedRecords = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
         selectedRecords.forEach((item) => {
             const path = AITableQueries.findPath(this.aiTable, item) as AIFieldPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
@@ -155,7 +155,7 @@ export class DemoTableContent {
 
     moveRecord() {
         const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item.id));
+        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
         const selectedRecordsAfterNewPath: AITableRecord[] = [];
         let offset = 0;
         const newIndex = 2;

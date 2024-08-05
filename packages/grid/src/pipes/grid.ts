@@ -6,7 +6,7 @@ import { AITableSelectOption } from '../core';
     standalone: true
 })
 export class SelectOptionPipe implements PipeTransform {
-    transform(id: string, options: AITableSelectOption[]) {
-        return options.find((item) => item.id === id);
+    transform(_id: string, options: AITableSelectOption[]) {
+        return options.find((item) => item._id === _id);
     }
 }

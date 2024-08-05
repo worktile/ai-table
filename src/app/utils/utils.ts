@@ -47,7 +47,7 @@ export function getDefaultValue() {
     } = {
         records: [
             {
-                id: 'row-1',
+                _id: 'row-1',
                 positions: {
                     view1: 0,
                     view2: 1
@@ -64,7 +64,7 @@ export function getDefaultValue() {
                 }
             },
             {
-                id: 'row-2',
+                _id: 'row-2',
                 positions: {
                     view1: 1,
                     view2: 2
@@ -78,7 +78,7 @@ export function getDefaultValue() {
                 }
             },
             {
-                id: 'row-3',
+                _id: 'row-3',
                 positions: {
                     view1: 2,
                     view2: 0
@@ -94,7 +94,7 @@ export function getDefaultValue() {
         ],
         fields: [
             {
-                id: 'column-1',
+                _id: 'column-1',
                 name: '文本',
                 positions: {
                     view1: 0,
@@ -103,7 +103,7 @@ export function getDefaultValue() {
                 type: AITableFieldType.text
             },
             {
-                id: 'column-2',
+                _id: 'column-2',
                 name: '单选',
                 positions: {
                     view1: 1,
@@ -112,24 +112,24 @@ export function getDefaultValue() {
                 type: AITableFieldType.select,
                 options: [
                     {
-                        id: '1',
-                        name: '开始',
+                        _id: '1',
+                        text: '开始',
                         color: '#5dcfff'
                     },
                     {
-                        id: '2',
-                        name: '进行中',
+                        _id: '2',
+                        text: '进行中',
                         color: '#ffcd5d'
                     },
                     {
-                        id: '3',
-                        name: '已完成',
+                        _id: '3',
+                        text: '已完成',
                         color: '#73d897'
                     }
                 ]
             },
             {
-                id: 'column-3',
+                _id: 'column-3',
                 name: '链接',
                 positions: {
                     view1: 2,
@@ -138,7 +138,7 @@ export function getDefaultValue() {
                 type: AITableFieldType.link
             },
             {
-                id: 'column-4',
+                _id: 'column-4',
                 name: '评分',
                 positions: {
                     view1: 3,
@@ -147,7 +147,7 @@ export function getDefaultValue() {
                 type: AITableFieldType.rate
             },
             {
-                id: 'column-5',
+                _id: 'column-5',
                 name: '进度',
                 positions:{
                     view1: 4,
@@ -162,7 +162,7 @@ export function getDefaultValue() {
     // initValue.fields = [];
     // for (let index = 0; index < 5; index++) {
     //     initValue.fields.push({
-    //         id: `column-${index}`,
+    //         _id: `column-${index}`,
     //         name: "文本",
     //         type: AITableFieldType.text,
     //     });
@@ -171,10 +171,10 @@ export function getDefaultValue() {
     // for (let index = 0; index < 40 * 3 * 2*30; index++) {
     //     const value: any = {};
     //     initValue.fields.forEach((column, columnIndex) => {
-    //         value[`${column.id}`] = `text-${index}-${columnIndex}`;
+    //         value[`${column._id}`] = `name-${index}-${columnIndex}`;
     //     });
     //     initValue.records.push({
-    //         id: `row-${index + 1}`,
+    //         _id: `row-${index + 1}`,
     //         value: value,
     //     });
     // }

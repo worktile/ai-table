@@ -15,7 +15,7 @@ export interface AITableSingleSelectField extends AITableField<AITableSelectOpti
 @Component({
     selector: 'single-select-cell-editor',
     template: `<thy-select [(ngModel)]="modelValue" [thyAutoExpand]="true" (thyOnExpandStatusChange)="updateValue($event)">
-        <thy-option *ngFor="let option of selectOptions()" [thyValue]="option.id" [thyLabelText]="option.name"> </thy-option>
+        <thy-option *ngFor="let option of selectOptions()" [thyValue]="option._id" [thyLabelText]="option.text"> </thy-option>
     </thy-select> `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,

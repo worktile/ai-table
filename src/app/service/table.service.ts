@@ -37,10 +37,10 @@ export class TableService {
         this.views.update((value) => {
             const draftViews = createDraft(value);
             draftViews.forEach((item) => {
-                if (item.isActive && item.id !== activeViewId) {
+                if (item.isActive && item._id !== activeViewId) {
                     item.isActive = false;
                 }
-                if (!item.isActive && item.id === activeViewId) {
+                if (!item.isActive && item._id === activeViewId) {
                     item.isActive = true;
                 }
             });
@@ -53,11 +53,11 @@ export class TableService {
     }
 
     buildRenderRecords(records?: DemoAIRecord[]) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeView().id) as DemoAIRecord[]);
+        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as DemoAIRecord[]);
     }
 
     buildRenderFields(fields?: DemoAIField[]) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView().id) as DemoAIField[]);
+        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as DemoAIField[]);
     }
 
     handleShared(room: string) {

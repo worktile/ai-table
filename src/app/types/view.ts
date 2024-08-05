@@ -8,7 +8,7 @@ export enum Direction {
 }
 
 export interface AITableView {
-    id: string;
+    _id: string;
     name: string;
     emoji_icon?: string;
     isActive?: boolean;

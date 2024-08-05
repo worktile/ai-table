@@ -10,8 +10,8 @@ import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService } from '../service/table.service';
 
 const initViews = [
-    { id: 'view1', name: '表格视图1', isActive: true },
-    { id: 'view2', name: '表格视图2' }
+    { _id: 'view1', name: '表格视图1', isActive: true },
+    { _id: 'view2', name: '表格视图2' }
 ];
 
 @Component({
@@ -37,7 +37,7 @@ export class DemoTable implements OnInit, OnDestroy {
 
     activeTabChange(data: any) {
         this.tableService.updateActiveView(data);
-        this.router.navigateByUrl(`/${this.tableService.activeView().id}`);
+        this.router.navigateByUrl(`/${this.tableService.activeView()._id}`);
     }
 
     handleShared() {

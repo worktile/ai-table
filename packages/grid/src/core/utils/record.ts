@@ -4,11 +4,11 @@ import { idCreator } from './id-creator';
 
 export function getDefaultRecord(fields: AITableFields) {
     const newRow: AITableRecord = {
-        id: idCreator(),
+        _id: idCreator(),
         values: {}
     };
     fields.map((item) => {
-        newRow.values[item.id] = getDefaultFieldValue(item.type);
+        newRow.values[item._id] = getDefaultFieldValue(item.type);
     });
     return newRow;
 }
