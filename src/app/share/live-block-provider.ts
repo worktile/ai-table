@@ -104,7 +104,7 @@ export class LiveBlockProvider extends Observable<string> {
         const messageHandler = messageHandlers[messageType];
         if (messageHandler) {
             const result = messageHandler(encoder, decoder, this, true, messageType);
-            // 只要是 step1 回复（yjs 给出的逻辑是，step1 并且有不同修改时回复）
+            // TODO: 只要是 step1 回复（yjs 给出的逻辑是，step1 并且有不同修改时回复）
             // 因为加了 guid 不好判定是否有不同修改，暂时全同步
             if (syncProtocol.messageYjsSyncStep1 === result) {
                 this.ws.send(encoding.toUint8Array(encoder));
