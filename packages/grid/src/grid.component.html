@@ -2,17 +2,17 @@
     <div class="grid-column-checkbox grid-cell">
         <label thyCheckbox thyLabelText="" [ngModel]="isSelectedAll" (ngModelChange)="toggleSelectAll($event)"></label>
     </div>
-    @for (field of gridData().fields; track field.id) {
+    @for (field of gridData().fields; track field._id) {
         <div
             class="grid-cell grid-field"
             #fieldAction
-            [attr.fieldId]="field.id"
-            [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field.id) }"
+            [attr.fieldId]="field._id"
+            [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field._id) }"
             [ngStyle]="{ width: field.width + 'px' }"
         >
             <span class="text-truncate">
                 <thy-icon [thyIconName]="field.icon!" class="mr-2 text-muted"></thy-icon>
-                <span>{{ field.name }}</span>
+                <span>{{ field.text }}</span>
             </span>
             <a
                 class="grid-field-action"
@@ -23,7 +23,7 @@
                 href="javascript:;"
             >
                 <thy-dropdown-menu #fieldMenu>
-                    <field-menu [origin]="fieldAction" [fieldId]="field.id" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
+                    <field-menu [origin]="fieldAction" [fieldId]="field._id" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
                 </thy-dropdown-menu>
             </a>
         </div>
@@ -33,15 +33,15 @@
     </div>
 </div>
 <div class="grid-body d-flex">
-    @for (record of gridData().records; track record.id; let index = $index) {
-        <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record.id) }">
+    @for (record of gridData().records; track record._id; let index = $index) {
+        <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record._id) }">
             <div class="grid-row-index">
                 <label
                     [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
                     thyCheckbox
                     thyLabelText=""
                     [ngModel]="record.checked"
-                    (ngModelChange)="selectRecord(record.id)"
+                    (ngModelChange)="selectRecord(record._id)"
                 ></label>
                 <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
             </div>
@@ -50,51 +50,51 @@
                     #cell
                     class="grid-cell"
                     [ngClass]="{
-                        highlight: aiTable.selection().selectedCells.has(record.id) || aiTable.selection().selectedFields.has(field.id),
-                        selected: aiTable.selection().selectedCells.get(record.id)?.hasOwnProperty(field.id)
+                        highlight: aiTable.selection().selectedCells.has(record._id) || aiTable.selection().selectedFields.has(field._id),
+                        selected: aiTable.selection().selectedCells.get(record._id)?.hasOwnProperty(field._id)
                     }"
                     [attr.type]="[field.type]"
-                    [attr.fieldId]="[field.id]"
-                    [attr.recordId]="[record.id]"
+                    [attr.fieldId]="[field._id]"
+                    [attr.recordId]="[record._id]"
                     [ngStyle]="{ width: field.width + 'px' }"
                 >
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
-                            @if (!field.isMultiple && record.values[field.id] | selectOption: field['options']; as selectedOption) {
-                                <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.name }}</thy-tag>
+                            @if (!field.isMultiple && record.values[field._id] | selectOption: field['options']; as selectedOption) {
+                                <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.text }}</thy-tag>
                             }
                         }
                         @case (AITableFieldType.date) {
-                            {{ record.values[field.id] | thyDatePickerFormat }}
+                            {{ record.values[field._id] | thyDatePickerFormat }}
                         }
                         @case (AITableFieldType.rate) {
-                            <thy-rate [(ngModel)]="record.values[field.id]"></thy-rate>
+                            <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate>
                         }
                         @case (AITableFieldType.link) {
                             <a
                                 class="d-block"
                                 target="_blank"
-                                [href]="record.values[field.id]?.url"
+                                [href]="record.values[field._id]?.url"
                                 thyStopPropagation
                                 thyFlexibleText
-                                [thyTooltipContent]="record.values[field.id]?.text"
+                                [thyTooltipContent]="record.values[field._id]?.text"
                             >
-                                {{ record.values[field.id]?.text }}
+                                {{ record.values[field._id]?.text }}
                             </a>
                         }
                         @case (AITableFieldType.progress) {
                             <thy-progress
                                 class="w-100"
-                                [thyValue]="record.values[field.id]"
-                                [thySize]="record.values[field.id]?.config?.size || 'md'"
-                                [thyMax]="record.values[field.id]?.config?.max || 100"
-                                [thyType]="record.values[field.id]?.config?.progressType || 'success'"
+                                [thyValue]="record.values[field._id]"
+                                [thySize]="record.values[field._id]?.config?.size || 'md'"
+                                [thyMax]="record.values[field._id]?.config?.max || 100"
+                                [thyType]="record.values[field._id]?.config?.progressType || 'success'"
                             >
-                                <span> {{ record.values[field.id] }}{{ record.values[field.id]?.config?.suffix || '%' }} </span>
+                                <span> {{ record.values[field._id] }}{{ record.values[field._id]?.config?.suffix || '%' }} </span>
                             </thy-progress>
                         }
                         @default {
-                            <span class="text-truncate"> {{ record.values[field.id] }}</span>
+                            <span class="text-truncate"> {{ record.values[field._id] }}</span>
                         }
                     }
                     <div class="autofill-container"></div>

@@ -3,7 +3,7 @@ import { SharedType } from '../shared';
 import { DemoAIField, DemoAIRecord } from '../../types';
 
 export const translateRecord = (arrayRecord: any[], fields: AITableFields) => {
-    const fieldIds = fields.map((item) => item.id);
+    const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
         recordValue[item] = arrayRecord[index] || '';
@@ -17,7 +17,7 @@ export const translateSharedTypeToTable = (sharedType: SharedType) => {
     const records: DemoAIRecord[] = data['records'].map((record: any) => {
         const [nonEditableArray, editableArray] = record;
         return {
-            id: nonEditableArray[0],
+            _id: nonEditableArray[0],
             positions: editableArray[editableArray.length - 1],
             values: translateRecord(editableArray.slice(0, editableArray.length - 1), fields)
         };

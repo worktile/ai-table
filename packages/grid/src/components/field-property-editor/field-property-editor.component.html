@@ -1,12 +1,12 @@
-<form thyForm name="createPropertyForm" [thyFormValidatorConfig]="validatorConfig" thyLayout="vertical">
+<form thyForm text="createPropertyForm" [thyFormValidatorConfig]="validatorConfig" thyLayout="vertical">
     <thy-form-group thyLabelRequired thyLabelText="表格列名">
         <thy-input-group>
             <input
                 thyInput
                 [thyAutofocus]="true"
-                name="fieldName"
+                text="fieldName"
                 [maxlength]="fieldMaxLength"
-                [(ngModel)]="aiField().name"
+                [(ngModel)]="aiField().text"
                 required
                 placeholder="输入列名称"
                 [thyUniqueCheck]="checkUniqueName"
@@ -21,7 +21,7 @@
             <thy-list-item [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" class="justify-content-between">
                 <span>
                     <thy-icon [thyIconName]="fieldType().icon" class="text-desc mr-2"></thy-icon>
-                    <span>{{ fieldType().name }}</span>
+                    <span>{{ fieldType().text }}</span>
                 </span>
                 <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
             </thy-list-item>
@@ -43,7 +43,7 @@
     @for (item of selectableFields; track item.type) {
         <a thyDropdownMenuItem href="javascript:;" (click)="selectFieldType(item.type)">
             <thy-icon [thyIconName]="item.icon"></thy-icon>
-            <span thyDropdownMenuItemName>{{ item.name }}</span>
+            <span thyDropdownMenuItemName>{{ item.text }}</span>
         </a>
     }
 </thy-dropdown-menu>

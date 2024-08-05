@@ -8,8 +8,8 @@ export enum Direction {
 }
 
 export interface AITableView {
-    id: string;
-    name: string;
+    _id: string;
+    text: string;
     emoji_icon?: string;
     isActive?: boolean;
     sortCondition?: {

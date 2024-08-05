@@ -4,9 +4,9 @@
         tableService.provider ? '断开连接' : '连接协同'
     }}</a>
 </div>
-<thy-tabs (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView().id">
+<thy-tabs (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView()._id">
     @for (item of tableService.views(); track $index) {
-        <thy-tab [thyTitle]="item.name" [id]="item.id">
+        <thy-tab [thyTitle]="item.text" [_id]="item._id">
             @if (item.isActive) {
                 <router-outlet></router-outlet>
             }

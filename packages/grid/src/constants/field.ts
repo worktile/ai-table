@@ -4,12 +4,12 @@ import { ElementRef, signal, Signal, WritableSignal } from '@angular/core';
 import { AITableFieldMenuItem } from '../types';
 
 export const DividerMenuItem = {
-    id: 'divider'
+    _id: 'divider'
 };
 
 export const EditFieldPropertyItem = {
-    id: 'editFieldProperty',
-    name: '编辑列',
+    _id: 'editFieldProperty',
+    text: '编辑列',
     icon: 'edit',
     exec: (aiTable: AITable, field: Signal<AITableField>, origin?: HTMLElement | ElementRef<any>) => {
         const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
@@ -19,8 +19,8 @@ export const EditFieldPropertyItem = {
 };
 
 export const RemoveFieldItem = {
-    id: 'removeField',
-    name: '删除列',
+    _id: 'removeField',
+    text: '删除列',
     icon: 'trash',
     exec: (aiTable: AITable, field: Signal<AITableField>) => {
         const path = AITableQueries.findPath(aiTable, field()) as AIFieldPath;

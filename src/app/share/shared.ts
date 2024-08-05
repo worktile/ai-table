@@ -71,7 +71,7 @@ export function toSyncElement(node: any): SyncMapElement {
 
 export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>> {
     const nonEditableArray = new Y.Array();
-    nonEditableArray.insert(0, [record['id']]);
+    nonEditableArray.insert(0, [record['_id']]);
 
     const editableArray = new Y.Array();
     const editableFields = [];

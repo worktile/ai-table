@@ -46,7 +46,7 @@ export class AITableGridSelectionService {
         this.clearSelection();
         if (checked) {
             this.aiTable.records().forEach((item) => {
-                this.selectRecord(item.id);
+                this.selectRecord(item._id);
             });
         }
     }

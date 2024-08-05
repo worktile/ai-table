@@ -7,7 +7,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         case ActionName.UpdateFieldValue: {
             const [recordIndex, fieldIndex] = options.path;
             if (fieldIndex > -1 && recordIndex > -1) {
-                const fieldId = aiTable.fields()[fieldIndex].id;
+                const fieldId = aiTable.fields()[fieldIndex]._id;
                 records[recordIndex].values[fieldId] = options.newFieldValue;
             }
             break;
@@ -25,7 +25,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                 const newField = options.field;
                 fields.splice(fieldIndex, 0, newField);
                 const newRecord = {
-                    [newField.id]: ''
+                    [newField._id]: ''
                 };
                 records.forEach((item) => {
                     item.values = {
@@ -59,7 +59,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         case ActionName.RemoveField: {
             const [fieldIndex] = options.path;
             if (fieldIndex > -1) {
-                const fieldId = aiTable.fields()[fieldIndex].id;
+                const fieldId = aiTable.fields()[fieldIndex]._id;
                 fields.splice(fieldIndex, 1);
                 records.forEach((item) => {
                     delete item.values[fieldId];
