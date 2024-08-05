@@ -1,6 +1,5 @@
 import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { createSharedType, initSharedType, SharedType } from '../share/shared';
-import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../share/provider';
 import { DemoAIField, DemoAIRecord } from '../types';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
@@ -10,6 +9,7 @@ import { YjsAITable } from '../share/yjs-table';
 import { AITable } from '@ai-table/grid';
 import { AITableView } from '../types/view';
 import { createDraft, finishDraft } from 'immer';
+import { WebsocketProvider } from '../share/y-websocket';
 
 @Injectable()
 export class TableService {

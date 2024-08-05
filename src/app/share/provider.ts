@@ -1,4 +1,3 @@
-// import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 import { WebsocketProvider } from './y-websocket';
 

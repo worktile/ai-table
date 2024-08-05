@@ -9,7 +9,7 @@ export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path:
     const oldView: Partial<AITableView> = {};
     const newView: Partial<AITableView> = {};
     for (const key in value) {
-        const k = key as keyof AITableView;
+        const k = key;
         if (JSON.stringify(view[k]) !== JSON.stringify(value[k])) {
             if (view.hasOwnProperty(key)) {
                 oldView[k] = view[k] as any;

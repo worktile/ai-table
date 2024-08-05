@@ -26,14 +26,14 @@ export default function translateMapEvent(
         })
 
         for (const [key, value] of entries) {
-            const k = key as keyof AITableView;
+            const k = key;
             newProperties[k] = value  
         }
 
         const oldEntries = keyChanges.map(([key]) => [key, (targetElement as any)[key]])
 
         for (const [key, value] of oldEntries) {
-            const k = key as keyof AITableView;
+            const k = key;
             properties[k] = value
         }
 
