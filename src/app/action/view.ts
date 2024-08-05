@@ -50,15 +50,13 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], records: A
                     ...options.newView
                 };
                 if (options.newView.sortCondition) {
-                    if (viewIndex > -1) {
-                        const { sortCondition } = options.newView;
-                        const { sortBy, direction } = sortCondition.conditions[0];
-                        records = records.sort((a: AITableRecord, b: AITableRecord) => {
-                            return direction === Direction.ascending
-                                ? a.values[sortBy] - b.values[sortBy]
-                                : b.values[sortBy] - a.values[sortBy];
-                        });
-                    }
+                    const { sortCondition } = options.newView;
+                    const { sortBy, direction } = sortCondition.conditions[0];
+                    records = records.sort((a: AITableRecord, b: AITableRecord) => {
+                        return direction === Direction.ascending
+                            ? a.values[sortBy] - b.values[sortBy]
+                            : b.values[sortBy] - a.values[sortBy];
+                    });
                 }
             }
         }

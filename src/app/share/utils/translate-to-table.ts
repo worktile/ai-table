@@ -11,26 +11,18 @@ export const translateRecord = (arrayRecord: any[], fields: AITableFields) => {
     return recordValue;
 };
 
-export const translatePositions = (arrayPositions: any[]) => {
-    return arrayPositions.reduce((acc, obj) => {
-        const key = Object.keys(obj)[0];
-        acc[key] = obj[key];
-        return acc;
-    }, {});
-};
-
 export const translateSharedTypeToTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();
     const fields: DemoAIField[] = data['fields'];
     const records: DemoAIRecord[] = data['records'].map((record: any) => {
-        const [fixedField, customField, positions] = record;
+        const [nonEditableArray, editableArray] = record;
         return {
-            id: fixedField[0],
-            values: translateRecord(customField, fields),
-            positions: translatePositions(positions)
+            id: nonEditableArray[0],
+            positions: editableArray[editableArray.length - 1],
+            values: translateRecord(editableArray.slice(0, editableArray.length - 1), fields)
         };
     });
-    const views = data['views']
+    const views = data['views'];
     return {
         records,
         fields,
