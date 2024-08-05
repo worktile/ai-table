@@ -96,7 +96,6 @@ const setupWS = (provider: WebsocketProvider) => {
                 const encoder = encoding.createEncoder();
                 const messageType = decoding.readVarUint(decoder);
                 const guid = decoding.readVarString(decoder);
-                console.log('on message from guid: ', guid);
                 if (guid !== provider.doc.guid) {
                     console.log('子文档')
                     const liveBlock = provider.liveBlocks.get(guid);

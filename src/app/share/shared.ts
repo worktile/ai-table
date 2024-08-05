@@ -20,10 +20,11 @@ export const initSharedType = (
         fields: DemoAIField[];
         records: DemoAIRecord[];
         views: AITableView[];
-    }
+    },
+    origin: any
 ) => {
     const sharedType = doc.getMap<any>('ai-table');
-    toSharedType(sharedType, initializeValue);
+    toSharedType(sharedType, initializeValue, origin);
     return sharedType;
 };
 
@@ -33,21 +34,22 @@ export function toSharedType(
         fields: DemoAIField[];
         records: DemoAIRecord[];
         views: AITableView[];
-    }
+    },
+    origin: any
 ): void {
     sharedType.doc!.transact(() => {
         const fieldSharedType = new Y.Array();
         fieldSharedType.insert(0, data.fields.map(toSyncElement));
         sharedType.set('fields', fieldSharedType);
 
-        const recordSharedType = new Y.Array<Y.Array<any>>();
+        const recordSharedType = new Y.Array<any>();
         sharedType.set('records', recordSharedType);
         recordSharedType.insert(0, data.records.map(toRecordSyncElement));
 
         const viewsSharedType = new Y.Array();
         sharedType.set('views', viewsSharedType);
         viewsSharedType.insert(0, data.views.map(toSyncElement));
-    });
+    }, sharedType.doc);
 }
 
 export function toSyncElement(node: any): SyncMapElement {
@@ -78,10 +80,28 @@ export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>>
     for (const fieldId in record['values']) {
         editableFields.push(record['values'][fieldId]);
     }
-    editableArray.insert(0, [...editableFields, record['positions']]);
+    editableArray.insert(0, [...editableFields, record['positions'] || {}]);
 
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
     element.insert(0, [nonEditableArray, editableArray]);
     return element;
+}
+
+export function recordToLive(record: DemoAIRecord): Y.Doc {
+    const subDoc = new Y.Doc({ guid: record._id });
+    const yArray = subDoc.getArray();
+
+    const nonEditableArray = new Y.Array();
+    nonEditableArray.insert(0, [record['_id']]);
+
+    const editableArray = new Y.Array();
+    const editableFields = [];
+    for (const fieldId in record['values']) {
+        editableFields.push(record['values'][fieldId]);
+    }
+    editableArray.insert(0, [...editableFields, record['positions']]);
+    // To save memory, convert map to array.
+    yArray.insert(0, [nonEditableArray, editableArray]);
+    return subDoc;
 }

@@ -10,6 +10,7 @@ import { AITable } from '@ai-table/grid';
 import { AITableView } from '../types/view';
 import { createDraft, finishDraft } from 'immer';
 import { WebsocketProvider } from '../share/y-websocket';
+import { Transaction } from 'yjs';
 
 @Injectable()
 export class TableService {
@@ -69,18 +70,24 @@ export class TableService {
         let isInitialized = false;
         if (!this.sharedType) {
             this.sharedType = createSharedType(room);
-            this.sharedType.observeDeep((events: any) => {
-                if (!YjsAITable.isLocal(this.aiTable)) {
-                    if (!isInitialized) {
-                        const data = translateSharedTypeToTable(this.sharedType!);
-                        this.buildRenderRecords(data.records);
-                        this.buildRenderFields(data.fields);
-                        this.views.set(data.views);
-                        isInitialized = true;
-                    } else {
-                        applyYjsEvents(this.aiTable, events);
+            this.sharedType.observeDeep((events: any, transaction: Transaction) => {
+                if (transaction.origin !== this.provider.doc) {
+                    if (!YjsAITable.isLocal(this.aiTable)) {
+                        if (!isInitialized) {
+                            const data = translateSharedTypeToTable(this.sharedType!);
+                            this.buildRenderRecords(data.records);
+                            this.buildRenderFields(data.fields);
+                            this.views.set(data.views);
+                            isInitialized = true;
+                        } else {
+                            applyYjsEvents(this.aiTable, events);
+                        }
                     }
                 }
+            });
+            this.sharedType.doc.on('subdocs', (subdocs) => {
+                console.log('subdocs', subdocs);
+                // [Array.from(subdocs.added).map(x => x.guid), Array.from(subdocs.removed).map(x => x.guid), Array.from(subdocs.loaded).map(x => x.guid)]
             });
         }
         this.provider = getProvider(this.sharedType.doc!, room, isDevMode());
@@ -89,11 +96,15 @@ export class TableService {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
                 console.log('init shared type');
                 const value = getDefaultValue();
-                initSharedType(this.sharedType!.doc!, {
-                    records: value.records,
-                    fields: value.fields,
-                    views: this.views()
-                });
+                initSharedType(
+                    this.sharedType!.doc!,
+                    {
+                        records: value.records,
+                        fields: value.fields,
+                        views: this.views()
+                    },
+                    this.provider
+                );
             }
         });
     }

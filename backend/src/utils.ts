@@ -198,7 +198,7 @@ const messageListener = (conn, doc: WSSharedDoc, message) => {
                 // If the `encoder` only contains the type of reply message and no
                 // message, there is no need to send the message. When `encoder` only
                 // contains the type of reply, its length is 1.
-                if (syncMessageType === 0) {
+                if (syncMessageType === syncProtocol.messageYjsSyncStep1) {
                     send(doc, conn, encoding.toUint8Array(encoder));
                 }
                 break;
