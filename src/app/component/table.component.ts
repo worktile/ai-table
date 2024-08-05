@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
 import { AITableGrid } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +7,7 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService } from '../service/table.service';
+import { WebsocketProvider } from '../share/y-websocket';
 
 const initViews = [
     { _id: 'view1', name: '表格视图1', isActive: true },

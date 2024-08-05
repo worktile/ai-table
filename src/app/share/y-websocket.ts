@@ -105,7 +105,7 @@ const setupWS = (provider: WebsocketProvider) => {
                 const messageHandler = provider.messageHandlers[messageType];
                 if (/** @type {any} */ messageHandler) {
                     const syncMessageType = messageHandler(encoder, decoder, provider, true, messageType);
-                    if (syncMessageType === syncProtocol.messageYjsSyncStep2) {
+                    if (syncMessageType === syncProtocol.messageYjsSyncStep1) {
                         websocket.send(encoding.toUint8Array(encoder));
                     }
                 } else {
@@ -321,7 +321,7 @@ export class WebsocketProvider extends Observable<string> {
                     // resend sync step 1
                     const encoder = encoding.createEncoder();
                     encoding.writeVarUint(encoder, messageSync);
-
+                    encoding.writeVarString(encoder, this.doc.guid);
                     syncProtocol.writeSyncStep1(encoder, doc);
                     this.ws.send(encoding.toUint8Array(encoder));
                 }

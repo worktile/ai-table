@@ -66,7 +66,7 @@
         "ts-node": "^10.9.2",
         "typescript": "~5.4.2",
         "ws": "8.0.0",
-        "y-websocket": "^2.0.3",
+        "y-protocols": "^1.0.6",
         "yjs": "^13.6.16"
     }
 }
