@@ -23,6 +23,7 @@ export interface AITableProgressConfig {
             [thyType]="config?.progressType || 'success'"
             [thySize]="config?.size || 'md'"
             (ngModelChange)="updateValue($event)"
+            (mousedown)="sliderMousedownHandler($event)"
         ></thy-slider>
         <span class="progress-text">{{ modelValue }}{{ config?.suffix || '%' }}</span>
     `,
@@ -30,7 +31,10 @@ export interface AITableProgressConfig {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThySlider],
     host: {
-        class: 'progress-editor'
+        class: 'grid-cell progress-editor',
+        '[attr.type]': 'field().type',
+        '[attr.fieldId]': 'field()._id',
+        '[attr.recordId]': 'record()._id'
     }
 })
 export class ProgressEditorComponent extends AbstractEditCellEditor<number> implements OnInit {
@@ -50,6 +54,11 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> impl
 
     constructor() {
         super();
+    }
+
+    sliderMousedownHandler(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     updateValue(value: number) {
