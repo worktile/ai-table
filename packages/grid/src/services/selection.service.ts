@@ -59,12 +59,13 @@ export class AITableGridSelectionService {
 
         const cellDom = target.closest('.grid-cell');
         const colDom = target.closest('.grid-field');
+        const fieldAction =  target.closest('.grid-field-action');
         if (cellDom) {
             const fieldId = cellDom.getAttribute('fieldId');
             const recordId = cellDom.getAttribute('recordId');
             fieldId && recordId && this.selectCell(recordId, fieldId);
         }
-        if (colDom) {
+        if (colDom && !fieldAction) {
             const fieldId = colDom.getAttribute('fieldId');
             fieldId && this.selectField(fieldId);
         }
