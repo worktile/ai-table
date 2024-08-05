@@ -47,7 +47,7 @@ export interface AITableSelectOption {
 
 export interface AITableField<T = unknown> {
     _id: string;
-    text: string;
+    name: string;
     type: AITableFieldType;
     icon?: string;
     width?: number;
@@ -114,7 +114,7 @@ export interface AITableChangeOptions {
 
 export interface AITableFieldInfo {
     type: AITableFieldType;
-    text: string;
+    name: string;
     icon: string;
     width: number;
 }

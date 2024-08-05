@@ -10,8 +10,8 @@ import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService } from '../service/table.service';
 
 const initViews = [
-    { _id: 'view1', text: '表格视图1', isActive: true },
-    { _id: 'view2', text: '表格视图2' }
+    { _id: 'view1', name: '表格视图1', isActive: true },
+    { _id: 'view2', name: '表格视图2' }
 ];
 
 @Component({

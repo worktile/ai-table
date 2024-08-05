@@ -57,7 +57,7 @@ export function getDefaultValue() {
                     'column-2': '1',
                     'column-3': {
                         url: 'https://www.baidu.com',
-                        text: '百度链接'
+                        name: '百度链接'
                     },
                     'column-4': 3,
                     'column-5': 10
@@ -95,7 +95,7 @@ export function getDefaultValue() {
         fields: [
             {
                 _id: 'column-1',
-                text: '文本',
+                name: '文本',
                 positions: {
                     view1: 0,
                     view2: 1
@@ -104,7 +104,7 @@ export function getDefaultValue() {
             },
             {
                 _id: 'column-2',
-                text: '单选',
+                name: '单选',
                 positions: {
                     view1: 1,
                     view2: 3
@@ -113,24 +113,24 @@ export function getDefaultValue() {
                 options: [
                     {
                         _id: '1',
-                        text: '开始',
+                        name: '开始',
                         color: '#5dcfff'
                     },
                     {
                         _id: '2',
-                        text: '进行中',
+                        name: '进行中',
                         color: '#ffcd5d'
                     },
                     {
                         _id: '3',
-                        text: '已完成',
+                        name: '已完成',
                         color: '#73d897'
                     }
                 ]
             },
             {
                 _id: 'column-3',
-                text: '链接',
+                name: '链接',
                 positions: {
                     view1: 2,
                     view2: 2
@@ -139,7 +139,7 @@ export function getDefaultValue() {
             },
             {
                 _id: 'column-4',
-                text: '评分',
+                name: '评分',
                 positions: {
                     view1: 3,
                     view2: 4
@@ -148,7 +148,7 @@ export function getDefaultValue() {
             },
             {
                 _id: 'column-5',
-                text: '进度',
+                name: '进度',
                 positions:{
                     view1: 4,
                     view2: 0
@@ -163,7 +163,7 @@ export function getDefaultValue() {
     // for (let index = 0; index < 5; index++) {
     //     initValue.fields.push({
     //         _id: `column-${index}`,
-    //         text: "文本",
+    //         name: "文本",
     //         type: AITableFieldType.text,
     //     });
     // }
@@ -171,7 +171,7 @@ export function getDefaultValue() {
     // for (let index = 0; index < 40 * 3 * 2*30; index++) {
     //     const value: any = {};
     //     initValue.fields.forEach((column, columnIndex) => {
-    //         value[`${column._id}`] = `text-${index}-${columnIndex}`;
+    //         value[`${column._id}`] = `name-${index}-${columnIndex}`;
     //     });
     //     initValue.records.push({
     //         _id: `row-${index + 1}`,

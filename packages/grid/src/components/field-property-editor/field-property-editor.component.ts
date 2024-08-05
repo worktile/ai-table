@@ -88,11 +88,11 @@ export class AITableFieldPropertyEditor {
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.aiTable.fields()?.find((field) => field.text === fieldName && this.aiField()?._id !== field._id));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?._id !== field._id));
     };
 
     selectFieldType(fieldType: AITableFieldType) {
-        this.aiField.update((item) => ({ ...item, type: fieldType, text: createDefaultFieldName(this.aiTable, fieldType) }));
+        this.aiField.update((item) => ({ ...item, type: fieldType, name: createDefaultFieldName(this.aiTable, fieldType) }));
     }
 
     editFieldProperty() {

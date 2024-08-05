@@ -43,15 +43,15 @@ export class DemoTableContent {
     listOfOption = [
         {
             value: 'short',
-            text: 'short'
+            name: 'short'
         },
         {
             value: 'medium',
-            text: 'medium'
+            name: 'medium'
         },
         {
             value: 'tall',
-            text: 'tall'
+            name: 'tall'
         }
     ];
 
@@ -62,7 +62,7 @@ export class DemoTableContent {
             DividerMenuItem,
             {
                 _id: 'filterFields',
-                text: '按本列筛选',
+                name: '按本列筛选',
                 icon: 'filter-line',
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},
                 hidden: (aiTable: AITable, field: Signal<AITableField>) => false,

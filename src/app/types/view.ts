@@ -9,7 +9,7 @@ export enum Direction {
 
 export interface AITableView {
     _id: string;
-    text: string;
+    name: string;
     emoji_icon?: string;
     isActive?: boolean;
     sortCondition?: {

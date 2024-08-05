@@ -9,9 +9,9 @@ export function getDefaultFieldValue(type: AITableFieldType) {
 export function createDefaultFieldName(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
     const fields = aiTable.fields();
     const count = fields.filter((item) => item.type === type).length;
-    return count === 0 ? FieldsMap[type].text : FieldsMap[type].text + count;
+    return count === 0 ? FieldsMap[type].name : FieldsMap[type].name + count;
 }
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
-    return { _id: idCreator(), type, text: createDefaultFieldName(aiTable, type) };
+    return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, type) };
 }
