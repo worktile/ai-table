@@ -120,7 +120,8 @@ export class DemoTableContent {
             keepSort: false,
             conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
         };
-        CustomActions.setView(this.aiTable as any, { sortCondition }, [1]);
+        const index = this.tableService.views().indexOf(this.tableService.activeView());
+        CustomActions.setView(this.aiTable as any, { sortCondition }, [index]);
     }
 
     prevent(event: Event) {

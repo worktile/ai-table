@@ -44,15 +44,23 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], records: A
     switch (options.type) {
         case ViewActionName.setView: {
             if (options.newView.sortCondition) {
-                const { sortCondition } = options.newView;
-                const { sortBy, direction } = sortCondition.conditions[0];
-                records = records.sort((a: AITableRecord, b: AITableRecord) => {
-                    return direction === Direction.ascending ? a.values[sortBy] - b.values[sortBy] : b.values[sortBy] - a.values[sortBy];
-                });
+                const [viewIndex] = options.path;
+                if (viewIndex > -1) {
+                    views[viewIndex] = {
+                        ...views[viewIndex],
+                        ...options.newView
+                    };
+                    const { sortCondition } = options.newView;
+                    const { sortBy, direction } = sortCondition.conditions[0];
+                    records = records.sort((a: AITableRecord, b: AITableRecord) => {
+                        return direction === Direction.ascending
+                            ? a.values[sortBy] - b.values[sortBy]
+                            : b.values[sortBy] - a.values[sortBy];
+                    });
+                }
             }
         }
     }
-    return views;
 };
 
 export const ViewActions = {
