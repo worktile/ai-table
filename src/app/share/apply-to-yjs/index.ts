@@ -3,6 +3,7 @@ import { SharedType } from '../shared';
 import updateFieldValue from './update-field-value';
 import addRecord from './add-record';
 import addField from './add-field';
+import setView from './set-view';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;
@@ -10,10 +11,11 @@ export type ActionMapper<O extends AITableAction = AITableAction> = {
 
 export type ApplyFunc<O extends AITableAction = AITableAction> = (sharedType: SharedType, op: O) => SharedType;
 
-export const actionMappers: Partial<ActionMapper<AITableAction>> = {
+export const actionMappers: Partial<ActionMapper<any>> = {
     update_field_value: updateFieldValue,
     add_record: addRecord,
-    add_field: addField
+    add_field: addField,
+    set_view: setView
 };
 
 export default function applyActionOps(sharedType: SharedType, actions: AITableAction[], aiTable: AITable): SharedType {

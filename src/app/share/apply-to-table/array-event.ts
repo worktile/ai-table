@@ -2,6 +2,7 @@ import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AIT
 import * as Y from 'yjs';
 import { toTablePath, translateRecord } from '../utils/translate-to-table';
 import { isArray } from 'ngx-tethys/util';
+import { AIViewTable, ViewActionName } from '../../types/view';
 
 export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
@@ -9,7 +10,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
     let targetPath = toTablePath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
-
+ 
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
             offset += delta.retain ?? 0;
@@ -41,7 +42,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                                 type: ActionName.AddRecord,
                                 path: [offset + index],
                                 record: {
-                                    id: fixedField[0],
+                                    _id: fixedField[0],
                                     values: translateRecord(customField, aiTable.fields())
                                 }
                             });
@@ -60,6 +61,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                         }
                     });
                 }
+                
             }
         }
     });

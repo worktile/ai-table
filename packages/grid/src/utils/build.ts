@@ -12,7 +12,7 @@ export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableF
             }
         }),
         records: recordValue.map((item) => {
-            return { ...item, checked: selection.selectedRecords.has(item.id) };
+            return { ...item, checked: selection.selectedRecords.has(item._id) };
         })
     };
 };

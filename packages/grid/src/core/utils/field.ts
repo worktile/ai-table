@@ -13,5 +13,5 @@ export function createDefaultFieldName(aiTable: AITable, type: AITableFieldType 
 }
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
-    return { id: idCreator(), type, name: createDefaultFieldName(aiTable, type) };
+    return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, type) };
 }

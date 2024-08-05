@@ -46,23 +46,31 @@ export class AITableGridSelectionService {
         this.clearSelection();
         if (checked) {
             this.aiTable.records().forEach((item) => {
-                this.selectRecord(item.id);
+                this.selectRecord(item._id);
             });
         }
     }
 
     updateSelect(event: MouseEvent) {
-        const target = event.target as HTMLElement;
+        const target = event?.target as HTMLElement;
+        if (!target) {
+            return;
+        }
+
         const cellDom = target.closest('.grid-cell');
         const colDom = target.closest('.grid-field');
+        const fieldAction =  target.closest('.grid-field-action');
         if (cellDom) {
             const fieldId = cellDom.getAttribute('fieldId');
             const recordId = cellDom.getAttribute('recordId');
             fieldId && recordId && this.selectCell(recordId, fieldId);
         }
-        if (colDom) {
+        if (colDom && !fieldAction) {
             const fieldId = colDom.getAttribute('fieldId');
             fieldId && this.selectField(fieldId);
+        }
+        if (!cellDom && !colDom) {
+            this.clearSelection();
         }
     }
 }

@@ -26,6 +26,7 @@ import { ThyProgress } from 'ngx-tethys/progress';
 import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
+import { mergeWith } from 'rxjs/operators';
 import { ProgressEditorComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
@@ -45,7 +46,7 @@ import {
 import { SelectOptionPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.servive';
+import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
 import { buildGridData } from './utils';
 
@@ -178,11 +179,12 @@ export class AITableGrid implements OnInit {
             this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.dblClick(event);
             });
-            this.aiTableGridEventService.mousedownEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                if ((event as MouseEvent)?.target) {
-                    this.aiTableGridSelectionService.updateSelect(event as MouseEvent);
-                }
-            });
+            this.aiTableGridEventService.mousedownEvent$
+                .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => {
+                    this.aiTableGridSelectionService.updateSelect(event);
+                });
+
             this.aiTableGridEventService.mouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.mouseoverHandle(event);
             });
