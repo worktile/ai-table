@@ -9,7 +9,7 @@ export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
 export type SharedType = Y.Map<SyncElement>;
 
 export const createSharedType = () => {
-    const doc = new Y.Doc();
+    const doc = new Y.Doc({ guid: 'room-1' });
     const sharedType = doc.getMap<any>('ai-table');
     return sharedType;
 };

@@ -75,9 +75,10 @@ const messageAwareness = 1;
  * @param {WSSharedDoc} doc
  * @param {any} _tr
  */
-const updateHandler = (update, _origin, doc, _tr) => {
+const updateHandler = (update, _origin, doc: WSSharedDoc, _tr) => {
     const encoder = encoding.createEncoder();
     encoding.writeVarUint(encoder, messageSync);
+    encoding.writeVarString(encoder, doc.guid);
     syncProtocol.writeUpdate(encoder, update);
     const message = encoding.toUint8Array(encoder);
     doc.conns.forEach((_, conn) => send(doc, conn, message));
@@ -107,7 +108,7 @@ class WSSharedDoc extends Y.Doc {
      * @param {string} name
      */
     constructor(name) {
-        super({ gc: gcEnabled });
+        super({ gc: gcEnabled, guid: name });
         this.name = name;
         /**
          * Maps from conn to set of controlled user ids. Delete all user ids from awareness when this conn is closed
@@ -139,6 +140,7 @@ class WSSharedDoc extends Y.Doc {
             // broadcast awareness update
             const encoder = encoding.createEncoder();
             encoding.writeVarUint(encoder, messageAwareness);
+            encoding.writeVarString(encoder, this.guid);
             encoding.writeVarUint8Array(encoder, awarenessProtocol.encodeAwarenessUpdate(this.awareness, changedClients));
             const buff = encoding.toUint8Array(encoder);
             this.conns.forEach((_, c) => {
@@ -163,8 +165,8 @@ exports.WSSharedDoc = WSSharedDoc;
  * @param {boolean} gc - whether to allow gc on the doc (applies only when created)
  * @return {WSSharedDoc}
  */
-const getYDoc = (docname, gc = true) =>
-    map.setIfUndefined(docs, docname, () => {
+const getYDoc = (docname, gc = true) => {
+    return map.setIfUndefined(docs, docname, () => {
         const doc = new WSSharedDoc(docname);
         doc.gc = gc;
         if (persistence !== null) {
@@ -172,9 +174,9 @@ const getYDoc = (docname, gc = true) =>
         }
         docs.set(docname, doc);
         return doc;
-    });
+    }) as WSSharedDoc;
+};
 
-exports.getYDoc = getYDoc;
 
 /**
  * @param {any} conn
@@ -186,15 +188,17 @@ const messageListener = (conn, doc: WSSharedDoc, message) => {
         const encoder = encoding.createEncoder();
         const decoder = decoding.createDecoder(message);
         const messageType = decoding.readVarUint(decoder);
+        const guid = decoding.readVarString(decoder);
         switch (messageType) {
             case messageSync:
                 encoding.writeVarUint(encoder, messageSync);
-                syncProtocol.readSyncMessage(decoder, encoder, doc, conn);
+                encoding.writeVarString(encoder, guid);
+                const syncMessageType = syncProtocol.readSyncMessage(decoder, encoder, doc, conn);
 
                 // If the `encoder` only contains the type of reply message and no
                 // message, there is no need to send the message. When `encoder` only
                 // contains the type of reply, its length is 1.
-                if (encoding.length(encoder) > 1) {
+                if (syncMessageType === 0) {
                     send(doc, conn, encoding.toUint8Array(encoder));
                 }
                 break;
@@ -298,12 +302,14 @@ export const setupWSConnection = (conn, req, { docName = (req.url || '').slice(1
         // send sync step 1
         const encoder = encoding.createEncoder();
         encoding.writeVarUint(encoder, messageSync);
+        encoding.writeVarString(encoder, doc.guid);
         syncProtocol.writeSyncStep1(encoder, doc);
         send(doc, conn, encoding.toUint8Array(encoder));
         const awarenessStates = doc.awareness.getStates();
         if (awarenessStates.size > 0) {
             const encoder = encoding.createEncoder();
             encoding.writeVarUint(encoder, messageAwareness);
+            encoding.writeVarString(encoder, doc.guid);
             encoding.writeVarUint8Array(
                 encoder,
                 awarenessProtocol.encodeAwarenessUpdate(doc.awareness, Array.from(awarenessStates.keys()))

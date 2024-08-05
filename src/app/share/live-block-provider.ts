@@ -38,6 +38,7 @@ messageHandlers[messageSync] = (encoder, decoder, provider: LiveBlockProvider, e
 
 messageHandlers[messageQueryAwareness] = (encoder, decoder, provider, emitSynced, messageType) => {
     encoding.writeVarUint(encoder, messageAwareness);
+    encoding.writeVarString(encoder, provider.doc.guid);
     encoding.writeVarUint8Array(
         encoder,
         awarenessProtocol.encodeAwarenessUpdate(provider.awareness, Array.from(provider.awareness.getStates().keys()))

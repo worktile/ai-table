@@ -20,6 +20,7 @@ import { Observable } from 'lib0/observable';
 import * as math from 'lib0/math';
 import * as url from 'lib0/url';
 import { Observable as RxjsObservable } from 'rxjs';
+import { LiveBlockProvider } from './live-block-provider';
 
 const messageSync = 0;
 const messageQueryAwareness = 3;
@@ -32,16 +33,19 @@ const messageAuth = 2;
  */
 const messageHandlers = [];
 
-messageHandlers[messageSync] = (encoder, decoder, provider, emitSynced, messageType) => {
+messageHandlers[messageSync] = (encoder, decoder, provider: WebsocketProvider, emitSynced, messageType) => {
     encoding.writeVarUint(encoder, messageSync);
+    encoding.writeVarString(encoder, provider.doc.guid);
     const syncMessageType = syncProtocol.readSyncMessage(decoder, encoder, provider.doc, provider);
     if (emitSynced && syncMessageType === syncProtocol.messageYjsSyncStep2 && !provider.synced) {
         provider.synced = true;
     }
+    return syncMessageType;
 };
 
 messageHandlers[messageQueryAwareness] = (encoder, decoder, provider, emitSynced, messageType) => {
     encoding.writeVarUint(encoder, messageAwareness);
+    encoding.writeVarString(encoder, provider.doc.guid);
     encoding.writeVarUint8Array(
         encoder,
         awarenessProtocol.encodeAwarenessUpdate(provider.awareness, Array.from(provider.awareness.getStates().keys()))
@@ -73,27 +77,8 @@ const permissionDeniedHandler = (provider: WebsocketProvider, reason) => {
 
 /**
  * @param {WebsocketProvider} provider
- * @param {Uint8Array} buf
- * @param {boolean} emitSynced
- * @return {encoding.Encoder}
  */
-const readMessage = (provider, buf, emitSynced) => {
-    const decoder = decoding.createDecoder(buf);
-    const encoder = encoding.createEncoder();
-    const messageType = decoding.readVarUint(decoder);
-    const messageHandler = provider.messageHandlers[messageType];
-    if (/** @type {any} */ messageHandler) {
-        messageHandler(encoder, decoder, provider, emitSynced, messageType);
-    } else {
-        console.error('Unable to compute message');
-    }
-    return encoder;
-};
-
-/**
- * @param {WebsocketProvider} provider
- */
-const setupWS = (provider) => {
+const setupWS = (provider: WebsocketProvider) => {
     if (provider.shouldConnect && provider.ws === null) {
         const websocket = new provider._WS(provider.url);
         websocket.binaryType = 'arraybuffer';
@@ -106,9 +91,25 @@ const setupWS = (provider) => {
             const { data } = event;
             if (typeof data === 'object') {
                 provider.wsLastMessageReceived = time.getUnixTime();
-                const encoder = readMessage(provider, new Uint8Array(event.data), true);
-                if (encoding.length(encoder) > 1) {
-                    websocket.send(encoding.toUint8Array(encoder));
+                const buf = new Uint8Array(event.data);
+                const decoder = decoding.createDecoder(buf);
+                const encoder = encoding.createEncoder();
+                const messageType = decoding.readVarUint(decoder);
+                const guid = decoding.readVarString(decoder);
+                console.log('on message from guid: ', guid);
+                if (guid !== provider.doc.guid) {
+                    console.log('子文档')
+                    const liveBlock = provider.liveBlocks.get(guid);
+                    return;
+                }
+                const messageHandler = provider.messageHandlers[messageType];
+                if (/** @type {any} */ messageHandler) {
+                    const syncMessageType = messageHandler(encoder, decoder, provider, true, messageType);
+                    if (syncMessageType === syncProtocol.messageYjsSyncStep2) {
+                        websocket.send(encoding.toUint8Array(encoder));
+                    }
+                } else {
+                    console.error('Unable to compute message');
                 }
             }
         };
@@ -121,7 +122,7 @@ const setupWS = (provider) => {
                 // update awareness (all users except local left)
                 awarenessProtocol.removeAwarenessStates(
                     provider.awareness,
-                    Array.from(provider.awareness.getStates().keys() as number[]).filter(
+                    Array.from(provider.awareness.getStates().keys() as unknown as number[]).filter(
                         (client: number) => client !== provider.doc.clientID
                     ),
                     provider
@@ -177,18 +178,20 @@ const setupWS = (provider) => {
     }
 };
 
-const syncYDoc = (provider, websocket) => {
+const syncYDoc = (provider: WebsocketProvider, websocket) => {
     // always send sync step 1 when connected
     const encoder = encoding.createEncoder();
     encoding.writeVarUint(encoder, messageSync);
+    encoding.writeVarString(encoder, provider.doc.guid);
     syncProtocol.writeSyncStep1(encoder, provider.doc);
     websocket.send(encoding.toUint8Array(encoder));
 };
 
-const syncAwareness = (provider, websocket) => {
+const syncAwareness = (provider: WebsocketProvider, websocket) => {
     if (provider.awareness.getLocalState() !== null) {
         const encoderAwarenessState = encoding.createEncoder();
         encoding.writeVarUint(encoderAwarenessState, messageAwareness);
+        encoding.writeVarString(encoderAwarenessState, provider.doc.guid);
         encoding.writeVarUint8Array(
             encoderAwarenessState,
             awarenessProtocol.encodeAwarenessUpdate(provider.awareness, [provider.doc.clientID])
@@ -204,11 +207,6 @@ const syncAwareness = (provider, websocket) => {
 const broadcastMessage = (provider, buf) => {
     if (provider.wsconnected) {
         /** @type {WebSocket} */ provider.ws.send(buf);
-    }
-    if (provider.bcconnected) {
-        provider.mux(() => {
-            bc.publish(provider.bcChannel, buf);
-        });
     }
 };
 
@@ -229,7 +227,8 @@ export class WebsocketProvider extends Observable<string> {
     bcChannel: string;
     roomname: any;
     serverUrl: string;
-    doc: any;
+    doc: Y.Doc;
+    liveBlocks: Map<string, LiveBlockProvider> = new Map();
     params: any;
     _WS: {
         new (url: string, protocols?: string | string[]): WebSocket;
@@ -330,17 +329,6 @@ export class WebsocketProvider extends Observable<string> {
         }
 
         /**
-         * @param {ArrayBuffer} data
-         */
-        this._bcSubscriber = (data) => {
-            this.mux(() => {
-                const encoder = readMessage(this, new Uint8Array(data), false);
-                if (encoding.length(encoder) > 1) {
-                    bc.publish(this.bcChannel, encoding.toUint8Array(encoder));
-                }
-            });
-        };
-        /**
          * Listens to Yjs updates and sends them to remote peers (ws and broadcastchannel)
          * @param {Uint8Array} update
          * @param {any} origin
@@ -349,6 +337,7 @@ export class WebsocketProvider extends Observable<string> {
             if (origin !== this) {
                 const encoder = encoding.createEncoder();
                 encoding.writeVarUint(encoder, messageSync);
+                encoding.writeVarString(encoder, this.doc.guid);
                 syncProtocol.writeUpdate(encoder, update);
                 broadcastMessage(this, encoding.toUint8Array(encoder));
             }
@@ -362,6 +351,7 @@ export class WebsocketProvider extends Observable<string> {
             const changedClients = added.concat(updated).concat(removed);
             const encoder = encoding.createEncoder();
             encoding.writeVarUint(encoder, messageAwareness);
+            encoding.writeVarString(encoder, this.doc.guid);
             encoding.writeVarUint8Array(encoder, awarenessProtocol.encodeAwarenessUpdate(awareness, changedClients));
             broadcastMessage(this, encoding.toUint8Array(encoder));
         };
@@ -423,53 +413,8 @@ export class WebsocketProvider extends Observable<string> {
         super.destroy();
     }
 
-    connectBc() {
-        if (!this.bcconnected) {
-            bc.subscribe(this.bcChannel, this._bcSubscriber);
-            this.bcconnected = true;
-        }
-        // send sync step1 to bc
-        this.mux(() => {
-            // write sync step 1
-            const encoderSync = encoding.createEncoder();
-            encoding.writeVarUint(encoderSync, messageSync);
-            syncProtocol.writeSyncStep1(encoderSync, this.doc);
-            bc.publish(this.bcChannel, encoding.toUint8Array(encoderSync));
-            // broadcast local state
-            const encoderState = encoding.createEncoder();
-            encoding.writeVarUint(encoderState, messageSync);
-            syncProtocol.writeSyncStep2(encoderState, this.doc);
-            bc.publish(this.bcChannel, encoding.toUint8Array(encoderState));
-            // write queryAwareness
-            const encoderAwarenessQuery = encoding.createEncoder();
-            encoding.writeVarUint(encoderAwarenessQuery, messageQueryAwareness);
-            bc.publish(this.bcChannel, encoding.toUint8Array(encoderAwarenessQuery));
-            // broadcast local awareness state
-            const encoderAwarenessState = encoding.createEncoder();
-            encoding.writeVarUint(encoderAwarenessState, messageAwareness);
-            encoding.writeVarUint8Array(
-                encoderAwarenessState,
-                awarenessProtocol.encodeAwarenessUpdate(this.awareness, [this.doc.clientID])
-            );
-            bc.publish(this.bcChannel, encoding.toUint8Array(encoderAwarenessState));
-        });
-    }
-
-    disconnectBc() {
-        // broadcast message with local awareness state set to null (indicating disconnect)
-        const encoder = encoding.createEncoder();
-        encoding.writeVarUint(encoder, messageAwareness);
-        encoding.writeVarUint8Array(encoder, awarenessProtocol.encodeAwarenessUpdate(this.awareness, [this.doc.clientID], new Map()));
-        broadcastMessage(this, encoding.toUint8Array(encoder));
-        if (this.bcconnected) {
-            bc.unsubscribe(this.bcChannel, this._bcSubscriber);
-            this.bcconnected = false;
-        }
-    }
-
     disconnect() {
         this.shouldConnect = false;
-        this.disconnectBc();
         if (this.ws !== null) {
             this.ws.close();
         }
@@ -479,7 +424,6 @@ export class WebsocketProvider extends Observable<string> {
         this.shouldConnect = true;
         if (!this.wsconnected && this.ws === null) {
             setupWS(this);
-            this.connectBc();
         }
     }
 }
