@@ -46,7 +46,7 @@ import {
 import { SelectOptionPipe } from './pipes/grid';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.servive';
+import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
 import { buildGridData } from './utils';
 

@@ -1,6 +1,6 @@
-import { AITableFields, AITableRecord, AITableRecords } from '@ai-table/grid';
 import { isArray, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
+import { DemoAIField, DemoAIRecord, Positions } from '../types';
 import { AITableView } from '../types/view';
 
 export type SyncMapElement = Y.Map<any>;
@@ -8,41 +8,46 @@ export type SyncArrayElement = Y.Array<Y.Array<any>>;
 export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
 export type SharedType = Y.Map<SyncElement>;
 
-export const getSharedType = (
-    initializeValue: {
-        fields: AITableFields;
-        records: AITableRecords;
-        views: AITableView[]
-    },
-    isInitializeSharedType: boolean
-) => {
+export const createSharedType = () => {
     const doc = new Y.Doc();
     const sharedType = doc.getMap<any>('ai-table');
-    if (!isInitializeSharedType) {
-        toSharedType(sharedType, initializeValue);
+    return sharedType;
+};
+
+export const initSharedType = (
+    doc: Y.Doc,
+    initializeValue: {
+        fields: DemoAIField[];
+        records: DemoAIRecord[];
+        views: AITableView[];
     }
+) => {
+    const sharedType = doc.getMap<any>('ai-table');
+    toSharedType(sharedType, initializeValue);
     return sharedType;
 };
 
 export function toSharedType(
     sharedType: Y.Map<any>,
     data: {
-        fields: AITableFields;
-        records: AITableRecords;
-        views: AITableView[]
+        fields: DemoAIField[];
+        records: DemoAIRecord[];
+        views: AITableView[];
     }
 ): void {
-    const fieldSharedType = new Y.Array();
-    sharedType.set('fields', fieldSharedType);
-    fieldSharedType.insert(0, data.fields.map(toSyncElement));
+    sharedType.doc!.transact(() => {
+        const fieldSharedType = new Y.Array();
+        fieldSharedType.insert(0, data.fields.map(toSyncElement));
+        sharedType.set('fields', fieldSharedType);
 
-    const recordSharedType = new Y.Array<Y.Array<any>>();
-    sharedType.set('records', recordSharedType);
-    recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+        const recordSharedType = new Y.Array<Y.Array<any>>();
+        sharedType.set('records', recordSharedType);
+        recordSharedType.insert(0, data.records.map(toRecordSyncElement));
 
-    const viewsSharedType = new Y.Array();
-    sharedType.set('views', viewsSharedType);
-    viewsSharedType.insert(0, data.views.map(toSyncElement))
+        const viewsSharedType = new Y.Array();
+        sharedType.set('views', viewsSharedType);
+        viewsSharedType.insert(0, data.views.map(toSyncElement));
+    });
 }
 
 export function toSyncElement(node: any): SyncMapElement {
@@ -64,19 +69,19 @@ export function toSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>> {
-    const fixedFieldArray = new Y.Array();
-    fixedFieldArray.insert(0, [record['id']]);
+export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>> {
+    const nonEditableArray = new Y.Array();
+    nonEditableArray.insert(0, [record['id']]);
 
-    const customFieldArray = new Y.Array();
-    const customFields = [];
+    const editableArray = new Y.Array();
+    const editableFields = [];
     for (const fieldId in record['values']) {
-        customFields.push(record['values'][fieldId]);
+        editableFields.push(record['values'][fieldId]);
     }
-    customFieldArray.insert(0, customFields);
+    editableArray.insert(0, [...editableFields, record['positions']]);
 
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
-    element.insert(0, [fixedFieldArray, customFieldArray]);
+    element.insert(0, [nonEditableArray, editableArray]);
     return element;
 }

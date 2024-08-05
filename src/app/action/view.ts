@@ -1,4 +1,5 @@
-import { AITableView, AIViewAction, ViewActionName } from '../types/view';
+import { AITableRecord, AITableRecords } from '@ai-table/grid';
+import { AITableView, AIViewAction, Direction, ViewActionName } from '../types/view';
 import { AIViewTable } from '../types/view';
 import { createDraft, finishDraft } from 'immer';
 
@@ -23,37 +24,43 @@ export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path:
         path
     };
     aiTable.viewApply(operation);
-
 }
 
 export const GeneralActions = {
     transform(aiTable: AIViewTable, op: AIViewAction): void {
         const views = createDraft(aiTable.views());
-        applyView(aiTable, views, op);
+        const records = createDraft(aiTable.records());
+        applyView(aiTable, views, records, op);
         aiTable.views.update(() => {
             return finishDraft(views);
+        });
+        aiTable.records.update(() => {
+            return finishDraft(records);
         });
     }
 };
 
-export const applyView = (aiTable: AIViewTable, views: AITableView[], options: AIViewAction) => {
-    const [viewIndex] = options.path;
-    const targetView: AITableView = views[viewIndex] 
-    Object.entries(options.newView).forEach(([k, value]) => {
-        const key = k  as keyof AITableView;
-        if (value == null) {
-            delete targetView[key]
-        } else {
-            targetView[key] = value as never  
+export const applyView = (aiTable: AIViewTable, views: AITableView[], records: AITableRecords, options: AIViewAction) => {
+    switch (options.type) {
+        case ViewActionName.setView: {
+            const [viewIndex] = options.path;
+            if (viewIndex > -1) {
+                views[viewIndex] = {
+                    ...views[viewIndex],
+                    ...options.newView
+                };
+                if (options.newView.sortCondition) {
+                    const { sortCondition } = options.newView;
+                    const { sortBy, direction } = sortCondition.conditions[0];
+                    records = records.sort((a: AITableRecord, b: AITableRecord) => {
+                        return direction === Direction.ascending
+                            ? a.values[sortBy] - b.values[sortBy]
+                            : b.values[sortBy] - a.values[sortBy];
+                    });
+                }
+            }
         }
-    });
-    Object.entries(options.view).forEach(([k, value]) => {
-        if (!options.newView.hasOwnProperty(k)) {
-            const key = k  as keyof AITableView;
-            delete targetView[key]
-        }
-    });
-    return views;
+    }
 };
 
 export const ViewActions = {
