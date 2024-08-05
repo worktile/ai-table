@@ -10,8 +10,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
     let targetPath = toTablePath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
-    const isViewsTranslate = event.path.includes('views');
-
+ 
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
             offset += delta.retain ?? 0;
@@ -62,20 +61,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                         }
                     });
                 }
-                if(isViewsTranslate){
-                    delta.insert?.map((item: Y.Map<any>, index) => {
-                        const data = item.toJSON();
-                        const view = (aiTable as AIViewTable).views()[offset]
-                        if (event.path.includes('views')) {
-                            actions.push({
-                                type: ViewActionName.setView,
-                                view ,
-                                newView: data,
-                                path: [offset]
-                            } as any);
-                        }
-                    });
-                }
+                
             }
         }
     });

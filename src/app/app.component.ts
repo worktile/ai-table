@@ -12,7 +12,8 @@ import {
     EditFieldPropertyItem,
     DividerMenuItem,
     RemoveFieldItem,
-    Actions
+    Actions,
+    AITableRecord
 } from '@ai-table/grid';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
@@ -147,8 +148,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     aiTable!: AITable;
 
     views = signal([
+        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' },
         { rowHeight: RowHeight.short, id: 'view1', name: '表格1', isActive: true },
-        { rowHeight: RowHeight.short, id: '3', name: '表格视图3' }
     ]);
 
     plugins = [withCustomApply];
@@ -260,7 +261,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             const sortCondition = this.activeView().sortCondition;
             if(sortCondition){
                 const {sortBy, direction} = sortCondition.conditions[0] 
-                const records = this.records().sort((a:any,b:any)=>{ return  direction === Direction.ascending ? a.value[sortBy] - b.value[sortBy] : b.value[sortBy] - a.value[sortBy] });
+                const records = this.records().sort((a:AITableRecord,b:AITableRecord)=>{ return  direction === Direction.ascending ? a.values[sortBy] - b.values[sortBy] : b.values[sortBy] - a.values[sortBy] });
                 this.records.set([...records])
             }
         }
@@ -310,8 +311,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     sort(){
         const direction =  this.activeView().sortCondition?.conditions[0].direction
         const sortCondition = { keepSort:true , conditions:[{sortBy: 'column-4', direction: direction=== Direction.ascending ? Direction.descending:  Direction.ascending}]}
-        this.activeView().sortCondition = sortCondition
-        CustomActions.setView(this.aiTable as any, this.activeView(), [0]);
+        CustomActions.setView(this.aiTable as any, {sortCondition}, [1]);
     }
 
     ngOnDestroy(): void {

@@ -3,10 +3,14 @@ import { AITable, AITableAction } from '@ai-table/grid';
 import translateArrayEvent from './array-event';
 import { YjsAITable } from '../yjs-table';
 import { AIViewAction, AIViewTable } from '../../types/view';
+import translateMapEvent from './map-event';
 
-export function translateYjsEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
+export function translateYjsEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] | AIViewAction[] {
     if (event instanceof Y.YArrayEvent) {
         return translateArrayEvent(aiTable, event);
+    }
+    if (event instanceof Y.YMapEvent) {
+        return translateMapEvent(aiTable, event);
     }
     return [];
 }

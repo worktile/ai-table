@@ -41,8 +41,8 @@ export enum ViewActionName {
 
 export interface AIViewAction {
     type: ViewActionName.setView;
-    view: AITableView;
-    newView: AITableView;
+    view: Partial<AITableView>;
+    newView: Partial<AITableView>;
     path: [number];
 }
 
