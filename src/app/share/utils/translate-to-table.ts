@@ -1,8 +1,9 @@
-import { AITableFields, AITableRecords, Path } from '@ai-table/grid';
+import { AITableFields, Path } from '@ai-table/grid';
 import { SharedType } from '../shared';
+import { DemoAIField, DemoAIRecord } from '../../types';
 
 export const translateRecord = (arrayRecord: any[], fields: AITableFields) => {
-    const fieldIds = fields.map((item) => item.id);
+    const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
         recordValue[item] = arrayRecord[index] || '';
@@ -12,15 +13,16 @@ export const translateRecord = (arrayRecord: any[], fields: AITableFields) => {
 
 export const translateSharedTypeToTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();
-    const fields: AITableFields = data['fields'];
-    const records: AITableRecords = data['records'].map((record: any) => {
-        const [fixedField, customField] = record;
+    const fields: DemoAIField[] = data['fields'];
+    const records: DemoAIRecord[] = data['records'].map((record: any) => {
+        const [nonEditableArray, editableArray] = record;
         return {
-            id: fixedField[0],
-            values: translateRecord(customField, fields)
+            _id: nonEditableArray[0],
+            positions: editableArray[editableArray.length - 1],
+            values: translateRecord(editableArray.slice(0, editableArray.length - 1), fields)
         };
     });
-    const views = data['views']
+    const views = data['views'];
     return {
         records,
         fields,

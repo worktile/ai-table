@@ -88,7 +88,7 @@ export class AITableFieldPropertyEditor {
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?.id !== field.id));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?._id !== field._id));
     };
 
     selectFieldType(fieldType: AITableFieldType) {
@@ -97,7 +97,7 @@ export class AITableFieldPropertyEditor {
 
     editFieldProperty() {
         if (this.isUpdate) {
-            const path = this.aiTable.fields().findIndex((item) => item.id === this.aiField().id);
+            const path = this.aiTable.fields().findIndex((item) => item._id === this.aiField()._id);
             Actions.setField(this.aiTable, this.aiField(), [path]);
         } else {
             Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);

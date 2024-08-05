@@ -38,13 +38,15 @@ export enum AITableStatType {
 }
 
 export interface AITableSelectOption {
-    id: string;
-    name: string;
+    _id: string;
+    text: string;
     color?: string;
+    bg_color?: string;
+    [key: string]: any;
 }
 
 export interface AITableField<T = unknown> {
-    id: string;
+    _id: string;
     name: string;
     type: AITableFieldType;
     icon?: string;
@@ -81,7 +83,7 @@ export type FieldValue =
     | any;
 
 export interface AITableRecord {
-    id: string;
+    _id: string;
     checked?: boolean;
     values: Record<string, FieldValue>;
 }
