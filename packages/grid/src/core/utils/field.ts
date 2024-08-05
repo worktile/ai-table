@@ -1,6 +1,6 @@
 import { FieldsMap } from '../constants/field';
 import { AITable, AITableFieldType } from '../types';
-import { idCreator } from './_id-creator';
+import { idCreator } from './id-creator';
 
 export function getDefaultFieldValue(type: AITableFieldType) {
     return '';

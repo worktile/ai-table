@@ -1,6 +1,6 @@
 import { AITableFields, AITableRecord } from '../types';
 import { getDefaultFieldValue } from './field';
-import { idCreator } from './_id-creator';
+import { idCreator } from './id-creator';
 
 export function getDefaultRecord(fields: AITableFields) {
     const newRow: AITableRecord = {
