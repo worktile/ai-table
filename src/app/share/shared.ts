@@ -8,8 +8,8 @@ export type SyncArrayElement = Y.Array<Y.Array<any>>;
 export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
 export type SharedType = Y.Map<SyncElement>;
 
-export const createSharedType = () => {
-    const doc = new Y.Doc({ guid: 'room-1' });
+export const createSharedType = (room: string) => {
+    const doc = new Y.Doc({ guid: room });
     const sharedType = doc.getMap<any>('ai-table');
     return sharedType;
 };

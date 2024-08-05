@@ -68,7 +68,7 @@ export class TableService {
 
         let isInitialized = false;
         if (!this.sharedType) {
-            this.sharedType = createSharedType();
+            this.sharedType = createSharedType(room);
             this.sharedType.observeDeep((events: any) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
