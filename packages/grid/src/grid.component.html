@@ -1,5 +1,5 @@
 <div class="grid-header d-flex">
-    <div class="grid-column-checkbox grid-cell">
+    <div class="grid-column-checkbox grid-cell grid-checkbox">
         <label thyCheckbox thyLabelText="" [ngModel]="isSelectedAll" (ngModelChange)="toggleSelectAll($event)"></label>
     </div>
     @for (field of gridData().fields; track field._id) {
@@ -35,7 +35,7 @@
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record._id; let index = $index) {
         <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record._id) }">
-            <div class="grid-row-index">
+            <div class="grid-row-index grid-checkbox">
                 <label
                     [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
                     thyCheckbox
