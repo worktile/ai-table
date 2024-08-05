@@ -75,7 +75,6 @@ export class TableService {
                         const data = translateSharedTypeToTable(this.sharedType!);
                         this.buildRenderRecords(data.records);
                         this.buildRenderFields(data.fields);
-                        console.log(123, )
                         this.views.set(data.views);
                         isInitialized = true;
                     } else {

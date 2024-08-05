@@ -57,7 +57,7 @@ export function getDefaultValue() {
                     'column-2': '1',
                     'column-3': {
                         url: 'https://www.baidu.com',
-                        name: '百度链接'
+                        text: '百度链接'
                     },
                     'column-4': 3,
                     'column-5': 10
@@ -113,17 +113,17 @@ export function getDefaultValue() {
                 options: [
                     {
                         _id: '1',
-                        name: '开始',
+                        text: '开始',
                         color: '#5dcfff'
                     },
                     {
                         _id: '2',
-                        name: '进行中',
+                        text: '进行中',
                         color: '#ffcd5d'
                     },
                     {
                         _id: '3',
-                        name: '已完成',
+                        text: '已完成',
                         color: '#73d897'
                     }
                 ]
