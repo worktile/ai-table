@@ -8,7 +8,9 @@
     display: block;
 
     textarea {
+        padding: 0.55rem 0.75rem;
         min-height: 44px;
+        border-width: 2px;
         resize: none;
     }
 }
