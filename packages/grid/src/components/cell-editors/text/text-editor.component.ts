@@ -10,6 +10,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     template: `
         <textarea
             placeholder=""
+            rows="1"
             thyInput
             [thyAutofocus]="true"
             [(ngModel)]="modelValue"
@@ -22,7 +23,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgIf, FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective],
     host: {
-        class: 'd-block'
+        class: 'text-cell-editor'
     }
 })
 export class TextCellEditorComponent extends AbstractEditCellEditor<string> implements AfterViewInit {
@@ -44,7 +45,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
 
     updateStyle() {
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
-        const height = textarea.scrollHeight <= this.maxHeight ? textarea.scrollHeight : this.maxHeight;
+        const height = textarea.scrollHeight < this.maxHeight ? textarea.scrollHeight : this.maxHeight;
 
         this.render2.setStyle(textarea, 'height', `${height}px`);
         this.render2.setStyle(textarea, 'min-height', `44px`);
