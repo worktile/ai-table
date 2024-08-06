@@ -1,9 +1,14 @@
 import {
+    ActionName,
     Actions,
+    AddFieldAction,
+    AddRecordAction,
     AIFieldConfig,
     AIFieldPath,
     AIRecordPath,
     AITable,
+    AITableAction,
+    AITableChangeOptions,
     AITableField,
     AITableGrid,
     AITableQueries,
@@ -24,10 +29,12 @@ import { withCustomApply } from '../../../plugins/custom-action.plugin';
 import { TableService } from '../../../service/table.service';
 import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
-import { AIViewAction, AIViewTable, Direction } from '../../../types/view';
-import { getDefaultValue } from '../../../utils/utils';
+import { AIViewTable, Direction } from '../../../types/view';
+import { createDefaultPositions, getDefaultValue } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { CustomActions } from '../../../action';
+import { DemoAIField, DemoAIRecord } from '../../../types';
+import { createDraft, finishDraft } from 'immer';
 
 @Component({
     selector: 'demo-table-content',
@@ -103,12 +110,37 @@ export class DemoTableContent {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
     }
 
-    onChange(data: any) {
+    buildAction(action: AITableAction) {
         // TODO：获取当前的 view 和 path，转换为 sharedType 中原数据的 path
+        let draftAction = createDraft(action);
+        switch (action.type) {
+            case ActionName.AddRecord:
+                const record = (draftAction as AddRecordAction).record as DemoAIRecord;
+                if (!record.positions) {
+                    record.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
+                    return finishDraft(draftAction);
+                }
+                return action;
+            case ActionName.AddField:
+                const field = (draftAction as AddFieldAction).field as DemoAIField;
+                if (!field.positions) {
+                    field.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
+                    return finishDraft(draftAction);
+                }
+                return action;
+            default:
+                return action;
+        }
+    }
+
+    onChange(options: AITableChangeOptions) {
         if (this.tableService.sharedType) {
+            options.actions = options.actions.map((action) => {
+                return this.buildAction(action);
+            });
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
-                    applyActionOps(this.tableService.sharedType!, data.actions, this.aiTable);
+                    applyActionOps(this.tableService.sharedType!, options.actions, this.aiTable);
                 });
             }
         }
