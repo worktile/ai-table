@@ -27,7 +27,7 @@ import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { mergeWith } from 'rxjs/operators';
-import { ProgressEditorComponent } from './components';
+import { ProgressEditorComponent, RateDisplayComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
@@ -79,7 +79,8 @@ import { buildGridData } from './utils';
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
         ThyCheckboxModule,
-        ProgressEditorComponent
+        ProgressEditorComponent,
+        RateDisplayComponent
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })

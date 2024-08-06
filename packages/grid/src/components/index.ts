@@ -1,3 +1,4 @@
+export * from './cell-display/rate/rate.component';
 export * from './cell-editors/date-time/date-time-editor.component';
 export * from './cell-editors/link/number-editor.component';
 export * from './cell-editors/number/number-editor.component';

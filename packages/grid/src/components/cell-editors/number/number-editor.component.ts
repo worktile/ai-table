@@ -6,14 +6,16 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 
 @Component({
     selector: 'number-cell-editor',
-    template: `<thy-input-number
-        class="h-100"
-        [thyAutoFocus]="true"
-        [(ngModel)]="modelValue"
-        (thyEnter)="updateValue()"
-        (thyBlur)="updateValue()"
-        placeholder=""
-    /> `,
+    template: `
+        <thy-input-number
+            class="h-100"
+            [thyAutoFocus]="true"
+            [(ngModel)]="modelValue"
+            (thyEnter)="updateValue()"
+            (thyBlur)="updateValue()"
+            placeholder=""
+        />
+    `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyAutofocusDirective, ThyEnterDirective, ThyInputNumber]

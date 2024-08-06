@@ -149,7 +149,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-5',
                 name: '进度',
-                positions:{
+                positions: {
                     view1: 4,
                     view2: 0
                 },
@@ -158,26 +158,28 @@ export function getDefaultValue() {
         ]
     };
 
-    // console.time('build data');
-    // initValue.fields = [];
-    // for (let index = 0; index < 5; index++) {
-    //     initValue.fields.push({
-    //         _id: `column-${index}`,
-    //         name: "文本",
-    //         type: AITableFieldType.text,
-    //     });
-    // }
-    // initValue.records = [];
-    // for (let index = 0; index < 40 * 3 * 2*30; index++) {
-    //     const value: any = {};
-    //     initValue.fields.forEach((column, columnIndex) => {
-    //         value[`${column._id}`] = `name-${index}-${columnIndex}`;
-    //     });
-    //     initValue.records.push({
-    //         _id: `row-${index + 1}`,
-    //         value: value,
-    //     });
-    // }
-    // console.timeEnd('build data');
+    console.time('build data');
+    initValue.fields = [];
+    for (let index = 0; index < 5; index++) {
+        initValue.fields.push({
+            _id: `column-${index}`,
+            name: '文本',
+            type: AITableFieldType.rate,
+            positions: {}
+        });
+    }
+    initValue.records = [];
+    for (let index = 0; index < 4 * 3 * 2 * 30; index++) {
+        const value: any = {};
+        initValue.fields.forEach((column, columnIndex) => {
+            value[`${column._id}`] = `name-${index}-${columnIndex}`;
+        });
+        initValue.records.push({
+            _id: `row-${index + 1}`,
+            values: value,
+            positions: {}
+        });
+    }
+    console.timeEnd('build data');
     return initValue;
 }

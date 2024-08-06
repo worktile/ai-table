@@ -77,7 +77,31 @@
                             }
                         }
                         @case (AITableFieldType.rate) {
-                            <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate>
+                            <!-- 组件库 -->
+                            <!-- <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate> -->
+
+                            <!-- 自定义组件 -->
+                            <rate-display [currentValue]="record.values[field._id]"></rate-display>
+
+                            <!-- 直接渲染 svg -->
+                            <!-- <svg
+                                width="16px"
+                                height="16px"
+                                viewBox="0 0 16 16"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <title>因素</title>
+                                <g id="因素" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="编组-5" transform="translate(1.000000, 3.000000)">
+                                        <rect id="矩形" fill="#FF7575" x="0" y="0" width="6" height="4" rx="2"></rect>
+                                        <rect id="矩形备份-5" fill="#F5C659" x="8" y="0" width="6" height="4" rx="2"></rect>
+                                        <rect id="矩形备份-4" fill="#72D997" x="0" y="6" width="6" height="4" rx="2"></rect>
+                                        <rect id="矩形备份-7" fill="#6598FF" x="8" y="6" width="6" height="4" rx="2"></rect>
+                                    </g>
+                                </g>
+                            </svg> -->
                         }
                         @case (AITableFieldType.link) {
                             <a
