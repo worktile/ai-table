@@ -104,9 +104,9 @@ export class AITableGrid implements OnInit {
 
     aiTable!: AITable;
 
-    get isSelectedAll() {
+    isSelectedAll = computed(() => {
         return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
-    }
+    });
 
     onChange = output<AITableChangeOptions>();
 
