@@ -53,7 +53,7 @@ export class DemoTableContent {
             EditFieldPropertyItem,
             DividerMenuItem,
             {
-                _id: 'filterFields',
+                type: 'filterFields',
                 name: '按本列筛选',
                 icon: 'filter-line',
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},

@@ -2,7 +2,7 @@ import { ElementRef, Signal } from '@angular/core';
 import { AITable, AITableField } from '../core';
 
 export interface AITableFieldMenuItem {
-    _id: string;
+    type: string;
     name?: string;
     icon?: string;
     exec?: (aiTable: AITable, field: Signal<AITableField>, origin?: HTMLElement | ElementRef<any>) => void;
