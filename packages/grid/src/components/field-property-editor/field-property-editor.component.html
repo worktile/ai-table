@@ -40,7 +40,7 @@
 </form>
 
 <thy-dropdown-menu #menu>
-    @for (item of selectableFields; track item.type) {
+    @for (item of selectableFields; track $index) {
         <a thyDropdownMenuItem href="javascript:;" (click)="selectFieldType(item.type)">
             <thy-icon [thyIconName]="item.icon"></thy-icon>
             <span thyDropdownMenuItemName>{{ item.name }}</span>

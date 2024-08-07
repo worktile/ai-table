@@ -1,4 +1,4 @@
-import { ActionName, AITableField, AITableRecord } from '@ai-table/grid';
+import { ActionName, AITableField, AITableRecord, AITableValue } from '@ai-table/grid';
 
 export class Positions {
     [view_id: string]: number;

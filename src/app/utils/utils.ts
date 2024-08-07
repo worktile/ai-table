@@ -1,6 +1,6 @@
 import { AITableFieldType } from '@ai-table/grid';
-import { DemoAIField, DemoAIRecord } from '../types';
-const LOCAL_STORAGE_KEY = 'ai-table-data';
+import { DemoAIField, DemoAIRecord, Positions } from '../types';
+import { AITableView } from '../types/view';
 
 export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -10,34 +10,12 @@ export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewI
     return data;
 }
 
-export function getSortFieldsAndRecordsByPositions(records: DemoAIRecord[], fields: DemoAIField[], activeViewId: string) {
-    const newRecords = sortDataByView(records, activeViewId) as DemoAIRecord[];
-    const newFields = sortDataByView(fields, activeViewId) as DemoAIField[];
-    return {
-        records: newRecords,
-        fields: newFields
-    };
-}
-
-export function setActiveViewPositions(value: DemoAIRecord[] | DemoAIField[], activeViewId: string) {
-    return value.map((item, index) => {
-        return {
-            ...item,
-            positions: {
-                ...(item.positions || {}),
-                [activeViewId]: index
-            }
-        };
+export function createDefaultPositions(views: AITableView[], index: number) {
+    const positions: Positions = {};
+    views.forEach((element) => {
+        positions[element._id] = index;
     });
-}
-
-export function getLocalStorage() {
-    const data = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
-    return data ? JSON.parse(data) : getDefaultValue();
-}
-
-export function setLocalData(data: string) {
-    localStorage.setItem(`${LOCAL_STORAGE_KEY}`, data);
+    return positions;
 }
 
 export function getDefaultValue() {
@@ -161,7 +139,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-5',
                 name: '进度',
-                positions:{
+                positions: {
                     view1: 4,
                     view2: 0
                 },
