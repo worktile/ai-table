@@ -1,4 +1,4 @@
-import { CommonModule, NgClass, NgComponentOutlet, NgForOf } from '@angular/common';
+import { CommonModule, NgClass, NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,

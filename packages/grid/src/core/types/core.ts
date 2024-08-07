@@ -13,7 +13,9 @@ export enum AITableFieldType {
     // cascadeSelect = 'cascade_select', // 包含单选和多选，参数复杂后续再进行设计
     progress = 'progress',
     rate = 'rate',
-    link = 'link'
+    link = 'link',
+    createdAt = 'created_at',
+    updatedAt= 'updated_at'
 }
 
 export enum AITableStatType {
