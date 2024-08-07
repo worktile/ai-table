@@ -1,3 +1,4 @@
+import { createDraft, finishDraft } from 'immer';
 import { AITableFields, AITableFieldType, AITableRecords, FieldsMap } from '../core';
 import { AITableGridData, AITableReferences, AITableSelection, AITableUserInfo } from '../types';
 
@@ -36,7 +37,8 @@ export function buildRecordsByReferences(records: AITableRecords, fields: AITabl
             },
             {} as Record<string, AITableUserInfo>
         );
-        records.forEach((record) => {
+        const draftRecords = createDraft(records);
+        draftRecords.forEach((record) => {
             memberFields.forEach((field) => {
                 const value = record.values[field._id];
                 if (field.isMultiple) {
@@ -46,6 +48,7 @@ export function buildRecordsByReferences(records: AITableRecords, fields: AITabl
                 }
             });
         });
+        records = finishDraft(draftRecords);
     }
     return records;
 }
