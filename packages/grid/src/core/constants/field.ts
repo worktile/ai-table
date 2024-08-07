@@ -45,17 +45,15 @@ export const BasicFields = [
         width: 200
     },
     {
-        type: AITableFieldType.date,
+        type: AITableFieldType.createdAt,
         name: '创建时间',
         icon: 'calendar',
-        readonly: true,
         width: 200
     },
     {
-        type: AITableFieldType.date,
+        type: AITableFieldType.updatedAt,
         name: '更新时间',
         icon: 'calendar',
-        readonly: true,
         width: 200
     }
 ];

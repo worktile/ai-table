@@ -60,7 +60,11 @@ export function getDefaultValue() {
                         text: '百度链接'
                     },
                     'column-4': 3,
-                    'column-5': 10
+                    'column-5': 10,
+                    'column-6': 1682235946,
+                    'column-7': 1720490727,
+                    'column-8': 1,
+                    'column-9': 1682235946
                 }
             },
             {
@@ -74,7 +78,11 @@ export function getDefaultValue() {
                     'column-2': '2',
                     'column-3': {},
                     'column-4': 1,
-                    'column-5': 50
+                    'column-5': 50,
+                    'column-6': 1682235946,
+                    'column-7': 1720490727,
+                    'column-8': 10,
+                    'column-9': 1682235946
                 }
             },
             {
@@ -88,7 +96,11 @@ export function getDefaultValue() {
                     'column-2': '3',
                     'column-3': {},
                     'column-4': 1,
-                    'column-5': 100
+                    'column-5': 100,
+                    'column-6': 1682235946,
+                    'column-7': 1720490727,
+                    'column-8': 100,
+                    'column-9': 1682235946
                 }
             }
         ],
@@ -154,6 +166,42 @@ export function getDefaultValue() {
                     view2: 0
                 },
                 type: AITableFieldType.progress
+            },
+            {
+                _id: 'column-6',
+                name: '创建时间',
+                positions:{
+                    view1: 5,
+                    view2: 5
+                },
+                type: AITableFieldType.createdAt
+            },
+            {
+                _id: 'column-7',
+                name: '更新时间',
+                positions:{
+                    view1: 6,
+                    view2: 6
+                },
+                type: AITableFieldType.updatedAt
+            },
+            {
+                _id: 'column-8',
+                name: '数字',
+                positions:{
+                    view1: 7,
+                    view2: 7
+                },
+                type: AITableFieldType.number
+            },
+            {
+                _id: 'column-9',
+                name: '日期',
+                positions:{
+                    view1: 8,
+                    view2: 8
+                },
+                type: AITableFieldType.date
             }
         ]
     };

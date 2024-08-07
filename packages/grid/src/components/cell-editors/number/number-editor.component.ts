@@ -12,11 +12,13 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
         [(ngModel)]="modelValue"
         (thyEnter)="updateValue()"
         (thyBlur)="updateValue()"
-        placeholder=""
     /> `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ThyAutofocusDirective, ThyEnterDirective, ThyInputNumber]
+    imports: [FormsModule, ThyAutofocusDirective, ThyEnterDirective, ThyInputNumber],
+    host: {
+        class: 'number-cell-editor'
+    }
 })
 export class NumberCellEditorComponent extends AbstractEditCellEditor<number> {
     updateValue() {

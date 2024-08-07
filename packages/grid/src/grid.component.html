@@ -66,15 +66,21 @@
                             }
                         }
                         @case (AITableFieldType.date) {
-                            @if (field?.readonly) {
-                                <div class="d-block user-select-none">
-                                    <span class="text-truncate">
-                                        {{ record.values[field._id] | thyDatePickerFormat: 'yyyy-MM-dd HH:mm' }}
-                                    </span>
-                                </div>
-                            } @else {
-                                {{ record.values[field._id] | thyDatePickerFormat }}
-                            }
+                            {{ record.values[field._id] | thyDatePickerFormat }}
+                        }
+                        @case (AITableFieldType.updatedAt) {
+                            <div class="d-block user-select-none">
+                                <span class="text-truncate">
+                                    {{ record.values[field._id] | thyDatePickerFormat: 'yyyy-MM-dd HH:mm' }}
+                                </span>
+                            </div>
+                        }
+                        @case (AITableFieldType.createdAt) {
+                            <div class="d-block user-select-none">
+                                <span class="text-truncate">
+                                    {{ record.values[field._id] | thyDatePickerFormat: 'yyyy-MM-dd HH:mm' }}
+                                </span>
+                            </div>
                         }
                         @case (AITableFieldType.rate) {
                             <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate>
