@@ -49,6 +49,7 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
 import { buildGridData } from './utils';
+import { ThyAvatarModule } from 'ngx-tethys/avatar';
 
 @Component({
     selector: 'ai-table-grid',
@@ -79,7 +80,9 @@ import { buildGridData } from './utils';
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
         ThyCheckboxModule,
-        ProgressEditorComponent
+        ProgressEditorComponent,
+        ThyAvatarModule,
+        NgTemplateOutlet
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })

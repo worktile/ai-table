@@ -30,7 +30,7 @@ import { TableService } from '../../../service/table.service';
 import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
 import { AIViewTable, Direction } from '../../../types/view';
-import { createDefaultPositions, getDefaultValue } from '../../../utils/utils';
+import { buildByReference, createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { CustomActions } from '../../../action';
 import { DemoAIField, DemoAIRecord } from '../../../types';
@@ -46,21 +46,6 @@ export class DemoTableContent {
     aiTable!: AITable;
 
     plugins = [withCustomApply];
-
-    listOfOption = [
-        {
-            value: 'short',
-            name: 'short'
-        },
-        {
-            value: 'medium',
-            name: 'medium'
-        },
-        {
-            value: 'tall',
-            name: 'tall'
-        }
-    ];
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -96,8 +81,9 @@ export class DemoTableContent {
             this.tableService.buildRenderFields();
         } else {
             const value = getDefaultValue();
-            this.tableService.buildRenderRecords(value.records);
-            this.tableService.buildRenderFields(value.fields);
+            const buildData = buildByReference(value.records, value.fields, getReferences());
+            this.tableService.buildRenderRecords(buildData.records);
+            this.tableService.buildRenderFields(buildData.fields);
         }
         console.time('render');
     }

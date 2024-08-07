@@ -83,7 +83,7 @@
                             </div>
                         }
                         @case (AITableFieldType.rate) {
-                            <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate>
+                            <thy-rate [ngModel]="record.values[field._id]"></thy-rate>
                         }
                         @case (AITableFieldType.link) {
                             <a
@@ -108,6 +108,23 @@
                                 <span> {{ record.values[field._id] }}{{ record.values[field._id]?.config?.suffix || '%' }} </span>
                             </thy-progress>
                         }
+                        @case (AITableFieldType.member) {
+                            @if (!field.isMultiple) {
+                                <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                            } @else {
+                                <thy-avatar-list thyAvatarSize="xs">
+                                    @for (item of record.values[field._id]; track $index) {
+                                        <thy-avatar [thyName]="item.display_name" [thySrc]="item.avatar"></thy-avatar>
+                                    }
+                                </thy-avatar-list>
+                            }
+                        }
+                        @case (AITableFieldType.createdBy) {
+                            <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                        }
+                        @case (AITableFieldType.updateBy) {
+                            <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                        }
                         @default {
                             <span class="text-truncate"> {{ record.values[field._id] }}</span>
                         }
@@ -124,3 +141,12 @@
 </div>
 
 <div #activeBorder class="active-border"></div>
+
+<ng-template #member let-record="record" let-field="field">
+    <thy-avatar
+        [thyName]="record.values[field._id].display_name"
+        [thySrc]="record.values[field._id].avatar"
+        thySize="xs"
+        thyShowName="true"
+    ></thy-avatar>
+</ng-template>

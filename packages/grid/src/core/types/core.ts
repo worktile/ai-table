@@ -15,7 +15,9 @@ export enum AITableFieldType {
     rate = 'rate',
     link = 'link',
     createdAt = 'created_at',
-    updatedAt= 'updated_at'
+    updatedAt = 'updated_at',
+    createdBy = 'created_by',
+    updateBy = 'update_by'
 }
 
 export enum AITableStatType {

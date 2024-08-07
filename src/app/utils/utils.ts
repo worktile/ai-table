@@ -10,6 +10,32 @@ export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewI
     return data;
 }
 
+export function buildByReference(records: DemoAIRecord[], fields: DemoAIField[], reference: any) {
+    const memberFields = fields.filter((field) =>
+        [AITableFieldType.createdBy, AITableFieldType.updateBy, AITableFieldType.member].includes(field.type)
+    );
+    if (memberFields.length) {
+        const uidToMember = reference.members.reduce(
+            (map: { [key: string]: any }, member: UserInfo) => {
+                map[member.uid!] = member;
+                return map;
+            },
+            {} as Record<string, UserInfo>
+        );
+        records.forEach((record) => {
+            memberFields.forEach((field) => {
+                const value = record.values[field._id];
+                if (field.isMultiple) {
+                    record.values[field._id] = value.map((uid: string) => uidToMember[uid]).filter(Boolean);
+                } else {
+                    record.values[field._id] = uidToMember[value] || {};
+                }
+            });
+        });
+    }
+    return { records, fields };
+}
+
 export function createDefaultPositions(views: AITableView[], index: number) {
     const positions: Positions = {};
     views.forEach((element) => {
@@ -42,7 +68,10 @@ export function getDefaultValue() {
                     'column-6': 1682235946,
                     'column-7': 1720490727,
                     'column-8': 1,
-                    'column-9': 1682235946
+                    'column-9': 1682235946,
+                    'column-10': ['member_01'],
+                    'column-11': 'member_01',
+                    'column-12': 'member_02'
                 }
             },
             {
@@ -60,7 +89,10 @@ export function getDefaultValue() {
                     'column-6': 1682235946,
                     'column-7': 1720490727,
                     'column-8': 10,
-                    'column-9': 1682235946
+                    'column-9': 1682235946,
+                    'column-10': ['member_01', 'member_02'],
+                    'column-11': 'member_01',
+                    'column-12': 'member_02'
                 }
             },
             {
@@ -78,14 +110,17 @@ export function getDefaultValue() {
                     'column-6': 1682235946,
                     'column-7': 1720490727,
                     'column-8': 100,
-                    'column-9': 1682235946
+                    'column-9': 1682235946,
+                    'column-10': [],
+                    'column-11': '',
+                    'column-12': 'member_02'
                 }
             }
         ],
         fields: [
             {
                 _id: 'column-1',
-                name: '文本',
+                name: '单行文本',
                 positions: {
                     view1: 0,
                     view2: 1
@@ -119,55 +154,10 @@ export function getDefaultValue() {
                 ]
             },
             {
-                _id: 'column-3',
-                name: '链接',
-                positions: {
-                    view1: 2,
-                    view2: 2
-                },
-                type: AITableFieldType.link
-            },
-            {
-                _id: 'column-4',
-                name: '评分',
-                positions: {
-                    view1: 3,
-                    view2: 4
-                },
-                type: AITableFieldType.rate
-            },
-            {
-                _id: 'column-5',
-                name: '进度',
-                positions: {
-                    view1: 4,
-                    view2: 0
-                },
-                type: AITableFieldType.progress
-            },
-            {
-                _id: 'column-6',
-                name: '创建时间',
-                positions:{
-                    view1: 5,
-                    view2: 5
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-7',
-                name: '更新时间',
-                positions:{
-                    view1: 6,
-                    view2: 6
-                },
-                type: AITableFieldType.updatedAt
-            },
-            {
                 _id: 'column-8',
                 name: '数字',
-                positions:{
-                    view1: 7,
+                positions: {
+                    view1: 2,
                     view2: 7
                 },
                 type: AITableFieldType.number
@@ -175,11 +165,85 @@ export function getDefaultValue() {
             {
                 _id: 'column-9',
                 name: '日期',
-                positions:{
-                    view1: 8,
+                positions: {
+                    view1: 3,
                     view2: 8
                 },
                 type: AITableFieldType.date
+            },
+            {
+                _id: 'column-10',
+                name: '成员(📌)',
+                positions: {
+                    view1: 4,
+                    view2: 9
+                },
+                isMultiple: true,
+                type: AITableFieldType.member
+            },
+            {
+                _id: 'column-5',
+                name: '进度',
+                positions: {
+                    view1: 5,
+                    view2: 0
+                },
+                type: AITableFieldType.progress
+            },
+            {
+                _id: 'column-4',
+                name: '评分(📌)',
+                positions: {
+                    view1: 6,
+                    view2: 4
+                },
+                type: AITableFieldType.rate
+            },
+            {
+                _id: 'column-3',
+                name: '链接(📌)',
+                positions: {
+                    view1: 7,
+                    view2: 2
+                },
+                type: AITableFieldType.link
+            },
+
+            {
+                _id: 'column-11',
+                name: '创建人',
+                positions: {
+                    view1: 8,
+                    view2: 10
+                },
+                type: AITableFieldType.createdBy
+            },
+            {
+                _id: 'column-6',
+                name: '创建时间',
+                positions: {
+                    view1: 9,
+                    view2: 5
+                },
+                type: AITableFieldType.createdAt
+            },
+            {
+                _id: 'column-12',
+                name: '更新人',
+                positions: {
+                    view1: 10,
+                    view2: 11
+                },
+                type: AITableFieldType.updateBy
+            },
+            {
+                _id: 'column-7',
+                name: '更新时间',
+                positions: {
+                    view1: 11,
+                    view2: 6
+                },
+                type: AITableFieldType.updatedAt
             }
         ]
     };
@@ -206,4 +270,29 @@ export function getDefaultValue() {
     // }
     // console.timeEnd('build data');
     return initValue;
+}
+
+
+export interface UserInfo {
+    uid?: string;
+    display_name?: string;
+    avatar?: string;
+}
+
+
+export function getReferences(): { members: UserInfo[] } {
+    return {
+        members: [
+            {
+                uid: 'member_01',
+                display_name: 'admin',
+                avatar: ''
+            },
+            {
+                uid: 'member_02',
+                display_name: 'member',
+                avatar: ''
+            }
+        ]
+    };
 }
