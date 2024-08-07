@@ -43,7 +43,7 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { SelectOptionPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, SelectOptionPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
@@ -82,7 +82,8 @@ import { ThyAvatarModule } from 'ngx-tethys/avatar';
         ThyCheckboxModule,
         ProgressEditorComponent,
         ThyAvatarModule,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        IsSelectRecordPipe
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
@@ -116,7 +117,7 @@ export class AITableGrid implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection(), this.aiReferences());
+        return buildGridData(this.aiRecords(), this.aiFields(), this.aiReferences());
     });
 
     private ngZone = inject(NgZone);

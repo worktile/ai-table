@@ -89,7 +89,6 @@ export type FieldValue =
 
 export interface AITableRecord {
     _id: string;
-    checked?: boolean;
     values: Record<string, FieldValue>;
 }
 

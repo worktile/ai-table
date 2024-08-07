@@ -34,16 +34,18 @@
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record._id; let index = $index) {
-        <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record._id) }">
+        <div class="grid-row d-flex" [ngClass]="{ highlight: (record._id | isSelectRecord: aiTable.selection()) }">
             <div class="grid-row-index grid-checkbox">
                 <label
-                    [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
+                    [ngClass]="(record._id | isSelectRecord: aiTable.selection()) ? 'checked-box' : 'unchecked-box'"
                     thyCheckbox
                     thyLabelText=""
-                    [ngModel]="record.checked"
+                    [ngModel]="record._id | isSelectRecord: aiTable.selection()"
                     (ngModelChange)="selectRecord(record._id)"
                 ></label>
-                <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
+                <span [ngClass]="(record._id | isSelectRecord: aiTable.selection()) ? 'grid-row-no-number' : 'grid-row-number'">
+                    {{ index + 1 }}
+                </span>
             </div>
             @for (field of gridData().fields; track field._id) {
                 <div

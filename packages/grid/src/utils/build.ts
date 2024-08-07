@@ -4,7 +4,6 @@ import { AITableGridData, AITableReferences, AITableSelection, AITableUserInfo }
 export const buildGridData = (
     recordValue: AITableRecords,
     fieldsValue: AITableFields,
-    selection: AITableSelection,
     references?: AITableReferences
 ): AITableGridData => {
     const fields = fieldsValue.map((item) => {
@@ -15,9 +14,6 @@ export const buildGridData = (
         };
     });
     let records = buildRecordsByReferences(recordValue, fieldsValue, references);
-    records = records.map((item) => {
-        return { ...item, checked: selection.selectedRecords.has(item._id) };
-    });
     return {
         type: 'grid',
         fields,
