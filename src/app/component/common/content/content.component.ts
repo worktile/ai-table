@@ -17,7 +17,7 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, signal, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -30,7 +30,7 @@ import { TableService } from '../../../service/table.service';
 import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
 import { AIViewTable, Direction } from '../../../types/view';
-import { buildByReference, createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
+import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { CustomActions } from '../../../action';
 import { DemoAIField, DemoAIRecord } from '../../../types';
@@ -71,6 +71,8 @@ export class DemoTableContent {
 
     tableService = inject(TableService);
 
+    references = signal(getReferences());
+
     constructor() {
         this.registryIcon();
     }
@@ -81,9 +83,8 @@ export class DemoTableContent {
             this.tableService.buildRenderFields();
         } else {
             const value = getDefaultValue();
-            const buildData = buildByReference(value.records, value.fields, getReferences());
-            this.tableService.buildRenderRecords(buildData.records);
-            this.tableService.buildRenderFields(buildData.fields);
+            this.tableService.buildRenderRecords(value.records);
+            this.tableService.buildRenderFields(value.fields);
         }
         console.time('render');
     }

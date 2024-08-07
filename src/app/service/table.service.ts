@@ -3,7 +3,7 @@ import { createSharedType, initSharedType, SharedType } from '../share/shared';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../share/provider';
 import { DemoAIField, DemoAIRecord } from '../types';
-import { buildByReference, getDefaultValue, getReferences, sortDataByView } from '../utils/utils';
+import { getDefaultValue, sortDataByView } from '../utils/utils';
 import { applyYjsEvents } from '../share/apply-to-table';
 import { translateSharedTypeToTable } from '../share/utils/translate-to-table';
 import { YjsAITable } from '../share/yjs-table';
@@ -73,9 +73,8 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = translateSharedTypeToTable(this.sharedType!);
-                        const buildData = buildByReference(data.records, data.fields, getReferences())
-                        this.buildRenderFields(buildData.fields);
-                        this.buildRenderRecords(buildData.records);
+                        this.buildRenderFields(data.fields);
+                        this.buildRenderRecords(data.records);
                         this.views.set(data.views);
                         isInitialized = true;
                     } else {

@@ -47,7 +47,7 @@ import { SelectOptionPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
 import { ThyAvatarModule } from 'ngx-tethys/avatar';
 
@@ -91,13 +91,13 @@ export class AITableGrid implements OnInit {
 
     aiFields = model.required<AITableFields>();
 
-    aiRowHeight = input<AITableRowHeight>();
-
     aiFieldConfig = input<AIFieldConfig>();
 
     aiReadonly = input<boolean>();
 
     aiPlugins = input<AIPlugin[]>();
+
+    aiReferences = input<AITableReferences>();
 
     AITableFieldType = AITableFieldType;
 
@@ -116,7 +116,7 @@ export class AITableGrid implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
+        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection(), this.aiReferences());
     });
 
     private ngZone = inject(NgZone);

@@ -1,4 +1,4 @@
-import { AITableFieldType } from '@ai-table/grid';
+import { AITableFieldType, AITableReferences } from '@ai-table/grid';
 import { DemoAIField, DemoAIRecord, Positions } from '../types';
 import { AITableView } from '../types/view';
 
@@ -8,32 +8,6 @@ export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewI
         return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
     }
     return data;
-}
-
-export function buildByReference(records: DemoAIRecord[], fields: DemoAIField[], reference: any) {
-    const memberFields = fields.filter((field) =>
-        [AITableFieldType.createdBy, AITableFieldType.updateBy, AITableFieldType.member].includes(field.type)
-    );
-    if (memberFields.length) {
-        const uidToMember = reference.members.reduce(
-            (map: { [key: string]: any }, member: UserInfo) => {
-                map[member.uid!] = member;
-                return map;
-            },
-            {} as Record<string, UserInfo>
-        );
-        records.forEach((record) => {
-            memberFields.forEach((field) => {
-                const value = record.values[field._id];
-                if (field.isMultiple) {
-                    record.values[field._id] = value.map((uid: string) => uidToMember[uid]).filter(Boolean);
-                } else {
-                    record.values[field._id] = uidToMember[value] || {};
-                }
-            });
-        });
-    }
-    return { records, fields };
 }
 
 export function createDefaultPositions(views: AITableView[], index: number) {
@@ -273,14 +247,7 @@ export function getDefaultValue() {
 }
 
 
-export interface UserInfo {
-    uid?: string;
-    display_name?: string;
-    avatar?: string;
-}
-
-
-export function getReferences(): { members: UserInfo[] } {
+export function getReferences(): AITableReferences {
     return {
         members: [
             {
