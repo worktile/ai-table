@@ -2,11 +2,7 @@ import { createDraft, finishDraft } from 'immer';
 import { AITableFields, AITableFieldType, AITableRecords, FieldsMap } from '../core';
 import { AITableGridData, AITableReferences, AITableSelection, AITableUserInfo } from '../types';
 
-export const buildGridData = (
-    recordValue: AITableRecords,
-    fieldsValue: AITableFields,
-    references?: AITableReferences
-): AITableGridData => {
+export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields, references?: AITableReferences): AITableGridData => {
     const fields = fieldsValue.map((item) => {
         return {
             ...item,
@@ -41,11 +37,7 @@ export function buildRecordsByReferences(records: AITableRecords, fields: AITabl
         draftRecords.forEach((record) => {
             memberFields.forEach((field) => {
                 const value = record.values[field._id];
-                if (field.isMultiple) {
-                    record.values[field._id] = value.map((uid: string) => uidToMember[uid]).filter(Boolean);
-                } else {
-                    record.values[field._id] = uidToMember[value] || {};
-                }
+                record.values[field._id] = value.map((uid: string) => uidToMember[uid]).filter(Boolean);
             });
         });
         records = finishDraft(draftRecords);
