@@ -1,8 +1,11 @@
 import { FieldsMap } from '../constants/field';
-import { AITable, AITableFieldType } from '../types';
+import { AITable, AITableField, AITableFieldType } from '../types';
 import { idCreator } from './id-creator';
 
-export function getDefaultFieldValue(type: AITableFieldType) {
+export function getDefaultFieldValue(field: AITableField) {
+    if (AITableFieldType.member === field.type && field.isMultiple) {
+        return [];
+    }
     return '';
 }
 

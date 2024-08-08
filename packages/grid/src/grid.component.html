@@ -64,7 +64,7 @@
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
                             @if (!field.isMultiple && record.values[field._id] | selectOption: field['options']; as selectedOption) {
-                                <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.text }}</thy-tag>
+                                <thy-tag [thyColor]="selectedOption!.color! || selectedOption!.bg_color! || 'default'">{{ selectedOption.text }}</thy-tag>
                             }
                         }
                         @case (AITableFieldType.date) {
