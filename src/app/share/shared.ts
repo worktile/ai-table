@@ -44,7 +44,7 @@ export function toSharedType(
 
         const recordSharedType = new Y.Array<any>();
         sharedType.set('records', recordSharedType);
-        recordSharedType.insert(0, data.records.map(toRecordSyncElement));
+        recordSharedType.insert(0, data.records.map(recordToLive));
 
         const viewsSharedType = new Y.Array();
         sharedType.set('views', viewsSharedType);
@@ -89,19 +89,20 @@ export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>>
 }
 
 export function recordToLive(record: DemoAIRecord): Y.Doc {
-    const subDoc = new Y.Doc({ guid: record._id });
-    const yArray = subDoc.getArray();
+    const subDoc = new Y.Doc({ guid: record._id, autoLoad: true });
+    subDoc.transact(() => {
+        const yArray = subDoc.getArray();
+        const nonEditableArray = new Y.Array();
+        nonEditableArray.insert(0, [record['_id']]);
 
-    const nonEditableArray = new Y.Array();
-    nonEditableArray.insert(0, [record['_id']]);
-
-    const editableArray = new Y.Array();
-    const editableFields = [];
-    for (const fieldId in record['values']) {
-        editableFields.push(record['values'][fieldId]);
-    }
-    editableArray.insert(0, [...editableFields, record['positions']]);
-    // To save memory, convert map to array.
-    yArray.insert(0, [nonEditableArray, editableArray]);
+        const editableArray = new Y.Array();
+        const editableFields = [];
+        for (const fieldId in record['values']) {
+            editableFields.push(record['values'][fieldId]);
+        }
+        editableArray.insert(0, [...editableFields, record['positions']]);
+        // To save memory, convert map to array.
+        yArray.insert(0, [nonEditableArray, editableArray]);
+    });
     return subDoc;
 }

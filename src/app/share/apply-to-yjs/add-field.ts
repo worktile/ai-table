@@ -1,7 +1,7 @@
 import { SharedType, SyncArrayElement, toSyncElement } from '../shared';
-import { AddFieldAction, getDefaultFieldValue } from '@ai-table/grid';
+import { AddFieldAction, AITable, getDefaultFieldValue } from '@ai-table/grid';
 
-export default function addField(sharedType: SharedType, action: AddFieldAction): SharedType {
+export default function addField(sharedType: SharedType, action: AddFieldAction, aiTable: AITable): SharedType {
     const fields = sharedType.get('fields');
     const path = action.path[0];
     if (fields) {

@@ -3,14 +3,15 @@ import { createSharedType, initSharedType, SharedType } from '../share/shared';
 import { getProvider } from '../share/provider';
 import { DemoAIField, DemoAIRecord } from '../types';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
-import { applyYjsEvents } from '../share/apply-to-table';
-import { translateSharedTypeToTable } from '../share/utils/translate-to-table';
+import { applySubDocEvents, applyYjsEvents } from '../share/apply-to-table';
+import { translateRecord, translateSharedTypeToTable } from '../share/utils/translate-to-table';
 import { YjsAITable } from '../share/yjs-table';
 import { AITable } from '@ai-table/grid';
 import { AITableView } from '../types/view';
 import { createDraft, finishDraft } from 'immer';
 import { WebsocketProvider } from '../share/y-websocket';
 import { Transaction } from 'yjs';
+import { LiveBlockProvider } from '../share/live-block-provider';
 
 @Injectable()
 export class TableService {
@@ -75,7 +76,7 @@ export class TableService {
                     if (!YjsAITable.isLocal(this.aiTable)) {
                         if (!isInitialized) {
                             const data = translateSharedTypeToTable(this.sharedType!);
-                            this.buildRenderRecords(data.records);
+                            this.buildRenderRecords([]);
                             this.buildRenderFields(data.fields);
                             this.views.set(data.views);
                             isInitialized = true;
@@ -87,7 +88,33 @@ export class TableService {
             });
             this.sharedType.doc.on('subdocs', (subdocs) => {
                 console.log('subdocs', subdocs);
-                // [Array.from(subdocs.added).map(x => x.guid), Array.from(subdocs.removed).map(x => x.guid), Array.from(subdocs.loaded).map(x => x.guid)]
+                for (const doc of subdocs.added) {
+                    if (!this.provider.liveBlocks.get(doc.guid)) {
+                        const liveBlock = new LiveBlockProvider(doc.guid, this.provider.ws, doc);
+                        this.provider.liveBlocks.set(doc.guid, liveBlock);
+                        liveBlock.sync();
+                        liveBlock.on('synced', () => {
+                            const recordOfYArray = liveBlock.doc.getArray();
+                            const formatRecord = recordOfYArray.toJSON();
+                            const [nonEditableArray, editableArray] = formatRecord;
+                            const record = {
+                                _id: nonEditableArray[0],
+                                positions: editableArray[editableArray.length - 1],
+                                values: translateRecord(editableArray.slice(0, editableArray.length - 1), this.fields())
+                            };
+                            const newRecords = [...this.records(), record];
+                            this.buildRenderRecords(newRecords);
+                            console.log('synced', record);
+                        });
+                        liveBlock.sharedType.observeDeep((events: any) => {
+                            if (liveBlock.synced) {
+                                if (!YjsAITable.isLocal(this.aiTable)) {
+                                    applySubDocEvents(liveBlock, this.aiTable, events);
+                                }
+                            }
+                        });
+                    }
+                }
             });
         }
         this.provider = getProvider(this.sharedType.doc!, room, isDevMode());

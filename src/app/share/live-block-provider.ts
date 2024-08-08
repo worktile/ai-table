@@ -93,6 +93,10 @@ export class LiveBlockProvider extends Observable<string> {
                 encoding.writeVarUint(encoder, messageSync);
                 encoding.writeVarString(encoder, this.doc.guid);
                 syncProtocol.writeUpdate(encoder, update);
+                if (this.ws) {
+                    /** @type {WebSocket} */ ws.send(encoding.toUint8Array(encoder));
+                    console.log('send sub doc updates');
+                }
             }
         });
     }

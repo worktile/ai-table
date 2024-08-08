@@ -99,6 +99,9 @@ const setupWS = (provider: WebsocketProvider) => {
                 if (guid !== provider.doc.guid) {
                     console.log('子文档')
                     const liveBlock = provider.liveBlocks.get(guid);
+                    if (liveBlock) {
+                        liveBlock.readMessage(messageType, encoder, decoder)
+                    }
                     return;
                 }
                 const messageHandler = provider.messageHandlers[messageType];
@@ -286,6 +289,7 @@ export class WebsocketProvider extends Observable<string> {
         this.serverUrl = serverUrl;
         this.bcChannel = serverUrl + '/' + roomname;
         this.doc = doc;
+        this.doc['liveBlocks'] = this.liveBlocks;
         this.params = params;
         this._WS = WebSocketPolyfill;
         this.awareness = awareness;

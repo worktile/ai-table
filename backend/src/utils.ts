@@ -70,21 +70,6 @@ const messageAwareness = 1;
 // const messageAuth = 2
 
 /**
- * @param {Uint8Array} update
- * @param {any} _origin
- * @param {WSSharedDoc} doc
- * @param {any} _tr
- */
-const updateHandler = (update, _origin, doc: WSSharedDoc, _tr) => {
-    const encoder = encoding.createEncoder();
-    encoding.writeVarUint(encoder, messageSync);
-    encoding.writeVarString(encoder, doc.guid);
-    syncProtocol.writeUpdate(encoder, update);
-    const message = encoding.toUint8Array(encoder);
-    doc.conns.forEach((_, conn) => send(doc, conn, message));
-};
-
-/**
  * @type {(ydoc: Y.Doc) => Promise<void>}
  */
 let contentInitializor = (_ydoc) => Promise.resolve();
@@ -104,6 +89,9 @@ class WSSharedDoc extends Y.Doc {
     conns: any;
     awareness: any;
     whenInitialized: any;
+
+    liveBlocks = new Map<string, LiveBlock>();
+
     /**
      * @param {string} name
      */
@@ -148,11 +136,49 @@ class WSSharedDoc extends Y.Doc {
             });
         };
         this.awareness.on('update', awarenessChangeHandler);
-        this.on('update', /** @type {any} */ updateHandler);
+        this.on(
+            'update',
+            /** @type {any} */ (update, _origin, doc: WSSharedDoc, _tr) => {
+                const encoder = encoding.createEncoder();
+                encoding.writeVarUint(encoder, messageSync);
+                encoding.writeVarString(encoder, doc.guid);
+                syncProtocol.writeUpdate(encoder, update);
+                const message = encoding.toUint8Array(encoder);
+                doc.conns.forEach((_, conn) => send(doc, conn, message));
+            }
+        );
         // if (isCallbackSet) {
         //     this.on('update', /** @type {any} */ debounce(callbackHandler, CALLBACK_DEBOUNCE_WAIT, { maxWait: CALLBACK_DEBOUNCE_MAXWAIT }));
         // }
         this.whenInitialized = contentInitializor(this);
+    }
+}
+
+class LiveBlock extends Y.Doc {
+    rootDoc: WSSharedDoc;
+    constructor(guid: string, rootDoc: WSSharedDoc) {
+        super({ gc: gcEnabled, guid, autoLoad: true });
+        this.on(
+            'update',
+            /** @type {any} */ (update, _origin, doc: WSSharedDoc, _tr) => {
+                const encoder = encoding.createEncoder();
+                encoding.writeVarUint(encoder, messageSync);
+                encoding.writeVarString(encoder, doc.guid);
+                syncProtocol.writeUpdate(encoder, update);
+                const message = encoding.toUint8Array(encoder);
+                rootDoc.conns.forEach((_, conn) => send(this, conn, message));
+            }
+        );
+        this.rootDoc = rootDoc;
+    }
+
+    sync(conn) {
+        // send sync step 1
+        const encoder = encoding.createEncoder();
+        encoding.writeVarUint(encoder, messageSync);
+        encoding.writeVarString(encoder, this.guid);
+        syncProtocol.writeSyncStep1(encoder, this);
+        send(this, conn, encoding.toUint8Array(encoder));
     }
 }
 
@@ -177,13 +203,12 @@ const getYDoc = (docname, gc = true) => {
     }) as WSSharedDoc;
 };
 
-
 /**
  * @param {any} conn
  * @param {WSSharedDoc} doc
  * @param {Uint8Array} message
  */
-const messageListener = (conn, doc: WSSharedDoc, message) => {
+const messageListener = (conn, rootDoc: WSSharedDoc, message) => {
     try {
         const encoder = encoding.createEncoder();
         const decoder = decoding.createDecoder(message);
@@ -193,17 +218,36 @@ const messageListener = (conn, doc: WSSharedDoc, message) => {
             case messageSync:
                 encoding.writeVarUint(encoder, messageSync);
                 encoding.writeVarString(encoder, guid);
-                const syncMessageType = syncProtocol.readSyncMessage(decoder, encoder, doc, conn);
+                let targetDoc: Y.Doc = null;
+                if (guid === rootDoc.guid) {
+                    targetDoc = rootDoc;
+                } else {
+                    let liveBlock = rootDoc.liveBlocks.get(guid);
+                    if (!liveBlock) {
+                        liveBlock = new LiveBlock(guid, rootDoc);
+                        rootDoc.liveBlocks.set(guid, liveBlock);
+                        liveBlock.sync(conn);
+                    }
+                    targetDoc = liveBlock;
+                }
+
+                const syncMessageType = syncProtocol.readSyncMessage(decoder, encoder, targetDoc, conn);
+
+                if (guid === rootDoc.guid) {
+                    console.log(`root doc(${guid}): ${JSON.stringify(rootDoc.getMap('ai-table').toJSON())}`);
+                } else {
+                    console.log(`sub doc(${guid}): ${JSON.stringify(targetDoc.getArray('').toJSON())}`);
+                }
 
                 // If the `encoder` only contains the type of reply message and no
                 // message, there is no need to send the message. When `encoder` only
                 // contains the type of reply, its length is 1.
                 if (syncMessageType === syncProtocol.messageYjsSyncStep1) {
-                    send(doc, conn, encoding.toUint8Array(encoder));
+                    send(targetDoc, conn, encoding.toUint8Array(encoder));
                 }
                 break;
             case messageAwareness: {
-                awarenessProtocol.applyAwarenessUpdate(doc.awareness, decoding.readVarUint8Array(decoder), conn);
+                awarenessProtocol.applyAwarenessUpdate(rootDoc.awareness, decoding.readVarUint8Array(decoder), conn);
                 break;
             }
         }
@@ -263,7 +307,7 @@ const pingTimeout = 30000;
  * @param {import('http').IncomingMessage} req
  * @param {any} opts
  */
-export const setupWSConnection = (conn, req, { docName = (req.url || '').slice(1).split('?')[0], gc = true } = {}) => {
+export const setupWSConnection = (conn: any, req, { docName = (req.url || '').slice(1).split('?')[0], gc = true } = {}) => {
     conn.binaryType = 'arraybuffer';
     // get doc, initialize if it does not exist yet
     const doc = getYDoc(docName, gc);

@@ -2,6 +2,7 @@ import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AIT
 import * as Y from 'yjs';
 import { toTablePath, translateRecord } from '../utils/translate-to-table';
 import { isArray } from 'ngx-tethys/util';
+import { LiveBlockProvider } from '../live-block-provider';
 
 export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
@@ -9,7 +10,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
     let targetPath = toTablePath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
- 
+
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
             offset += delta.retain ?? 0;
@@ -60,7 +61,44 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                         }
                     });
                 }
-                
+            }
+        }
+    });
+    return actions;
+}
+
+export function translateSubArrayEvent(liveBlock: LiveBlockProvider, aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
+    const actions: AITableAction[] = [];
+    let offset = 0;
+    let targetPath = toTablePath(event.path);
+
+    console.log(event);
+
+    event.changes.delta.forEach((delta) => {
+        if ('retain' in delta) {
+            offset += delta.retain ?? 0;
+        }
+        if ('insert' in delta) {
+            if (isArray(delta.insert)) {
+                if (targetPath.length) {
+                    try {
+                        delta.insert?.map((item: any) => {
+                            // liveBlock
+                            const recordIndex =  aiTable.records().findIndex(((record) => record._id === liveBlock.doc.guid));
+                            const path = [recordIndex, offset] as AIFieldValuePath;
+                            const fieldValue = AITableQueries.getFieldValue(aiTable, path);
+                            // To exclude insert triggered by field inserts.
+                            if (fieldValue !== item) {
+                                actions.push({
+                                    type: ActionName.UpdateFieldValue,
+                                    path,
+                                    fieldValue,
+                                    newFieldValue: item
+                                });
+                            }
+                        });
+                    } catch (error) {}
+                }
             }
         }
     });
