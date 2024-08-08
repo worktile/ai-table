@@ -1,4 +1,4 @@
-import { AITableFieldType, AITableReferences } from '@ai-table/grid';
+import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
 import { DemoAIField, DemoAIRecord, Positions } from '../types';
 import { AITableView } from '../types/view';
 
@@ -45,7 +45,10 @@ export function getDefaultValue() {
                     'column-9': 'member_01',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-20': ['66b31d0c8097a908f74bcd8a'],
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8a']
                 }
             },
             {
@@ -66,7 +69,10 @@ export function getDefaultValue() {
                     'column-9': 'member_01',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
                 }
             },
             {
@@ -87,7 +93,25 @@ export function getDefaultValue() {
                     'column-9': '',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-20': [
+                        '66b31d0c8097a908f74bcd8a',
+                        '66b31d0c8097a908f74bcd8b',
+                        '66b31d0c8097a908f74bcd8c',
+                        '66b31d0c8097a908f74bcd8d'
+                    ],
+                    'column-21': [
+                        '66b31d0c8097a908f74bcd8a',
+                        '66b31d0c8097a908f74bcd8b',
+                        '66b31d0c8097a908f74bcd8c',
+                        '66b31d0c8097a908f74bcd8d'
+                    ],
+                    'column-22': [
+                        '66b31d0c8097a908f74bcd8a',
+                        '66b31d0c8097a908f74bcd8b',
+                        '66b31d0c8097a908f74bcd8c',
+                        '66b31d0c8097a908f74bcd8d'
+                    ]
                 }
             }
         ],
@@ -109,6 +133,7 @@ export function getDefaultValue() {
                     view2: 3
                 },
                 type: AITableFieldType.select,
+                icon: 'check-circle',
                 options: [
                     {
                         _id: '1',
@@ -126,6 +151,153 @@ export function getDefaultValue() {
                         color: '#73d897'
                     }
                 ]
+            },
+            {
+                _id: 'column-20',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选',
+                isMultiple: true,
+                optionStyle: AITableSelectOptionStyle.tag,
+                options: [
+                    {
+                        text: '111',
+                        bg_color: '#E48483',
+                        _id: '66b31d0c8097a908f74bcd8a'
+                    },
+                    {
+                        text: '222',
+                        bg_color: '#E0B75D',
+                        _id: '66b31d0c8097a908f74bcd8b'
+                    },
+                    {
+                        text: '333',
+                        bg_color: '#69B1E4',
+                        _id: '66b31d0c8097a908f74bcd8c'
+                    },
+                    {
+                        text: '444',
+                        bg_color: '#77C386',
+                        _id: '66b31d0c8097a908f74bcd8d'
+                    },
+                    {
+                        text: '555',
+                        bg_color: '#6EC4C4',
+                        _id: '66b31d0c8097a908f74bcd8e'
+                    },
+                    {
+                        text: '666',
+                        bg_color: '#E581D4',
+                        _id: '66b31d0c8097a908f74bcd8f'
+                    },
+                    {
+                        text: '777',
+                        bg_color: '#B0C774',
+                        _id: '66b31d0c8097a908f74bcd90'
+                    }
+                ],
+                positions: {
+                    view1: 2,
+                    view2: 2
+                }
+            },
+            {
+                _id: 'column-21',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选',
+                isMultiple: true,
+                optionStyle: AITableSelectOptionStyle.dot,
+                options: [
+                    {
+                        text: '111',
+                        bg_color: '#E48483',
+                        _id: '66b31d0c8097a908f74bcd8a'
+                    },
+                    {
+                        text: '222',
+                        bg_color: '#E0B75D',
+                        _id: '66b31d0c8097a908f74bcd8b'
+                    },
+                    {
+                        text: '333',
+                        bg_color: '#69B1E4',
+                        _id: '66b31d0c8097a908f74bcd8c'
+                    },
+                    {
+                        text: '444',
+                        bg_color: '#77C386',
+                        _id: '66b31d0c8097a908f74bcd8d'
+                    },
+                    {
+                        text: '555',
+                        bg_color: '#6EC4C4',
+                        _id: '66b31d0c8097a908f74bcd8e'
+                    },
+                    {
+                        text: '666',
+                        bg_color: '#E581D4',
+                        _id: '66b31d0c8097a908f74bcd8f'
+                    },
+                    {
+                        text: '777',
+                        bg_color: '#B0C774',
+                        _id: '66b31d0c8097a908f74bcd90'
+                    }
+                ],
+                positions: {
+                    view1: 2,
+                    view2: 2
+                }
+            },
+            {
+                _id: 'column-22',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选',
+                isMultiple: true,
+                optionStyle: AITableSelectOptionStyle.piece,
+                options: [
+                    {
+                        text: '111',
+                        bg_color: '#E48483',
+                        _id: '66b31d0c8097a908f74bcd8a'
+                    },
+                    {
+                        text: '222',
+                        bg_color: '#E0B75D',
+                        _id: '66b31d0c8097a908f74bcd8b'
+                    },
+                    {
+                        text: '333',
+                        bg_color: '#69B1E4',
+                        _id: '66b31d0c8097a908f74bcd8c'
+                    },
+                    {
+                        text: '444',
+                        bg_color: '#77C386',
+                        _id: '66b31d0c8097a908f74bcd8d'
+                    },
+                    {
+                        text: '555',
+                        bg_color: '#6EC4C4',
+                        _id: '66b31d0c8097a908f74bcd8e'
+                    },
+                    {
+                        text: '666',
+                        bg_color: '#E581D4',
+                        _id: '66b31d0c8097a908f74bcd8f'
+                    },
+                    {
+                        text: '777',
+                        bg_color: '#B0C774',
+                        _id: '66b31d0c8097a908f74bcd90'
+                    }
+                ],
+                positions: {
+                    view1: 2,
+                    view2: 2
+                }
             },
             {
                 _id: 'column-3',

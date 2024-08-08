@@ -1,0 +1,17 @@
+<thy-select
+    [(ngModel)]="modelValue"
+    [thyAutoExpand]="true"
+    [thyAllowClear]="true"
+    [thyMode]="field().isMultiple ? 'multiple' : ''"
+    [thyPreset]="'tag'"
+    (thyOnExpandStatusChange)="updateValue($event)"
+>
+    <ng-template #selectedDisplay let-option>
+        <select-cell-view [field]="field()" [displayOption]="option"></select-cell-view>
+    </ng-template>
+    @for (option of selectOptions(); track option._id) {
+        <thy-option [thyValue]="option._id" [thyRawValue]="option" [thyShowOptionCustom]="true" [thyLabelText]="option.text">
+            <select-option [field]="field()" [displayOption]="option"></select-option>
+        </thy-option>
+    }
+</thy-select>

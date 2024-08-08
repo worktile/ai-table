@@ -64,7 +64,11 @@
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
                             @if (!field.isMultiple && record.values[field._id] | selectOption: field['options']; as selectedOption) {
-                                <thy-tag [thyColor]="selectedOption!.color!">{{ selectedOption.text }}</thy-tag>
+                                <select-cell-view [field]="field" [displayOption]="selectedOption"></select-cell-view>
+                            } @else {
+                                <div class="d-flex align-items-center">
+                                    <multi-select-view [field]="field" [record]="record"></multi-select-view>
+                                </div>
                             }
                         }
                         @case (AITableFieldType.date) {

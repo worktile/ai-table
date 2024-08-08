@@ -1,0 +1,7 @@
+@if (optionStyle() === AITableSelectOptionStyle.tag) {
+    <select-option [field]="field()" [displayOption]="displayOption()"></select-option>
+} @else {
+    <div thyTag class="mb-1 mr-1">
+        <select-option [field]="field()" [displayOption]="displayOption()"></select-option>
+    </div>
+}

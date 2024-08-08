@@ -16,6 +16,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
+import { ThyAvatar, ThyAvatarModule, ThyAvatarService, ThyDefaultAvatarService } from 'ngx-tethys/avatar';
 import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
@@ -27,7 +28,7 @@ import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { mergeWith } from 'rxjs/operators';
-import { ProgressEditorComponent } from './components';
+import { MultiSelectViewComponent, ProgressEditorComponent, SelectCellViewComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
@@ -49,7 +50,6 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
-import { ThyAvatarModule } from 'ngx-tethys/avatar';
 
 @Component({
     selector: 'ai-table-grid',
@@ -57,7 +57,7 @@ import { ThyAvatarModule } from 'ngx-tethys/avatar';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        class: 'ai-table-grid '
     },
     imports: [
         NgForOf,
@@ -83,9 +83,21 @@ import { ThyAvatarModule } from 'ngx-tethys/avatar';
         ProgressEditorComponent,
         ThyAvatarModule,
         NgTemplateOutlet,
-        IsSelectRecordPipe
+        IsSelectRecordPipe,
+        ThyAvatar,
+        ProgressEditorComponent,
+        SelectCellViewComponent,
+        MultiSelectViewComponent
     ],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [
+        {
+            provide: ThyAvatarService,
+            useClass: ThyDefaultAvatarService
+        },
+        AITableGridEventService,
+        AITableGridFieldService,
+        AITableGridSelectionService
+    ]
 })
 export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();
