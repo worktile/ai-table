@@ -43,12 +43,13 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { SelectOptionPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, SelectOptionPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableRowHeight } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
+import { ThyAvatarModule } from 'ngx-tethys/avatar';
 
 @Component({
     selector: 'ai-table-grid',
@@ -79,7 +80,10 @@ import { buildGridData } from './utils';
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
         ThyCheckboxModule,
-        ProgressEditorComponent
+        ProgressEditorComponent,
+        ThyAvatarModule,
+        NgTemplateOutlet,
+        IsSelectRecordPipe
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
@@ -88,21 +92,21 @@ export class AITableGrid implements OnInit {
 
     aiFields = model.required<AITableFields>();
 
-    aiRowHeight = input<AITableRowHeight>();
-
     aiFieldConfig = input<AIFieldConfig>();
 
     aiReadonly = input<boolean>();
 
     aiPlugins = input<AIPlugin[]>();
 
+    aiReferences = input<AITableReferences>();
+
     AITableFieldType = AITableFieldType;
 
     aiTable!: AITable;
 
-    get isSelectedAll() {
+    isSelectedAll = computed(() => {
         return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
-    }
+    });
 
     onChange = output<AITableChangeOptions>();
 
@@ -113,7 +117,7 @@ export class AITableGrid implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields(), this.aiTable.selection());
+        return buildGridData(this.aiRecords(), this.aiFields(), this.aiReferences());
     });
 
     private ngZone = inject(NgZone);

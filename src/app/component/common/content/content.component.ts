@@ -17,7 +17,7 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, signal, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -30,7 +30,7 @@ import { TableService } from '../../../service/table.service';
 import applyActionOps from '../../../share/apply-to-yjs';
 import { YjsAITable } from '../../../share/yjs-table';
 import { AIViewTable, Direction } from '../../../types/view';
-import { createDefaultPositions, getDefaultValue } from '../../../utils/utils';
+import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { CustomActions } from '../../../action';
 import { DemoAIField, DemoAIRecord } from '../../../types';
@@ -47,28 +47,13 @@ export class DemoTableContent {
 
     plugins = [withCustomApply];
 
-    listOfOption = [
-        {
-            value: 'short',
-            name: 'short'
-        },
-        {
-            value: 'medium',
-            name: 'medium'
-        },
-        {
-            value: 'tall',
-            name: 'tall'
-        }
-    ];
-
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
         fieldMenus: [
             EditFieldPropertyItem,
             DividerMenuItem,
             {
-                _id: 'filterFields',
+                type: 'filterFields',
                 name: '按本列筛选',
                 icon: 'filter-line',
                 exec: (aiTable: AITable, field: Signal<AITableField>) => {},
@@ -85,6 +70,8 @@ export class DemoTableContent {
     sanitizer = inject(DomSanitizer);
 
     tableService = inject(TableService);
+
+    references = signal(getReferences());
 
     constructor() {
         this.registryIcon();

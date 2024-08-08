@@ -4,16 +4,18 @@ import { AITableFieldInfo, AITableFieldType } from '../types';
 export const BasicFields = [
     {
         type: AITableFieldType.text,
-        name: '文本',
+        name: '单行文本',
         icon: 'font',
         width: 300
     },
+    // 多行文本
     {
         type: AITableFieldType.select,
         name: '单选',
         icon: 'check-circle',
         width: 200
     },
+    // 多选
     {
         type: AITableFieldType.number,
         name: '数字',
@@ -24,6 +26,20 @@ export const BasicFields = [
         type: AITableFieldType.date,
         name: '日期',
         icon: 'calendar',
+        width: 200
+    },
+    {
+        type: AITableFieldType.member,
+        name: '成员',
+        icon: 'user',
+        width: 200
+    },
+    // 级联单选
+    // 级联多选
+    {
+        type: AITableFieldType.progress,
+        name: '进度',
+        icon: 'progress',
         width: 200
     },
     {
@@ -39,15 +55,21 @@ export const BasicFields = [
         width: 300
     },
     {
-        type: AITableFieldType.progress,
-        name: '进度',
-        icon: 'progress',
+        type: AITableFieldType.createdBy,
+        name: '创建人',
+        icon: 'user',
         width: 200
     },
     {
         type: AITableFieldType.createdAt,
         name: '创建时间',
         icon: 'calendar',
+        width: 200
+    },
+    {
+        type: AITableFieldType.updatedBy,
+        name: '更新人',
+        icon: 'user',
         width: 200
     },
     {

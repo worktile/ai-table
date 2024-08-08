@@ -1,13 +1,6 @@
 import { AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
 
-export enum AITableRowHeight {
-    Short = 1,
-    Medium = 2,
-    Tall = 3,
-    ExtraTall = 4
-}
-
 export interface AITableGridCellRenderSchema {
     editor: any;
 }
@@ -27,4 +20,14 @@ export interface AIFieldConfig {
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldPropertyEditor?: any;
     fieldMenus?: AITableFieldMenuItem[];
+}
+
+export interface AITableUserInfo {
+    uid?: string;
+    display_name?: string;
+    avatar?: string;
+}
+
+export interface AITableReferences {
+    members: AITableUserInfo[];
 }

@@ -1,5 +1,5 @@
 @for (menu of fieldMenus; track index; let index = $index) {
-    @if (menu._id === 'divider') {
+    @if (menu.type === 'divider') {
         <thy-divider [thyStyle]="'solid'"></thy-divider>
     } @else {
         <a thyDropdownMenuItem href="javascript:;" (click)="execute(menu)">

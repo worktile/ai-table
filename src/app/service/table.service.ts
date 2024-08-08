@@ -73,8 +73,8 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = translateSharedTypeToTable(this.sharedType!);
-                        this.buildRenderRecords(data.records);
                         this.buildRenderFields(data.fields);
+                        this.buildRenderRecords(data.records);
                         this.views.set(data.views);
                         isInitialized = true;
                     } else {

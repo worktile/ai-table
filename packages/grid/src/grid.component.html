@@ -1,6 +1,6 @@
 <div class="grid-header d-flex">
     <div class="grid-column-checkbox grid-cell grid-checkbox">
-        <label thyCheckbox thyLabelText="" [ngModel]="isSelectedAll" (ngModelChange)="toggleSelectAll($event)"></label>
+        <label thyCheckbox thyLabelText="" [ngModel]="isSelectedAll()" (ngModelChange)="toggleSelectAll($event)"></label>
     </div>
     @for (field of gridData().fields; track field._id) {
         <div
@@ -34,16 +34,18 @@
 </div>
 <div class="grid-body d-flex">
     @for (record of gridData().records; track record._id; let index = $index) {
-        <div class="grid-row d-flex" [ngClass]="{ highlight: aiTable.selection().selectedRecords.has(record._id) }">
+        <div class="grid-row d-flex" [ngClass]="{ highlight: (record._id | isSelectRecord: aiTable.selection()) }">
             <div class="grid-row-index grid-checkbox">
                 <label
-                    [ngClass]="record.checked ? 'checked-box' : 'unchecked-box'"
+                    [ngClass]="(record._id | isSelectRecord: aiTable.selection()) ? 'checked-box' : 'unchecked-box'"
                     thyCheckbox
                     thyLabelText=""
-                    [ngModel]="record.checked"
+                    [ngModel]="record._id | isSelectRecord: aiTable.selection()"
                     (ngModelChange)="selectRecord(record._id)"
                 ></label>
-                <span [ngClass]="record.checked ? 'grid-row-no-number' : 'grid-row-number'"> {{ index + 1 }} </span>
+                <span [ngClass]="(record._id | isSelectRecord: aiTable.selection()) ? 'grid-row-no-number' : 'grid-row-number'">
+                    {{ index + 1 }}
+                </span>
             </div>
             @for (field of gridData().fields; track field._id) {
                 <div
@@ -83,7 +85,7 @@
                             </div>
                         }
                         @case (AITableFieldType.rate) {
-                            <thy-rate [(ngModel)]="record.values[field._id]"></thy-rate>
+                            <thy-rate [ngModel]="record.values[field._id]"></thy-rate>
                         }
                         @case (AITableFieldType.link) {
                             <a
@@ -107,6 +109,38 @@
                             >
                                 <span> {{ record.values[field._id] }}{{ record.values[field._id]?.config?.suffix || '%' }} </span>
                             </thy-progress>
+                        }
+                        @case (AITableFieldType.member) {
+                            @if (!field.isMultiple) {
+                                <thy-avatar
+                                    [thyName]="record.values[field._id].display_name"
+                                    [thySrc]="record.values[field._id].avatar"
+                                    thySize="xs"
+                                    thyShowName="true"
+                                ></thy-avatar>
+                            } @else {
+                                <thy-avatar-list thyAvatarSize="xs">
+                                    @for (item of record.values[field._id]; track $index) {
+                                        <thy-avatar [thyName]="item.display_name" [thySrc]="item.avatar"></thy-avatar>
+                                    }
+                                </thy-avatar-list>
+                            }
+                        }
+                        @case (AITableFieldType.createdBy) {
+                            <thy-avatar
+                                [thyName]="record.values[field._id].display_name"
+                                [thySrc]="record.values[field._id].avatar"
+                                thySize="xs"
+                                thyShowName="true"
+                            ></thy-avatar>
+                        }
+                        @case (AITableFieldType.updatedBy) {
+                            <thy-avatar
+                                [thyName]="record.values[field._id].display_name"
+                                [thySrc]="record.values[field._id].avatar"
+                                thySize="xs"
+                                thyShowName="true"
+                            ></thy-avatar>
                         }
                         @default {
                             <span class="text-truncate"> {{ record.values[field._id] }}</span>

@@ -4,11 +4,11 @@ import { ElementRef, signal, Signal, WritableSignal } from '@angular/core';
 import { AITableFieldMenuItem } from '../types';
 
 export const DividerMenuItem = {
-    _id: 'divider'
+    type: 'divider'
 };
 
 export const EditFieldPropertyItem = {
-    _id: 'editFieldProperty',
+    type: 'editFieldProperty',
     name: '编辑列',
     icon: 'edit',
     exec: (aiTable: AITable, field: Signal<AITableField>, origin?: HTMLElement | ElementRef<any>) => {
@@ -19,7 +19,7 @@ export const EditFieldPropertyItem = {
 };
 
 export const RemoveFieldItem = {
-    _id: 'removeField',
+    type: 'removeField',
     name: '删除列',
     icon: 'trash',
     exec: (aiTable: AITable, field: Signal<AITableField>) => {

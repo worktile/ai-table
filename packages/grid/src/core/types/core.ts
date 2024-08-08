@@ -15,7 +15,9 @@ export enum AITableFieldType {
     rate = 'rate',
     link = 'link',
     createdAt = 'created_at',
-    updatedAt= 'updated_at'
+    updatedAt = 'updated_at',
+    createdBy = 'created_by',
+    updatedBy = 'updated_by'
 }
 
 export enum AITableStatType {
@@ -87,7 +89,6 @@ export type FieldValue =
 
 export interface AITableRecord {
     _id: string;
-    checked?: boolean;
     values: Record<string, FieldValue>;
 }
 
