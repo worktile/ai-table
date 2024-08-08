@@ -7,20 +7,7 @@ All notable changes to this project will be documented in this file. See [commit
 
 ### Bug Fixes
 
-* click action not select col ([012f651](https://github.com/worktile/ai-table/commit/012f651a318096aae636940153469858da330094))
-* **grid:** fix the layout jitter caused by the style when the edit component pops up #WIK-16177 ([#35](https://github.com/worktile/ai-table/issues/35)) ([d79a0c7](https://github.com/worktile/ai-table/commit/d79a0c7babdb2ce25a1edec427fb1c68568e4291)), closes [#WIK-16177](https://github.com/worktile/ai-table/issues/WIK-16177)
 * set member default value to [] ([#45](https://github.com/worktile/ai-table/issues/45)) ([3c61df7](https://github.com/worktile/ai-table/commit/3c61df7d99e7ed17f460303da983cea960e1e8c4))
-
-
-### Features
-
-* add createdAt and updatedAt field type #WIK-16252 ([#41](https://github.com/worktile/ai-table/issues/41)) ([254e468](https://github.com/worktile/ai-table/commit/254e468a9fbc9230e517bced09eae351d5d3eadc)), closes [#WIK-16252](https://github.com/worktile/ai-table/issues/WIK-16252)
-* build action before apply yjs #WIK-16236 ([#39](https://github.com/worktile/ai-table/issues/39)) ([0d954f2](https://github.com/worktile/ai-table/commit/0d954f253a313053db6ae45e7b3e3be4fb6862f1)), closes [#WIK-16236](https://github.com/worktile/ai-table/issues/WIK-16236)
-* **grid:** add clear selection condition ([#37](https://github.com/worktile/ai-table/issues/37)) ([5a196bc](https://github.com/worktile/ai-table/commit/5a196bca3911a5c90d013e25631a7d1fbfbc34c0))
-* **grid:** hover editing component supports selection #WIK-16107 ([#36](https://github.com/worktile/ai-table/issues/36)) ([17f01d5](https://github.com/worktile/ai-table/commit/17f01d5b3a81ed11377cc51888e50e22020406a4)), closes [#WIK-16107](https://github.com/worktile/ai-table/issues/WIK-16107)
-* **positions:** build data by positions and active views #WIK-16218 ([#29](https://github.com/worktile/ai-table/issues/29)) ([8896808](https://github.com/worktile/ai-table/commit/88968087cbf6979544e9c7c3a3f7d7dbfeb6c8fa)), closes [#WIK-16218](https://github.com/worktile/ai-table/issues/WIK-16218)
-* render member #WIK-16256 ([#42](https://github.com/worktile/ai-table/issues/42)) ([7e7bb52](https://github.com/worktile/ai-table/commit/7e7bb52f7afea5cb5be682647194d00f377ba9c1)), closes [#WIK-16256](https://github.com/worktile/ai-table/issues/WIK-16256)
-* support views share #WIK-16187 ([#22](https://github.com/worktile/ai-table/issues/22)) ([93e28ab](https://github.com/worktile/ai-table/commit/93e28abf7154e9cff0d7404af7b033ce81841396)), closes [#WIK-16187](https://github.com/worktile/ai-table/issues/WIK-16187)
 
 
 
