@@ -10,7 +10,7 @@ export default function addField(sharedType: SharedType, action: AddFieldAction)
     const records = sharedType.get('records') as SyncArrayElement;
     if (records) {
         for (let value of records) {
-            const newRecord = getDefaultFieldValue(action.field.type);
+            const newRecord = getDefaultFieldValue(action.field);
             const customField = value.get(1);
             customField.insert(path, [newRecord]);
         }
