@@ -116,12 +116,14 @@
                         }
                         @case (AITableFieldType.member) {
                             @if (!field.isMultiple) {
-                                <thy-avatar
-                                    [thyName]="record.values[field._id].display_name"
-                                    [thySrc]="record.values[field._id].avatar"
-                                    thySize="xs"
-                                    thyShowName="true"
-                                ></thy-avatar>
+                                @if (record.values[field._id][0]; as recordValue) {
+                                    <thy-avatar
+                                        [thyName]="recordValue.display_name"
+                                        [thySrc]="recordValue.avatar"
+                                        thySize="xs"
+                                        thyShowName="true"
+                                    ></thy-avatar>
+                                }
                             } @else {
                                 <thy-avatar-list thyAvatarSize="xs">
                                     @for (item of record.values[field._id]; track $index) {
@@ -131,20 +133,24 @@
                             }
                         }
                         @case (AITableFieldType.createdBy) {
-                            <thy-avatar
-                                [thyName]="record.values[field._id].display_name"
-                                [thySrc]="record.values[field._id].avatar"
-                                thySize="xs"
-                                thyShowName="true"
-                            ></thy-avatar>
+                            @if (record.values[field._id][0]; as recordValue) {
+                                <thy-avatar
+                                    [thyName]="recordValue.display_name"
+                                    [thySrc]="recordValue.avatar"
+                                    thySize="xs"
+                                    thyShowName="true"
+                                ></thy-avatar>
+                            }
                         }
                         @case (AITableFieldType.updatedBy) {
-                            <thy-avatar
-                                [thyName]="record.values[field._id].display_name"
-                                [thySrc]="record.values[field._id].avatar"
-                                thySize="xs"
-                                thyShowName="true"
-                            ></thy-avatar>
+                            @if (record.values[field._id][0]; as recordValue) {
+                                <thy-avatar
+                                    [thyName]="recordValue.display_name"
+                                    [thySrc]="recordValue.avatar"
+                                    thySize="xs"
+                                    thyShowName="true"
+                                ></thy-avatar>
+                            }
                         }
                         @default {
                             <span class="text-truncate"> {{ record.values[field._id] }}</span>

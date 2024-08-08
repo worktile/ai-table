@@ -8,7 +8,7 @@ export function getDefaultRecord(fields: AITableFields) {
         values: {}
     };
     fields.map((item) => {
-        newRow.values[item._id] = getDefaultFieldValue(item.type);
+        newRow.values[item._id] = getDefaultFieldValue(item);
     });
     return newRow;
 }
