@@ -27,7 +27,7 @@ export function buildRecordsByReferences(records: AITableRecords, fields: AITabl
         return records;
     }
     const memberFields = fields.filter((field) =>
-        [AITableFieldType.createdBy, AITableFieldType.updateBy, AITableFieldType.member].includes(field.type)
+        [AITableFieldType.createdBy, AITableFieldType.updatedBy, AITableFieldType.member].includes(field.type)
     );
     if (memberFields.length) {
         const uidToMember = references.members.reduce(

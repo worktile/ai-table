@@ -45,8 +45,7 @@ export function getDefaultValue() {
                     'column-9': 'member_01',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727,
-                
+                    'column-12': 1720490727
                 }
             },
             {
@@ -67,8 +66,7 @@ export function getDefaultValue() {
                     'column-9': 'member_01',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727,
-                    
+                    'column-12': 1720490727
                 }
             },
             {
@@ -89,8 +87,7 @@ export function getDefaultValue() {
                     'column-9': '',
                     'column-10': 1682235946,
                     'column-11': 'member_02',
-                    'column-12': 1720490727,
-                   
+                    'column-12': 1720490727
                 }
             }
         ],
@@ -211,7 +208,7 @@ export function getDefaultValue() {
                     view1: 10,
                     view2: 11
                 },
-                type: AITableFieldType.updateBy
+                type: AITableFieldType.updatedBy
             },
             {
                 _id: 'column-12',
@@ -230,25 +227,26 @@ export function getDefaultValue() {
     // for (let index = 0; index < 5; index++) {
     //     initValue.fields.push({
     //         _id: `column-${index}`,
-    //         name: "文本",
-    //         type: AITableFieldType.text,
+    //         name: '文本',
+    //         positions: { view1: index, view2: index },
+    //         type: AITableFieldType.text
     //     });
     // }
     // initValue.records = [];
-    // for (let index = 0; index < 40 * 3 * 2*30; index++) {
+    // for (let index = 0; index < 40 * 3 * 2 * 30; index++) {
     //     const value: any = {};
     //     initValue.fields.forEach((column, columnIndex) => {
     //         value[`${column._id}`] = `name-${index}-${columnIndex}`;
     //     });
     //     initValue.records.push({
     //         _id: `row-${index + 1}`,
-    //         value: value,
+    //         positions: { view1: index, view2: index },
+    //         values: value
     //     });
     // }
     // console.timeEnd('build data');
     return initValue;
 }
-
 
 export function getReferences(): AITableReferences {
     return {

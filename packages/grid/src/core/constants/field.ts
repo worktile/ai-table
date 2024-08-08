@@ -67,7 +67,7 @@ export const BasicFields = [
         width: 200
     },
     {
-        type: AITableFieldType.updateBy,
+        type: AITableFieldType.updatedBy,
         name: '更新人',
         icon: 'user',
         width: 200

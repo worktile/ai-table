@@ -112,7 +112,12 @@
                         }
                         @case (AITableFieldType.member) {
                             @if (!field.isMultiple) {
-                                <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                                <thy-avatar
+                                    [thyName]="record.values[field._id].display_name"
+                                    [thySrc]="record.values[field._id].avatar"
+                                    thySize="xs"
+                                    thyShowName="true"
+                                ></thy-avatar>
                             } @else {
                                 <thy-avatar-list thyAvatarSize="xs">
                                     @for (item of record.values[field._id]; track $index) {
@@ -122,10 +127,20 @@
                             }
                         }
                         @case (AITableFieldType.createdBy) {
-                            <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                            <thy-avatar
+                                [thyName]="record.values[field._id].display_name"
+                                [thySrc]="record.values[field._id].avatar"
+                                thySize="xs"
+                                thyShowName="true"
+                            ></thy-avatar>
                         }
-                        @case (AITableFieldType.updateBy) {
-                            <ng-template [ngTemplateOutlet]="member" [ngTemplateOutletContext]="{ record, field }"></ng-template>
+                        @case (AITableFieldType.updatedBy) {
+                            <thy-avatar
+                                [thyName]="record.values[field._id].display_name"
+                                [thySrc]="record.values[field._id].avatar"
+                                thySize="xs"
+                                thyShowName="true"
+                            ></thy-avatar>
                         }
                         @default {
                             <span class="text-truncate"> {{ record.values[field._id] }}</span>
@@ -143,12 +158,3 @@
 </div>
 
 <div #activeBorder class="active-border"></div>
-
-<ng-template #member let-record="record" let-field="field">
-    <thy-avatar
-        [thyName]="record.values[field._id].display_name"
-        [thySrc]="record.values[field._id].avatar"
-        thySize="xs"
-        thyShowName="true"
-    ></thy-avatar>
-</ng-template>

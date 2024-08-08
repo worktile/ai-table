@@ -17,7 +17,7 @@ export enum AITableFieldType {
     createdAt = 'created_at',
     updatedAt = 'updated_at',
     createdBy = 'created_by',
-    updateBy = 'update_by'
+    updatedBy = 'updated_by'
 }
 
 export enum AITableStatType {
