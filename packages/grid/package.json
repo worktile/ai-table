@@ -2,8 +2,8 @@
     "name": "@ai-table/grid",
     "version": "0.0.6",
     "peerDependencies": {
-        "@angular/common": "^18.0.0",
-        "@angular/core": "^18.0.0"
+        "@angular/common": "^18.1.4",
+        "@angular/core": "^18.1.4"
     },
     "dependencies": {
         "tslib": "^2.3.0"

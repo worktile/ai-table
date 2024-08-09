@@ -1,3 +1,6 @@
+@use 'ngx-tethys/styles/variables.scss';
+@use './progress/progress-editor.component.scss';
+
 .date-time-cell-editor {
     .thy-calendar-picker {
         height: 100%;
@@ -16,10 +19,27 @@
 }
 
 .number-cell-editor {
-    .thy-input-number{
+    .thy-input-number {
         .input-number-input {
             border-width: 2px;
         }
     }
-   
+}
+
+.select-cell-editor {
+    &:not(.tag) {
+        .select-control-multiple {
+            .choice-remove-link {
+                .thy-icon-close {
+                    color: variables.$gray-700;
+                }
+            }
+        }
+    }
+}
+
+.grid-cell-editor {
+    .select-cell-editor .form-control {
+        height: auto;
+    }
 }

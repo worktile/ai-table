@@ -16,6 +16,7 @@ export interface AITableSelection {
     selectedFields: Map<string, boolean>;
     selectedCells: Map<string, {}>;
 }
+
 export interface AIFieldConfig {
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldPropertyEditor?: any;

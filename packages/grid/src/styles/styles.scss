@@ -2,7 +2,6 @@
 @use 'ngx-tethys/styles/index.scss';
 @use 'ngx-tethys/styles/variables.scss';
 @use '../components/cell-editors/cell-editor.scss';
-@use '../components/cell-editors/progress/progress-editor.component.scss';
 
 .ai-table-grid {
     display: table;

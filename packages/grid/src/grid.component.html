@@ -63,10 +63,56 @@
                 >
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
-                            @if (!field.isMultiple && record.values[field._id] | selectOption: field['options']; as selectedOption) {
-                                <thy-tag [thyColor]="selectedOption!.color! || selectedOption!.bg_color! || 'default'">{{
-                                    selectedOption.text
-                                }}</thy-tag>
+                            @let fieldValue = record.values[field._id];
+                            @let options = field['options'];
+                            @let optionStyle = field['optionStyle'] || AITableSelectOptionStyle.tag;
+                            @let isTagStyle = optionStyle === AITableSelectOptionStyle.tag;
+                            @let isPieceStyle = optionStyle === AITableSelectOptionStyle.piece;
+
+                            @if (!field.isMultiple && fieldValue | selectOption: options; as selectedOption) {
+                                @if (isTagStyle) {
+                                    <select-option class="mb-1 mr-1" [field]="field" [displayOption]="selectedOption"></select-option>
+                                } @else {
+                                    <div thyTag class="mb-1 mr-1">
+                                        <select-option [field]="field" [displayOption]="selectedOption"></select-option>
+                                    </div>
+                                }
+                            } @else {
+                                @let maxShowCount = field['maxCount'] ?? 2;
+
+                                <div class="d-flex">
+                                    @if (fieldValue | selectOptions: options; as selectedOptions) {
+                                        @for (option of selectedOptions; track option!._id; let i = $index) {
+                                            @if (i + 1 <= maxShowCount) {
+                                                @if (isTagStyle) {
+                                                    <select-option
+                                                        class="mb-1 mr-1"
+                                                        [field]="field"
+                                                        [displayOption]="option!"
+                                                    ></select-option>
+                                                } @else {
+                                                    <div thyTag class="mb-1 mr-1">
+                                                        <select-option [field]="field" [displayOption]="option!"></select-option>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+
+                                        @let selectedLength = selectedOptions.length || 0;
+                                        @if (selectedOptions && maxShowCount < selectedLength) {
+                                            @let shape = isTagStyle ? 'pill' : 'rectangle';
+                                            @let isHidden = maxShowCount >= selectedLength;
+
+                                            <thy-tag
+                                                class="cursor-pointer"
+                                                [class.multi-property-value-hidden]="isHidden"
+                                                [thyShape]="shape"
+                                            >
+                                                <span class="text-truncate"> +{{ selectedLength - maxShowCount }} </span>
+                                            </thy-tag>
+                                        }
+                                    }
+                                </div>
                             }
                         }
                         @case (AITableFieldType.date) {
@@ -104,12 +150,12 @@
                         @case (AITableFieldType.progress) {
                             <thy-progress
                                 class="w-100"
-                                [thyValue]="record.values[field._id]"
+                                [thyValue]="record.values[field._id] || 0"
                                 [thySize]="record.values[field._id]?.config?.size || 'md'"
                                 [thyMax]="record.values[field._id]?.config?.max || 100"
                                 [thyType]="record.values[field._id]?.config?.progressType || 'success'"
                             >
-                                <span> {{ record.values[field._id] }}{{ record.values[field._id]?.config?.suffix || '%' }} </span>
+                                <span> {{ record.values[field._id] || 0 }}{{ record.values[field._id]?.config?.suffix || '%' }} </span>
                             </thy-progress>
                         }
                         @case (AITableFieldType.member) {

@@ -15,7 +15,12 @@ export const BasicFields = [
         icon: 'check-circle',
         width: 200
     },
-    // 多选
+    {
+        type: AITableFieldType.select,
+        name: '多选',
+        icon: 'list-check',
+        width: 200
+    },
     {
         type: AITableFieldType.number,
         name: '数字',

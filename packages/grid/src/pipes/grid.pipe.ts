@@ -13,6 +13,18 @@ export class SelectOptionPipe implements PipeTransform {
 }
 
 @Pipe({
+    name: 'selectOptions',
+    standalone: true
+})
+export class SelectOptionsPipe implements PipeTransform {
+    transform(ids: string[], options: AITableSelectOption[] = []) {
+        return ids.map((id: string) => {
+            return options.find((item) => item._id === id);
+        });
+    }
+}
+
+@Pipe({
     name: 'isSelectRecord',
     standalone: true
 })
