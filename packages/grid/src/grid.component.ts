@@ -16,7 +16,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
-import { ThyAvatar, ThyAvatarModule, ThyAvatarService, ThyDefaultAvatarService } from 'ngx-tethys/avatar';
+import { ThyAvatarModule } from 'ngx-tethys/avatar';
 import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
@@ -28,7 +28,7 @@ import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { mergeWith } from 'rxjs/operators';
-import { MultiSelectViewComponent, ProgressEditorComponent, SelectCellViewComponent } from './components';
+import { ProgressEditorComponent, SelectOptionComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
@@ -44,11 +44,11 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { IsSelectRecordPipe, SelectOptionPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, SelectOptionPipe, SelectsOptionsPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableReferences, AITableSelectOptionStyle } from './types';
 import { buildGridData } from './utils';
 
 @Component({
@@ -66,6 +66,7 @@ import { buildGridData } from './utils';
         CommonModule,
         FormsModule,
         SelectOptionPipe,
+        SelectsOptionsPipe,
         ThyTag,
         ThyPopoverModule,
         ThyIcon,
@@ -84,20 +85,10 @@ import { buildGridData } from './utils';
         ThyAvatarModule,
         NgTemplateOutlet,
         IsSelectRecordPipe,
-        ThyAvatar,
         ProgressEditorComponent,
-        SelectCellViewComponent,
-        MultiSelectViewComponent
+        SelectOptionComponent
     ],
-    providers: [
-        {
-            provide: ThyAvatarService,
-            useClass: ThyDefaultAvatarService
-        },
-        AITableGridEventService,
-        AITableGridFieldService,
-        AITableGridSelectionService
-    ]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid implements OnInit {
     aiRecords = model.required<AITableRecords>();
@@ -113,6 +104,8 @@ export class AITableGrid implements OnInit {
     aiReferences = input<AITableReferences>();
 
     AITableFieldType = AITableFieldType;
+
+    AITableSelectOptionStyle = AITableSelectOptionStyle;
 
     aiTable!: AITable;
 

@@ -17,7 +17,7 @@ export enum AITableSelectOptionStyle {
     piece = 4
 }
 
-export interface AITableSingleSelectField extends AITableField<AITableSelectOption> {
+export interface AITableSelectField extends AITableField<AITableSelectOption> {
     options: AITableSelectOption[];
     optionStyle: AITableSelectOptionStyle;
 }

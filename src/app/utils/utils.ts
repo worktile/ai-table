@@ -32,7 +32,7 @@ export function getDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 1-1',
-                    'column-2': '1',
+                    'column-2': ['1'],
                     'column-3': 1,
                     'column-4': 1682235946,
                     'column-5': ['member_01'],
@@ -44,7 +44,7 @@ export function getDefaultValue() {
                     },
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
-                    'column-11': 'member_02',
+                    'column-11': ['member_02'],
                     'column-12': 1720490727,
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
@@ -59,7 +59,7 @@ export function getDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 2-1',
-                    'column-2': '2',
+                    'column-2': ['2'],
                     'column-3': 10,
                     'column-4': 1682235946,
                     'column-5': ['member_01', 'member_02'],
@@ -68,7 +68,7 @@ export function getDefaultValue() {
                     'column-8': {},
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
-                    'column-11': 'member_02',
+                    'column-11': ['member_02'],
                     'column-12': 1720490727,
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
@@ -83,7 +83,7 @@ export function getDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 3-1',
-                    'column-2': '3',
+                    'column-2': ['3'],
                     'column-3': 100,
                     'column-4': 1682235946,
                     'column-5': [],
@@ -92,7 +92,7 @@ export function getDefaultValue() {
                     'column-8': {},
                     'column-9': [],
                     'column-10': 1682235946,
-                    'column-11': 'member_02',
+                    'column-11': ['member_02'],
                     'column-12': 1720490727,
                     'column-20': [
                         '66b31d0c8097a908f74bcd8a',
@@ -130,7 +130,7 @@ export function getDefaultValue() {
                 name: '单选',
                 positions: {
                     view1: 1,
-                    view2: 3
+                    view2: 2
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -198,7 +198,7 @@ export function getDefaultValue() {
                 ],
                 positions: {
                     view1: 2,
-                    view2: 2
+                    view2: 3
                 }
             },
             {
@@ -246,8 +246,8 @@ export function getDefaultValue() {
                     }
                 ],
                 positions: {
-                    view1: 2,
-                    view2: 2
+                    view1: 3,
+                    view2: 4
                 }
             },
             {
@@ -295,15 +295,15 @@ export function getDefaultValue() {
                     }
                 ],
                 positions: {
-                    view1: 2,
-                    view2: 2
+                    view1: 4,
+                    view2: 5
                 }
             },
             {
                 _id: 'column-3',
                 name: '数字',
                 positions: {
-                    view1: 2,
+                    view1: 5,
                     view2: 7
                 },
                 type: AITableFieldType.number
@@ -312,7 +312,7 @@ export function getDefaultValue() {
                 _id: 'column-4',
                 name: '日期',
                 positions: {
-                    view1: 3,
+                    view1: 6,
                     view2: 8
                 },
                 type: AITableFieldType.date
@@ -321,7 +321,7 @@ export function getDefaultValue() {
                 _id: 'column-5',
                 name: '成员(📌)',
                 positions: {
-                    view1: 4,
+                    view1: 7,
                     view2: 9
                 },
                 isMultiple: true,
@@ -331,8 +331,8 @@ export function getDefaultValue() {
                 _id: 'column-6',
                 name: '进度',
                 positions: {
-                    view1: 5,
-                    view2: 0
+                    view1: 8,
+                    view2: 10
                 },
                 type: AITableFieldType.progress
             },
@@ -340,8 +340,8 @@ export function getDefaultValue() {
                 _id: 'column-7',
                 name: '评分(📌)',
                 positions: {
-                    view1: 6,
-                    view2: 4
+                    view1: 9,
+                    view2: 11
                 },
                 type: AITableFieldType.rate
             },
@@ -349,8 +349,8 @@ export function getDefaultValue() {
                 _id: 'column-8',
                 name: '链接(📌)',
                 positions: {
-                    view1: 7,
-                    view2: 2
+                    view1: 10,
+                    view2: 12
                 },
                 type: AITableFieldType.link
             },
@@ -359,8 +359,8 @@ export function getDefaultValue() {
                 _id: 'column-9',
                 name: '创建人',
                 positions: {
-                    view1: 8,
-                    view2: 10
+                    view1: 11,
+                    view2: 13
                 },
                 type: AITableFieldType.createdBy
             },
@@ -368,8 +368,8 @@ export function getDefaultValue() {
                 _id: 'column-10',
                 name: '创建时间',
                 positions: {
-                    view1: 9,
-                    view2: 5
+                    view1: 12,
+                    view2: 14
                 },
                 type: AITableFieldType.createdAt
             },
@@ -377,8 +377,8 @@ export function getDefaultValue() {
                 _id: 'column-11',
                 name: '更新人',
                 positions: {
-                    view1: 10,
-                    view2: 11
+                    view1: 13,
+                    view2: 15
                 },
                 type: AITableFieldType.updatedBy
             },
@@ -386,8 +386,8 @@ export function getDefaultValue() {
                 _id: 'column-12',
                 name: '更新时间',
                 positions: {
-                    view1: 11,
-                    view2: 6
+                    view1: 14,
+                    view2: 16
                 },
                 type: AITableFieldType.updatedAt
             }

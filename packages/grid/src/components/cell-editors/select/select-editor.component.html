@@ -7,7 +7,13 @@
     (thyOnExpandStatusChange)="updateValue($event)"
 >
     <ng-template #selectedDisplay let-option>
-        <select-cell-view [field]="field()" [displayOption]="option"></select-cell-view>
+        @if (optionStyle() === AITableSelectOptionStyle.tag) {
+            <select-option [field]="field()" [displayOption]="option"></select-option>
+        } @else {
+            <div thyTag class="mb-1 mr-1">
+                <select-option [field]="field()" [displayOption]="option"></select-option>
+            </div>
+        }
     </ng-template>
     @for (option of selectOptions(); track option._id) {
         <thy-option [thyValue]="option._id" [thyRawValue]="option" [thyShowOptionCustom]="true" [thyLabelText]="option.text">

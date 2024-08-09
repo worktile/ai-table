@@ -4,7 +4,7 @@
             @if (displayOption.bg_color) {
                 <thy-dot [thyColor]="displayOption.bg_color" [thySize]="'sm'" class="mr-2"></thy-dot>
             }
-            <ng-template [ngTemplateOutlet]="flexibleText"></ng-template>
+            <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }
         @case (AITableSelectOptionStyle.tag) {
             @if (displayOption.bg_color || displayOption.color; as color) {
@@ -12,7 +12,7 @@
                     @if (displayOption['icon']) {
                         <thy-icon class="text-white" [thyIconName]="displayOption['icon']"></thy-icon>
                     }
-                    <ng-template [ngTemplateOutlet]="flexibleText"></ng-template>
+                    <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
                 </thy-tag>
             }
         }
@@ -20,19 +20,13 @@
             @if (displayOption.bg_color || displayOption.color; as color) {
                 <thy-dot thyShape="square" [thyColor]="color" [thySize]="'sm'" class="mr-2"></thy-dot>
             }
-            <ng-template [ngTemplateOutlet]="flexibleText"></ng-template>
+            <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }
         @default {
             @if (displayOption['icon']) {
                 <thy-icon [thyIconName]="displayOption['icon']" [style.color]="displayOption.color"></thy-icon>
             }
-            <ng-template [ngTemplateOutlet]="flexibleText"></ng-template>
+            <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }
     }
 }
-
-<ng-template #flexibleText>
-    @if (displayOption()!.text || displayOption()!['name'] || displayOption()!['title']; as value) {
-        <span thyFlexibleText [thyTooltipContent]="value">{{ value }}</span>
-    }
-</ng-template>
