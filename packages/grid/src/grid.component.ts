@@ -44,7 +44,7 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { IsSelectRecordPipe, SelectOptionPipe, SelectsOptionsPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, SelectOptionPipe, SelectOptionsPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
@@ -57,7 +57,7 @@ import { buildGridData } from './utils';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid '
+        class: 'ai-table-grid'
     },
     imports: [
         NgForOf,
@@ -66,7 +66,7 @@ import { buildGridData } from './utils';
         CommonModule,
         FormsModule,
         SelectOptionPipe,
-        SelectsOptionsPipe,
+        SelectOptionsPipe,
         ThyTag,
         ThyPopoverModule,
         ThyIcon,

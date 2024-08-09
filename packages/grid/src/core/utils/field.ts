@@ -12,7 +12,7 @@ export function getDefaultFieldValue(field: AITableField) {
 export function createDefaultFieldName(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
     const fields = aiTable.fields();
     const count = fields.filter((item) => item.type === type).length;
-    return count === 0 ? FieldsMap[type].name : FieldsMap[type].name + count;
+    return count === 0 ? FieldsMap[type].name : FieldsMap[type].name + ' ' + count;
 }
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {

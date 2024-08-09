@@ -6,6 +6,7 @@ import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableGridCellRenderSchema } from '../types';
 import { getRecordOrField } from '../utils';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Injectable()
 export class AITableGridEventService {
@@ -24,6 +25,8 @@ export class AITableGridEventService {
     globalMousedownEvent$ = new Subject<MouseEvent>();
 
     private destroyRef = inject(DestroyRef);
+
+    private overlay = inject(Overlay);
 
     private thyPopover = inject(ThyPopover);
 
@@ -101,7 +104,8 @@ export class AITableGridEventService {
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,
-            autoAdaptive: true
+            autoAdaptive: true,
+            scrollStrategy: this.overlay.scrollStrategies.close()
         });
         return ref;
     }

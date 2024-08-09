@@ -16,7 +16,7 @@ export class SelectOptionPipe implements PipeTransform {
     name: 'selectOptions',
     standalone: true
 })
-export class SelectsOptionsPipe implements PipeTransform {
+export class SelectOptionsPipe implements PipeTransform {
     transform(ids: string[], options: AITableSelectOption[] = []) {
         return ids.map((id: string) => {
             return options.find((item) => item._id === id);
