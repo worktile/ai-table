@@ -45,8 +45,9 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
 
     updateStyle() {
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
-        const height = textarea.scrollHeight < this.maxHeight ? textarea.scrollHeight : this.maxHeight;
-
+        // 4px = 上下边框高度
+        const contentHeight = textarea.scrollHeight + 4;
+        const height = contentHeight < this.maxHeight ? contentHeight : this.maxHeight;
         this.render2.setStyle(textarea, 'height', `${height}px`);
         this.render2.setStyle(textarea, 'min-height', `44px`);
         this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
