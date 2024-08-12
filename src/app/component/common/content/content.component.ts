@@ -25,16 +25,11 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
-import { withCustomApply } from '../../../plugins/custom-action.plugin';
 import { TableService } from '../../../service/table.service';
-import applyActionOps from '../../../share/apply-to-yjs';
-import { YjsAITable } from '../../../share/yjs-table';
-import { AIViewTable, Direction } from '../../../types/view';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
-import { CustomActions } from '../../../action';
-import { DemoAIField, DemoAIRecord } from '../../../types';
 import { createDraft, finishDraft } from 'immer';
+import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -43,9 +38,9 @@ import { createDraft, finishDraft } from 'immer';
     templateUrl: './content.component.html'
 })
 export class DemoTableContent {
-    aiTable!: AITable;
+    aiTable!: AIViewTable;
 
-    plugins = [withCustomApply];
+    plugins = [withView];
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -102,14 +97,14 @@ export class DemoTableContent {
         let draftAction = createDraft(action);
         switch (action.type) {
             case ActionName.AddRecord:
-                const record = (draftAction as AddRecordAction).record as DemoAIRecord;
+                const record = (draftAction as AddRecordAction).record as AITableViewRecord;
                 if (!record.positions) {
                     record.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
                 }
                 return action;
             case ActionName.AddField:
-                const field = (draftAction as AddFieldAction).field as DemoAIField;
+                const field = (draftAction as AddFieldAction).field as AITableViewField;
                 if (!field.positions) {
                     field.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
@@ -140,7 +135,7 @@ export class DemoTableContent {
             conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
         };
         const index = this.tableService.views().indexOf(this.tableService.activeView());
-        CustomActions.setView(this.aiTable as any, { sortCondition }, [index]);
+        ViewActions.setView(this.aiTable as any, { sortCondition }, [index]);
     }
 
     prevent(event: Event) {
@@ -149,9 +144,9 @@ export class DemoTableContent {
     }
 
     aiTableInitialized(aiTable: AITable) {
-        this.aiTable = aiTable;
-        (this.aiTable as AIViewTable).views = this.tableService.views;
-        this.tableService.setAITable(aiTable);
+        this.aiTable = aiTable as AIViewTable;
+        this.aiTable.views = this.tableService.views;
+        this.tableService.setAITable(this.aiTable);
     }
 
     removeRecord() {
