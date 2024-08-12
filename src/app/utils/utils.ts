@@ -1,6 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableView } from '../types/view';
-import { AITableSharedFields, AITableSharedRecords, Positions } from '@ai-table/shared';
+import { AITableSharedFields, AITableSharedRecords, AITableView, Positions } from '@ai-table/shared';
 
 export function sortDataByView(data: AITableSharedRecords | AITableSharedFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);

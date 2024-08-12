@@ -25,14 +25,11 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
-import { withCustomApply } from '../../../plugins/custom-action.plugin';
 import { TableService } from '../../../service/table.service';
-import { Direction } from '../../../types/view';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
-import { CustomActions } from '../../../action';
 import { createDraft, finishDraft } from 'immer';
-import { AITableSharedField, AITableSharedRecord, applyActionOps, SharedAITable, YjsAITable } from '@ai-table/shared';
+import { AITableSharedField, AITableSharedRecord, applyActionOps, ViewActions, Direction, SharedAITable, YjsAITable, withView } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -43,7 +40,7 @@ import { AITableSharedField, AITableSharedRecord, applyActionOps, SharedAITable,
 export class DemoTableContent {
     aiTable!: SharedAITable;
 
-    plugins = [withCustomApply];
+    plugins = [withView];
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -138,7 +135,7 @@ export class DemoTableContent {
             conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
         };
         const index = this.tableService.views().indexOf(this.tableService.activeView());
-        CustomActions.setView(this.aiTable as any, { sortCondition }, [index]);
+        ViewActions.setView(this.aiTable as any, { sortCondition }, [index]);
     }
 
     prevent(event: Event) {

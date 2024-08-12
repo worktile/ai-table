@@ -1,13 +1,13 @@
 import { Actions, AITable, AITableAction, FLUSHING } from '@ai-table/grid';
-import { CustomActions } from '../action';
-import { AITableSharedAction, AITableViewAction, SharedAITable, ViewActionName } from '@ai-table/shared';
+import { ViewActions } from '../action';
+import { AITableSharedAction, AITableViewAction, SharedAITable, ViewActionName } from '../../types';
 
-export const withCustomApply = (aiTable: AITable) => {
+export const withView = (aiTable: AITable) => {
     const viewTable = aiTable as SharedAITable;
     viewTable.apply = (action: AITableSharedAction) => {
         (aiTable.actions as AITableSharedAction[]).push(action);
-        if ( [ViewActionName.setView].includes(action.type as ViewActionName)) {
-            CustomActions.transform(viewTable, action as AITableViewAction);
+        if ([ViewActionName.setView].includes(action.type as ViewActionName)) {
+            ViewActions.transform(viewTable, action as AITableViewAction);
         } else {
             Actions.transform(aiTable, action as AITableAction);
         }

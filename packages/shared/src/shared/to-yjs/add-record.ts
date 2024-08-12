@@ -1,6 +1,6 @@
 import { AddRecordAction } from '@ai-table/grid';
-import { AITableSharedRecord, SharedType } from '../types';
 import { toRecordSyncElement } from '../utils';
+import { AITableSharedRecord, SharedType } from '../../types';
 
 export default function addRecord(sharedType: SharedType, action: AddRecordAction): SharedType {
     const records = sharedType.get('records');

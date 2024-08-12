@@ -2,7 +2,7 @@ import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AIT
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { toTablePath, translateRecord } from '../utils';
-import { AITableSharedFields } from '../types';
+import { AITableSharedFields } from '../../types';
 
 export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];

@@ -1,6 +1,5 @@
 import { Path } from '@ai-table/grid';
-import { AITableSharedFields, AITableSharedRecords } from '../types';
-import { SharedType } from '../types/shared';
+import { AITableSharedFields, AITableSharedRecords, SharedType } from '../../types';
 
 export const initTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();

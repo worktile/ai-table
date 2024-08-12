@@ -3,7 +3,7 @@ import updateFieldValue from './update-field-value';
 import addRecord from './add-record';
 import addField from './add-field';
 import setView from './set-view';
-import { SharedType } from '../types';
+import { SharedType } from '../../types';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;

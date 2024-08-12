@@ -2,8 +2,7 @@ import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angula
 import { WebsocketProvider } from 'y-websocket';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
 import { createDraft, finishDraft } from 'immer';
-import { AITableSharedFields, AITableSharedRecords, applyYjsEvents, createSharedType, getProvider, initSharedType, initTable, SharedAITable, SharedType, YjsAITable } from '@ai-table/shared';
-import { AITableView } from '../types/view';
+import { AITableSharedRecords, AITableSharedFields, SharedAITable, SharedType, YjsAITable, getProvider, applyYjsEvents, createSharedType, initSharedType, initTable, AITableView } from '@ai-table/shared';
 
 @Injectable()
 export class TableService {

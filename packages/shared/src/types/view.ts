@@ -1,30 +1,35 @@
-import { AITable, AITableAction, AITableField, AITableRecord } from '@ai-table/grid';
+import { AITable, AITableAction } from '@ai-table/grid';
 import { WritableSignal } from '@angular/core';
 
-export class Positions {
-    [view_id: string]: number;
+export enum Direction {
+    default = 0,
+    ascending = 1,
+    descending = -1
 }
 
-export interface AITableSharedRecord extends AITableRecord {
-    positions: Positions;
-}
-
-export interface AITableSharedField extends AITableField {
-    positions: Positions;
-}
-
-export type AITableSharedRecords = AITableSharedRecord[];
-
-export type AITableSharedFields = AITableSharedField[];
-
-export interface AITableSharedView {
+export interface AITableView {
     _id: string;
     name: string;
-    [key: string]: any;
+    emoji_icon?: string;
+    isActive?: boolean;
+    sortCondition?: {
+        keepSort: boolean;
+        conditions: {
+            sortBy: string;
+            direction: Direction;
+        }[];
+    };
+    // filterCondition?: {
+    //     fieldKey: string;
+    //     operation: OperationSymbol;
+    //     logical: LogicalOperator;
+    //     value?: SafeAny;
+    //     disabled?: boolean;
+    // }[];
 }
 
 export interface SharedAITable extends AITable {
-    views: WritableSignal<AITableSharedView[]>;
+    views: WritableSignal<AITableView[]>;
     apply: (action: AITableSharedAction) => void;
 }
 
@@ -34,8 +39,8 @@ export enum ViewActionName {
 
 export interface SetViewAction {
     type: ViewActionName.setView;
-    view: Partial<AITableSharedView>;
-    newView: Partial<AITableSharedView>;
+    view: Partial<AITableView>;
+    newView: Partial<AITableView>;
     path: [number];
 }
 

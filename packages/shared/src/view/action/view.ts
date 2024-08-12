@@ -1,7 +1,6 @@
 import { AITableRecord, AITableRecords } from '@ai-table/grid';
-import { AITableViewAction, SharedAITable, ViewActionName } from '@ai-table/shared';
 import { createDraft, finishDraft } from 'immer';
-import { AITableView, Direction } from '../types/view';
+import { AITableView, AITableViewAction, Direction, SharedAITable, ViewActionName } from '../../types';
 
 export function setView(aiTable: SharedAITable, value: Partial<AITableView>, path: [number]) {
     const [index] = path;
@@ -61,9 +60,4 @@ export const applyView = (aiTable: SharedAITable, views: AITableView[], records:
             }
         }
     }
-};
-
-export const ViewActions = {
-    setView,
-    applyView
 };

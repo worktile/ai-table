@@ -1,6 +1,5 @@
 import * as Y from 'yjs';
-import { Positions, AITableSharedRecord } from '../types';
-import { SyncMapElement } from '../types/shared';
+import { AITableSharedRecord, Positions, SyncMapElement } from '../../types';
 
 
 export const createSharedType = () => {
