@@ -1,9 +1,9 @@
 import { AITableRecord, AITableRecords } from '@ai-table/grid';
-import { AITableView, AIViewAction, Direction, ViewActionName } from '../types/view';
-import { AIViewTable } from '../types/view';
+import { AITableViewAction, SharedAITable, ViewActionName } from '@ai-table/shared';
 import { createDraft, finishDraft } from 'immer';
+import { AITableView, Direction } from '../types/view';
 
-export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [number]) {
+export function setView(aiTable: SharedAITable, value: Partial<AITableView>, path: [number]) {
     const [index] = path;
     const view: AITableView = aiTable.views()[index];
     const oldView: Partial<AITableView> = {};
@@ -23,11 +23,11 @@ export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path:
         newView,
         path
     };
-    aiTable.viewApply(operation);
+    aiTable.apply(operation);
 }
 
 export const GeneralActions = {
-    transform(aiTable: AIViewTable, op: AIViewAction): void {
+    transform(aiTable: SharedAITable, op: AITableViewAction): void {
         const views = createDraft(aiTable.views());
         const records = createDraft(aiTable.records());
         applyView(aiTable, views, records, op);
@@ -40,7 +40,7 @@ export const GeneralActions = {
     }
 };
 
-export const applyView = (aiTable: AIViewTable, views: AITableView[], records: AITableRecords, options: AIViewAction) => {
+export const applyView = (aiTable: SharedAITable, views: AITableView[], records: AITableRecords, options: AITableViewAction) => {
     switch (options.type) {
         case ViewActionName.setView: {
             const [viewIndex] = options.path;
@@ -49,7 +49,7 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], records: A
                     ...views[viewIndex],
                     ...options.newView
                 };
-                if (options.newView.sortCondition) {
+                if (options.newView['sortCondition']) {
                     const { sortCondition } = options.newView;
                     const { sortBy, direction } = sortCondition.conditions[0];
                     records = records.sort((a: AITableRecord, b: AITableRecord) => {

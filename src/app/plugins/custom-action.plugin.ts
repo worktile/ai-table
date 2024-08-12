@@ -1,12 +1,17 @@
-import { AITable, AITableAction, FLUSHING } from '@ai-table/grid';
+import { Actions, AITable, AITableAction, FLUSHING } from '@ai-table/grid';
 import { CustomActions } from '../action';
-import { AIViewAction, AIViewTable } from '../types/view';
+import { AITableSharedAction, AITableViewAction, SharedAITable, ViewActionName } from '@ai-table/shared';
 
 export const withCustomApply = (aiTable: AITable) => {
-    const viewTable = aiTable as AIViewTable;
-    viewTable.viewApply = (action: AIViewAction) => {
-        aiTable.actions.push(action as unknown as AITableAction);
-        CustomActions.transform(viewTable, action);
+    const viewTable = aiTable as SharedAITable;
+    viewTable.apply = (action: AITableSharedAction) => {
+        (aiTable.actions as AITableSharedAction[]).push(action);
+        if ( [ViewActionName.setView].includes(action.type as ViewActionName)) {
+            CustomActions.transform(viewTable, action as AITableViewAction);
+        } else {
+            Actions.transform(aiTable, action as AITableAction);
+        }
+
         if (!FLUSHING.get(aiTable)) {
             FLUSHING.set(aiTable, true);
             Promise.resolve().then(() => {

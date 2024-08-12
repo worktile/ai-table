@@ -1,0 +1,31 @@
+{
+    "extends": "../../.eslintrc.json",
+    "ignorePatterns": ["!**/*"],
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "parserOptions": {
+                "project": ["packages/shared/tsconfig.lib.json", "packages/shared/tsconfig.spec.json"],
+                "createDefaultProgram": true
+            },
+            "rules": {
+                "@angular-eslint/directive-selector": [
+                    "error",
+                    {
+                        "type": "attribute",
+                        "prefix": "ai-table",
+                        "style": "camelCase"
+                    }
+                ],
+                "@angular-eslint/component-selector": [
+                    "error",
+                    {
+                        "type": "element",
+                        "prefix": "ai-table",
+                        "style": "kebab-case"
+                    }
+                ]
+            }
+        }
+    ]
+}

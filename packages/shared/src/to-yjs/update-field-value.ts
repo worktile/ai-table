@@ -1,5 +1,5 @@
-import { SharedType, SyncArrayElement } from '../shared';
 import { UpdateFieldValueAction } from '@ai-table/grid';
+import { SharedType, SyncArrayElement } from '../types';
 
 export default function updateFieldValue(sharedType: SharedType, action: UpdateFieldValueAction): SharedType {
     const records = sharedType.get('records');

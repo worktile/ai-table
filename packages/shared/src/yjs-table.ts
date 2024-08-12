@@ -1,4 +1,4 @@
-import { AITable } from '@ai-table/grid';
+import { AITable } from "@ai-table/grid";
 
 const IS_LOCAL: WeakSet<any> = new WeakSet();
 const IS_REMOTE: WeakSet<any> = new WeakSet();

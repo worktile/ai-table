@@ -1,6 +1,6 @@
 import { createDraft, finishDraft } from 'immer';
 import { AITableFields, AITableFieldType, AITableRecords, FieldsMap } from '../core';
-import { AITableGridData, AITableReferences, AITableSelection, AITableUserInfo } from '../types';
+import { AITableGridData, AITableReferences, AITableUserInfo } from '../types';
 
 export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields, references?: AITableReferences): AITableGridData => {
     const fields = fieldsValue.map((item) => {

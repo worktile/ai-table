@@ -1,8 +1,8 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { DemoAIField, DemoAIRecord, Positions } from '../types';
 import { AITableView } from '../types/view';
+import { AITableSharedFields, AITableSharedRecords, Positions } from '@ai-table/shared';
 
-export function sortDataByView(data: DemoAIRecord[] | DemoAIField[], activeViewId: string) {
+export function sortDataByView(data: AITableSharedRecords | AITableSharedFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
     if (hasPositions) {
         return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
@@ -20,8 +20,8 @@ export function createDefaultPositions(views: AITableView[], index: number) {
 
 export function getDefaultValue() {
     const initValue: {
-        records: DemoAIRecord[];
-        fields: DemoAIField[];
+        records: AITableSharedRecords;
+        fields: AITableSharedFields;
     } = {
         records: [
             {
@@ -33,6 +33,9 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 1-1',
                     'column-2': ['1'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a'],
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
                     'column-4': 1682235946,
                     'column-5': ['member_01'],
@@ -46,9 +49,6 @@ export function getDefaultValue() {
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
                     'column-12': 1720490727,
-                    'column-20': ['66b31d0c8097a908f74bcd8a'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a']
                 }
             },
             {
@@ -60,6 +60,9 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 2-1',
                     'column-2': ['2'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
                     'column-4': 1682235946,
                     'column-5': ['member_01', 'member_02'],
@@ -70,9 +73,7 @@ export function getDefaultValue() {
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
                     'column-12': 1720490727,
-                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+
                 }
             },
             {
@@ -84,16 +85,6 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 3-1',
                     'column-2': ['3'],
-                    'column-3': 100,
-                    'column-4': 1682235946,
-                    'column-5': [],
-                    'column-6': 100,
-                    'column-7': 1,
-                    'column-8': {},
-                    'column-9': [],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727,
                     'column-20': [
                         '66b31d0c8097a908f74bcd8a',
                         '66b31d0c8097a908f74bcd8b',
@@ -111,7 +102,17 @@ export function getDefaultValue() {
                         '66b31d0c8097a908f74bcd8b',
                         '66b31d0c8097a908f74bcd8c',
                         '66b31d0c8097a908f74bcd8d'
-                    ]
+                    ],
+                    'column-3': 100,
+                    'column-4': 1682235946,
+                    'column-5': [],
+                    'column-6': 100,
+                    'column-7': 1,
+                    'column-8': {},
+                    'column-9': [],
+                    'column-10': 1682235946,
+                    'column-11': ['member_02'],
+                    'column-12': 1720490727
                 }
             }
         ],

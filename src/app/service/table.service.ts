@@ -1,25 +1,19 @@
 import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
-import { createSharedType, initSharedType, SharedType } from '../share/shared';
 import { WebsocketProvider } from 'y-websocket';
-import { getProvider } from '../share/provider';
-import { DemoAIField, DemoAIRecord } from '../types';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
-import { applyYjsEvents } from '../share/apply-to-table';
-import { translateSharedTypeToTable } from '../share/utils/translate-to-table';
-import { YjsAITable } from '../share/yjs-table';
-import { AITable } from '@ai-table/grid';
-import { AITableView } from '../types/view';
 import { createDraft, finishDraft } from 'immer';
+import { AITableSharedFields, AITableSharedRecords, applyYjsEvents, createSharedType, getProvider, initSharedType, initTable, SharedAITable, SharedType, YjsAITable } from '@ai-table/shared';
+import { AITableView } from '../types/view';
 
 @Injectable()
 export class TableService {
     views!: WritableSignal<AITableView[]>;
 
-    records!: WritableSignal<DemoAIRecord[]>;
+    records!: WritableSignal<AITableSharedRecords>;
 
-    fields!: WritableSignal<DemoAIField[]>;
+    fields!: WritableSignal<AITableSharedFields>;
 
-    aiTable!: AITable;
+    aiTable!: SharedAITable;
 
     provider!: WebsocketProvider | null;
 
@@ -48,16 +42,16 @@ export class TableService {
         });
     }
 
-    setAITable(aiTable: AITable) {
+    setAITable(aiTable: SharedAITable) {
         this.aiTable = aiTable;
     }
 
-    buildRenderRecords(records?: DemoAIRecord[]) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as DemoAIRecord[]);
+    buildRenderRecords(records?: AITableSharedRecords) {
+        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as AITableSharedRecords);
     }
 
-    buildRenderFields(fields?: DemoAIField[]) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as DemoAIField[]);
+    buildRenderFields(fields?: AITableSharedFields) {
+        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as AITableSharedFields);
     }
 
     handleShared(room: string) {
@@ -72,7 +66,7 @@ export class TableService {
             this.sharedType.observeDeep((events: any) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
-                        const data = translateSharedTypeToTable(this.sharedType!);
+                        const data = initTable(this.sharedType!);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
                         this.views.set(data.views);

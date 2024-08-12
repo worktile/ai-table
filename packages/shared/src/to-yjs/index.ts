@@ -1,9 +1,9 @@
 import { AITable, AITableAction } from '@ai-table/grid';
-import { SharedType } from '../shared';
 import updateFieldValue from './update-field-value';
 import addRecord from './add-record';
 import addField from './add-field';
 import setView from './set-view';
+import { SharedType } from '../types';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;
@@ -18,7 +18,7 @@ export const actionMappers: Partial<ActionMapper<any>> = {
     set_view: setView
 };
 
-export default function applyActionOps(sharedType: SharedType, actions: AITableAction[], aiTable: AITable): SharedType {
+export function applyActionOps(sharedType: SharedType, actions: AITableAction[], aiTable: AITable): SharedType {
     if (actions.length > 0) {
         sharedType.doc!.transact(() => {
             actions.forEach((action) => {

@@ -1,9 +1,9 @@
  
 import { isObject } from "ngx-tethys/util";
-import { AIViewAction } from "../../types/view";
-import { SharedType, toSyncElement } from "../shared";
+import { AITableViewAction, SharedType } from "../types";
+import { toSyncElement } from "../utils/init-shared";
 
-export default function setView(sharedType: SharedType, action: AIViewAction): SharedType {
+export default function setView(sharedType: SharedType, action: AITableViewAction): SharedType {
     const views = sharedType.get('views');
     if (views) {
         const index = action.path[0];

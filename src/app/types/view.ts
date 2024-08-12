@@ -1,5 +1,4 @@
-import { AITable } from '@ai-table/grid';
-import { WritableSignal } from '@angular/core';
+import { AITableSharedView } from "@ai-table/shared";
 
 export enum Direction {
     default = 0,
@@ -7,7 +6,7 @@ export enum Direction {
     descending = -1
 }
 
-export interface AITableView {
+export interface AITableView extends AITableSharedView{
     _id: string;
     name: string;
     emoji_icon?: string;
@@ -26,22 +25,4 @@ export interface AITableView {
     //     value?: SafeAny;
     //     disabled?: boolean;
     // }[];
-}
-
-export enum ViewActionName {
-    setView = 'set_view'
-}
-
-export interface SetAIViewAction {
-    type: ViewActionName.setView;
-    view: Partial<AITableView>;
-    newView: Partial<AITableView>;
-    path: [number];
-}
-
-export type AIViewAction = SetAIViewAction;
-
-export interface AIViewTable extends AITable {
-    views: WritableSignal<AITableView[]>;
-    viewApply: (action: AIViewAction) => void;
 }

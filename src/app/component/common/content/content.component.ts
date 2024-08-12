@@ -27,14 +27,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { withCustomApply } from '../../../plugins/custom-action.plugin';
 import { TableService } from '../../../service/table.service';
-import applyActionOps from '../../../share/apply-to-yjs';
-import { YjsAITable } from '../../../share/yjs-table';
-import { AIViewTable, Direction } from '../../../types/view';
+import { Direction } from '../../../types/view';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { CustomActions } from '../../../action';
-import { DemoAIField, DemoAIRecord } from '../../../types';
 import { createDraft, finishDraft } from 'immer';
+import { AITableSharedField, AITableSharedRecord, applyActionOps, SharedAITable, YjsAITable } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -43,7 +41,7 @@ import { createDraft, finishDraft } from 'immer';
     templateUrl: './content.component.html'
 })
 export class DemoTableContent {
-    aiTable!: AITable;
+    aiTable!: SharedAITable;
 
     plugins = [withCustomApply];
 
@@ -102,14 +100,14 @@ export class DemoTableContent {
         let draftAction = createDraft(action);
         switch (action.type) {
             case ActionName.AddRecord:
-                const record = (draftAction as AddRecordAction).record as DemoAIRecord;
+                const record = (draftAction as AddRecordAction).record as AITableSharedRecord;
                 if (!record.positions) {
                     record.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
                 }
                 return action;
             case ActionName.AddField:
-                const field = (draftAction as AddFieldAction).field as DemoAIField;
+                const field = (draftAction as AddFieldAction).field as AITableSharedField;
                 if (!field.positions) {
                     field.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
@@ -149,9 +147,9 @@ export class DemoTableContent {
     }
 
     aiTableInitialized(aiTable: AITable) {
-        this.aiTable = aiTable;
-        (this.aiTable as AIViewTable).views = this.tableService.views;
-        this.tableService.setAITable(aiTable);
+        this.aiTable = aiTable as SharedAITable;
+        this.aiTable.views = this.tableService.views;
+        this.tableService.setAITable(this.aiTable);
     }
 
     removeRecord() {

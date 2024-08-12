@@ -1,7 +1,8 @@
 import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AITableQueries } from '@ai-table/grid';
 import * as Y from 'yjs';
-import { toTablePath, translateRecord } from '../utils/translate-to-table';
 import { isArray } from 'ngx-tethys/util';
+import { toTablePath, translateRecord } from '../utils';
+import { AITableSharedFields } from '../types';
 
 export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
@@ -42,7 +43,7 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                                 path: [offset + index],
                                 record: {
                                     _id: fixedField[0],
-                                    values: translateRecord(customField, aiTable.fields())
+                                    values: translateRecord(customField, aiTable.fields() as AITableSharedFields)
                                 }
                             });
                         });
