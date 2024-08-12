@@ -13,7 +13,6 @@ export const initTable = (sharedType: SharedType) => {
             values: translateRecord(editableArray.slice(0, editableArray.length - 1), fields)
         };
     });
-    console.log(123, records);
     const views = data['views'];
     return {
         records,
