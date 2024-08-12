@@ -3,7 +3,7 @@ import { AITable, AITableField, AITableFieldType } from '../types';
 import { idCreator } from './id-creator';
 
 export function getDefaultFieldValue(field: AITableField) {
-    if ([AITableFieldType.member, AITableFieldType.createdBy, AITableFieldType.updatedBy].includes(field.type)) {
+    if ([AITableFieldType.select, AITableFieldType.member, AITableFieldType.createdBy, AITableFieldType.updatedBy].includes(field.type)) {
         return [];
     }
     return '';

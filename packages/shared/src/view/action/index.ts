@@ -1,6 +1,6 @@
 import { setView, applyView, GeneralActions } from './view';
 
-export const CustomActions = {
+export const ViewActions = {
     setView,
     applyView,
     ...GeneralActions

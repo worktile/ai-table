@@ -1,12 +1,6 @@
-import { isArray, isObject } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import { DemoAIField, DemoAIRecord, Positions } from '../types';
-import { AITableView } from '../types/view';
+import { AITableViewRecord, Positions, SyncMapElement } from '../../types';
 
-export type SyncMapElement = Y.Map<any>;
-export type SyncArrayElement = Y.Array<Y.Array<any>>;
-export type SyncElement = Y.Array<SyncMapElement | SyncArrayElement>;
-export type SharedType = Y.Map<SyncElement>;
 
 export const createSharedType = () => {
     const doc = new Y.Doc();
@@ -14,12 +8,12 @@ export const createSharedType = () => {
     return sharedType;
 };
 
-export const initSharedType = (
+export const initSharedType = <T>(
     doc: Y.Doc,
     initializeValue: {
-        fields: DemoAIField[];
-        records: DemoAIRecord[];
-        views: AITableView[];
+        fields: Positions[];
+        records: AITableViewRecord[];
+        views: T[];
     }
 ) => {
     const sharedType = doc.getMap<any>('ai-table');
@@ -27,12 +21,12 @@ export const initSharedType = (
     return sharedType;
 };
 
-export function toSharedType(
+export function toSharedType<T>(
     sharedType: Y.Map<any>,
     data: {
-        fields: DemoAIField[];
-        records: DemoAIRecord[];
-        views: AITableView[];
+        fields: Positions[];
+        records: AITableViewRecord[];
+        views: T[];
     }
 ): void {
     sharedType.doc!.transact(() => {
@@ -53,23 +47,12 @@ export function toSharedType(
 export function toSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
-        if (isArray(node[key])) {
-            const arrayElement = new Y.Array();
-            element.set(key, arrayElement);
-            const arrayContainer = node[key].map(toSyncElement);
-            arrayElement.insert(0, arrayContainer);
-        } else if (isObject(node[key])) {
-            const mapElement = toSyncElement(node[key]);
-            element.set(key, mapElement);
-        } else {
-            element.set(key, node[key]);
-        }
+        element.set(key, node[key]);
     }
-
     return element;
 }
 
-export function toRecordSyncElement(record: DemoAIRecord): Y.Array<Y.Array<any>> {
+export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
     const nonEditableArray = new Y.Array();
     nonEditableArray.insert(0, [record['_id']]);
 

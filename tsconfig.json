@@ -3,6 +3,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "strict": true,
         "noImplicitOverride": true,
@@ -20,8 +21,10 @@
         "useDefineForClassFields": false,
         "lib": ["ES2022", "dom"],
         "paths": {
-            "@ai-table/grid": ["./packages/grid/src/public-api"],
-            "@ai-table/grid/*": ["./packages/grid/src/*"]
+            "@ai-table/grid": ["packages/grid/src/public-api"],
+            "@ai-table/grid/*": ["packages/grid/src/*"],
+            "@ai-table/shared": ["packages/shared/src/public-api"],
+            "@ai-table/shared/*": ["packages/shared/src/*"],
         }
     },
     "angularCompilerOptions": {
