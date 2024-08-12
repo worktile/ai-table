@@ -422,17 +422,17 @@ export function getDefaultValue() {
 
 export function getReferences(): AITableReferences {
     return {
-        members: [
-            {
+        members: {
+            member_01: {
                 uid: 'member_01',
                 display_name: 'admin',
                 avatar: ''
             },
-            {
+            member_02: {
                 uid: 'member_02',
                 display_name: 'member',
                 avatar: ''
             }
-        ]
+        }
     };
 }
