@@ -8,7 +8,7 @@
         "ng": "ng",
         "start": "ng serve demo",
         "start-ws": "npx ts-node ./backend/src/index",
-        "build": "npm run build:grid &&npm run build:shared",
+        "build": "npm run build:grid && npm run build:shared",
         "build:demo": "ng build demo --configuration production",
         "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
         "build:shared": "ng build shared",
