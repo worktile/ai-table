@@ -35,18 +35,18 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                             });
                         } catch (error) {}
                     } else {
-                        delta.insert?.map((item: Y.Array<any>, index) => {
-                            const data = item.toJSON();
-                            const [fixedField, customField] = data;
-                            actions.push({
-                                type: ActionName.AddRecord,
-                                path: [offset + index],
-                                record: {
-                                    _id: fixedField[0],
-                                    values: translateRecord(customField, aiTable.fields())
-                                }
-                            });
-                        });
+                        // delta.insert?.map((item: Y.Array<any>, index) => {
+                        //     const data = item.toJSON();
+                        //     const [fixedField, customField] = data;
+                        //     actions.push({
+                        //         type: ActionName.AddRecord,
+                        //         path: [offset + index],
+                        //         record: {
+                        //             _id: fixedField[0],
+                        //             values: translateRecord(customField, aiTable.fields())
+                        //         }
+                        //     });
+                        // });
                     }
                 }
                 if (isFieldsTranslate) {

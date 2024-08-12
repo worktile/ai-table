@@ -236,7 +236,7 @@ const messageListener = (conn, rootDoc: WSSharedDoc, message) => {
                 if (guid === rootDoc.guid) {
                     console.log(`root doc(${guid}): ${JSON.stringify(rootDoc.getMap('ai-table').toJSON())}`);
                 } else {
-                    console.log(`sub doc(${guid}): ${JSON.stringify(targetDoc.getArray('').toJSON())}`);
+                    console.log(`sub doc(${guid})-${syncMessageType}: ${JSON.stringify(targetDoc.getArray('').toJSON())}`);
                 }
 
                 // If the `encoder` only contains the type of reply message and no

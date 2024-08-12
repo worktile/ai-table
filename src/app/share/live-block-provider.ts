@@ -61,6 +61,7 @@ const permissionDeniedHandler = (provider: LiveBlockProvider, reason) => {
 
 const syncLiveBlock = (doc: Y.Doc, websocket) => {
     // always send sync step 1 when connected
+    console.log(`send step 1: ${doc.guid}`)
     const encoder = encoding.createEncoder();
     encoding.writeVarUint(encoder, messageSync);
     encoding.writeVarString(encoder, doc.guid);

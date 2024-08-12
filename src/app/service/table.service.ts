@@ -97,17 +97,23 @@ export class TableService {
                             const recordOfYArray = liveBlock.doc.getArray();
                             const formatRecord = recordOfYArray.toJSON();
                             const [nonEditableArray, editableArray] = formatRecord;
+                            if (!nonEditableArray || !editableArray) {
+                                return;
+                            }
                             const record = {
                                 _id: nonEditableArray[0],
                                 positions: editableArray[editableArray.length - 1],
                                 values: translateRecord(editableArray.slice(0, editableArray.length - 1), this.fields())
                             };
-                            const newRecords = [...this.records(), record];
-                            this.buildRenderRecords(newRecords);
-                            console.log('synced', record);
+                            if (this.records().findIndex((_record) => _record._id === record._id) === -1) {
+                                const newRecords = [...this.records(), record];
+                                this.buildRenderRecords(newRecords);
+                                console.log('synced', record);
+                            }
                         });
                         liveBlock.sharedType.observeDeep((events: any) => {
                             if (liveBlock.synced) {
+                                console.log(events, 'subdoc changed');
                                 if (!YjsAITable.isLocal(this.aiTable)) {
                                     applySubDocEvents(liveBlock, this.aiTable, events);
                                 }
