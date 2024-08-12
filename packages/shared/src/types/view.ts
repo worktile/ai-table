@@ -1,5 +1,23 @@
-import { AITable, AITableAction } from '@ai-table/grid';
+import { AITable, AITableAction, AITableField, AITableRecord } from '@ai-table/grid';
 import { WritableSignal } from '@angular/core';
+
+export class Positions {
+    [view_id: string]: number;
+}
+
+export interface AITableViewRecord extends AITableRecord {
+    positions: Positions;
+}
+
+export interface AITableViewField extends AITableField {
+    positions: Positions;
+}
+
+export type AITableViewRecords = AITableViewRecord[];
+
+
+export type AITableViewFields = AITableViewField[];
+
 
 export enum Direction {
     default = 0,
@@ -28,7 +46,7 @@ export interface AITableView {
     // }[];
 }
 
-export interface SharedAITable extends AITable {
+export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
     apply: (action: AITableSharedAction) => void;
 }

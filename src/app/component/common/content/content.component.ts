@@ -29,7 +29,7 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import { AITableSharedField, AITableSharedRecord, applyActionOps, ViewActions, Direction, SharedAITable, YjsAITable, withView } from '@ai-table/shared';
+import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -38,7 +38,7 @@ import { AITableSharedField, AITableSharedRecord, applyActionOps, ViewActions, D
     templateUrl: './content.component.html'
 })
 export class DemoTableContent {
-    aiTable!: SharedAITable;
+    aiTable!: AIViewTable;
 
     plugins = [withView];
 
@@ -97,14 +97,14 @@ export class DemoTableContent {
         let draftAction = createDraft(action);
         switch (action.type) {
             case ActionName.AddRecord:
-                const record = (draftAction as AddRecordAction).record as AITableSharedRecord;
+                const record = (draftAction as AddRecordAction).record as AITableViewRecord;
                 if (!record.positions) {
                     record.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
                 }
                 return action;
             case ActionName.AddField:
-                const field = (draftAction as AddFieldAction).field as AITableSharedField;
+                const field = (draftAction as AddFieldAction).field as AITableViewField;
                 if (!field.positions) {
                     field.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
                     return finishDraft(draftAction);
@@ -144,7 +144,7 @@ export class DemoTableContent {
     }
 
     aiTableInitialized(aiTable: AITable) {
-        this.aiTable = aiTable as SharedAITable;
+        this.aiTable = aiTable as AIViewTable;
         this.aiTable.views = this.tableService.views;
         this.tableService.setAITable(this.aiTable);
     }

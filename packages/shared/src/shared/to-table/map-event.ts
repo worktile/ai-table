@@ -1,14 +1,14 @@
 import { AITable } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { toTablePath } from '../utils';
-import { AITableSharedAction, AITableView, SharedAITable, SharedType, ViewActionName } from '../../types';
+import { AITableSharedAction, AITableView, AIViewTable, SharedType, ViewActionName } from '../../types';
 
 export default function translateMapEvent(aiTable: AITable, event: Y.YMapEvent<unknown>): AITableSharedAction[] {
     const isViewTranslate = event.path.includes('views');
     if (isViewTranslate) {
         let [targetPath] = toTablePath(event.path) as [number];
         const targetSyncElement = event.target as SharedType;
-        const targetElement = (aiTable as SharedAITable).views()[targetPath];
+        const targetElement = (aiTable as AIViewTable).views()[targetPath];
         const keyChanges: [string, { action: 'add' | 'update' | 'delete'; oldValue: any }][] = Array.from(event.changes.keys.entries());
         const newProperties: Partial<AITableView> = {};
         const properties: Partial<AITableView> = {};

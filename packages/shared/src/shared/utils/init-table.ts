@@ -1,10 +1,10 @@
 import { Path } from '@ai-table/grid';
-import { AITableSharedFields, AITableSharedRecords, SharedType } from '../../types';
+import { AITableViewFields, AITableViewRecords, SharedType } from '../../types';
 
 export const initTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();
-    const fields: AITableSharedFields = data['fields'];
-    const records: AITableSharedRecords = data['records'].map((record: any) => {
+    const fields: AITableViewFields = data['fields'];
+    const records: AITableViewRecords = data['records'].map((record: any) => {
         const [nonEditableArray, editableArray] = record;
         return {
             _id: nonEditableArray[0],
@@ -20,7 +20,7 @@ export const initTable = (sharedType: SharedType) => {
     };
 };
 
-export const translateRecord = (arrayRecord: any[], fields: AITableSharedFields) => {
+export const translateRecord = (arrayRecord: any[], fields: AITableViewFields) => {
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {

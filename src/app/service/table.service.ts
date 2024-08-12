@@ -2,17 +2,17 @@ import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angula
 import { WebsocketProvider } from 'y-websocket';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
 import { createDraft, finishDraft } from 'immer';
-import { AITableSharedRecords, AITableSharedFields, SharedAITable, SharedType, YjsAITable, getProvider, applyYjsEvents, createSharedType, initSharedType, initTable, AITableView } from '@ai-table/shared';
+import { AITableViewRecords, AITableViewFields, AIViewTable, SharedType, YjsAITable, getProvider, applyYjsEvents, createSharedType, initSharedType, initTable, AITableView } from '@ai-table/shared';
 
 @Injectable()
 export class TableService {
     views!: WritableSignal<AITableView[]>;
 
-    records!: WritableSignal<AITableSharedRecords>;
+    records!: WritableSignal<AITableViewRecords>;
 
-    fields!: WritableSignal<AITableSharedFields>;
+    fields!: WritableSignal<AITableViewFields>;
 
-    aiTable!: SharedAITable;
+    aiTable!: AIViewTable;
 
     provider!: WebsocketProvider | null;
 
@@ -41,16 +41,16 @@ export class TableService {
         });
     }
 
-    setAITable(aiTable: SharedAITable) {
+    setAITable(aiTable: AIViewTable) {
         this.aiTable = aiTable;
     }
 
-    buildRenderRecords(records?: AITableSharedRecords) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as AITableSharedRecords);
+    buildRenderRecords(records?: AITableViewRecords) {
+        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as AITableViewRecords);
     }
 
-    buildRenderFields(fields?: AITableSharedFields) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as AITableSharedFields);
+    buildRenderFields(fields?: AITableViewFields) {
+        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as AITableViewFields);
     }
 
     handleShared(room: string) {

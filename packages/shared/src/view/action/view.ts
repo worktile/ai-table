@@ -1,8 +1,8 @@
 import { AITableRecord, AITableRecords } from '@ai-table/grid';
 import { createDraft, finishDraft } from 'immer';
-import { AITableView, AITableViewAction, Direction, SharedAITable, ViewActionName } from '../../types';
+import { AITableView, AITableViewAction, Direction, AIViewTable, ViewActionName } from '../../types';
 
-export function setView(aiTable: SharedAITable, value: Partial<AITableView>, path: [number]) {
+export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [number]) {
     const [index] = path;
     const view: AITableView = aiTable.views()[index];
     const oldView: Partial<AITableView> = {};
@@ -26,7 +26,7 @@ export function setView(aiTable: SharedAITable, value: Partial<AITableView>, pat
 }
 
 export const GeneralActions = {
-    transform(aiTable: SharedAITable, op: AITableViewAction): void {
+    transform(aiTable: AIViewTable, op: AITableViewAction): void {
         const views = createDraft(aiTable.views());
         const records = createDraft(aiTable.records());
         applyView(aiTable, views, records, op);
@@ -39,7 +39,7 @@ export const GeneralActions = {
     }
 };
 
-export const applyView = (aiTable: SharedAITable, views: AITableView[], records: AITableRecords, options: AITableViewAction) => {
+export const applyView = (aiTable: AIViewTable, views: AITableView[], records: AITableRecords, options: AITableViewAction) => {
     switch (options.type) {
         case ViewActionName.setView: {
             const [viewIndex] = options.path;

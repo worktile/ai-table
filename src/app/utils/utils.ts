@@ -1,7 +1,7 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableSharedFields, AITableSharedRecords, AITableView, Positions } from '@ai-table/shared';
+import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/shared';
 
-export function sortDataByView(data: AITableSharedRecords | AITableSharedFields, activeViewId: string) {
+export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
     if (hasPositions) {
         return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
@@ -19,8 +19,8 @@ export function createDefaultPositions(views: AITableView[], index: number) {
 
 export function getDefaultValue() {
     const initValue: {
-        records: AITableSharedRecords;
-        fields: AITableSharedFields;
+        records: AITableViewRecords;
+        fields: AITableViewFields;
     } = {
         records: [
             {

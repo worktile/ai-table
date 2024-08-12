@@ -1,10 +1,10 @@
 import * as Y from 'yjs';
 import translateArrayEvent from './array-event';
 import translateMapEvent from './map-event';
-import { SharedAITable, AITableSharedAction } from 'dist/share';
 import { YjsAITable } from '../yjs-table';
+import { AITableSharedAction, AIViewTable } from '../../types';
 
-export function translateYjsEvent(aiTable: SharedAITable, event: Y.YEvent<any>): AITableSharedAction[] {
+export function translateYjsEvent(aiTable: AIViewTable, event: Y.YEvent<any>): AITableSharedAction[] {
     if (event instanceof Y.YArrayEvent) {
         return translateArrayEvent(aiTable, event);
     }
@@ -14,7 +14,7 @@ export function translateYjsEvent(aiTable: SharedAITable, event: Y.YEvent<any>):
     return [];
 }
 
-export function applyEvents(aiTable: SharedAITable, events: Y.YEvent<any>[]) {
+export function applyEvents(aiTable: AIViewTable, events: Y.YEvent<any>[]) {
     events.forEach((event) =>
         translateYjsEvent(aiTable, event).forEach((item: AITableSharedAction) => {
             aiTable.apply(item);
@@ -22,7 +22,7 @@ export function applyEvents(aiTable: SharedAITable, events: Y.YEvent<any>[]) {
     );
 }
 
-export function applyYjsEvents(aiTable: SharedAITable, events: Y.YEvent<any>[]): void {
+export function applyYjsEvents(aiTable: AIViewTable, events: Y.YEvent<any>[]): void {
     if (YjsAITable.isUndo(aiTable)) {
         applyEvents(aiTable, events);
     } else {

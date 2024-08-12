@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { AITableSharedRecord, Positions, SyncMapElement } from '../../types';
+import { AITableViewRecord, Positions, SyncMapElement } from '../../types';
 
 
 export const createSharedType = () => {
@@ -12,7 +12,7 @@ export const initSharedType = <T>(
     doc: Y.Doc,
     initializeValue: {
         fields: Positions[];
-        records: AITableSharedRecord[];
+        records: AITableViewRecord[];
         views: T[];
     }
 ) => {
@@ -25,7 +25,7 @@ export function toSharedType<T>(
     sharedType: Y.Map<any>,
     data: {
         fields: Positions[];
-        records: AITableSharedRecord[];
+        records: AITableViewRecord[];
         views: T[];
     }
 ): void {
@@ -52,7 +52,7 @@ export function toSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toRecordSyncElement(record: AITableSharedRecord): Y.Array<Y.Array<any>> {
+export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
     const nonEditableArray = new Y.Array();
     nonEditableArray.insert(0, [record['_id']]);
 
