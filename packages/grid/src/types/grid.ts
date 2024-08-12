@@ -1,3 +1,4 @@
+import { Dictionary } from 'ngx-tethys/types';
 import { AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
 
@@ -30,5 +31,5 @@ export interface AITableUserInfo {
 }
 
 export interface AITableReferences {
-    members: AITableUserInfo[];
+    members: Dictionary<AITableUserInfo>;
 }
