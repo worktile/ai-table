@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AITableSelectOption } from '../core';
-import { AITableSelection } from '../types';
+import { AITableReferences, AITableSelection } from '../types';
 
 @Pipe({
     name: 'selectOption',
@@ -31,5 +31,18 @@ export class SelectOptionsPipe implements PipeTransform {
 export class IsSelectRecordPipe implements PipeTransform {
     transform(recordId: string, selection: AITableSelection) {
         return selection.selectedRecords.has(recordId);
+    }
+}
+
+@Pipe({
+    name: 'user',
+    standalone: true
+})
+export class UserPipe implements PipeTransform {
+    transform(values: string[], references: AITableReferences) {
+        return values.map((item) => {
+            return references.members[item] || {};
+        });
+      
     }
 }

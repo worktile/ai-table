@@ -44,7 +44,7 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { IsSelectRecordPipe, SelectOptionPipe, SelectOptionsPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, SelectOptionPipe, SelectOptionsPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
@@ -86,7 +86,8 @@ import { buildGridData } from './utils';
         NgTemplateOutlet,
         IsSelectRecordPipe,
         ProgressEditorComponent,
-        SelectOptionComponent
+        SelectOptionComponent,
+        UserPipe
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
@@ -122,7 +123,7 @@ export class AITableGrid implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields(), this.aiReferences());
+        return buildGridData(this.aiRecords(), this.aiFields());
     });
 
     private ngZone = inject(NgZone);
