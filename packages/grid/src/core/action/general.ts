@@ -5,9 +5,9 @@ import { isPathEqual } from '../utils';
 const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
     switch (options.type) {
         case ActionName.UpdateFieldValue: {
-            const [recordIndex, fieldIndex] = options.path;
-            if (fieldIndex > -1 && recordIndex > -1) {
-                const fieldId = aiTable.fields()[fieldIndex]._id;
+            const [recordId, fieldId] = options.path;
+            if (recordId && fieldId) {
+                const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
                 records[recordIndex].values[fieldId] = options.newFieldValue;
             }
             break;
