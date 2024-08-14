@@ -100,7 +100,7 @@ export class AITableFieldPropertyEditor {
             const path = this.aiTable.fields().findIndex((item) => item._id === this.aiField()._id);
             Actions.setField(this.aiTable, this.aiField(), [path]);
         } else {
-            Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
+            Actions.addField(this.aiTable, this.aiField(), [2]);
         }
         this.thyPopoverRef.close();
     }

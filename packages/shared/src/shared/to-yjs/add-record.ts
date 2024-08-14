@@ -5,7 +5,7 @@ import { AITableViewRecord, SharedType } from '../../types';
 export default function addRecord(sharedType: SharedType, action: AddRecordAction): SharedType {
     const records = sharedType.get('records');
     if (records) {
-        const path = action.path[0];
+        const path = records.toJSON().length;
         records.insert(path, [toRecordSyncElement(action.record as AITableViewRecord)]);
     }
 

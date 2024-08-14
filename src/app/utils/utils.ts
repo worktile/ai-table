@@ -9,12 +9,32 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
     return data;
 }
 
-export function createDefaultPositions(views: AITableView[], index: number) {
+export function buildDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
+    const sortData = sortDataByView(data, activeViewId);
+    return sortData;
+}
+
+export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
     const positions: Positions = {};
+    const activeId = views.find((item) => item.isActive)?._id!;
+    const buildData = buildDataByView(data, activeId) as AITableViewRecords;
+    const position = getPosition(buildData, activeId, index);
     views.forEach((element) => {
-        positions[element._id] = index;
+        positions[element._id] = element.isActive ? position : data.length;
     });
     return positions;
+}
+
+export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
+    let position = data.length;
+    if (index !== 0 && index !== data.length) {
+        const previousViewPosition = data[index - 1].positions[activeViewId];
+        const nextViewPosition = data[index].positions[activeViewId!];
+        position = (previousViewPosition + nextViewPosition) / 2;
+    } else {
+        position = index;
+    }
+    return position;
 }
 
 export function getDefaultValue() {
@@ -47,7 +67,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
+                    'column-12': 1720490727
                 }
             },
             {
@@ -71,8 +91,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
-
+                    'column-12': 1720490727
                 }
             },
             {

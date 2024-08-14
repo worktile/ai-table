@@ -29,7 +29,7 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
+import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView, initTable } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -93,20 +93,20 @@ export class DemoTableContent {
     }
 
     buildAction(action: AITableAction) {
-        // TODO：获取当前的 view 和 path，转换为 sharedType 中原数据的 path
         let draftAction = createDraft(action);
+        const data = initTable(this.tableService.sharedType!);
         switch (action.type) {
             case ActionName.AddRecord:
                 const record = (draftAction as AddRecordAction).record as AITableViewRecord;
                 if (!record.positions) {
-                    record.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
+                    record.positions = createDefaultPositions(this.tableService.views(), data.records, action.path[0]);
                     return finishDraft(draftAction);
                 }
                 return action;
             case ActionName.AddField:
                 const field = (draftAction as AddFieldAction).field as AITableViewField;
                 if (!field.positions) {
-                    field.positions = createDefaultPositions(this.tableService.views(), action.path[0]);
+                    field.positions = createDefaultPositions(this.tableService.views(), data.fields, action.path[0]);
                     return finishDraft(draftAction);
                 }
                 return action;
