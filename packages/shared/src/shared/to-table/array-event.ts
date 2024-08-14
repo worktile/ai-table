@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { toTablePath } from '../utils';
 import { AITableViewFields, SharedType } from '../../types';
-import { translateIndexToIds, translateToRecord } from '../utils/translate';
+import { translateIndexToIds, translateToRecordValues } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AITable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
@@ -48,7 +48,7 @@ export default function translateArrayEvent(aiTable: AITable, sharedType: Shared
                                 path: [offset + index],
                                 record: {
                                     _id: fixedField[0],
-                                    values: translateToRecord(customField, aiTable.fields() as AITableViewFields)
+                                    values: translateToRecordValues(customField, aiTable.fields() as AITableViewFields)
                                 }
                             });
                         });

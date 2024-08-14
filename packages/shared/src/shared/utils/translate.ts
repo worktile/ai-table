@@ -1,6 +1,6 @@
 import { AITableViewFields, AITableViewRecords, SharedType } from '../../types';
 
-export const translateToRecord = (arrayRecord: any[], fields: AITableViewFields) => {
+export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
@@ -15,7 +15,7 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
         return {
             _id: nonEditableArray[0],
             positions: editableArray[editableArray.length - 1],
-            values: translateToRecord(editableArray.slice(0, editableArray.length - 1), fields)
+            values: translateToRecordValues(editableArray.slice(0, editableArray.length - 1), fields)
         };
     });
 };
