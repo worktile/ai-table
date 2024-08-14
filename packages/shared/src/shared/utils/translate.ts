@@ -1,4 +1,5 @@
-import { AITableViewFields, AITableViewRecords, SharedType } from '../../types';
+import { Path } from '@ai-table/grid';
+import { AITableViewFields } from '../../types';
 
 export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
     const fieldIds = fields.map((item) => item._id);
@@ -20,26 +21,7 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
     });
 };
 
-export function translateIndexToIds(sharedType: SharedType, recordIndex: number, fieldIndex: number) {
-    const data = sharedType.toJSON();
-    const fields: AITableViewFields = data['fields'];
-    const records: AITableViewRecords = translateToRecords(data['records'], fields);
-    const recordId = records[recordIndex]._id;
-    const fieldId = fields[fieldIndex]._id;
-    return {
-        recordId,
-        fieldId
-    };
+export function toTablePath(path: (string | number)[]): Path {
+    return path.filter((node) => typeof node === 'number') as Path;
 }
 
-export function translateIdsToIndex(sharedType: SharedType, recordId: string, fieldId: string) {
-    const data = sharedType.toJSON();
-    const fields: AITableViewFields = data['fields'];
-    const records: AITableViewRecords = translateToRecords(data['records'], fields);
-    const recordIndex = records.findIndex((item) => item._id === recordId);
-    const fieldIndex = fields.findIndex((item) => item._id === fieldId);
-    return {
-        recordIndex,
-        fieldIndex
-    };
-}

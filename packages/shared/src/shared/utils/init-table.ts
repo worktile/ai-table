@@ -1,4 +1,3 @@
-import { Path } from '@ai-table/grid';
 import { AITableViewFields, AITableViewRecords, SharedType } from '../../types';
 import { translateToRecords } from './translate';
 
@@ -13,8 +12,3 @@ export const initTable = (sharedType: SharedType) => {
         views
     };
 };
-
-
-export function toTablePath(path: (string | number)[]): Path {
-    return path.filter((node) => typeof node === 'number') as Path;
-}
