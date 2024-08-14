@@ -5,3 +5,26 @@
     overflow-x: auto;
     height: calc(100vh - 20px);
 }
+
+demo-ai-canvas {
+    flex: 1 1 auto;
+    height: 100%;
+    position: relative;
+
+    konva-grid-view {
+        overflow: visible;
+        height: 100%;
+        width: 100%;
+
+        .grid-view-container {
+            overflow: visible;
+            height: 100%;
+            width: 100%;
+
+            .vika-grid-view {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}

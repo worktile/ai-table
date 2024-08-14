@@ -1,5 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/shared';
+import { AITableView, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/shared';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -47,7 +47,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
+                    'column-12': 1720490727
                 }
             },
             {
@@ -71,8 +71,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
-
+                    'column-12': 1720490727
                 }
             },
             {
@@ -435,4 +434,172 @@ export function getReferences(): AITableReferences {
             }
         }
     };
+}
+
+export function getCanvasDefaultValue() {
+    const initValue: {
+        records: AITableViewRecords;
+        fields: AITableViewFields;
+    } = {
+        records: [
+            {
+                _id: 'row-1',
+                positions: {
+                    view1: 0,
+                    view2: 1
+                },
+                values: {
+                    'column-1': '文本 1-1',
+                    'column-2': '文本 2-1',
+                    'column-3': '文本 3-1',
+                    'column-4': '文本 4-1',
+                    'column-5': '文本 5-1',
+                    'column-6': '文本 6-1',
+                    'column-7': '文本 7-1',
+                    'column-8': '文本 8-1',
+                    'column-9': '文本 9-1',
+                    'column-10': '1682235946',
+                    'column-11': '1720490727'
+                }
+            },
+            {
+                _id: 'row-2',
+                positions: {
+                    view1: 1,
+                    view2: 2
+                },
+                values: {
+                    'column-1': '文本 1-2',
+                    'column-2': '文本 2-2',
+                    'column-3': '文本 3-2',
+                    'column-4': '文本 4-2',
+                    'column-5': '文本 5-2',
+                    'column-6': '文本 6-2',
+                    'column-7': '文本 7-2',
+                    'column-8': '文本 8-2',
+                    'column-9': '文本 9-2'
+                }
+            },
+            {
+                _id: 'row-3',
+                positions: {
+                    view1: 2,
+                    view2: 0
+                },
+                values: {
+                    'column-1': '文本 1-3',
+                    'column-2': '文本 2-3',
+                    'column-3': '文本 3-3',
+                    'column-4': '文本 4-3',
+                    'column-5': '文本 5-3',
+                    'column-6': '文本 6-3',
+                    'column-7': '文本 7-3',
+                    'column-8': '文本 8-3',
+                    'column-9': '文本 9-3'
+                }
+            }
+        ],
+        fields: [
+            {
+                _id: 'column-1',
+                name: '单行文本1',
+                positions: {
+                    view1: 0,
+                    view2: 1
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-2',
+                name: '单行文本2',
+                positions: {
+                    view1: 1,
+                    view2: 2
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-3',
+                name: '单行文本3',
+                positions: {
+                    view1: 2,
+                    view2: 3
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-4',
+                name: '单行文本4',
+                positions: {
+                    view1: 3,
+                    view2: 4
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-5',
+                name: '单行文本5',
+                positions: {
+                    view1: 4,
+                    view2: 5
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-6',
+                name: '单行文本6',
+                positions: {
+                    view1: 5,
+                    view2: 6
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-7',
+                name: '单行文本7',
+                positions: {
+                    view1: 6,
+                    view2: 7
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-8',
+                name: '单行文本8',
+                positions: {
+                    view1: 7,
+                    view2: 8
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-9',
+                name: '单行文本9',
+                positions: {
+                    view1: 8,
+                    view2: 9
+                },
+                type: AITableFieldType.text
+            },
+            {
+                _id: 'column-10',
+                name: '创建时间',
+                positions: {
+                    view1: 9,
+                    view2: 10
+                },
+                type: AITableFieldType.createdAt
+            },
+            {
+                _id: 'column-11',
+                name: '更新时间',
+                positions: {
+                    view1: 10,
+                    view2: 11
+                },
+                type: AITableFieldType.updatedAt
+            }
+        ]
+    };
+    return initValue;
 }

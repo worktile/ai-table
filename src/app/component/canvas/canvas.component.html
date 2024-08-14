@@ -1,0 +1,7 @@
+<konva-grid-view
+    [(aiRecords)]="tableService.records"
+    [(aiFields)]="tableService.fields"
+    [aiPlugins]="plugins"
+    (onChange)="onChange($event)"
+    (aiTableInitialized)="aiTableInitialized($event)"
+></konva-grid-view>

@@ -1,17 +1,19 @@
 import { Routes } from '@angular/router';
-import { DemoTableContent } from './component/common/content/content.component';
-import { DemoTable } from './component/table.component';
+import { DemoCanvas } from './component/canvas/canvas.component';
 
 export const routes: Routes = [
+    // {
+    //     path: '',
+    //     component: DemoTable,
+    //     children: [
+    //         {
+    //             path: ':viewId',
+    //             component: DemoTableContent
+    //         }
+    //     ]
+    // },
     {
         path: '',
-        component: DemoTable,
-        children:[
-            {
-                path: ':viewId',
-                component: DemoTableContent,
-            }
-        ]
+        component: DemoCanvas
     }
- 
 ];
