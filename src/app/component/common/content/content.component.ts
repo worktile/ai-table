@@ -29,7 +29,16 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView, initTable } from '@ai-table/shared';
+import {
+    AITableViewField,
+    AITableViewRecord,
+    applyActionOps,
+    ViewActions,
+    Direction,
+    AIViewTable,
+    YjsAITable,
+    withView
+} from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -92,33 +101,38 @@ export class DemoTableContent {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
     }
 
-    buildAction(action: AITableAction) {
-        let draftAction = createDraft(action);
-        const data = initTable(this.tableService.sharedType!);
-        switch (action.type) {
-            case ActionName.AddRecord:
-                const record = (draftAction as AddRecordAction).record as AITableViewRecord;
-                if (!record.positions) {
-                    record.positions = createDefaultPositions(this.tableService.views(), data.records, action.path[0]);
-                    return finishDraft(draftAction);
-                }
-                return action;
-            case ActionName.AddField:
-                const field = (draftAction as AddFieldAction).field as AITableViewField;
-                if (!field.positions) {
-                    field.positions = createDefaultPositions(this.tableService.views(), data.fields, action.path[0]);
-                    return finishDraft(draftAction);
-                }
-                return action;
-            default:
-                return action;
-        }
-    }
-
     onChange(options: AITableChangeOptions) {
         if (this.tableService.sharedType) {
             options.actions = options.actions.map((action) => {
-                return this.buildAction(action);
+                if (action.type === ActionName.AddRecord) {
+                    const draftAction = createDraft(action);
+                    const record = (draftAction as AddRecordAction).record as AITableViewRecord;
+                    if (!record.positions) {
+                        record.positions = createDefaultPositions(this.tableService.views(), this.tableService.records(), action.path[0]);
+                        const newAction = finishDraft(draftAction) as AddRecordAction;
+                        this.tableService.records.update((value) => {
+                            let draftValue = createDraft(value);
+                            draftValue[action.path[0]] = newAction.record as AITableViewRecord;
+                            return draftValue;
+                        });
+                        return newAction;
+                    }
+                }
+                if (action.type === ActionName.AddField) {
+                    const draftAction = createDraft(action);
+                    const field = (draftAction as AddFieldAction).field as AITableViewField;
+                    if (!field.positions) {
+                        field.positions = createDefaultPositions(this.tableService.views(), this.tableService.fields(), action.path[0]);
+                        const newAction = finishDraft(draftAction) as AddFieldAction;
+                        this.tableService.fields.update((value) => {
+                            let draftValue = createDraft(value);
+                            draftValue[action.path[0]] = newAction.field as AITableViewField;
+                            return draftValue;
+                        });
+                        return newAction;
+                    }
+                }
+                return action;
             });
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {

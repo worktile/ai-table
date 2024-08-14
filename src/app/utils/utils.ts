@@ -26,10 +26,10 @@ export function createDefaultPositions(views: AITableView[], data: AITableViewRe
 }
 
 export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
-    let position = data.length;
-    if (index !== 0 && index !== data.length) {
+    let position = data.length - 1;
+    if (index !== 0 && index !== data.length - 1) {
         const previousViewPosition = data[index - 1].positions[activeViewId];
-        const nextViewPosition = data[index].positions[activeViewId!];
+        const nextViewPosition = data[index + 1].positions[activeViewId!];
         position = (previousViewPosition + nextViewPosition) / 2;
     } else {
         position = index;
