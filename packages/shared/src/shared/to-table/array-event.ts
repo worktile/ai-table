@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { toTablePath } from '../utils';
 import { AITableViewFields, SharedType } from '../../types';
-import { translateToIds, translateToRecord } from '../utils/translate';
+import { translateIndexToIds, translateToRecord } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AITable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
@@ -24,7 +24,7 @@ export default function translateArrayEvent(aiTable: AITable, sharedType: Shared
                             delta.insert?.map((item: any) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
-                                const { recordId, fieldId } = translateToIds(sharedType, recordIndex, fieldIndex);
+                                const { recordId, fieldId } = translateIndexToIds(sharedType, recordIndex, fieldIndex);
                                 const path = [recordId, fieldId] as AIFieldValuePath;
                                 const fieldValue = AITableQueries.getFieldValue(aiTable, path);
 

@@ -20,7 +20,7 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
     });
 };
 
-export function translateToIds(sharedType: SharedType, recordIndex: number, fieldIndex: number) {
+export function translateIndexToIds(sharedType: SharedType, recordIndex: number, fieldIndex: number) {
     const data = sharedType.toJSON();
     const fields: AITableViewFields = data['fields'];
     const records: AITableViewRecords = translateToRecords(data['records'], fields);
@@ -32,7 +32,7 @@ export function translateToIds(sharedType: SharedType, recordIndex: number, fiel
     };
 }
 
-export function translateToIndex(sharedType: SharedType, recordId: string, fieldId: string) {
+export function translateIdsToIndex(sharedType: SharedType, recordId: string, fieldId: string) {
     const data = sharedType.toJSON();
     const fields: AITableViewFields = data['fields'];
     const records: AITableViewRecords = translateToRecords(data['records'], fields);
