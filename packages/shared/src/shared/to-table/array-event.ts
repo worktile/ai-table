@@ -34,7 +34,7 @@ export default function translateArrayEvent(aiTable: AITable, sharedType: Shared
                                         type: ActionName.UpdateFieldValue,
                                         path,
                                         fieldValue,
-                                        newFieldValue: item,
+                                        newFieldValue: item
                                     });
                                 }
                             });
