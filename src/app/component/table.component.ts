@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { WebsocketProvider } from 'y-websocket';
-import { ThyAction } from 'ngx-tethys/action';
 import { AITableGrid } from '@ai-table/grid';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
+import { Router, RouterOutlet } from '@angular/router';
+import { ThyAction } from 'ngx-tethys/action';
 import { ThyInputDirective } from 'ngx-tethys/input';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
+import { WebsocketProvider } from 'y-websocket';
 import { TableService } from '../service/table.service';
 
 const initViews = [
@@ -31,7 +31,7 @@ export class DemoTable implements OnInit, OnDestroy {
     tableService = inject(TableService);
 
     ngOnInit(): void {
-        this.router.navigate(['/view1']);
+        this.router.navigate(['table', 'view1']);
         this.tableService.initData(initViews);
     }
 
