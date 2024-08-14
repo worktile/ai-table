@@ -5,7 +5,7 @@ import { YjsAITable } from '../yjs-table';
 import { AITableSharedAction, AITableView, AITableViewField, AIViewTable, SharedType } from '../../types';
 import { ActionName } from '@ai-table/grid';
 
-export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
+export function translateYjsEvent(aiTable: AIViewTable, event: Y.YEvent<any>): AITableSharedAction[] {
     if (event instanceof Y.YArrayEvent) {
         return translateArrayEvent(aiTable, event);
     }
@@ -17,7 +17,7 @@ export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, 
 
 export function applyEvents(aiTable: AIViewTable, sharedType: SharedType, activeView: AITableView, events: Y.YEvent<any>[]) {
     events.forEach((event) =>
-        translateYjsEvent(aiTable, sharedType, event).forEach((item: AITableSharedAction) => {
+        translateYjsEvent(aiTable, event).forEach((item: AITableSharedAction) => {
             if (item.type === ActionName.AddRecord) {
                 const records = sharedType.get('records')?.toJSON();
                 const record = records?.find((record) => record[0][0] === item.record._id);

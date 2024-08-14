@@ -9,16 +9,10 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
     return data;
 }
 
-export function buildDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
-    const sortData = sortDataByView(data, activeViewId);
-    return sortData;
-}
-
 export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
     const positions: Positions = {};
     const activeId = views.find((item) => item.isActive)?._id!;
-    const buildData = buildDataByView(data, activeId) as AITableViewRecords;
-    const position = getPosition(buildData, activeId, index);
+    const position = getPosition(data, activeId, index);
     views.forEach((element) => {
         positions[element._id] = element.isActive ? position : data.length;
     });
