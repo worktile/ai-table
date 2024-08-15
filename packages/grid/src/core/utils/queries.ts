@@ -1,22 +1,22 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { Path, AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
+import { AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
 
 export const AITableQueries = {
-    findPath(aiTable: AITable, field?: AITableField, record?: AITableRecord): Path {
+    findRecordPath(aiTable: AITable, record: AITableRecord) {
         const recordIndex = record && aiTable.records().indexOf(record);
-        const fieldIndex = field && aiTable.fields().indexOf(field);
-        if (!isUndefinedOrNull(recordIndex) && recordIndex > -1 && !isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
-            return [recordIndex!, fieldIndex!] as AIFieldValuePath;
-        }
         if (!isUndefinedOrNull(recordIndex) && recordIndex > -1) {
             return [recordIndex] as AIRecordPath;
         }
+        throw new Error(`can not find the record path: ${JSON.stringify({ ...(record || {}) })}`);
+    },
+    findFieldPath(aiTable: AITable, field: AITableField) {
+        const fieldIndex = field && aiTable.fields().indexOf(field);
         if (!isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
             return [fieldIndex] as AIFieldPath;
         }
-        throw new Error(`can not find the path: ${JSON.stringify({ ...(field || {}), ...(record || {}) })}`);
+        throw new Error(`can not find the field path: ${JSON.stringify({ ...(field || {}) })}`);
     },
-    getFieldValue(aiTable: AITable, path: [number, number]): any {
+    getFieldValue(aiTable: AITable, path: AIFieldValuePath): any {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
         }
@@ -29,12 +29,11 @@ export const AITableQueries = {
         if (!path) {
             throw new Error(`path does not exist as path [${path}]`);
         }
-
-        const field = aiTable.fields()[path[1]];
-        if (!field) {
-            throw new Error(`can not find field at path [${path}]`);
+        const recordIndex = aiTable.records().findIndex((item) => item._id === path[0]);
+        if (recordIndex < 0) {
+            throw new Error(`can not find record at path [${path}]`);
         }
-        return aiTable.records()[path[0]].values[field._id];
+        return aiTable.records()[recordIndex].values[path[1]];
     },
 
     getField(aiTable: AITable, path: AIFieldPath): AITableField {

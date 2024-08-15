@@ -46,6 +46,8 @@ export interface AITableView {
     // }[];
 }
 
+export type  AITableViews = AITableView[];
+
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
     apply: (action: AITableSharedAction) => void;
