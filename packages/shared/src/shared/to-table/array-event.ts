@@ -1,14 +1,14 @@
 import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AITableQueries } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
-import { getTableIndex } from '../utils';
+import { getShareTypeNumberPath } from '../utils';
 import { AITableViewFields, SharedType } from '../../types';
 import { getSharedFieldId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AITable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
     let offset = 0;
-    let targetPath = getTableIndex(event.path);
+    let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
 

@@ -22,7 +22,7 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
     });
 };
 
-export function getTableIndex(path: (string | number)[]): number[] {
+export function getShareTypeNumberPath(path: (string | number)[]): number[] {
     return path.filter((node) => typeof node === 'number') as number[];
 }
 
