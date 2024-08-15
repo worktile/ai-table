@@ -2,10 +2,10 @@ import { ActionName, AIFieldValuePath, AITable, AITableAction, AITableField, AIT
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { toTablePath } from '../utils';
-import { AITableViewFields } from '../../types';
-import { translateToRecordValues } from '../utils/translate';
+import { AITableViewFields, SharedType, SyncMapElement } from '../../types';
+import { getSharedFieldId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
-export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<any>): AITableAction[] {
+export default function translateArrayEvent(aiTable: AITable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     const actions: AITableAction[] = [];
     let offset = 0;
     let targetPath = toTablePath(event.path);
@@ -24,8 +24,8 @@ export default function translateArrayEvent(aiTable: AITable, event: Y.YEvent<an
                             delta.insert?.map((item: any) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
-                                const recordId = aiTable.records()[recordIndex]._id;
-                                const fieldId = aiTable.fields()[fieldIndex]._id;
+                                const recordId = getSharedRecordId(sharedType.get('records')!, recordIndex )
+                                const fieldId = getSharedFieldId(sharedType.get('fields')!, fieldIndex )
                                 const path = [recordId, fieldId] as AIFieldValuePath;
                                 const fieldValue = AITableQueries.getFieldValue(aiTable, path);
 

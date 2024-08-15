@@ -2,15 +2,16 @@ import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { Path, AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
 
 export const AITableQueries = {
-    findPath(aiTable: AITable, field?: AITableField, record?: AITableRecord): Path {
-        const recordIndex = record && aiTable.records().indexOf(record);
-        const fieldIndex = field && aiTable.fields().indexOf(field);
-        if (!isUndefinedOrNull(recordIndex) && recordIndex > -1 && !isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
-            return [aiTable.records()[recordIndex]._id!, aiTable.fields()[fieldIndex]._id!] as AIFieldValuePath;
+    findPath(aiTable: AITable, record?: AITableRecord,  field?: AITableField): Path {
+        if (!isUndefinedOrNull(field) && !isUndefinedOrNull(record)) {
+            return [record!._id!, field!._id!] as AIFieldValuePath;
         }
+        const recordIndex = record && aiTable.records().indexOf(record);
         if (!isUndefinedOrNull(recordIndex) && recordIndex > -1) {
             return [recordIndex] as AIRecordPath;
         }
+
+        const fieldIndex = field && aiTable.fields().indexOf(field);
         if (!isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
             return [fieldIndex] as AIFieldPath;
         }

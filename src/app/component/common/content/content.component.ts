@@ -160,9 +160,9 @@ export class DemoTableContent {
     moveField() {
         const newIndex = 2;
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedRecords = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
-        selectedRecords.forEach((item) => {
-            const path = AITableQueries.findPath(this.aiTable, item) as AIFieldPath;
+        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
+        selectedFields.forEach((item) => {
+            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIFieldPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
         });
     }
@@ -174,7 +174,7 @@ export class DemoTableContent {
         let offset = 0;
         const newIndex = 2;
         selectedRecords.forEach((item) => {
-            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            const path = AITableQueries.findPath(this.aiTable, item) as AIRecordPath;
             if (path[0] < newIndex) {
                 Actions.moveRecord(this.aiTable, path, [newIndex]);
                 offset = 1;
@@ -185,7 +185,7 @@ export class DemoTableContent {
 
         selectedRecordsAfterNewPath.reverse().forEach((item) => {
             const newPath = [newIndex + offset] as AIRecordPath;
-            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            const path = AITableQueries.findPath(this.aiTable, item) as AIRecordPath;
             Actions.moveRecord(this.aiTable, path, newPath);
         });
     }

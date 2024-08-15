@@ -1,5 +1,6 @@
 import { UpdateFieldValueAction } from '@ai-table/grid';
-import { SharedType, SyncArrayElement, SyncMapElement } from '../../types';
+import { SharedType, SyncArrayElement } from '../../types';
+import { getSharedFieldId, getSharedRecordId } from '../utils';
 
 export default function updateFieldValue(sharedType: SharedType, action: UpdateFieldValueAction): SharedType {
     const sharedRecords = sharedType.get('records');
@@ -8,13 +9,15 @@ export default function updateFieldValue(sharedType: SharedType, action: UpdateF
         let recordIndex = -1;
         let fieldIndex = -1;
         for (let index = 0; index < sharedRecords.length; index++) {
-            if ((sharedRecords.get(index) as SyncArrayElement).get(0).get(0) === action.path[0]) {
+            const recordId = getSharedRecordId(sharedRecords, index);
+            if (recordId === action.path[0]) {
                 recordIndex = index;
                 break;
             }
         }
         for (let index = 0; index < sharedFields.length; index++) {
-            if ((sharedFields.get(index) as SyncMapElement).get('_id') === action.path[1]) {
+            const fieldId = getSharedFieldId(sharedFields, index);
+            if (fieldId === action.path[1]) {
                 fieldIndex = index;
                 break;
             }

@@ -83,7 +83,7 @@ export class TableService {
                         this.views.set(data.views);
                         isInitialized = true;
                     } else {
-                        applyYjsEvents(this.aiTable, events);
+                        applyYjsEvents(this.aiTable, this.sharedType!, events);
                     }
                 }
             });

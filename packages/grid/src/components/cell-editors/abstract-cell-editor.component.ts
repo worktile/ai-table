@@ -21,13 +21,13 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     ngOnInit(): void {
         this.modelValue = computed(() => {
-            const path = AITableQueries.findPath(this.aiTable, this.field(), this.record()) as AIFieldValuePath;
+            const path = AITableQueries.findPath(this.aiTable, this.record(), this.field()) as AIFieldValuePath;
             return AITableQueries.getFieldValue(this.aiTable, path);
         })();
     }
 
     updateFieldValue() {
-        const path = AITableQueries.findPath(this.aiTable, this.field(), this.record()) as AIFieldValuePath;
+        const path = AITableQueries.findPath(this.aiTable, this.record(), this.field()) as AIFieldValuePath;
         Actions.updateFieldValue(this.aiTable, this.modelValue, path);
     }
 

@@ -1,5 +1,6 @@
 import { Path } from '@ai-table/grid';
-import { AITableViewFields } from '../../types';
+import { AITableViewFields, SyncArrayElement, SyncElement, SyncMapElement } from '../../types';
+import * as Y from 'yjs';
 
 export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
     const fieldIds = fields.map((item) => item._id);
@@ -25,3 +26,10 @@ export function toTablePath(path: (string | number)[]): Path {
     return path.filter((node) => typeof node === 'number') as Path;
 }
 
+export function getSharedRecordId(records: SyncElement, recordIndex: number) {
+    return records && (records as Y.Array<SyncArrayElement>).get(recordIndex).get(0).get(0);
+}
+
+export function getSharedFieldId(fields: SyncElement, fieldIndex: number) {
+    return fields && (fields as Y.Array<SyncMapElement>).get(fieldIndex).get('_id');
+}
