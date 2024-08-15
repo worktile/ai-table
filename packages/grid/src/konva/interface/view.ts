@@ -1,11 +1,12 @@
 import { AITable, AITableFields, AITableRecords } from '@ai-table/grid';
 import { Coordinate } from '../core/coordinate';
-import { AITableScrollState } from './grid';
+import { AILinearRow, AITableScrollState } from './grid';
 
 export interface AITableGridBase {
     aiTable: AITable;
     fields: AITableFields;
     records: AITableRecords;
+    linearRows?: AILinearRow[];
 }
 
 export interface AITableGridView extends AITableGridBase {
@@ -45,4 +46,9 @@ export interface AITableUseGridBaseConfig extends AITableGridBase {
     rowStopIndex: number;
     columnStartIndex: number;
     columnStopIndex: number;
+}
+
+export interface AITableGroupInfo {
+    fieldId: string;
+    desc: boolean;
 }

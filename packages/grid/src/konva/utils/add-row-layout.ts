@@ -1,4 +1,5 @@
-import { GRID_GROUP_OFFSET, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
+import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_GROUP_OFFSET, GRID_ICON_COMMON_SIZE, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
+import { AddOutlinedPath } from '../constants/icon';
 import { GridLayout } from './layout';
 
 interface AITableCell {
@@ -13,7 +14,7 @@ export class AddRowLayout extends GridLayout {
     override renderAddFieldBlank(row: any) {
         super.renderAddFieldBlank(row);
         const { depth } = row;
-        const width = this.addBtnWidth;
+        const width = GRID_ADD_FIELD_BUTTON_WIDTH;
         const rowHeight = this.rowHeight;
         if (depth <= 1) {
             this.line({
@@ -65,6 +66,37 @@ export class AddRowLayout extends GridLayout {
             points: [0, 0, 0, rowHeight, columnWidth + GRID_ROW_HEAD_WIDTH - frozenOffset + 1, rowHeight],
             stroke: this.colors.sheetLineColor
         });
+        const rowCreatable = true;
+        if (rowCreatable) {
+            const curX = depth ? (depth - 1) * GRID_GROUP_OFFSET + 30 : 30;
+            this.path({
+                x: curX,
+                y: y + (rowHeight - GRID_ICON_COMMON_SIZE) / 2 - 0.5,
+                data: AddOutlinedPath,
+                size: 16,
+                fill: this.colors.thirdLevelText
+            });
+            // this.text({
+            //     x: 10,
+            //     y: y + (rowHeight - GRID_ICON_COMMON_SIZE) / 2 - 0.5,
+            //     text: 'icon',
+            //     fillStyle: 'red'
+            // });
+            // hover 的时候 添加一行 text提示 新增一行
+            // if (isHoverColumn && isHoverRow) {
+            //   this.setStyle({
+            //     fontSize: 13,
+            //     fontWeight: 'normal',
+            //   });
+            //   this.text({
+            //     x: curX + 18,
+            //     y: y + rowHeight / 2,
+            //     verticalAlign: 'middle',
+            //     text: t(Strings.add_row_button_tip),
+            //     fillStyle: colors.black[500],
+            //   });
+            // }
+        }
     }
 
     private renderLastCell({ row }: Pick<AITableCell, 'row'>) {
@@ -91,13 +123,17 @@ export class AddRowLayout extends GridLayout {
         this.renderAddFieldBlank(row);
     }
 
+    private renderCommonCell() {
+        if (this.isFirst || this.isLast) return;
+        this.renderCell({
+            width: this.columnWidth
+        });
+    }
+
     render(row: Pick<AITableCell, 'row'>) {
-        this.renderFirstCell({
-            row
-        });
-        this.renderLastCell({
-            row
-        });
+        this.renderFirstCell(row);
+        this.renderCommonCell();
+        this.renderLastCell(row);
     }
 }
 

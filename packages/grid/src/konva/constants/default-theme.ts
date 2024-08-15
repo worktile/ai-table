@@ -8,7 +8,7 @@ export const DefaultTheme = {
         fourthLevelText: '#C9C9C9',
         textCommonTertiary: 'rgba(156, 156, 156, 1)',
         sheetLineColor: 'rgba(61, 61, 61, 1)',
-        thirdLevelText: 'rgba(255, 255, 255, 0.55)',
+        thirdLevelText: '#333',
         staticWhite0: ``,
         fc8: '',
         highBg: '',

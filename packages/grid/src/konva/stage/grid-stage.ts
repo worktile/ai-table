@@ -15,8 +15,8 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
         const stopIndex = instance.getRowStopIndex(startIndex, scrollTop);
 
         return {
-            rowStartIndex: Math.max(0, startIndex),
-            rowStopIndex: Math.max(0, Math.min(rowCount - 1, stopIndex))
+            rowStartIndex: Math.max(0, startIndex - 1),
+            rowStopIndex: Math.max(0, Math.min(rowCount - 1, stopIndex + 1))
         };
     };
 
@@ -46,6 +46,7 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
         fields: config.fields,
         records: config.records,
         instance,
+        linearRows: config.linearRows,
         scrollState,
         rowStartIndex,
         rowStopIndex,

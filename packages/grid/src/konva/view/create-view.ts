@@ -2,12 +2,15 @@ import { GRID_FIELD_HEAD_HEIGHT, GRID_ROW_HEAD_WIDTH, RowHeightLevel } from '../
 import { Coordinate } from '../core/coordinate';
 import { AITableGridView } from '../interface/view';
 import { createGridStage } from '../stage/grid-stage';
+import { getLinearRowsAndGroup } from '../utils/view-group-derviate';
 
 export const createGridView = (config: AITableGridView) => {
     const { aiTable, fields, records, width: _containerWidth, height: containerHeight } = config;
     const offsetX = 32;
     const containerWidth = _containerWidth + offsetX;
-    const rowCount = records.length;
+
+    const { linearRows } = getLinearRowsAndGroup([], records);
+    const rowCount = linearRows.length;
 
     /**
      * 当前表格的数据示例。
@@ -32,6 +35,7 @@ export const createGridView = (config: AITableGridView) => {
         records: config.records,
         container: config.container,
         instance,
+        linearRows,
         scrollState: {
             scrollTop: 0,
             scrollLeft: 0,
