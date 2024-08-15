@@ -168,7 +168,7 @@ export class AITableGrid implements OnInit {
     }
 
     addRecord() {
-        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [1]);
+        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
     }
 
     selectRecord(recordId: string) {

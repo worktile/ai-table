@@ -1,8 +1,8 @@
 import { ActionName, AIFieldPath, AIFieldValuePath, AIRecordPath, AITableAction, AITableField, AITableQueries } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
-import { AITableViewFields, AIViewTable, SharedType } from '../../types';
-import { getShareTypeNumberPath } from '../utils';
+import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType } from '../../types';
+import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
 import { getSharedFieldId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
@@ -44,12 +44,17 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
-                            const activeView = aiTable.views().find((item) => item.isActive)!;
-                            const path = [customField[customField.length - 1][activeView._id]] as AIRecordPath;
+                            const activeViewId = aiTable.views().find((item) => item.isActive)!._id!;
+                            const position = customField[customField.length - 1][activeViewId];
+                            const path = translatePositionToPath(
+                                aiTable.records() as AITableViewRecords,
+                                position,
+                                activeViewId
+                            ) as AIRecordPath;
 
                             actions.push({
                                 type: ActionName.AddRecord,
-                                path,
+                                path: path,
                                 record: {
                                     _id: fixedField[0],
                                     values: translateToRecordValues(customField, aiTable.fields() as AITableViewFields)
@@ -62,8 +67,12 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
                         if (event.path.includes('fields')) {
-                            const activeView = aiTable.views().find((item) => item.isActive)!;
-                            const path = [data['positions'][activeView._id]] as AIFieldPath;
+                            const activeViewId = aiTable.views().find((item) => item.isActive)!._id!;
+                            const path = translatePositionToPath(
+                                aiTable.fields() as AITableViewFields,
+                                data['positions'][activeViewId],
+                                activeViewId
+                            ) as AIFieldPath;
                             actions.push({
                                 type: ActionName.AddField,
                                 path,

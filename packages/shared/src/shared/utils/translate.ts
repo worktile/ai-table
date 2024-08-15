@@ -1,5 +1,5 @@
 import { Path } from '@ai-table/grid';
-import { AITableViewFields, SyncArrayElement, SyncElement, SyncMapElement } from '../../types';
+import { AITableViewFields, AITableViewRecords, SyncArrayElement, SyncElement, SyncMapElement } from '../../types';
 import * as Y from 'yjs';
 
 export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
@@ -21,6 +21,20 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
         };
     });
 };
+
+export function translatePositionToPath(data: AITableViewRecords | AITableViewFields, position: number, activeViewId: string) {
+    let index = data.findIndex((value, index) => {
+        if (index === 0) {
+            return position < value.positions[activeViewId];
+        }
+        return position > data[index - 1].positions[activeViewId] && position < value.positions[activeViewId];
+    });
+    if (index === -1) {
+        index = data.length;
+    }
+
+    return [index];
+}
 
 export function getShareTypeNumberPath(path: (string | number)[]): number[] {
     return path.filter((node) => typeof node === 'number') as number[];

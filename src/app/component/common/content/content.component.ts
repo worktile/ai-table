@@ -113,7 +113,7 @@ export class DemoTableContent {
                         this.tableService.records.update((value) => {
                             let draftValue = createDraft(value);
                             draftValue[action.path[0]] = newAction.record as AITableViewRecord;
-                            return draftValue;
+                            return finishDraft(draftValue);
                         });
                         return newAction;
                     }
@@ -127,7 +127,7 @@ export class DemoTableContent {
                         this.tableService.fields.update((value) => {
                             let draftValue = createDraft(value);
                             draftValue[action.path[0]] = newAction.field as AITableViewField;
-                            return draftValue;
+                            return finishDraft(draftValue);
                         });
                         return newAction;
                     }
