@@ -2,12 +2,11 @@ import * as Y from 'yjs';
 import translateArrayEvent from './array-event';
 import translateMapEvent from './map-event';
 import { YjsAITable } from '../yjs-table';
-import { AITableSharedAction, AITableView, AITableViewField, AIViewTable, SharedType } from '../../types';
-import { ActionName } from '@ai-table/grid';
+import { AITableSharedAction, AIViewTable, SharedType } from '../../types';
 
-export function translateYjsEvent(aiTable: AIViewTable, event: Y.YEvent<any>): AITableSharedAction[] {
+export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
     if (event instanceof Y.YArrayEvent) {
-        return translateArrayEvent(aiTable, event);
+        return translateArrayEvent(aiTable, sharedType, event);
     }
     if (event instanceof Y.YMapEvent) {
         return translateMapEvent(aiTable, event);
@@ -15,31 +14,20 @@ export function translateYjsEvent(aiTable: AIViewTable, event: Y.YEvent<any>): A
     return [];
 }
 
-export function applyEvents(aiTable: AIViewTable, sharedType: SharedType, activeView: AITableView, events: Y.YEvent<any>[]) {
+export function applyEvents(aiTable: AIViewTable, sharedType: SharedType, events: Y.YEvent<any>[]) {
     events.forEach((event) =>
-        translateYjsEvent(aiTable, event).forEach((item: AITableSharedAction) => {
-            if (item.type === ActionName.AddRecord) {
-                const records = sharedType.get('records')?.toJSON();
-                const record = records?.find((record) => record[0][0] === item.record._id);
-                const positions = record[1][record[1].length - 1];
-                item.path = [positions[activeView._id]];
-            }
-            if (item.type === ActionName.AddField) {
-                const fields = sharedType.get('fields')?.toJSON();
-                const field = fields?.find((field) => field._id === item.field._id) as AITableViewField;
-                item.path = [field.positions[activeView._id]];
-            }
+        translateYjsEvent(aiTable, sharedType, event).forEach((item: AITableSharedAction) => {
             aiTable.apply(item);
         })
     );
 }
 
-export function applyYjsEvents(aiTable: AIViewTable, sharedType: SharedType, activeView: AITableView, events: Y.YEvent<any>[]): void {
+export function applyYjsEvents(aiTable: AIViewTable, sharedType: SharedType, events: Y.YEvent<any>[]): void {
     if (YjsAITable.isUndo(aiTable)) {
-        applyEvents(aiTable, sharedType, activeView, events);
+        applyEvents(aiTable, sharedType, events);
     } else {
         YjsAITable.asRemote(aiTable, () => {
-            applyEvents(aiTable, sharedType, activeView, events);
+            applyEvents(aiTable, sharedType, events);
         });
     }
 }

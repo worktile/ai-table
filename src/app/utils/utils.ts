@@ -13,8 +13,9 @@ export function createDefaultPositions(views: AITableView[], data: AITableViewRe
     const positions: Positions = {};
     const activeId = views.find((item) => item.isActive)?._id!;
     const position = getPosition(data, activeId, index);
+    const maxPosition = data[data.length - 1].positions[activeId];
     views.forEach((element) => {
-        positions[element._id] = element.isActive ? position : data.length;
+        positions[element._id] = element.isActive ? position : maxPosition + 1;
     });
     return positions;
 }
