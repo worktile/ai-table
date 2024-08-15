@@ -9,12 +9,28 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
     return data;
 }
 
-export function createDefaultPositions(views: AITableView[], index: number) {
+export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
     const positions: Positions = {};
+    const activeId = views.find((item) => item.isActive)?._id!;
+    const position = getPosition(data, activeId, index);
+    const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
+    const maxPosition = data[maxIndex].positions[activeId];
     views.forEach((element) => {
-        positions[element._id] = index;
+        positions[element._id] = element.isActive ? position : maxPosition + 1;
     });
     return positions;
+}
+
+export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
+    let position = data.length - 1;
+    if (index !== 0 && index !== data.length - 1) {
+        const previousViewPosition = data[index - 1].positions[activeViewId];
+        const nextViewPosition = data[index + 1].positions[activeViewId!];
+        position = (previousViewPosition + nextViewPosition) / 2;
+    } else {
+        position = index;
+    }
+    return position;
 }
 
 export function getDefaultValue() {
@@ -47,7 +63,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
+                    'column-12': 1720490727
                 }
             },
             {
@@ -71,8 +87,7 @@ export function getDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727,
-
+                    'column-12': 1720490727
                 }
             },
             {

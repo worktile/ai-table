@@ -1,6 +1,6 @@
 import { ActionName, AITable, AITableAction, AITableFields, AITableRecords } from '../types';
 import { createDraft, finishDraft } from 'immer';
-import { isPathEqual } from '../utils';
+import { getDefaultFieldValue, isPathEqual } from '../utils';
 
 const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
     switch (options.type) {
@@ -25,7 +25,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
                 const newField = options.field;
                 fields.splice(fieldIndex, 0, newField);
                 const newRecord = {
-                    [newField._id]: ''
+                    [newField._id]: getDefaultFieldValue(options.field)
                 };
                 records.forEach((item) => {
                     item.values = {
