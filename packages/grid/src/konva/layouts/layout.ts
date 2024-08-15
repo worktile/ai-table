@@ -1,6 +1,6 @@
 import { range } from 'rxjs';
 import { GRID_GROUP_OFFSET } from '../constants/grid';
-import { KonvaDrawer } from './drawer';
+import { KonvaDrawer } from '../core/drawer';
 
 interface AITableLayout {
     x: number;

@@ -1,7 +1,18 @@
-<konva-grid-view
-    [(aiRecords)]="tableService.records"
-    [(aiFields)]="tableService.fields"
-    [aiPlugins]="plugins"
-    (onChange)="onChange($event)"
-    (aiTableInitialized)="aiTableInitialized($event)"
-></konva-grid-view>
+@if (tableService.activeView()) {
+    <thy-actions>
+        <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveField()">移动选中列到第三列</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="editField()">编辑第一列</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="editRecord()">编辑第一个单元格文本</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="updateType()">修改第一列类型</a>
+        <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="addField()">添加文本列</a>
+    </thy-actions>
+    <ai-table-grid
+        [(aiRecords)]="tableService.records"
+        [(aiFields)]="tableService.fields"
+        (onChange)="onChange($event)"
+        [aiPlugins]="plugins"
+        (aiTableInitialized)="aiTableInitialized($event)"
+    ></ai-table-grid>
+}

@@ -1,5 +1,5 @@
 import { AITableFieldType } from '@ai-table/grid';
-import { Icon } from '../../components/icon';
+import { Icon } from '../components/icon';
 import {
     ColumnCalendarFilledPath,
     ColumnCreatedAtFilledPath,
@@ -13,7 +13,7 @@ import {
     ColumnTextFilledPath,
     ColumnUpdatedAtFilledPath,
     ColumnUpdatedByFilledPath
-} from '../../constants/icon';
+} from '../constants/icon';
 
 interface AITableFieldIconConfig {
     fieldType: AITableFieldType;

@@ -28,7 +28,7 @@ import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { mergeWith } from 'rxjs/operators';
-import { ProgressEditorComponent, SelectOptionComponent } from './components';
+import { GridView, ProgressEditorComponent, SelectOptionComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
@@ -57,7 +57,7 @@ import { buildGridData } from './utils';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        // class: 'ai-table-grid'
     },
     imports: [
         NgForOf,
@@ -87,7 +87,8 @@ import { buildGridData } from './utils';
         IsSelectRecordPipe,
         ProgressEditorComponent,
         SelectOptionComponent,
-        UserPipe
+        UserPipe,
+        GridView
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })

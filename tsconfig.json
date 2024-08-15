@@ -25,6 +25,7 @@
             "@ai-table/grid/*": ["packages/grid/src/*"],
             "@ai-table/shared": ["packages/shared/src/public-api"],
             "@ai-table/shared/*": ["packages/shared/src/*"],
+            "@ai-table/konva/*": ["packages/grid/src/konva/*"]
         }
     },
     "angularCompilerOptions": {

@@ -3,14 +3,16 @@ import { GridLayout } from './layout';
 
 interface AITableFirstCell {
     row: any;
+    style: any;
     colors: any;
 }
 
 export class RecordRowLayout extends GridLayout {
-    private renderFirstCell({ row, colors }: AITableFirstCell) {
+    private renderFirstCell({ row, style, colors }: AITableFirstCell) {
         if (!this.isFirst) return;
 
-        const depth = row?.depth ?? 0;
+        const depth = row?.depth ?? 1;
+        const { fill } = style;
         if (depth) this.renderIndentFront(depth - 1);
         const y = this.y;
         const rowHeight = this.rowHeight;
@@ -29,13 +31,13 @@ export class RecordRowLayout extends GridLayout {
             y: y + 0.5,
             width: columnWidth - groupOffset,
             height: rowHeight - 1,
-            fill: 'transparent'
+            fill: fill || 'transparent'
         });
         this.setStyle({ fontSize: 13 });
         this.text({
             x: groupOffset + GRID_ROW_HEAD_WIDTH / 2,
             y: y + 10,
-            text: row?.text ?? '',
+            text: String(this.rowIndex),
             textAlign: 'center'
         });
     }
@@ -74,9 +76,9 @@ export class RecordRowLayout extends GridLayout {
     }
 
     render(config: AITableFirstCell) {
-        const { row, colors } = config;
+        const { row, style, colors } = config;
 
-        this.renderFirstCell({ row, colors });
+        this.renderFirstCell({ row, style, colors });
         this.renderCommonCell({ colors });
         this.renderLastCell({ row, colors });
     }

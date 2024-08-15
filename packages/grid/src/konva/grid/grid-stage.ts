@@ -1,11 +1,11 @@
 import Konva from 'konva';
-import { createGrid } from '../grid/create-grid';
 import { AITableKonvaGridStage } from '../interface/view';
+import { createGrid } from './create-grid';
 
 Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableKonvaGridStage) => {
-    const { instance, scrollState, offsetX = 0 } = config;
+    const { context, instance, scrollState, offsetX = 0 } = config;
     const { scrollTop, scrollLeft } = scrollState;
     const { rowCount, columnCount, frozenColumnCount, containerWidth, containerHeight } = instance;
 
@@ -42,9 +42,7 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
     });
 
     const grid = createGrid({
-        aiTable: config.aiTable,
-        fields: config.fields,
-        records: config.records,
+        context,
         instance,
         scrollState,
         rowStartIndex,

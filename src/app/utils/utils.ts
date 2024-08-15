@@ -562,43 +562,43 @@ export function getCanvasDefaultValue() {
                     view2: 7
                 },
                 type: AITableFieldType.text
-            },
-            {
-                _id: 'column-8',
-                name: '单行文本8',
-                positions: {
-                    view1: 7,
-                    view2: 8
-                },
-                type: AITableFieldType.text
-            },
-            {
-                _id: 'column-9',
-                name: '单行文本9',
-                positions: {
-                    view1: 8,
-                    view2: 9
-                },
-                type: AITableFieldType.text
-            },
-            {
-                _id: 'column-10',
-                name: '创建时间',
-                positions: {
-                    view1: 9,
-                    view2: 10
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-11',
-                name: '更新时间',
-                positions: {
-                    view1: 10,
-                    view2: 11
-                },
-                type: AITableFieldType.updatedAt
             }
+            // {
+            //     _id: 'column-8',
+            //     name: '单行文本8',
+            //     positions: {
+            //         view1: 7,
+            //         view2: 8
+            //     },
+            //     type: AITableFieldType.text
+            // },
+            // {
+            //     _id: 'column-9',
+            //     name: '单行文本9',
+            //     positions: {
+            //         view1: 8,
+            //         view2: 9
+            //     },
+            //     type: AITableFieldType.text
+            // },
+            // {
+            //     _id: 'column-10',
+            //     name: '创建时间',
+            //     positions: {
+            //         view1: 9,
+            //         view2: 10
+            //     },
+            //     type: AITableFieldType.createdAt
+            // },
+            // {
+            //     _id: 'column-11',
+            //     name: '更新时间',
+            //     positions: {
+            //         view1: 10,
+            //         view2: 11
+            //     },
+            //     type: AITableFieldType.updatedAt
+            // }
         ]
     };
     return initValue;

@@ -1,10 +1,10 @@
 import Konva from 'konva';
 import { DefaultTheme } from '../constants/default-theme';
 import { GRID_GROUP_OFFSET } from '../constants/grid';
+import { cellHelper } from '../core/cell-helper';
 import { AITableRender } from '../interface/grid';
 import { AITableUseGridBaseConfig } from '../interface/view';
-import { cellHelper } from '../utils/cell-helper';
-import { recordRowLayout } from '../utils/record-row-layout';
+import { recordRowLayout } from '../layouts/record-row-layout';
 
 /**
  * 根据单元格是否是第一列/最后一列确定单元格所在的位置
@@ -24,7 +24,8 @@ export const getCellHorizontalPosition = (props: { depth: number; columnWidth: n
 };
 
 export const createCells = (config: AITableUseGridBaseConfig) => {
-    const { aiTable, fields, records, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { fields, records } = context;
     const colors = DefaultTheme.colors;
 
     const { rowHeight, columnCount, rowCount, rowHeightLevel, frozenColumnCount } = instance;
@@ -50,6 +51,7 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
                 const row = records[rowIndex];
                 const depth = 0;
                 const y = instance.getRowOffset(rowIndex) + 0.5;
+                let background = colors.white;
 
                 recordRowLayout.init({
                     x,
@@ -60,7 +62,7 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
                     rowHeight,
                     columnCount
                 });
-                recordRowLayout.render({ row, colors });
+                recordRowLayout.render({ row, style: { fill: background }, colors });
                 const { width, offset } = getCellHorizontalPosition({
                     depth,
                     columnIndex,

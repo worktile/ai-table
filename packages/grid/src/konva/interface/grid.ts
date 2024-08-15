@@ -29,6 +29,7 @@ export interface AITableCoordinate {
     columnInitSize?: number;
     rowHeightLevel?: RowHeightLevel;
     frozenColumnCount?: number;
+    autoHeadHeight?: boolean;
 }
 
 export interface AITableRender {

@@ -1,10 +1,11 @@
 import { GRID_FIELD_HEAD_HEIGHT, GRID_ROW_HEAD_WIDTH, RowHeightLevel } from '../constants/grid';
 import { Coordinate } from '../core/coordinate';
 import { AITableGridView } from '../interface/view';
-import { createGridStage } from '../stage/grid-stage';
+import { createGridStage } from './grid-stage';
 
 export const createGridView = (config: AITableGridView) => {
-    const { aiTable, fields, records, width: _containerWidth, height: containerHeight } = config;
+    const { context, width: _containerWidth, height: containerHeight } = config;
+    const { fields, records } = context;
     const offsetX = 32;
     const containerWidth = _containerWidth + offsetX;
     const rowCount = records.length;
@@ -23,13 +24,12 @@ export const createGridView = (config: AITableGridView) => {
         containerHeight,
         rowInitSize: GRID_FIELD_HEAD_HEIGHT,
         columnInitSize: GRID_ROW_HEAD_WIDTH,
-        frozenColumnCount: 1
+        frozenColumnCount: 1,
+        autoHeadHeight: false
     });
 
     return createGridStage({
-        aiTable: config.aiTable,
-        fields: config.fields,
-        records: config.records,
+        context,
         container: config.container,
         instance,
         scrollState: {

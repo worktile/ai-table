@@ -10,8 +10,8 @@ import {
     AITableWrapText,
     AITableWrapTextData
 } from '../interface/grid';
-import { autoSizerCanvas } from './auto-size-canvas';
-import { getTextWidth, textDataCache } from './get-text-width';
+import { autoSizerCanvas } from '../utils/auto-size-canvas';
+import { getTextWidth, textDataCache } from '../utils/get-text-width';
 
 export const graphemeSplitter = new GraphemeSplitter();
 

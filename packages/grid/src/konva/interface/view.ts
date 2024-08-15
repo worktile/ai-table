@@ -2,10 +2,14 @@ import { AITable, AITableFields, AITableRecords } from '@ai-table/grid';
 import { Coordinate } from '../core/coordinate';
 import { AITableScrollState } from './grid';
 
-export interface AITableGridBase {
+export interface AITableGridContext {
     aiTable: AITable;
     fields: AITableFields;
     records: AITableRecords;
+}
+
+export interface AITableGridBase {
+    context: AITableGridContext;
 }
 
 export interface AITableGridView extends AITableGridBase {

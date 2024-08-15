@@ -1,10 +1,25 @@
-import { ActionName, AddFieldAction, AddRecordAction, AITable, AITableAction, AITableChangeOptions, KonvaGridView } from '@ai-table/grid';
+import {
+    ActionName,
+    Actions,
+    AddFieldAction,
+    AddRecordAction,
+    AIFieldPath,
+    AIFieldValuePath,
+    AIRecordPath,
+    AITable,
+    AITableAction,
+    AITableChangeOptions,
+    AITableFieldType,
+    AITableGrid,
+    AITableQueries,
+    AITableRecord
+} from '@ai-table/grid';
 import { AITableViewField, AITableViewRecord, AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/shared';
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { createDraft, finishDraft } from 'immer';
-import { ThyAction } from 'ngx-tethys/action';
+import { ThyAction, ThyActions } from 'ngx-tethys/action';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -20,7 +35,7 @@ const initViews = [
     selector: 'demo-ai-canvas',
     templateUrl: './canvas.component.html',
     standalone: true,
-    imports: [ThyAction, ThyPopoverModule, FormsModule, ThyInputDirective, KonvaGridView],
+    imports: [ThyActions, ThyAction, ThyPopoverModule, FormsModule, ThyInputDirective, AITableGrid],
     providers: [TableService]
 })
 export class DemoCanvas implements OnInit, AfterViewInit {
@@ -95,9 +110,97 @@ export class DemoCanvas implements OnInit, AfterViewInit {
         }
     }
 
+    prevent(event: Event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable as AIViewTable;
         (this.aiTable as AIViewTable).views = this.tableService.views;
         this.tableService.setAITable(this.aiTable);
+    }
+
+    removeRecord() {
+        const recordIds = ['row-1'];
+        recordIds.forEach((item) => {
+            const path = this.aiTable.records().findIndex((record) => record._id === item);
+            Actions.removeRecord(this.aiTable, [path]);
+        });
+    }
+
+    moveField() {
+        const newIndex = 2;
+        const selectedFieldIds = ['column-1'];
+        const selectedRecords = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
+        selectedRecords.forEach((item) => {
+            const path = AITableQueries.findPath(this.aiTable, item) as AIFieldPath;
+            Actions.moveField(this.aiTable, path, [newIndex]);
+        });
+    }
+
+    moveRecord() {
+        const selectedRecordIds = ['row-1'];
+        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
+        const selectedRecordsAfterNewPath: AITableRecord[] = [];
+        let offset = 0;
+        const newIndex = 2;
+        selectedRecords.forEach((item) => {
+            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            if (path[0] < newIndex) {
+                Actions.moveRecord(this.aiTable, path, [newIndex]);
+                offset = 1;
+            } else {
+                selectedRecordsAfterNewPath.push(item);
+            }
+        });
+
+        selectedRecordsAfterNewPath.reverse().forEach((item) => {
+            const newPath = [newIndex + offset] as AIRecordPath;
+            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIRecordPath;
+            Actions.moveRecord(this.aiTable, path, newPath);
+        });
+    }
+
+    addField() {
+        const field = {
+            _id: 'column-40',
+            name: '新增列',
+            type: AITableFieldType.text
+        };
+        Actions.addField(this.aiTable, field, [this.aiTable.fields().length]);
+    }
+
+    editField() {
+        const fieldId = 'column-1';
+        const path = this.aiTable.fields().findIndex((item) => item._id === fieldId);
+        const field = this.aiTable.fields().find((item) => item._id === fieldId);
+        const newField = {
+            ...field,
+            name: '单行文本1-编辑后'
+        };
+        Actions.setField(this.aiTable, newField, [path]);
+    }
+
+    editRecord() {
+        const fieldId = 'column-1';
+        const selectedRecordId = 'row-1';
+        const field = this.aiTable.fields().find((item) => item._id === fieldId);
+        const selectedRecord = this.aiTable.records().find((item) => selectedRecordId === item._id);
+        const newRecord = '单行文本1-编辑后';
+        const path = AITableQueries.findPath(this.aiTable, field, selectedRecord) as AIFieldValuePath;
+        Actions.updateFieldValue(this.aiTable, newRecord, path);
+    }
+
+    updateType() {
+        const fieldId = 'column-1';
+        const path = this.aiTable.fields().findIndex((item) => item._id === fieldId);
+        const field = this.aiTable.fields().find((item) => item._id === fieldId);
+        const newField = {
+            ...field,
+            name: '单行文本1-编辑后',
+            type: AITableFieldType.updatedAt
+        };
+        Actions.setField(this.aiTable, newField, [path]);
     }
 }

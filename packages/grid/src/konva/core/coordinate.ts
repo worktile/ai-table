@@ -29,6 +29,7 @@ export class Coordinate {
     public columnMetaDataMap: CellMetaDataMap = {};
     public rowHeightLevel: RowHeightLevel;
     public frozenColumnCount: number;
+    public autoHeadHeight: boolean;
 
     constructor({
         rowHeight,
@@ -42,7 +43,8 @@ export class Coordinate {
         rowIndicesMap = {},
         columnIndicesMap = {},
         rowHeightLevel = RowHeightLevel.short,
-        frozenColumnCount = 0
+        frozenColumnCount = 0,
+        autoHeadHeight = false
     }: AITableCoordinate) {
         this._rowHeight = rowHeight;
         this._columnWidth = columnWidth;
@@ -56,6 +58,7 @@ export class Coordinate {
         this.rowIndicesMap = rowIndicesMap;
         this.columnIndicesMap = columnIndicesMap;
         this.frozenColumnCount = frozenColumnCount;
+        this.autoHeadHeight = autoHeadHeight;
     }
 
     public get columnWidth() {
