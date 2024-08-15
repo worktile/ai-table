@@ -22,8 +22,8 @@ export const translateToRecords = (arrayRecords: any[], fields: AITableViewField
     });
 };
 
-export function toTablePath(path: (string | number)[]): Path {
-    return path.filter((node) => typeof node === 'number') as Path;
+export function getTableIndex(path: (string | number)[]): number[] {
+    return path.filter((node) => typeof node === 'number') as number[];
 }
 
 export function getSharedRecordId(records: SyncElement, recordIndex: number) {

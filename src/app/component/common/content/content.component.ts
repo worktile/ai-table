@@ -29,7 +29,16 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import { AITableViewField, AITableViewRecord, applyActionOps, ViewActions, Direction, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
+import {
+    AITableViewField,
+    AITableViewRecord,
+    applyActionOps,
+    ViewActions,
+    Direction,
+    AIViewTable,
+    YjsAITable,
+    withView
+} from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -162,7 +171,7 @@ export class DemoTableContent {
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
         const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
         selectedFields.forEach((item) => {
-            const path = AITableQueries.findPath(this.aiTable, undefined, item) as AIFieldPath;
+            const path = AITableQueries.findFieldPath(this.aiTable, item) as AIFieldPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
         });
     }
@@ -174,7 +183,7 @@ export class DemoTableContent {
         let offset = 0;
         const newIndex = 2;
         selectedRecords.forEach((item) => {
-            const path = AITableQueries.findPath(this.aiTable, item) as AIRecordPath;
+            const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
             if (path[0] < newIndex) {
                 Actions.moveRecord(this.aiTable, path, [newIndex]);
                 offset = 1;
@@ -185,7 +194,7 @@ export class DemoTableContent {
 
         selectedRecordsAfterNewPath.reverse().forEach((item) => {
             const newPath = [newIndex + offset] as AIRecordPath;
-            const path = AITableQueries.findPath(this.aiTable, item) as AIRecordPath;
+            const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
             Actions.moveRecord(this.aiTable, path, newPath);
         });
     }

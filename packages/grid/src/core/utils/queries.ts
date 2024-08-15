@@ -1,21 +1,20 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { Path, AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
+import { AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
 
 export const AITableQueries = {
-    findPath(aiTable: AITable, record?: AITableRecord,  field?: AITableField): Path {
-        if (!isUndefinedOrNull(field) && !isUndefinedOrNull(record)) {
-            return [record!._id!, field!._id!] as AIFieldValuePath;
-        }
+    findRecordPath(aiTable: AITable, record: AITableRecord) {
         const recordIndex = record && aiTable.records().indexOf(record);
         if (!isUndefinedOrNull(recordIndex) && recordIndex > -1) {
             return [recordIndex] as AIRecordPath;
         }
-
+        throw new Error(`can not find the record path: ${JSON.stringify({ ...(record || {}) })}`);
+    },
+    findFieldPath(aiTable: AITable, field: AITableField) {
         const fieldIndex = field && aiTable.fields().indexOf(field);
         if (!isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
             return [fieldIndex] as AIFieldPath;
         }
-        throw new Error(`can not find the path: ${JSON.stringify({ ...(field || {}), ...(record || {}) })}`);
+        throw new Error(`can not find the field path: ${JSON.stringify({ ...(field || {}) })}`);
     },
     getFieldValue(aiTable: AITable, path: AIFieldValuePath): any {
         if (!aiTable) {
