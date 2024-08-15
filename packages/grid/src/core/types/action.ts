@@ -4,7 +4,7 @@ export type AIRecordPath = [number];
 
 export type AIFieldPath = [number];
 
-export type AIFieldValuePath = [number, number];
+export type AIFieldValuePath = [string, string];
 
 export type Path = AIRecordPath | AIFieldPath | AIFieldValuePath;
 
