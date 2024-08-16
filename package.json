@@ -38,6 +38,7 @@
         "@angular/router": "^18.1.4",
         "@tethys/cdk": "^17.0.17",
         "@tethys/icons": "^1.4.69",
+        "bson-objectid": "^2.0.4",
         "date-fns": "^3.6.0",
         "immer": "^10.0.3",
         "ngx-tethys": "17.0.17",
