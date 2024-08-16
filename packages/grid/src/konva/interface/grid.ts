@@ -129,3 +129,34 @@ export type AITableLabel = Omit<AITableRect & AITableText, 'fillStyle'> & {
     color?: string;
     padding?: number;
 };
+
+export enum CellType {
+    GroupTab = 'GroupTab',
+    Add = 'AddRecord',
+    Blank = 'Blank',
+    Record = 'Record'
+}
+
+export type AILinearRowBase = {
+    depth: number;
+    recordId: string;
+};
+export type AILinearRowBlank = AILinearRowBase & {
+    type: CellType.Blank;
+};
+
+export type AILinearRowAdd = AILinearRowBase & {
+    type: CellType.Add;
+};
+
+export type AILinearRowGroupTab = AILinearRowBase & {
+    type: CellType.GroupTab;
+};
+
+export type AILinearRowRecord = AILinearRowBase & {
+    type: CellType.Record;
+    groupHeadRecordId: string;
+    displayIndex: number;
+};
+
+export type AILinearRow = AILinearRowBlank | AILinearRowAdd | AILinearRowGroupTab | AILinearRowRecord;

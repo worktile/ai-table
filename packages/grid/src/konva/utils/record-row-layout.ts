@@ -42,8 +42,8 @@ export class RecordRowLayout extends GridLayout {
 
     private renderLastCell({ row, colors }: Pick<AITableFirstCell, 'row' | 'colors'>) {
         if (!this.isLast) return;
+        this.renderAddFieldBlank(row);
         if (this.isFirst) return;
-
         const { depth } = row;
         const columnWidth = this.columnWidth;
         const width = depth === 3 ? columnWidth - GRID_GROUP_OFFSET : columnWidth;
