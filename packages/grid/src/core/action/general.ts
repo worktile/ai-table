@@ -1,31 +1,31 @@
-import { ActionName, AITable, AITableAction, AITableFields, AITableRecords } from '../types';
+import { ActionName, AITable, AITableAction, AITableField, AITableFields, AITableRecords } from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { getDefaultFieldValue, isPathEqual } from '../utils';
 
-const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, options: AITableAction) => {
-    switch (options.type) {
+const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields, action: AITableAction) => {
+    switch (action.type) {
         case ActionName.UpdateFieldValue: {
-            const [recordId, fieldId] = options.path;
+            const [recordId, fieldId] = action.path;
             if (recordId && fieldId) {
                 const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
-                records[recordIndex].values[fieldId] = options.newFieldValue;
+                records[recordIndex].values[fieldId] = action.newFieldValue;
             }
             break;
         }
         case ActionName.AddRecord: {
-            const [recordIndex] = options.path;
+            const [recordIndex] = action.path;
             if (recordIndex > -1) {
-                records.splice(recordIndex, 0, options.record);
+                records.splice(recordIndex, 0, action.record);
             }
             break;
         }
         case ActionName.AddField: {
-            const [fieldIndex] = options.path;
+            const [fieldIndex] = action.path;
             if (fieldIndex > -1) {
-                const newField = options.field;
+                const newField = action.field;
                 fields.splice(fieldIndex, 0, newField);
                 const newRecord = {
-                    [newField._id]: getDefaultFieldValue(options.field)
+                    [newField._id]: getDefaultFieldValue(action.field)
                 };
                 records.forEach((item) => {
                     item.values = {
@@ -38,26 +38,26 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             break;
         }
         case ActionName.MoveRecord: {
-            if (isPathEqual(options.path, options.newPath)) {
+            if (isPathEqual(action.path, action.newPath)) {
                 return;
             }
-            const record = records[options.path[0]];
-            records.splice(options.path[0], 1);
-            records.splice(options.newPath[0], 0, record);
+            const record = records[action.path[0]];
+            records.splice(action.path[0], 1);
+            records.splice(action.newPath[0], 0, record);
             break;
         }
         case ActionName.MoveField: {
-            if (isPathEqual(options.path, options.newPath)) {
+            if (isPathEqual(action.path, action.newPath)) {
                 return;
             }
-            const field = fields[options.path[0]];
-            fields.splice(options.path[0], 1);
-            fields.splice(options.newPath[0], 0, field);
+            const field = fields[action.path[0]];
+            fields.splice(action.path[0], 1);
+            fields.splice(action.newPath[0], 0, field);
 
             break;
         }
         case ActionName.RemoveField: {
-            const [fieldId] = options.path;
+            const [fieldId] = action.path;
             const fieldIndex = aiTable.fields().findIndex((item) => item._id === fieldId);
             if (fieldIndex > -1) {
                 fields.splice(fieldIndex, 1);
@@ -68,7 +68,7 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             break;
         }
         case ActionName.RemoveRecord: {
-            const [recordId] = options.path;
+            const [recordId] = action.path;
             const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
             if (recordIndex > -1) {
                 records.splice(recordIndex, 1);
@@ -77,12 +77,24 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
         }
 
         case ActionName.SetField: {
-            const [fieldIndex] = options.path;
-            if (fieldIndex > -1) {
-                fields.splice(fieldIndex, 1, {
-                    ...fields[fieldIndex],
-                    ...options.newField
-                });
+            const field = fields.find((item) => item._id === action.path[0]) as AITableField;
+            if (field) {
+                for (const key in action.newProperties) {
+                    const k = key as keyof AITableField;
+                    const value = action.newProperties[k];
+                    if (value == null) {
+                        delete field[k];
+                    } else {
+                        (field[k] as any) = value;
+                    }
+                }
+
+                // properties that were previously defined, but are now missing, must be deleted
+                for (const key in action.properties) {
+                    if (!action.newProperties.hasOwnProperty(key)) {
+                        delete field[<keyof AITableField>key];
+                    }
+                }
             }
             break;
         }
@@ -94,10 +106,10 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
 };
 
 export const GeneralActions = {
-    transform(aiTable: AITable, op: AITableAction): void {
+    transform(aiTable: AITable, action: AITableAction): void {
         const records = createDraft(aiTable.records());
         const fields = createDraft(aiTable.fields());
-        apply(aiTable, records, fields, op);
+        apply(aiTable, records, fields, action);
         aiTable.fields.update(() => {
             return finishDraft(fields);
         });

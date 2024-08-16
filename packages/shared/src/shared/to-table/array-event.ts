@@ -12,7 +12,7 @@ import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType } from '../../types';
 import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
-import { getSharedFieldId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
+import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
@@ -71,7 +71,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
                                 const recordId = getSharedRecordId(sharedType.get('records')!, recordIndex);
-                                const fieldId = getSharedFieldId(sharedType.get('fields')!, fieldIndex);
+                                const fieldId = getSharedMapValueId(sharedType.get('fields')!, fieldIndex);
                                 const path = [recordId, fieldId] as AIFieldValueIdPath;
                                 const fieldValue = AITableQueries.getFieldValue(aiTable, path);
 

@@ -144,12 +144,12 @@ export class DemoTableContent {
 
     sort() {
         const direction = this.tableService.activeView().sortCondition?.conditions[0].direction;
+        const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
         const sortCondition = {
             keepSort: false,
-            conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
+            conditions: [{ sortBy: selectedFieldIds[0], direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
         };
-        const index = this.tableService.views().indexOf(this.tableService.activeView());
-        ViewActions.setView(this.aiTable as any, { sortCondition }, [index]);
+        ViewActions.setView(this.aiTable as any, { sortCondition }, [this.tableService.activeView()._id]);
     }
 
     prevent(event: Event) {

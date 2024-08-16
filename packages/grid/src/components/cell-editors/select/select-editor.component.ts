@@ -9,9 +9,10 @@ import { ThyOption } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { SelectOptionPipe } from '../../../pipes';
-import { AITableSelectField, AITableSelectOptionStyle } from '../../../types';
+import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
+import { AITableSelectOptionStyle } from '../../../core';
 
 @Component({
     selector: 'select-cell-editor',
@@ -20,7 +21,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block h-100 select-cell-editor',
-        '[class.tag]': 'field()!.optionStyle === AITableSelectOptionStyle.tag'
+        '[class.tag]': 'field()!.settings.option_style === AITableSelectOptionStyle.tag'
     },
     imports: [
         FormsModule,
@@ -38,11 +39,11 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 })
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string, AITableSelectField> {
     selectOptions = computed(() => {
-        return this.field().options;
+        return this.field().settings.options;
     });
 
     optionStyle = computed(() => {
-        return (this.field() as AITableSelectField).optionStyle || AITableSelectOptionStyle.tag;
+        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.tag;
     });
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;

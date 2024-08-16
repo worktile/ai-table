@@ -91,14 +91,18 @@ export class AITableFieldPropertyEditor {
         return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?._id !== field._id));
     };
 
-    selectFieldType(fieldType: AITableFieldType) {
-        this.aiField.update((item) => ({ ...item, type: fieldType, name: createDefaultFieldName(this.aiTable, fieldType) }));
+    selectFieldType(field: Partial<AITableField>) {
+        this.aiField.update((item) => {
+            const width = item.width ?? field.width;
+            const name = createDefaultFieldName(this.aiTable, field.type!);
+            const settings = field.settings || null;
+            return { ...item, ...field, width, name, settings };
+        });
     }
 
     editFieldProperty() {
         if (this.isUpdate) {
-            const path = this.aiTable.fields().findIndex((item) => item._id === this.aiField()._id);
-            Actions.setField(this.aiTable, this.aiField(), [path]);
+            Actions.setField(this.aiTable, this.aiField(), [this.aiField()._id]);
         } else {
             Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
         }

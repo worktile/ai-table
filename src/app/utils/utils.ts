@@ -149,68 +149,72 @@ export function getDefaultValue() {
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
-                options: [
-                    {
-                        _id: '1',
-                        text: '开始',
-                        color: '#5dcfff'
-                    },
-                    {
-                        _id: '2',
-                        text: '进行中',
-                        color: '#ffcd5d'
-                    },
-                    {
-                        _id: '3',
-                        text: '已完成',
-                        color: '#73d897'
-                    }
-                ]
+                settings: {
+                    options: [
+                        {
+                            _id: '1',
+                            text: '开始',
+                            color: '#5dcfff'
+                        },
+                        {
+                            _id: '2',
+                            text: '进行中',
+                            color: '#ffcd5d'
+                        },
+                        {
+                            _id: '3',
+                            text: '已完成',
+                            color: '#73d897'
+                        }
+                    ]
+                }
             },
             {
                 _id: 'column-20',
                 type: AITableFieldType.select,
                 icon: 'list-check',
                 name: '多选',
-                isMultiple: true,
-                optionStyle: AITableSelectOptionStyle.tag,
-                options: [
-                    {
-                        text: '111',
-                        bg_color: '#E48483',
-                        _id: '66b31d0c8097a908f74bcd8a'
-                    },
-                    {
-                        text: '222',
-                        bg_color: '#E0B75D',
-                        _id: '66b31d0c8097a908f74bcd8b'
-                    },
-                    {
-                        text: '333',
-                        bg_color: '#69B1E4',
-                        _id: '66b31d0c8097a908f74bcd8c'
-                    },
-                    {
-                        text: '444',
-                        bg_color: '#77C386',
-                        _id: '66b31d0c8097a908f74bcd8d'
-                    },
-                    {
-                        text: '555',
-                        bg_color: '#6EC4C4',
-                        _id: '66b31d0c8097a908f74bcd8e'
-                    },
-                    {
-                        text: '666',
-                        bg_color: '#E581D4',
-                        _id: '66b31d0c8097a908f74bcd8f'
-                    },
-                    {
-                        text: '777',
-                        bg_color: '#B0C774',
-                        _id: '66b31d0c8097a908f74bcd90'
-                    }
-                ],
+                settings: {
+                    is_multiple: true,
+                    option_style: AITableSelectOptionStyle.tag,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a'
+                        },
+                        {
+                            text: '222',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd90'
+                        }
+                    ]
+                },
                 positions: {
                     view1: 2,
                     view2: 14
@@ -221,45 +225,47 @@ export function getDefaultValue() {
                 type: AITableFieldType.select,
                 icon: 'list-check',
                 name: '多选',
-                isMultiple: true,
-                optionStyle: AITableSelectOptionStyle.dot,
-                options: [
-                    {
-                        text: '111',
-                        bg_color: '#E48483',
-                        _id: '66b31d0c8097a908f74bcd8a'
-                    },
-                    {
-                        text: '222',
-                        bg_color: '#E0B75D',
-                        _id: '66b31d0c8097a908f74bcd8b'
-                    },
-                    {
-                        text: '333',
-                        bg_color: '#69B1E4',
-                        _id: '66b31d0c8097a908f74bcd8c'
-                    },
-                    {
-                        text: '444',
-                        bg_color: '#77C386',
-                        _id: '66b31d0c8097a908f74bcd8d'
-                    },
-                    {
-                        text: '555',
-                        bg_color: '#6EC4C4',
-                        _id: '66b31d0c8097a908f74bcd8e'
-                    },
-                    {
-                        text: '666',
-                        bg_color: '#E581D4',
-                        _id: '66b31d0c8097a908f74bcd8f'
-                    },
-                    {
-                        text: '777',
-                        bg_color: '#B0C774',
-                        _id: '66b31d0c8097a908f74bcd90'
-                    }
-                ],
+                settings: {
+                    is_multiple: true,
+                    option_style: AITableSelectOptionStyle.dot,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a'
+                        },
+                        {
+                            text: '222',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd90'
+                        }
+                    ]
+                },
                 positions: {
                     view1: 3,
                     view2: 13
@@ -270,45 +276,48 @@ export function getDefaultValue() {
                 type: AITableFieldType.select,
                 icon: 'list-check',
                 name: '多选',
-                isMultiple: true,
-                optionStyle: AITableSelectOptionStyle.piece,
-                options: [
-                    {
-                        text: '111',
-                        bg_color: '#E48483',
-                        _id: '66b31d0c8097a908f74bcd8a'
-                    },
-                    {
-                        text: '222',
-                        bg_color: '#E0B75D',
-                        _id: '66b31d0c8097a908f74bcd8b'
-                    },
-                    {
-                        text: '333',
-                        bg_color: '#69B1E4',
-                        _id: '66b31d0c8097a908f74bcd8c'
-                    },
-                    {
-                        text: '444',
-                        bg_color: '#77C386',
-                        _id: '66b31d0c8097a908f74bcd8d'
-                    },
-                    {
-                        text: '555',
-                        bg_color: '#6EC4C4',
-                        _id: '66b31d0c8097a908f74bcd8e'
-                    },
-                    {
-                        text: '666',
-                        bg_color: '#E581D4',
-                        _id: '66b31d0c8097a908f74bcd8f'
-                    },
-                    {
-                        text: '777',
-                        bg_color: '#B0C774',
-                        _id: '66b31d0c8097a908f74bcd90'
-                    }
-                ],
+                settings: {
+                    is_multiple: true,
+                    option_style: AITableSelectOptionStyle.piece,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a'
+                        },
+                        {
+                            text: '222',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd90'
+                        }
+                    ]
+                },
+
                 positions: {
                     view1: 4,
                     view2: 12
@@ -339,7 +348,9 @@ export function getDefaultValue() {
                     view1: 7,
                     view2: 9
                 },
-                isMultiple: true,
+                settings: {
+                    is_multiple: true
+                },
                 type: AITableFieldType.member
             },
             {

@@ -57,19 +57,19 @@
                     }"
                     [attr.type]="[field.type]"
                     [attr.fieldId]="[field._id]"
-                    [attr.readonly]="[field?.readonly]"
                     [attr.recordId]="[record._id]"
                     [ngStyle]="{ width: field.width + 'px' }"
                 >
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
                             @let fieldValue = record.values[field._id];
-                            @let options = field['options'];
-                            @let optionStyle = field['optionStyle'] || AITableSelectOptionStyle.tag;
+                            @let settings = field.settings! | selectSetting;
+                            @let options = settings['options'];
+                            @let optionStyle = settings['option_style'] || AITableSelectOptionStyle.tag;
                             @let isTagStyle = optionStyle === AITableSelectOptionStyle.tag;
                             @let isPieceStyle = optionStyle === AITableSelectOptionStyle.piece;
 
-                            @if (!field.isMultiple && fieldValue | selectOption: options; as selectedOption) {
+                            @if (!settings['is_multiple'] && fieldValue | selectOption: options; as selectedOption) {
                                 @if (isTagStyle) {
                                     <select-option class="mb-1 mr-1" [field]="field" [displayOption]="selectedOption"></select-option>
                                 } @else {
@@ -78,7 +78,7 @@
                                     </div>
                                 }
                             } @else {
-                                @let maxShowCount = field['maxCount'] ?? 2;
+                                @let maxShowCount = 2;
 
                                 <div class="d-flex">
                                     @if (fieldValue | selectOptions: options; as selectedOptions) {
@@ -159,7 +159,9 @@
                             </thy-progress>
                         }
                         @case (AITableFieldType.member) {
-                            @if (!field.isMultiple) {
+                            @let settings = field.settings! | memberSetting;
+
+                            @if (!settings!['is_multiple']) {
                                 @let recordValues = record.values[field._id] | user: aiReferences()!;
 
                                 @if (recordValues && recordValues.length) {
@@ -194,7 +196,7 @@
                         }
                         @case (AITableFieldType.updatedBy) {
                             @let recordValues = record.values[field._id] | user: aiReferences()!;
-                            
+
                             @if (recordValues && recordValues.length) {
                                 <thy-avatar
                                     [thyName]="recordValues[0].display_name!"

@@ -41,15 +41,7 @@ export enum AITableStatType {
     PercentUnChecked = 17
 }
 
-export interface AITableSelectOption {
-    _id: string;
-    text: string;
-    color?: string;
-    bg_color?: string;
-    [key: string]: any;
-}
-
-export interface AITableField<T = unknown> {
+export interface AITableField {
     _id: string;
     name: string;
     type: AITableFieldType;
@@ -58,9 +50,39 @@ export interface AITableField<T = unknown> {
     hidden?: boolean;
     frozen?: boolean;
     statType?: AITableStatType;
-    readonly?: boolean;
-    isMultiple?: boolean;
-    [key: string]: T | any;
+    settings?: AITableFieldSettings | null;
+}
+
+export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
+
+export interface TextSettings {}
+
+export interface RichTextSettings {}
+
+export interface SelectSettings extends IsMultiple {
+    option_style?: AITableSelectOptionStyle;
+    options: AITableSelectOption[];
+}
+
+export interface MemberSettings extends IsMultiple {}
+
+export interface IsMultiple {
+    is_multiple?: boolean;
+}
+
+export interface AITableSelectOption {
+    _id: string;
+    text: string;
+    color?: string;
+    bg_color?: string;
+    [key: string]: any;
+}
+
+export enum AITableSelectOptionStyle {
+    text = 'text',
+    tag = 'tag',
+    dot = 'dot',
+    piece = 'piece'
 }
 
 export type TextFieldValue = string;
@@ -116,11 +138,11 @@ export interface AITableChangeOptions {
     actions: AITableAction[];
 }
 
-export interface AITableFieldInfo {
-    type: AITableFieldType;
-    name: string;
-    icon: string;
-    width: number;
-}
+// export interface AITableFieldInfo {
+//     type: AITableFieldType;
+//     name: string;
+//     icon: string;
+//     width: number;
+// }
 
 export type AIPlugin = (aiTable: AITable) => AITable;

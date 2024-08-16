@@ -43,8 +43,8 @@ export function getSharedRecordId(records: SyncElement, recordIndex: number) {
     return records && (records as Y.Array<SyncArrayElement>).get(recordIndex).get(0).get(0)['_id'];
 }
 
-export function getSharedFieldId(fields: SyncElement, fieldIndex: number) {
-    return fields && (fields as Y.Array<SyncMapElement>).get(fieldIndex).get('_id');
+export function getSharedMapValueId(values: SyncElement, index: number) {
+    return values && (values as Y.Array<SyncMapElement>).get(index).get('_id');
 }
 
 export function getSharedRecordIndex(sharedRecords: SyncElement, recordId: string) {
@@ -59,14 +59,14 @@ export function getSharedRecordIndex(sharedRecords: SyncElement, recordId: strin
     return recordIndex;
 }
 
-export function getSharedFieldIndex(sharedFields: SyncElement, fieldId: string) {
-    let fieldIndex = -1;
-    for (let index = 0; index < sharedFields.length; index++) {
-        const sharedFieldId = getSharedFieldId(sharedFields, index);
-        if (sharedFieldId === fieldId) {
-            fieldIndex = index;
+export function getSharedMapValueIndex(sharedNodes: SyncElement, id: string) {
+    let nodeIndex = -1;
+    for (let index = 0; index < sharedNodes.length; index++) {
+        const sharedId = getSharedMapValueId(sharedNodes, index);
+        if (sharedId === id) {
+            nodeIndex = index;
             break;
         }
     }
-    return fieldIndex;
+    return nodeIndex;
 }

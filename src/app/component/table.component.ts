@@ -24,7 +24,7 @@ const initViews = [
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-room-demo-4';
+    room = 'share-room-demo-action-1';
 
     router = inject(Router);
 
