@@ -138,11 +138,4 @@ export interface AITableChangeOptions {
     actions: AITableAction[];
 }
 
-// export interface AITableFieldInfo {
-//     type: AITableFieldType;
-//     name: string;
-//     icon: string;
-//     width: number;
-// }
-
 export type AIPlugin = (aiTable: AITable) => AITable;
