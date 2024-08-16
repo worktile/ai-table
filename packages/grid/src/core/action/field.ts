@@ -1,6 +1,7 @@
 import {
     ActionName,
     AddFieldAction,
+    AIFieldIdPath,
     AIFieldPath,
     AITable,
     AITableField,
@@ -28,7 +29,7 @@ export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldP
     aiTable.apply(operation);
 }
 
-export function removeField(aiTable: AITable, path: AIFieldPath) {
+export function removeField(aiTable: AITable, path: AIFieldIdPath) {
     const operation: RemoveFieldAction = {
         type: ActionName.RemoveField,
         path

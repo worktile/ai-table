@@ -57,9 +57,9 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             break;
         }
         case ActionName.RemoveField: {
-            const [fieldIndex] = options.path;
+            const [fieldId] = options.path;
+            const fieldIndex = aiTable.fields().findIndex((item) => item._id === fieldId);
             if (fieldIndex > -1) {
-                const fieldId = aiTable.fields()[fieldIndex]._id;
                 fields.splice(fieldIndex, 1);
                 records.forEach((item) => {
                     delete item.values[fieldId];
@@ -68,7 +68,8 @@ const apply = (aiTable: AITable, records: AITableRecords, fields: AITableFields,
             break;
         }
         case ActionName.RemoveRecord: {
-            const [recordIndex] = options.path;
+            const [recordId] = options.path;
+            const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
             if (recordIndex > -1) {
                 records.splice(recordIndex, 1);
             }

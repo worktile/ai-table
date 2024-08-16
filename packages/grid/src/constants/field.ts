@@ -23,8 +23,7 @@ export const RemoveFieldItem = {
     name: '删除列',
     icon: 'trash',
     exec: (aiTable: AITable, field: Signal<AITableField>) => {
-        const path = AITableQueries.findFieldPath(aiTable, field()) as AIFieldPath;
-        Actions.removeField(aiTable, path);
+        Actions.removeField(aiTable, [field()._id]);
     }
 };
 
