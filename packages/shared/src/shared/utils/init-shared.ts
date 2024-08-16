@@ -1,7 +1,6 @@
 import * as Y from 'yjs';
 import { AITableViewRecord, Positions, SyncMapElement } from '../../types';
 
-
 export const createSharedType = () => {
     const doc = new Y.Doc();
     const sharedType = doc.getMap<any>('ai-table');
@@ -54,7 +53,9 @@ export function toSyncElement(node: any): SyncMapElement {
 
 export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
     const nonEditableArray = new Y.Array();
-    nonEditableArray.insert(0, [record['_id']]);
+    // 临时方案：为了解决删除时协同操作无法精准获取删除的 id 的问题，将原来的[idValue] 改为[{'_id': idValue}]
+    // 后续可能改为 YMap 或者通过在 views 中存储 positions 解决
+    nonEditableArray.insert(0, [{ _id: record['_id'] }]);
 
     const editableArray = new Y.Array();
     const editableFields = [];

@@ -1,4 +1,13 @@
-import { ActionName, AIFieldPath, AIFieldValuePath, AIRecordPath, AITableAction, AITableField, AITableQueries } from '@ai-table/grid';
+import {
+    ActionName,
+    AIFieldIdPath,
+    AIFieldPath,
+    AIFieldValueIdPath,
+    AIRecordPath,
+    AITableAction,
+    AITableField,
+    AITableQueries
+} from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType } from '../../types';
@@ -16,31 +25,27 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
         if ('retain' in delta) {
             offset += delta.retain ?? 0;
         }
+
+        if ('delete' in delta) {
+            if (isAddOrRemove(targetPath)) {
+                const type = isRecordsTranslate ? ActionName.RemoveRecord : ActionName.RemoveField;
+                const removeIds = getRemoveIds(event, type);
+                console.log(removeIds);
+                if (removeIds.length) {
+                    removeIds.forEach((path) => {
+                        actions.push({
+                            type,
+                            path
+                        });
+                    });
+                }
+            }
+        }
+
         if ('insert' in delta) {
             if (isArray(delta.insert)) {
                 if (isRecordsTranslate) {
-                    if (isAddRecord(targetPath)) {
-                        try {
-                            delta.insert?.map((item: any) => {
-                                const recordIndex = targetPath[0] as number;
-                                const fieldIndex = offset;
-                                const recordId = getSharedRecordId(sharedType.get('records')!, recordIndex);
-                                const fieldId = getSharedFieldId(sharedType.get('fields')!, fieldIndex);
-                                const path = [recordId, fieldId] as AIFieldValuePath;
-                                const fieldValue = AITableQueries.getFieldValue(aiTable, path);
-
-                                // To exclude insert triggered by field inserts.
-                                if (fieldValue !== item) {
-                                    actions.push({
-                                        type: ActionName.UpdateFieldValue,
-                                        path,
-                                        fieldValue,
-                                        newFieldValue: item
-                                    });
-                                }
-                            });
-                        } catch (error) {}
-                    } else {
+                    if (isAddOrRemove(targetPath)) {
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
@@ -56,11 +61,32 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 type: ActionName.AddRecord,
                                 path: path,
                                 record: {
-                                    _id: fixedField[0],
+                                    _id: fixedField[0]['_id'],
                                     values: translateToRecordValues(customField, aiTable.fields() as AITableViewFields)
                                 }
                             });
                         });
+                    } else {
+                        try {
+                            delta.insert?.map((item: any) => {
+                                const recordIndex = targetPath[0] as number;
+                                const fieldIndex = offset;
+                                const recordId = getSharedRecordId(sharedType.get('records')!, recordIndex);
+                                const fieldId = getSharedFieldId(sharedType.get('fields')!, fieldIndex);
+                                const path = [recordId, fieldId] as AIFieldValueIdPath;
+                                const fieldValue = AITableQueries.getFieldValue(aiTable, path);
+
+                                // To exclude insert triggered by field inserts.
+                                if (fieldValue !== item) {
+                                    actions.push({
+                                        type: ActionName.UpdateFieldValue,
+                                        path,
+                                        fieldValue,
+                                        newFieldValue: item
+                                    });
+                                }
+                            });
+                        } catch (error) {}
                     }
                 }
                 if (isFieldsTranslate) {
@@ -83,10 +109,39 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                 }
             }
         }
+
+     
     });
     return actions;
 }
 
-export function isAddRecord(targetPath: number[]): boolean {
-    return targetPath.length !== 0;
+export function isAddOrRemove(targetPath: number[]): boolean {
+    return targetPath.length === 0;
+}
+
+export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord) {
+    const ids: [string][] = [];
+    if (!type) {
+        return ids;
+    }
+
+    Y.iterateDeletedStructs(
+        event.transaction,
+        event.transaction.deleteSet,
+        // @param {Item|GC} item
+        (item) => {
+            if (item instanceof Y.Item && item.deleted) {
+                if (type === ActionName.RemoveField && item.parentSub === '_id') {
+                    ids.push(item.content.getContent() as AIFieldIdPath);
+                }
+                if (type === ActionName.RemoveRecord) {
+                    const content = item.content.getContent();
+                    if (content[0] && content[0]['_id']) {
+                        ids.push([content[0]['_id']]);
+                    }
+                }
+            }
+        }
+    );
+    return ids;
 }

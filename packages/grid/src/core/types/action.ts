@@ -2,11 +2,15 @@ import { AITableField, AITableRecord } from './core';
 
 export type AIRecordPath = [number];
 
+export type AIRecordIdPath = [string];
+
 export type AIFieldPath = [number];
 
-export type AIFieldValuePath = [string, string];
+export type AIFieldIdPath = [string];
 
-export type Path = AIRecordPath | AIFieldPath | AIFieldValuePath;
+export type AIFieldValueIdPath = [string, string];
+
+export type Path = AIRecordPath | AIFieldPath | AIFieldIdPath | AIRecordIdPath | AIFieldValueIdPath;
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',
@@ -27,7 +31,7 @@ export enum ExecuteType {
 
 export type UpdateFieldValueAction = {
     type: ActionName.UpdateFieldValue;
-    path: AIFieldValuePath;
+    path: AIFieldValueIdPath;
     fieldValue: any;
     newFieldValue: any;
 };
@@ -58,12 +62,12 @@ export type MoveRecordAction = {
 
 export type RemoveFieldAction = {
     type: ActionName.RemoveField;
-    path: AIFieldPath;
+    path: AIFieldIdPath;
 };
 
 export type RemoveRecordAction = {
     type: ActionName.RemoveRecord;
-    path: AIRecordPath;
+    path: AIRecordIdPath;
 };
 
 export type SetFieldAction = {

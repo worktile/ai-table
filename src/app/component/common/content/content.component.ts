@@ -165,9 +165,8 @@ export class DemoTableContent {
 
     removeRecord() {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        recordIds.forEach((item) => {
-            const path = this.aiTable.records().findIndex((record) => record._id === item);
-            Actions.removeRecord(this.aiTable, [path]);
+        recordIds.forEach((id) => {
+            Actions.removeRecord(this.aiTable, [id]);
         });
     }
 

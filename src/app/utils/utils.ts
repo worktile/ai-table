@@ -136,7 +136,7 @@ export function getDefaultValue() {
                 name: '单行文本',
                 positions: {
                     view1: 0,
-                    view2: 1
+                    view2: 16
                 },
                 type: AITableFieldType.text
             },
@@ -145,7 +145,7 @@ export function getDefaultValue() {
                 name: '单选',
                 positions: {
                     view1: 1,
-                    view2: 2
+                    view2: 15
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -213,7 +213,7 @@ export function getDefaultValue() {
                 ],
                 positions: {
                     view1: 2,
-                    view2: 3
+                    view2: 14
                 }
             },
             {
@@ -262,7 +262,7 @@ export function getDefaultValue() {
                 ],
                 positions: {
                     view1: 3,
-                    view2: 4
+                    view2: 13
                 }
             },
             {
@@ -311,7 +311,7 @@ export function getDefaultValue() {
                 ],
                 positions: {
                     view1: 4,
-                    view2: 5
+                    view2: 12
                 }
             },
             {
@@ -319,7 +319,7 @@ export function getDefaultValue() {
                 name: '数字',
                 positions: {
                     view1: 5,
-                    view2: 7
+                    view2: 11
                 },
                 type: AITableFieldType.number
             },
@@ -328,7 +328,7 @@ export function getDefaultValue() {
                 name: '日期',
                 positions: {
                     view1: 6,
-                    view2: 8
+                    view2: 10
                 },
                 type: AITableFieldType.date
             },
@@ -347,7 +347,7 @@ export function getDefaultValue() {
                 name: '进度',
                 positions: {
                     view1: 8,
-                    view2: 10
+                    view2: 8
                 },
                 type: AITableFieldType.progress
             },
@@ -356,7 +356,7 @@ export function getDefaultValue() {
                 name: '评分(📌)',
                 positions: {
                     view1: 9,
-                    view2: 11
+                    view2: 7
                 },
                 type: AITableFieldType.rate
             },
@@ -365,7 +365,7 @@ export function getDefaultValue() {
                 name: '链接(📌)',
                 positions: {
                     view1: 10,
-                    view2: 12
+                    view2: 6
                 },
                 type: AITableFieldType.link
             },
@@ -375,7 +375,7 @@ export function getDefaultValue() {
                 name: '创建人',
                 positions: {
                     view1: 11,
-                    view2: 13
+                    view2: 5
                 },
                 type: AITableFieldType.createdBy
             },
@@ -384,7 +384,7 @@ export function getDefaultValue() {
                 name: '创建时间',
                 positions: {
                     view1: 12,
-                    view2: 14
+                    view2: 4
                 },
                 type: AITableFieldType.createdAt
             },
@@ -393,7 +393,7 @@ export function getDefaultValue() {
                 name: '更新人',
                 positions: {
                     view1: 13,
-                    view2: 15
+                    view2: 3
                 },
                 type: AITableFieldType.updatedBy
             },
@@ -402,7 +402,7 @@ export function getDefaultValue() {
                 name: '更新时间',
                 positions: {
                     view1: 14,
-                    view2: 16
+                    view2: 2
                 },
                 type: AITableFieldType.updatedAt
             }

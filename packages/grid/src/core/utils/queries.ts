@@ -1,5 +1,5 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { AITable, AITableField, AITableRecord, AIFieldValuePath, AIRecordPath, AIFieldPath } from '../types';
+import { AITable, AITableField, AITableRecord, AIFieldValueIdPath, AIRecordPath, AIFieldPath } from '../types';
 
 export const AITableQueries = {
     findRecordPath(aiTable: AITable, record: AITableRecord) {
@@ -16,7 +16,7 @@ export const AITableQueries = {
         }
         throw new Error(`can not find the field path: ${JSON.stringify({ ...(field || {}) })}`);
     },
-    getFieldValue(aiTable: AITable, path: AIFieldValuePath): any {
+    getFieldValue(aiTable: AITable, path: AIFieldValueIdPath): any {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
         }

@@ -4,6 +4,8 @@ import addRecord from './add-record';
 import addField from './add-field';
 import setView from './set-view';
 import { SharedType } from '../../types';
+import removeRecord from './remove-record';
+import removeField from './remove-field';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;
@@ -14,7 +16,9 @@ export type ApplyFunc<O extends AITableAction = AITableAction> = (sharedType: Sh
 export const actionMappers: Partial<ActionMapper<any>> = {
     update_field_value: updateFieldValue,
     add_record: addRecord,
+    remove_record: removeRecord,
     add_field: addField,
+    remove_field: removeField,
     set_view: setView
 };
 
