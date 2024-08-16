@@ -30,7 +30,6 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
             if (isAddOrRemove(targetPath)) {
                 const type = isRecordsTranslate ? ActionName.RemoveRecord : ActionName.RemoveField;
                 const removeIds = getRemoveIds(event, type);
-                console.log(removeIds);
                 if (removeIds.length) {
                     removeIds.forEach((path) => {
                         actions.push({
