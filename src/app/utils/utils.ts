@@ -11,12 +11,12 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
 
 export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
     const positions: Positions = {};
-    const activeId = views.find((item) => item.isActive)?._id!;
+    const activeId = views.find((item) => item.is_active)?._id!;
     const position = getPosition(data, activeId, index);
     const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
     const maxPosition = data[maxIndex].positions[activeId];
     views.forEach((element) => {
-        positions[element._id] = element.isActive ? position : maxPosition + 1;
+        positions[element._id] = element.is_active ? position : maxPosition + 1;
     });
     return positions;
 }

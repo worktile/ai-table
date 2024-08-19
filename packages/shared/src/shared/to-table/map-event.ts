@@ -32,10 +32,7 @@ export default function translateMapEvent(aiTable: AITable, sharedType: SharedTy
                 const k = key as keyof (AITableView | AITableField);
                 properties[k] = value;
             }
-            let type = isFieldsTranslate ? ActionName.SetField : ViewActionName.setView;
-            // TODO:
-            // 排序、筛选等操作仅对当前视图生效，修改名称、修改视图顺序等操作对所有视图生效，后续需要做区分
-            // 考虑将排序和筛选等操作从 set_view 中移出
+            const type = isFieldsTranslate ? ActionName.SetField : ViewActionName.SetView;
             return [
                 {
                     type,

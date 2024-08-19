@@ -48,7 +48,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
-                            const activeViewId = aiTable.views().find((item) => item.isActive)!._id!;
+                            const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
                             const position = customField[customField.length - 1][activeViewId];
                             const path = translatePositionToPath(
                                 aiTable.records() as AITableViewRecords,
@@ -92,7 +92,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
                         if (event.path.includes('fields')) {
-                            const activeViewId = aiTable.views().find((item) => item.isActive)!._id!;
+                            const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
                             const path = translatePositionToPath(
                                 aiTable.fields() as AITableViewFields,
                                 data['positions'][activeViewId],

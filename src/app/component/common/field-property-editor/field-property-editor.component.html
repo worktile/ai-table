@@ -1,13 +1,13 @@
 <ai-table-field-property-editor
     [aiTable]="aiTable"
-    [aiField]="aiField()"
+    [aiEditField]="aiEditField()"
     [isUpdate]="isUpdate"
     [aiExternalTemplate]="aiExternalTemplate"
 >
 </ai-table-field-property-editor>
 
 <ng-template #aiExternalTemplate>
-    @if (aiField().type === AITableFieldType.select) {
+    @if (aiEditField().type === AITableFieldType.select) {
         下拉选项选择
     }
 </ng-template>

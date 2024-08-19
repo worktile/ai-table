@@ -31,7 +31,7 @@ export class TableService {
     sharedType!: SharedType | null;
 
     activeView = computed(() => {
-        return this.views().find((view) => view?.isActive) as AITableView;
+        return this.views().find((view) => view?.is_active) as AITableView;
     });
 
     initData(views: AITableView[]) {
@@ -42,11 +42,11 @@ export class TableService {
         this.views.update((value) => {
             const draftViews = createDraft(value);
             draftViews.forEach((item) => {
-                if (item.isActive && item._id !== activeViewId) {
-                    item.isActive = false;
+                if (item.is_active && item._id !== activeViewId) {
+                    item.is_active = false;
                 }
-                if (!item.isActive && item._id === activeViewId) {
-                    item.isActive = true;
+                if (!item.is_active && item._id === activeViewId) {
+                    item.is_active = true;
                 }
             });
             return finishDraft(draftViews);

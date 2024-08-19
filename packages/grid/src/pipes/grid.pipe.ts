@@ -43,11 +43,8 @@ export class UserPipe implements PipeTransform {
         return values.map((item) => {
             return references.members[item] || {};
         });
-      
     }
 }
-
-
 
 @Pipe({
     name: 'selectSetting',
@@ -55,10 +52,9 @@ export class UserPipe implements PipeTransform {
 })
 export class SelectSettingPipe implements PipeTransform {
     transform(settings: AITableFieldSettings) {
-    return settings as SelectSettings;
+        return settings as SelectSettings;
     }
 }
-
 
 @Pipe({
     name: 'memberSetting',
@@ -66,6 +62,6 @@ export class SelectSettingPipe implements PipeTransform {
 })
 export class MemberSettingPipe implements PipeTransform {
     transform(settings: AITableFieldSettings) {
-    return settings as MemberSettings;
+        return settings as MemberSettings;
     }
 }

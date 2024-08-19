@@ -9,7 +9,7 @@ import { AITableField, AITableFieldType, AITableFieldPropertyEditor, AITable } f
     imports: [AITableFieldPropertyEditor]
 })
 export class FieldPropertyEditor {
-    aiField = model.required<AITableField>();
+    aiEditField = model.required<AITableField>();
 
     @Input({ required: true }) aiTable!: AITable;
 

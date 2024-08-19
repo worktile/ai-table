@@ -57,7 +57,7 @@ import { ThyAutofocusDirective } from 'ngx-tethys/shared';
     ]
 })
 export class AITableFieldPropertyEditor {
-    aiField = model.required<AITableField>();
+    aiEditField = model.required<AITableField>();
 
     @Input({ required: true }) aiTable!: AITable;
 
@@ -66,7 +66,7 @@ export class AITableFieldPropertyEditor {
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     fieldType = computed(() => {
-        return FieldsMap[this.aiField().type];
+        return FieldsMap[this.aiEditField().type];
     });
 
     fieldMaxLength = 32;
@@ -88,11 +88,11 @@ export class AITableFieldPropertyEditor {
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?._id !== field._id));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiEditField()?._id !== field._id));
     };
 
     selectFieldType(field: Partial<AITableField>) {
-        this.aiField.update((item) => {
+        this.aiEditField.update((item) => {
             const width = item.width ?? field.width;
             const name = createDefaultFieldName(this.aiTable, field.type!);
             const settings = field.settings || null;
@@ -102,9 +102,9 @@ export class AITableFieldPropertyEditor {
 
     editFieldProperty() {
         if (this.isUpdate) {
-            Actions.setField(this.aiTable, this.aiField(), [this.aiField()._id]);
+            Actions.setField(this.aiTable, this.aiEditField(), [this.aiEditField()._id]);
         } else {
-            Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
+            Actions.addField(this.aiTable, this.aiEditField(), [this.aiTable.fields().length]);
         }
         this.thyPopoverRef.close();
     }

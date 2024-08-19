@@ -1,15 +1,43 @@
 <div class="d-flex align-items-center mt-5">
     <input thyInput [(ngModel)]="room" [disabled]="!!tableService.provider" placeholder="请输入房间号" style="width: 300px" />
-    <a thyAction class="ml-2" [thyIcon]="tableService.provider ? 'unlink-insert' : 'link-insert'" href="javascript:;" (click)="handleShared()">{{
-        tableService.provider ? '断开连接' : '连接协同'
-    }}</a>
+    <a
+        thyAction
+        class="ml-2"
+        [thyIcon]="tableService.provider ? 'unlink-insert' : 'link-insert'"
+        href="javascript:;"
+        (click)="handleShared()"
+        >{{ tableService.provider ? '断开连接' : '连接协同' }}</a
+    >
 </div>
 <thy-tabs (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView()._id">
     @for (item of tableService.views(); track $index) {
         <thy-tab [thyTitle]="item.name" [id]="item._id">
-            @if (item.isActive) {
+            @if (item.is_active) {
+                <ng-template #title>
+                    @if (isEdit) {
+                        <input
+                            thyAutofocus
+                            thyInput
+                            [ngModel]="item.name"
+                            (thyEnter)="updateValue()"
+                            (blur)="updateValue()"
+                            (ngModelChange)="valueChange($event)"
+                        />
+                    } @else {
+                        <p class="mb-0">
+                            <span> {{ item.name }} </span>
+                            <a thySize="xxs" thyAction class="ml-1" thyIcon="more" [thyDropdown]="menu" href="javascript:;"></a>
+                        </p>
+                    }
+                </ng-template>
                 <router-outlet></router-outlet>
             }
         </thy-tab>
     }
 </thy-tabs>
+
+<thy-dropdown-menu #menu>
+    <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
+        <span>重命名视图</span>
+    </a>
+</thy-dropdown-menu>

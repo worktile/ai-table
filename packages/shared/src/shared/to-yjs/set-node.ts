@@ -8,7 +8,7 @@ export default function setMapNode(sharedType: SharedType, action: SetFieldActio
         sharedNodes = sharedType.get('fields')!;
     }
 
-    if (action.type === ViewActionName.setView) {
+    if (action.type === ViewActionName.SetView) {
         sharedNodes = sharedType.get('views')!;
     }
 
