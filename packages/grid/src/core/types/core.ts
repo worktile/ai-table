@@ -49,7 +49,7 @@ export interface AITableField {
     width?: number;
     hidden?: boolean;
     frozen?: boolean;
-    statType?: AITableStatType;
+    stat_type?: AITableStatType;
     settings?: AITableFieldSettings | null;
 }
 
@@ -75,7 +75,6 @@ export interface AITableSelectOption {
     text: string;
     color?: string;
     bg_color?: string;
-    [key: string]: any;
 }
 
 export enum AITableSelectOptionStyle {

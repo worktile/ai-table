@@ -10,7 +10,7 @@ import {
 } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
-import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType } from '../../types';
+import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType, SyncArrayElement, SyncMapElement } from '../../types';
 import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
@@ -70,8 +70,8 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                             delta.insert?.map((item: any) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
-                                const recordId = getSharedRecordId(sharedType.get('records')!, recordIndex);
-                                const fieldId = getSharedMapValueId(sharedType.get('fields')!, fieldIndex);
+                                const recordId = getSharedRecordId(sharedType.get('records')! as Y.Array<SyncArrayElement>, recordIndex);
+                                const fieldId = getSharedMapValueId(sharedType.get('fields')! as Y.Array<SyncMapElement>, fieldIndex);
                                 const path = [recordId, fieldId] as AIFieldValueIdPath;
                                 const fieldValue = AITableQueries.getFieldValue(aiTable, path);
 
@@ -108,8 +108,6 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                 }
             }
         }
-
-     
     });
     return actions;
 }
