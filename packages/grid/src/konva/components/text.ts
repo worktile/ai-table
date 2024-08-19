@@ -2,7 +2,7 @@ import Konva from 'konva';
 import { DefaultTheme } from '../constants/default-theme';
 
 export const Text = (config: Konva.ShapeConfig) => {
-    const colors = DefaultTheme.colors;
+    const colors = DefaultTheme.color;
     const {
         x,
         y,

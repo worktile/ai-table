@@ -28,7 +28,7 @@ interface AITableIconConfig extends Konva.ShapeConfig {
 export type Shape = 'square' | 'circle';
 
 export const Icon = (config: AITableIconConfig & { id?: string; background?: string; shape?: Shape }) => {
-    const colors = DefaultTheme.colors;
+    const colors = DefaultTheme.color;
     const {
         name,
         data,

@@ -1,11 +1,12 @@
+import { AITable, GRID_ROW_ADD_BUTTON } from '@ai-table/grid';
 import Konva from 'konva';
-import { DefaultTheme } from '../constants/default-theme';
 import { GRID_GROUP_OFFSET } from '../constants/grid';
-import { AILinearRow, AITableRender, CellType } from '../interface/grid';
+import { AITableRender, CellType } from '../interface/grid';
 import { AITableUseGridBaseConfig } from '../interface/view';
-import { cellHelper } from '../utils/cell-helper';
-import { recordRowLayout } from '../utils/record-row-layout';
 import { addRowLayout } from '../utils/add-row-layout';
+import { cellHelper } from '../utils/cell-helper';
+import { getSelectRanges } from '../utils/cell-range-calc';
+import { recordRowLayout } from '../utils/record-row-layout';
 
 /**
  * 根据单元格是否是第一列/最后一列确定单元格所在的位置
@@ -25,8 +26,15 @@ export const getCellHorizontalPosition = (props: { depth: number; columnWidth: n
 };
 
 export const createCells = (config: AITableUseGridBaseConfig) => {
-    const { aiTable, fields, records, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, linearRows } = config;
-    const colors = DefaultTheme.colors;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, linearRows } = config;
+    const { aiTable, fields, records, pointPosition } = context;
+    const { rowIndex: pointRowIndex, columnIndex: pointColumnIndex, targetName } = pointPosition();
+    const colors = AITable.getThemeColors(aiTable());
+    const selectRanges = getSelectRanges(context);
+    const selectionRange = selectRanges[0];
+    const activeCell = aiTable().selection().activeCell;
+    const recordRanges = aiTable().selection().recordRanges;
+    const fillHandleStatus = aiTable().selection().fillHandleStatus;
 
     const { rowHeight, columnCount, rowCount, rowHeightLevel, frozenColumnCount } = instance;
 
@@ -36,7 +44,7 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
         addRowLayout.initCtx(ctx);
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             if (columnIndex > columnCount - 1) break;
-            const field = fields[columnIndex];
+            const field = fields()[columnIndex];
             if (field == null) continue;
             const columnWidth = instance.getColumnWidth(columnIndex);
             const x = instance.getColumnOffset(columnIndex) + 0.5;
@@ -47,32 +55,61 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
             }
             for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
                 if (rowIndex > rowCount - 1) break;
-                const row = records[rowIndex];
-                const leanRow = (linearRows as AILinearRow[])[rowIndex];
-                const { recordId, type, depth } = leanRow;
 
+                const row = linearRows[rowIndex];
+                const { recordId, type, depth } = row;
                 const y = instance.getRowOffset(rowIndex) + 0.5;
+                const height = instance.getRowHeight(rowIndex);
 
                 switch (type) {
-                    //  Add Row Button
+                    //  添加行按钮
                     case CellType.Add: {
-                        // const isHoverColumn = pointColumnIndex === columnIndex;
-                        // const isHoverRow = !isNoneArea && pointRowIndex === rowIndex && targetName === KONVA_DATASHEET_ID.GRID_ROW_ADD_BUTTON;
+                        const isHoverColumn = pointColumnIndex === columnIndex;
+                        const isHoverRow = pointRowIndex === rowIndex && targetName === GRID_ROW_ADD_BUTTON;
                         addRowLayout.init({
                             x,
                             y,
                             rowIndex,
                             columnIndex,
                             columnWidth,
-                            rowHeight: 44,
+                            rowHeight: height,
                             columnCount
                         });
                         addRowLayout.render({
-                            row: leanRow
+                            row,
+                            isHoverRow,
+                            isHoverColumn,
+                            rowCreatable: true
                         });
                         break;
                     }
                     case CellType.Record: {
+                        const isCellInSelection = (() => {
+                            if (!selectionRange) return false;
+                            return aiTable().selection().selectedCells.get(row.recordId)?.hasOwnProperty(field._id);
+                        })();
+
+                        const isActiveRow = Boolean(activeCell && activeCell.recordId === row.recordId);
+                        let background = colors.white;
+                        const isHoverRow = pointRowIndex === rowIndex;
+                        const isCheckedRow = Boolean(recordRanges && recordRanges.findIndex((item) => item === row.recordId) !== -1);
+                        const isCellInFillSelection = !!activeCell;
+                        const isActive = activeCell?.recordId === row.recordId && activeCell?.fieldId === field._id;
+
+                        if (isActive) {
+                            background = colors.defaultBg;
+                        } else if (isCellInFillSelection) {
+                            background = colors.warnLight;
+                        } else if (isCheckedRow) {
+                            background = colors.bgBrandLightDefaultSolid;
+                        } else if (isCellInSelection) {
+                            background = colors.bgBrandLightDefaultSolid;
+                        } else if (isActiveRow) {
+                            background = colors.bgBrandLightDefaultSolid;
+                        } else if (isHoverRow) {
+                            background = colors.bgBglessHoverSolid;
+                        }
+
                         recordRowLayout.init({
                             x,
                             y,
@@ -83,7 +120,7 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
                             columnCount
                         });
 
-                        recordRowLayout.render({ row, colors });
+                        recordRowLayout.render({ row, isHoverRow, isCheckedRow, isActiveRow, colors });
 
                         const { width, offset } = getCellHorizontalPosition({
                             depth,
@@ -94,7 +131,8 @@ export const createCells = (config: AITableUseGridBaseConfig) => {
                         const realX = x + offset - 0.5;
                         const realY = y - 0.5;
                         const style = { fontWeight: 'normal' };
-                        const cellValue = row.values[field._id];
+                        const rowValue = records()[rowIndex];
+                        const cellValue = rowValue.values[field._id];
 
                         const render = {
                             x: realX,

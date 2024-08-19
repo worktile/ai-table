@@ -1,27 +1,25 @@
+import { AITable } from '@ai-table/grid';
 import { Group } from 'konva/lib/Group';
+import { Rect } from 'konva/lib/shapes/Rect';
+import { Icon } from '../components/icon';
 import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_ICON_COMMON_SIZE } from '../constants/grid';
+import { AddOutlinedPath } from '../constants/icon';
 import { AITableUseGrid } from '../interface/view';
 import { createCells } from './create-cells';
+import { createDynamicCells } from './create-dynamic-cells';
 import { createHeads } from './create-heads';
-import { Rect } from 'konva/lib/shapes/Rect';
-import { DefaultTheme } from '../constants/default-theme';
-import { Icon } from '../components/icon';
-import { AddOutlinedPath } from '../constants/icon';
-import { Text } from 'konva/lib/shapes/Text';
-import { Shape } from 'konva/lib/Shape';
 
 export const createGridContent = (config: AITableUseGrid) => {
-    const { aiTable, fields, records, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, scrollState, linearRows } =
-        config;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, scrollState, linearRows } = config;
+    const { aiTable, fields } = context;
 
     /**
      * Field header
      */
     const { frozenFieldHead, fieldHeads } = createHeads({
-        aiTable,
-        fields,
-        records,
+        context,
         instance,
+        linearRows,
         columnStartIndex,
         columnStopIndex,
         scrollState
@@ -31,9 +29,7 @@ export const createGridContent = (config: AITableUseGrid) => {
      * Static cells
      */
     const { frozenCells, cells } = createCells({
-        aiTable,
-        fields,
-        records,
+        context,
         instance,
         rowStartIndex,
         rowStopIndex,
@@ -43,8 +39,9 @@ export const createGridContent = (config: AITableUseGrid) => {
     });
 
     function getFieldButton() {
-        const columnLength = fields.length;
+        const columnLength = fields().length;
         if (columnStopIndex !== columnLength - 1) return;
+        const colors = AITable.getThemeColors(aiTable());
         const lastColumnOffset = instance.getColumnOffset(columnStopIndex);
         const lastColumnWidth = instance.getColumnWidth(columnStopIndex);
         const x = lastColumnOffset + lastColumnWidth;
@@ -59,7 +56,7 @@ export const createGridContent = (config: AITableUseGrid) => {
             width: btnWidth,
             height: instance.rowInitSize,
             cornerRadius: [0, 0],
-            stroke: DefaultTheme.colors.sheetLineColor,
+            stroke: colors.sheetLineColor,
             strokeWidth: 1,
             listening: true
         });
@@ -70,7 +67,7 @@ export const createGridContent = (config: AITableUseGrid) => {
             size: 16,
             backgroundHeight: 16,
             data: AddOutlinedPath,
-            fill: DefaultTheme.colors.thirdLevelText,
+            fill: colors.thirdLevelText,
             listening: false
         });
 
@@ -81,11 +78,46 @@ export const createGridContent = (config: AITableUseGrid) => {
 
     const addFieldBtn = getFieldButton();
 
+    /**
+     * Dynamic cells in active and hover states
+     */
+    const {
+        activedCell,
+        activeCellBorder,
+        frozenActivedCell,
+        frozenActiveCellBorder,
+        fillHandler,
+        frozenFillHandler,
+        placeHolderCells,
+        frozenPlaceHolderCells,
+        draggingOutline,
+        toggleEditing
+    } = createDynamicCells({
+        context,
+        instance,
+        linearRows,
+        rowStartIndex,
+        rowStopIndex,
+        columnStartIndex,
+        columnStopIndex,
+        scrollState
+    }) as any;
+
     return {
         frozenFieldHead,
         fieldHeads,
         frozenCells,
         cells,
-        addFieldBtn
+        addFieldBtn,
+        activedCell,
+        activeCellBorder,
+        frozenActivedCell,
+        frozenActiveCellBorder,
+        fillHandler,
+        frozenFillHandler,
+        placeHolderCells,
+        frozenPlaceHolderCells,
+        draggingOutline,
+        toggleEditing
     };
 };

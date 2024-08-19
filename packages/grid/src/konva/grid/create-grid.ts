@@ -1,13 +1,11 @@
 import Konva from 'konva';
-import { GRID_ROW_HEAD_WIDTH } from '../constants/grid';
+import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
 import { AITableUseGrid } from '../interface/view';
 import { createGridContent } from './create-grid-content';
 
 export const createGrid = (config: AITableUseGrid) => {
     const {
-        aiTable,
-        fields,
-        records,
+        context,
         instance,
         scrollState,
         rowStartIndex,
@@ -18,10 +16,24 @@ export const createGrid = (config: AITableUseGrid) => {
         linearRows
     } = config;
 
-    const { fieldHeads, frozenFieldHead, frozenCells, cells, addFieldBtn } = createGridContent({
-        aiTable,
-        fields,
-        records,
+    const {
+        fieldHeads,
+        frozenFieldHead,
+        frozenCells,
+        cells,
+        addFieldBtn,
+        activedCell,
+        activeCellBorder,
+        frozenActivedCell,
+        frozenActiveCellBorder,
+        fillHandler,
+        frozenFillHandler,
+        placeHolderCells,
+        frozenPlaceHolderCells,
+        draggingOutline,
+        toggleEditing
+    } = createGridContent({
+        context,
         instance,
         linearRows,
         rowStartIndex,
@@ -36,81 +48,101 @@ export const createGrid = (config: AITableUseGrid) => {
     const frozenAreaWidth = GRID_ROW_HEAD_WIDTH + frozenColumnWidth;
     const lastColumnWidth = instance.getColumnWidth(columnStopIndex);
     const lastColumnOffset = instance.getColumnOffset(columnStopIndex);
-    const cellGroupClipWidth = containerWidth;
-    // const cellGroupClipWidth = Math.min(
-    //     containerWidth - frozenAreaWidth,
-    //     lastColumnOffset + lastColumnWidth - scrollLeft - frozenAreaWidth
-    // );
+    const addFieldBtnWidth = GRID_ADD_FIELD_BUTTON_WIDTH;
+    const cellGroupClipWidth = Math.min(
+        containerWidth - frozenAreaWidth,
+        addFieldBtnWidth + lastColumnOffset + lastColumnWidth - scrollLeft - frozenAreaWidth
+    );
 
     const layer = new Konva.Layer();
-    const group = new Konva.Group();
-    const group2 = new Konva.Group({
-        // clipX: offsetX,
-        clipY: 0
-        // clipWidth: containerWidth - offsetX,
-        // clipHeight: containerHeight
+    const grid = new Konva.Group();
+    const gridContainer = new Konva.Group({
+        clipX: offsetX,
+        clipY: 0,
+        clipWidth: containerWidth - offsetX,
+        clipHeight: containerHeight
     });
-    const group3 = new Konva.Group({
+    const gridView = new Konva.Group({
         x: offsetX
     });
-    const group4 = new Konva.Group({
+    const gridContent = new Konva.Group({
         offsetY: scrollTop
     });
-    const group5 = new Konva.Group({
-        // clipX: frozenAreaWidth + 1,
-        // clipY: 0
-        // clipWidth: cellGroupClipWidth,
-        // clipHeight: containerHeight
+    const gridCommonCellContainer = new Konva.Group({
+        clipX: frozenAreaWidth + 1,
+        clipY: 0,
+        clipWidth: cellGroupClipWidth,
+        clipHeight: containerHeight
     });
-    const group6 = new Konva.Group({
-        // offsetX: scrollLeft,
-        // offsetY: scrollTop
+    const gridCommonRowContainer = new Konva.Group({
+        offsetX: scrollLeft,
+        offsetY: scrollTop
     });
-    const group7 = new Konva.Group({
-        // offsetX: scrollLeft
+    const gridCommonHeadContainer = new Konva.Group({
+        offsetX: scrollLeft
     });
-    group6.add(cells);
-    group7.add(...fieldHeads);
+
+    gridCommonRowContainer.add(cells);
+    gridCommonHeadContainer.add(...fieldHeads);
     if (addFieldBtn) {
-        group7.add(addFieldBtn);
+        gridCommonHeadContainer.add(addFieldBtn);
+    }
+    gridCommonCellContainer.add(gridCommonRowContainer);
+    gridCommonCellContainer.add(gridCommonRowContainer);
+    gridCommonCellContainer.add(gridCommonHeadContainer);
+    gridContent.add(frozenCells);
+    gridView.add(gridContent);
+
+    gridView.add(...frozenFieldHead);
+    gridView.add(gridCommonCellContainer);
+
+    const attachContainer = new Konva.Group({
+        clipX: frozenAreaWidth - 1,
+        clipY: rowInitSize - 1,
+        clipWidth: containerWidth - frozenAreaWidth,
+        clipHeight: containerHeight - rowInitSize
+    });
+    const attachChildContainer = new Konva.Group({
+        offsetX: scrollLeft,
+        offsetY: scrollTop
+    });
+
+    attachContainer.add(attachChildContainer);
+    attachChildContainer.add(...placeHolderCells);
+
+    if (activedCell) {
+        attachChildContainer.add(activedCell);
+    }
+    if (activeCellBorder) {
+        attachChildContainer.add(activeCellBorder);
     }
 
-    group5.add(group6);
-    group5.add(group7);
-    group4.add(frozenCells);
-    group3.add(group4);
-    const frozenFieldHeads = frozenFieldHead();
-    group3.add(...frozenFieldHeads);
-    group3.add(group5);
+    gridView.add(attachContainer);
+    gridContainer.add(gridView);
+    grid.add(gridContainer);
+    layer.add(grid);
 
-    const group8 = new Konva.Group({
-        clipX: frozenAreaWidth - 1,
-        clipY: rowInitSize - 1
-        // clipWidth: containerWidth - frozenAreaWidth,
-        // clipHeight: containerHeight - rowInitSize
-    });
-    const group9 = new Konva.Group({
-        // offsetX: scrollLeft,
-        // offsetY: scrollTop
-    });
-    group8.add(group9);
-    group3.add(group8);
-
-    const group10 = new Konva.Group({
-        // clipX: 0,
-        // clipY: rowInitSize - 1
-        // clipWidth: frozenAreaWidth + 4,
-        // clipHeight: containerHeight - rowInitSize
-    });
-    const group11 = new Konva.Group({
-        offsetY: scrollTop
-    });
-    group10.add(group11);
-
-    group2.add(group3);
-
-    group.add(group2);
-
-    layer.add(group);
+    /**
+     * <layer>
+     *  <grid>
+     *      <gridContainer>
+     *          <gridView>
+     *              <gridContent>
+     *                  <frozenCells>
+     *              </gridContent>
+     *              { ...frozenFieldHeads }
+     *              <gridCommonCellContainer>
+     *                  <gridCommonRowContainer>
+     *                      <cells>
+     *                  </gridCommonRowContainer>
+     *                  <gridCommonHeadContainer>
+     *                      { ...fieldHeads }
+     *                  </gridCommonHeadContainer>
+     *              </gridCommonCellContainer>
+     *          </gridView>
+     *      </gridContainer>
+     *  </grid>
+     * </layer>
+     */
     return layer;
 };

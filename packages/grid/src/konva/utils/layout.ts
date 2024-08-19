@@ -1,8 +1,7 @@
 import { range } from 'rxjs';
 import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_GROUP_OFFSET } from '../constants/grid';
-import { KonvaDrawer } from './drawer';
 import { AILinearRow } from '../interface/grid';
-import { DefaultTheme } from '../constants/default-theme';
+import { KonvaDrawer } from './drawer';
 
 interface AITableLayout {
     x: number;
@@ -41,9 +40,13 @@ export class GridLayout extends KonvaDrawer {
         return this.columnIndex === this.columnCount - 1;
     }
 
+    protected get addBtnWidth() {
+        return GRID_ADD_FIELD_BUTTON_WIDTH;
+    }
+
     protected renderAddFieldBlank(_row: AILinearRow) {
         const width = GRID_ADD_FIELD_BUTTON_WIDTH;
-        const background = DefaultTheme.colors.defaultBg;
+        const background = this.colors.defaultBg;
         const x = this.x + this.columnWidth;
         const y = this.y;
         const rowHeight = this.rowHeight;
@@ -58,7 +61,7 @@ export class GridLayout extends KonvaDrawer {
             x,
             y,
             points: [width, 0, width, rowHeight],
-            stroke: DefaultTheme.colors.sheetLineColor
+            stroke: this.colors.sheetLineColor
         });
     }
 

@@ -24,7 +24,7 @@ const DEFAULT_FONT_FAMILY = `"Segoe UI", Roboto, "Helvetica Neue", Arial,
 export class KonvaDrawer {
     ctx: CanvasRenderingContext2D = autoSizerCanvas.context!;
     needDraw = false;
-    colors = DefaultTheme.colors;
+    colors = DefaultTheme.color;
 
     public initCtx(ctx: CanvasRenderingContext2D) {
         this.needDraw = Boolean(ctx);
