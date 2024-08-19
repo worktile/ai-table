@@ -31,6 +31,7 @@ import { mergeWith } from 'rxjs/operators';
 import { ProgressEditorComponent, SelectOptionComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
+import { GridView } from './components/grid-view/grid-view.component';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
 import {
     Actions,
@@ -57,7 +58,9 @@ import { buildGridData } from './utils';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        // class: 'ai-table-grid',
+        class: 'd-block h-100'
+        // '[style.felex]': '1 1 auto'
     },
     imports: [
         NgForOf,
@@ -87,7 +90,8 @@ import { buildGridData } from './utils';
         IsSelectRecordPipe,
         ProgressEditorComponent,
         SelectOptionComponent,
-        UserPipe
+        UserPipe,
+        GridView
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })

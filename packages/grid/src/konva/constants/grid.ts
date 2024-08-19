@@ -1,3 +1,5 @@
+import { GRID_BLANK } from './config';
+
 export const GRID_FIELD_HEAD_HEIGHT = 40; // Height of field header
 export const GRID_ROW_HEAD_WIDTH = 70; // Row head width
 
@@ -25,4 +27,21 @@ export enum RowHeightLevel {
     medium = 2,
     tall = 3,
     extraTall = 4
+}
+
+export const DEFAULT_POINT_POSITION = {
+    targetName: GRID_BLANK,
+    realTargetName: GRID_BLANK,
+    rowIndex: -1,
+    columnIndex: -1,
+    x: 0,
+    y: 0,
+    offsetTop: 0,
+    offsetLeft: 0
+};
+
+export enum MouseDownType {
+    Left,
+    Center,
+    Right
 }

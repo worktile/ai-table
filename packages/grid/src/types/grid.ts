@@ -16,6 +16,11 @@ export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;
     selectedCells: Map<string, {}>;
+    activeCell?: AITableGridCell;
+    ranges?: AITableGridRange[];
+    recordRanges?: AITableGridRecordRanges;
+    fieldRanges?: AITableGridFieldRanges;
+    fillHandleStatus?: AITableGridFillHandleStatus;
 }
 
 export interface AIFieldConfig {
@@ -32,4 +37,48 @@ export interface AITableUserInfo {
 
 export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
+}
+
+export interface AITableGridCell {
+    /**
+     * cell row UUID
+     */
+    recordId: string;
+    /**
+     * cell column UUID
+     */
+    fieldId: string;
+}
+
+export interface AITableGridRange {
+    start: AITableGridCell;
+    end: AITableGridCell;
+}
+
+export interface AITabelGridIndexRange {
+    record: {
+        min: number;
+        max: number;
+    };
+    field: {
+        min: number;
+        max: number;
+    };
+}
+
+export type AITableGridRecordRanges = string[];
+
+export type AITableGridFieldRanges = string[];
+
+export enum AITableGridFillDirection {
+    Left = 'left',
+    Right = 'right',
+    Below = 'below',
+    Top = 'top'
+}
+
+export interface AITableGridFillHandleStatus {
+    isActive: boolean;
+    direction?: AITableGridFillDirection;
+    fillRange?: AITableGridRange;
 }

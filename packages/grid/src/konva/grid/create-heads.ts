@@ -1,28 +1,46 @@
-import { DEFAULT_COLUMN_WIDTH } from '@ai-table/grid';
+import { AITable } from '@ai-table/grid';
 import Konva from 'konva';
+import { FieldHead } from '../components/field-head';
 import { AITableIconType, Icon } from '../components/icon';
-import { GRID_FIELD_HEAD_SELECT_CHECKBOX } from '../constants/config';
-import { DefaultTheme } from '../constants/default-theme';
+import { GRID_FIELD_HEAD, GRID_FIELD_HEAD_DESC, GRID_FIELD_HEAD_MORE, GRID_FIELD_HEAD_SELECT_CHECKBOX } from '../constants/config';
 import { GRID_ICON_COMMON_SIZE, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
 import { AITableUseHeads } from '../interface/view';
-import { FieldHead } from './components/field-head';
 
-export const createHeads = (props: AITableUseHeads) => {
-    const { fields, instance, columnStartIndex, columnStopIndex } = props;
-
-    const colors = DefaultTheme.colors;
+export const createHeads = (config: AITableUseHeads) => {
+    const { context, instance, columnStartIndex, columnStopIndex } = config;
+    const { aiTable, fields, pointPosition } = context;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
+    const colors = AITable.getThemeColors(aiTable());
+    const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition();
+    const pointFieldId = fields()[pointColumnIndex]?._id;
 
-    const getColumnHead = (columnStartIndex: number, columnStopIndex: number) => {
+    const getFieldHeadStatus = (fieldId: string, columnIndex: number) => {
+        const iconVisible =
+            [GRID_FIELD_HEAD_DESC, GRID_FIELD_HEAD, GRID_FIELD_HEAD_MORE].includes(pointTargetName) && pointFieldId === fieldId;
+        const isFilterField = false;
+        const isSortField = false;
+        const isHighlight = isFilterField || isSortField;
+        const isSelected = false;
+
+        return {
+            iconVisible,
+            isHighlight,
+            isSelected
+        };
+    };
+
+    const getColumnHead = (columnStartIndex: number, columnStopIndex: number, isFrozen = false) => {
         const _fieldHeads: Konva.Group[] = [];
 
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             if (columnIndex > columnCount - 1) break;
             if (columnIndex < 0) continue;
-            const field = fields[columnIndex];
+            const field = fields()[columnIndex];
+            const fieldId = field._id;
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);
-            const columnWidth = instance.getColumnWidth(columnIndex) ?? DEFAULT_COLUMN_WIDTH;
+            const columnWidth = instance.getColumnWidth(columnIndex);
+            const { iconVisible, isHighlight, isSelected } = getFieldHeadStatus(fieldId, columnIndex);
 
             const fieldHead = FieldHead({
                 x,
@@ -31,7 +49,13 @@ export const createHeads = (props: AITableUseHeads) => {
                 height: fieldHeadHeight,
                 field,
                 columnIndex,
-                stroke: columnIndex === 0 ? 'transparent' : undefined
+                stroke: columnIndex === 0 ? 'transparent' : undefined,
+                isFrozen,
+                iconVisible,
+                isHighlight,
+                isSelected,
+                editable: true,
+                autoHeadHeight: false
             });
 
             _fieldHeads.push(fieldHead);
@@ -42,7 +66,7 @@ export const createHeads = (props: AITableUseHeads) => {
     /**
      * 绘制第一列标题
      */
-    const frozenFieldHead = () => {
+    const frozenFieldHead = (() => {
         const isChecked = false;
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
@@ -77,7 +101,7 @@ export const createHeads = (props: AITableUseHeads) => {
         headGroup.push(rect, icon, ...head, rect1);
 
         return headGroup;
-    };
+    })();
 
     /**
      * 绘制其他列标题

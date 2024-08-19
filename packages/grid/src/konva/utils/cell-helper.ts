@@ -121,7 +121,7 @@ export class CellHelper extends KonvaDrawer {
     }
 
     private renderCellDateTime(render: AITableRender, ctx?: any) {
-        const colors = DefaultTheme.colors;
+        const colors = DefaultTheme.color;
         const { x, y, cellValue, field, columnWidth, style } = render;
         const cellString = cellValue;
         // const [date, time, timeRule, abbr] = cellString ? cellString.split(' ') : [];
