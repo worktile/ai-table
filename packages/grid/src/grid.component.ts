@@ -40,15 +40,16 @@ import {
     AITableFields,
     AITableFieldType,
     AITableRecords,
+    AITableSelectOptionStyle,
     createAITable,
     createDefaultField,
     getDefaultRecord
 } from './core';
-import { IsSelectRecordPipe, SelectOptionPipe, SelectOptionsPipe, UserPipe } from './pipes/grid.pipe';
+import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableReferences, AITableSelectOptionStyle } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
 
 @Component({
@@ -87,7 +88,9 @@ import { buildGridData } from './utils';
         IsSelectRecordPipe,
         ProgressEditorComponent,
         SelectOptionComponent,
-        UserPipe
+        UserPipe,
+        SelectSettingPipe,
+        MemberSettingPipe
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
@@ -207,8 +210,7 @@ export class AITableGrid implements OnInit {
     private dblClick(event: MouseEvent) {
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
         const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        const readonly = cellDom && cellDom.getAttribute('readonly')!;
-        if (type && !readonly && DBL_CLICK_EDIT_TYPE.includes(type)) {
+        if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.aiTableGridEventService.openEdit(cellDom);
         }
     }

@@ -9,7 +9,7 @@ export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, 
         return translateArrayEvent(aiTable, sharedType, event);
     }
     if (event instanceof Y.YMapEvent) {
-        return translateMapEvent(aiTable, event);
+        return translateMapEvent(aiTable, sharedType, event);
     }
     return [];
 }

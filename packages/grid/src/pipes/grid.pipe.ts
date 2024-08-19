@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AITableSelectOption } from '../core';
+import { AITableFieldSettings, AITableSelectOption, MemberSettings, SelectSettings } from '../core';
 import { AITableReferences, AITableSelection } from '../types';
 
 @Pipe({
@@ -43,6 +43,25 @@ export class UserPipe implements PipeTransform {
         return values.map((item) => {
             return references.members[item] || {};
         });
-      
+    }
+}
+
+@Pipe({
+    name: 'selectSetting',
+    standalone: true
+})
+export class SelectSettingPipe implements PipeTransform {
+    transform(settings: AITableFieldSettings) {
+        return settings as SelectSettings;
+    }
+}
+
+@Pipe({
+    name: 'memberSetting',
+    standalone: true
+})
+export class MemberSettingPipe implements PipeTransform {
+    transform(settings: AITableFieldSettings) {
+        return settings as MemberSettings;
     }
 }

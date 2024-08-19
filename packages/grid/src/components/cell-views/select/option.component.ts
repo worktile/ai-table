@@ -4,9 +4,8 @@ import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
-import { AITableField, AITableSelectOption } from '../../../core';
-import { AITableSelectField, AITableSelectOptionStyle } from '../../../types';
-
+import { AITableField, AITableSelectOption, AITableSelectOptionStyle } from '../../../core';
+import { AITableSelectField } from '../../../types';
 @Component({
     selector: 'select-option',
     templateUrl: './option.component.html',
@@ -23,7 +22,7 @@ export class SelectOptionComponent {
     displayOption = input.required<AITableSelectOption>();
 
     optionStyle = computed(() => {
-        return (this.field() as AITableSelectField).optionStyle || AITableSelectOptionStyle.tag;
+        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.tag;
     });
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;

@@ -1,5 +1,5 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableFieldInfo, AITableFieldType } from '../types';
+import { AITableField, AITableFieldType } from '../types';
 
 export const BasicFields = [
     {
@@ -19,7 +19,10 @@ export const BasicFields = [
         type: AITableFieldType.select,
         name: '多选',
         icon: 'list-check',
-        width: 200
+        width: 200,
+        settings: {
+            is_multiple: true
+        }
     },
     {
         type: AITableFieldType.number,
@@ -85,6 +88,6 @@ export const BasicFields = [
     }
 ];
 
-export const Fields: AITableFieldInfo[] = [...BasicFields];
+export const Fields: Partial<AITableField>[] = [...BasicFields];
 
 export const FieldsMap = helpers.keyBy([...BasicFields], 'type');

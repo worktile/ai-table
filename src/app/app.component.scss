@@ -4,4 +4,9 @@
     margin-bottom: 0;
     overflow-x: auto;
     height: calc(100vh - 20px);
+
+    .thy-nav-item {
+        display: flex;
+        align-items: center;
+    }
 }

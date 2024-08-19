@@ -37,24 +37,27 @@ export function removeField(aiTable: AITable, path: AIFieldIdPath) {
     aiTable.apply(operation);
 }
 
-export function setField(aiTable: AITable, value: Partial<AITableField>, path: AIFieldPath) {
+export function setField(aiTable: AITable, value: Partial<AITableField>, path: AIFieldIdPath) {
     const field = AITableQueries.getField(aiTable, path);
     if (field) {
-        const oldField: Partial<AITableField> = {};
-        const newField: Partial<AITableField> = {};
-        for (const k in value) {
-            if (field[k] !== value[k]) {
+        const properties: Partial<AITableField> = {};
+        const newProperties: Partial<AITableField> = {};
+        for (const key in value) {
+            const k = key as keyof AITableField;
+            if (field[k]?.toString() !== value[k]?.toString()) {
                 if (field.hasOwnProperty(k)) {
-                    oldField[k] = field[k];
+                    properties[k] = field[k] as any;
                 }
-                newField[k] = value[k];
+                if (newProperties[k] !== null) {
+                    newProperties[k] = value[k] as any;
+                }
             }
         }
 
         const operation: SetFieldAction = {
             type: ActionName.SetField,
-            field: oldField,
-            newField,
+            properties,
+            newProperties,
             path
         };
 

@@ -1,4 +1,4 @@
-import { AITableViewFields, AITableViewRecords, SyncArrayElement, SyncElement, SyncMapElement } from '../../types';
+import { AITableViewFields, AITableViewRecords, SyncArrayElement, SyncMapElement } from '../../types';
 import * as Y from 'yjs';
 
 export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
@@ -39,15 +39,15 @@ export function getShareTypeNumberPath(path: (string | number)[]): number[] {
     return path.filter((node) => typeof node === 'number') as number[];
 }
 
-export function getSharedRecordId(records: SyncElement, recordIndex: number) {
+export function getSharedRecordId(records: Y.Array<SyncArrayElement>, recordIndex: number) {
     return records && (records as Y.Array<SyncArrayElement>).get(recordIndex).get(0).get(0)['_id'];
 }
 
-export function getSharedFieldId(fields: SyncElement, fieldIndex: number) {
-    return fields && (fields as Y.Array<SyncMapElement>).get(fieldIndex).get('_id');
+export function getSharedMapValueId(values: Y.Array<SyncMapElement>, index: number) {
+    return values && values.get(index).get('_id');
 }
 
-export function getSharedRecordIndex(sharedRecords: SyncElement, recordId: string) {
+export function getSharedRecordIndex(sharedRecords: Y.Array<SyncArrayElement>, recordId: string) {
     let recordIndex = -1;
     for (let index = 0; index < sharedRecords.length; index++) {
         const sharedRecordId = getSharedRecordId(sharedRecords, index);
@@ -59,14 +59,14 @@ export function getSharedRecordIndex(sharedRecords: SyncElement, recordId: strin
     return recordIndex;
 }
 
-export function getSharedFieldIndex(sharedFields: SyncElement, fieldId: string) {
-    let fieldIndex = -1;
-    for (let index = 0; index < sharedFields.length; index++) {
-        const sharedFieldId = getSharedFieldId(sharedFields, index);
-        if (sharedFieldId === fieldId) {
-            fieldIndex = index;
+export function getSharedMapValueIndex(sharedNodes: Y.Array<SyncMapElement>, id: string) {
+    let nodeIndex = -1;
+    for (let index = 0; index < sharedNodes.length; index++) {
+        const sharedId = getSharedMapValueId(sharedNodes, index);
+        if (sharedId === id) {
+            nodeIndex = index;
             break;
         }
     }
-    return fieldIndex;
+    return nodeIndex;
 }

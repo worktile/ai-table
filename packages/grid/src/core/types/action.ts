@@ -72,9 +72,9 @@ export type RemoveRecordAction = {
 
 export type SetFieldAction = {
     type: ActionName.SetField;
-    path: AIFieldPath;
-    field: Partial<AITableField>;
-    newField: Partial<AITableField>;
+    path: AIFieldIdPath;
+    properties: Partial<AITableField>;
+    newProperties: Partial<AITableField>;
 };
 
 export type AITableAction =

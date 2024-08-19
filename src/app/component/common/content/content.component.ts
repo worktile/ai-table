@@ -142,15 +142,6 @@ export class DemoTableContent {
         }
     }
 
-    sort() {
-        const direction = this.tableService.activeView().sortCondition?.conditions[0].direction;
-        const sortCondition = {
-            keepSort: false,
-            conditions: [{ sortBy: 'column-4', direction: direction === Direction.ascending ? Direction.descending : Direction.ascending }]
-        };
-        const index = this.tableService.views().indexOf(this.tableService.activeView());
-        ViewActions.setView(this.aiTable as any, { sortCondition }, [index]);
-    }
 
     prevent(event: Event) {
         event.stopPropagation();

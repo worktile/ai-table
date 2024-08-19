@@ -57,7 +57,7 @@ import { ThyAutofocusDirective } from 'ngx-tethys/shared';
     ]
 })
 export class AITableFieldPropertyEditor {
-    aiField = model.required<AITableField>();
+    aiEditField = model.required<AITableField>();
 
     @Input({ required: true }) aiTable!: AITable;
 
@@ -66,7 +66,7 @@ export class AITableFieldPropertyEditor {
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     fieldType = computed(() => {
-        return FieldsMap[this.aiField().type];
+        return FieldsMap[this.aiEditField().type];
     });
 
     fieldMaxLength = 32;
@@ -88,19 +88,23 @@ export class AITableFieldPropertyEditor {
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
-        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiField()?._id !== field._id));
+        return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiEditField()?._id !== field._id));
     };
 
-    selectFieldType(fieldType: AITableFieldType) {
-        this.aiField.update((item) => ({ ...item, type: fieldType, name: createDefaultFieldName(this.aiTable, fieldType) }));
+    selectFieldType(field: Partial<AITableField>) {
+        this.aiEditField.update((item) => {
+            const width = item.width ?? field.width;
+            const name = createDefaultFieldName(this.aiTable, field.type!);
+            const settings = field.settings || null;
+            return { ...item, ...field, width, name, settings };
+        });
     }
 
     editFieldProperty() {
         if (this.isUpdate) {
-            const path = this.aiTable.fields().findIndex((item) => item._id === this.aiField()._id);
-            Actions.setField(this.aiTable, this.aiField(), [path]);
+            Actions.setField(this.aiTable, this.aiEditField(), [this.aiEditField()._id]);
         } else {
-            Actions.addField(this.aiTable, this.aiField(), [this.aiTable.fields().length]);
+            Actions.addField(this.aiTable, this.aiEditField(), [this.aiTable.fields().length]);
         }
         this.thyPopoverRef.close();
     }
