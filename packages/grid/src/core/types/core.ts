@@ -73,6 +73,7 @@ export interface IsMultiple {
 export interface AITableSelectOption {
     _id: string;
     text: string;
+    icon?: string;
     color?: string;
     bg_color?: string;
 }
