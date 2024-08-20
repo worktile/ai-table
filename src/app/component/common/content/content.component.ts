@@ -32,11 +32,11 @@ import {
     AITableViewField,
     AITableViewRecord,
     applyActionOps,
-    ViewActions,
-    Direction,
     AIViewTable,
     YjsAITable,
-    withView
+    withView,
+    ViewActionName,
+    AITableSharedAction
 } from '@ai-table/shared';
 
 @Component({
@@ -44,7 +44,7 @@ import {
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction, FormsModule, ThyInputDirective],
     templateUrl: './content.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoTableContent {
     aiTable!: AIViewTable;
@@ -102,6 +102,11 @@ export class DemoTableContent {
     }
 
     onChange(options: AITableChangeOptions) {
+        (options.actions as AITableSharedAction[]).forEach((item) => {
+            if (item.type === ViewActionName.RemoveView) {
+                this.tableService.updateActiveView(this.tableService.views()[0]._id);
+            }
+        });
         if (this.tableService.sharedType) {
             options.actions = options.actions.map((action) => {
                 if (action.type === ActionName.AddRecord) {
@@ -141,7 +146,6 @@ export class DemoTableContent {
             }
         }
     }
-
 
     prevent(event: Event) {
         event.stopPropagation();

@@ -1,7 +1,7 @@
 import { ActionName, AITableField } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { getShareTypeNumberPath } from '../utils';
-import { AITableSharedAction, AITableView, AIViewTable, SharedType, ViewActionName } from '../../types';
+import { AITableSharedAction, AITableView, AIViewTable, SharedType, SyncMapElement, ViewActionName } from '../../types';
 
 export default function translateMapEvent(
     aiTable: AIViewTable,
@@ -13,13 +13,18 @@ export default function translateMapEvent(
 
     if (isViewTranslate || isFieldsTranslate) {
         let [targetPath] = getShareTypeNumberPath(event.path) as [number];
+        let targetElement;
         const targetSyncElement = event.target as SharedType;
-        let targetElement = aiTable.views()[targetPath];
         if (isFieldsTranslate) {
-            const fields = sharedType.get('fields')?.toJSON();
-            const field = fields![targetPath];
-            targetElement = field && aiTable.fields().find((item) => item._id === field._id);
+            const field = sharedType.get('fields')?.get(targetPath) as SyncMapElement;
+            const fieldId = field && field.get('_id');
+            targetElement = fieldId && aiTable.fields().find((item) => item._id === field.get('_id'));
         }
+
+        if (isViewTranslate) {
+            targetElement = aiTable.views()[targetPath];
+        }
+
         if (targetElement) {
             const keyChanges: [string, { action: 'add' | 'update' | 'delete'; oldValue: any }][] = Array.from(event.changes.keys.entries());
             const newProperties: Partial<AITableView | AITableField> = {};

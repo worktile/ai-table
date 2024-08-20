@@ -48,11 +48,6 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], action: AI
             if (viewIndex > -1) {
                 views.splice(viewIndex, 1);
             }
-            if (viewIndex === 0) {
-                views[0].is_active = true;
-            } else {
-                views[viewIndex - 1].is_active = true;
-            }
             break;
         }
     }
