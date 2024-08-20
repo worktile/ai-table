@@ -1,5 +1,5 @@
 module.exports = {
-    allowBranch: ['develop', 'release-auto-*'],
+    allowBranch: ['develop', 'test-release-1', 'release-auto-*'],
     bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json', 'packages/shared/package.json'],
     skip: {
         confirm: true,
@@ -13,6 +13,6 @@ module.exports = {
     tagPrefix: '',
     hooks: {
         prepublish: 'npm run build',
-        prereleaseBranch: 'lerna version {{version}} && git add .'
+        prereleaseBranch: 'lerna version {{version}} --conventional-commits && git add .'
     }
 };
