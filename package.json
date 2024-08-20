@@ -20,6 +20,7 @@
         "watch": "ng build --watch --configuration development",
         "pub": "wpm publish && npm run pub-only",
         "pub-only": "cd dist/grid && npm publish --access=public",
+        "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
         "test": "ng test grid",
         "commit-msg": "commitlint --config ./commitlint.config.js -e"
     },
