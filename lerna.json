@@ -1,27 +1,21 @@
 {
-  "version": "0.0.6",
-  "npmClient": "npm",
-  "useWorkspaces": true,
-  "command": {
-    "version": {
-      "conventionalCommits": true,
-      "gitTagVersion": false,
-      "push": false,
-      "yes": true
-    },
-    "publish": {
-      "message": "chore(release): publish",
-      "ignoreChanges": [
-        ".gitignore",
-        "*.log",
-        "*.md"
-      ]
-    },
-    "bootstrap": {
-      "ignore": "npm-*",
-      "npmClientArgs": [
-        "--no-package-lock"
-      ]
+    "version": "0.0.1235",
+    "npmClient": "npm",
+    "useWorkspaces": true,
+    "command": {
+        "version": {
+            "conventionalCommits": true,
+            "gitTagVersion": false,
+            "push": false,
+            "yes": true
+        },
+        "publish": {
+            "message": "chore(release): publish",
+            "ignoreChanges": [".gitignore", "*.log", "*.md"]
+        },
+        "bootstrap": {
+            "ignore": "npm-*",
+            "npmClientArgs": ["--no-package-lock"]
+        }
     }
-  }
 }

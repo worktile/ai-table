@@ -1,9 +1,11 @@
 module.exports = {
-    allowBranch: ['develop', 'release-auto-*'],
-    bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json', 'packages/shared/package.json'],
+    allowBranch: ['develop', 'test-release', 'release-auto-*'],
+    bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json'],
     skip: {
-        confirm: true
+        confirm: true,
+        changelog: true
     },
+    commitAll: true,
     // backward compatibility changelog
     // because we didn't use tag prefix(v) when create tag before
     // should set tagPrefix as empty (default is 'v')
@@ -11,6 +13,6 @@ module.exports = {
     tagPrefix: '',
     hooks: {
         prepublish: 'npm run build',
-        prereleaseBranch: 'lerna version {{version}} && git add .',
+        prereleaseBranch: 'lerna version {{version}} && git add .'
     }
 };
