@@ -28,16 +28,7 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import {
-    AITableViewField,
-    AITableViewRecord,
-    applyActionOps,
-    AIViewTable,
-    YjsAITable,
-    withView,
-    ViewActionName,
-    AITableSharedAction
-} from '@ai-table/shared';
+import { AITableViewField, AITableViewRecord, applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
@@ -102,11 +93,6 @@ export class DemoTableContent {
     }
 
     onChange(options: AITableChangeOptions) {
-        (options.actions as AITableSharedAction[]).forEach((item) => {
-            if (item.type === ViewActionName.RemoveView) {
-                this.tableService.updateActiveView(this.tableService.views()[0]._id);
-            }
-        });
         if (this.tableService.sharedType) {
             options.actions = options.actions.map((action) => {
                 if (action.type === ActionName.AddRecord) {
