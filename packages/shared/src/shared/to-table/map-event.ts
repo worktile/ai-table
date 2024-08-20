@@ -1,17 +1,25 @@
-import { ActionName, AITable, AITableField } from '@ai-table/grid';
+import { ActionName, AITableField } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { getShareTypeNumberPath } from '../utils';
-import { AITableSharedAction, AITableView, SharedType, ViewActionName } from '../../types';
+import { AITableSharedAction, AITableView, AIViewTable, SharedType, ViewActionName } from '../../types';
 
-export default function translateMapEvent(aiTable: AITable, sharedType: SharedType, event: Y.YMapEvent<unknown>): AITableSharedAction[] {
+export default function translateMapEvent(
+    aiTable: AIViewTable,
+    sharedType: SharedType,
+    event: Y.YMapEvent<unknown>
+): AITableSharedAction[] {
     const isFieldsTranslate = event.path.includes('fields');
     const isViewTranslate = event.path.includes('views');
 
     if (isViewTranslate || isFieldsTranslate) {
         let [targetPath] = getShareTypeNumberPath(event.path) as [number];
         const targetSyncElement = event.target as SharedType;
-        const sharedElement = isFieldsTranslate ? sharedType.get('fields')?.get(targetPath) : sharedType.get('views')?.get(targetPath);
-        const targetElement = sharedElement?.toJSON() as AITableField | AITableView;
+        let targetElement = aiTable.views()[targetPath];
+        if (isFieldsTranslate) {
+            const fields = sharedType.get('fields')?.toJSON();
+            const field = fields![targetPath];
+            targetElement = field && aiTable.fields().find((item) => item._id === field._id);
+        }
         if (targetElement) {
             const keyChanges: [string, { action: 'add' | 'update' | 'delete'; oldValue: any }][] = Array.from(event.changes.keys.entries());
             const newProperties: Partial<AITableView | AITableField> = {};
@@ -40,7 +48,7 @@ export default function translateMapEvent(aiTable: AITable, sharedType: SharedTy
                     newProperties: newProperties,
                     path: [targetElement._id]
                 }
-            ];
+            ] as AITableSharedAction[];
         }
     }
     return [];

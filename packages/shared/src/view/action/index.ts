@@ -1,5 +1,7 @@
-import { setView } from './view';
+import { addView, removeView, setView } from './view';
 
 export const ViewActions = {
-    setView
+    setView,
+    addView,
+    removeView
 };

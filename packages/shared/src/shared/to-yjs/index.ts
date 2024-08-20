@@ -1,11 +1,9 @@
 import { AITable, AITableAction } from '@ai-table/grid';
 import updateFieldValue from './update-field-value';
-import addRecord from './add-record';
-import addField from './add-field';
 import { SharedType } from '../../types';
-import removeRecord from './remove-record';
-import removeField from './remove-field';
-import setMapNode from './set-node';
+import setNode from './set-node';
+import addNode from './add-node';
+import removeNode from './remove-node';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;
@@ -14,13 +12,15 @@ export type ActionMapper<O extends AITableAction = AITableAction> = {
 export type ApplyFunc<O extends AITableAction = AITableAction> = (sharedType: SharedType, op: O) => SharedType;
 
 export const actionMappers: Partial<ActionMapper<any>> = {
+    add_record: addNode,
     update_field_value: updateFieldValue,
-    add_record: addRecord,
-    remove_record: removeRecord,
-    add_field: addField,
-    remove_field: removeField,
-    set_field: setMapNode,
-    set_view: setMapNode
+    remove_record: removeNode,
+    add_field: addNode,
+    set_field: setNode,
+    remove_field: removeNode,
+    set_view: setNode,
+    add_view: addNode,
+    remove_view: removeNode,
 };
 
 export function applyActionOps(sharedType: SharedType, actions: AITableAction[], aiTable: AITable): SharedType {

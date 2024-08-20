@@ -10,7 +10,7 @@
     >
 </div>
 <thy-tabs (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView()._id">
-    @for (item of tableService.views(); track $index) {
+    @for (item of tableService.views(); let index = $index; track $index) {
         <thy-tab [thyTitle]="item.name" [id]="item._id">
             @if (item.is_active) {
                 <ng-template #title>
@@ -21,7 +21,7 @@
                             [ngModel]="item.name"
                             (thyEnter)="updateValue()"
                             (blur)="updateValue()"
-                            (ngModelChange)="valueChange($event)"
+                            (ngModelChange)="nameChange($event)"
                         />
                     } @else {
                         <p class="mb-0">
@@ -31,6 +31,10 @@
                     }
                 </ng-template>
                 <router-outlet></router-outlet>
+            } @else {
+                <ng-template #title>
+                    <span> {{ item.name }} </span>
+                </ng-template>
             }
         </thy-tab>
     }
@@ -38,6 +42,13 @@
 
 <thy-dropdown-menu #menu>
     <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
-        <span>重命名视图</span>
+        <span>重命名</span>
+    </a>
+    <a thyDropdownMenuItem href="javascript:;" (click)="removeView()">
+        <span>删除</span>
     </a>
 </thy-dropdown-menu>
+
+<ng-template #extra>
+    <thy-action thyIcon="plus" class="cursor-pointer" (click)="addView()"></thy-action>
+</ng-template>

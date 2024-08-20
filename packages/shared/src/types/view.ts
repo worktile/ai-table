@@ -51,6 +51,10 @@ export interface AITableView {
     name: string;
     emoji_icon?: string;
     is_active?: boolean;
+    settings?: GridSettings;
+}
+
+export class GridSettings {
     is_keep_sort?: boolean;
     sorts?: {
         sort_by: Id;
@@ -67,22 +71,38 @@ export interface AITableView {
 
 export type AITableViews = AITableView[];
 
+export type AIViewPath = [string];
+
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
     apply: (action: AITableSharedAction) => void;
 }
 
 export enum ViewActionName {
-    SetView = 'set_view'
+    SetView = 'set_view',
+    AddView = 'add_view',
+    RemoveView = 'remove_view'
 }
 
 export interface SetViewAction {
     type: ViewActionName.SetView;
     properties: Partial<AITableView>;
     newProperties: Partial<AITableView>;
-    path: [string];
+    path: AIViewPath;
 }
 
-export type AITableViewAction = SetViewAction;
+export interface AddViewAction {
+    type: ViewActionName.AddView;
+    view: AITableView;
+    path: [number];
+}
+
+export interface RemoveViewAction {
+    type: ViewActionName.RemoveView;
+    path: AIViewPath;
+}
+
+export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction;
 
 export type AITableSharedAction = AITableViewAction | AITableAction;
+

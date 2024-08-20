@@ -5,6 +5,9 @@
     overflow-x: auto;
     height: calc(100vh - 20px);
 
+    .thy-nav-list {
+        flex: none;
+    }
     .thy-nav-item {
         display: flex;
         align-items: center;

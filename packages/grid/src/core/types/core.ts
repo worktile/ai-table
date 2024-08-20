@@ -50,7 +50,7 @@ export interface AITableField {
     hidden?: boolean;
     frozen?: boolean;
     stat_type?: AITableStatType;
-    settings?: AITableFieldSettings | null;
+    settings?: AITableFieldSettings;
 }
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
