@@ -1,6 +1,6 @@
 {
     "name": "ai-table",
-    "version": "0.0.6",
+    "version": "0.0.10000",
     "workspaces": [
         "packages/*"
     ],
@@ -22,6 +22,11 @@
         "pub-only": "cd dist/grid && npm publish --access=public",
         "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
         "test": "ng test grid"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     },
     "repository": {
         "type": "git",
