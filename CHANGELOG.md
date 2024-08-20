@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.10001-0 (2024-08-20)
+
+
+### Bug Fixes
+
+* add console ([0b8c434](https://github.com/worktile/ai-table/commit/0b8c434f1a0d9e732eb67459e7848b6eedd952d8))
+
+
 ## 0.0.10000 (2024-08-20)
 
 
