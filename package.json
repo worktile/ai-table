@@ -22,6 +22,7 @@
         "pub-only": "cd dist/grid && npm publish --access=public",
         "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
         "test": "ng test grid",
+        "pre-commit": "pretty-quick --staged",
         "commit-msg": "commitlint --config ./commitlint.config.js -e"
     },
     "repository": {
@@ -45,6 +46,7 @@
         "immer": "^10.0.3",
         "ngx-tethys": "17.0.17",
         "npm": "^10.8.1",
+        "pretty-quick": "^4.0.0",
         "rxjs": "~7.8.0",
         "tslib": "^2.6.3",
         "zone.js": "~0.14.3"
