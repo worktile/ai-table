@@ -1,17 +1,30 @@
-import { ActionName, AITable, AITableField } from '@ai-table/grid';
+import { ActionName, AITableField } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { getShareTypeNumberPath } from '../utils';
-import { AITableSharedAction, AITableView, SharedType, ViewActionName } from '../../types';
+import { AITableSharedAction, AITableView, AIViewTable, SharedType, SyncMapElement, ViewActionName } from '../../types';
 
-export default function translateMapEvent(aiTable: AITable, sharedType: SharedType, event: Y.YMapEvent<unknown>): AITableSharedAction[] {
+export default function translateMapEvent(
+    aiTable: AIViewTable,
+    sharedType: SharedType,
+    event: Y.YMapEvent<unknown>
+): AITableSharedAction[] {
     const isFieldsTranslate = event.path.includes('fields');
     const isViewTranslate = event.path.includes('views');
 
     if (isViewTranslate || isFieldsTranslate) {
         let [targetPath] = getShareTypeNumberPath(event.path) as [number];
+        let targetElement;
         const targetSyncElement = event.target as SharedType;
-        const sharedElement = isFieldsTranslate ? sharedType.get('fields')?.get(targetPath) : sharedType.get('views')?.get(targetPath);
-        const targetElement = sharedElement?.toJSON() as AITableField | AITableView;
+        if (isFieldsTranslate) {
+            const field = sharedType.get('fields')?.get(targetPath) as SyncMapElement;
+            const fieldId = field && field.get('_id');
+            targetElement = fieldId && aiTable.fields().find((item) => item._id === field.get('_id'));
+        }
+
+        if (isViewTranslate) {
+            targetElement = aiTable.views()[targetPath];
+        }
+
         if (targetElement) {
             const keyChanges: [string, { action: 'add' | 'update' | 'delete'; oldValue: any }][] = Array.from(event.changes.keys.entries());
             const newProperties: Partial<AITableView | AITableField> = {};
@@ -40,7 +53,7 @@ export default function translateMapEvent(aiTable: AITable, sharedType: SharedTy
                     newProperties: newProperties,
                     path: [targetElement._id]
                 }
-            ];
+            ] as AITableSharedAction[];
         }
     }
     return [];

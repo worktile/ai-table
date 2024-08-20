@@ -7,7 +7,6 @@ import {
     AIFieldPath,
     AIRecordPath,
     AITable,
-    AITableAction,
     AITableChangeOptions,
     AITableField,
     AITableGrid,
@@ -17,7 +16,7 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { Component, inject, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -29,22 +28,14 @@ import { TableService } from '../../../service/table.service';
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import {
-    AITableViewField,
-    AITableViewRecord,
-    applyActionOps,
-    ViewActions,
-    Direction,
-    AIViewTable,
-    YjsAITable,
-    withView
-} from '@ai-table/shared';
+import { AITableViewField, AITableViewRecord, applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/shared';
 
 @Component({
     selector: 'demo-table-content',
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction, FormsModule, ThyInputDirective],
-    templateUrl: './content.component.html'
+    templateUrl: './content.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoTableContent {
     aiTable!: AIViewTable;
@@ -141,7 +132,6 @@ export class DemoTableContent {
             }
         }
     }
-
 
     prevent(event: Event) {
         event.stopPropagation();

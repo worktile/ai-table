@@ -1,25 +1,27 @@
-import {
-    ActionName,
-    AIFieldIdPath,
-    AIFieldPath,
-    AIFieldValueIdPath,
-    AIRecordPath,
-    AITableAction,
-    AITableField,
-    AITableQueries
-} from '@ai-table/grid';
+import { ActionName, AIFieldIdPath, AIFieldPath, AIFieldValueIdPath, AIRecordPath, AITableField, AITableQueries } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
-import { AITableViewFields, AITableViewRecords, AIViewTable, SharedType, SyncArrayElement, SyncMapElement } from '../../types';
+import {
+    AITableSharedAction,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    AIViewTable,
+    SharedType,
+    SyncArrayElement,
+    SyncMapElement,
+    ViewActionName
+} from '../../types';
 import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
-export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
+export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
-    const actions: AITableAction[] = [];
+    const isViewsTranslate = event.path.includes('views');
+    const actions: AITableSharedAction[] = [];
 
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
@@ -28,15 +30,25 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
 
         if ('delete' in delta) {
             if (isAddOrRemove(targetPath)) {
-                const type = isRecordsTranslate ? ActionName.RemoveRecord : ActionName.RemoveField;
-                const removeIds = getRemoveIds(event, type);
-                if (removeIds.length) {
-                    removeIds.forEach((path) => {
+                if (isViewsTranslate) {
+                    const removeView = aiTable.views()[offset];
+                    if (removeView) {
                         actions.push({
-                            type,
-                            path
+                            type: ViewActionName.RemoveView,
+                            path: [removeView._id]
                         });
-                    });
+                    }
+                } else {
+                    const type = isRecordsTranslate ? ActionName.RemoveRecord : ActionName.RemoveField;
+                    const removeIds = getRemoveIds(event, type);
+                    if (removeIds.length) {
+                        removeIds.forEach((path) => {
+                            actions.push({
+                                type,
+                                path
+                            });
+                        });
+                    }
                 }
             }
         }
@@ -91,19 +103,27 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                 if (isFieldsTranslate) {
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
-                        if (event.path.includes('fields')) {
-                            const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
-                            const path = translatePositionToPath(
-                                aiTable.fields() as AITableViewFields,
-                                data['positions'][activeViewId],
-                                activeViewId
-                            ) as AIFieldPath;
-                            actions.push({
-                                type: ActionName.AddField,
-                                path,
-                                field: data as AITableField
-                            });
-                        }
+                        const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
+                        const path = translatePositionToPath(
+                            aiTable.fields() as AITableViewFields,
+                            data['positions'][activeViewId],
+                            activeViewId
+                        ) as AIFieldPath;
+                        actions.push({
+                            type: ActionName.AddField,
+                            path,
+                            field: data as AITableField
+                        });
+                    });
+                }
+                if (isViewsTranslate) {
+                    delta.insert?.map((item: Y.Map<any>, index) => {
+                        const data = item.toJSON();
+                        actions.push({
+                            type: ViewActionName.AddView,
+                            path: [offset + index],
+                            view: data as AITableView
+                        });
                     });
                 }
             }

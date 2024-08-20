@@ -1,20 +1,21 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
-import { AITableGrid } from '@ai-table/grid';
+import { AITableGrid, idCreator } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService } from '../service/table.service';
+import { AITableView, ViewActions } from '@ai-table/shared';
+import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
-import { ViewActions } from '@ai-table/shared';
 
 const initViews = [
-    { _id: 'view1', name: '表格视图1', is_active: true },
-    { _id: 'view2', name: '表格视图2' }
+    { _id: 'view1', name: '表格视图 ', is_active: true },
+    { _id: 'view2', name: '表格视图 1' }
 ];
 
 @Component({
@@ -29,12 +30,15 @@ const initViews = [
         ThyPopoverModule,
         FormsModule,
         ThyInputDirective,
+        ThyIconModule,
+        ThyAction,
         ThyDropdownModule,
         ThyEnterDirective,
         ThyAutofocusDirective
     ],
     templateUrl: './table.component.html',
-    providers: [TableService]
+    providers: [TableService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
@@ -74,8 +78,21 @@ export class DemoTable implements OnInit, OnDestroy {
         this.isEdit = true;
     }
 
-    valueChange(value: string) {
+    nameChange(value: string) {
         this.activeViewName = value;
+    }
+
+    addView() {
+        const index = this.tableService.views().length;
+        const newView: AITableView = {
+            _id: idCreator(),
+            name: '表格视图 ' + index
+        };
+        ViewActions.addView(this.tableService.aiTable, newView, [index]);
+    }
+
+    removeView() {
+        ViewActions.removeView(this.tableService.aiTable, [this.tableService.activeView()._id]);
     }
 
     ngOnDestroy(): void {

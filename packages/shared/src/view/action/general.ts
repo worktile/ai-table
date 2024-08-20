@@ -11,14 +11,14 @@ export const GeneralActions = {
     }
 };
 
-export const applyView = (aiTable: AIViewTable, views: AITableView[], options: AITableViewAction) => {
-    switch (options.type) {
+export const applyView = (aiTable: AIViewTable, views: AITableView[], action: AITableViewAction) => {
+    switch (action.type) {
         case ViewActionName.SetView: {
-            const view = views.find((item) => item._id === options.path[0]) as AITableView;
+            const view = views.find((item) => item._id === action.path[0]) as AITableView;
             if (view) {
-                for (const key in options.newProperties) {
+                for (const key in action.newProperties) {
                     const k = key as keyof AITableView;
-                    const value = options.newProperties[k];
+                    const value = action.newProperties[k];
                     if (value == null) {
                         delete view[k];
                     } else {
@@ -27,12 +27,28 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], options: A
                 }
 
                 // properties that were previously defined, but are now missing, must be deleted
-                for (const key in options.properties) {
-                    if (!options.newProperties.hasOwnProperty(key)) {
+                for (const key in action.properties) {
+                    if (!action.newProperties.hasOwnProperty(key)) {
                         delete view[<keyof AITableView>key];
                     }
                 }
             }
+            break;
+        }
+        case ViewActionName.AddView: {
+            const [viewIndex] = action.path;
+            if (viewIndex > -1) {
+                views.splice(viewIndex, 0, action.view);
+            }
+            break;
+        }
+        case ViewActionName.RemoveView: {
+            const [viewId] = action.path;
+            const viewIndex = views.findIndex((item) => item._id === viewId);
+            if (viewIndex > -1) {
+                views.splice(viewIndex, 1);
+            }
+            break;
         }
     }
 };
