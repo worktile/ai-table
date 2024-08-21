@@ -156,6 +156,7 @@ export class AITableGrid implements OnInit {
                 actions: this.aiTable.actions
             });
         };
+        console.log(23423);
     }
 
     initService() {
