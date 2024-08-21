@@ -8,11 +8,11 @@
         "ng": "ng",
         "start": "ng serve demo",
         "start-ws": "npx ts-node ./backend/src/index",
-        "build": "npm run build:grid && npm run build:shared",
+        "build": "npm run build:packages && npm run sync-styles",
+        "build:packages": "ts-node --project ./scripts/tsconfig.json ./scripts/build-packages.ts",
         "build:demo": "ng build demo --configuration production",
-        "build:grid": "ng build grid && cpx \"./packages/grid/src/**/*.scss\" ./dist/grid/",
-        "build:shared": "ng build shared",
         "build:ws": "tsc -p tsconfig.backend.json",
+        "sync-styles": "ts-node --project ./scripts/tsconfig.json ./scripts/sync-styles.ts",
         "release": "npm run build && wpm release --release-branch-format release-auto-v{{version}}",
         "release-next": "npm run build && wpm release --release-branch-format release-auto-next-v{{version}}",
         "release-manual": "npm run build && wpm release",
@@ -20,6 +20,7 @@
         "watch": "ng build --watch --configuration development",
         "pub": "wpm publish && npm run pub-only",
         "pub-only": "cd dist/grid && npm publish --access=public",
+        "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
         "test": "ng test grid"
     },
     "repository": {
