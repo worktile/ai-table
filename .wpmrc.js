@@ -1,11 +1,9 @@
 module.exports = {
-    allowBranch: ['develop', 'release-auto-*'],
+    allowBranch: ['develop', 'release-test', 'release-auto-*'],
     bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json', 'packages/shared/package.json'],
     skip: {
-        confirm: true,
-        changelog: true
+        confirm: true
     },
-    commitAll: true,
     // backward compatibility changelog
     // because we didn't use tag prefix(v) when create tag before
     // should set tagPrefix as empty (default is 'v')

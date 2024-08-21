@@ -164,6 +164,7 @@ export class AITableGrid implements OnInit {
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
         this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
+        console.log(2412);
     }
 
     buildFieldMenus() {
