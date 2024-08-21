@@ -13,6 +13,6 @@ module.exports = {
     tagPrefix: '',
     hooks: {
         prepublish: 'npm run build',
-        prereleaseBranch: 'lerna version {{version}} && git add .'
+        prereleaseBranch: 'node ./scripts/pre-release.js {{version}}'
     }
 };
