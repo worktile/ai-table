@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.7](https://github.com/worktile/ai-table/compare/0.0.6...0.0.7) (2024-08-21)
+
+
+### Bug Fixes
+
+* close edit component and add space to default field name #WIK-16285 ([#49](https://github.com/worktile/ai-table/issues/49)) ([13abbb4](https://github.com/worktile/ai-table/commit/13abbb441c7206811707614a51ef7ecd009e9dd3)), closes [#WIK-16285](https://github.com/worktile/ai-table/issues/WIK-16285)
+* fix autofill position #WIK-16275 ([#50](https://github.com/worktile/ai-table/issues/50)) ([8b9e427](https://github.com/worktile/ai-table/commit/8b9e427d13f3408674cc286331d040da92b110a1)), closes [#WIK-16275](https://github.com/worktile/ai-table/issues/WIK-16275)
+
+
+### Features
+
+* add shared package and move view handle to shared #WIK-16315 ([#52](https://github.com/worktile/ai-table/issues/52)) ([8ab9e22](https://github.com/worktile/ai-table/commit/8ab9e227b7901cb3bf3835bd9b29050e221f51f3)), closes [#WIK-16315](https://github.com/worktile/ai-table/issues/WIK-16315)
+* refactor add_record and add_field #WIK-16330 ([#56](https://github.com/worktile/ai-table/issues/56)) ([92359ff](https://github.com/worktile/ai-table/commit/92359ff04bd71f97586ee4eb8f8ed73b19b3b7f0)), closes [#WIK-16330](https://github.com/worktile/ai-table/issues/WIK-16330)
+* refactor idCreator #WIK-16347 ([#60](https://github.com/worktile/ai-table/issues/60)) ([88a8259](https://github.com/worktile/ai-table/commit/88a82598e3e22081a67c6505c819ef8805c645ea)), closes [#WIK-16347](https://github.com/worktile/ai-table/issues/WIK-16347)
+* refactor update field value action #WIK-16327 ([#54](https://github.com/worktile/ai-table/issues/54)) ([bd3a7c4](https://github.com/worktile/ai-table/commit/bd3a7c46d71a26afab49c1db76e2cab500e59051)), closes [#WIK-16327](https://github.com/worktile/ai-table/issues/WIK-16327)
+* support add view and remove view #WIK-16293 ([#62](https://github.com/worktile/ai-table/issues/62)) ([0585ed7](https://github.com/worktile/ai-table/commit/0585ed737dcbc12bb99565c8454a3706a10b1df1)), closes [#WIK-16293](https://github.com/worktile/ai-table/issues/WIK-16293)
+* support remove shared #WIK-16331 ([#58](https://github.com/worktile/ai-table/issues/58)) ([9cac388](https://github.com/worktile/ai-table/commit/9cac388d0eded4154dbd1eb6a53de4a215c94b28)), closes [#WIK-16331](https://github.com/worktile/ai-table/issues/WIK-16331)
+* support set field shared #WIK-16344 ([#59](https://github.com/worktile/ai-table/issues/59)) ([a3377e4](https://github.com/worktile/ai-table/commit/a3377e4cf727ca450efb16da885c68c01595e006)), closes [#WIK-16344](https://github.com/worktile/ai-table/issues/WIK-16344)
+
+
+
 ## [0.0.6](https://github.com/worktile/ai-table/compare/0.0.4...0.0.6) (2024-08-08)
 
 

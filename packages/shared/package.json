@@ -1,8 +1,8 @@
 {
     "name": "@ai-table/shared",
-    "version": "0.0.0",
+    "version": "0.0.7",
     "peerDependencies": {
-        "@ai-table/grid": "^0.0.6"
+        "@ai-table/grid": "^0.0.7"
     },
     "dependencies": {
         "tslib": "^2.3.0"
