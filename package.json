@@ -19,7 +19,8 @@
         "release-next-manual": "npm run build && wpm release --release-branch-format release-next-v{{version}}",
         "watch": "ng build --watch --configuration development",
         "pub": "wpm publish && npm run pub-only",
-        "pub-only": "cd dist/grid && npm publish --access=public",
+        "pub-next": "wpm publish && npm run pub-next-only",
+        "pub-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts",
         "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
         "test": "ng test grid"
     },
