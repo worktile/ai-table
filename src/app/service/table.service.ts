@@ -1,9 +1,7 @@
 import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { WebsocketProvider } from 'y-websocket';
-import { getDefaultValue, sortDataByView } from '../utils/utils';
+import { getDefaultValue, sortByView } from '../utils/utils';
 import {
-    AITableViewRecords,
-    AITableViewFields,
     AIViewTable,
     SharedType,
     YjsAITable,
@@ -14,6 +12,7 @@ import {
     AITableView
 } from '@ai-table/state';
 import { getProvider } from '../provider';
+import { AITableFields, AITableRecords } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -23,9 +22,9 @@ export const TABLE_SERVICE_MAP = new WeakMap<AIViewTable, TableService>();
 export class TableService {
     views!: WritableSignal<AITableView[]>;
 
-    records!: WritableSignal<AITableViewRecords>;
+    records!: WritableSignal<AITableRecords>;
 
-    fields!: WritableSignal<AITableViewFields>;
+    fields!: WritableSignal<AITableFields>;
 
     aiTable!: AIViewTable;
 
@@ -52,12 +51,12 @@ export class TableService {
         this.aiTable = aiTable;
     }
 
-    buildRenderRecords(records?: AITableViewRecords) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeViewId()) as AITableViewRecords);
+    buildRenderRecords(records?: AITableRecords) {
+        this.records = signal(sortByView(records ?? this.records(), this.activeView(), 'record') as AITableRecords);
     }
 
-    buildRenderFields(fields?: AITableViewFields) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeViewId()) as AITableViewFields);
+    buildRenderFields(fields?: AITableFields) {
+        this.fields = signal(sortByView(fields ?? this.fields(), this.activeView(), 'field') as AITableFields);
     }
 
     handleShared(room: string) {

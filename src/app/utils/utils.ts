@@ -1,49 +1,44 @@
-import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/state';
+import { AITableFields, AITableFieldType, AITableRecords, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
+import { AITableView, AITableViews } from '@ai-table/state';
 
-export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
-    const hasPositions = data.every((item) => item.positions && item.positions);
-    if (hasPositions) {
-        return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
-    }
-    return data;
+export function sortByView(data: AITableRecords | AITableFields, activeViews: AITableView, type: 'record' | 'field') {
+    const recordPositions = type === 'record' ? activeViews.recordPositions : activeViews.fieldPositions;
+    return recordPositions.map((position) => {
+        return data.find((record) => record._id === position)!;
+    });
 }
 
-export function createDefaultPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
-    const positions: Positions = {};
-    const position = getPosition(data, activeId, index);
-    const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
-    const maxPosition = data[maxIndex].positions[activeId];
-    views.forEach((element) => {
-        positions[element._id] = element._id === activeId ? position : maxPosition + 1;
-    });
+export function createDefaultPositions(views: AITableView[], activeId: string, data: AITableRecords | AITableFields, index: number) {
+    const positions = {};
+    // const position = getPosition(data, activeId, index);
+    // const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
+    // const maxPosition = data[maxIndex].positions[activeId];
+    // views.forEach((element) => {
+    //     positions[element._id] = element._id === activeId ? position : maxPosition + 1;
+    // });
     return positions;
 }
 
-export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
+export function getPosition(data: AITableRecords | AITableFields, activeViewId: string, index: number) {
     let position = data.length - 1;
-    if (index !== 0 && index !== data.length - 1) {
-        const previousViewPosition = data[index - 1].positions[activeViewId];
-        const nextViewPosition = data[index + 1].positions[activeViewId!];
-        position = (previousViewPosition + nextViewPosition) / 2;
-    } else {
-        position = index;
-    }
+    // if (index !== 0 && index !== data.length - 1) {
+    //     const previousViewPosition = data[index - 1].positions[activeViewId];
+    //     const nextViewPosition = data[index + 1].positions[activeViewId!];
+    //     position = (previousViewPosition + nextViewPosition) / 2;
+    // } else {
+    //     position = index;
+    // }
     return position;
 }
 
 export function getDefaultValue() {
     const initValue: {
-        records: AITableViewRecords;
-        fields: AITableViewFields;
+        records: AITableRecords;
+        fields: AITableFields;
     } = {
         records: [
             {
                 _id: 'row-1',
-                positions: {
-                    view1: 0,
-                    view2: 1
-                },
                 values: {
                     'column-1': '文本 1-1',
                     'column-2': ['1'],
@@ -67,10 +62,6 @@ export function getDefaultValue() {
             },
             {
                 _id: 'row-2',
-                positions: {
-                    view1: 1,
-                    view2: 2
-                },
                 values: {
                     'column-1': '文本 2-1',
                     'column-2': ['2'],
@@ -91,10 +82,6 @@ export function getDefaultValue() {
             },
             {
                 _id: 'row-3',
-                positions: {
-                    view1: 2,
-                    view2: 0
-                },
                 values: {
                     'column-1': '文本 3-1',
                     'column-2': ['3'],
@@ -133,19 +120,11 @@ export function getDefaultValue() {
             {
                 _id: 'column-1',
                 name: '单行文本',
-                positions: {
-                    view1: 0,
-                    view2: 16
-                },
                 type: AITableFieldType.text
             },
             {
                 _id: 'column-2',
                 name: '单选',
-                positions: {
-                    view1: 1,
-                    view2: 15
-                },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
                 settings: {
@@ -213,10 +192,6 @@ export function getDefaultValue() {
                             _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
-                },
-                positions: {
-                    view1: 2,
-                    view2: 14
                 }
             },
             {
@@ -264,10 +239,6 @@ export function getDefaultValue() {
                             _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
-                },
-                positions: {
-                    view1: 3,
-                    view2: 13
                 }
             },
             {
@@ -315,38 +286,21 @@ export function getDefaultValue() {
                             _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
-                },
-
-                positions: {
-                    view1: 4,
-                    view2: 12
                 }
             },
             {
                 _id: 'column-3',
                 name: '数字',
-                positions: {
-                    view1: 5,
-                    view2: 11
-                },
                 type: AITableFieldType.number
             },
             {
                 _id: 'column-4',
                 name: '日期',
-                positions: {
-                    view1: 6,
-                    view2: 10
-                },
                 type: AITableFieldType.date
             },
             {
                 _id: 'column-5',
                 name: '成员(📌)',
-                positions: {
-                    view1: 7,
-                    view2: 9
-                },
                 settings: {
                     is_multiple: true
                 },
@@ -355,65 +309,37 @@ export function getDefaultValue() {
             {
                 _id: 'column-6',
                 name: '进度',
-                positions: {
-                    view1: 8,
-                    view2: 8
-                },
                 type: AITableFieldType.progress
             },
             {
                 _id: 'column-7',
                 name: '评分(📌)',
-                positions: {
-                    view1: 9,
-                    view2: 7
-                },
                 type: AITableFieldType.rate
             },
             {
                 _id: 'column-8',
                 name: '链接(📌)',
-                positions: {
-                    view1: 10,
-                    view2: 6
-                },
                 type: AITableFieldType.link
             },
 
             {
                 _id: 'column-9',
                 name: '创建人',
-                positions: {
-                    view1: 11,
-                    view2: 5
-                },
                 type: AITableFieldType.createdBy
             },
             {
                 _id: 'column-10',
                 name: '创建时间',
-                positions: {
-                    view1: 12,
-                    view2: 4
-                },
                 type: AITableFieldType.createdAt
             },
             {
                 _id: 'column-11',
                 name: '更新人',
-                positions: {
-                    view1: 13,
-                    view2: 3
-                },
                 type: AITableFieldType.updatedBy
             },
             {
                 _id: 'column-12',
                 name: '更新时间',
-                positions: {
-                    view1: 14,
-                    view2: 2
-                },
                 type: AITableFieldType.updatedAt
             }
         ]
@@ -425,7 +351,6 @@ export function getDefaultValue() {
     //     initValue.fields.push({
     //         _id: `column-${index}`,
     //         name: '文本',
-    //         positions: { view1: index, view2: index },
     //         type: AITableFieldType.text
     //     });
     // }
@@ -437,7 +362,6 @@ export function getDefaultValue() {
     //     });
     //     initValue.records.push({
     //         _id: `row-${index + 1}`,
-    //         positions: { view1: index, view2: index },
     //         values: value
     //     });
     // }
@@ -460,4 +384,53 @@ export function getReferences(): AITableReferences {
             }
         }
     };
+}
+
+export function getInitViews(): AITableViews {
+    return [
+        {
+            _id: 'view0',
+            name: '表格视图',
+            recordPositions: ['row-1', 'row-2', 'row-3'],
+            fieldPositions: [
+                'column-1',
+                'column-2',
+                'column-20',
+                'column-21',
+                'column-22',
+                'column-3',
+                'column-4',
+                'column-5',
+                'column-6',
+                'column-7',
+                'column-8',
+                'column-9',
+                'column-10',
+                'column-11',
+                'column-12'
+            ]
+        },
+        {
+            _id: 'view1',
+            name: '表格视图 1',
+            recordPositions: ['row-3', 'row-1', 'row-2'],
+            fieldPositions: [
+                'column-5',
+                'column-1',
+                'column-6',
+                'column-7',
+                'column-8',
+                'column-9',
+                'column-10',
+                'column-11',
+                'column-12',
+                'column-2',
+                'column-20',
+                'column-21',
+                'column-22',
+                'column-3',
+                'column-4'
+            ]
+        }
+    ];
 }

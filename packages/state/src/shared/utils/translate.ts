@@ -1,7 +1,8 @@
-import { AITableViewFields, AITableViewRecords, SyncArrayElement, SyncMapElement } from '../../types';
+import { AITableFields, AITableRecords } from '@ai-table/grid';
+import {SyncArrayElement, SyncMapElement } from '../../types';
 import * as Y from 'yjs';
 
-export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
+export const translateToRecordValues = (arrayRecord: any[], fields: AITableFields) => {
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
@@ -10,29 +11,28 @@ export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewF
     return recordValue;
 };
 
-export const translateToRecords = (arrayRecords: any[], fields: AITableViewFields) => {
+export const translateToRecords = (arrayRecords: any[], fields: AITableFields) => {
     return arrayRecords.map((record: any) => {
         const [nonEditableArray, editableArray] = record;
         return {
             _id: nonEditableArray[0]['_id'],
-            positions: editableArray[editableArray.length - 1],
-            values: translateToRecordValues(editableArray.slice(0, editableArray.length - 1), fields)
+            values: translateToRecordValues(editableArray, fields)
         };
     });
 };
 
-export function translatePositionToPath(data: AITableViewRecords | AITableViewFields, position: number, activeViewId: string) {
-    let index = data.findIndex((value, index) => {
-        if (index === 0) {
-            return position < value.positions[activeViewId];
-        }
-        return position > data[index - 1].positions[activeViewId] && position < value.positions[activeViewId];
-    });
-    if (index === -1) {
-        index = data.length;
-    }
+export function translatePositionToPath(data: AITableRecords | AITableFields, position: number, activeViewId: string) {
+    // let index = data.findIndex((value, index) => {
+    //     if (index === 0) {
+    //         return position < value.positions[activeViewId];
+    //     }
+    //     return position > data[index - 1].positions[activeViewId] && position < value.positions[activeViewId];
+    // });
+    // if (index === -1) {
+    //     index = data.length;
+    // }
 
-    return [index];
+    // return [index];
 }
 
 export function getShareTypeNumberPath(path: (string | number)[]): number[] {

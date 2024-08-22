@@ -28,7 +28,7 @@ import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service'
 import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 import { createDraft, finishDraft } from 'immer';
-import { AITableViewField, AITableViewRecord, applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/state';
+import { applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/state';
 import { withRemoveView } from '../../../plugins/view.plugin';
 
 @Component({
@@ -95,47 +95,47 @@ export class DemoTableContent {
 
     onChange(options: AITableChangeOptions) {
         if (this.tableService.sharedType) {
-            options.actions = options.actions.map((action) => {
-                if (action.type === ActionName.AddRecord) {
-                    const draftAction = createDraft(action);
-                    const record = (draftAction as AddRecordAction).record as AITableViewRecord;
-                    if (!record.positions) {
-                        record.positions = createDefaultPositions(
-                            this.tableService.views(),
-                            this.tableService.activeViewId(),
-                            this.tableService.records(),
-                            action.path[0]
-                        );
-                        const newAction = finishDraft(draftAction) as AddRecordAction;
-                        this.tableService.records.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.record as AITableViewRecord;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                if (action.type === ActionName.AddField) {
-                    const draftAction = createDraft(action);
-                    const field = (draftAction as AddFieldAction).field as AITableViewField;
-                    if (!field.positions) {
-                        field.positions = createDefaultPositions(
-                            this.tableService.views(),
-                            this.tableService.activeViewId(),
-                            this.tableService.fields(),
-                            action.path[0]
-                        );
-                        const newAction = finishDraft(draftAction) as AddFieldAction;
-                        this.tableService.fields.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.field as AITableViewField;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                return action;
-            });
+            // options.actions = options.actions.map((action) => {
+            //     if (action.type === ActionName.AddRecord) {
+            //         const draftAction = createDraft(action);
+            //         const record = (draftAction as AddRecordAction).record as AITableRecord;
+            //         if (!record.positions) {
+            //             record.positions = createDefaultPositions(
+            //                 this.tableService.views(),
+            //                 this.tableService.activeViewId(),
+            //                 this.tableService.records(),
+            //                 action.path[0]
+            //             );
+            //             const newAction = finishDraft(draftAction) as AddRecordAction;
+            //             this.tableService.records.update((value) => {
+            //                 let draftValue = createDraft(value);
+            //                 draftValue[action.path[0]] = newAction.record as AITableRecord;
+            //                 return finishDraft(draftValue);
+            //             });
+            //             return newAction;
+            //         }
+            //     }
+            //     if (action.type === ActionName.AddField) {
+            //         const draftAction = createDraft(action);
+            //         const field = (draftAction as AddFieldAction).field as AITableField;
+            //         if (!field.positions) {
+            //             field.positions = createDefaultPositions(
+            //                 this.tableService.views(),
+            //                 this.tableService.activeViewId(),
+            //                 this.tableService.fields(),
+            //                 action.path[0]
+            //             );
+            //             const newAction = finishDraft(draftAction) as AddFieldAction;
+            //             this.tableService.fields.update((value) => {
+            //                 let draftValue = createDraft(value);
+            //                 draftValue[action.path[0]] = newAction.field as AITableField;
+            //                 return finishDraft(draftValue);
+            //             });
+            //             return newAction;
+            //         }
+            //     }
+            //     return action;
+            // });
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
                     applyActionOps(this.tableService.sharedType!, options.actions, this.aiTable);

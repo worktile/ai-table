@@ -2,21 +2,21 @@ import { AITable, AITableAction, AITableField, AITableRecord } from '@ai-table/g
 import { WritableSignal } from '@angular/core';
 import { Id } from 'ngx-tethys/types';
 
-export class Positions {
-    [view_id: string]: number;
-}
+// export class Positions {
+//     [key: string]: string[];
+// }
 
-export interface AITableViewRecord extends AITableRecord {
-    positions: Positions;
-}
+// export interface AITableRecord extends AITableRecord {
+//     positions: Positions;
+// }
 
-export interface AITableViewField extends AITableField {
-    positions: Positions;
-}
+// export interface AITableField extends AITableField {
+//     positions: Positions;
+// }
 
-export type AITableViewRecords = AITableViewRecord[];
+// export type AITableRecords = AITableRecord[];
 
-export type AITableViewFields = AITableViewField[];
+// export type AITableFields = AITableField[];
 
 export enum Direction {
     default = 0,
@@ -50,6 +50,8 @@ export interface AITableView {
     _id: string;
     name: string;
     emoji_icon?: string;
+    recordPositions: string[];
+    fieldPositions: string[];
     settings?: GridSettings;
 }
 

@@ -4,8 +4,6 @@ import { isArray } from 'ngx-tethys/util';
 import {
     AITableSharedAction,
     AITableView,
-    AITableViewFields,
-    AITableViewRecords,
     AIViewTable,
     SharedType,
     SyncArrayElement,
@@ -60,21 +58,21 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
-                            const position = customField[customField.length - 1][activeViewId];
-                            const path = translatePositionToPath(
-                                aiTable.records() as AITableViewRecords,
-                                position,
-                                activeViewId
-                            ) as AIRecordPath;
+                            // const position = customField[customField.length - 1][activeViewId];
+                            // const path = translatePositionToPath(
+                            //     aiTable.records(),
+                            //     position,
+                            //     activeViewId
+                            // ) as AIRecordPath;
 
-                            actions.push({
-                                type: ActionName.AddRecord,
-                                path: path,
-                                record: {
-                                    _id: fixedField[0]['_id'],
-                                    values: translateToRecordValues(customField, aiTable.fields() as AITableViewFields)
-                                }
-                            });
+                            // actions.push({
+                            //     type: ActionName.AddRecord,
+                            //     path: path,
+                            //     record: {
+                            //         _id: fixedField[0]['_id'],
+                            //         values: translateToRecordValues(customField, aiTable.fields() as AITableFields)
+                            //     }
+                            // });
                         });
                     } else {
                         try {
@@ -102,16 +100,16 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
                 if (isFieldsTranslate) {
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
-                        const path = translatePositionToPath(
-                            aiTable.fields() as AITableViewFields,
-                            data['positions'][activeViewId],
-                            activeViewId
-                        ) as AIFieldPath;
-                        actions.push({
-                            type: ActionName.AddField,
-                            path,
-                            field: data as AITableField
-                        });
+                        // const path = translatePositionToPath(
+                        //     aiTable.fields() as AITableFields,
+                        //     data['positions'][activeViewId],
+                        //     activeViewId
+                        // ) as AIFieldPath;
+                        // actions.push({
+                        //     type: ActionName.AddField,
+                        //     path,
+                        //     field: data as AITableField
+                        // });
                     });
                 }
                 if (isViewsTranslate) {

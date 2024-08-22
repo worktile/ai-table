@@ -2,21 +2,17 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@
 import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
-import { AITableGrid, idCreator } from '@ai-table/grid';
+import { AITableFields, AITableGrid, AITableRecords } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
-import { AITableView, ViewActions } from '@ai-table/state';
+import { AITableView, getDefaultView, translateToRecords, ViewActions } from '@ai-table/state';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
-
-const initViews = [
-    { _id: 'view0', name: '表格视图' },
-    { _id: 'view1', name: '表格视图 1' }
-];
+import { getInitViews } from '../utils/utils';
 
 @Component({
     selector: 'demo-ai-table',
@@ -54,6 +50,7 @@ export class DemoTable implements OnInit, OnDestroy {
     activeViewName!: string;
 
     ngOnInit(): void {
+        const initViews = getInitViews();
         let activeView = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         if (!activeView || (activeView && initViews.findIndex((item) => item._id === activeView) < 0)) {
             activeView = initViews[0]._id;
@@ -88,12 +85,20 @@ export class DemoTable implements OnInit, OnDestroy {
     }
 
     addView() {
-        const index = this.tableService.views().length;
-        const newView: AITableView = {
-            _id: idCreator(),
-            name: '表格视图 ' + index
-        };
-        ViewActions.addView(this.tableService.aiTable, newView, [index]);
+        let newView: AITableView | undefined;
+        if (this.tableService.sharedType) {
+            const data = this.tableService.sharedType.toJSON();
+            const fields: AITableFields = data['fields'];
+            const records: AITableRecords = translateToRecords(data['records'], fields);
+            const recordPositions = records.map((item) => item._id);
+            const fieldPositions = fields.map((item) => item._id);
+            newView = getDefaultView(this.tableService.views(), recordPositions, fieldPositions);
+        } else {
+            newView = getDefaultView(this.tableService.views());
+        }
+        if (newView) {
+            ViewActions.addView(this.tableService.aiTable, newView, [this.tableService.views().length]);
+        }
     }
 
     removeView() {

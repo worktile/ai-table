@@ -1,10 +1,11 @@
-import { AITableViewFields, AITableViewRecords, SharedType } from '../../types';
+import { AITableFields, AITableRecords } from '@ai-table/grid';
+import { SharedType } from '../../types';
 import { translateToRecords } from './translate';
 
 export const initTable = (sharedType: SharedType) => {
     const data = sharedType.toJSON();
-    const fields: AITableViewFields = data['fields'];
-    const records: AITableViewRecords = translateToRecords(data['records'], fields);
+    const fields: AITableFields = data['fields'];
+    const records: AITableRecords = translateToRecords(data['records'], fields);
     const views = data['views'];
     return {
         records,

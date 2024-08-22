@@ -1,5 +1,6 @@
 import * as Y from 'yjs';
-import { AITableViewFields, AITableViewRecord, AITableViewRecords, AITableViews, Positions, SyncMapElement } from '../../types';
+import { AITableViews, SyncMapElement } from '../../types';
+import { AITableFields, AITableRecord, AITableRecords } from '@ai-table/grid';
 
 export const createSharedType = () => {
     const doc = new Y.Doc();
@@ -10,8 +11,8 @@ export const createSharedType = () => {
 export const initSharedType = (
     doc: Y.Doc,
     initializeValue: {
-        fields: AITableViewFields;
-        records: AITableViewRecords;
+        fields: AITableFields;
+        records: AITableRecords;
         views: AITableViews;
     }
 ) => {
@@ -23,8 +24,8 @@ export const initSharedType = (
 export function toSharedType(
     sharedType: Y.Map<any>,
     data: {
-        fields: AITableViewFields;
-        records: AITableViewRecords;
+        fields: AITableFields;
+        records: AITableRecords;
         views: AITableViews;
     }
 ): void {
@@ -51,7 +52,7 @@ export function toSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
+export function toRecordSyncElement(record: AITableRecord): Y.Array<Y.Array<any>> {
     const nonEditableArray = new Y.Array();
     // 临时方案：为了解决删除时协同操作无法精准获取删除的 id 的问题，将原来的[idValue] 改为[{'_id': idValue}]
     // 后续可能改为 YMap 或者通过在 views 中存储 positions 解决
@@ -62,7 +63,7 @@ export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<
     for (const fieldId in record['values']) {
         editableFields.push(record['values'][fieldId]);
     }
-    editableArray.insert(0, [...editableFields, record['positions']]);
+    editableArray.insert(0, [...editableFields]);
 
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
