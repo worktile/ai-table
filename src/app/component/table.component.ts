@@ -7,15 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { TableService } from '../service/table.service';
-import { AITableView, ViewActions } from '@ai-table/shared';
+import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
+import { AITableView, ViewActions } from '@ai-table/state';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 
 const initViews = [
-    { _id: 'view1', name: '表格视图 ', is_active: true },
-    { _id: 'view2', name: '表格视图 1' }
+    { _id: 'view0', name: '表格视图' },
+    { _id: 'view1', name: '表格视图 1' }
 ];
 
 @Component({
@@ -38,12 +38,12 @@ const initViews = [
     ],
     templateUrl: './table.component.html',
     providers: [TableService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-room-demo-action-1';
+    room = 'share-demo-action-1';
 
     router = inject(Router);
 
@@ -54,13 +54,18 @@ export class DemoTable implements OnInit, OnDestroy {
     activeViewName!: string;
 
     ngOnInit(): void {
-        this.router.navigate(['/view1']);
+        let activeView = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
+        if (!activeView || (activeView && initViews.findIndex((item) => item._id === activeView) < 0)) {
+            activeView = initViews[0]._id;
+        }
+        this.tableService.setActiveView(activeView);
+        this.router.navigate([`/${activeView}`]);
         this.tableService.initData(initViews);
     }
 
     activeTabChange(data: any) {
-        this.tableService.updateActiveView(data);
-        this.router.navigateByUrl(`/${this.tableService.activeView()._id}`);
+        this.tableService.setActiveView(data);
+        this.router.navigateByUrl(`/${this.tableService.activeViewId()}`);
     }
 
     handleShared() {
@@ -92,7 +97,7 @@ export class DemoTable implements OnInit, OnDestroy {
     }
 
     removeView() {
-        ViewActions.removeView(this.tableService.aiTable, [this.tableService.activeView()._id]);
+        ViewActions.removeView(this.tableService.aiTable, [this.tableService.activeViewId()]);
     }
 
     ngOnDestroy(): void {

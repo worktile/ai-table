@@ -7,7 +7,7 @@
         "types": [],
         "paths": {
             "@ai-table/grid": ["./packages/grid/src/index"],
-            "@ai-table/shared": ["./packages/shared/src/public-api"],
+            "@ai-table/state": ["./packages/state/src/public-api"],
         },
         "moduleResolution": "node",
         "importHelpers": true,

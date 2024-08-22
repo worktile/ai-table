@@ -9,10 +9,10 @@
         >{{ tableService.provider ? '断开连接' : '连接协同' }}</a
     >
 </div>
-<thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeView()._id">
+<thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.views(); let index = $index; track $index) {
         <thy-tab [thyTitle]="item.name" [id]="item._id">
-            @if (item.is_active) {
+            @if (item._id === tableService.activeViewId()) {
                 <ng-template #title>
                     @if (isEdit) {
                         <input
