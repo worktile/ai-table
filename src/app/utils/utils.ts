@@ -1,5 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/shared';
+import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/state';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -9,14 +9,13 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
     return data;
 }
 
-export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
+export function createDefaultPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
     const positions: Positions = {};
-    const activeId = views.find((item) => item.is_active)?._id!;
     const position = getPosition(data, activeId, index);
     const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
     const maxPosition = data[maxIndex].positions[activeId];
     views.forEach((element) => {
-        positions[element._id] = element.is_active ? position : maxPosition + 1;
+        positions[element._id] = element._id === activeId ? position : maxPosition + 1;
     });
     return positions;
 }

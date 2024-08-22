@@ -1,7 +1,7 @@
 import { createDraft, finishDraft } from 'immer';
 import { AITableView, AITableViewAction, AIViewTable, ViewActionName } from '../../types';
 
-export const GeneralActions = {
+export const GeneralViewActions = {
     transform(aiTable: AIViewTable, action: AITableViewAction): void {
         const views = createDraft(aiTable.views());
         applyView(aiTable, views, action);

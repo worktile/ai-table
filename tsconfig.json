@@ -23,8 +23,8 @@
         "paths": {
             "@ai-table/grid": ["packages/grid/src/public-api"],
             "@ai-table/grid/*": ["packages/grid/src/*"],
-            "@ai-table/shared": ["packages/shared/src/public-api"],
-            "@ai-table/shared/*": ["packages/shared/src/*"],
+            "@ai-table/state": ["packages/state/src/public-api"],
+            "@ai-table/state/*": ["packages/state/src/*"],
         }
     },
     "angularCompilerOptions": {

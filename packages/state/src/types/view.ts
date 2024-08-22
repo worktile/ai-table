@@ -50,7 +50,6 @@ export interface AITableView {
     _id: string;
     name: string;
     emoji_icon?: string;
-    is_active?: boolean;
     settings?: GridSettings;
 }
 
@@ -105,4 +104,3 @@ export interface RemoveViewAction {
 export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction;
 
 export type AITableSharedAction = AITableViewAction | AITableAction;
-

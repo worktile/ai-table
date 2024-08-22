@@ -43,3 +43,10 @@ export function removeView(aiTable: AIViewTable, path: [string]) {
     };
     aiTable.apply(operation);
 }
+
+
+export const ViewActions = {
+    setView,
+    addView,
+    removeView
+};
