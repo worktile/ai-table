@@ -14,8 +14,8 @@ import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 
 const initViews = [
-    { _id: 'view1', name: '表格视图 ', is_active: true },
-    { _id: 'view2', name: '表格视图 1' }
+    { _id: 'view0', name: '表格视图' },
+    { _id: 'view1', name: '表格视图 1' }
 ];
 
 @Component({
