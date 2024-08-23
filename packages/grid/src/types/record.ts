@@ -1,7 +1,7 @@
 export enum AITableRowType {
-    Add = 'AddRecord',
-    Blank = 'Blank',
-    Record = 'Record'
+    add = 'addRecord',
+    blank = 'blank',
+    record = 'record'
 }
 
 export type AITableCellMetaData = {
@@ -17,15 +17,15 @@ export interface AITableLinearRowBase {
 }
 
 export type AITableLinearRowBlank = AITableLinearRowBase & {
-    type: AITableRowType.Blank;
+    type: AITableRowType.blank;
 };
 
 export type AITableLinearRowAdd = AITableLinearRowBase & {
-    type: AITableRowType.Add;
+    type: AITableRowType.add;
 };
 
 export type AITableLinearRowRecord = AITableLinearRowBase & {
-    type: AITableRowType.Record;
+    type: AITableRowType.record;
     groupHeadRecordId: string;
     displayIndex: number;
 };

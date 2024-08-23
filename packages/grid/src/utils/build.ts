@@ -11,7 +11,7 @@ export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLine
         if (row._id) {
             displayRowIndex++;
             linearRows.push({
-                type: AITableRowType.Record,
+                type: AITableRowType.record,
                 depth: 0,
                 recordId: row._id,
                 displayIndex: displayRowIndex,
@@ -20,7 +20,7 @@ export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLine
         }
         if (!row._id) {
             linearRows.push({
-                type: AITableRowType.Add,
+                type: AITableRowType.add,
                 depth: 0,
                 recordId: ''
             });
