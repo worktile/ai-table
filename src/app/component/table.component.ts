@@ -1,17 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { WebsocketProvider } from 'y-websocket';
-import { ThyAction } from 'ngx-tethys/action';
 import { AITableGrid } from '@ai-table/grid';
-import { FormsModule } from '@angular/forms';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
-import { ThyInputDirective } from 'ngx-tethys/input';
-import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
 import { addView, AITableViewFields, AITableViewRecords, removeView, ViewActions } from '@ai-table/state';
-import { ThyIconModule } from 'ngx-tethys/icon';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
+import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
+import { ThyIconModule } from 'ngx-tethys/icon';
+import { ThyInputDirective } from 'ngx-tethys/input';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
+import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
+import { WebsocketProvider } from 'y-websocket';
+import { LOCAL_STORAGE_KEY, TableService } from '../service/table.service';
 
 const initViews = [
     { _id: 'view1', name: '表格视图' },
@@ -40,7 +40,7 @@ const initViews = [
     providers: [TableService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoTable implements OnInit, OnDestroy {
+export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
     room = 'share-demo-action-1';
@@ -61,6 +61,10 @@ export class DemoTable implements OnInit, OnDestroy {
         this.tableService.setActiveView(activeView);
         this.router.navigate([`/${activeView}`]);
         this.tableService.initData(initViews);
+    }
+
+    ngAfterViewInit(): void {
+        this.router.navigate(['/view1']);
     }
 
     activeTabChange(data: any) {
