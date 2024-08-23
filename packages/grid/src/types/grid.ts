@@ -34,7 +34,7 @@ export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
 }
 
-export interface AITableGridConfig {
+export interface AITableGridOptions {
     aiTable: AITable;
     fields: AITableField[];
     records: AITableRecord[];

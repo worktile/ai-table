@@ -1,8 +1,8 @@
 import { Layer } from 'konva/lib/Layer';
-import { AITableGridConfig } from '../types';
+import { AITableGridOptions } from '../types';
 import { Stage } from 'konva/lib/Stage';
 
-export const createGrid = (config: AITableGridConfig) => {
+export const createGrid = (config: AITableGridOptions) => {
     const gridStage = new Stage({
         container: config.container,
         width: config.width,

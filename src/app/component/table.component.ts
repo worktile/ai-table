@@ -54,13 +54,13 @@ export class DemoTable implements OnInit, OnDestroy {
     activeViewName!: string;
 
     ngOnInit(): void {
-        // this.router.navigate(['/view1']);
+        this.router.navigate(['/view1']);
         this.tableService.initData(initViews);
     }
 
     activeTabChange(data: any) {
         this.tableService.updateActiveView(data);
-        // this.router.navigateByUrl(`/${this.tableService.activeView()._id}`);
+        this.router.navigateByUrl(`/${this.tableService.activeView()._id}`);
     }
 
     handleShared() {

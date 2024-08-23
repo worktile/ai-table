@@ -51,28 +51,22 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
+import { createGrid } from './grid-renderer/create-grid';
 
 @Component({
     selector: 'ai-table-grid',
-    templateUrl: './grid.component.html',
+    template: '',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        class: 'ai-table-grid d-block w-100 h-100'
     },
     imports: [
-        NgForOf,
-        NgClass,
         NgComponentOutlet,
         CommonModule,
         FormsModule,
         SelectOptionPipe,
         SelectOptionsPipe,
-        ThyTag,
-        ThyPopoverModule,
-        ThyIcon,
-        ThyRate,
-        ThyProgress,
         AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
         ThyFlexibleText,
@@ -141,6 +135,23 @@ export class AITableGrid implements OnInit {
         this.initService();
         this.buildFieldMenus();
         this.subscribeEvents();
+    }
+
+    ngAfterViewInit(): void {
+        this.initGridRender();
+    }
+
+    initGridRender() {
+        const container = this.elementRef.nativeElement;
+        const gridStage = createGrid({
+            aiTable: this.aiTable,
+            fields: this.aiFields(),
+            records: this.aiRecords(),
+            container: container,
+            width: container.offsetWidth,
+            height: container.offsetHeight
+        });
+        gridStage.draw();
     }
 
     initAITable() {
