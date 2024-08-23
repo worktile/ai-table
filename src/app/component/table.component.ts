@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
@@ -40,7 +40,7 @@ const initViews = [
     providers: [TableService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoTable implements OnInit, OnDestroy {
+export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
     room = 'share-room-demo-action-1';
@@ -54,8 +54,11 @@ export class DemoTable implements OnInit, OnDestroy {
     activeViewName!: string;
 
     ngOnInit(): void {
-        this.router.navigate(['/view1']);
         this.tableService.initData(initViews);
+    }
+
+    ngAfterViewInit(): void {
+        this.router.navigate(['/view1']);
     }
 
     activeTabChange(data: any) {
