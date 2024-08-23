@@ -1,37 +1,24 @@
 import { AITableFields, AITableRecords, FieldsMap } from '../core';
-import { AITableGroupInfo, AITableLinearRow } from '../types';
+import { AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/record';
 
-export const buildGridLinearRows = (visibleRecords: AITableRecords, groupInfo: AITableGroupInfo[] = []): AITableLinearRow[] => {
+export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLinearRow[] => {
     const linearRows: AITableLinearRow[] = [];
-    const groupLevel = groupInfo.length;
     let preRow = { _id: '' };
     let displayRowIndex = 0;
-    if (!visibleRecords.length && groupLevel) {
-        linearRows.push({
-            type: AITableRowType.Blank,
-            depth: 0,
-            recordId: ''
-        });
-        linearRows.push({
-            type: AITableRowType.Add,
-            depth: 0,
-            recordId: ''
-        });
-    }
     for (const [index, row] of [...visibleRecords, { _id: '' }].entries()) {
         preRow = row;
         if (row._id) {
             displayRowIndex++;
             linearRows.push({
                 type: AITableRowType.Record,
-                depth: groupLevel,
+                depth: 0,
                 recordId: row._id,
                 displayIndex: displayRowIndex,
                 groupHeadRecordId: ''
             });
         }
-        if (!groupLevel && !row._id) {
+        if (!row._id) {
             linearRows.push({
                 type: AITableRowType.Add,
                 depth: 0,

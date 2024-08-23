@@ -1,36 +1,10 @@
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableFieldType } from '../core';
 import { AITableFieldMenuItem, AITableSizeMap } from './field';
-import { AITableRowType } from './record';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
 }
-
-export interface AITableLinearRowBase {
-    depth: number;
-    recordId: string;
-}
-
-export type AITableLinearRowBlank = AITableLinearRowBase & {
-    type: AITableRowType.Blank;
-};
-
-export type AITableLinearRowAdd = AITableLinearRowBase & {
-    type: AITableRowType.Add;
-};
-
-export type AITableLinearRowGroupTab = AITableLinearRowBase & {
-    type: AITableRowType.GroupTab;
-};
-
-export type AITableLinearRowRecord = AITableLinearRowBase & {
-    type: AITableRowType.Record;
-    groupHeadRecordId: string;
-    displayIndex: number;
-};
-
-export type AITableLinearRow = AITableLinearRowBlank | AITableLinearRowAdd | AITableLinearRowGroupTab | AITableLinearRowRecord;
 
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
@@ -61,14 +35,9 @@ export interface AITableGridStageOptions {
     height: number;
 }
 
-export interface AITableGroupInfo {
-    fieldId: string;
-    desc: boolean;
-}
-
 export enum AITableItemType {
-    Row = 'Row',
-    Column = 'Column'
+    row = 'row',
+    column = 'column'
 }
 
 export interface AITableCoordinate {
