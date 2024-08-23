@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyAvatarModule } from 'ngx-tethys/avatar';
@@ -21,6 +21,7 @@ import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsP
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
+import { buildGridData } from './utils';
 
 @Component({
     selector: 'ai-table-dom-grid',
@@ -63,4 +64,8 @@ import { AITableGridSelectionService } from './services/selection.service';
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableDomGrid extends AITableGridBase {}
+export class AITableDomGrid extends AITableGridBase {
+    gridData = computed(() => {
+        return buildGridData(this.aiRecords(), this.aiFields());
+    });
+}

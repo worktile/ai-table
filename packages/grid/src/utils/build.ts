@@ -1,4 +1,4 @@
-import { AITableRecords } from '../core';
+import { AITableFields, AITableRecords, FieldsMap } from '../core';
 import { AITableGroupInfo, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/record';
 
@@ -40,4 +40,19 @@ export const buildGridLinearRows = (visibleRecords: AITableRecords, groupInfo: A
         }
     }
     return linearRows;
+};
+
+export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields) => {
+    const fields = fieldsValue.map((item) => {
+        return {
+            ...item,
+            icon: item.icon || FieldsMap[item.type].icon,
+            width: item.width || FieldsMap[item.type].width
+        };
+    });
+    return {
+        type: 'grid',
+        fields,
+        records: recordValue
+    };
 };
