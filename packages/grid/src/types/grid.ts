@@ -1,5 +1,5 @@
 import { Dictionary } from 'ngx-tethys/types';
-import { AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
 
 export interface AITableGridCellRenderSchema {
@@ -32,4 +32,13 @@ export interface AITableUserInfo {
 
 export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
+}
+
+export interface AITableGridConfig {
+    aiTable: AITable;
+    fields: AITableField[];
+    records: AITableRecord[];
+    container: HTMLDivElement;
+    width: number;
+    height: number;
 }
