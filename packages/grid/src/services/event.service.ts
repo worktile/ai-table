@@ -1,3 +1,4 @@
+import { Overlay } from '@angular/cdk/overlay';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopover } from 'ngx-tethys/popover';
@@ -5,7 +6,6 @@ import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema } from '../types';
-import { Overlay } from '@angular/cdk/overlay';
 
 @Injectable()
 export class AITableGridEventService {
@@ -35,31 +35,31 @@ export class AITableGridEventService {
     }
 
     registerEvents(element: HTMLElement) {
-        fromEvent<MouseEvent>(element, 'dblclick')
+        fromEvent<MouseEvent>(element, 'dblclick', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.dblClickEvent$.next(event);
             });
 
-        fromEvent<MouseEvent>(element, 'mouseover')
+        fromEvent<MouseEvent>(element, 'mouseover', { passive: true })
             .pipe(debounceTime(80), takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.mouseoverEvent$.next(event);
             });
 
-        fromEvent<MouseEvent>(document, 'mouseover')
+        fromEvent<MouseEvent>(document, 'mouseover', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.globalMouseoverEvent$.next(event);
             });
 
-        fromEvent<MouseEvent>(element, 'mousedown')
+        fromEvent<MouseEvent>(element, 'mousedown', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.mousedownEvent$.next(event);
             });
 
-        fromEvent<MouseEvent>(document, 'mousedown')
+        fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.globalMousedownEvent$.next(event as MouseEvent);
