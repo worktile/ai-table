@@ -51,7 +51,7 @@ import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
-import { buildGridData } from './utils';
+import { buildGridLinearRows } from './utils';
 import { createGridStage } from './grid-renderer/create-grid-stage';
 
 @Component({
@@ -120,8 +120,8 @@ export class AITableGrid implements OnInit, AfterViewInit {
 
     mouseoverRef!: ThyPopoverRef<any>;
 
-    gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
+    linearRows = computed(() => {
+        return buildGridLinearRows(this.aiRecords());
     });
 
     private ngZone = inject(NgZone);
