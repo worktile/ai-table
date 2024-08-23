@@ -7,7 +7,7 @@ import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as syncProtocol from 'y-protocols/sync';
 import * as Y from 'yjs';
-import { readSyncStep1 } from './sync';
+import { readSyncStep1, readSyncStep2, readUpdate } from './sync';
 
 export const messageSync = 0;
 export const messageQueryAwareness = 3;
@@ -146,24 +146,17 @@ const setupWS = (provider: LiveFeedProvider) => {
     }
 };
 
-// let guid = decoding.readVarString(decoder);
-//     let syncMessageType = messageYjsSyncStep1;
-//     while (guid) {
-        
-//         guid = decoding.readVarString(decoder);
-//     }
-
-export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Encoder, doc: LiveFeedProvider, transactionOrigin: any) => {
+export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Encoder, provider: LiveFeedProvider, transactionOrigin: any) => {
     const messageType = decoding.readVarUint(decoder);
     switch (messageType) {
         case messageYjsSyncStep1:
-            readSyncStep1(decoder, encoder, doc);
+            readSyncStep1(decoder, encoder, provider);
             break;
         case messageYjsSyncStep2:
-            readSyncStep2(decoder, doc, transactionOrigin);
+            readSyncStep2(decoder, provider, transactionOrigin);
             break;
         case messageYjsUpdate:
-            readUpdate(decoder, doc, transactionOrigin);
+            readUpdate(decoder, provider, transactionOrigin);
             break;
         default:
             throw new Error('Unknown message type');
