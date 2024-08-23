@@ -5,6 +5,7 @@ import {
     AIRecordPath,
     AITable,
     AITableChangeOptions,
+    AITableDomGrid,
     AITableField,
     AITableGrid,
     AITableQueries,
@@ -13,24 +14,38 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
+import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/shared';
 import { ChangeDetectionStrategy, Component, inject, signal, Signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { FormsModule } from '@angular/forms';
-import { ThyInputDirective } from 'ngx-tethys/input';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
+import { ThyInputDirective } from 'ngx-tethys/input';
+import { ThyLoading } from 'ngx-tethys/loading';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
+import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
-import { applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/state';
-import { withRemoveView } from '../../../plugins/view.plugin';
 
 @Component({
     selector: 'demo-table-content',
     standalone: true,
-    imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction, FormsModule, ThyInputDirective],
+    imports: [
+        RouterOutlet,
+        ThyPopoverModule,
+        FieldPropertyEditor,
+        ThyAction,
+        FormsModule,
+        ThyInputDirective,
+        ThySegment,
+        ThySegmentItem,
+        ThyLoading,
+        AITableGrid,
+        AITableDomGrid
+    ],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -68,6 +83,8 @@ export class DemoTableContent {
 
     references = signal(getReferences());
 
+    renderMode = signal(1);
+
     constructor() {
         this.registryIcon();
     }
@@ -95,6 +112,10 @@ export class DemoTableContent {
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+    }
+
+    changeRenderMode(e: ThySegmentEvent) {
+        this.renderMode.set(Number(e.value));
     }
 
     onChange(options: AITableChangeOptions) {
@@ -130,8 +151,8 @@ export class DemoTableContent {
     moveField() {
         const newIndex = 2;
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
-        selectedFields.forEach((item) => {
+        const selectedFields = this.aiTable.fields().filter((item: AITableField) => selectedFieldIds.includes(item._id));
+        selectedFields.forEach((item: AITableField) => {
             const path = AITableQueries.findFieldPath(this.aiTable, item) as AIFieldPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
         });
@@ -139,11 +160,11 @@ export class DemoTableContent {
 
     moveRecord() {
         const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
+        const selectedRecords = this.aiTable.records().filter((item: AITableField) => selectedRecordIds.includes(item._id));
         const selectedRecordsAfterNewPath: AITableRecord[] = [];
         let offset = 0;
         const newIndex = 2;
-        selectedRecords.forEach((item) => {
+        selectedRecords.forEach((item: AITableRecord) => {
             const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
             if (path[0] < newIndex) {
                 Actions.moveRecord(this.aiTable, path, [newIndex]);

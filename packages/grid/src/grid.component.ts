@@ -1,53 +1,9 @@
-import { CommonModule, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    ElementRef,
-    inject,
-    input,
-    model,
-    NgZone,
-    OnInit,
-    output
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
-import { ThyAction } from 'ngx-tethys/action';
-import { ThyAvatarModule } from 'ngx-tethys/avatar';
-import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
-import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
-import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
-import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
-import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { mergeWith } from 'rxjs/operators';
-import { ProgressEditorComponent, SelectOptionComponent } from './components';
-import { FieldMenu } from './components/field-menu/field-menu.component';
-import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
-import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
-import {
-    Actions,
-    AIPlugin,
-    AITable,
-    AITableChangeOptions,
-    AITableFields,
-    AITableFieldType,
-    AITableRecords,
-    AITableSelectOptionStyle,
-    AITableValue,
-    createAITable,
-    createDefaultField,
-    getDefaultRecord
-} from './core';
+import { afterNextRender, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AITableGridBase } from './grid-base.component';
 import { createGridStage } from './grid-renderer/create-grid-stage';
-import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
-import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
+import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 
 @Component({
     selector: 'ai-table-grid',
@@ -57,97 +13,16 @@ import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types'
     host: {
         class: 'ai-table-grid d-block w-100 h-100'
     },
-    imports: [
-        NgComponentOutlet,
-        CommonModule,
-        FormsModule,
-        SelectOptionPipe,
-        SelectOptionsPipe,
-        AITableFieldPropertyEditor,
-        ThyDatePickerFormatPipe,
-        ThyFlexibleText,
-        ThyStopPropagationDirective,
-        FieldMenu,
-        ThyAction,
-        ThyDropdownDirective,
-        ThyDropdownMenuComponent,
-        ThyCheckboxModule,
-        ProgressEditorComponent,
-        ThyAvatarModule,
-        NgTemplateOutlet,
-        IsSelectRecordPipe,
-        ProgressEditorComponent,
-        SelectOptionComponent,
-        UserPipe,
-        SelectSettingPipe,
-        MemberSettingPipe
-    ],
+    imports: [],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGrid implements OnInit, AfterViewInit {
-    aiRecords = model.required<AITableRecords>();
+export class AITableGrid extends AITableGridBase implements OnInit {
+    constructor() {
+        super();
 
-    aiFields = model.required<AITableFields>();
-
-    aiFieldConfig = input<AIFieldConfig>();
-
-    aiReadonly = input<boolean>();
-
-    aiPlugins = input<AIPlugin[]>();
-
-    aiReferences = input<AITableReferences>();
-
-    aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
-
-    AITableFieldType = AITableFieldType;
-
-    AITableSelectOptionStyle = AITableSelectOptionStyle;
-
-    aiTable!: AITable;
-
-    gridData = computed(() => {
-        if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
-            return this.aiBuildRenderDataFn()!(this.aiTable);
-        }
-        return {
-            records: this.aiRecords(),
-            fields: this.aiFields()
-        };
-    });
-
-    isSelectedAll = computed(() => {
-        return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
-    });
-
-    onChange = output<AITableChangeOptions>();
-
-    aiTableInitialized = output<AITable>();
-
-    fieldMenus!: AITableFieldMenuItem[];
-
-    mouseoverRef!: ThyPopoverRef<any>;
-
-    private ngZone = inject(NgZone);
-
-    private elementRef = inject(ElementRef);
-
-    private destroyRef = inject(DestroyRef);
-
-    private aiTableGridFieldService = inject(AITableGridFieldService);
-
-    private aiTableGridEventService = inject(AITableGridEventService);
-
-    public aiTableGridSelectionService = inject(AITableGridSelectionService);
-
-    ngOnInit(): void {
-        this.initAITable();
-        this.initService();
-        this.buildFieldMenus();
-        this.subscribeEvents();
-    }
-
-    ngAfterViewInit(): void {
-        this.initGridRender();
+        afterNextRender(() => {
+            this.initGridRender();
+        });
     }
 
     initGridRender() {
@@ -159,98 +34,5 @@ export class AITableGrid implements OnInit, AfterViewInit {
             height: container.offsetHeight
         });
         gridStage.draw();
-    }
-
-    initAITable() {
-        this.aiTable = createAITable(this.aiRecords, this.aiFields);
-        this.aiPlugins()?.forEach((plugin) => {
-            this.aiTable = plugin(this.aiTable);
-        });
-        this.aiTableInitialized.emit(this.aiTable);
-        this.aiTable.onChange = () => {
-            this.onChange.emit({
-                records: this.aiRecords(),
-                fields: this.aiFields(),
-                actions: this.aiTable.actions
-            });
-        };
-    }
-
-    initService() {
-        this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldPropertyEditor);
-        this.aiTableGridSelectionService.initialize(this.aiTable);
-        this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
-        this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
-        AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
-    }
-
-    buildFieldMenus() {
-        this.fieldMenus = this.aiFieldConfig()?.fieldMenus ?? DefaultFieldMenus;
-    }
-
-    addRecord() {
-        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
-    }
-
-    selectRecord(recordId: string) {
-        this.aiTableGridSelectionService.selectRecord(recordId);
-    }
-
-    toggleSelectAll(checked: boolean) {
-        this.aiTableGridSelectionService.toggleSelectAll(checked);
-    }
-
-    addField(gridColumnBlank: HTMLElement) {
-        const field = createDefaultField(this.aiTable, AITableFieldType.text);
-        this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
-    }
-
-    private subscribeEvents() {
-        this.ngZone.runOutsideAngular(() => {
-            this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                this.dblClick(event);
-            });
-            this.aiTableGridEventService.mousedownEvent$
-                .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
-                .subscribe((event) => {
-                    this.aiTableGridSelectionService.updateSelect(event);
-                });
-
-            this.aiTableGridEventService.mouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                this.mouseoverHandle(event);
-            });
-            this.aiTableGridEventService.globalMouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                this.closeHoverCellEditor(event);
-            });
-        });
-    }
-
-    private dblClick(event: MouseEvent) {
-        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
-            this.aiTableGridEventService.openEdit(cellDom);
-        }
-    }
-
-    private mouseoverHandle(event: MouseEvent) {
-        if (this.mouseoverRef) {
-            this.mouseoverRef?.close();
-        }
-        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && MOUSEOVER_EDIT_TYPE.includes(type)) {
-            this.mouseoverRef = this.aiTableGridEventService.openEdit(cellDom);
-        }
-    }
-
-    private closeHoverCellEditor(e: MouseEvent) {
-        if (this.mouseoverRef) {
-            const hasGrid = e.target && (e.target as HTMLElement).closest('.ai-table-grid');
-            const hasCellEditor = e.target && (e.target as HTMLElement).closest('.grid-cell-editor');
-            if (!hasGrid && !hasCellEditor) {
-                this.mouseoverRef.close();
-            }
-        }
     }
 }
