@@ -1,5 +1,6 @@
-import { CommonModule, NgClass, NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
+import { CommonModule, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -10,8 +11,7 @@ import {
     model,
     NgZone,
     OnInit,
-    output,
-    signal
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -21,12 +21,8 @@ import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
-import { ThyIcon } from 'ngx-tethys/icon';
-import { ThyPopoverModule, ThyPopoverRef } from 'ngx-tethys/popover';
-import { ThyProgress } from 'ngx-tethys/progress';
-import { ThyRate } from 'ngx-tethys/rate';
+import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { ThyTag } from 'ngx-tethys/tag';
 import { mergeWith } from 'rxjs/operators';
 import { ProgressEditorComponent, SelectOptionComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
@@ -46,6 +42,7 @@ import {
     createDefaultField,
     getDefaultRecord
 } from './core';
+import { createGridStage } from './grid-renderer/create-grid-stage';
 import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
@@ -54,25 +51,18 @@ import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types'
 
 @Component({
     selector: 'ai-table-grid',
-    templateUrl: './grid.component.html',
+    template: '',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        class: 'ai-table-grid d-block w-100 h-100'
     },
     imports: [
-        NgForOf,
-        NgClass,
         NgComponentOutlet,
         CommonModule,
         FormsModule,
         SelectOptionPipe,
         SelectOptionsPipe,
-        ThyTag,
-        ThyPopoverModule,
-        ThyIcon,
-        ThyRate,
-        ThyProgress,
         AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
         ThyFlexibleText,
@@ -94,7 +84,7 @@ import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types'
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGrid implements OnInit {
+export class AITableGrid implements OnInit, AfterViewInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
@@ -154,6 +144,21 @@ export class AITableGrid implements OnInit {
         this.initService();
         this.buildFieldMenus();
         this.subscribeEvents();
+    }
+
+    ngAfterViewInit(): void {
+        this.initGridRender();
+    }
+
+    initGridRender() {
+        const container = this.elementRef.nativeElement;
+        const gridStage = createGridStage({
+            aiTable: this.aiTable,
+            container: container,
+            width: container.offsetWidth,
+            height: container.offsetHeight
+        });
+        gridStage.draw();
     }
 
     initAITable() {
