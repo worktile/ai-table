@@ -1,7 +1,7 @@
 import { AITableRecords } from '@ai-table/grid';
-import { AITableGroupInfo } from '../interface/view';
-import { AILinearRow, CellType } from '../interface/grid';
 import { Group } from 'konva/lib/Group';
+import { AILinearRow, CellType } from '../interface/grid';
+import { AITableGroupInfo } from '../interface/view';
 
 export function getLinearRowsAndGroup(groupInfo: AITableGroupInfo[], visibleRows: AITableRecords) {
     const linearRows: AILinearRow[] = [];

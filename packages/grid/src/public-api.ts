@@ -4,5 +4,6 @@ export * from './core';
 export * from './grid.component';
 export * from './konva/index';
 export * from './pipes';
+export * from './stores';
 export * from './types';
 export * from './utils';

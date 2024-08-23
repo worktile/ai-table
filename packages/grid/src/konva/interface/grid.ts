@@ -41,6 +41,7 @@ export interface AITableRender {
     field: AITableField;
     cellValue: FieldValue;
     rowHeightLevel: RowHeightLevel;
+    isActive: boolean;
     style: AITableRenderStyle;
 }
 
@@ -55,6 +56,12 @@ export interface AITableScrollState {
     scrollTop: number;
     scrollLeft: number;
     isScrolling: boolean;
+}
+
+export interface AITableCellScrollState {
+    scrollTop: number;
+    totalHeight: number;
+    isOverflow: boolean;
 }
 
 export type AITableFontWeight = 'normal' | 'bold' | 'bolder' | 'lighter';
@@ -161,3 +168,58 @@ export type AILinearRowRecord = AILinearRowBase & {
 };
 
 export type AILinearRow = AILinearRowBlank | AILinearRowAdd | AILinearRowGroupTab | AILinearRowRecord;
+
+export interface AITableViewColumn {
+    fieldId: string;
+    hidden?: boolean;
+}
+
+export interface AITableGridCell {
+    recordId: string;
+    fieldId: string;
+}
+
+export interface AITableGridRange {
+    start: AITableGridCell;
+    end: AITableGridCell;
+}
+
+export interface AITabelGridIndexRange {
+    record: {
+        min: number;
+        max: number;
+    };
+    field: {
+        min: number;
+        max: number;
+    };
+}
+
+export type AITableGridRecordRanges = string[];
+
+export type AITableGridFieldRanges = string[];
+
+export enum AITableGridFillDirection {
+    Left = 'left',
+    Right = 'right',
+    Below = 'below',
+    Top = 'top'
+}
+
+export enum AITableRangeDirection {
+    Up,
+    Down,
+    Left,
+    Right,
+    UpEdge,
+    DownEdge,
+    LeftEdge,
+    RightEdge,
+    All
+}
+
+export interface AITableGridFillHandleStatus {
+    isActive: boolean;
+    direction?: AITableGridFillDirection;
+    fillRange?: AITableGridRange;
+}

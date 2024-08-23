@@ -7,7 +7,7 @@ export const isCellVisible = (context: AITableGridContext, cell: AITableGridCell
 
 export const getSelection = (context: AITableGridContext) => {
     const { aiTable } = context;
-    const selection = aiTable() && aiTable().selection();
+    const selection = aiTable && aiTable.selection();
 
     // 活动单元格是否移出
     if (selection?.activeCell && !isCellVisible(context, selection.activeCell!)) {
@@ -48,7 +48,7 @@ export const getSelectedField = (context: AITableGridContext) => {
         return;
     }
     const fieldId = selection.activeCell.fieldId;
-    return fields().find((field) => field._id === fieldId);
+    return fields.find((field) => field._id === fieldId);
 };
 
 /**
@@ -63,7 +63,7 @@ export const getSelectedRecord = (context: AITableGridContext, state: any) => {
         return;
     }
     const recordId = selection.activeCell.recordId;
-    return records().find((record) => record._id === recordId);
+    return records.find((record) => record._id === recordId);
 };
 
 /**

@@ -1,34 +1,31 @@
 import { AITable, AITableFields, AITableRecords } from '@ai-table/grid';
-import { InputSignal, ModelSignal, WritableSignal } from '@angular/core';
 import { DefaultTheme } from '../constants/default-theme';
 import { Coordinate } from '../core/coordinate';
-import { AILinearRow, AITableScrollState } from './grid';
+import { AILinearRow, AITableCellScrollState, AITableScrollState } from './grid';
 
 export interface AITableGridContext {
-    aiTable: InputSignal<AITable>;
-    fields: ModelSignal<AITableFields>;
-    records: ModelSignal<AITableRecords>;
-    pointPosition: WritableSignal<AITablePointPosition>;
-    isCellDown: WritableSignal<boolean>;
-    canAppendRow: WritableSignal<boolean>;
-    activeUrlAction: WritableSignal<boolean>;
-    activeCellBound?: WritableSignal<CellBound>;
+    aiTable: AITable;
+    fields: AITableFields;
+    records: AITableRecords;
+    linearRows: AILinearRow[];
+    pointPosition: AITablePointPosition;
+    isCellDown: boolean;
+    canAppendRow: boolean;
+    activeUrlAction: boolean;
+    activeCellBound: CellBound;
+    scrollState: AITableScrollState;
+    cellScrollState: AITableCellScrollState;
+    setPointPosition: (pointPosition: AITablePointPosition) => void;
+    setCellDown: (cellDown: boolean) => void;
+    setCanAppendRow: (canAppendRow: boolean) => void;
+    setActiveUrlAction: (activeUrlAction: boolean) => void;
+    setActiveCellBound: (activeCellBound: Partial<CellBound>) => void;
+    setScrollState: (scrollState: Partial<AITableScrollState>) => void;
+    setCellScrollState: (cellScrollState: Partial<AITableCellScrollState>) => void;
 }
 
 export interface AITableGridBase {
     context: AITableGridContext;
-    linearRows: AILinearRow[];
-}
-
-export interface AITableGridContext {
-    aiTable: InputSignal<AITable>;
-    fields: ModelSignal<AITableFields>;
-    records: ModelSignal<AITableRecords>;
-    pointPosition: WritableSignal<AITablePointPosition>;
-    isCellDown: WritableSignal<boolean>;
-    canAppendRow: WritableSignal<boolean>;
-    activeUrlAction: WritableSignal<boolean>;
-    activeCellBound?: WritableSignal<CellBound>;
 }
 
 export interface AITableGridView extends AITableGridBase {
@@ -39,7 +36,6 @@ export interface AITableGridView extends AITableGridBase {
 
 export interface AITableKonvaGridStage extends AITableGridBase {
     instance: Coordinate;
-    scrollState: AITableScrollState;
     container: HTMLDivElement | string;
     offsetX?: number;
     listening?: boolean;
@@ -51,7 +47,6 @@ export interface AITableUseGrid extends AITableGridBase {
     rowStopIndex: number;
     columnStartIndex: number;
     columnStopIndex: number;
-    scrollState: AITableScrollState;
     offsetX?: number;
 }
 
@@ -59,7 +54,6 @@ export interface AITableUseHeads extends AITableGridBase {
     instance: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
-    scrollState: AITableScrollState;
 }
 
 export interface AITableUseGridBaseConfig extends AITableGridBase {

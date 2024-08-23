@@ -1,5 +1,7 @@
 import { AITableGridCell, AITableGridContext, AITableGridFieldRanges, MouseDownType } from '@ai-table/grid';
+import _ from 'lodash';
 import SelectionActions from '../actions/selection';
+import { AIGrid } from '../interface/table';
 import { getParentNodeByClass } from '../utils/helper';
 
 interface AITableAttachEvent {
@@ -7,10 +9,14 @@ interface AITableAttachEvent {
 }
 
 export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) => {
-    const { aiTable, fields, records } = context;
+    const { aiTable } = context;
     const { viewMouseDown } = e;
-    const activeCell = aiTable().selection().activeCell;
-    const fieldRanges = aiTable().selection().fieldRanges;
+    const visibleColumns = AIGrid.getVisibleColumns(context);
+    const visibleRows = AIGrid.getVisibleRows(context);
+    const selectRanges = AIGrid.getSelectRanges(context);
+    const activeCell = AIGrid.getActiveCell(context);
+    const fieldRanges = AIGrid.getFieldRanges(context);
+    const fieldIndexMap = AIGrid.getVisibleColumnsMap(context);
 
     function generateFieldRanges(e: MouseEvent, fieldId: string, columnIndex: number): AITableGridFieldRanges {
         const defaultFieldRanges = [fieldId];
@@ -20,6 +26,20 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
         }
 
         const originFieldRanges = fieldRanges;
+
+        const fieldIndexes = fieldRanges.map((id) => fieldIndexMap!.get(id)!);
+
+        const startIdx = fieldIndexes[0];
+        const endIdx = fieldIndexes[fieldRanges.length - 1];
+        if (e.shiftKey && !fieldIndexes.includes(columnIndex)) {
+            return visibleColumns!
+                .map((column) => column._id)
+                .slice(_.min([startIdx, endIdx, columnIndex]), _.max([startIdx, endIdx, columnIndex])! + 1);
+        }
+
+        if (!e.shiftKey && columnIndex >= startIdx && columnIndex <= endIdx) {
+            return originFieldRanges;
+        }
 
         return defaultFieldRanges;
     }
@@ -35,9 +55,8 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
 
         if (isChangeColumnWidth) return;
 
-        const { fields, records } = context;
-        const firstRecord = records()[0];
-        const lastRecord = fields()[records().length - 1];
+        const firstRecord = visibleRows[0];
+        const lastRecord = visibleRows[visibleRows.length - 1];
         const _fieldRanges = generateFieldRanges(e, fieldId, columnIndex);
 
         if (!firstRecord) {
@@ -61,10 +80,12 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
 
     function handleForFillBar() {
         // Fill handler first press
+        const selectionRange = selectRanges && selectRanges[0];
+        if (!selectionRange) return;
         SelectionActions.setFillHandleStatus(context, { isActive: true });
     }
 
-    // Merge selections by shift key
+    //通过 Shift 键合并选择区域
     function combineRangeByShift(hoverCell: AITableGridCell) {
         SelectionActions.setSelection(context, {
             start: activeCell!,
@@ -73,7 +94,8 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
     }
 
     function handleForCell(e: MouseEvent, hoverCell: AITableGridCell) {
-        if (e.button === MouseDownType.Right) {
+        const cellInSelection = AIGrid.isCellInSelection(context, hoverCell);
+        if (e.button === MouseDownType.Right && cellInSelection) {
             return;
         }
         viewMouseDown(hoverCell);
@@ -84,7 +106,7 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
         SelectionActions.setActiveCell(context, hoverCell);
     }
 
-    // Expand the record, and if you click on the mask to collapse it, block its mouseDown event
+    // 展开记录，如果点击遮罩将其折叠，则阻止其鼠标按下事件
     function isClickInExpandModal(e: MouseEvent) {
         const modalRoot = document.querySelector('.ant-modal-root');
         if (modalRoot && modalRoot.contains(e.target as HTMLElement)) return true;
@@ -95,7 +117,7 @@ export const attachEvent = (context: AITableGridContext, e: AITableAttachEvent) 
         if (isClickInExpandModal(e)) return;
         if (isOperateHead) return;
         if (getParentNodeByClass(e.target as HTMLElement, 'hideenFieldItem')) return;
-        // Determining whether a click is a scrollbar in DOM mode
+        // 确定在 DOM 模式下的一次点击是否是滚动条
         // const gridContainer = document.getElementById(DATASHEET_ID.DOM_CONTAINER);
         // const verticalScrollBar = gridContainer?.nextSibling;
         // const horizontalScrollBar = verticalScrollBar?.nextSibling;

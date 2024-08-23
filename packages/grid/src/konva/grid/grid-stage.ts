@@ -3,6 +3,7 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { DEFAULT_POINT_POSITION, GRID_BLANK, GRID_GROUP_OFFSET, GRID_ROW_HEAD_WIDTH } from '../constants';
 import { gridMouseEvent } from '../core/mouse-event';
 import { AITableKonvaGridStage } from '../interface/view';
+import { getTargetName } from '../utils/helper';
 import { createGrid } from './create-grid';
 
 export const getCellOffsetLeft = (depth: number) => {
@@ -21,15 +22,15 @@ export const isWithinFrozenColumnBoundary = (x: number, depth: number, frozenCol
 Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableKonvaGridStage) => {
-    const { context, instance, scrollState, offsetX = 0, linearRows } = config;
-    const { aiTable, fields, records, pointPosition } = context;
+    const { context, instance, offsetX = 0 } = config;
+    const { scrollState, linearRows, setPointPosition } = context;
     const { scrollTop, scrollLeft } = scrollState;
     const { rowCount, columnCount, frozenColumnCount, containerWidth, containerHeight, frozenColumnWidth } = instance;
 
     // 获取要渲染的垂直可见区域
     const getVerticalRangeInfo = () => {
-        const startIndex = instance.getRowStartIndex(scrollTop);
-        const stopIndex = instance.getRowStopIndex(startIndex, scrollTop);
+        const startIndex = instance.getRowStartIndex(scrollTop!);
+        const stopIndex = instance.getRowStopIndex(startIndex, scrollTop!);
 
         return {
             rowStartIndex: Math.max(0, startIndex),
@@ -39,8 +40,8 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
 
     // 获取要渲染的水平可见区域
     const getHorizontalRangeInfo = () => {
-        const startIndex = instance.getColumnStartIndex(scrollLeft);
-        const stopIndex = instance.getColumnStopIndex(startIndex, scrollLeft);
+        const startIndex = instance.getColumnStartIndex(scrollLeft!);
+        const stopIndex = instance.getColumnStopIndex(startIndex, scrollLeft!);
 
         return {
             columnStartIndex: Math.max(frozenColumnCount - 1, startIndex),
@@ -51,21 +52,15 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
     const { rowStartIndex, rowStopIndex } = getVerticalRangeInfo();
     const { columnStartIndex, columnStopIndex } = getHorizontalRangeInfo();
 
-    // Get the prefix targetName
-    const getTargetName = (targetName?: string | null) => {
-        if (targetName == null || targetName === '') return GRID_BLANK;
-        return targetName.split('-')[0];
-    };
-
     const getMousePosition = (x: number, y: number, _targetName?: string) => {
         if (x < offsetX) {
             return DEFAULT_POINT_POSITION;
         }
-        const offsetTop = scrollTop + y;
+        const offsetTop = scrollTop! + y;
         const rowIndex = instance.getRowStartIndex(offsetTop);
         const depth = linearRows[rowIndex]?.depth;
         const realX = x - offsetX;
-        const offsetLeft = isWithinFrozenColumnBoundary(realX, depth, frozenColumnWidth) ? realX : scrollLeft + realX;
+        const offsetLeft = isWithinFrozenColumnBoundary(realX, depth, frozenColumnWidth) ? realX : scrollLeft! + realX;
         const columnIndex = instance.getColumnStartIndex(offsetLeft);
         const targetName = getTargetName(_targetName);
         return {
@@ -82,13 +77,21 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
 
     const setImmediatePointPosition = (e: KonvaEventObject<MouseEvent>) => {
         const targetName = e.target.name();
-        if (pointPosition() == null) return;
-        const { x, y } = pointPosition();
+        const pos = e.target.getStage()!.getPointerPosition();
+        if (pos == null) return;
+        const { x, y } = pos;
         const curMousePosition = getMousePosition(x, y, targetName);
-        pointPosition.set(curMousePosition);
+        setPointPosition(curMousePosition);
     };
 
-    const { onMouseDown, onMouseUp, onMouseMove, onClick, onTap } = gridMouseEvent({
+    const {
+        onTap,
+        onClick,
+        onMouseUp,
+        onMouseDown,
+        handleMouseStyle,
+        onMouseMove: onGridMouseMove
+    } = gridMouseEvent({
         context,
         instance,
         rowStartIndex,
@@ -107,20 +110,47 @@ export const createGridStage = (config: AITableKonvaGridStage) => {
         listening: true,
         draggable: false
     });
+
+    /**
+     * 处理鼠标移动事件
+     */
+    let wheelingRef: number | null = null;
+    const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
+        if (wheelingRef) return;
+        wheelingRef = window.requestAnimationFrame(() => {
+            const targetName = e.target.name();
+            const pos = stage?.getPointerPosition();
+            if (pos == null) return;
+            const { x, y } = pos;
+            const curMousePosition = getMousePosition(x, y, targetName);
+            // 处理鼠标样式
+            handleMouseStyle(curMousePosition.realTargetName);
+            onGridMouseMove(e);
+            setPointPosition(curMousePosition);
+            wheelingRef = null;
+        });
+    };
+
     stage.on('mousedown', (e: KonvaEventObject<MouseEvent>) => {
         setImmediatePointPosition(e);
         onMouseDown(e);
     });
-    stage.on('mouseup', onMouseUp);
-    stage.on('mousemove', onMouseMove);
-    stage.on('click', onClick);
-    stage.on('tap', onTap);
+    stage.on('mouseup', (e: KonvaEventObject<MouseEvent>) => {
+        onMouseUp(e);
+    });
+    stage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
+        onMouseMove(e);
+    });
+    stage.on('click', (e: KonvaEventObject<MouseEvent>) => {
+        onClick(e);
+    });
+    stage.on('tap', (e: KonvaEventObject<MouseEvent>) => {
+        onTap(e);
+    });
 
     const grid = createGrid({
         context,
         instance,
-        linearRows,
-        scrollState,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,

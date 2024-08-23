@@ -58,7 +58,7 @@ export class CellHelper extends KonvaDrawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, cellValue, field, columnWidth, rowHeightLevel, style } = render;
+        const { x, y, cellValue, field, columnWidth, rowHeightLevel, isActive, style } = render;
 
         let renderText: string | null = cellValue;
 
@@ -86,14 +86,14 @@ export class CellHelper extends KonvaDrawer {
             y: renderY,
             text: renderText,
             maxWidth: textMaxWidth,
-            maxRow: getMaxLine(rowHeightLevel),
+            maxRow: isActive ? Infinity : getMaxLine(rowHeightLevel),
             lineHeight: 24,
             textAlign,
             fillStyle: color,
             fontWeight,
             textDecoration,
             fieldType,
-            needDraw: true
+            needDraw: !isActive
         });
         textHeight = result.height;
         textData = result.data;

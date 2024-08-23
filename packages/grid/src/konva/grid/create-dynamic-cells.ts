@@ -1,18 +1,20 @@
 import {
-    AILinearRow,
-    AITable,
     AITableFieldType,
     AITableGridContext,
-    AITableRecord,
-    AITableScrollState,
     CellType,
     Coordinate,
     GRID_CELL,
-    GRID_GROUP_OFFSET
+    GRID_CELL_FILL_HANDLER,
+    GRID_FILL_HANDLER_SIZE,
+    GRID_GROUP_OFFSET,
+    MouseDownType
 } from '@ai-table/grid';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { isEqual } from 'lodash';
 import { CellValue } from '../components/cell/cell';
+import { Range } from '../core/range';
+import { AIGrid } from '../interface/table';
 import { getCellHeight } from '../utils/calc';
 import { cellHelper } from '../utils/cell-helper';
 import { generateTargetName } from '../utils/helper';
@@ -42,8 +44,6 @@ interface AIGridDynamicCells {
     rowStopIndex: number;
     columnStartIndex: number;
     columnStopIndex: number;
-    scrollState: AITableScrollState;
-    linearRows: AILinearRow[];
 }
 
 /**
@@ -64,15 +64,17 @@ export const getCellHorizontalPosition = (props: { depth: number; columnWidth: n
 };
 
 export const createDynamicCells = (props: AIGridDynamicCells) => {
-    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, scrollState, linearRows } = props;
-    const { aiTable, fields, records, activeCellBound, pointPosition } = context;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = props;
+    const { aiTable, fields, records, activeCellBound, pointPosition, scrollState, linearRows } = context;
     const { rowHeight, rowHeightLevel, columnCount, rowCount, frozenColumnCount, rowInitSize } = instance;
-    const colors = AITable.getThemeColors(aiTable());
-    const activeCell = aiTable().selection().activeCell;
+    const colors = AIGrid.getThemeColors(aiTable);
+    const activeCell = AIGrid.getActiveCell(context);
+    const visibleColumns = AIGrid.getVisibleColumns(context);
+    const selectRanges = AIGrid.getSelectRanges(context);
     const { isScrolling } = scrollState;
 
-    const totalColumnCount = fields.length;
-    const activeCellHeight = activeCellBound!().height!;
+    const totalColumnCount = visibleColumns.length;
+    const activeCellHeight = activeCellBound.height;
 
     const checkIsVisible = (rowIndex: number, columnIndex: number) => {
         if (columnIndex < frozenColumnCount) return true;
@@ -90,12 +92,12 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
 
         if (activeCell != null) {
             const { recordId, fieldId } = activeCell;
-            const { rowIndex, columnIndex } = pointPosition();
+            const { rowIndex, columnIndex } = pointPosition;
             if (rowIndex != null && columnIndex != null && checkIsVisible(rowIndex, columnIndex)) {
                 const { recordId, type, depth } = linearRows[rowIndex];
 
                 if (type === CellType.Record) {
-                    const activeField = fields().find((field) => field._id === fieldId);
+                    const activeField = AIGrid.getField(context, fieldId);
                     if (activeField == null) {
                         return {
                             activedCell,
@@ -107,8 +109,7 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
                     const x = instance.getColumnOffset(columnIndex);
                     const y = instance.getRowOffset(rowIndex);
                     const columnWidth = instance.getColumnWidth(columnIndex);
-                    const rowValue = records().find((item: AITableRecord) => item._id === recordId);
-                    const cellValue = rowValue?.values[activeField._id];
+                    const cellValue = AIGrid.getCellValue(context, recordId, fieldId);
                     const isFrozenColumn = columnIndex < frozenColumnCount;
                     const { offset, width } = getCellHorizontalPosition({
                         depth,
@@ -207,12 +208,24 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
         };
     })();
 
+    /**
+     * Drag handler
+     */
+    let fillHandler = null;
+    let frozenFillHandler = null;
+
+    const onMouseDown = (e: any, field: any, isActive: any) => {
+        if (e.evt.button === MouseDownType.Right) return;
+        if (![AITableFieldType.select, AITableFieldType.member].includes(field?.type)) return;
+        // TODO: 支持编辑的字段类型
+    };
+
     const getPlaceHolderCellsByColumnIndex = (columnStartIndex: number, columnStopIndex: number) => {
         const tempCells: any[] = [];
 
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             if (columnIndex > columnCount - 1) return EMPTY_ARRAY;
-            const field = fields()[columnIndex];
+            const field = visibleColumns[columnIndex];
             const fieldId = field._id;
             if (field == null) return EMPTY_ARRAY;
             const x = instance.getColumnOffset(columnIndex) + 0.5;
@@ -223,6 +236,7 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
 
                 const row = linearRows[rowIndex];
                 const { recordId, type, depth } = row;
+                if (type !== CellType.Record) continue;
 
                 const y = instance.getRowOffset(rowIndex) + 0.5;
                 const { width, offset } = getCellHorizontalPosition({
@@ -231,23 +245,24 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
                     columnIndex,
                     columnCount
                 });
+                const isActive = isEqual(activeCell, { fieldId, recordId });
                 let height = rowHeight;
 
-                if (true) {
+                if (isActive) {
                     height = getCellHeight({
                         field,
                         rowHeight,
                         activeHeight: activeCellHeight,
-                        isActive: true
+                        isActive
                     });
                 }
 
                 const rect = new Konva.Rect({
+                    key: `placeholder-cell-${fieldId}-${recordId}`,
                     name: generateTargetName({
                         targetName: GRID_CELL,
                         fieldId,
-                        recordId,
-                        mouseStyle: 'pointer'
+                        recordId
                     }),
                     x: x + offset,
                     y,
@@ -258,13 +273,12 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
                     hitStrokeWidth: 0,
                     transformsEnabled: 'position',
                     perfectDrawEnabled: false,
-                    shadowEnabled: false,
-                    listening: false
+                    shadowEnabled: false
                 });
                 rect.on('dblclick', (e: KonvaEventObject<MouseEvent>) => {});
-                rect.on('mousedown', (e: KonvaEventObject<MouseEvent>) => {});
-                rect.on('tap', (e: KonvaEventObject<MouseEvent>) => {});
-                tempCells.push(rect);
+                rect.on('mousedown', (e: KonvaEventObject<MouseEvent>) => onMouseDown(e, field, isActive));
+                rect.on('tap', (e: KonvaEventObject<MouseEvent>) => onMouseDown(e, field, isActive));
+                tempCells.unshift(rect);
             }
         }
         return tempCells;
@@ -280,8 +294,72 @@ export const createDynamicCells = (props: AIGridDynamicCells) => {
         return getPlaceHolderCellsByColumnIndex(0, frozenColumnCount - 1);
     })();
 
+    if (selectRanges.length) {
+        const selectionRange = selectRanges[0];
+        if (selectionRange != null) {
+            const fillHandleCellIndex = Range.bindModel(selectionRange).getUIIndexRange(context);
+            const { min: recordMinIndex, max: recordMaxIndex } = fillHandleCellIndex?.record || {
+                min: null,
+                max: null
+            };
+            const { min: fieldMinIndex, max: fieldMaxIndex } = fillHandleCellIndex?.field || {
+                min: null,
+                max: null
+            };
+            if (recordMaxIndex != null && !isNaN(recordMaxIndex) && fieldMaxIndex != null && !isNaN(fieldMaxIndex)) {
+                const maxIndexColumn = visibleColumns[fieldMaxIndex];
+                if (!maxIndexColumn) return;
+                const { fieldId } = maxIndexColumn;
+                const maxIndexField = AIGrid.getField(context, fieldId);
+                const isCellEditable = false;
+                // 计算字段不呈现拖动处理程序；
+                if (isCellEditable) {
+                    const x = instance.getColumnOffset(fieldMaxIndex);
+                    const y = instance.getRowOffset(recordMaxIndex);
+                    const isSingleCell = recordMinIndex === recordMaxIndex && fieldMinIndex === fieldMaxIndex;
+                    const activeField = AIGrid.getField(context, activeCell!.fieldId);
+                    const cellHeight = getCellHeight({
+                        field: activeField,
+                        rowHeight,
+                        activeHeight: activeCellBound.height,
+                        isActive: isSingleCell
+                    });
+                    const columnWidth = instance.getColumnWidth(fieldMaxIndex);
+                    const { depth } = linearRows[recordMaxIndex];
+                    const { width, offset } = getCellHorizontalPosition({
+                        depth,
+                        columnWidth,
+                        columnIndex: fieldMaxIndex,
+                        columnCount: totalColumnCount
+                    });
+                    const currentHandler = new Konva.Rect({
+                        name: GRID_CELL_FILL_HANDLER,
+                        x: x - GRID_FILL_HANDLER_SIZE / 2 - 0.5 + width + offset,
+                        y: y + cellHeight - GRID_FILL_HANDLER_SIZE / 2 - 0.5,
+                        width: GRID_FILL_HANDLER_SIZE,
+                        height: GRID_FILL_HANDLER_SIZE,
+                        stroke: colors.primaryColor,
+                        strokeWidth: 0.5
+                    });
+
+                    // select section with workdoc field cannot be filled
+                    let selectWithWorkdocField = false;
+                    if (selectWithWorkdocField) {
+                        fillHandler = null;
+                    } else if (fieldMaxIndex < frozenColumnCount) {
+                        frozenFillHandler = currentHandler;
+                    } else {
+                        fillHandler = currentHandler;
+                    }
+                }
+            }
+        }
+    }
+
     return {
         ...activeCellMap,
+        fillHandler,
+        frozenFillHandler,
         placeHolderCells,
         frozenPlaceHolderCells
     };

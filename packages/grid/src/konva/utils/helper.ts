@@ -1,3 +1,4 @@
+import { GRID_BLANK } from '../constants';
 import { GRID_GROUP_OFFSET, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
 
 /**
@@ -5,7 +6,7 @@ import { GRID_GROUP_OFFSET, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
  */
 export const generateTargetName = ({ targetName, fieldId, recordId, mouseStyle }: any) => {
     const flag = '$';
-    return `${targetName}-${fieldId || flag}-${recordId || flag}-${mouseStyle || flag}`;
+    return `${targetName}.${fieldId || flag}.${recordId || flag}.${mouseStyle || flag}`;
 };
 
 /**
@@ -22,7 +23,7 @@ export const getDetailByTargetName = (_targetName: string | null) => {
     }
 
     const flag = '$';
-    const [targetName, fieldId, recordId, mouseStyle] = _targetName.split('-');
+    const [targetName, fieldId, recordId, mouseStyle] = _targetName.split('.');
     return {
         targetName,
         fieldId: fieldId === flag ? null : fieldId,
@@ -74,3 +75,29 @@ export function getParentNodeByClass(element: HTMLElement, className: string | s
     }
     return getParentNodeByOneClass(element, className);
 }
+
+/**
+ * [1,2,3,6,7,11,13,14] => [[1,2,3],[6,7],[11],[13,14]
+ * @param list
+ */
+export const groupArray = (list: number[]) => {
+    const breaks: number[] = [0];
+    list.forEach((currentRowIndex, index) => {
+        const nextRowIndex = list[index + 1];
+        if (nextRowIndex && nextRowIndex - currentRowIndex > 1) {
+            breaks.push(index + 1);
+        }
+    });
+    breaks.push(list.length);
+    const res: number[][] = [];
+    while (breaks.length > 1) {
+        res.push(list.slice(breaks[0], breaks[1]));
+        breaks.shift();
+    }
+    return res;
+};
+
+export const getTargetName = (targetName?: string | null) => {
+    if (targetName == null || targetName === '') return GRID_BLANK;
+    return targetName.split('-')[0];
+};

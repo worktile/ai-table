@@ -12,7 +12,8 @@ import {
     AITableFieldType,
     AITableGrid,
     AITableQueries,
-    AITableRecord
+    AITableRecord,
+    getDefaultRecord
 } from '@ai-table/grid';
 import { AITableViewField, AITableViewRecord, AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/shared';
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
@@ -169,6 +170,10 @@ export class DemoCanvas implements OnInit, AfterViewInit {
             type: AITableFieldType.text
         };
         Actions.addField(this.aiTable, field, [this.aiTable.fields().length]);
+    }
+
+    addRow() {
+        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiTable.fields()), [this.aiTable.records().length]);
     }
 
     editField() {

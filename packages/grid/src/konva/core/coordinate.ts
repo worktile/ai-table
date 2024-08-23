@@ -5,8 +5,8 @@ import { AITableCoordinate, CellMetaData, CellMetaDataMap, IndicesMap, ItemType 
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础
  */
 export class Coordinate {
-    protected _rowHeight: number;
-    protected _columnWidth: number;
+    private _rowHeight: number;
+    private _columnWidth: number;
     public rowCount: number;
     public columnCount: number;
     public containerWidth: number;

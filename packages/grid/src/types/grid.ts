@@ -1,5 +1,6 @@
 import { Dictionary } from 'ngx-tethys/types';
 import { AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITableGridCell, AITableGridFieldRanges, AITableGridFillHandleStatus, AITableGridRange, AITableGridRecordRanges } from '../konva';
 import { AITableFieldMenuItem } from './field';
 
 export interface AITableGridCellRenderSchema {
@@ -37,48 +38,4 @@ export interface AITableUserInfo {
 
 export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
-}
-
-export interface AITableGridCell {
-    /**
-     * cell row UUID
-     */
-    recordId: string;
-    /**
-     * cell column UUID
-     */
-    fieldId: string;
-}
-
-export interface AITableGridRange {
-    start: AITableGridCell;
-    end: AITableGridCell;
-}
-
-export interface AITabelGridIndexRange {
-    record: {
-        min: number;
-        max: number;
-    };
-    field: {
-        min: number;
-        max: number;
-    };
-}
-
-export type AITableGridRecordRanges = string[];
-
-export type AITableGridFieldRanges = string[];
-
-export enum AITableGridFillDirection {
-    Left = 'left',
-    Right = 'right',
-    Below = 'below',
-    Top = 'top'
-}
-
-export interface AITableGridFillHandleStatus {
-    isActive: boolean;
-    direction?: AITableGridFillDirection;
-    fillRange?: AITableGridRange;
 }

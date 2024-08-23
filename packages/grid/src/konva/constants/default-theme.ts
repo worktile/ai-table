@@ -14,12 +14,14 @@ export const DefaultTheme = {
         highBg: '#FFFFFF',
         bgBglessHoverSolid: 'rgba(243, 243, 243, 1)',
         black500: '#8C8C8C',
+        black300: '#C9C9C9',
         lowestBg: '#F5F7FA',
         white: '#FFFFFF',
         borderCommonHover: 'rgba(206, 211, 219, 1)',
         borderGridVertical: 'rgba(225, 228, 234, 1)',
         bgBrandLightDefaultSolid: 'rgba(216, 210, 252, 1)',
         warnLight: '',
-        rowSelectedBgSolid: ''
+        rowSelectedBgSolid: '',
+        indigo100: '#C2D3FF'
     }
 };

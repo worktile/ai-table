@@ -1,18 +1,19 @@
-import { AITable } from '@ai-table/grid';
 import Konva from 'konva';
 import { FieldHead } from '../components/field-head';
 import { AITableIconType, Icon } from '../components/icon';
 import { GRID_FIELD_HEAD, GRID_FIELD_HEAD_DESC, GRID_FIELD_HEAD_MORE, GRID_FIELD_HEAD_SELECT_CHECKBOX } from '../constants/config';
 import { GRID_ICON_COMMON_SIZE, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
+import { AIGrid } from '../interface/table';
 import { AITableUseHeads } from '../interface/view';
 
 export const createHeads = (config: AITableUseHeads) => {
     const { context, instance, columnStartIndex, columnStopIndex } = config;
     const { aiTable, fields, pointPosition } = context;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
-    const colors = AITable.getThemeColors(aiTable());
-    const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition();
-    const pointFieldId = fields()[pointColumnIndex]?._id;
+    const colors = AIGrid.getThemeColors(aiTable);
+    const visibleColumns = AIGrid.getVisibleColumns(context);
+    const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
+    const pointFieldId = visibleColumns[pointColumnIndex]?._id;
 
     const getFieldHeadStatus = (fieldId: string, columnIndex: number) => {
         const iconVisible =
@@ -35,7 +36,7 @@ export const createHeads = (config: AITableUseHeads) => {
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             if (columnIndex > columnCount - 1) break;
             if (columnIndex < 0) continue;
-            const field = fields()[columnIndex];
+            const field = visibleColumns[columnIndex];
             const fieldId = field._id;
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);

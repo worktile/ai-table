@@ -70,5 +70,5 @@ export const CellValue = (config: AITableGridCellConfig) => {
         case AITableFieldType.updatedAt:
             return CellText(cellProps);
     }
-    return [];
+    return null;
 };

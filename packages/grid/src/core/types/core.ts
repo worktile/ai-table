@@ -1,4 +1,3 @@
-import { DefaultTheme } from '@ai-table/grid';
 import { WritableSignal } from '@angular/core';
 import { Id } from 'ngx-tethys/types';
 import { AITableSelection } from '../../types';
@@ -125,29 +124,3 @@ export interface AITable {
     onChange: () => void;
     apply: (action: AITableAction) => void;
 }
-
-export const AI_TABLE_TO_ELEMENT_HOST = new WeakMap<
-    AITable,
-    {
-        container: HTMLElement;
-    }
->();
-
-export const AITable = {
-    isAlive(aiTable: AITable) {
-        return true;
-    },
-    getContainer(aiTable: AITable): HTMLElement {
-        return AI_TABLE_TO_ELEMENT_HOST.get(aiTable)!.container;
-    },
-    isReadonly(aiTable: AITable): boolean {
-        return false;
-    },
-    getThemeColors(aiTable: AITable) {
-        return DefaultTheme.color;
-    },
-    getActiveCell(aiTable: AITable) {
-        const activeCell = aiTable.selection()!.activeCell;
-        return activeCell ? activeCell : null;
-    }
-};

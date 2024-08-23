@@ -1,17 +1,18 @@
-import { AITable } from '@ai-table/grid';
 import { Group } from 'konva/lib/Group';
 import { Rect } from 'konva/lib/shapes/Rect';
 import { Icon } from '../components/icon';
 import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_ICON_COMMON_SIZE } from '../constants/grid';
 import { AddOutlinedPath } from '../constants/icon';
+import { AIGrid } from '../interface/table';
 import { AITableUseGrid } from '../interface/view';
 import { createCells } from './create-cells';
 import { createDynamicCells } from './create-dynamic-cells';
 import { createHeads } from './create-heads';
 
 export const createGridContent = (config: AITableUseGrid) => {
-    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, scrollState, linearRows } = config;
-    const { aiTable, fields } = context;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { aiTable, fields, linearRows, scrollState } = context;
+    const visibleColumns = AIGrid.getVisibleColumns(context);
 
     /**
      * Field header
@@ -19,10 +20,8 @@ export const createGridContent = (config: AITableUseGrid) => {
     const { frozenFieldHead, fieldHeads } = createHeads({
         context,
         instance,
-        linearRows,
         columnStartIndex,
-        columnStopIndex,
-        scrollState
+        columnStopIndex
     });
 
     /**
@@ -34,14 +33,16 @@ export const createGridContent = (config: AITableUseGrid) => {
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
-        columnStopIndex,
-        linearRows
+        columnStopIndex
     });
 
-    function getFieldButton() {
-        const columnLength = fields().length;
+    /**
+     * 添加行按钮
+     */
+    const addFieldBtn = (() => {
+        const columnLength = visibleColumns.length;
         if (columnStopIndex !== columnLength - 1) return;
-        const colors = AITable.getThemeColors(aiTable());
+        const colors = AIGrid.getThemeColors(aiTable);
         const lastColumnOffset = instance.getColumnOffset(columnStopIndex);
         const lastColumnWidth = instance.getColumnWidth(columnStopIndex);
         const x = lastColumnOffset + lastColumnWidth;
@@ -55,7 +56,7 @@ export const createGridContent = (config: AITableUseGrid) => {
             y: 0.5,
             width: btnWidth,
             height: instance.rowInitSize,
-            cornerRadius: [0, 0],
+            cornerRadius: [0, 8, 0, 0],
             stroke: colors.sheetLineColor,
             strokeWidth: 1,
             listening: true
@@ -74,9 +75,7 @@ export const createGridContent = (config: AITableUseGrid) => {
         btnGroup.add(react);
         btnGroup.add(addIcon);
         return btnGroup;
-    }
-
-    const addFieldBtn = getFieldButton();
+    })();
 
     /**
      * Dynamic cells in active and hover states
@@ -95,12 +94,10 @@ export const createGridContent = (config: AITableUseGrid) => {
     } = createDynamicCells({
         context,
         instance,
-        linearRows,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
-        columnStopIndex,
-        scrollState
+        columnStopIndex
     }) as any;
 
     return {

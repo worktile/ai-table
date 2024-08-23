@@ -1,20 +1,12 @@
+import { AIGrid } from '@ai-table/grid';
 import Konva from 'konva';
 import { GRID_ADD_FIELD_BUTTON_WIDTH, GRID_ROW_HEAD_WIDTH } from '../constants/grid';
 import { AITableUseGrid } from '../interface/view';
 import { createGridContent } from './create-grid-content';
 
 export const createGrid = (config: AITableUseGrid) => {
-    const {
-        context,
-        instance,
-        scrollState,
-        rowStartIndex,
-        rowStopIndex,
-        columnStartIndex,
-        columnStopIndex,
-        offsetX = 0,
-        linearRows
-    } = config;
+    const { context, instance, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, offsetX = 0 } = config;
+    const { aiTable, scrollState } = context;
 
     const {
         fieldHeads,
@@ -35,14 +27,13 @@ export const createGrid = (config: AITableUseGrid) => {
     } = createGridContent({
         context,
         instance,
-        linearRows,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
-        columnStopIndex,
-        scrollState
+        columnStopIndex
     });
 
+    const colors = AIGrid.getThemeColors(aiTable);
     const { scrollTop, scrollLeft } = scrollState;
     const { frozenColumnWidth, containerWidth, containerHeight, rowInitSize } = instance;
     const frozenAreaWidth = GRID_ROW_HEAD_WIDTH + frozenColumnWidth;
@@ -51,7 +42,7 @@ export const createGrid = (config: AITableUseGrid) => {
     const addFieldBtnWidth = GRID_ADD_FIELD_BUTTON_WIDTH;
     const cellGroupClipWidth = Math.min(
         containerWidth - frozenAreaWidth,
-        addFieldBtnWidth + lastColumnOffset + lastColumnWidth - scrollLeft - frozenAreaWidth
+        addFieldBtnWidth + lastColumnOffset + lastColumnWidth - scrollLeft! - frozenAreaWidth
     );
 
     const layer = new Konva.Layer();
@@ -65,10 +56,10 @@ export const createGrid = (config: AITableUseGrid) => {
     const gridView = new Konva.Group({
         x: offsetX
     });
-    const gridContent = new Konva.Group({
+    const frozenContainer = new Konva.Group({
         offsetY: scrollTop
     });
-    const gridCommonCellContainer = new Konva.Group({
+    const gridCommonContainer = new Konva.Group({
         clipX: frozenAreaWidth + 1,
         clipY: 0,
         clipWidth: cellGroupClipWidth,
@@ -81,21 +72,12 @@ export const createGrid = (config: AITableUseGrid) => {
     const gridCommonHeadContainer = new Konva.Group({
         offsetX: scrollLeft
     });
-
-    gridCommonRowContainer.add(cells);
-    gridCommonHeadContainer.add(...fieldHeads);
-    if (addFieldBtn) {
-        gridCommonHeadContainer.add(addFieldBtn);
-    }
-    gridCommonCellContainer.add(gridCommonRowContainer);
-    gridCommonCellContainer.add(gridCommonRowContainer);
-    gridCommonCellContainer.add(gridCommonHeadContainer);
-    gridContent.add(frozenCells);
-    gridView.add(gridContent);
-
-    gridView.add(...frozenFieldHead);
-    gridView.add(gridCommonCellContainer);
-
+    const contextBg = new Konva.Rect({
+        width: 8,
+        height: 8,
+        fill: colors.lowestBg,
+        listening: false
+    });
     const attachContainer = new Konva.Group({
         clipX: frozenAreaWidth - 1,
         clipY: rowInitSize - 1,
@@ -106,42 +88,81 @@ export const createGrid = (config: AITableUseGrid) => {
         offsetX: scrollLeft,
         offsetY: scrollTop
     });
+    const frozenAttachContainer = new Konva.Group({
+        clipX: 0,
+        clipY: rowInitSize - 1,
+        clipWidth: frozenAreaWidth + 4,
+        clipHeight: containerHeight - rowInitSize
+    });
+    const frozenAttachChildContainer = new Konva.Group({
+        offsetY: scrollTop
+    });
 
-    attachContainer.add(attachChildContainer);
-    attachChildContainer.add(...placeHolderCells);
+    // 冻结列(首列)
+    frozenContainer.add(frozenCells);
+    // frozenContainer.add(...otherRows);
+    // frozenContainer.add(...hoverRowHeadOperation);
+    // frozenContainer.add(...frozenGroupStats);
+    // 冻结列单元格填充
+    frozenContainer.add(...frozenPlaceHolderCells);
+    // frozenContainer.add(frozenCollaboratorBorders);
+    frozenActivedCell && frozenContainer.add(...frozenActivedCell);
+    // frozenContainer.add(frozenDateAlarms);
+    // frozenContainer.add(frozenDateAddAlarm);
 
-    if (activedCell) {
-        attachChildContainer.add(activedCell);
+    gridView.add(frozenContainer);
+    gridView.add(contextBg);
+    gridView.add(...frozenFieldHead);
+    // gridView.add(...frozenOpacityLines);
+    gridView.add(gridCommonContainer);
+    gridCommonContainer.add(gridCommonRowContainer);
+    gridCommonContainer.add(gridCommonHeadContainer);
+
+    // 属性列 head 父级 group
+
+    // 单元格父级 group
+    gridCommonRowContainer.add(cells);
+
+    gridCommonHeadContainer.add(...fieldHeads);
+    // gridCommonHeadContainer.add(...opacityLines);
+    // 添加属性列
+    if (addFieldBtn) {
+        gridCommonHeadContainer.add(addFieldBtn);
     }
-    if (activeCellBorder) {
-        attachChildContainer.add(activeCellBorder);
-    }
 
-    gridView.add(attachContainer);
     gridContainer.add(gridView);
     grid.add(gridContainer);
     layer.add(grid);
 
     /**
      * <layer>
-     *  <grid>
+     *    <grid>
      *      <gridContainer>
      *          <gridView>
-     *              <gridContent>
-     *                  <frozenCells>
-     *              </gridContent>
-     *              { ...frozenFieldHeads }
-     *              <gridCommonCellContainer>
+     *              <frozenContainer>
+     *                  { ...frozenFieldHeads }
+     *                  <frozenCells />
+     *                 <...frozenPlaceHolderCells />
+     *              </frozenContainer>
+     *
+     *              <gridCommonContainer>
      *                  <gridCommonRowContainer>
-     *                      <cells>
+     *                      <cells />
      *                  </gridCommonRowContainer>
      *                  <gridCommonHeadContainer>
      *                      { ...fieldHeads }
      *                  </gridCommonHeadContainer>
-     *              </gridCommonCellContainer>
+     *              </gridCommonContainer>
+     *              <attachContainer>
+     *                  <attachChildContainer>
+     *                      { ...placeHolderCells }
+     *                      { activedCell }
+     *                      { activeCellBorder }
+     *                  </attachChildContainer>
+     *              </attachChildContainer>
      *          </gridView>
      *      </gridContainer>
-     *  </grid>
+     *    </grid>
      * </layer>
      */
     return layer;

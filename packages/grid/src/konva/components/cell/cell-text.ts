@@ -1,14 +1,16 @@
-import { AddOutlinedPath, AITable, GRID_CELL, GRID_CELL_VALUE_PADDING } from '@ai-table/grid';
+import { AddOutlinedPath, GRID_CELL, GRID_CELL_VALUE_PADDING } from '@ai-table/grid';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { AIGrid } from '../../interface/table';
 import { generateTargetName } from '../../utils/helper';
 import { Icon } from '../icon';
 import { Text } from '../text';
 import type { AITableGridCellConfig } from './cell';
+import { CellScrollContainer } from './cell-scroll-container';
 
 export const CellText = (config: AITableGridCellConfig) => {
     const { context, x, y, recordId, field, rowHeight, columnWidth, isActive, cellValue, toggleEdit, editable, renderData } = config;
-    const { aiTable, fields, records } = context;
-    const colors = AITable.getThemeColors(aiTable());
+    const { aiTable } = context;
+    const colors = AIGrid.getThemeColors(aiTable);
     const { type: fieldType, id: fieldId } = field;
     const name = generateTargetName({
         targetName: GRID_CELL,
@@ -20,7 +22,39 @@ export const CellText = (config: AITableGridCellConfig) => {
     const restIconProps = {};
     let renders = [];
 
+    // 鼠标移入时展示完整内容
+    const onMouseEnter = (item: { offsetX: number; offsetY: number; text: string; width: number }) => {
+        //  if (field.type === FieldType.URL && !!cellValue) {
+        //      const { offsetX: innerX, offsetY: innerY, width } = item;
+        //      const text = Field.bindModel(field).cellValueToString(cellValue as any) || '';
+        //      setTooltipInfo({
+        //          title: text,
+        //          visible: true,
+        //          x: x + innerX,
+        //          y: y + innerY,
+        //          width,
+        //          height: 1
+        //      });
+        //  }
+    };
+
     const renderText = () => {
+        // if (renderContent == null) {
+        //     const icon = Icon({
+        //         name,
+        //         x: columnWidth - GRID_ICON_COMMON_SIZE - GRID_CELL_VALUE_PADDING - 4,
+        //         y: 24 - GRID_ICON_COMMON_SIZE,
+        //         backgroundWidth: 18,
+        //         backgroundHeight: 16,
+        //         background: colors.defaultBg,
+        //         data: enhanceTextIconMap[fieldType],
+        //         transformsEnabled: 'all',
+        //         listening: true,
+        //     });
+        //     icon.on('click', () => setActiveUrlAction(true));
+        //     icon.on('tap', () => setActiveUrlAction(true));
+        //     return [icon];
+        // };
         const { width, height, text: entityText, textData, style } = renderContent;
         const linkEnable = style?.textDecoration === 'underline';
         const commonProps = {
@@ -41,23 +75,28 @@ export const CellText = (config: AITableGridCellConfig) => {
                 text: entityText,
                 wrap: 'word',
                 fill: colors.firstLevelText,
+                listening: true,
                 ...commonProps
             });
             return [text];
         } else {
             const texts = textData.map((item: any, index: number) => {
                 const { offsetX, offsetY, text } = item;
+                const listening = linkEnable;
 
-                return Text({
+                const textNode = Text({
                     x: offsetX + GRID_CELL_VALUE_PADDING,
                     y: offsetY + 4.5,
                     heigh: 24,
                     text,
-                    listening: false,
-                    textDecoration: '',
-                    fill: colors.firstLevelText,
+                    listening,
+                    textDecoration: listening ? 'underline' : '',
+                    fill: listening ? colors.primaryColor : colors.firstLevelText,
                     ...commonProps
                 });
+                // textNode.on('mouseenter', () => onMouseEnter(item));
+                // textNode.on('mouseout', () => clearTooltipInfo(item));
+                return textNode;
             });
             return texts;
         }
@@ -83,5 +122,18 @@ export const CellText = (config: AITableGridCellConfig) => {
     if (isActive) {
         renders.push(...renderText());
     }
-    return renders;
+    const container = CellScrollContainer(
+        {
+            context,
+            x,
+            y,
+            columnWidth,
+            rowHeight,
+            fieldId,
+            recordId,
+            renderData
+        },
+        renders
+    );
+    return container;
 };

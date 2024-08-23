@@ -1,6 +1,6 @@
-import { AITable } from '@ai-table/grid';
-import { signal } from '@angular/core';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { isEqual } from 'lodash';
+import SelectionActions from '../actions/selection';
 import {
     GRID_BOTTOM_STAT,
     GRID_BOTTOM_STAT_HEIGHT,
@@ -26,6 +26,7 @@ import {
     GRID_ROW_SELECT_CHECKBOX,
     MouseDownType
 } from '../constants';
+import { AIGrid } from '../interface/table';
 import { AITableGridContext, AITablePointPosition } from '../interface/view';
 import { setMouseStyle } from '../transforms/view';
 import { getDetailByTargetName } from '../utils/helper';
@@ -56,15 +57,20 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
         columnStopIndex,
         scrollTop
     } = config;
-    const { aiTable, fields, records, pointPosition, isCellDown, canAppendRow, activeUrlAction } = context;
+    const { aiTable, pointPosition, isCellDown, canAppendRow, linearRows, setCellDown, setCanAppendRow } = context;
     const { rowInitSize, frozenColumnWidth, containerWidth, containerHeight } = instance;
-    const { x: pointX, y: pointY, targetName, realTargetName, rowIndex: pointRowIndex, columnIndex: pointColumnIndex } = pointPosition();
+    const { x: pointX, y: pointY, targetName, realTargetName, rowIndex: pointRowIndex, columnIndex: pointColumnIndex } = pointPosition;
+    const visibleColumns = AIGrid.getVisibleColumns(context);
+    const visibleRows = AIGrid.getVisibleRows(context);
+    const recordRanges = AIGrid.getSelectionRecordRanges(context);
+    const visibleRowsIndexMap = AIGrid.getPureVisibleRowsIndexMap(context);
+    const fillHandleStatus = AIGrid.getFillHandleStatus(context);
+    const pointRecordId = linearRows[pointRowIndex]?.recordId;
+    const pointFieldId = visibleColumns[pointColumnIndex]?._id;
+    let isFillStart = false;
     const { handleForHeader, handleForCell, handleForFillBar, handleForOtherArea } = attachEvent(context, {
         viewMouseDown: () => {}
     });
-    const pointRecordId = records()[pointRowIndex]?._id;
-    const pointFieldId = fields()[pointColumnIndex]?._id;
-    const isFillStart = signal<boolean>(false);
 
     /**
      * 激活单元格操作
@@ -81,10 +87,10 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
                   }
                 : null;
         if (currentActiveCell) {
-            console.log('active cell:', currentActiveCell);
-            // Prevent multiple activation of cell events
-            const activeCell = aiTable().selection().activeCell;
-            if (currentActiveCell === activeCell) return;
+            setCellDown(true);
+            // 防止单元格事件的多次激活
+            const activeCell = AIGrid.getActiveCell(context);
+            if (isEqual(currentActiveCell, activeCell)) return;
             handleForCell(mouseEvent, currentActiveCell);
         }
     };
@@ -93,8 +99,8 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
      * 添加行操作
      */
     const addRow = (recordId: string) => {
-        const rowCount = fields().length;
-        const finalRecordId = rowCount > 0 ? records()[rowCount - 1]._id : '';
+        const rowCount = visibleRows.length;
+        const finalRecordId = rowCount > 0 ? visibleRows[rowCount - 1]._id : '';
         console.log('add row:', finalRecordId);
     };
 
@@ -103,7 +109,23 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
      */
     const selectRow = (mouseEvent: MouseEvent, recordId: string) => {
         if (!recordId) return;
-        console.log('select row:', recordId);
+        // TODO: 选择行操作
+        const defaultFn = () => {};
+
+        if (mouseEvent.shiftKey) {
+            if (!recordRanges || recordRanges.length === 0) return defaultFn();
+            if (recordRanges.includes(recordId)) return;
+
+            const rowIndexs = recordRanges.map((id) => visibleRowsIndexMap.get(id)!).sort((a, b) => a - b);
+            const checkedRowIndex = visibleRowsIndexMap.get(pointRecordId)!;
+            const [startIndex, endIndex] = [
+                Math.min(checkedRowIndex, rowIndexs[0]),
+                Math.max(checkedRowIndex, rowIndexs[rowIndexs.length - 1])
+            ];
+            // TODO: 设置行选区 setRecordRange
+            // return StoreActions.setRecordRange(datasheetId, visibleRecordIds.slice(startIndex, endIndex + 1));
+        }
+        return defaultFn();
     };
 
     /**
@@ -111,6 +133,9 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
      */
     const selectAll = () => {
         console.log('select all');
+        const recordIds = recordRanges?.length === visibleRows.length ? [] : visibleRows.map((r) => r._id);
+        // TODO: 设置行选区
+        // return StoreActions.setRecordRange(recordIds);
     };
 
     /**
@@ -121,7 +146,6 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
         const toBottomSpacing = containerHeight - pointY - GRID_BOTTOM_STAT_HEIGHT;
         const toLeftSpacing = pointX - GRID_ROW_HEAD_WIDTH - frozenColumnWidth - offsetX;
         const toRightSpacing = containerWidth ? containerWidth - pointX - offsetX : Infinity;
-        console.log('scroll by position:');
     };
 
     const onMouseDown = (e: KonvaEventObject<MouseEvent>) => {
@@ -133,7 +157,7 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
             case GRID_FIELD_HEAD: {
                 mouseEvent.preventDefault();
                 if (!targetFieldId) return;
-                canAppendRow.set(false);
+                setCanAppendRow(false);
                 // todo: 设置选中整列
                 return handleForHeader(mouseEvent, context, targetFieldId, pointColumnIndex, false);
             }
@@ -141,28 +165,28 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
             case GRID_CELL_FILL_HANDLER: {
                 if (mouseEvent.button === MouseDownType.Right) return;
                 // todo: 填充开始
-                isFillStart.set(true);
-                canAppendRow.set(true);
+                isFillStart = true;
+                setCanAppendRow(true);
                 return handleForFillBar();
             }
             // 激活的单元格
             case GRID_DATE_CELL_CREATE_ALARM:
             case GRID_DATE_CELL_ALARM:
             case GRID_CELL: {
-                canAppendRow.set(false);
+                setCanAppendRow(false);
                 return activeGridCell(mouseEvent, _targetName, pointRowIndex, pointColumnIndex);
             }
             case GRID_ROW_HEAD:
             case GRID_ROW_SELECT_CHECKBOX:
             case GRID_FIELD_HEAD_SELECT_CHECKBOX: {
                 if (mouseEvent.button === MouseDownType.Right) return;
-                canAppendRow.set(false);
+                setCanAppendRow(false);
                 // todo: 编辑位置
                 return;
             }
             default: {
                 if (targetName !== GRID_ROW_ADD_BUTTON) {
-                    canAppendRow.set(false);
+                    setCanAppendRow(false);
                 }
                 // 点击其他区域取消选区、选中
                 return handleForOtherArea(mouseEvent, false);
@@ -173,26 +197,52 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
     const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
         e.evt.preventDefault();
 
-        const activeCell = AITable.getActiveCell(aiTable());
+        const activeCell = AIGrid.getActiveCell(context);
         if (activeCell) {
             const { recordId: activeRecordId, fieldId: activeFieldId } = activeCell;
             const { recordId: targetRecordId, fieldId: targetFieldId } = getDetailByTargetName(realTargetName);
             if (activeRecordId === targetRecordId && activeFieldId === targetFieldId) return;
-            // todo: 拖选单元格操作
+            // 拖选单元格操作
+            if (isCellDown) {
+                scrollByPosition();
+                return SelectionActions.setSelection(context, {
+                    start: activeCell,
+                    end: {
+                        recordId: pointRecordId,
+                        fieldId: pointFieldId
+                    }
+                });
+            }
+            // Drag-and-drop handle operation
+            if (fillHandleStatus?.isActive && isFillStart) {
+                scrollByPosition();
+                return SelectionActions.setFillHandleStatus(context, {
+                    isActive: true,
+                    hoverCell: {
+                        recordId: pointRecordId,
+                        fieldId: pointFieldId
+                    }
+                });
+            }
         }
     };
 
     const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
         e.evt.preventDefault();
         // 重置状态
-        isCellDown.set(false);
-        isFillStart.set(false);
+        setCellDown(false);
+        isFillStart = false;
     };
 
     const onClick = (e: KonvaEventObject<MouseEvent>) => {
         const mouseEvent = e.evt;
         mouseEvent.preventDefault();
         if (mouseEvent.button !== MouseDownType.Left) return;
+
+        if (targetName === GRID_ROW_ADD_BUTTON && !canAppendRow) {
+            setCanAppendRow(true);
+            return;
+        }
 
         switch (targetName) {
             case GRID_ROW_ADD_BUTTON: {
@@ -219,7 +269,7 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
 
         const { x, y } = pos;
         const { targetName, rowIndex, columnIndex } = getMousePosition(x, y, _targetName);
-        const pointRecordId = records()[rowIndex]?._id;
+        const pointRecordId = linearRows[rowIndex]?.recordId;
         switch (targetName) {
             case GRID_ROW_ADD_BUTTON: {
                 return addRow(pointRecordId);
@@ -235,7 +285,7 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
             }
             default: {
                 if (targetName !== GRID_ROW_ADD_BUTTON) {
-                    canAppendRow.set(true);
+                    setCanAppendRow(true);
                 }
                 // 点击其他区域取消选区、选中
                 return;
@@ -251,14 +301,14 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
      */
     const handleMouseStyle = (realTargetName: string) => {
         const { targetName, mouseStyle } = getDetailByTargetName(realTargetName);
-        if (mouseStyle) return setMouseStyle(aiTable(), mouseStyle);
+        if (mouseStyle) return setMouseStyle(aiTable, mouseStyle);
 
         switch (targetName) {
             case GRID_CELL_FILL_HANDLER: {
-                return setMouseStyle(aiTable(), 'crosshair');
+                return setMouseStyle(aiTable, 'crosshair');
             }
             case GRID_FIELD_HEAD_OPACITY_LINE: {
-                return setMouseStyle(aiTable(), 'col-resize');
+                return setMouseStyle(aiTable, 'col-resize');
             }
             case GRID_DATE_CELL_ALARM:
             case GRID_DATE_CELL_CREATE_ALARM:
@@ -275,10 +325,10 @@ export const gridMouseEvent = (config: AITableGridMouseEvent) => {
             case GRID_BOTTOM_STAT:
             case GRID_GROUP_STAT:
             case GRID_FROZEN_SHADOW_LINE: {
-                return setMouseStyle(aiTable(), 'pointer');
+                return setMouseStyle(aiTable, 'pointer');
             }
             default:
-                return setMouseStyle(aiTable(), 'default');
+                return setMouseStyle(aiTable, 'default');
         }
     };
 

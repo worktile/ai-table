@@ -7,6 +7,7 @@ export const GRID_ROW_HEAD_WIDTH = 70; // Row head width
  * Layout
  */
 export const GRID_GROUP_OFFSET = 16; // Group Indent
+export const GRID_FILL_HANDLER_SIZE = 8; // Width and height of the fill handler
 export const GRID_BOTTOM_STAT_HEIGHT = 39; // Height of the bottom statistics column
 export const GRID_ADD_FIELD_BUTTON_WIDTH = 100; // The width of the column add button when there is no grouping
 
