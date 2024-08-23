@@ -35,7 +35,10 @@ import { AITableViewField, AITableViewRecord, applyActionOps, AIViewTable, YjsAI
     standalone: true,
     imports: [RouterOutlet, AITableGrid, ThyPopoverModule, FieldPropertyEditor, ThyAction, FormsModule, ThyInputDirective],
     templateUrl: './content.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'd-block w-100 h-100'
+    }
 })
 export class DemoTableContent {
     aiTable!: AIViewTable;

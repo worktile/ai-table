@@ -1,5 +1,6 @@
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -51,28 +52,22 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
+import { createGridStage } from './grid-renderer/create-grid-stage';
 
 @Component({
     selector: 'ai-table-grid',
-    templateUrl: './grid.component.html',
+    template: '',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid'
+        class: 'ai-table-grid d-block w-100 h-100'
     },
     imports: [
-        NgForOf,
-        NgClass,
         NgComponentOutlet,
         CommonModule,
         FormsModule,
         SelectOptionPipe,
         SelectOptionsPipe,
-        ThyTag,
-        ThyPopoverModule,
-        ThyIcon,
-        ThyRate,
-        ThyProgress,
         AITableFieldPropertyEditor,
         ThyDatePickerFormatPipe,
         ThyFlexibleText,
@@ -94,7 +89,7 @@ import { buildGridData } from './utils';
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGrid implements OnInit {
+export class AITableGrid implements OnInit, AfterViewInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
@@ -141,6 +136,21 @@ export class AITableGrid implements OnInit {
         this.initService();
         this.buildFieldMenus();
         this.subscribeEvents();
+    }
+
+    ngAfterViewInit(): void {
+        this.initGridRender();
+    }
+
+    initGridRender() {
+        const container = this.elementRef.nativeElement;
+        const gridStage = createGridStage({
+            aiTable: this.aiTable,
+            container: container,
+            width: container.offsetWidth,
+            height: container.offsetHeight
+        });
+        gridStage.draw();
     }
 
     initAITable() {
