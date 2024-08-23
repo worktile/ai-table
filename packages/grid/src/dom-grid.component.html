@@ -67,7 +67,6 @@
                             @let options = settings['options'];
                             @let optionStyle = settings['option_style'] || AITableSelectOptionStyle.tag;
                             @let isTagStyle = optionStyle === AITableSelectOptionStyle.tag;
-                            @let isPieceStyle = optionStyle === AITableSelectOptionStyle.piece;
 
                             @if (!settings['is_multiple'] && fieldValue | selectOption: options; as selectedOption) {
                                 @if (isTagStyle) {
