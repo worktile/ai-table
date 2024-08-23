@@ -138,8 +138,6 @@ export class Coordinate {
         return indexToDimensionMap[index] || { size: 0, offset: 0 };
     }
 
-    getOffset(index: number, type: AITableItemType) {}
-
     /**
      * 查找最近的单元格索引
      * 性能较差，但无论如何都可以找到
