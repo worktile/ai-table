@@ -36,8 +36,6 @@ export interface AITableReferences {
 
 export interface AITableGridOptions {
     aiTable: AITable;
-    fields: AITableField[];
-    records: AITableRecord[];
     container: HTMLDivElement;
     width: number;
     height: number;

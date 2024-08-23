@@ -1,5 +1,6 @@
 import { CommonModule, NgClass, NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -51,7 +52,7 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
 import { buildGridData } from './utils';
-import { createGrid } from './grid-renderer/create-grid';
+import { createGridStage } from './grid-renderer/create-grid-stage';
 
 @Component({
     selector: 'ai-table-grid',
@@ -88,7 +89,7 @@ import { createGrid } from './grid-renderer/create-grid';
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGrid implements OnInit {
+export class AITableGrid implements OnInit, AfterViewInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
@@ -143,10 +144,8 @@ export class AITableGrid implements OnInit {
 
     initGridRender() {
         const container = this.elementRef.nativeElement;
-        const gridStage = createGrid({
+        const gridStage = createGridStage({
             aiTable: this.aiTable,
-            fields: this.aiFields(),
-            records: this.aiRecords(),
             container: container,
             width: container.offsetWidth,
             height: container.offsetHeight

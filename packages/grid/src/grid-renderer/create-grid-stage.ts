@@ -2,7 +2,7 @@ import { Layer } from 'konva/lib/Layer';
 import { AITableGridOptions } from '../types';
 import { Stage } from 'konva/lib/Stage';
 
-export const createGrid = (config: AITableGridOptions) => {
+export const createGridStage = (config: AITableGridOptions) => {
     const gridStage = new Stage({
         container: config.container,
         width: config.width,
@@ -10,5 +10,6 @@ export const createGrid = (config: AITableGridOptions) => {
     });
     const gridLayer = new Layer();
     gridStage.add(gridLayer);
+
     return gridStage;
 };
