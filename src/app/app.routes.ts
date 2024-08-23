@@ -6,12 +6,11 @@ export const routes: Routes = [
     {
         path: '',
         component: DemoTable,
-        children:[
+        children: [
             {
                 path: ':viewId',
-                component: DemoTableContent,
+                component: DemoTableContent
             }
         ]
     }
- 
 ];
