@@ -13,6 +13,3 @@ export interface AITableFieldMenuItem {
 export interface AITableSelectField extends AITableField {
     settings: SelectSettings;
 }
-
-// index - size
-export type AITableSizeMap = Record<number, number>;

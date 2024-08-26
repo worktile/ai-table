@@ -1,6 +1,6 @@
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableFieldType } from '../core';
-import { AITableFieldMenuItem, AITableSizeMap } from './field';
+import { AITableFieldMenuItem } from './field';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
@@ -35,10 +35,12 @@ export interface AITableGridStageOptions {
     height: number;
 }
 
-export enum AITableItemType {
+export enum AITableRowColumnType {
     row = 'row',
     column = 'column'
 }
+
+export type AITableSizeMap = Record<number, number>;
 
 export interface AITableCoordinate {
     rowCount: number;

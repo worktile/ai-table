@@ -1,4 +1,4 @@
-import { AITableCellMetaData, AITableCellMetaDataMap, AITableCoordinate, AITableItemType, AITableSizeMap } from '../types';
+import { AITableCellMetaData, AITableCellMetaDataMap, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '../types';
 
 /**
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础
@@ -14,9 +14,9 @@ export class Coordinate {
     public rowIndicesMap: AITableSizeMap = {};
     // 用 index 映射 每一列 的 宽度
     public columnIndicesMap: AITableSizeMap = {};
-    // 滚动区域垂直初始距离
+    // 除去表头和编号列真正单元格绘制的初始值 x
     public rowInitSize: number;
-    // 滚动区域水平初始距离
+    // 除去表头和编号列真正单元格绘制的初始值 y
     public columnInitSize: number;
     // 行坐标集中最后一行的索引
     public lastRowIndex = -1;
@@ -69,7 +69,7 @@ export class Coordinate {
      * 总宽度
      */
     public get totalWidth() {
-        const { offset, size } = this.getCellMetaData(this.columnCount - 1, AITableItemType.column);
+        const { offset, size } = this.getCellMetaData(this.columnCount - 1, AITableRowColumnType.column);
         return offset + size;
     }
 
@@ -77,7 +77,7 @@ export class Coordinate {
      * 总高度
      */
     public get totalHeight() {
-        const { offset, size } = this.getCellMetaData(this.rowCount - 1, AITableItemType.row);
+        const { offset, size } = this.getCellMetaData(this.rowCount - 1, AITableRowColumnType.row);
         return offset + size;
     }
 
@@ -98,10 +98,10 @@ export class Coordinate {
     /**
      * 获取每个 cell 垂直/水平方向的坐标信息
      */
-    protected getCellMetaData(index: number, itemType: AITableItemType): AITableCellMetaData {
+    protected getCellMetaData(index: number, itemType: AITableRowColumnType): AITableCellMetaData {
         let itemSize, lastMeasuredIndex, offset, indexToWidthHeightMap;
         let indexToDimensionMap: AITableCellMetaDataMap = {};
-        const isColumnType = itemType === AITableItemType.column;
+        const isColumnType = itemType === AITableRowColumnType.column;
 
         if (isColumnType) {
             itemSize = this.columnWidth;
@@ -142,8 +142,8 @@ export class Coordinate {
      * 查找最近的单元格索引
      * 性能较差，但无论如何都可以找到
      */
-    private _findNearestCellIndex(index: number, offset: number, itemType: AITableItemType) {
-        const itemCount = itemType === AITableItemType.column ? this.columnCount : this.rowCount;
+    private _findNearestCellIndex(index: number, offset: number, itemType: AITableRowColumnType) {
+        const itemCount = itemType === AITableRowColumnType.column ? this.columnCount : this.rowCount;
         let interval = 1;
 
         while (index < itemCount && this.getCellMetaData(index, itemType).offset < offset) {
@@ -158,7 +158,7 @@ export class Coordinate {
      * 二分法查找最近的单元格索引
      * 性能更佳，但需要加载数据
      */
-    private _findNearestCellIndexByBinary(offset: number, low: number, high: number, itemType: AITableItemType) {
+    private _findNearestCellIndexByBinary(offset: number, low: number, high: number, itemType: AITableRowColumnType) {
         while (low <= high) {
             const middle = low + Math.floor((high - low) / 2);
             const currentOffset = this.getCellMetaData(middle, itemType).offset;
@@ -177,9 +177,9 @@ export class Coordinate {
     /**
      * 根据偏移量查找最近的单元格索引
      */
-    public findNearestCellIndex(offset: number, itemType: AITableItemType) {
+    public findNearestCellIndex(offset: number, itemType: AITableRowColumnType) {
         let lastIndex;
-        if (itemType === AITableItemType.column) {
+        if (itemType === AITableRowColumnType.column) {
             lastIndex = this.lastColumnIndex;
         } else {
             lastIndex = this.lastRowIndex;
@@ -197,21 +197,21 @@ export class Coordinate {
      * 根据垂直偏移量找到起始单元格的索引
      */
     public getRowStartIndex(offset: number) {
-        return this.findNearestCellIndex(offset, AITableItemType.row);
+        return this.findNearestCellIndex(offset, AITableRowColumnType.row);
     }
 
     /**
      * 根据垂直起始单元格的索引查找结束单元格的索引
      */
     public getRowStopIndex(startIndex: number, scrollTop: number) {
-        const itemMetadata = this.getCellMetaData(startIndex, AITableItemType.row);
+        const itemMetadata = this.getCellMetaData(startIndex, AITableRowColumnType.row);
         const maxOffset = scrollTop + this.containerHeight;
         let offset = itemMetadata.offset + itemMetadata.size;
         let stopIndex = startIndex;
 
         while (stopIndex < this.rowCount - 1 && offset < maxOffset) {
             stopIndex++;
-            offset += this.getCellMetaData(stopIndex, AITableItemType.row).size;
+            offset += this.getCellMetaData(stopIndex, AITableRowColumnType.row).size;
         }
         return stopIndex;
     }
@@ -220,21 +220,21 @@ export class Coordinate {
      * 根据水平偏移量找到起始单元格的索引
      */
     public getColumnStartIndex(offset: number) {
-        return this.findNearestCellIndex(offset, AITableItemType.column);
+        return this.findNearestCellIndex(offset, AITableRowColumnType.column);
     }
 
     /**
      * 根据水平起始单元格的索引查找结束单元格的索引
      */
     public getColumnStopIndex(startIndex: number, scrollLeft: number) {
-        const itemMetadata = this.getCellMetaData(startIndex, AITableItemType.column);
+        const itemMetadata = this.getCellMetaData(startIndex, AITableRowColumnType.column);
         const maxOffset = scrollLeft + this.containerWidth;
         let offset = itemMetadata.offset + itemMetadata.size;
         let stopIndex = startIndex;
 
         while (stopIndex < this.columnCount - 1 && offset < maxOffset) {
             stopIndex++;
-            offset += this.getCellMetaData(stopIndex, AITableItemType.column).size;
+            offset += this.getCellMetaData(stopIndex, AITableRowColumnType.column).size;
         }
         return stopIndex;
     }
@@ -243,14 +243,14 @@ export class Coordinate {
      * 根据 rowIndex 获取垂直偏移量
      */
     public getRowOffset(rowIndex: number) {
-        return this.getCellMetaData(rowIndex, AITableItemType.row).offset;
+        return this.getCellMetaData(rowIndex, AITableRowColumnType.row).offset;
     }
 
     /**
      * 根据 columnIndex 获取水平偏移量
      */
     public getColumnOffset(columnIndex: number) {
-        return this.getCellMetaData(columnIndex, AITableItemType.column).offset;
+        return this.getCellMetaData(columnIndex, AITableRowColumnType.column).offset;
     }
 
     /**
@@ -264,8 +264,8 @@ export class Coordinate {
      * 根据 rowIndex, columnIndex 获取单元格坐标信息
      */
     public getCellRect(rowIndex: number, columnIndex: number) {
-        const { size: height, offset: y } = this.getCellMetaData(rowIndex, AITableItemType.row);
-        const { size: width, offset: x } = this.getCellMetaData(columnIndex, AITableItemType.column);
+        const { size: height, offset: y } = this.getCellMetaData(rowIndex, AITableRowColumnType.row);
+        const { size: width, offset: x } = this.getCellMetaData(columnIndex, AITableRowColumnType.column);
         return {
             x,
             y,

@@ -1,31 +1,26 @@
 import { AITableFields, AITableRecords, FieldsMap } from '../core';
 import { AITableLinearRow } from '../types';
-import { AITableRowType } from '../types/record';
+import { AITableRowType } from '../types/row';
 
 export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLinearRow[] => {
     const linearRows: AITableLinearRow[] = [];
-    let preRow = { _id: '' };
     let displayRowIndex = 0;
-    for (const [index, row] of [...visibleRecords, { _id: '' }].entries()) {
-        preRow = row;
+    [...visibleRecords, { _id: '' }].forEach((row) => {
         if (row._id) {
             displayRowIndex++;
             linearRows.push({
                 type: AITableRowType.record,
-                depth: 0,
-                recordId: row._id,
-                displayIndex: displayRowIndex,
-                groupHeadRecordId: ''
+                _id: row._id,
+                displayIndex: displayRowIndex
             });
         }
         if (!row._id) {
             linearRows.push({
                 type: AITableRowType.add,
-                depth: 0,
-                recordId: ''
+                _id: ''
             });
         }
-    }
+    });
     return linearRows;
 };
 
