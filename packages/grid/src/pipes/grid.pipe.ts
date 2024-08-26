@@ -8,7 +8,7 @@ import { AITableReferences, AITableSelection } from '../types';
 })
 export class SelectOptionPipe implements PipeTransform {
     transform(_id: string, options: AITableSelectOption[]) {
-        return options.find((item) => item._id === _id);
+        return options.length && options.find((item) => item._id === _id);
     }
 }
 
@@ -18,9 +18,13 @@ export class SelectOptionPipe implements PipeTransform {
 })
 export class SelectOptionsPipe implements PipeTransform {
     transform(ids: string[], options: AITableSelectOption[] = []) {
-        return ids.map((id: string) => {
-            return options.find((item) => item._id === id);
-        });
+        return (
+            (ids.length &&
+                ids.map((id: string) => {
+                    return options.find((item) => item._id === id);
+                })) ||
+            []
+        );
     }
 }
 
@@ -40,9 +44,13 @@ export class IsSelectRecordPipe implements PipeTransform {
 })
 export class UserPipe implements PipeTransform {
     transform(values: string[], references: AITableReferences) {
-        return values.map((item) => {
-            return references.members[item] || {};
-        });
+        return (
+            (values.length &&
+                values.map((item) => {
+                    return references.members[item] || {};
+                })) ||
+            []
+        );
     }
 }
 
