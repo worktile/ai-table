@@ -1,6 +1,6 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { Id } from 'ngx-tethys/types';
-import { AITableSelection } from '../../types';
+import { AITableSelection } from '../../types/grid';
 import { AITableAction } from './action';
 
 export enum AITableFieldType {
@@ -147,5 +147,3 @@ export interface AITableChangeOptions {
     fields: AITableField[];
     actions: AITableAction[];
 }
-
-export type AIPlugin = (aiTable: AITable) => AITable;
