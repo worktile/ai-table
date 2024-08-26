@@ -1,7 +1,17 @@
-import { ActionName, AIFieldIdPath, AIFieldPath, AIFieldValueIdPath, AIRecordPath, AITableField, AITableQueries } from '@ai-table/grid';
+import {
+    ActionName,
+    AIFieldIdPath,
+    AIFieldPath,
+    AIFieldValueIdPath,
+    AIRecordPath,
+    AITableField,
+    AITableFields,
+    AITableQueries
+} from '@ai-table/grid';
 import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
 import {
+    AddPositionKey,
     AITableSharedAction,
     AITableView,
     AIViewTable,
@@ -10,10 +20,15 @@ import {
     SyncMapElement,
     ViewActionName
 } from '../../types';
-import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
+import { getShareTypeNumberPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
-export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: string, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
+export default function translateArrayEvent(
+    aiTable: AIViewTable,
+    activeViewId: string,
+    sharedType: SharedType,
+    event: Y.YEvent<any>
+): AITableSharedAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
@@ -58,21 +73,14 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
-                            // const position = customField[customField.length - 1][activeViewId];
-                            // const path = translatePositionToPath(
-                            //     aiTable.records(),
-                            //     position,
-                            //     activeViewId
-                            // ) as AIRecordPath;
-
-                            // actions.push({
-                            //     type: ActionName.AddRecord,
-                            //     path: path,
-                            //     record: {
-                            //         _id: fixedField[0]['_id'],
-                            //         values: translateToRecordValues(customField, aiTable.fields() as AITableFields)
-                            //     }
-                            // });
+                            actions.push({
+                                type: ActionName.AddRecord,
+                                path: [aiTable.views()[0].recordPositions.length],
+                                record: {
+                                    _id: fixedField[0]['_id'],
+                                    values: translateToRecordValues(customField, aiTable.fields() as AITableFields)
+                                }
+                            });
                         });
                     } else {
                         try {
@@ -100,27 +108,39 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
                 if (isFieldsTranslate) {
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
-                        // const path = translatePositionToPath(
-                        //     aiTable.fields() as AITableFields,
-                        //     data['positions'][activeViewId],
-                        //     activeViewId
-                        // ) as AIFieldPath;
-                        // actions.push({
-                        //     type: ActionName.AddField,
-                        //     path,
-                        //     field: data as AITableField
-                        // });
+                        actions.push({
+                            type: ActionName.AddField,
+                            path: [aiTable.views()[0].fieldPositions.length],
+                            field: data as AITableField
+                        });
                     });
                 }
                 if (isViewsTranslate) {
-                    delta.insert?.map((item: Y.Map<any>, index) => {
-                        const data = item.toJSON();
-                        actions.push({
-                            type: ViewActionName.AddView,
-                            path: [offset + index],
-                            view: data as AITableView
+                    if (isAddOrRemove(targetPath)) {
+                        delta.insert?.map((item: Y.Map<any>, index) => {
+                            const data = item.toJSON();
+                            actions.push({
+                                type: ViewActionName.AddView,
+                                path: [offset + index],
+                                view: data as AITableView
+                            });
                         });
-                    });
+                    } else {
+                        delta.insert?.map((item: string) => {
+                            console.log(123, item);
+                            // 确定协同视图的 viewId 与当前视图是否一致
+                            // 根据 id 和 path 查找，判断 offset 的前一个和后一个 view.recordPosition[path] === id
+
+                            const path = [aiTable.views().length] as [number];
+                            const key = event.path[event.path.length - 1] as AddPositionKey;
+                            actions.push({
+                                type: ViewActionName.AddPosition,
+                                path,
+                                key,
+                                node: item
+                            });
+                        });
+                    }
                 }
             }
         }

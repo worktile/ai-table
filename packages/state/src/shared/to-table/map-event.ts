@@ -5,6 +5,7 @@ import { AITableSharedAction, AITableView, AIViewTable, SharedType, SyncMapEleme
 
 export default function translateMapEvent(
     aiTable: AIViewTable,
+    activeViewId: string,
     sharedType: SharedType,
     event: Y.YMapEvent<unknown>
 ): AITableSharedAction[] {
@@ -22,7 +23,7 @@ export default function translateMapEvent(
         }
 
         if (isViewTranslate) {
-            targetElement = aiTable.views()[targetPath];
+            targetElement = aiTable.views().find((item) => item._id === activeViewId);
         }
 
         if (targetElement) {

@@ -52,6 +52,7 @@ export class TableService {
     }
 
     buildRenderRecords(records?: AITableRecords) {
+        console.log(this.views());
         this.records = signal(sortByView(records ?? this.records(), this.activeView(), 'record') as AITableRecords);
     }
 
@@ -72,9 +73,9 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = initTable(this.sharedType!);
+                        this.views.set(data.views);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
-                        this.views.set(data.views);
                         isInitialized = true;
                     } else {
                         applyYjsEvents(this.aiTable, this.activeViewId(), this.sharedType!, events);

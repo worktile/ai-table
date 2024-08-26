@@ -1,5 +1,5 @@
 import { createDraft, finishDraft } from 'immer';
-import { AITableView, AITableViewAction, AIViewTable, ViewActionName } from '../../types';
+import { AddPositionAction, AddViewAction, AITableView, AITableViewAction, AIViewTable, SetViewAction, ViewActionName } from '../../types';
 
 export const GeneralViewActions = {
     transform(aiTable: AIViewTable, action: AITableViewAction): void {
@@ -47,6 +47,15 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], action: AI
             const viewIndex = views.findIndex((item) => item._id === viewId);
             if (viewIndex > -1) {
                 views.splice(viewIndex, 1);
+            }
+            break;
+        }
+        case ViewActionName.AddPosition: {
+            const [positionIndex] = action.path;
+            if (positionIndex > -1) {
+                views.forEach((item) => {
+                    item[action.key].splice(positionIndex, 0, action.node);
+                });
             }
             break;
         }

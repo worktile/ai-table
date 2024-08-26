@@ -18,7 +18,7 @@ export class SelectOptionPipe implements PipeTransform {
 })
 export class SelectOptionsPipe implements PipeTransform {
     transform(ids: string[], options: AITableSelectOption[] = []) {
-        return ids.map((id: string) => {
+        return ids.length && ids.map((id: string) => {
             return options.find((item) => item._id === id);
         });
     }
@@ -40,9 +40,12 @@ export class IsSelectRecordPipe implements PipeTransform {
 })
 export class UserPipe implements PipeTransform {
     transform(values: string[], references: AITableReferences) {
-        return values.map((item) => {
-            return references.members[item] || {};
-        });
+        if(values.length){
+            return  values.map((item) => {
+                return references.members[item] || {};
+            });
+        }
+        return [];
     }
 }
 

@@ -9,7 +9,7 @@ export function translateYjsEvent(aiTable: AIViewTable, activeViewId: string, sh
         return translateArrayEvent(aiTable, activeViewId, sharedType, event);
     }
     if (event instanceof Y.YMapEvent) {
-        return translateMapEvent(aiTable, sharedType, event);
+        return translateMapEvent(aiTable, activeViewId, sharedType, event);
     }
     return [];
 }
@@ -17,6 +17,7 @@ export function translateYjsEvent(aiTable: AIViewTable, activeViewId: string, sh
 export function applyEvents(aiTable: AIViewTable, activeViewId: string, sharedType: SharedType, events: Y.YEvent<any>[]) {
     events.forEach((event) =>
         translateYjsEvent(aiTable, activeViewId, sharedType, event).forEach((item: AITableSharedAction) => {
+            console.log(item);
             aiTable.apply(item);
         })
     );
@@ -24,6 +25,7 @@ export function applyEvents(aiTable: AIViewTable, activeViewId: string, sharedTy
 
 export function applyYjsEvents(aiTable: AIViewTable, activeViewId: string, sharedType: SharedType, events: Y.YEvent<any>[]): void {
     if (YjsAITable.isUndo(aiTable)) {
+
         applyEvents(aiTable, activeViewId, sharedType, events);
     } else {
         YjsAITable.asRemote(aiTable, () => {

@@ -47,7 +47,13 @@ export function toSharedType(
 export function toSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
-        element.set(key, node[key]);
+        if (key === 'recordPositions' || key === 'fieldPositions') {
+            const positionsArray = new Y.Array();
+            positionsArray.insert(0, [...node[key]]);
+            element.set(key, positionsArray);
+        } else {
+            element.set(key, node[key]);
+        }
     }
     return element;
 }

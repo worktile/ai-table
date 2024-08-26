@@ -39,7 +39,7 @@ import { getInitViews } from '../utils/utils';
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-demo-action-1';
+    room = 'share-dexxxmo-action-1';
 
     router = inject(Router);
 

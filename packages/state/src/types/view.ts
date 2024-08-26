@@ -1,10 +1,8 @@
 import { AITable, AITableAction, AITableField, AITableRecord } from '@ai-table/grid';
 import { WritableSignal } from '@angular/core';
-import { Id } from 'ngx-tethys/types';
+import { Id, Ids } from 'ngx-tethys/types';
 
-// export class Positions {
-//     [key: string]: string[];
-// }
+export type Positions = Ids;
 
 // export interface AITableRecord extends AITableRecord {
 //     positions: Positions;
@@ -50,8 +48,8 @@ export interface AITableView {
     _id: string;
     name: string;
     emoji_icon?: string;
-    recordPositions: string[];
-    fieldPositions: string[];
+    recordPositions: Positions;
+    fieldPositions: Positions;
     settings?: GridSettings;
 }
 
@@ -82,7 +80,10 @@ export interface AIViewTable extends AITable {
 export enum ViewActionName {
     SetView = 'set_view',
     AddView = 'add_view',
-    RemoveView = 'remove_view'
+    RemoveView = 'remove_view',
+    AddPosition = 'add_position',
+    AddRecordPositions = 'add_record_position',
+    RemovePositions = 'remove_position'
 }
 
 export interface SetViewAction {
@@ -103,6 +104,15 @@ export interface RemoveViewAction {
     path: AIViewPath;
 }
 
-export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction;
+export type AddPositionKey = 'recordPositions' | 'fieldPositions';
+
+export interface AddPositionAction {
+    type: ViewActionName.AddPosition;
+    key: AddPositionKey;
+    node: string;
+    path: [number];
+}
+
+export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction | AddPositionAction;
 
 export type AITableSharedAction = AITableViewAction | AITableAction;
