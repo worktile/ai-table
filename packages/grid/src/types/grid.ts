@@ -1,11 +1,15 @@
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableFieldType } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
 }
-
+export interface AITableGridData {
+    type: 'grid';
+    fields: AITableField[];
+    records: AITableRecord[];
+}
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;

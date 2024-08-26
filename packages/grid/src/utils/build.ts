@@ -1,5 +1,5 @@
 import { AITableFields, AITableRecords, FieldsMap } from '../core';
-import { AITableLinearRow } from '../types';
+import { AITableGridData, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/row';
 
 export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLinearRow[] => {
@@ -24,7 +24,7 @@ export const buildGridLinearRows = (visibleRecords: AITableRecords): AITableLine
     return linearRows;
 };
 
-export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields) => {
+export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
     const fields = fieldsValue.map((item) => {
         return {
             ...item,
