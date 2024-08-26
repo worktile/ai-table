@@ -1,9 +1,10 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, OnInit } from '@angular/core';
 import { AITableGridBase } from './grid-base.component';
 import { createGridStage } from './grid-renderer/create-grid-stage';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
+import { buildGridLinearRows } from './utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -28,6 +29,10 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
     }
+
+    gridLinearRows = computed(() => {
+        return buildGridLinearRows(this.aiRecords());
+    });
 
     initGridRender() {
         const container = this.elementRef.nativeElement;
