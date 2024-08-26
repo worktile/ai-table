@@ -9,15 +9,14 @@ export const messageYjsUpdate = 2;
 
 export const writeSyncStep2 = (decoder: decoding.Decoder, encoder: encoding.Encoder, provider: LiveFeedProvider) => {
     encoding.writeVarUint(encoder, messageYjsSyncStep2);
-    let guid = decoding.readVarString(decoder);
-    while (guid) {
+
+    while (decoding.hasContent(decoder)) {
+        const guid = decoding.readVarString(decoder);
         const diffUpdate = Y.encodeStateAsUpdate(provider.room.getObject(guid), decoding.readVarUint8Array(decoder));
         if (diffUpdate.length > 0) {
             encoding.writeVarString(encoder, guid);
-            encoding.writeVarUint8Array(encoder, diffUpdate);    
+            encoding.writeVarUint8Array(encoder, diffUpdate);
         }
-        // TODO: 可能存在异常，失去失败？
-        guid = decoding.readVarString(decoder);
     }
 };
 
@@ -27,11 +26,9 @@ export const readSyncStep1 = (decoder: decoding.Decoder, encoder: encoding.Encod
 
 export const readSyncStep2 = (decoder: decoding.Decoder, provider: LiveFeedProvider, transactionOrigin: any) => {
     try {
-        let guid = decoding.readVarString(decoder);
-        while(guid) {
+        while (decoding.hasContent(decoder)) {
+            const guid = decoding.readVarString(decoder);
             Y.applyUpdate(provider.room.getObject(guid), decoding.readVarUint8Array(decoder), transactionOrigin);
-            // TODO: 可能存在异常，失去失败？
-            guid = decoding.readVarString(decoder);
         }
     } catch (error) {
         // This catches errors that are thrown by event handlers
@@ -39,4 +36,4 @@ export const readSyncStep2 = (decoder: decoding.Decoder, provider: LiveFeedProvi
     }
 };
 
-export const readUpdate = readSyncStep2
+export const readUpdate = readSyncStep2;
