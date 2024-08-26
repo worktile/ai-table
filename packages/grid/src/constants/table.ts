@@ -13,3 +13,6 @@ export const AI_TABLE_ROW_HEAD_WIDTH = 70;
 
 // 属性列头标识
 export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD';
+export const GRID_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD';
+// 单元格标识
+export const GRID_CELL = 'AI_TABLE_CELL';
