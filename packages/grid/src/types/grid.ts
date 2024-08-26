@@ -5,13 +5,11 @@ import { AITableFieldMenuItem } from './field';
 export interface AITableGridCellRenderSchema {
     editor: any;
 }
-
 export interface AITableGridData {
     type: 'grid';
     fields: AITableField[];
     records: AITableRecord[];
 }
-
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;
@@ -39,4 +37,25 @@ export interface AITableGridStageOptions {
     container: HTMLDivElement;
     width: number;
     height: number;
+}
+
+export enum AITableRowColumnType {
+    row = 'row',
+    column = 'column'
+}
+
+export type AITableSizeMap = Record<number, number>;
+
+export interface AITableCoordinate {
+    rowCount: number;
+    columnCount: number;
+    containerWidth: number;
+    containerHeight: number;
+    rowHeight: number;
+    columnWidth: number;
+    rowInitSize?: number;
+    rowIndicesMap: AITableSizeMap;
+    columnIndicesMap: AITableSizeMap;
+    columnInitSize?: number;
+    frozenColumnCount?: number;
 }

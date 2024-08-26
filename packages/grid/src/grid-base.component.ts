@@ -33,7 +33,6 @@ import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
-import { buildGridData } from './utils';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -71,10 +70,6 @@ export class AITableGridBase implements OnInit {
     fieldMenus!: AITableFieldMenuItem[];
 
     mouseoverRef!: ThyPopoverRef<any>;
-
-    gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
-    });
 
     protected ngZone = inject(NgZone);
     protected elementRef = inject(ElementRef);
