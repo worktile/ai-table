@@ -5,5 +5,6 @@ export const Colors = {
     defaultBackground: '#FFFFFF',
     defaultBorderStroke: 'rgba(61, 61, 61, 1)',
     defaultIconFill: '#8C8C8C',
-    activeBackground: '#2C293B'
+    activeBackground: '#2C293B',
+    sheetLineColor: '#eee'
 };

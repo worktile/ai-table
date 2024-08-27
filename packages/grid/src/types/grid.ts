@@ -1,6 +1,7 @@
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
+import { AITableLinearRow } from './row';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
@@ -37,6 +38,7 @@ export interface AITableGridStageOptions {
     container: HTMLDivElement;
     width: number;
     height: number;
+    linearRows: AITableLinearRow[];
 }
 
 export enum AITableRowColumnType {
@@ -58,4 +60,14 @@ export interface AITableCoordinate {
     columnIndicesMap: AITableSizeMap;
     columnInitSize?: number;
     frozenColumnCount?: number;
+}
+
+export enum AITableCheckType {
+    checked = 'checked',
+    unchecked = 'unchecked'
+}
+
+export interface AITableScrollState {
+    scrollTop: number;
+    scrollLeft: number;
 }
