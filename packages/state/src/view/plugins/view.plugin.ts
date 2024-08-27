@@ -1,5 +1,5 @@
-import { Actions, AITable, AITableAction, FLUSHING } from '@ai-table/grid';
-import { GeneralViewActions } from '../action';
+import { ActionName, Actions, AITable, AITableAction, FLUSHING } from '@ai-table/grid';
+import { GeneralActions, GeneralViewActions } from '../action';
 import { AITableSharedAction, AITableViewAction, AIViewTable, ViewActionName } from '../../types';
 import { VIEW_ACTIONS } from '../constants/view';
 
@@ -10,7 +10,11 @@ export const withView = (aiTable: AITable) => {
         if (VIEW_ACTIONS.includes(action.type as ViewActionName)) {
             GeneralViewActions.transform(viewTable, action as AITableViewAction);
         } else {
-            Actions.transform(aiTable, action as AITableAction);
+            if (action.type === ActionName.AddField || action.type === ActionName.AddRecord) {
+                GeneralActions.transform(viewTable, action);
+            } else {
+                Actions.transform(aiTable, action as AITableAction);
+            }
         }
 
         if (!FLUSHING.get(aiTable)) {

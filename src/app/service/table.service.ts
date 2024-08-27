@@ -1,4 +1,4 @@
-import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { WebsocketProvider } from 'y-websocket';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
 import {
@@ -11,9 +11,11 @@ import {
     createSharedType,
     initSharedType,
     initTable,
-    AITableView
+    AITableView,
+    AITableViews
 } from '@ai-table/state';
 import { getProvider } from '../provider';
+import { Router } from '@angular/router';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -34,6 +36,8 @@ export class TableService {
     sharedType!: SharedType | null;
 
     activeViewId: WritableSignal<string> = signal('');
+
+    router = inject(Router);
 
     activeView = computed(() => {
         return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
@@ -73,9 +77,15 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = initTable(this.sharedType!);
+                        this.views.set(data.views);
+                        let activeView = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
+                        if (!activeView || (activeView && (data.views as AITableViews).findIndex((item) => item._id === activeView) < 0)) {
+                            activeView = data.views[0]._id;
+                        }
+                        this.setActiveView(activeView!);
+                        this.router.navigate([`/${activeView!}`]);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
-                        this.views.set(data.views);
                         isInitialized = true;
                     } else {
                         applyYjsEvents(this.aiTable, this.activeViewId(), this.sharedType!, events);

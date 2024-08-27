@@ -1,8 +1,5 @@
 import {
-    ActionName,
     Actions,
-    AddFieldAction,
-    AddRecordAction,
     AIFieldConfig,
     AIFieldPath,
     AIRecordPath,
@@ -25,10 +22,9 @@ import { ThyInputDirective } from 'ngx-tethys/input';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
+import { getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
-import { createDraft, finishDraft } from 'immer';
-import { AITableViewField, AITableViewRecord, applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/state';
+import { applyActionOps, AIViewTable, YjsAITable, withView } from '@ai-table/state';
 import { withRemoveView } from '../../../plugins/view.plugin';
 
 @Component({
@@ -95,47 +91,6 @@ export class DemoTableContent {
 
     onChange(options: AITableChangeOptions) {
         if (this.tableService.sharedType) {
-            options.actions = options.actions.map((action) => {
-                if (action.type === ActionName.AddRecord) {
-                    const draftAction = createDraft(action);
-                    const record = (draftAction as AddRecordAction).record as AITableViewRecord;
-                    if (!record.positions) {
-                        record.positions = createDefaultPositions(
-                            this.tableService.views(),
-                            this.tableService.activeViewId(),
-                            this.tableService.records(),
-                            action.path[0]
-                        );
-                        const newAction = finishDraft(draftAction) as AddRecordAction;
-                        this.tableService.records.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.record as AITableViewRecord;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                if (action.type === ActionName.AddField) {
-                    const draftAction = createDraft(action);
-                    const field = (draftAction as AddFieldAction).field as AITableViewField;
-                    if (!field.positions) {
-                        field.positions = createDefaultPositions(
-                            this.tableService.views(),
-                            this.tableService.activeViewId(),
-                            this.tableService.fields(),
-                            action.path[0]
-                        );
-                        const newAction = finishDraft(draftAction) as AddFieldAction;
-                        this.tableService.fields.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.field as AITableViewField;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                return action;
-            });
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
                     applyActionOps(this.tableService.sharedType!, options.actions, this.aiTable);
@@ -152,6 +107,7 @@ export class DemoTableContent {
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable as AIViewTable;
         this.aiTable.views = this.tableService.views;
+        this.aiTable.activeViewId = this.tableService.activeViewId;
         TABLE_SERVICE_MAP.set(this.aiTable, this.tableService);
         this.tableService.setAITable(this.aiTable);
     }
