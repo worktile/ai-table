@@ -22,6 +22,8 @@ export class Coordinate {
     public lastRowIndex = -1;
     // 列坐标集中最后一列的索引
     public lastColumnIndex = -1;
+    public rowMetaDataMap: Record<number, AITableCellMetaData> = {};
+    public columnMetaDataMap: Record<number, AITableCellMetaData> = {};
     public frozenColumnCount: number;
     constructor({
         rowHeight,
@@ -99,31 +101,30 @@ export class Coordinate {
      * 获取每个 cell 垂直/水平方向的坐标信息
      */
     protected getCellMetaData(index: number, itemType: AITableRowColumnType): AITableCellMetaData {
-        let itemSize, lastMeasuredIndex, offset, indexToWidthHeightMap;
-        let indexToDimensionMap: AITableCellMetaDataMap = {};
+        let cellMetadataMap, itemSize, lastMeasuredIndex, offset;
         const isColumnType = itemType === AITableRowColumnType.column;
 
         if (isColumnType) {
             itemSize = this.columnWidth;
             offset = this.columnInitSize;
             lastMeasuredIndex = this.lastColumnIndex;
-            indexToWidthHeightMap = this.columnIndicesMap;
+            cellMetadataMap = this.columnMetaDataMap;
         } else {
             itemSize = this.rowHeight;
             offset = this.rowInitSize;
             lastMeasuredIndex = this.lastRowIndex;
-            indexToWidthHeightMap = this.rowIndicesMap;
+            cellMetadataMap = this.rowMetaDataMap;
         }
-
-        if (lastMeasuredIndex >= 0) {
-            const size = indexToWidthHeightMap[lastMeasuredIndex];
-            offset = size;
-        }
-
         if (index > lastMeasuredIndex) {
+            if (lastMeasuredIndex >= 0) {
+                const itemMetadata = cellMetadataMap[lastMeasuredIndex];
+                offset = itemMetadata.offset + itemMetadata.size;
+            }
+
             for (let i = lastMeasuredIndex + 1; i <= index; i++) {
                 const size = (isColumnType ? this.columnIndicesMap[i] : this.rowIndicesMap[i]) ?? itemSize;
-                indexToDimensionMap[i] = {
+
+                cellMetadataMap[i] = {
                     offset,
                     size
                 };
@@ -135,7 +136,7 @@ export class Coordinate {
                 this.lastRowIndex = index;
             }
         }
-        return indexToDimensionMap[index] || { size: 0, offset: 0 };
+        return cellMetadataMap[index] || { size: 0, offset: 0 };
     }
 
     /**

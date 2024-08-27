@@ -26,7 +26,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
         };
     };
 
-    const getColumnHead = (columnStartIndex: number, columnStopIndex: number, isFrozen = false) => {
+    const getColumnHead = (columnStartIndex: number, columnStopIndex: number) => {
         const _fieldHeads: Konva.Group[] = [];
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             if (columnIndex > columnCount - 1) break;
@@ -57,7 +57,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
      */
     const getFrozenFieldHead = () => {
         const isChecked = false;
-        const head = getColumnHead(0, frozenColumnCount - 1, true);
+        const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
         const rect = new Konva.Rect({
             x: 0.5,

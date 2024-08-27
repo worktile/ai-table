@@ -220,109 +220,109 @@ export function getDefaultValue() {
                     view2: 14
                 }
             },
-            {
-                _id: 'column-21',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.dot,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-                positions: {
-                    view1: 3,
-                    view2: 13
-                }
-            },
-            {
-                _id: 'column-22',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.piece,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
+            // {
+            //     _id: 'column-21',
+            //     type: AITableFieldType.select,
+            //     icon: 'list-check',
+            //     name: '多选',
+            //     settings: {
+            //         is_multiple: true,
+            //         option_style: AITableSelectOptionStyle.dot,
+            //         options: [
+            //             {
+            //                 text: '111',
+            //                 bg_color: '#E48483',
+            //                 _id: '66b31d0c8097a908f74bcd8a'
+            //             },
+            //             {
+            //                 text: '222',
+            //                 bg_color: '#E0B75D',
+            //                 _id: '66b31d0c8097a908f74bcd8b'
+            //             },
+            //             {
+            //                 text: '333',
+            //                 bg_color: '#69B1E4',
+            //                 _id: '66b31d0c8097a908f74bcd8c'
+            //             },
+            //             {
+            //                 text: '444',
+            //                 bg_color: '#77C386',
+            //                 _id: '66b31d0c8097a908f74bcd8d'
+            //             },
+            //             {
+            //                 text: '555',
+            //                 bg_color: '#6EC4C4',
+            //                 _id: '66b31d0c8097a908f74bcd8e'
+            //             },
+            //             {
+            //                 text: '666',
+            //                 bg_color: '#E581D4',
+            //                 _id: '66b31d0c8097a908f74bcd8f'
+            //             },
+            //             {
+            //                 text: '777',
+            //                 bg_color: '#B0C774',
+            //                 _id: '66b31d0c8097a908f74bcd90'
+            //             }
+            //         ]
+            //     },
+            //     positions: {
+            //         view1: 3,
+            //         view2: 13
+            //     }
+            // },
+            // {
+            //     _id: 'column-22',
+            //     type: AITableFieldType.select,
+            //     icon: 'list-check',
+            //     name: '多选',
+            //     settings: {
+            //         is_multiple: true,
+            //         option_style: AITableSelectOptionStyle.piece,
+            //         options: [
+            //             {
+            //                 text: '111',
+            //                 bg_color: '#E48483',
+            //                 _id: '66b31d0c8097a908f74bcd8a'
+            //             },
+            //             {
+            //                 text: '222',
+            //                 bg_color: '#E0B75D',
+            //                 _id: '66b31d0c8097a908f74bcd8b'
+            //             },
+            //             {
+            //                 text: '333',
+            //                 bg_color: '#69B1E4',
+            //                 _id: '66b31d0c8097a908f74bcd8c'
+            //             },
+            //             {
+            //                 text: '444',
+            //                 bg_color: '#77C386',
+            //                 _id: '66b31d0c8097a908f74bcd8d'
+            //             },
+            //             {
+            //                 text: '555',
+            //                 bg_color: '#6EC4C4',
+            //                 _id: '66b31d0c8097a908f74bcd8e'
+            //             },
+            //             {
+            //                 text: '666',
+            //                 bg_color: '#E581D4',
+            //                 _id: '66b31d0c8097a908f74bcd8f'
+            //             },
+            //             {
+            //                 text: '777',
+            //                 bg_color: '#B0C774',
+            //                 _id: '66b31d0c8097a908f74bcd90'
+            //             }
+            //         ]
+            //     },
 
-                positions: {
-                    view1: 4,
-                    view2: 12
-                }
-            },
+            //     positions: {
+            //         view1: 4,
+            //         view2: 12
+            //     }
+            // },
             {
                 _id: 'column-3',
                 name: '数字',

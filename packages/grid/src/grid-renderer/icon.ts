@@ -1,6 +1,6 @@
 import Konva from 'konva';
-import { DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_FILL, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE } from '../constants';
-import { AITableIconOptions } from '../types';
+import { Check, DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_FILL, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../constants';
+import { AITableCheckType, AITableIconOptions } from '../types';
 
 export const createIcon = (config: AITableIconOptions) => {
     const {
@@ -46,9 +46,9 @@ export const createIcon = (config: AITableIconOptions) => {
     }
 
     const path = new Konva.Path({
-        x: (size * (scaleX || 1)) / 2,
-        y: (size * (scaleY || 1)) / 2,
-        data,
+        // x: (size * (scaleX || 1)) / 2,
+        // y: (size * (scaleY || 1)) / 2,
+        data: type && type === AITableCheckType.checked ? Check : type && type === AITableCheckType.unchecked ? Unchecked : data,
         width: size,
         height: size,
         fill,

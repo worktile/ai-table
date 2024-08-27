@@ -50,7 +50,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         width: width,
         height: headHeight,
         fill: isSelected ? colors.activeBackground : colors.defaultBackground,
-        stroke: stroke || colors.defaultBorderStroke,
+        stroke: stroke || colors.sheetLineColor,
         strokeWidth: 1,
         onMouseEnter: () => {},
         onMouseOut: () => {}

@@ -12,7 +12,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
         columnWidth: AI_TABLE_DEFAULT_COLUMN_WIDTH,
         rowCount: linearRows.length,
-        columnCount: aiTable.fields.length,
+        columnCount: aiTable.fields().length,
         containerWidth: width,
         containerHeight: height,
         rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
