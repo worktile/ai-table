@@ -74,6 +74,7 @@ export type AIViewPath = [string];
 
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
+    activeViewId: WritableSignal<string>;
     apply: (action: AITableSharedAction) => void;
 }
 

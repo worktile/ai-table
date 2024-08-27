@@ -87,10 +87,10 @@ export interface AITableSelectOption {
 }
 
 export enum AITableSelectOptionStyle {
-    text = 'text',
-    tag = 'tag',
-    dot = 'dot',
-    piece = 'piece'
+    text = 1,
+    tag = 2,
+    dot = 3,
+    piece = 4
 }
 
 export type TextFieldValue = string;

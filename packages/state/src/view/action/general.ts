@@ -1,5 +1,7 @@
 import { createDraft, finishDraft } from 'immer';
-import { AITableView, AITableViewAction, AIViewTable, ViewActionName } from '../../types';
+import { AITableView, AITableViewAction, AITableViewField, AITableViewFields, AITableViewRecord, AITableViewRecords, AIViewTable, ViewActionName } from '../../types';
+import { ActionName, AITableAction, getDefaultFieldValue } from '@ai-table/grid';
+import { createDefaultPositions } from '../../utils/view';
 
 export const GeneralViewActions = {
     transform(aiTable: AIViewTable, action: AITableViewAction): void {
@@ -52,3 +54,64 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], action: AI
         }
     }
 };
+
+export const GeneralActions = {
+    transform(aiTable: AIViewTable, action: AITableAction): void {
+        const records = createDraft(aiTable.records()) as AITableViewRecords;
+        const fields = createDraft(aiTable.fields()) as AITableViewFields;
+        apply(aiTable, records, fields, action);
+        if (action.type === ActionName.AddRecord) {
+            aiTable.records.update(() => {
+                return finishDraft(records);
+            });
+        }
+        if (action.type === ActionName.AddField) {
+            aiTable.fields.update(() => {
+                return finishDraft(fields);
+            });
+        }
+    }
+};
+
+export const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, action: AITableAction) => {
+    switch (action.type) {
+        case ActionName.AddRecord: {
+            const [recordIndex] = action.path;
+            if (recordIndex > -1) {
+                (action.record as AITableViewRecord).positions = createDefaultPositions(
+                    aiTable.views(),
+                    aiTable.activeViewId(),
+                    aiTable.records() as AITableViewRecords,
+                    action.path[0]
+                );
+                records.splice(recordIndex, 0, action.record as AITableViewRecord);
+            }
+            break;
+        }
+        case ActionName.AddField: {
+            const [fieldIndex] = action.path;
+            if (fieldIndex > -1) {
+                const newField = action.field;
+                (newField as AITableViewField).positions = createDefaultPositions(
+                    aiTable.views(),
+                    aiTable.activeViewId(),
+                    aiTable.fields() as AITableViewFields,
+                    action.path[0]
+                );
+                fields.splice(fieldIndex, 0, newField as AITableViewField);
+                const newRecord = {
+                    [newField._id]: getDefaultFieldValue(action.field)
+                };
+                records.forEach((item) => {
+                    item.values = {
+                        ...item.values,
+                        ...newRecord
+                    };
+                });
+            }
+            break;
+        }
+
+    }
+}
+
