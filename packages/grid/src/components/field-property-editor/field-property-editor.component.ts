@@ -11,7 +11,7 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-import { AITable, AITableField, AITableFieldType, Actions, Fields, FieldsMap, createDefaultFieldName } from '../../core';
+import { AITable, AITableField, Actions, Fields, FieldsIncludeIsMultiple, FieldsMap, IsMultiple, createDefaultFieldName } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
@@ -66,6 +66,9 @@ export class AITableFieldPropertyEditor {
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     fieldType = computed(() => {
+        if (FieldsIncludeIsMultiple.includes(this.aiEditField().type!)) {
+            return Fields.find(item => item.type === this.aiEditField().type && !!(item.settings as IsMultiple)?.is_multiple === !!(this.aiEditField().settings as IsMultiple)?.is_multiple)!;
+        }
         return FieldsMap[this.aiEditField().type];
     });
 
@@ -84,8 +87,6 @@ export class AITableFieldPropertyEditor {
 
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldPropertyEditor>);
 
-    constructor() {}
-
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
         return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiEditField()?._id !== field._id));
@@ -94,8 +95,8 @@ export class AITableFieldPropertyEditor {
     selectFieldType(field: Partial<AITableField>) {
         this.aiEditField.update((item) => {
             const width = item.width ?? field.width;
-            const name = createDefaultFieldName(this.aiTable, field.type!);
-            const settings = field.settings;
+            const settings = field.settings || {};
+            const name = createDefaultFieldName(this.aiTable, field);
             return { ...item, ...field, width, name, settings };
         });
     }

@@ -1,5 +1,5 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType } from '../types';
+import { AITableBaseField, AITableFieldType } from '../types';
 
 export const BasicFields = [
     {
@@ -40,7 +40,10 @@ export const BasicFields = [
         type: AITableFieldType.member,
         name: '成员',
         icon: 'user',
-        width: 200
+        width: 200,
+        settings: {
+            is_multiple: true
+        }
     },
     // 级联单选
     // 级联多选
@@ -88,6 +91,8 @@ export const BasicFields = [
     }
 ];
 
-export const Fields: Partial<AITableField>[] = [...BasicFields];
+export const Fields: AITableBaseField[] = [...BasicFields];
 
 export const FieldsMap = helpers.keyBy([...BasicFields], 'type');
+
+export const FieldsIncludeIsMultiple = [AITableFieldType.select, AITableFieldType.member];
