@@ -11,7 +11,7 @@ import {
     ThyDropdownMenuItemIconDirective
 } from 'ngx-tethys/dropdown';
 import { ThyButton } from 'ngx-tethys/button';
-import { AITable, AITableField, Actions, Fields, FieldsIncludeIsMultiple, FieldsMap, IsMultiple, createDefaultFieldName } from '../../core';
+import { AITable, AITableField, Actions, FieldOptions, createDefaultFieldName, AITableFieldOption, getFieldOptionByField } from '../../core';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyListItem } from 'ngx-tethys/list';
@@ -65,11 +65,8 @@ export class AITableFieldPropertyEditor {
 
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
-    fieldType = computed(() => {
-        if (FieldsIncludeIsMultiple.includes(this.aiEditField().type!)) {
-            return Fields.find(item => item.type === this.aiEditField().type && !!(item.settings as IsMultiple)?.is_multiple === !!(this.aiEditField().settings as IsMultiple)?.is_multiple)!;
-        }
-        return FieldsMap[this.aiEditField().type];
+    selectedFieldOption = computed(() => {
+        return getFieldOptionByField(this.aiEditField())!
     });
 
     fieldMaxLength = 32;
@@ -83,7 +80,7 @@ export class AITableFieldPropertyEditor {
         }
     };
 
-    selectableFields = Fields;
+    fieldOptions = FieldOptions;
 
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldPropertyEditor>);
 
@@ -92,7 +89,7 @@ export class AITableFieldPropertyEditor {
         return of(!!this.aiTable.fields()?.find((field) => field.name === fieldName && this.aiEditField()?._id !== field._id));
     };
 
-    selectFieldType(field: Partial<AITableField>) {
+    selectFieldType(field: AITableFieldOption) {
         this.aiEditField.update((item) => {
             const width = item.width ?? field.width;
             const settings = field.settings || {};

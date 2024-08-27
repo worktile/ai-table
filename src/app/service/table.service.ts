@@ -78,12 +78,6 @@ export class TableService {
                     if (!isInitialized) {
                         const data = initTable(this.sharedType!);
                         this.views.set(data.views);
-                        let activeView = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
-                        if (!activeView || (activeView && (data.views as AITableViews).findIndex((item) => item._id === activeView) < 0)) {
-                            activeView = data.views[0]._id;
-                        }
-                        this.setActiveView(activeView!);
-                        this.router.navigate([`/${activeView!}`]);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
                         isInitialized = true;

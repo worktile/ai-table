@@ -20,8 +20,8 @@
         <div class="ml-n5 mr-n5">
             <thy-list-item [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" class="justify-content-between">
                 <span>
-                    <thy-icon [thyIconName]="fieldType().icon" class="text-desc mr-2"></thy-icon>
-                    <span>{{ fieldType().name }}</span>
+                    <thy-icon [thyIconName]="selectedFieldOption().icon" class="text-desc mr-2"></thy-icon>
+                    <span>{{ selectedFieldOption().name }}</span>
                 </span>
                 <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
             </thy-list-item>
@@ -40,7 +40,7 @@
 </form>
 
 <thy-dropdown-menu #menu>
-    @for (item of selectableFields; track $index) {
+    @for (item of fieldOptions; track $index) {
         <a thyDropdownMenuItem href="javascript:;" (click)="selectFieldType(item)">
             <thy-icon [thyIconName]="item.icon!"></thy-icon>
             <span thyDropdownMenuItemName>{{ item.name }}</span>

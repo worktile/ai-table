@@ -1,5 +1,5 @@
-import { FieldsMap, FieldsIncludeIsMultiple, Fields } from '../constants/field';
-import { AITable, AITableField, AITableFieldType, IsMultiple } from '../types';
+import { FieldOptions } from '../constants/field';
+import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple } from '../types';
 import { idCreator } from './id-creator';
 
 export function getDefaultFieldValue(field: AITableField) {
@@ -9,23 +9,26 @@ export function getDefaultFieldValue(field: AITableField) {
     return '';
 }
 
-export function createDefaultFieldName(aiTable: AITable, field: Partial<AITableField>) {
-    if (!field.type) {
-        return FieldsMap[AITableFieldType.text].name;
+export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOption) {
+    const fieldOption = getFieldOptionByField(field);
+    if(fieldOption){
+        const count = aiTable.fields().filter((item) => {
+            return isFieldTypeOption(field, item)
+        }).length;
+        return count === 0 ? fieldOption.name :fieldOption.name + ' ' + count;
     }
-    const isMultiple = FieldsIncludeIsMultiple.includes(field.type!) ? !!(field.settings as IsMultiple)?.is_multiple : false
-    const fields = aiTable.fields();
-    const count = fields.filter((item) => {
-        return item.type === field.type && (!FieldsIncludeIsMultiple.includes(field.type) || !!(item.settings as IsMultiple)?.is_multiple === isMultiple);
-    }).length;
+    return FieldOptions[0].name;
+}
 
-    if (FieldsIncludeIsMultiple.includes(field.type!)) {
-        const basicField = Fields.find(item => item.type === field.type && !!(item.settings as IsMultiple)?.is_multiple === isMultiple)!;
-        return count === 0 ? basicField.name! : basicField.name! + ' ' + count;
-    }
-    return count === 0 ? FieldsMap[field.type!].name : FieldsMap[field.type!].name + ' ' + count;
+export function getFieldOptionByField(field: Partial<AITableField>){
+    return FieldOptions.find(item=> isFieldTypeOption(item, field));
+}
+
+export function isFieldTypeOption(fieldOption: AITableFieldOption, field: Partial<AITableField>): boolean {
+    return fieldOption.type === field.type && (fieldOption.type === AITableFieldType.select ? !!(fieldOption.settings as IsMultiple)?.is_multiple === !!(field.settings as IsMultiple)?.is_multiple : true)
 }
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
-    return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, { type }) };
+    const fieldOption = FieldOptions.find(item=> item.type === type)!;
+    return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, fieldOption) };
 }
