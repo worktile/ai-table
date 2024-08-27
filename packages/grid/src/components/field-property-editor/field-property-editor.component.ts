@@ -94,7 +94,7 @@ export class AITableFieldPropertyEditor {
             const width = item.width ?? field.width;
             const settings = field.settings || {};
             const name = createDefaultFieldName(this.aiTable, field);
-            return { ...item, ...field, width, name, settings };
+            return { ...item, ...field, width, name, ...settings };
         });
     }
 
