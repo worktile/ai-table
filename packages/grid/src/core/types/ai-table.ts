@@ -1,5 +1,5 @@
 import { WritableSignal } from '@angular/core';
-import { Colors } from '../../constants';
+import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { AITableAction } from './action';
 import { AITableFields, AITableRecords } from './core';
