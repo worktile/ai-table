@@ -1,16 +1,12 @@
 import {
     ColumnCalendarFilledPath,
-    ColumnCreatedAtFilledPath,
-    ColumnCreatedByFilledPath,
     ColumnLinkOutlinedPath,
     ColumnMemberFilledPath,
     ColumnNumberFilledPath,
     ColumnProgressFilledPath,
     ColumnRatingFilledPath,
     ColumnSelectFilledPath,
-    ColumnTextFilledPath,
-    ColumnUpdatedAtFilledPath,
-    ColumnUpdatedByFilledPath
+    ColumnTextFilledPath
 } from '../constants';
 import { AITableFieldType } from '../core';
 import { AITableFieldTypeIconOptions } from '../types';
@@ -29,6 +25,8 @@ export const createFieldIcon = (options: AITableFieldTypeIconOptions) => {
             data = ColumnSelectFilledPath;
             break;
         case AITableFieldType.date:
+        case AITableFieldType.createdAt:
+        case AITableFieldType.updatedAt:
             data = ColumnCalendarFilledPath;
             break;
         case AITableFieldType.number:
@@ -41,22 +39,12 @@ export const createFieldIcon = (options: AITableFieldTypeIconOptions) => {
             data = ColumnRatingFilledPath;
             break;
         case AITableFieldType.member:
+        case AITableFieldType.createdBy:
+        case AITableFieldType.updatedBy:
             data = ColumnMemberFilledPath;
             break;
         case AITableFieldType.progress:
             data = ColumnProgressFilledPath;
-            break;
-        case AITableFieldType.createdAt:
-            data = ColumnCreatedAtFilledPath;
-            break;
-        case AITableFieldType.updatedAt:
-            data = ColumnUpdatedAtFilledPath;
-            break;
-        case AITableFieldType.createdBy:
-            data = ColumnCreatedByFilledPath;
-            break;
-        case AITableFieldType.updatedBy:
-            data = ColumnUpdatedByFilledPath;
             break;
     }
 
