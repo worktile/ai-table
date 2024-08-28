@@ -1,12 +1,13 @@
-import { AITableFields, AITableRecords, FieldsMap } from '../core';
+import { AITableFields, AITableRecords, FieldOptions } from '../core';
 import { AITableGridData } from '../types';
 
 export const buildGridData = (recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
-    const fields = fieldsValue.map((item) => {
+    const fields = fieldsValue.map((value) => {
+        const fieldOption = FieldOptions.find(item=> item.type === value.type)!;
         return {
-            ...item,
-            icon: item.icon || FieldsMap[item.type].icon,
-            width: item.width || FieldsMap[item.type].width
+            ...value,
+            icon: value.icon || fieldOption.icon,
+            width: value.width || fieldOption.width
         };
     });
     return {

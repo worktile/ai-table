@@ -1,7 +1,6 @@
-import { helpers } from 'ngx-tethys/util';
-import { AITableBaseField, AITableFieldType } from '../types';
+import { AITableFieldOption, AITableFieldType } from '../types';
 
-export const BasicFields = [
+export const FieldOptions: AITableFieldOption[] = [
     {
         type: AITableFieldType.text,
         name: '单行文本',
@@ -90,9 +89,3 @@ export const BasicFields = [
         width: 200
     }
 ];
-
-export const Fields: AITableBaseField[] = [...BasicFields];
-
-export const FieldsMap = helpers.keyBy([...BasicFields], 'type');
-
-export const FieldsIncludeIsMultiple = [AITableFieldType.select, AITableFieldType.member];

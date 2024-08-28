@@ -41,11 +41,11 @@ export enum AITableStatType {
     PercentUnChecked = 17
 }
 
-export interface AITableBaseField {
+export interface AITableFieldOption {
     name: string;
     type: AITableFieldType;
     icon: string;
-    width?: number;
+    width: number;
     settings?: AITableFieldSettings;
 }
 
