@@ -1,5 +1,5 @@
-import { Colors } from '../constants';
 
+import { Colors } from './colors';
 export const DEFAULT_ICON_SHAPE = 'square';
 export const DEFAULT_ICON_SIZE = 16;
 export const DEFAULT_ICON_FILL = Colors.defaultIconFill;
