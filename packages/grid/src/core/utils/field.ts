@@ -13,7 +13,7 @@ export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOpti
     const fieldOption = getFieldOptionByField(field);
     if(fieldOption){
         const count = aiTable.fields().filter((item) => {
-            return isFieldTypeOption(field, item)
+            return isSameFieldOption(field, item)
         }).length;
         return count === 0 ? fieldOption.name :fieldOption.name + ' ' + count;
     }
@@ -21,10 +21,10 @@ export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOpti
 }
 
 export function getFieldOptionByField(field: Partial<AITableField>){
-    return FieldOptions.find(item=> isFieldTypeOption(item, field));
+    return FieldOptions.find(item=> isSameFieldOption(item, field));
 }
 
-export function isFieldTypeOption(fieldOption: AITableFieldOption, field: Partial<AITableField>): boolean {
+export function isSameFieldOption(fieldOption: AITableFieldOption, field: Partial<AITableField>): boolean {
     return fieldOption.type === field.type && (fieldOption.type === AITableFieldType.select ? !!(fieldOption.settings as IsMultiple)?.is_multiple === !!(field.settings as IsMultiple)?.is_multiple : true)
 }
 
