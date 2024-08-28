@@ -1,25 +1,23 @@
 import * as Y from 'yjs';
 import { Observable } from 'lib0/observable';
-import * as url from 'lib0/url';
-import * as math from 'lib0/math';
-import * as time from 'lib0/time';
+import { LiveFeedProvider } from './feed-provider';
 
-// 尽量让使用方感受不到任何 subdoc 的概念
+export const convertYDocToFeedObject = (yDoc: Y.Doc, typeName: string) => {
+    const feedObject = yDoc as LiveFeedObject;
+    feedObject.typeName = typeName;
+    return feedObject;
+};
 
-/**
- * 可协同的对象
- */
 export class LiveFeedObject extends Y.Doc {
-    typeName: string;
+    typeName?: string;
 
-    constructor(options: { guid: string; typeName: string }) {
+    constructor(options: { guid: string; typeName: string }, provider?: LiveFeedProvider) {
         super({ guid: options.guid });
         this.typeName = options.typeName;
     }
 
-    // 1.存储数据
-    // 2.本地数据变化后同步给协同方
-    // 3.远程数据变化后应用到本地数据
+    // 检测数据变化，如果发现新增文档则需要将新增的文档转换为 feed-object （调用 convertYDocToFeedObject）
+    // 然后调用 room 的 addObject 方法，将对象添加到房间内，整体管理
 }
 
 export class LiveFeedRoom extends Observable<string> {
@@ -28,7 +26,11 @@ export class LiveFeedRoom extends Observable<string> {
 
     #pendingUpdates: LiveFeedObjectUpdate[] = [];
 
-    #isPending = false;
+    #pendingChanges: LiveFeedObjectChange[] = [];
+
+    #isPendingUpdate = false;
+
+    #isPendingChange = false;
 
     constructor(options: { guid: string; objects: LiveFeedObject[] }) {
         super();
@@ -42,17 +44,30 @@ export class LiveFeedRoom extends Observable<string> {
     }
 
     addObject(object: LiveFeedObject) {
+        if (!object.typeName) {
+            throw new Error('can not resolve typeName');
+        }
         this.objects.set(object.guid, object);
         object.get(object.typeName).observeDeep((events: Array<Y.YEvent<any>>, transaction: Y.Transaction) => {
-            this.emit('change', [
-                {
-                    events,
-                    transaction,
-                    guid: object.guid
-                }
-            ]);
+            this.#emitObjectChange(events, object, transaction);
         });
         object.on('update', this.#emitObjectUpdate);
+    }
+
+    #emitObjectChange(events: Y.YEvent<any>[], doc: Y.Doc, transaction: Y.Transaction) {
+        this.#pendingChanges.push({
+            events,
+            guid: doc.guid,
+            transaction
+        });
+        if (!this.#isPendingChange) {
+            this.#isPendingChange = true;
+            Promise.resolve().then(() => {
+                this.emit('update', this.#pendingChanges);
+                this.#pendingChanges = [];
+                this.#isPendingChange = false;
+            });
+        }
     }
 
     #emitObjectUpdate = (update: Uint8Array, arg1: any, doc: Y.Doc, transaction: Y.Transaction) => {
@@ -61,12 +76,12 @@ export class LiveFeedRoom extends Observable<string> {
             transaction,
             guid: doc.guid
         });
-        if (!this.#isPending) {
-            this.#isPending = true;
+        if (!this.#isPendingUpdate) {
+            this.#isPendingUpdate = true;
             Promise.resolve().then(() => {
                 this.emit('update', this.#pendingUpdates);
                 this.#pendingUpdates = [];
-                this.#isPending = false;
+                this.#isPendingUpdate = false;
             });
         }
     };
@@ -76,6 +91,14 @@ export class LiveFeedRoom extends Observable<string> {
         object.off('update', this.#emitObjectUpdate);
         object.destroy();
     }
+
+    getObject(guid: string) {
+        const object = this.objects.get(guid);
+        if (!object) {
+            throw new Error(`can not resolve feed object by guid: ${guid}`);
+        }
+        return object;
+    }
 }
 
 export interface LiveFeedObjectUpdate {
@@ -84,129 +107,8 @@ export interface LiveFeedObjectUpdate {
     guid: string;
 }
 
-export interface LiveFeedProviderOptions {
-    params: { [x: string]: string };
-    WebSocketPolyfill: typeof WebSocket;
-    connect: boolean;
+export interface LiveFeedObjectChange {
+    events: Y.YEvent<any>[];
+    transaction: Y.Transaction;
+    guid: string;
 }
-
-export class LiveFeedProvider extends Observable<string> {
-    room: LiveFeedRoom;
-    options: LiveFeedProviderOptions;
-    serverUrl: string;
-
-    shouldConnect = false;
-    hasConnected = false;
-    connecting = false;
-    unsuccessfulReconnects = 0;
-    lastMessageReceived = 0;
-
-    #synced = false;
-
-    ws?: WebSocket | null;
-
-    constructor(
-        room: LiveFeedRoom,
-        serverUrl: string,
-        options: LiveFeedProviderOptions = { params: {}, WebSocketPolyfill: WebSocket, connect: true }
-    ) {
-        super();
-        this.room = room;
-        this.options = options;
-        this.serverUrl = serverUrl;
-        this.shouldConnect = options.connect;
-    }
-
-    url() {
-        const encodedParams = url.encodeQueryParams(this.options.params);
-        return this.serverUrl + '/' + this.room.guid + (encodedParams.length === 0 ? '' : '?' + encodedParams);
-    }
-
-    connect() {
-        this.shouldConnect = true;
-        if (!this.hasConnected && this.ws === null) {
-            setupWS(this);
-        }
-    }
-
-    get synced() {
-        return this.#synced;
-    }
-
-    set synced(state) {
-        if (this.#synced !== state) {
-            this.#synced = state;
-            this.emit('synced', [state]);
-        }
-    }
-}
-
-const reconnectTimeoutBase = 1200;
-const maxReconnectTimeout = 12000;
-const messageReconnectTimeout = 60000;
-
-const setupWS = (provider: LiveFeedProvider) => {
-    if (provider.shouldConnect && provider.ws === null) {
-        const websocket = new provider.options.WebSocketPolyfill(provider.serverUrl);
-        websocket.binaryType = 'arraybuffer';
-        provider.ws = websocket;
-        provider.connecting = true;
-        provider.hasConnected = false;
-        provider.synced = false;
-
-        websocket.onmessage = (event) => {
-            const { data } = event;
-            if (typeof data === 'object') {
-            }
-        };
-        websocket.onclose = () => {
-            provider.ws = null;
-            provider.connecting = false;
-            if (provider.hasConnected) {
-                provider.hasConnected = false;
-                provider.synced = false;
-                provider.emit('status', [
-                    {
-                        status: 'disconnected'
-                    }
-                ]);
-            } else {
-                provider.unsuccessfulReconnects++;
-            }
-            // Start with no reconnect timeout and increase timeout by
-            // log10(unsuccessfulReconnects).
-            // The idea is to increase reconnect timeout slowly and have no reconnect
-            // timeout at the beginning (log(1) = 0)
-            setTimeout(
-                setupWS,
-                math.min(math.log10(provider.unsuccessfulReconnects + 1) * reconnectTimeoutBase, maxReconnectTimeout),
-                provider
-            );
-        };
-        websocket.onopen = () => {
-            provider.lastMessageReceived = time.getUnixTime();
-            provider.connecting = false;
-            provider.hasConnected = true;
-            provider.unsuccessfulReconnects = 0;
-            provider.emit('status', [
-                {
-                    status: 'connected'
-                }
-            ]);
-            // sync ydoc
-            const _syncInterval = setInterval(() => {
-                if (!provider.synced && provider.hasConnected) {
-                    // sync ydoc
-                } else {
-                    clearInterval(_syncInterval);
-                }
-            }, 1000);
-        };
-
-        provider.emit('status', [
-            {
-                status: 'connecting'
-            }
-        ]);
-    }
-};
