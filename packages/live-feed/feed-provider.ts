@@ -89,10 +89,13 @@ const setupWS = (provider: LiveFeedProvider) => {
         provider.synced = false;
 
         websocket.onmessage = (event) => {
-            const { data } = event;
-            if (typeof data === 'object') {
+            provider.lastMessageReceived = time.getUnixTime();
+            const encoder = readMessage(provider, new Uint8Array(event.data), true);
+            if (encoding.length(encoder) > 1) {
+                websocket.send(encoding.toUint8Array(encoder));
             }
         };
+
         websocket.onclose = () => {
             provider.ws = null;
             provider.connecting = false;
@@ -127,11 +130,10 @@ const setupWS = (provider: LiveFeedProvider) => {
                     status: 'connected'
                 }
             ]);
-            // sync ydoc
-
+            syncStep1(provider);
             const _syncInterval = setInterval(() => {
                 if (!provider.synced && provider.hasConnected) {
-                    // sync ydoc
+                    syncStep1(provider);
                 } else {
                     clearInterval(_syncInterval);
                 }
@@ -146,7 +148,12 @@ const setupWS = (provider: LiveFeedProvider) => {
     }
 };
 
-export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Encoder, provider: LiveFeedProvider, transactionOrigin: any) => {
+export const readSyncMessage = (
+    decoder: decoding.Decoder,
+    encoder: encoding.Encoder,
+    provider: LiveFeedProvider,
+    transactionOrigin: any
+) => {
     const messageType = decoding.readVarUint(decoder);
     switch (messageType) {
         case messageYjsSyncStep1:
@@ -164,7 +171,7 @@ export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Enc
     return messageType;
 };
 
-const sendStep1 = (provider: LiveFeedProvider) => {
+const syncStep1 = (provider: LiveFeedProvider) => {
     // always send sync step 1 when connected
     const encoder = encoding.createEncoder();
     encoding.writeVarUint(encoder, messageSync);

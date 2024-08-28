@@ -1,22 +1,23 @@
 import * as Y from 'yjs';
 import { Observable } from 'lib0/observable';
+import { LiveFeedProvider } from './feed-provider';
 
-// 尽量让使用方感受不到任何 subdoc 的概念
+export const convertYDocToFeedObject = (yDoc: Y.Doc, typeName: string) => {
+    const feedObject = yDoc as LiveFeedObject;
+    feedObject.typeName = typeName;
+    return feedObject;
+};
 
-/**
- * 可协同的对象
- */
 export class LiveFeedObject extends Y.Doc {
-    typeName: string;
+    typeName?: string;
 
-    constructor(options: { guid: string; typeName: string }) {
+    constructor(options: { guid: string; typeName: string }, provider?: LiveFeedProvider) {
         super({ guid: options.guid });
         this.typeName = options.typeName;
     }
 
-    // 1.存储数据
-    // 2.本地数据变化后同步给协同方
-    // 3.远程数据变化后应用到本地数据
+    // 检测数据变化，如果发现新增文档则需要将新增的文档转换为 feed-object （调用 convertYDocToFeedObject）
+    // 然后调用 room 的 addObject 方法，将对象添加到房间内，整体管理
 }
 
 export class LiveFeedRoom extends Observable<string> {
@@ -25,7 +26,11 @@ export class LiveFeedRoom extends Observable<string> {
 
     #pendingUpdates: LiveFeedObjectUpdate[] = [];
 
-    #isPending = false;
+    #pendingChanges: LiveFeedObjectChange[] = [];
+
+    #isPendingUpdate = false;
+
+    #isPendingChange = false;
 
     constructor(options: { guid: string; objects: LiveFeedObject[] }) {
         super();
@@ -39,17 +44,30 @@ export class LiveFeedRoom extends Observable<string> {
     }
 
     addObject(object: LiveFeedObject) {
+        if (!object.typeName) {
+            throw new Error('can not resolve typeName');
+        }
         this.objects.set(object.guid, object);
         object.get(object.typeName).observeDeep((events: Array<Y.YEvent<any>>, transaction: Y.Transaction) => {
-            this.emit('change', [
-                {
-                    events,
-                    transaction,
-                    guid: object.guid
-                }
-            ]);
+            this.#emitObjectChange(events, object, transaction);
         });
         object.on('update', this.#emitObjectUpdate);
+    }
+
+    #emitObjectChange(events: Y.YEvent<any>[], doc: Y.Doc, transaction: Y.Transaction) {
+        this.#pendingChanges.push({
+            events,
+            guid: doc.guid,
+            transaction
+        });
+        if (!this.#isPendingChange) {
+            this.#isPendingChange = true;
+            Promise.resolve().then(() => {
+                this.emit('update', this.#pendingChanges);
+                this.#pendingChanges = [];
+                this.#isPendingChange = false;
+            });
+        }
     }
 
     #emitObjectUpdate = (update: Uint8Array, arg1: any, doc: Y.Doc, transaction: Y.Transaction) => {
@@ -58,12 +76,12 @@ export class LiveFeedRoom extends Observable<string> {
             transaction,
             guid: doc.guid
         });
-        if (!this.#isPending) {
-            this.#isPending = true;
+        if (!this.#isPendingUpdate) {
+            this.#isPendingUpdate = true;
             Promise.resolve().then(() => {
                 this.emit('update', this.#pendingUpdates);
                 this.#pendingUpdates = [];
-                this.#isPending = false;
+                this.#isPendingUpdate = false;
             });
         }
     };
@@ -85,6 +103,12 @@ export class LiveFeedRoom extends Observable<string> {
 
 export interface LiveFeedObjectUpdate {
     update: Uint8Array;
+    transaction: Y.Transaction;
+    guid: string;
+}
+
+export interface LiveFeedObjectChange {
+    events: Y.YEvent<any>[];
     transaction: Y.Transaction;
     guid: string;
 }
