@@ -30,7 +30,7 @@ import { ThyLoading } from 'ngx-tethys/loading';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { TableService } from '../../../service/table.service';
-import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
+import { createDefaultPositions, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 
 @Component({
@@ -97,7 +97,7 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            const value = getDefaultValue();
+            const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
             this.tableService.buildRenderRecords(value.records);
             this.tableService.buildRenderFields(value.fields);
         }
@@ -114,6 +114,9 @@ export class DemoTableContent {
 
     changeRenderMode(e: ThySegmentEvent) {
         this.renderMode.set(Number(e.value));
+        const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
+        this.tableService.buildRenderRecords(value.records);
+        this.tableService.buildRenderFields(value.fields);
     }
 
     onChange(options: AITableChangeOptions) {

@@ -1,12 +1,12 @@
 import Konva from 'konva';
-import { AITableField, AITableFieldType, Coordinate } from '../core';
+import { AITableField, Coordinate } from '../core';
 
 export interface AITableIconOptions extends Konva.ShapeConfig {
     size?: number;
 }
 
 export interface AITableFieldTypeIconOptions {
-    fieldType: AITableFieldType;
+    field: AITableField;
     x?: number;
     y?: number;
     width?: number;

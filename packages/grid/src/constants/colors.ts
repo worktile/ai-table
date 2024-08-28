@@ -1,10 +1,10 @@
 export const Colors = {
     primary: '#6698FF',
-    defaultTextFill: '#262626',
-    defaultFieldIconFill: '#636363',
+    defaultTextFill: '#333333',
+    defaultFieldIconFill: '#999999',
     defaultBackground: '#FFFFFF',
-    defaultBorderStroke: 'rgba(61, 61, 61, 1)',
+    defaultBorderStroke: '#dddddd',
     defaultIconFill: '#8C8C8C',
     activeBackground: '#2C293B',
-    sheetLineColor: '#eee'
+    sheetLineColor: '#eeeeee'
 };

@@ -73,7 +73,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
             x: 28,
             y: (fieldHeadHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: isChecked ? AITableCheckType.checked : AITableCheckType.unchecked,
-            fill: isChecked ? colors.primary : colors.defaultIconFill
+            fill: isChecked ? colors.primary : colors.defaultBorderStroke
         });
         const rect1 = new Konva.Rect({
             x: 0.5,

@@ -57,7 +57,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
     });
 
     const fieldIcon = createFieldIcon({
-        fieldType: field.type,
+        field: field,
         x: AI_TABLE_CELL_PADDING,
         y: (headHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
         width: AI_TABLE_ICON_COMMON_SIZE,
