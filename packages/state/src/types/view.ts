@@ -70,7 +70,7 @@ export class GridSettings {
 
 export type AITableViews = AITableView[];
 
-export type AIViewPath = [string];
+export type AITableViewPath = [string];
 
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
@@ -84,11 +84,16 @@ export enum ViewActionName {
     RemoveView = 'remove_view'
 }
 
+export enum PositionActionName {
+    AddRecordPosition = 'add_record_position',
+    RemoveRecordPosition = 'remove_position'
+}
+
 export interface SetViewAction {
     type: ViewActionName.SetView;
     properties: Partial<AITableView>;
     newProperties: Partial<AITableView>;
-    path: AIViewPath;
+    path: AITableViewPath;
 }
 
 export interface AddViewAction {
@@ -99,9 +104,22 @@ export interface AddViewAction {
 
 export interface RemoveViewAction {
     type: ViewActionName.RemoveView;
-    path: AIViewPath;
+    path: AITableViewPath;
+}
+
+export interface AddRecordPositionAction {
+    type: PositionActionName.AddRecordPosition;
+    positions: Positions;
+    path: AITableViewPath;
+}
+
+export interface RemoveRecordPositionAction {
+    type: PositionActionName.RemoveRecordPosition;
+    path: AITableViewPath;
 }
 
 export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction;
 
-export type AITableSharedAction = AITableViewAction | AITableAction;
+export type AITablePositionAction = AddRecordPositionAction | RemoveRecordPositionAction;
+
+export type AITableSharedAction = AITableViewAction | AITableAction | AITablePositionAction;

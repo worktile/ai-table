@@ -1,5 +1,16 @@
-import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords } from '@ai-table/state';
+import { Actions, AITableFieldType, AITableReferences, AITableSelectOptionStyle, idCreator } from '@ai-table/grid';
+import {
+    AITableView,
+    AITableViewField,
+    AITableViewFields,
+    AITableViewRecords,
+    AIViewTable,
+    getViewPositions,
+    PositionActions,
+    SharedType,
+    translateToRecords,
+    ViewActions
+} from '@ai-table/state';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -437,4 +448,47 @@ export function getReferences(): AITableReferences {
             }
         }
     };
+}
+
+export function addView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, type: 'add' | 'copy') {
+    let index = aiTable.views().length;
+    const newId = idCreator();
+    let newView: AITableView = {
+        _id: newId,
+        name: '表格视图 ' + index
+    };
+    let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
+    if (type === 'copy') {
+        originViewId = aiTable.activeViewId();
+        const copyView = aiTable.views().find((item) => item._id === aiTable.activeViewId())!;
+        newView = {
+            ...copyView,
+            _id: newId,
+            name: copyView.name + '-副本'
+        };
+        index = aiTable.views().indexOf(copyView) + 1;
+    }
+    ViewActions.addView(aiTable, newView, [index]);
+    const { recordPositions, fieldPositions } = getViewPositions(records, fields, originViewId);
+    PositionActions.addRecordPosition(aiTable, recordPositions, [newId]);
+    fields.forEach((item) => {
+        Actions.setField<AITableViewField>(
+            aiTable,
+            {
+                positions: {
+                    ...item.positions,
+                    [newId]: fieldPositions[item._id]
+                }
+            },
+            [item._id]
+        );
+    });
+    return newView;
+}
+
+export function addViewInShared(aiTable: AIViewTable, sharedType: SharedType, type: 'add' | 'copy') {
+    const data = sharedType.toJSON();
+    const fields: AITableViewFields = data['fields'];
+    const records: AITableViewRecords = translateToRecords(data['records'], fields);
+    return addView(aiTable, records, fields, type);
 }
