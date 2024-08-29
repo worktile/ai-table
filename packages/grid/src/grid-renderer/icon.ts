@@ -45,10 +45,20 @@ export const createIcon = (config: AITableIconOptions) => {
         group.add(rect);
     }
 
+    let pathData = data;
+
+    switch (type) {
+        case AITableCheckType.checked:
+            pathData = Check;
+            break;
+        case AITableCheckType.unchecked:
+            pathData = Unchecked;
+            break;
+    }
     const path = new Konva.Path({
         // x: (size * (scaleX || 1)) / 2,
         // y: (size * (scaleY || 1)) / 2,
-        data: type && type === AITableCheckType.checked ? Check : type && type === AITableCheckType.unchecked ? Unchecked : data,
+        data: pathData,
         width: size,
         height: size,
         fill,
