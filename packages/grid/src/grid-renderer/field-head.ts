@@ -49,8 +49,8 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         }),
         width: width,
         height: headHeight,
-        fill: isSelected ? colors.activeBackground : colors.defaultBackground,
-        stroke: stroke || colors.sheetLineColor,
+        fill: isSelected ? colors.primary : colors.white,
+        stroke: stroke || colors.gray200,
         strokeWidth: 1,
         onMouseEnter: () => {},
         onMouseOut: () => {}
@@ -62,7 +62,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         y: (headHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
         width: AI_TABLE_ICON_COMMON_SIZE,
         height: AI_TABLE_ICON_COMMON_SIZE,
-        fill: colors.defaultFieldIconFill
+        fill: colors.gray600
     });
 
     const textData = getTextData();

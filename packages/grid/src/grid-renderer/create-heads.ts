@@ -61,7 +61,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             y: 0.5,
             width: AI_TABLE_ROW_HEAD_WIDTH + 1,
             height: fieldHeadHeight,
-            fill: colors.defaultBackground,
+            fill: colors.white,
             cornerRadius: [8, 0, 0, 0],
             listening: false
         });
@@ -70,14 +70,14 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             x: 28,
             y: (fieldHeadHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: isChecked ? AITableCheckType.checked : AITableCheckType.unchecked,
-            fill: isChecked ? colors.primary : colors.defaultBorderStroke
+            fill: isChecked ? colors.primary : colors.gray300
         });
         const rect1 = new Konva.Rect({
             x: 0.5,
             y: 0.5,
             width: frozenColumnWidth + AI_TABLE_ROW_HEAD_WIDTH,
             height: fieldHeadHeight,
-            stroke: colors.sheetLineColor,
+            stroke: colors.gray200,
             strokeWidth: 1,
             fill: 'transparent',
             cornerRadius: [8, 0, 0, 0],

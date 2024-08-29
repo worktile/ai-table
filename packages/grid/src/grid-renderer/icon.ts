@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { Check, DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_FILL, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../constants';
+import { Check, Colors, DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../constants';
 import { AITableCheckType, AITableIconOptions } from '../types';
 
 export const createIcon = (config: AITableIconOptions) => {
@@ -11,7 +11,7 @@ export const createIcon = (config: AITableIconOptions) => {
         x,
         y,
         size = DEFAULT_ICON_SIZE,
-        fill = DEFAULT_ICON_FILL,
+        fill = Colors.gray600,
         stroke,
         background = DEFAULT_ICON_BACKGROUND,
         rotation,
