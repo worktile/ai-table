@@ -12,7 +12,7 @@ import { createIcon } from './icon';
 import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
 import { AITableField } from '../core/types';
 
-export const createHeads = (props: AITableCreateHeadsOptions) => {
+export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex } = props;
     const colors = Colors;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;

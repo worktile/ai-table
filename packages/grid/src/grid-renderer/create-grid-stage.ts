@@ -3,7 +3,7 @@ import { AITableGridStageOptions } from '../types';
 import { AITable, Coordinate } from '../core';
 import { AI_TABLE_DEFAULT_COLUMN_WIDTH, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { getColumnIndicesMap, getVisibleRangeInfo } from '../utils';
-import { createHeads } from './create-heads';
+import { createColumnHeads } from './create-heads';
 
 export const createGridStage = (config: AITableGridStageOptions) => {
     const { width, height, container, aiTable, linearRows } = config;
@@ -36,7 +36,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
 
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
-    const { fieldHeads, frozenFieldHead } = createHeads({
+    const { columnHeads, frozenColumnHead } = createColumnHeads({
         instance: coordinateInstance,
         columnStartIndex,
         columnStopIndex,
@@ -47,15 +47,15 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const commonGroup = new Konva.Group();
     gridGroup.add(frozenGroup);
     gridGroup.add(commonGroup);
-    const frozenFieldHeadGroup = new Konva.Group();
-    frozenFieldHeadGroup.add(...frozenFieldHead);
+    const frozenColumnHeadGroup = new Konva.Group();
+    frozenColumnHeadGroup.add(...frozenColumnHead);
     const frozenCellsGroup = new Konva.Group();
-    frozenGroup.add(frozenFieldHeadGroup);
+    frozenGroup.add(frozenColumnHeadGroup);
     frozenGroup.add(frozenCellsGroup);
-    const fieldHeadGroup = new Konva.Group();
-    fieldHeadGroup.add(...fieldHeads);
+    const columnHeadGroup = new Konva.Group();
+    columnHeadGroup.add(...columnHeads);
     const cellsGroup = new Konva.Group();
-    commonGroup.add(fieldHeadGroup);
+    commonGroup.add(columnHeadGroup);
     commonGroup.add(cellsGroup);
     gridLayer.add(gridGroup);
     gridStage.add(gridLayer);
