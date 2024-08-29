@@ -1,4 +1,4 @@
-import { LiveFeedObject, LiveFeedRoom } from './feed-object';
+import { LiveFeedObject } from './feed-object';
 import { Observable } from 'lib0/observable';
 import * as url from 'lib0/url';
 import * as math from 'lib0/math';
@@ -7,16 +7,13 @@ import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as syncProtocol from 'y-protocols/sync';
 import * as Y from 'yjs';
-import { readSyncStep1, readSyncStep2, readUpdate } from './sync';
+import { messageYjsSyncStep1, readSyncMessage } from './sync';
+import { LiveFeedRoom } from './feed-room';
 
 export const messageSync = 0;
 export const messageQueryAwareness = 3;
 export const messageAwareness = 1;
 export const messageAuth = 2;
-
-export const messageYjsSyncStep1 = 0;
-export const messageYjsSyncStep2 = 1;
-export const messageYjsUpdate = 2;
 
 export interface LiveFeedProviderOptions {
     params: { [x: string]: string };
@@ -148,29 +145,6 @@ const setupWS = (provider: LiveFeedProvider) => {
     }
 };
 
-export const readSyncMessage = (
-    decoder: decoding.Decoder,
-    encoder: encoding.Encoder,
-    provider: LiveFeedProvider,
-    transactionOrigin: any
-) => {
-    const messageType = decoding.readVarUint(decoder);
-    switch (messageType) {
-        case messageYjsSyncStep1:
-            readSyncStep1(decoder, encoder, provider);
-            break;
-        case messageYjsSyncStep2:
-            readSyncStep2(decoder, provider, transactionOrigin);
-            break;
-        case messageYjsUpdate:
-            readUpdate(decoder, provider, transactionOrigin);
-            break;
-        default:
-            throw new Error('Unknown message type');
-    }
-    return messageType;
-};
-
 const syncStep1 = (provider: LiveFeedProvider) => {
     // always send sync step 1 when connected
     const encoder = encoding.createEncoder();
@@ -187,7 +161,7 @@ const syncStep1 = (provider: LiveFeedProvider) => {
 const messageHandlers: any[] = [];
 messageHandlers[messageSync] = (encoder: encoding.Encoder, decoder: decoding.Decoder, provider: LiveFeedProvider, emitSynced: boolean) => {
     encoding.writeVarUint(encoder, messageSync);
-    const syncMessageType = readSyncMessage(decoder, encoder, provider, provider);
+    const syncMessageType = readSyncMessage(decoder, encoder, provider.room, provider);
     if (emitSynced && syncMessageType === syncProtocol.messageYjsSyncStep2 && !provider.synced) {
         provider.synced = true;
     }
