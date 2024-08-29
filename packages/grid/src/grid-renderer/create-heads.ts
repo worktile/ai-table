@@ -17,7 +17,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
     const colors = Colors;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
 
-    const getFieldHeadStatus = (field: AITableField, columnIndex: number) => {
+    const getColumnHeadStatus = (field: AITableField, columnIndex: number) => {
         const iconVisible = false;
         const isSelected = false;
         return {
@@ -35,7 +35,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);
             const columnWidth = instance.getColumnWidth(columnIndex) ?? DEFAULT_COLUMN_WIDTH;
-            const { iconVisible, isSelected } = getFieldHeadStatus(field, columnIndex);
+            const { iconVisible, isSelected } = getColumnHeadStatus(field, columnIndex);
             const fieldHead = createFieldHead({
                 x,
                 y: 0,
@@ -52,10 +52,7 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
         return _fieldHeads;
     };
 
-    /**
-     * 绘制第一列标题
-     */
-    const getFrozenFieldHead = () => {
+    const getFrozenColumnHead = () => {
         const isChecked = false;
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
@@ -94,12 +91,12 @@ export const createHeads = (props: AITableCreateHeadsOptions) => {
     /**
      * 绘制其他列标题
      */
-    const fieldHeads = getColumnHead(Math.max(columnStartIndex, frozenColumnCount), columnStopIndex);
+    const columnHeads = getColumnHead(Math.max(columnStartIndex, frozenColumnCount), columnStopIndex);
 
-    const frozenFieldHead = getFrozenFieldHead();
+    const frozenColumnHead = getFrozenColumnHead();
 
     return {
-        fieldHeads,
-        frozenFieldHead
+        columnHeads,
+        frozenColumnHead
     };
 };
