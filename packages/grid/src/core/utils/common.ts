@@ -1,7 +1,7 @@
+import { WritableSignal, signal } from '@angular/core';
 import { Actions } from '../action';
 import { AITable, AITableAction, AITableFields, AITableRecords, Path } from '../types';
 import { FLUSHING } from './weak-map';
-import { WritableSignal, signal } from '@angular/core';
 
 export function createAITable(records: WritableSignal<AITableRecords>, fields: WritableSignal<AITableFields>): AITable {
     const aiTable: AITable = {

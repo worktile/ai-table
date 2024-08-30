@@ -1,16 +1,15 @@
 import Konva from 'konva';
 import {
-    AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors,
     DEFAULT_COLUMN_WIDTH
 } from '../constants';
+import { AITableField } from '../core/types';
+import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
 import { createFieldHead } from './field-head';
 import { createIcon } from './icon';
-import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
-import { AITableField } from '../core/types';
 
 export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex } = props;
@@ -42,7 +41,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
                 width: columnWidth,
                 height: fieldHeadHeight,
                 field,
-                stroke: columnIndex === 0 ? 'transparent' : undefined,
+                stroke: columnIndex === 0 ? colors.transparent : undefined,
                 isSelected: isSelected,
                 operationVisible: iconVisible
             });
@@ -79,7 +78,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             height: fieldHeadHeight,
             stroke: colors.gray200,
             strokeWidth: 1,
-            fill: 'transparent',
+            fill: colors.transparent,
             cornerRadius: [8, 0, 0, 0],
             listening: false
         });
