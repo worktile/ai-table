@@ -1,20 +1,25 @@
-import { computed, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { WebsocketProvider } from 'y-websocket';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
-import { createDraft, finishDraft } from 'immer';
 import {
     AITableViewRecords,
     AITableViewFields,
     AIViewTable,
     SharedType,
     YjsAITable,
-    getProvider,
     applyYjsEvents,
     createSharedType,
     initSharedType,
     initTable,
-    AITableView
-} from '@ai-table/shared';
+    AITableView,
+    AITableViews
+} from '@ai-table/state';
+import { getProvider } from '../provider';
+import { Router } from '@angular/router';
+
+export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
+
+export const TABLE_SERVICE_MAP = new WeakMap<AIViewTable, TableService>();
 
 @Injectable()
 export class TableService {
@@ -30,27 +35,21 @@ export class TableService {
 
     sharedType!: SharedType | null;
 
+    activeViewId: WritableSignal<string> = signal('');
+
+    router = inject(Router);
+
     activeView = computed(() => {
-        return this.views().find((view) => view?.is_active) as AITableView;
+        return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
     });
 
     initData(views: AITableView[]) {
         this.views = signal(views);
     }
 
-    updateActiveView(activeViewId: string) {
-        this.views.update((value) => {
-            const draftViews = createDraft(value);
-            draftViews.forEach((item) => {
-                if (item.is_active && item._id !== activeViewId) {
-                    item.is_active = false;
-                }
-                if (!item.is_active && item._id === activeViewId) {
-                    item.is_active = true;
-                }
-            });
-            return finishDraft(draftViews);
-        });
+    setActiveView(activeViewId: string) {
+        this.activeViewId.set(activeViewId);
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}`, activeViewId);
     }
 
     setAITable(aiTable: AIViewTable) {
@@ -58,11 +57,11 @@ export class TableService {
     }
 
     buildRenderRecords(records?: AITableViewRecords) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeView()._id) as AITableViewRecords);
+        this.records = signal(sortDataByView(records ?? this.records(), this.activeViewId()) as AITableViewRecords);
     }
 
     buildRenderFields(fields?: AITableViewFields) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeView()._id) as AITableViewFields);
+        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeViewId()) as AITableViewFields);
     }
 
     handleShared(room: string) {
@@ -78,12 +77,12 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = initTable(this.sharedType!);
+                        this.views.set(data.views);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
-                        this.views.set(data.views);
                         isInitialized = true;
                     } else {
-                        applyYjsEvents(this.aiTable, this.sharedType!, events);
+                        applyYjsEvents(this.aiTable, this.activeViewId(), this.sharedType!, events);
                     }
                 }
             });

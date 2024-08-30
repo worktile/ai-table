@@ -1,5 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/shared';
+import { AITableViewFields, AITableViewRecords } from '@ai-table/state';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -7,30 +7,6 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
         return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
     }
     return data;
-}
-
-export function createDefaultPositions(views: AITableView[], data: AITableViewRecords | AITableViewFields, index: number) {
-    const positions: Positions = {};
-    const activeId = views.find((item) => item.is_active)?._id!;
-    const position = getPosition(data, activeId, index);
-    const maxIndex = index === data.length - 1 ? data.length - 2 : data.length - 1;
-    const maxPosition = data[maxIndex].positions[activeId];
-    views.forEach((element) => {
-        positions[element._id] = element.is_active ? position : maxPosition + 1;
-    });
-    return positions;
-}
-
-export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
-    let position = data.length - 1;
-    if (index !== 0 && index !== data.length - 1) {
-        const previousViewPosition = data[index - 1].positions[activeViewId];
-        const nextViewPosition = data[index + 1].positions[activeViewId!];
-        position = (previousViewPosition + nextViewPosition) / 2;
-    } else {
-        position = index;
-    }
-    return position;
 }
 
 export function getDefaultValue() {

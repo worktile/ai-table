@@ -39,6 +39,14 @@ export enum AITableStatType {
     PercentUnChecked = 17
 }
 
+export interface AITableFieldOption {
+    name: string;
+    type: AITableFieldType;
+    icon: string;
+    width: number;
+    settings?: AITableFieldSettings;
+}
+
 export interface AITableField {
     _id: string;
     name: string;
@@ -53,16 +61,16 @@ export interface AITableField {
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
 
-export interface TextSettings {}
+export interface TextSettings { }
 
-export interface RichTextSettings {}
+export interface RichTextSettings { }
 
 export interface SelectSettings extends IsMultiple {
     option_style?: AITableSelectOptionStyle;
     options: AITableSelectOption[];
 }
 
-export interface MemberSettings extends IsMultiple {}
+export interface MemberSettings extends IsMultiple { }
 
 export interface IsMultiple {
     is_multiple?: boolean;
@@ -77,10 +85,10 @@ export interface AITableSelectOption {
 }
 
 export enum AITableSelectOptionStyle {
-    text = 'text',
-    tag = 'tag',
-    dot = 'dot',
-    piece = 'piece'
+    text = 1,
+    tag = 2,
+    dot = 3,
+    piece = 4
 }
 
 export type TextFieldValue = string;

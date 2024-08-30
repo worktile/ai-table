@@ -90,7 +90,7 @@ export class Coordinate {
      * 获取每个 cell 垂直/水平方向的坐标信息
      */
     protected getCellMetaData(index: number, itemType: AITableRowColumnType): AITableCellMetaData {
-        let cellMetadataMap, itemSize, lastMeasuredIndex, offset;
+        let cellMetadataMap, lastMeasuredIndex, offset;
         const isColumnType = itemType === AITableRowColumnType.column;
         if (isColumnType) {
             offset = this.columnInitSize;

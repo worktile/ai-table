@@ -1,6 +1,6 @@
 {
     "name": "ai-table",
-    "version": "0.0.7",
+    "version": "0.0.9",
     "workspaces": [
         "packages/*"
     ],
