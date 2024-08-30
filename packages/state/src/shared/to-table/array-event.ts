@@ -86,7 +86,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
                                 const record = (aiTable.records() as AITableViewRecords)[recordIndex];
-                                if (fieldIndex === sharedFields.length) {
+                                if (isPositionOperation(fieldIndex, sharedFields)) {
                                     for (const key in item) {
                                         if (!record.positions[key] && record.positions[key] !== 0) {
                                             actions.push({
@@ -159,6 +159,10 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
 
 export function isAddOrRemove(targetPath: number[]): boolean {
     return targetPath.length === 0;
+}
+
+export function isPositionOperation(fieldIndex: number, sharedFields: Y.Array<SyncMapElement>): boolean {
+    return fieldIndex === sharedFields.length;
 }
 
 export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord) {
