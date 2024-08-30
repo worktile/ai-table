@@ -14,7 +14,7 @@ export const createAddFieldColumn = (instance: Coordinate, columnLength: number,
     const react = new Konva.Rect({
         x: 0.5,
         y: 0.5,
-        width: btnWidth,
+        width: instance.containerWidth - x < btnWidth ? btnWidth : instance.containerWidth - x,
         height: instance.rowInitSize,
         stroke: Colors.gray200,
         strokeWidth: 1,
