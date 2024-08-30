@@ -54,7 +54,6 @@ export interface AITableCoordinate {
     containerWidth: number;
     containerHeight: number;
     rowHeight: number;
-    columnWidth: number;
     rowInitSize?: number;
     rowIndicesMap: AITableSizeMap;
     columnIndicesMap: AITableSizeMap;

@@ -1,11 +1,5 @@
 import Konva from 'konva';
-import {
-    AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-    AI_TABLE_ICON_COMMON_SIZE,
-    AI_TABLE_ROW_HEAD_WIDTH,
-    Colors,
-    DEFAULT_COLUMN_WIDTH
-} from '../constants';
+import { AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX, AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_ROW_HEAD_WIDTH, Colors } from '../constants';
 import { createFieldHead } from './field-head';
 import { createIcon } from './icon';
 import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
@@ -23,7 +17,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             const field = fields[columnIndex];
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);
-            const columnWidth = instance.getColumnWidth(columnIndex) ?? DEFAULT_COLUMN_WIDTH;
+            const columnWidth = instance.getColumnWidth(columnIndex);
             const fieldHead = createFieldHead({
                 x,
                 y: 0,

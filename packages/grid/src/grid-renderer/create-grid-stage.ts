@@ -1,7 +1,7 @@
 import Konva from 'konva/lib';
 import { AITableGridStageOptions } from '../types';
 import { AITable, Coordinate } from '../core';
-import { AI_TABLE_DEFAULT_COLUMN_WIDTH, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { getColumnIndicesMap, getVisibleRangeInfo } from '../utils';
 import { createColumnHeads } from './create-heads';
 
@@ -10,7 +10,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
 
     const coordinateInstance = new Coordinate({
         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
-        columnWidth: AI_TABLE_DEFAULT_COLUMN_WIDTH,
         rowCount: linearRows.length,
         columnCount: aiTable.fields().length,
         containerWidth: width,
