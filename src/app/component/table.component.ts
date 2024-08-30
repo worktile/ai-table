@@ -8,11 +8,10 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
-import { addView, AITableView, AITableViewFields, AITableViewRecords, PositionActions, removeView, ViewActions } from '@ai-table/state';
+import { addView, AITableViewFields, AITableViewRecords, removeView, ViewActions } from '@ai-table/state';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
-import { addViewInShared } from '../utils/utils';
 
 const initViews = [
     { _id: 'view1', name: '表格视图' },
@@ -89,15 +88,7 @@ export class DemoTable implements OnInit, OnDestroy {
     }
 
     addView(type: 'add' | 'copy') {
-        let newView: AITableView;
-        if (this.tableService.sharedType) {
-            newView = addViewInShared(this.tableService.aiTable, this.tableService.sharedType, type);
-        } else {
-            // TODO：未连接协同时只有渲染数据，没有存储原始数据，此时不应该直接用渲染数据的 positions
-            const records = this.tableService.aiTable.records() as AITableViewRecords;
-            const fields = this.tableService.aiTable.fields() as AITableViewFields;
-            newView = addView(this.tableService.aiTable, records, fields, type);
-        }
+        const newView = addView(this.tableService.aiTable, type);
         if (newView) {
             this.tableService.setActiveView(newView._id);
         }

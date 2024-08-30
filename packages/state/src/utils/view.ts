@@ -29,7 +29,7 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
     return position;
 }
 
-export function addView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, type: 'add' | 'copy') {
+export function addView(aiTable: AIViewTable, type: 'add' | 'copy') {
     let index = aiTable.views().length;
     const newId = idCreator();
     let newView: AITableView = {
@@ -48,10 +48,10 @@ export function addView(aiTable: AIViewTable, records: AITableViewRecords, field
         index = aiTable.views().indexOf(copyView) + 1;
     }
     ViewActions.addView(aiTable, newView, [index]);
-    records.forEach((record) => {
+    (aiTable.records() as AITableViewRecords).forEach((record) => {
         PositionActions.addRecordPosition(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
     });
-    fields.forEach((field) => {
+    (aiTable.fields() as AITableViewFields).forEach((field) => {
         Actions.setField<AITableViewField>(
             aiTable,
             {

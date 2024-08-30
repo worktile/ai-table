@@ -1,5 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { addView, AITableViewFields, AITableViewRecords, AIViewTable, SharedType, translateToRecords } from '@ai-table/state';
+import { AITableViewFields, AITableViewRecords } from '@ai-table/state';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -437,11 +437,4 @@ export function getReferences(): AITableReferences {
             }
         }
     };
-}
-
-export function addViewInShared(aiTable: AIViewTable, sharedType: SharedType, type: 'add' | 'copy') {
-    const data = sharedType.toJSON();
-    const fields: AITableViewFields = data['fields'];
-    const records: AITableViewRecords = translateToRecords(data['records'], fields);
-    return addView(aiTable, records, fields, type);
 }
