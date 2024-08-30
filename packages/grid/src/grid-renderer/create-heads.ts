@@ -36,13 +36,20 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
         const isChecked = false;
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
-        const rect = new Konva.Rect({
+        const topLine = new Konva.Line({
             x: 0.5,
             y: 0.5,
-            width: AI_TABLE_ROW_HEAD_WIDTH + 1,
-            height: fieldHeadHeight,
-            fill: colors.white,
-            cornerRadius: [8, 0, 0, 0],
+            points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
+            stroke: colors.gray200,
+            strokeWidth: 1,
+            listening: false
+        });
+        const bottomLine = new Konva.Line({
+            x: 0.5,
+            y: 0.5,
+            points: [AI_TABLE_ROW_HEAD_WIDTH, fieldHeadHeight, 0, fieldHeadHeight],
+            stroke: colors.gray200,
+            strokeWidth: 1,
             listening: false
         });
         const icon = createIcon({
@@ -53,17 +60,16 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             fill: isChecked ? colors.primary : colors.gray300
         });
         const rect1 = new Konva.Rect({
-            x: 0.5,
+            x: AI_TABLE_ROW_HEAD_WIDTH + 0.5,
             y: 0.5,
-            width: frozenColumnWidth + AI_TABLE_ROW_HEAD_WIDTH,
+            width: frozenColumnWidth,
             height: fieldHeadHeight,
             stroke: colors.gray200,
             strokeWidth: 1,
             fill: 'transparent',
-            cornerRadius: [8, 0, 0, 0],
             listening: false
         });
-        headGroup.push(rect, icon, ...head, rect1);
+        headGroup.push(topLine, bottomLine, icon, ...head, rect1);
 
         return headGroup;
     };
