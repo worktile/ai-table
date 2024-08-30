@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, OnInit } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { AITableGridBase } from './grid-base.component';
 import { createGridStage } from './grid-renderer/create-grid-stage';
 import { AITableGridEventService } from './services/event.service';
@@ -38,11 +38,20 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         const container = this.elementRef.nativeElement;
         const gridStage = createGridStage({
             aiTable: this.aiTable,
+            context: {
+                linearRows: this.gridLinearRows(),
+                scrollState: signal({
+                    scrollTop: 0,
+                    scrollLeft: 0,
+                    isScrolling: false
+                })
+            },
             container: container,
             width: container.offsetWidth,
             height: container.offsetHeight,
             linearRows: this.gridLinearRows()
         });
         gridStage.draw();
+        console.log(gridStage.toObject());
     }
 }
