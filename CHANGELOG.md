@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.9](https://github.com/worktile/ai-table/compare/0.0.8...0.0.9) (2024-08-27)
+
+
+### Bug Fixes
+
+* **grid:** fix select type error when type is multiple ([#77](https://github.com/worktile/ai-table/issues/77)) ([10be512](https://github.com/worktile/ai-table/commit/10be5124166a5da8d359cf6d51ccb074ae5fa8c2))
+* **grid:** optimize pipe #WIK-16303 ([#76](https://github.com/worktile/ai-table/issues/76)) ([4e219e7](https://github.com/worktile/ai-table/commit/4e219e7b3f9f19ab496bac9d8fcc0623849cc608)), closes [#WIK-16303](https://github.com/worktile/ai-table/issues/WIK-16303)
+
+
+
+## [0.0.8](https://github.com/worktile/ai-table/compare/0.0.7...0.0.8) (2024-08-22)
+
+
+
 ## [0.0.7](https://github.com/worktile/ai-table/compare/0.0.6...0.0.7) (2024-08-21)
 
 

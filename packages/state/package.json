@@ -1,6 +1,6 @@
 {
-    "name": "@ai-table/shared",
-    "version": "0.0.7",
+    "name": "@ai-table/state",
+    "version": "0.0.9",
     "peerDependencies": {
         "@ai-table/grid": "^0.0.7"
     },

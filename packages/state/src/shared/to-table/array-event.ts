@@ -15,7 +15,7 @@ import {
 import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
-export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
+export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: string, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
@@ -60,7 +60,6 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [fixedField, customField] = data;
-                            const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
                             const position = customField[customField.length - 1][activeViewId];
                             const path = translatePositionToPath(
                                 aiTable.records() as AITableViewRecords,
@@ -103,7 +102,6 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                 if (isFieldsTranslate) {
                     delta.insert?.map((item: Y.Map<any>) => {
                         const data = item.toJSON();
-                        const activeViewId = aiTable.views().find((item) => item.is_active)!._id!;
                         const path = translatePositionToPath(
                             aiTable.fields() as AITableViewFields,
                             data['positions'][activeViewId],

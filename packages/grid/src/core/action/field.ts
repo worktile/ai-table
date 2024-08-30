@@ -44,7 +44,7 @@ export function setField(aiTable: AITable, value: Partial<AITableField>, path: A
         const newProperties: Partial<AITableField> = {};
         for (const key in value) {
             const k = key as keyof AITableField;
-            if (field[k]?.toString() !== value[k]?.toString()) {
+            if (JSON.stringify(field[k]) !== JSON.stringify(value[k])) {
                 if (field.hasOwnProperty(k)) {
                     properties[k] = field[k] as any;
                 }

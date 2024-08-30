@@ -1,6 +1,6 @@
 {
     "name": "ai-table",
-    "version": "0.0.7",
+    "version": "0.0.9",
     "workspaces": [
         "packages/*"
     ],
@@ -38,12 +38,12 @@
         "@angular/platform-browser": "^18.1.4",
         "@angular/platform-browser-dynamic": "^18.1.4",
         "@angular/router": "^18.1.4",
-        "@tethys/cdk": "^17.0.17",
+        "@tethys/cdk": "^18.0.0",
         "@tethys/icons": "^1.4.69",
         "bson-objectid": "^2.0.4",
         "date-fns": "^3.6.0",
         "immer": "^10.0.3",
-        "ngx-tethys": "17.0.17",
+        "ngx-tethys": "18.0.0",
         "npm": "^10.8.1",
         "rxjs": "~7.8.0",
         "tslib": "^2.6.3",

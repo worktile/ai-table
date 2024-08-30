@@ -50,7 +50,6 @@ export interface AITableView {
     _id: string;
     name: string;
     emoji_icon?: string;
-    is_active?: boolean;
     settings?: GridSettings;
 }
 
@@ -75,6 +74,7 @@ export type AIViewPath = [string];
 
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
+    activeViewId: WritableSignal<string>;
     apply: (action: AITableSharedAction) => void;
 }
 
@@ -105,4 +105,3 @@ export interface RemoveViewAction {
 export type AITableViewAction = SetViewAction | AddViewAction | RemoveViewAction;
 
 export type AITableSharedAction = AITableViewAction | AITableAction;
-

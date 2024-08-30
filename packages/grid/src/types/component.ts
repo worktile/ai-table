@@ -1,12 +1,12 @@
 import Konva from 'konva';
-import { AITableField, AITableFieldType } from '../core';
+import { AITableField, Coordinate } from '../core';
 
 export interface AITableIconOptions extends Konva.ShapeConfig {
     size?: number;
 }
 
 export interface AITableFieldTypeIconOptions {
-    fieldType: AITableFieldType;
+    field: AITableField;
     x?: number;
     y?: number;
     width?: number;
@@ -21,8 +21,13 @@ export interface AITableFieldHeadOptions {
     height: number;
     field: AITableField;
     stroke?: string;
-    operationVisible: boolean; // 是否显示图标，鼠标悬停时显示，否则隐藏
-    isSelected: boolean; // 是否选中
+}
+
+export interface AITableCreateHeadsOptions {
+    fields: AITableField[];
+    instance: Coordinate;
+    columnStartIndex: number;
+    columnStopIndex: number;
 }
 
 export interface AITableTargetNameOptions {

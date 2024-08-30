@@ -1,8 +1,5 @@
 import {
-    ActionName,
     Actions,
-    AddFieldAction,
-    AddRecordAction,
     AIFieldConfig,
     AIFieldPath,
     AIRecordPath,
@@ -17,21 +14,21 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { AITableViewField, AITableViewRecord, AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/shared';
+import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/state';
 import { ChangeDetectionStrategy, Component, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
-import { createDraft, finishDraft } from 'immer';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyLoading } from 'ngx-tethys/loading';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
-import { TableService } from '../../../service/table.service';
-import { createDefaultPositions, getDefaultValue, getReferences } from '../../../utils/utils';
+import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
+import { getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
+import { withRemoveView } from '../../../plugins/view.plugin';
 
 @Component({
     selector: 'demo-table-content',
@@ -58,7 +55,7 @@ import { FieldPropertyEditor } from '../field-property-editor/field-property-edi
 export class DemoTableContent {
     aiTable!: AIViewTable;
 
-    plugins = [withView];
+    plugins = [withView, withRemoveView];
 
     aiFieldConfig: AIFieldConfig = {
         fieldPropertyEditor: FieldPropertyEditor,
@@ -97,7 +94,7 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            const value = getDefaultValue();
+            const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
             this.tableService.buildRenderRecords(value.records);
             this.tableService.buildRenderFields(value.fields);
         }
@@ -114,41 +111,13 @@ export class DemoTableContent {
 
     changeRenderMode(e: ThySegmentEvent) {
         this.renderMode.set(Number(e.value));
+        const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
+        this.tableService.buildRenderRecords(value.records);
+        this.tableService.buildRenderFields(value.fields);
     }
 
     onChange(options: AITableChangeOptions) {
         if (this.tableService.sharedType) {
-            options.actions = options.actions.map((action) => {
-                if (action.type === ActionName.AddRecord) {
-                    const draftAction = createDraft(action);
-                    const record = (draftAction as AddRecordAction).record as AITableViewRecord;
-                    if (!record.positions) {
-                        record.positions = createDefaultPositions(this.tableService.views(), this.tableService.records(), action.path[0]);
-                        const newAction = finishDraft(draftAction) as AddRecordAction;
-                        this.tableService.records.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.record as AITableViewRecord;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                if (action.type === ActionName.AddField) {
-                    const draftAction = createDraft(action);
-                    const field = (draftAction as AddFieldAction).field as AITableViewField;
-                    if (!field.positions) {
-                        field.positions = createDefaultPositions(this.tableService.views(), this.tableService.fields(), action.path[0]);
-                        const newAction = finishDraft(draftAction) as AddFieldAction;
-                        this.tableService.fields.update((value) => {
-                            let draftValue = createDraft(value);
-                            draftValue[action.path[0]] = newAction.field as AITableViewField;
-                            return finishDraft(draftValue);
-                        });
-                        return newAction;
-                    }
-                }
-                return action;
-            });
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                 YjsAITable.asLocal(this.aiTable, () => {
                     applyActionOps(this.tableService.sharedType!, options.actions, this.aiTable);
@@ -165,6 +134,8 @@ export class DemoTableContent {
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable as AIViewTable;
         this.aiTable.views = this.tableService.views;
+        this.aiTable.activeViewId = this.tableService.activeViewId;
+        TABLE_SERVICE_MAP.set(this.aiTable, this.tableService);
         this.tableService.setAITable(this.aiTable);
     }
 
