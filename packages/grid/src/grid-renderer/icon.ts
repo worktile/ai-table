@@ -1,6 +1,6 @@
 import Konva from 'konva';
-import { DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_FILL, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE } from '../constants';
-import { AITableIconOptions } from '../types';
+import { Check, Colors, DEFAULT_ICON_BACKGROUND, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../constants';
+import { AITableCheckType, AITableIconOptions } from '../types';
 
 export const createIcon = (config: AITableIconOptions) => {
     const {
@@ -11,7 +11,7 @@ export const createIcon = (config: AITableIconOptions) => {
         x,
         y,
         size = DEFAULT_ICON_SIZE,
-        fill = DEFAULT_ICON_FILL,
+        fill = Colors.gray600,
         stroke,
         background = DEFAULT_ICON_BACKGROUND,
         rotation,
@@ -45,10 +45,18 @@ export const createIcon = (config: AITableIconOptions) => {
         group.add(rect);
     }
 
+    let pathData = data;
+
+    switch (type) {
+        case AITableCheckType.checked:
+            pathData = Check;
+            break;
+        case AITableCheckType.unchecked:
+            pathData = Unchecked;
+            break;
+    }
     const path = new Konva.Path({
-        x: (size * (scaleX || 1)) / 2,
-        y: (size * (scaleY || 1)) / 2,
-        data,
+        data: pathData,
         width: size,
         height: size,
         fill,

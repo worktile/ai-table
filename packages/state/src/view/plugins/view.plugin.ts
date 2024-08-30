@@ -1,5 +1,4 @@
 import { ActionName, Actions, AITable, AITableAction, FLUSHING } from '@ai-table/grid';
-import { GeneralActions, GeneralPositionActions, GeneralViewActions } from '../action';
 import {
     AITablePositionAction,
     AITableSharedAction,
@@ -8,6 +7,7 @@ import {
     PositionActionName,
     ViewActionName
 } from '../../types';
+import { GeneralActions, GeneralPositionActions, GeneralViewActions } from '../action';
 import { POSITION_ACTIONS, VIEW_ACTIONS } from '../constants/view';
 
 export const withView = (aiTable: AITable) => {

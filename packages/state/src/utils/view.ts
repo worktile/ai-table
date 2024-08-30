@@ -1,4 +1,4 @@
-import { idCreator, Actions } from '@ai-table/grid';
+import { Actions, idCreator } from '@ai-table/grid';
 import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
 import { PositionActions, ViewActions } from '../view/action';
 
