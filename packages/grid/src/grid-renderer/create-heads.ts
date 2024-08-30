@@ -1,6 +1,5 @@
 import Konva from 'konva';
 import {
-    AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_ROW_HEAD_WIDTH,
@@ -10,21 +9,11 @@ import {
 import { createFieldHead } from './field-head';
 import { createIcon } from './icon';
 import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
-import { AITableField } from '../core/types';
 
 export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex } = props;
     const colors = Colors;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
-
-    const getColumnHeadStatus = (field: AITableField, columnIndex: number) => {
-        const iconVisible = false;
-        const isSelected = false;
-        return {
-            iconVisible,
-            isSelected
-        };
-    };
 
     const getColumnHead = (columnStartIndex: number, columnStopIndex: number) => {
         const _fieldHeads: Konva.Group[] = [];
@@ -35,16 +24,13 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);
             const columnWidth = instance.getColumnWidth(columnIndex) ?? DEFAULT_COLUMN_WIDTH;
-            const { iconVisible, isSelected } = getColumnHeadStatus(field, columnIndex);
             const fieldHead = createFieldHead({
                 x,
                 y: 0,
                 width: columnWidth,
                 height: fieldHeadHeight,
                 field,
-                stroke: columnIndex === 0 ? 'transparent' : undefined,
-                isSelected: isSelected,
-                operationVisible: iconVisible
+                stroke: columnIndex === 0 ? 'transparent' : undefined
             });
 
             _fieldHeads.push(fieldHead);

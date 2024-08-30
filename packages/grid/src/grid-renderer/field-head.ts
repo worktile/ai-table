@@ -16,15 +16,11 @@ import { createText } from './text';
 export const createFieldHead = (options: AITableFieldHeadOptions) => {
     const colors = AITable.getColors();
     const textMeasure = TextMeasure();
-    const { x = 0, y = 0, width, field, height: headHeight, stroke, operationVisible, isSelected } = options;
+    const { x = 0, y = 0, width, field, height: headHeight, stroke } = options;
     const { _id: fieldId, name: _fieldName } = field;
     const textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
 
-    let availableTextWidth =
-        width -
-        (operationVisible
-            ? 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE)
-            : 2 * AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE);
+    let availableTextWidth = width - (2 * AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE);
 
     // 在 "默认列标题高度" 模式下，换行符将转换为空格以便完整显示.
     const fieldName = _fieldName.replace(/\r|\n/g, ' ');
@@ -49,7 +45,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         }),
         width: width,
         height: headHeight,
-        fill: isSelected ? colors.primary : colors.white,
+        fill: colors.white,
         stroke: stroke || colors.gray200,
         strokeWidth: 1,
         onMouseEnter: () => {},

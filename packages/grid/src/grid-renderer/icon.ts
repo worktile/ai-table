@@ -56,8 +56,6 @@ export const createIcon = (config: AITableIconOptions) => {
             break;
     }
     const path = new Konva.Path({
-        // x: (size * (scaleX || 1)) / 2,
-        // y: (size * (scaleY || 1)) / 2,
         data: pathData,
         width: size,
         height: size,
