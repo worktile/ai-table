@@ -34,7 +34,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         height: height,
         listening: false
     });
-
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
     const { columnHeads, frozenColumnHead } = createColumnHeads({
@@ -43,7 +42,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         columnStopIndex,
         fields: aiTable.fields()
     });
-
     const frozenGroup = new Konva.Group();
     const commonGroup = new Konva.Group();
     gridGroup.add(frozenGroup);
@@ -56,12 +54,9 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const columnHeadGroup = new Konva.Group();
     columnHeadGroup.add(...columnHeads);
     const addFieldColumn = createAddFieldColumn(coordinateInstance, fields.length, columnStopIndex);
-    columnHeadGroup.add(...columnHeads);
-
     if (addFieldColumn) {
         columnHeadGroup.add(addFieldColumn);
     }
-
     const cellsGroup = new Konva.Group();
     commonGroup.add(columnHeadGroup);
     commonGroup.add(cellsGroup);
