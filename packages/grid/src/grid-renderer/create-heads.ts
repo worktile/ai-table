@@ -1,5 +1,11 @@
 import Konva from 'konva';
-import { AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX, AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_ROW_HEAD_WIDTH, Colors } from '../constants';
+import {
+    AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
+    AI_TABLE_ICON_COMMON_SIZE,
+    AI_TABLE_ROW_HEAD_WIDTH,
+    Colors
+} from '../constants';
 import { createFieldHead } from './field-head';
 import { createIcon } from './icon';
 import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
@@ -54,7 +60,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
         });
         const icon = createIcon({
             name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: 28,
+            x: AI_TABLE_CELL_PADDING,
             y: (fieldHeadHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: isChecked ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill: isChecked ? colors.primary : colors.gray300

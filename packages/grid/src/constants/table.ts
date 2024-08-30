@@ -8,8 +8,8 @@ export const AI_TABLE_ICON_COMMON_SIZE = 16;
 export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8;
 // 字段列头文本的最小宽度
 export const AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH = 30;
-// 表格行头的宽度
-export const AI_TABLE_ROW_HEAD_WIDTH = 70;
+// 表格行头 checkbox 列的宽度
+export const AI_TABLE_ROW_HEAD_WIDTH = 44;
 // 属性列头标识
 export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD';
 // 空白区域
