@@ -1,4 +1,5 @@
 import { ActionName, RemoveFieldAction, RemoveRecordAction } from '@ai-table/grid';
+import * as Y from 'yjs';
 import {
     PositionActionName,
     RemoveRecordPositionAction,
@@ -9,7 +10,6 @@ import {
     ViewActionName
 } from '../../types';
 import { getSharedMapValueIndex, getSharedRecordIndex } from '../utils';
-import * as Y from 'yjs';
 
 export default function removeNode(
     sharedType: SharedType,

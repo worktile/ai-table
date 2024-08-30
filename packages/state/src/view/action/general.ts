@@ -1,3 +1,4 @@
+import { ActionName, getDefaultFieldValue } from '@ai-table/grid';
 import { createDraft, finishDraft } from 'immer';
 import {
     AITableSharedAction,
@@ -11,7 +12,6 @@ import {
     PositionActionName,
     ViewActionName
 } from '../../types';
-import { ActionName, getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions } from '../../utils/view';
 
 export const GeneralViewActions = {

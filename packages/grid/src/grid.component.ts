@@ -36,7 +36,8 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             aiTable: this.aiTable,
             container: container,
             width: container.offsetWidth,
-            height: container.offsetHeight
+            height: container.offsetHeight,
+            linearRows: this.gridLinearRows()
         });
         gridStage.draw();
     }

@@ -1,6 +1,6 @@
 import { ActionName, AIFieldIdPath, AIFieldPath, AIFieldValueIdPath, AIRecordPath, AITableField, AITableQueries } from '@ai-table/grid';
-import * as Y from 'yjs';
 import { isArray } from 'ngx-tethys/util';
+import * as Y from 'yjs';
 import {
     AITableSharedAction,
     AITableView,
@@ -13,7 +13,7 @@ import {
     SyncMapElement,
     ViewActionName
 } from '../../types';
-import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
+import { getShareTypeNumberPath, translatePositionToPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
 export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {

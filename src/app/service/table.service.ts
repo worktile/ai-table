@@ -1,21 +1,20 @@
-import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
-import { WebsocketProvider } from 'y-websocket';
-import { getDefaultValue, sortDataByView } from '../utils/utils';
 import {
-    AITableViewRecords,
+    AITableView,
     AITableViewFields,
+    AITableViewRecords,
     AIViewTable,
-    SharedType,
-    YjsAITable,
     applyYjsEvents,
     createSharedType,
     initSharedType,
     initTable,
-    AITableView,
-    AITableViews
+    SharedType,
+    YjsAITable
 } from '@ai-table/state';
-import { getProvider } from '../provider';
+import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { WebsocketProvider } from 'y-websocket';
+import { getProvider } from '../provider';
+import { getDefaultValue, sortDataByView } from '../utils/utils';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
