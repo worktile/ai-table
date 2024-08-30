@@ -1,5 +1,5 @@
 import { AITable } from '@ai-table/grid';
-import { AITableSharedAction, AIViewTable, VIEW_ACTIONS, ViewActionName } from '@ai-table/state';
+import { AITableSharedAction, AIViewTable, RemoveViewAction, VIEW_ACTIONS, ViewActionName } from '@ai-table/state';
 import { TABLE_SERVICE_MAP } from '../service/table.service';
 
 export const withRemoveView = (aiTable: AITable) => {
@@ -19,7 +19,7 @@ export const withRemoveView = (aiTable: AITable) => {
 };
 
 export function getActiveViewId(aiTable: AIViewTable, action: AITableSharedAction) {
-    const activeViewIndex = aiTable.views().findIndex((item) => item._id === action.path[0]);
+    const activeViewIndex = aiTable.views().findIndex((item) => item._id === (action as RemoveViewAction).path[0]);
     if (activeViewIndex > -1) {
         if (activeViewIndex === 0) {
             return aiTable.views()[1]._id;

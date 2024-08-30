@@ -1,6 +1,17 @@
 import { createDraft, finishDraft } from 'immer';
-import { AITableView, AITableViewAction, AITableViewField, AITableViewFields, AITableViewRecord, AITableViewRecords, AIViewTable, ViewActionName } from '../../types';
-import { ActionName, AITableAction, getDefaultFieldValue } from '@ai-table/grid';
+import {
+    AITableSharedAction,
+    AITableView,
+    AITableViewAction,
+    AITableViewField,
+    AITableViewFields,
+    AITableViewRecord,
+    AITableViewRecords,
+    AIViewTable,
+    PositionActionName,
+    ViewActionName
+} from '../../types';
+import { ActionName, getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions } from '../../utils/view';
 
 export const GeneralViewActions = {
@@ -56,7 +67,7 @@ export const applyView = (aiTable: AIViewTable, views: AITableView[], action: AI
 };
 
 export const GeneralActions = {
-    transform(aiTable: AIViewTable, action: AITableAction): void {
+    transform(aiTable: AIViewTable, action: AITableSharedAction): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
         apply(aiTable, records, fields, action);
@@ -73,7 +84,7 @@ export const GeneralActions = {
     }
 };
 
-export const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, action: AITableAction) => {
+export const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, action: AITableSharedAction) => {
     switch (action.type) {
         case ActionName.AddRecord: {
             const [recordIndex] = action.path;
@@ -111,7 +122,41 @@ export const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields:
             }
             break;
         }
-
     }
-}
+};
 
+export const GeneralPositionActions = {
+    transform(aiTable: AIViewTable, action: AITableSharedAction): void {
+        const records = createDraft(aiTable.records()) as AITableViewRecords;
+        const fields = createDraft(aiTable.fields()) as AITableViewFields;
+        applyPosition(aiTable, records, action);
+        aiTable.records.update(() => {
+            return finishDraft(records);
+        });
+        aiTable.fields.update(() => {
+            return finishDraft(fields);
+        });
+    }
+};
+
+export const applyPosition = (aiTable: AIViewTable, records: AITableViewRecords, action: AITableSharedAction) => {
+    switch (action.type) {
+        case PositionActionName.AddRecordPosition: {
+            const { position, path } = action;
+            const record = records.find((item) => item._id === path[0]);
+            if (record) {
+                record.positions = {
+                    ...record.positions,
+                    ...position
+                };
+            }
+            break;
+        }
+        case PositionActionName.RemoveRecordPosition: {
+            const { path } = action;
+            const record = records.find((item) => item._id === path[1]);
+            delete record?.positions[path[0]];
+            break;
+        }
+    }
+};
