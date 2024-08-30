@@ -1,6 +1,6 @@
 import { AddViewAction, AITableView, AIViewTable, RemoveViewAction, SetViewAction, ViewActionName } from '../../types';
 
-export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
+function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
     if (view) {
         const properties: Partial<AITableView> = {};
@@ -27,7 +27,7 @@ export function setView(aiTable: AIViewTable, value: Partial<AITableView>, path:
     }
 }
 
-export function addView(aiTable: AIViewTable, view: AITableView, path: [number]) {
+function addView(aiTable: AIViewTable, view: AITableView, path: [number]) {
     const operation: AddViewAction = {
         type: ViewActionName.AddView,
         view,
@@ -36,7 +36,7 @@ export function addView(aiTable: AIViewTable, view: AITableView, path: [number])
     aiTable.apply(operation);
 }
 
-export function removeView(aiTable: AIViewTable, path: [string]) {
+function removeView(aiTable: AIViewTable, path: [string]) {
     const operation: RemoveViewAction = {
         type: ViewActionName.RemoveView,
         path

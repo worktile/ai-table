@@ -1,16 +1,5 @@
-import { Actions, AITableFieldType, AITableReferences, AITableSelectOptionStyle, idCreator } from '@ai-table/grid';
-import {
-    AITableView,
-    AITableViewField,
-    AITableViewFields,
-    AITableViewRecords,
-    AIViewTable,
-    getViewPositions,
-    PositionActions,
-    SharedType,
-    translateToRecords,
-    ViewActions
-} from '@ai-table/state';
+import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
+import { addView, AITableViewFields, AITableViewRecords, AIViewTable, SharedType, translateToRecords } from '@ai-table/state';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -35,22 +24,22 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 1-1',
                     'column-2': ['1'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a'],
-                    'column-3': 1,
-                    'column-4': 1682235946,
-                    'column-5': ['member_01'],
-                    'column-6': 10,
-                    'column-7': 3,
-                    'column-8': {
-                        url: 'https://www.baidu.com',
-                        text: '百度链接'
-                    },
-                    'column-9': ['member_01'],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-20': ['66b31d0c8097a908f74bcd8a']
+                    // 'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    // 'column-22': ['66b31d0c8097a908f74bcd8a'],
+                    // 'column-3': 1,
+                    // 'column-4': 1682235946,
+                    // 'column-5': ['member_01'],
+                    // 'column-6': 10,
+                    // 'column-7': 3,
+                    // 'column-8': {
+                    //     url: 'https://www.baidu.com',
+                    //     text: '百度链接'
+                    // },
+                    // 'column-9': ['member_01'],
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             },
             {
@@ -62,19 +51,19 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 2-1',
                     'column-2': ['2'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-3': 10,
-                    'column-4': 1682235946,
-                    'column-5': ['member_01', 'member_02'],
-                    'column-6': 50,
-                    'column-7': 1,
-                    'column-8': {},
-                    'column-9': ['member_01'],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+                    // 'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    // 'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    // 'column-3': 10,
+                    // 'column-4': 1682235946,
+                    // 'column-5': ['member_01', 'member_02'],
+                    // 'column-6': 50,
+                    // 'column-7': 1,
+                    // 'column-8': {},
+                    // 'column-9': ['member_01'],
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             },
             {
@@ -91,29 +80,29 @@ export function getDefaultValue() {
                         '66b31d0c8097a908f74bcd8b',
                         '66b31d0c8097a908f74bcd8c',
                         '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-21': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-22': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-3': 100,
-                    'column-4': 1682235946,
-                    'column-5': [],
-                    'column-6': 100,
-                    'column-7': 1,
-                    'column-8': {},
-                    'column-9': [],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    ]
+                    // 'column-21': [
+                    //     '66b31d0c8097a908f74bcd8a',
+                    //     '66b31d0c8097a908f74bcd8b',
+                    //     '66b31d0c8097a908f74bcd8c',
+                    //     '66b31d0c8097a908f74bcd8d'
+                    // ],
+                    // 'column-22': [
+                    //     '66b31d0c8097a908f74bcd8a',
+                    //     '66b31d0c8097a908f74bcd8b',
+                    //     '66b31d0c8097a908f74bcd8c',
+                    //     '66b31d0c8097a908f74bcd8d'
+                    // ],
+                    // 'column-3': 100,
+                    // 'column-4': 1682235946,
+                    // 'column-5': [],
+                    // 'column-6': 100,
+                    // 'column-7': 1,
+                    // 'column-8': {},
+                    // 'column-9': [],
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             }
         ],
@@ -206,204 +195,204 @@ export function getDefaultValue() {
                     view1: 2,
                     view2: 14
                 }
-            },
-            {
-                _id: 'column-21',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.dot,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-                positions: {
-                    view1: 3,
-                    view2: 13
-                }
-            },
-            {
-                _id: 'column-22',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.piece,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-
-                positions: {
-                    view1: 4,
-                    view2: 12
-                }
-            },
-            {
-                _id: 'column-3',
-                name: '数字',
-                positions: {
-                    view1: 5,
-                    view2: 11
-                },
-                type: AITableFieldType.number
-            },
-            {
-                _id: 'column-4',
-                name: '日期',
-                positions: {
-                    view1: 6,
-                    view2: 10
-                },
-                type: AITableFieldType.date
-            },
-            {
-                _id: 'column-5',
-                name: '成员(📌)',
-                positions: {
-                    view1: 7,
-                    view2: 9
-                },
-                settings: {
-                    is_multiple: true
-                },
-                type: AITableFieldType.member
-            },
-            {
-                _id: 'column-6',
-                name: '进度',
-                positions: {
-                    view1: 8,
-                    view2: 8
-                },
-                type: AITableFieldType.progress
-            },
-            {
-                _id: 'column-7',
-                name: '评分(📌)',
-                positions: {
-                    view1: 9,
-                    view2: 7
-                },
-                type: AITableFieldType.rate
-            },
-            {
-                _id: 'column-8',
-                name: '链接(📌)',
-                positions: {
-                    view1: 10,
-                    view2: 6
-                },
-                type: AITableFieldType.link
-            },
-
-            {
-                _id: 'column-9',
-                name: '创建人',
-                positions: {
-                    view1: 11,
-                    view2: 5
-                },
-                type: AITableFieldType.createdBy
-            },
-            {
-                _id: 'column-10',
-                name: '创建时间',
-                positions: {
-                    view1: 12,
-                    view2: 4
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-11',
-                name: '更新人',
-                positions: {
-                    view1: 13,
-                    view2: 3
-                },
-                type: AITableFieldType.updatedBy
-            },
-            {
-                _id: 'column-12',
-                name: '更新时间',
-                positions: {
-                    view1: 14,
-                    view2: 2
-                },
-                type: AITableFieldType.updatedAt
             }
+            // {
+            //     _id: 'column-21',
+            //     type: AITableFieldType.select,
+            //     icon: 'list-check',
+            //     name: '多选',
+            //     settings: {
+            //         is_multiple: true,
+            //         option_style: AITableSelectOptionStyle.dot,
+            //         options: [
+            //             {
+            //                 text: '111',
+            //                 bg_color: '#E48483',
+            //                 _id: '66b31d0c8097a908f74bcd8a'
+            //             },
+            //             {
+            //                 text: '222',
+            //                 bg_color: '#E0B75D',
+            //                 _id: '66b31d0c8097a908f74bcd8b'
+            //             },
+            //             {
+            //                 text: '333',
+            //                 bg_color: '#69B1E4',
+            //                 _id: '66b31d0c8097a908f74bcd8c'
+            //             },
+            //             {
+            //                 text: '444',
+            //                 bg_color: '#77C386',
+            //                 _id: '66b31d0c8097a908f74bcd8d'
+            //             },
+            //             {
+            //                 text: '555',
+            //                 bg_color: '#6EC4C4',
+            //                 _id: '66b31d0c8097a908f74bcd8e'
+            //             },
+            //             {
+            //                 text: '666',
+            //                 bg_color: '#E581D4',
+            //                 _id: '66b31d0c8097a908f74bcd8f'
+            //             },
+            //             {
+            //                 text: '777',
+            //                 bg_color: '#B0C774',
+            //                 _id: '66b31d0c8097a908f74bcd90'
+            //             }
+            //         ]
+            //     },
+            //     positions: {
+            //         view1: 3,
+            //         view2: 13
+            //     }
+            // },
+            // {
+            //     _id: 'column-22',
+            //     type: AITableFieldType.select,
+            //     icon: 'list-check',
+            //     name: '多选',
+            //     settings: {
+            //         is_multiple: true,
+            //         option_style: AITableSelectOptionStyle.piece,
+            //         options: [
+            //             {
+            //                 text: '111',
+            //                 bg_color: '#E48483',
+            //                 _id: '66b31d0c8097a908f74bcd8a'
+            //             },
+            //             {
+            //                 text: '222',
+            //                 bg_color: '#E0B75D',
+            //                 _id: '66b31d0c8097a908f74bcd8b'
+            //             },
+            //             {
+            //                 text: '333',
+            //                 bg_color: '#69B1E4',
+            //                 _id: '66b31d0c8097a908f74bcd8c'
+            //             },
+            //             {
+            //                 text: '444',
+            //                 bg_color: '#77C386',
+            //                 _id: '66b31d0c8097a908f74bcd8d'
+            //             },
+            //             {
+            //                 text: '555',
+            //                 bg_color: '#6EC4C4',
+            //                 _id: '66b31d0c8097a908f74bcd8e'
+            //             },
+            //             {
+            //                 text: '666',
+            //                 bg_color: '#E581D4',
+            //                 _id: '66b31d0c8097a908f74bcd8f'
+            //             },
+            //             {
+            //                 text: '777',
+            //                 bg_color: '#B0C774',
+            //                 _id: '66b31d0c8097a908f74bcd90'
+            //             }
+            //         ]
+            //     },
+
+            //     positions: {
+            //         view1: 4,
+            //         view2: 12
+            //     }
+            // },
+            // {
+            //     _id: 'column-3',
+            //     name: '数字',
+            //     positions: {
+            //         view1: 5,
+            //         view2: 11
+            //     },
+            //     type: AITableFieldType.number
+            // },
+            // {
+            //     _id: 'column-4',
+            //     name: '日期',
+            //     positions: {
+            //         view1: 6,
+            //         view2: 10
+            //     },
+            //     type: AITableFieldType.date
+            // },
+            // {
+            //     _id: 'column-5',
+            //     name: '成员(📌)',
+            //     positions: {
+            //         view1: 7,
+            //         view2: 9
+            //     },
+            //     settings: {
+            //         is_multiple: true
+            //     },
+            //     type: AITableFieldType.member
+            // },
+            // {
+            //     _id: 'column-6',
+            //     name: '进度',
+            //     positions: {
+            //         view1: 8,
+            //         view2: 8
+            //     },
+            //     type: AITableFieldType.progress
+            // },
+            // {
+            //     _id: 'column-7',
+            //     name: '评分(📌)',
+            //     positions: {
+            //         view1: 9,
+            //         view2: 7
+            //     },
+            //     type: AITableFieldType.rate
+            // },
+            // {
+            //     _id: 'column-8',
+            //     name: '链接(📌)',
+            //     positions: {
+            //         view1: 10,
+            //         view2: 6
+            //     },
+            //     type: AITableFieldType.link
+            // },
+
+            // {
+            //     _id: 'column-9',
+            //     name: '创建人',
+            //     positions: {
+            //         view1: 11,
+            //         view2: 5
+            //     },
+            //     type: AITableFieldType.createdBy
+            // },
+            // {
+            //     _id: 'column-10',
+            //     name: '创建时间',
+            //     positions: {
+            //         view1: 12,
+            //         view2: 4
+            //     },
+            //     type: AITableFieldType.createdAt
+            // },
+            // {
+            //     _id: 'column-11',
+            //     name: '更新人',
+            //     positions: {
+            //         view1: 13,
+            //         view2: 3
+            //     },
+            //     type: AITableFieldType.updatedBy
+            // },
+            // {
+            //     _id: 'column-12',
+            //     name: '更新时间',
+            //     positions: {
+            //         view1: 14,
+            //         view2: 2
+            //     },
+            //     type: AITableFieldType.updatedAt
+            // }
         ]
     };
 
@@ -448,42 +437,6 @@ export function getReferences(): AITableReferences {
             }
         }
     };
-}
-
-export function addView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, type: 'add' | 'copy') {
-    let index = aiTable.views().length;
-    const newId = idCreator();
-    let newView: AITableView = {
-        _id: newId,
-        name: '表格视图 ' + index
-    };
-    let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
-    if (type === 'copy') {
-        originViewId = aiTable.activeViewId();
-        const copyView = aiTable.views().find((item) => item._id === aiTable.activeViewId())!;
-        newView = {
-            ...copyView,
-            _id: newId,
-            name: copyView.name + '-副本'
-        };
-        index = aiTable.views().indexOf(copyView) + 1;
-    }
-    ViewActions.addView(aiTable, newView, [index]);
-    const { recordPositions, fieldPositions } = getViewPositions(records, fields, originViewId);
-    PositionActions.addRecordPosition(aiTable, recordPositions, [newId]);
-    fields.forEach((item) => {
-        Actions.setField<AITableViewField>(
-            aiTable,
-            {
-                positions: {
-                    ...item.positions,
-                    [newId]: fieldPositions[item._id]
-                }
-            },
-            [item._id]
-        );
-    });
-    return newView;
 }
 
 export function addViewInShared(aiTable: AIViewTable, sharedType: SharedType, type: 'add' | 'copy') {

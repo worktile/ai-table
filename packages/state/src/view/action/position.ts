@@ -1,22 +1,15 @@
-import {
-    AddRecordPositionAction,
-    AITableViewPath,
-    AIViewTable,
-    PositionActionName,
-    Positions,
-    RemoveRecordPositionAction,
-} from '../../types';
+import { AddRecordPositionAction, AIViewIdPath, AIViewTable, PositionActionName, Positions, RemoveRecordPositionAction } from '../../types';
 
-export function addRecordPosition(aiTable: AIViewTable, positions: Positions, path: AITableViewPath) {
+export function addRecordPosition(aiTable: AIViewTable, position: Positions, path: AIViewIdPath) {
     const operation: AddRecordPositionAction = {
         type: PositionActionName.AddRecordPosition,
-        positions,
+        position,
         path
     };
     aiTable.apply(operation);
 }
 
-export function removePosition(aiTable: AIViewTable, path: AITableViewPath) {
+export function removeRecordPosition(aiTable: AIViewTable, path: [string, string]) {
     const operation: RemoveRecordPositionAction = {
         type: PositionActionName.RemoveRecordPosition,
         path
@@ -26,5 +19,5 @@ export function removePosition(aiTable: AIViewTable, path: AITableViewPath) {
 
 export const PositionActions = {
     addRecordPosition,
-    removePosition
+    removeRecordPosition
 };

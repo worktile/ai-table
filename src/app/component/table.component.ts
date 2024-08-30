@@ -8,11 +8,11 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
-import { AITableView, AITableViewFields, AITableViewRecords, ViewActions } from '@ai-table/state';
+import { addView, AITableView, AITableViewFields, AITableViewRecords, PositionActions, removeView, ViewActions } from '@ai-table/state';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
-import { addView, addViewInShared } from '../utils/utils';
+import { addViewInShared } from '../utils/utils';
 
 const initViews = [
     { _id: 'view1', name: '表格视图' },
@@ -104,7 +104,9 @@ export class DemoTable implements OnInit, OnDestroy {
     }
 
     removeView() {
-        ViewActions.removeView(this.tableService.aiTable, [this.tableService.activeViewId()]);
+        const records = this.tableService.aiTable.records() as AITableViewRecords;
+        const fields = this.tableService.aiTable.fields() as AITableViewFields;
+        removeView(this.tableService.aiTable, records, fields, this.tableService.activeViewId());
     }
 
     ngOnDestroy(): void {

@@ -1,4 +1,7 @@
-import { AITableView, AITableViewFields, AITableViewRecords, Positions } from '../types';
+import { idCreator, Actions } from '@ai-table/grid';
+import { PositionActions } from '@ai-table/state';
+import { ViewActions } from 'dist/state';
+import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
 
 export function createDefaultPositions(
     views: AITableView[],
@@ -27,17 +30,57 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
     return position;
 }
 
-export function getViewPositions(records: AITableViewRecords, fields: AITableViewFields, originViewId: string) {
-    const recordPositions: Positions = {};
-    const fieldPositions: Positions = {};
+export function addView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, type: 'add' | 'copy') {
+    let index = aiTable.views().length;
+    const newId = idCreator();
+    let newView: AITableView = {
+        _id: newId,
+        name: '表格视图 ' + index
+    };
+    let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
+    if (type === 'copy') {
+        originViewId = aiTable.activeViewId();
+        const copyView = aiTable.views().find((item) => item._id === aiTable.activeViewId())!;
+        newView = {
+            ...copyView,
+            _id: newId,
+            name: copyView.name + '-副本'
+        };
+        index = aiTable.views().indexOf(copyView) + 1;
+    }
+    ViewActions.addView(aiTable, newView, [index]);
     records.forEach((record) => {
-        recordPositions[record._id] = record.positions[originViewId];
+        PositionActions.addRecordPosition(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
     });
     fields.forEach((field) => {
-        fieldPositions[field._id] = field.positions[originViewId];
+        Actions.setField<AITableViewField>(
+            aiTable,
+            {
+                positions: {
+                    ...field.positions,
+                    [newId]: field.positions[originViewId]
+                }
+            },
+            [field._id]
+        );
     });
-    return {
-        recordPositions,
-        fieldPositions
-    };
+    return newView;
+}
+
+export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeViewId: string) {
+    records.forEach((record) => {
+        PositionActions.removeRecordPosition(aiTable, [activeViewId, record._id]);
+    });
+    fields.forEach((field) => {
+        const positions = { ...field.positions };
+        delete positions[activeViewId];
+        Actions.setField<AITableViewField>(
+            aiTable,
+            {
+                positions
+            },
+            [field._id]
+        );
+    });
+    ViewActions.removeView(aiTable, [activeViewId]);
 }

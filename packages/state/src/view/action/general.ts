@@ -129,7 +129,7 @@ export const GeneralPositionActions = {
     transform(aiTable: AIViewTable, action: AITableSharedAction): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
-        applyPosition(aiTable, records, fields, action);
+        applyPosition(aiTable, records, action);
         aiTable.records.update(() => {
             return finishDraft(records);
         });
@@ -139,26 +139,23 @@ export const GeneralPositionActions = {
     }
 };
 
-export const applyPosition = (
-    aiTable: AIViewTable,
-    records: AITableViewRecords,
-    fields: AITableViewFields,
-    action: AITableSharedAction
-) => {
+export const applyPosition = (aiTable: AIViewTable, records: AITableViewRecords, action: AITableSharedAction) => {
     switch (action.type) {
         case PositionActionName.AddRecordPosition: {
-            const { positions, path } = action;
-            records.forEach((item) => {
-                item.positions = {
-                    ...item.positions,
-                    [path[0]]: positions[item._id]
+            const { position, path } = action;
+            const record = records.find((item) => item._id === path[0]);
+            if (record) {
+                record.positions = {
+                    ...record.positions,
+                    ...position
                 };
-            });
-
+            }
             break;
         }
         case PositionActionName.RemoveRecordPosition: {
-            //...
+            const { path } = action;
+            const record = records.find((item) => item._id === path[1]);
+            delete record?.positions[path[0]];
             break;
         }
     }

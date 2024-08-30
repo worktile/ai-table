@@ -1,4 +1,4 @@
-import { toRecordSyncElement, toSyncElement } from '../utils';
+import { getSharedRecordIndex, toRecordSyncElement, toSyncElement } from '../utils';
 import {
     AddRecordPositionAction,
     AddViewAction,
@@ -28,15 +28,14 @@ export default function addNode(
             break;
         case PositionActionName.AddRecordPosition:
             if (records) {
-                for (let value of records) {
-                    const id = value.get(0).get(0)['_id'];
-                    const customField = value.get(1) as Y.Array<any>;
-                    const positionsIndex = customField.length - 1;
-                    const positions = customField.get(positionsIndex);
-                    const newPositions = { ...positions, [action.path[0]]: action.positions[id] };
-                    customField.delete(positionsIndex);
-                    customField.insert(positionsIndex, [newPositions]);
-                }
+                const recordIndex = getSharedRecordIndex(records, action.path[0]);
+                const record = records.get(recordIndex);
+                const customField = record.get(1) as Y.Array<any>;
+                const positionsIndex = customField.length - 1;
+                const positions = customField.get(positionsIndex);
+                const newPositions = { ...positions, ...action.position };
+                customField.delete(positionsIndex);
+                customField.insert(positionsIndex, [newPositions]);
             }
             break;
         case ActionName.AddField:

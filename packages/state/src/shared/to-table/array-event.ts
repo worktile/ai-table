@@ -85,16 +85,24 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                             delta.insert?.map((item: any) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
+                                const record = (aiTable.records() as AITableViewRecords)[recordIndex];
                                 if (fieldIndex === sharedFields.length) {
                                     for (const key in item) {
-                                        const record = (aiTable.records() as AITableViewRecords)[recordIndex];
                                         if (!record.positions[key] && record.positions[key] !== 0) {
                                             actions.push({
                                                 type: PositionActionName.AddRecordPosition,
-                                                path: [key],
-                                                positions: {
-                                                    [record._id]: item[key]
+                                                path: [record._id],
+                                                position: {
+                                                    [key]: item[key]
                                                 }
+                                            });
+                                        }
+                                    }
+                                    for (const key in record.positions) {
+                                        if (!item[key] && item[key] !== 0) {
+                                            actions.push({
+                                                type: PositionActionName.RemoveRecordPosition,
+                                                path: [key, record._id]
                                             });
                                         }
                                     }
