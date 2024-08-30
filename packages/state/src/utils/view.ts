@@ -1,7 +1,6 @@
 import { idCreator, Actions } from '@ai-table/grid';
-import { PositionActions } from '@ai-table/state';
-import { ViewActions } from 'dist/state';
 import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
+import { PositionActions, ViewActions } from '../view/action';
 
 export function createDefaultPositions(
     views: AITableView[],
