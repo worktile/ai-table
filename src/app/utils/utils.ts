@@ -1,5 +1,5 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AITableView, Positions } from '@ai-table/shared';
+import { AITableView, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/shared';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -545,11 +545,20 @@ export function getCanvasDefaultValue() {
         ],
         fields: [
             {
+                _id: 'column-1',
+                name: '单行文本',
+                positions: {
+                    view1: 0,
+                    view2: 16
+                },
+                type: AITableFieldType.text
+            },
+            {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 0,
-                    view2: 15
+                    view1: 1,
+                    view2: 16
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -572,15 +581,6 @@ export function getCanvasDefaultValue() {
                         }
                     ]
                 }
-            },
-            {
-                _id: 'column-1',
-                name: '单行文本',
-                positions: {
-                    view1: 1,
-                    view2: 16
-                },
-                type: AITableFieldType.text
             },
             {
                 _id: 'column-20',
@@ -699,34 +699,34 @@ export function getCanvasDefaultValue() {
                     view2: 5
                 },
                 type: AITableFieldType.createdBy
-            },
-            {
-                _id: 'column-10',
-                name: '创建时间',
-                positions: {
-                    view1: 12,
-                    view2: 4
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-11',
-                name: '更新人',
-                positions: {
-                    view1: 13,
-                    view2: 3
-                },
-                type: AITableFieldType.updatedBy
-            },
-            {
-                _id: 'column-12',
-                name: '更新时间',
-                positions: {
-                    view1: 14,
-                    view2: 2
-                },
-                type: AITableFieldType.updatedAt
             }
+            // {
+            //     _id: 'column-10',
+            //     name: '创建时间',
+            //     positions: {
+            //         view1: 12,
+            //         view2: 4
+            //     },
+            //     type: AITableFieldType.createdAt
+            // },
+            // {
+            //     _id: 'column-11',
+            //     name: '更新人',
+            //     positions: {
+            //         view1: 13,
+            //         view2: 3
+            //     },
+            //     type: AITableFieldType.updatedBy
+            // },
+            // {
+            //     _id: 'column-12',
+            //     name: '更新时间',
+            //     positions: {
+            //         view1: 14,
+            //         view2: 2
+            //     },
+            //     type: AITableFieldType.updatedAt
+            // }
         ]
     };
     return initValue;

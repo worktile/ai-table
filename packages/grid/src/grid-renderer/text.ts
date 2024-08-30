@@ -8,7 +8,7 @@ import {
     DEFAULT_TEXT_FILL,
     DEFAULT_TEXT_LISTENING,
     DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN,
+    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_WRAP
 } from '../constants';
 
@@ -21,7 +21,7 @@ export const createText = (config: Konva.ShapeConfig) => {
         text,
         padding,
         align = DEFAULT_TEXT_ALIGN,
-        verticalAlign = DEFAULT_TEXT_VERTICAL_ALIGN,
+        verticalAlign = DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
         fill = DEFAULT_TEXT_FILL,
         textDecoration,
         fontSize = DEFAULT_FONT_SIZE,

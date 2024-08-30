@@ -1,3 +1,4 @@
+import { WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
@@ -11,6 +12,7 @@ export interface AITableGridData {
     fields: AITableField[];
     records: AITableRecord[];
 }
+
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;
@@ -35,6 +37,7 @@ export interface AITableReferences {
 
 export interface AITableGridStageOptions {
     aiTable: AITable;
+    context: AITableContext;
     container: HTMLDivElement;
     width: number;
     height: number;
@@ -67,7 +70,36 @@ export enum AITableCheckType {
     unchecked = 'unchecked'
 }
 
+export type AITablePointPosition = {
+    x: number; // 鼠标在可见区域的横坐标
+    y: number; // 鼠标在可见区域的纵坐标
+    targetName: string; // 模糊的目标名称，仅用于识别点击区域的类型，例如单元格、表头、操作等
+    realTargetName: string; // 真实的目标名称，包括相应的 fieldId、recordId 等，并结合 areaType 来识别有效点击区域。
+    rowIndex: number;
+    columnIndex: number;
+    offsetTop: number;
+    offsetLeft: number;
+};
+
+export type CellBound = {
+    width: number;
+    height: number;
+};
+
 export interface AITableScrollState {
     scrollTop: number;
     scrollLeft: number;
+    isScrolling?: boolean;
+}
+
+export interface AITableCellScrollState {
+    scrollTop: number;
+    totalHeight: number;
+    isOverflow: boolean;
+}
+
+export interface AITableContext {
+    linearRows: AITableLinearRow[];
+    scrollState: WritableSignal<AITableScrollState>;
+    cellScrollState: WritableSignal<AITableCellScrollState>;
 }

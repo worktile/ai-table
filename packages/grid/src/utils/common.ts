@@ -19,3 +19,9 @@ export const castToString = (value: string): string | null => {
     }
     return typeof value !== 'string' ? String(value) : value;
 };
+
+const isNumberInRange = (n: number, range: readonly [number, number]) => {
+    const [min, max] = range;
+    if (n < min || n > max) return false;
+    return true;
+};
