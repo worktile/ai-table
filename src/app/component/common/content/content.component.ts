@@ -14,7 +14,7 @@ import {
     EditFieldPropertyItem,
     RemoveFieldItem
 } from '@ai-table/grid';
-import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/shared';
+import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/state';
 import { ChangeDetectionStrategy, Component, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -27,7 +27,7 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { getDefaultValue, getReferences } from '../../../utils/utils';
+import { getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 
 @Component({
@@ -94,14 +94,9 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            if (this.tableService.records && this.tableService.fields) {
-                this.tableService.buildRenderRecords(this.tableService.records());
-                this.tableService.buildRenderFields(this.tableService.fields());
-            } else {
-                const value = getDefaultValue();
-                this.tableService.buildRenderRecords(value.records);
-                this.tableService.buildRenderFields(value.fields);
-            }
+            const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
+            this.tableService.buildRenderRecords(value.records);
+            this.tableService.buildRenderFields(value.fields);
         }
         console.time('render');
     }
@@ -116,6 +111,9 @@ export class DemoTableContent {
 
     changeRenderMode(e: ThySegmentEvent) {
         this.renderMode.set(Number(e.value));
+        const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
+        this.tableService.buildRenderRecords(value.records);
+        this.tableService.buildRenderFields(value.fields);
     }
 
     onChange(options: AITableChangeOptions) {
@@ -151,8 +149,8 @@ export class DemoTableContent {
     moveField() {
         const newIndex = 2;
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedFields = this.aiTable.fields().filter((item: AITableField) => selectedFieldIds.includes(item._id));
-        selectedFields.forEach((item: AITableField) => {
+        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
+        selectedFields.forEach((item) => {
             const path = AITableQueries.findFieldPath(this.aiTable, item) as AIFieldPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
         });
@@ -160,11 +158,11 @@ export class DemoTableContent {
 
     moveRecord() {
         const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item: AITableField) => selectedRecordIds.includes(item._id));
+        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
         const selectedRecordsAfterNewPath: AITableRecord[] = [];
         let offset = 0;
         const newIndex = 2;
-        selectedRecords.forEach((item: AITableRecord) => {
+        selectedRecords.forEach((item) => {
             const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
             if (path[0] < newIndex) {
                 Actions.moveRecord(this.aiTable, path, [newIndex]);

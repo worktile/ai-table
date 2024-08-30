@@ -63,16 +63,16 @@ export interface AITableField {
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
 
-export interface TextSettings {}
+export interface TextSettings { }
 
-export interface RichTextSettings {}
+export interface RichTextSettings { }
 
 export interface SelectSettings extends IsMultiple {
     option_style?: AITableSelectOptionStyle;
     options: AITableSelectOption[];
 }
 
-export interface MemberSettings extends IsMultiple {}
+export interface MemberSettings extends IsMultiple { }
 
 export interface IsMultiple {
     is_multiple?: boolean;

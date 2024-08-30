@@ -46,7 +46,7 @@ export enum AITableFilterOperation {
     notContain = 'not_contain'
 }
 
-export type ViewSettings = AITableFilterConditions & AITableSortOptions
+export type ViewSettings = AITableFilterConditions & AITableSortOptions;
 
 export interface AITableView {
     _id: string;

@@ -1,8 +1,8 @@
 import * as Y from 'yjs';
+import { AITableSharedAction, AIViewTable, SharedType } from '../../types';
+import { YjsAITable } from '../yjs-table';
 import translateArrayEvent from './array-event';
 import translateMapEvent from './map-event';
-import { YjsAITable } from '../yjs-table';
-import { AITableSharedAction, AIViewTable, SharedType } from '../../types';
 
 export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
     if (event instanceof Y.YArrayEvent) {

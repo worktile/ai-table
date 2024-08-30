@@ -1,4 +1,5 @@
-import { getSharedRecordIndex, toRecordSyncElement, toSyncElement } from '../utils';
+import { ActionName, AddFieldAction, AddRecordAction, getDefaultFieldValue } from '@ai-table/grid';
+import * as Y from 'yjs';
 import {
     AddRecordPositionAction,
     AddViewAction,
@@ -9,8 +10,7 @@ import {
     SyncMapElement,
     ViewActionName
 } from '../../types';
-import { ActionName, AddFieldAction, AddRecordAction, getDefaultFieldValue } from '@ai-table/grid';
-import * as Y from 'yjs';
+import { getSharedRecordIndex, toRecordSyncElement, toSyncElement } from '../utils';
 
 export default function addNode(
     sharedType: SharedType,

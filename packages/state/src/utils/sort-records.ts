@@ -1,6 +1,6 @@
 import { AITable, AITableQueries } from '@ai-table/grid';
-import { ViewOperationMap } from './field';
 import { AITableView, AITableViewRecords } from '../types';
+import { ViewOperationMap } from './field';
 import { sortByViewPosition } from './view';
 
 export function getSortRecords(aiTable: AITable, records: AITableViewRecords, activeView: AITableView) {

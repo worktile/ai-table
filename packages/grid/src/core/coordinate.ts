@@ -1,11 +1,10 @@
-import { AITableCellMetaData, AITableCellMetaDataMap, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '../types';
+import { AITableCellMetaData, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '../types';
 
 /**
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础
  */
 export class Coordinate {
     protected _rowHeight: number;
-    protected _columnWidth: number;
     public rowCount: number;
     public columnCount: number;
     public containerWidth: number;
@@ -22,10 +21,11 @@ export class Coordinate {
     public lastRowIndex = -1;
     // 列坐标集中最后一列的索引
     public lastColumnIndex = -1;
+    public rowMetaDataMap: Record<number, AITableCellMetaData> = {};
+    public columnMetaDataMap: Record<number, AITableCellMetaData> = {};
     public frozenColumnCount: number;
     constructor({
         rowHeight,
-        columnWidth,
         rowCount,
         columnCount,
         containerWidth,
@@ -37,7 +37,6 @@ export class Coordinate {
         frozenColumnCount = 0
     }: AITableCoordinate) {
         this._rowHeight = rowHeight;
-        this._columnWidth = columnWidth;
         this.rowCount = rowCount;
         this.columnCount = columnCount;
         this.rowInitSize = rowInitSize;
@@ -47,14 +46,6 @@ export class Coordinate {
         this.columnIndicesMap = columnIndicesMap;
         this.containerHeight = containerHeight;
         this.frozenColumnCount = frozenColumnCount;
-    }
-
-    public get columnWidth() {
-        return this._columnWidth;
-    }
-
-    public set columnWidth(width: number) {
-        this._columnWidth = width;
     }
 
     public get rowHeight() {
@@ -92,38 +83,34 @@ export class Coordinate {
      * 根据 columnIndex 获取对应列宽
      */
     public getColumnWidth(index: number) {
-        return this.columnIndicesMap[index] ?? this.columnWidth;
+        return this.columnIndicesMap[index];
     }
 
     /**
      * 获取每个 cell 垂直/水平方向的坐标信息
      */
     protected getCellMetaData(index: number, itemType: AITableRowColumnType): AITableCellMetaData {
-        let itemSize, lastMeasuredIndex, offset, indexToWidthHeightMap;
-        let indexToDimensionMap: AITableCellMetaDataMap = {};
+        let cellMetadataMap, lastMeasuredIndex, offset;
         const isColumnType = itemType === AITableRowColumnType.column;
-
         if (isColumnType) {
-            itemSize = this.columnWidth;
             offset = this.columnInitSize;
             lastMeasuredIndex = this.lastColumnIndex;
-            indexToWidthHeightMap = this.columnIndicesMap;
+            cellMetadataMap = this.columnMetaDataMap;
         } else {
-            itemSize = this.rowHeight;
             offset = this.rowInitSize;
             lastMeasuredIndex = this.lastRowIndex;
-            indexToWidthHeightMap = this.rowIndicesMap;
+            cellMetadataMap = this.rowMetaDataMap;
         }
-
-        if (lastMeasuredIndex >= 0) {
-            const size = indexToWidthHeightMap[lastMeasuredIndex];
-            offset = size;
-        }
-
         if (index > lastMeasuredIndex) {
+            if (lastMeasuredIndex >= 0) {
+                const itemMetadata = cellMetadataMap[lastMeasuredIndex];
+                offset = itemMetadata.offset + itemMetadata.size;
+            }
+
             for (let i = lastMeasuredIndex + 1; i <= index; i++) {
-                const size = (isColumnType ? this.columnIndicesMap[i] : this.rowIndicesMap[i]) ?? itemSize;
-                indexToDimensionMap[i] = {
+                const size = isColumnType ? this.columnIndicesMap[i] : (this.rowIndicesMap[i] ?? this.rowHeight);
+
+                cellMetadataMap[i] = {
                     offset,
                     size
                 };
@@ -135,7 +122,7 @@ export class Coordinate {
                 this.lastRowIndex = index;
             }
         }
-        return indexToDimensionMap[index] || { size: 0, offset: 0 };
+        return cellMetadataMap[index] || { size: 0, offset: 0 };
     }
 
     /**

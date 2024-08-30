@@ -1,22 +1,30 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ThyInput, ThyInputCount, ThyInputGroup, ThyInputDirective } from 'ngx-tethys/input';
-import { ThyConfirmValidatorDirective, ThyUniqueCheckValidator, ThyFormValidatorConfig, ThyFormModule } from 'ngx-tethys/form';
+import { ThyButton } from 'ngx-tethys/button';
 import {
     ThyDropdownDirective,
     ThyDropdownMenuComponent,
     ThyDropdownMenuItemDirective,
-    ThyDropdownMenuItemNameDirective,
-    ThyDropdownMenuItemIconDirective
+    ThyDropdownMenuItemIconDirective,
+    ThyDropdownMenuItemNameDirective
 } from 'ngx-tethys/dropdown';
-import { ThyButton } from 'ngx-tethys/button';
-import { AITable, AITableField, Actions, FieldOptions, createDefaultFieldName, AITableFieldOption, getFieldOptionByField } from '../../core';
+import { ThyConfirmValidatorDirective, ThyFormModule, ThyFormValidatorConfig, ThyUniqueCheckValidator } from 'ngx-tethys/form';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyInput, ThyInputCount, ThyInputDirective, ThyInputGroup } from 'ngx-tethys/input';
 import { ThyListItem } from 'ngx-tethys/list';
-import { of } from 'rxjs';
+import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
+import { of } from 'rxjs';
+import {
+    AITable,
+    AITableField,
+    AITableFieldOption,
+    Actions,
+    FieldOptions,
+    createDefaultFieldName,
+    getFieldOptionByField
+} from '../../core';
 
 @Component({
     selector: 'ai-table-field-property-editor',
@@ -66,7 +74,7 @@ export class AITableFieldPropertyEditor {
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
     selectedFieldOption = computed(() => {
-        return getFieldOptionByField(this.aiEditField())!
+        return getFieldOptionByField(this.aiEditField())!;
     });
 
     fieldMaxLength = 32;
@@ -94,7 +102,7 @@ export class AITableFieldPropertyEditor {
             const width = item.width ?? field.width;
             const settings = field.settings || {};
             const name = createDefaultFieldName(this.aiTable, field);
-            return { ...item, ...field, width, name, settings };
+            return { ...item, ...field, width, name, ...settings };
         });
     }
 
