@@ -6,7 +6,7 @@ import { Drawer } from '../../utils';
  * 它提供了基本的布局信息（如位置、大小等），并定义了常用的绘图方法（如渲染缩进区域、添加新字段的空白区域等）。
  * 该类继承自 Drawer，并被其他更具体的布局类（如 RecordRowLayout）扩展和使用
  */
-export class Layout extends Drawer {
+export class LayoutDrawer extends Drawer {
     // 定义当前单元格或行的位置
     protected x = 0;
     protected y = 0;

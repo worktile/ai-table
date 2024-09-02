@@ -1,6 +1,6 @@
 import Konva from 'konva';
-import { AITableCellsOptions } from '../types';
-import { cellsDrawer } from './cell/cells-drawer';
+import { AITableCellsOptions } from '../../types';
+import { cellsDrawer } from '../drawers/cells-drawer';
 
 export const createCells = (options: AITableCellsOptions) => {
     const { instance, columnStartIndex } = options;

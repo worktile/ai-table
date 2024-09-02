@@ -1,8 +1,8 @@
 import Konva from 'konva/lib';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITable, Coordinate } from '../core';
-import { AITableGridStageOptions } from '../types';
-import { getColumnIndicesMap, getVisibleRangeInfo } from '../utils';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants';
+import { AITable, Coordinate } from '../../core';
+import { AITableGridStageOptions } from '../../types';
+import { getColumnIndicesMap, getVisibleRangeInfo } from '../../utils';
 import { createCells } from './create-cells';
 import { createColumnHeads } from './create-heads';
 import { createAddFieldColumn } from './create-add-field-column';

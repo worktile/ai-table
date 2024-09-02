@@ -1,14 +1,14 @@
 import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH, DEFAULT_FONT_SIZE } from '../../constants';
 import { AITable } from '../../core';
 import { AITableFirstCell } from '../../types';
-import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from './../../constants/text';
-import { Layout } from './layout';
+import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from '../../constants/text';
+import { LayoutDrawer } from './layout-drawer';
 
 /**
  * 绘制行的布局，通过直接操作 Canvas 提供高效的渲染方法。
  * 它继承自 Layout 类，包含了用于绘制行中单元格（尤其是首列和尾列）的几个方法
  */
-export class RecordRowLayout extends Layout {
+export class RowLayoutDrawer extends LayoutDrawer {
     // 首列
     private renderFirstCell({ row, style }: AITableFirstCell) {
         if (!this.isFirst) return;
@@ -100,4 +100,4 @@ export class RecordRowLayout extends Layout {
     }
 }
 
-export const recordRowLayout = new RecordRowLayout();
+export const rowLayoutDrawer = new RowLayoutDrawer();
