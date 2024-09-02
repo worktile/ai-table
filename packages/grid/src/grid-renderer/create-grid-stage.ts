@@ -4,20 +4,22 @@ import { AITable, Coordinate } from '../core';
 import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { getColumnIndicesMap, getVisibleRangeInfo } from '../utils';
 import { createColumnHeads } from './create-heads';
+import { createAddFieldColumn } from './create-add-field-column';
 
 export const createGridStage = (config: AITableGridStageOptions) => {
     const { width, height, container, aiTable, linearRows } = config;
+    const fields = AITable.getVisibleFields(aiTable);
 
     const coordinateInstance = new Coordinate({
         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
         rowCount: linearRows.length,
-        columnCount: aiTable.fields().length,
+        columnCount: fields.length,
         containerWidth: width,
         containerHeight: height,
         rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
         columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
         rowIndicesMap: {},
-        columnIndicesMap: getColumnIndicesMap(AITable.getVisibleFields(aiTable)),
+        columnIndicesMap: getColumnIndicesMap(fields),
         frozenColumnCount: 1
     });
 
@@ -32,7 +34,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         height: height,
         listening: false
     });
-
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
     const { columnHeads, frozenColumnHead } = createColumnHeads({
@@ -41,7 +42,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         columnStopIndex,
         fields: aiTable.fields()
     });
-
     const frozenGroup = new Konva.Group();
     const commonGroup = new Konva.Group();
     gridGroup.add(frozenGroup);
@@ -53,6 +53,10 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     frozenGroup.add(frozenCellsGroup);
     const columnHeadGroup = new Konva.Group();
     columnHeadGroup.add(...columnHeads);
+    const addFieldColumn = createAddFieldColumn(coordinateInstance, fields.length, columnStopIndex);
+    if (addFieldColumn) {
+        columnHeadGroup.add(addFieldColumn);
+    }
     const cellsGroup = new Konva.Group();
     commonGroup.add(columnHeadGroup);
     commonGroup.add(cellsGroup);

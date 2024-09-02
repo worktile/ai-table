@@ -448,11 +448,7 @@ export function getCanvasDefaultValue() {
                     'column-8': {
                         url: 'https://www.baidu.com',
                         text: '百度链接'
-                    },
-                    'column-9': ['member_01'],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    }
                 }
             },
             {
@@ -472,11 +468,7 @@ export function getCanvasDefaultValue() {
                     'column-5': ['member_01', 'member_02'],
                     'column-6': 50,
                     'column-7': 1,
-                    'column-8': {},
-                    'column-9': ['member_01'],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-8': {}
                 }
             },
             {
@@ -511,11 +503,7 @@ export function getCanvasDefaultValue() {
                     'column-5': [],
                     'column-6': 100,
                     'column-7': 1,
-                    'column-8': {},
-                    'column-9': [],
-                    'column-10': 1682235946,
-                    'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-8': {}
                 }
             }
         ],
@@ -609,7 +597,6 @@ export function getCanvasDefaultValue() {
                     view2: 14
                 }
             },
-
             {
                 _id: 'column-3',
                 name: '数字',
@@ -666,42 +653,6 @@ export function getCanvasDefaultValue() {
                     view2: 6
                 },
                 type: AITableFieldType.link
-            },
-            {
-                _id: 'column-9',
-                name: '创建人',
-                positions: {
-                    view1: 11,
-                    view2: 5
-                },
-                type: AITableFieldType.createdBy
-            },
-            {
-                _id: 'column-10',
-                name: '创建时间',
-                positions: {
-                    view1: 12,
-                    view2: 4
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-11',
-                name: '更新人',
-                positions: {
-                    view1: 13,
-                    view2: 3
-                },
-                type: AITableFieldType.updatedBy
-            },
-            {
-                _id: 'column-12',
-                name: '更新时间',
-                positions: {
-                    view1: 14,
-                    view2: 2
-                },
-                type: AITableFieldType.updatedAt
             }
         ]
     };
