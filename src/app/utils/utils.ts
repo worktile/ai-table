@@ -593,7 +593,6 @@ export function getCanvasDefaultValue() {
                     view2: 14
                 }
             },
-
             {
                 _id: 'column-3',
                 name: '数字',
