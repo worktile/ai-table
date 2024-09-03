@@ -17,35 +17,6 @@ export interface AITableCellsDrawerOptions extends AITableCellsOptions {
     ctx: Konva.Context | CanvasRenderingContext2D;
 }
 
-export interface AITableCellScrollContainerOptions {
-    aiTable: AITable;
-    context: AITableContext;
-    x: number;
-    y: number;
-    columnWidth: number;
-    rowHeight: number;
-    fieldId: string;
-    recordId: string;
-    renderData: any;
-    children: any[];
-    [key: string]: any;
-}
-
-export interface AITableCellOptions {
-    aiTable: AITable;
-    context: AITableContext;
-    field: AITableField;
-    recordId: string;
-    x: number;
-    y: number;
-    rowHeight: number;
-    columnWidth: number;
-    cellValue: FieldValue;
-    renderData: any;
-    isActive?: boolean;
-    style?: any;
-}
-
 export interface AITableRender {
     x: number;
     y: number;
@@ -66,9 +37,4 @@ export interface AITableRenderStyle {
 export interface AITableFirstCell {
     row: AITableLinearRowRecord;
     style: any;
-}
-
-export interface AITableCell {
-    recordId: string;
-    fieldId: string;
 }

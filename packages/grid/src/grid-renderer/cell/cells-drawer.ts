@@ -1,5 +1,5 @@
 import { AI_TABLE_OFFSET, DEFAULT_FONT_STYLE } from '../../constants';
-import { AITable } from '../../core';
+import { AITable, AITableQueries } from '../../core';
 import { AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { cellHelper } from '../cell/cell-helper';
@@ -70,7 +70,7 @@ export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
                     const realX = x + offset - AI_TABLE_OFFSET;
                     const realY = y - AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
-                    const cellValue = AITable.getCellValue(aiTable, recordId, field._id);
+                    const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
                     const render = {
                         x: realX,
                         y: realY,

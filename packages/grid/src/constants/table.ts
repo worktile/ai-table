@@ -17,8 +17,6 @@ export const AI_TABLE_DEFAULT_COLUMN_WIDTH = 200;
 export const AI_TABLE_SCROLL_BAR_PADDING = 3;
 // 默认单元格展示的最大行数
 export const AI_TABLE_CELL_MAX_ROW_COUNT = 1;
-// 无分组时默认的添加列宽度
-export const AI_TABLE_ADD_FIELD_BUTTON_WIDTH = 100;
 // 边框线偏移值
 export const AI_TABLE_OFFSET = 0.5;
 // 文本间距
