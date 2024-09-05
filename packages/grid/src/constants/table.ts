@@ -4,6 +4,8 @@ export const AI_TABLE_FIELD_HEAD_HEIGHT = 44;
 export const AI_TABLE_CELL_PADDING = 12;
 // 表格图标的通用尺寸
 export const AI_TABLE_ICON_COMMON_SIZE = 16;
+// 表格图标action背景的通用尺寸
+export const AI_TABLE_ACTION_COMMON_SIZE = 32;
 // 字段表列头图标的间距
 export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8;
 // 字段列头文本的最小宽度

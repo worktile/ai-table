@@ -23,6 +23,8 @@ export interface AITableFieldHeadOptions {
     field: AITableField;
     stroke?: string;
     iconVisible?: boolean;
+    isSelected?: boolean;
+    isHoverIcon?: boolean;
 }
 
 export interface AITableCreateHeadsOptions {

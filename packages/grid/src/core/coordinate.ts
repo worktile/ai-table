@@ -109,7 +109,7 @@ export class Coordinate {
             }
 
             for (let i = lastMeasuredIndex + 1; i <= index; i++) {
-                const size = isColumnType ? this.columnIndicesMap[i] : this.rowIndicesMap[i] ?? this.rowHeight;
+                const size = isColumnType ? this.columnIndicesMap[i] : (this.rowIndicesMap[i] ?? this.rowHeight);
 
                 cellMetadataMap[i] = {
                     offset,
@@ -159,7 +159,7 @@ export class Coordinate {
                 high = middle - 1;
             }
         }
-        return low > 0 ? low - 1 : 0;
+        return low > -1 ? low - 1 : 0;
     }
 
     /**

@@ -1,5 +1,6 @@
 import Konva from 'konva';
 import {
+    AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
@@ -20,7 +21,7 @@ import { createIcon } from './create-icon';
 export const createFieldHead = (options: AITableFieldHeadOptions) => {
     const colors = AITable.getColors();
     const textMeasure = TextMeasure();
-    const { x = 0, y = 0, width, field, height: headHeight, stroke, iconVisible } = options;
+    const { x = 0, y = 0, width, field, height: headHeight, stroke, iconVisible, isSelected, isHoverIcon } = options;
     const { _id: fieldId, name: _fieldName } = field;
     const textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
 
@@ -52,7 +53,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         }),
         width: width,
         height: headHeight,
-        fill: colors.white,
+        fill: isSelected ? colors.itemActiveBgColor : iconVisible ? colors.gray80 : colors.white,
         stroke: stroke || colors.gray200,
         strokeWidth: 1,
         onMouseEnter: () => {},
@@ -78,7 +79,7 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
         lineHeight: 1.84
     });
 
-    const commonIconOffsetY = (headHeight - AI_TABLE_ICON_COMMON_SIZE) / 2;
+    const commonIconOffsetY = (headHeight - AI_TABLE_ACTION_COMMON_SIZE) / 2;
 
     group.add(rect);
     group.add(fieldIcon);
@@ -90,11 +91,14 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
                 targetName: AI_TABLE_FIELD_HEAD_MORE,
                 fieldId
             }),
-            x: width - AI_TABLE_CELL_PADDING - AI_TABLE_ICON_COMMON_SIZE,
+            x: width - AI_TABLE_CELL_PADDING - AI_TABLE_ACTION_COMMON_SIZE,
             y: commonIconOffsetY,
             data: MoreStandOutlinedPath,
-            fill: colors.gray600,
-            background: colors.white
+            fill: isHoverIcon ? colors.primary : colors.gray600,
+            background: isSelected || isHoverIcon ? colors.itemActiveBgColor : colors.gray80,
+            backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
+            backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
+            cornerRadius: 4
         });
         group.add(moreIcon);
     }

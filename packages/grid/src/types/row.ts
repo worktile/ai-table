@@ -28,7 +28,6 @@ export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord;
 export interface AITableRowHeadOperationOptions {
     instance: Coordinate;
     isCheckedRow: boolean;
-    isHoverRow: boolean;
     rowIndex: number;
     isHoverCheckbox: boolean;
     recordId: string;

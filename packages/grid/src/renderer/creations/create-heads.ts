@@ -22,8 +22,12 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const getFieldHeadStatus = (fieldId: string) => {
         const iconVisible =
             [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields[pointColumnIndex]?._id === fieldId;
+        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields[pointColumnIndex]?._id === fieldId;
+        const isSelected = aiTable.selection().selectedFields.has(fieldId);
         return {
-            iconVisible
+            iconVisible,
+            isSelected,
+            isHoverIcon
         };
     };
 
@@ -36,7 +40,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             if (field == null) continue;
             const x = instance.getColumnOffset(columnIndex);
             const columnWidth = instance.getColumnWidth(columnIndex);
-            const { iconVisible } = getFieldHeadStatus(field._id);
+            const { iconVisible, isSelected, isHoverIcon } = getFieldHeadStatus(field._id);
             const fieldHead = createFieldHead({
                 x,
                 y: 0,
@@ -44,7 +48,9 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
                 height: fieldHeadHeight,
                 field,
                 stroke: columnIndex === 0 ? colors.transparent : undefined,
-                iconVisible
+                iconVisible,
+                isSelected,
+                isHoverIcon
             });
 
             _fieldHeads.push(fieldHead);

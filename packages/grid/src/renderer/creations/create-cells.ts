@@ -1,4 +1,10 @@
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_ADD_BUTTON, DEFAULT_FONT_STYLE } from '../../constants';
+import {
+    AI_TABLE_FIELD_HEAD,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_OFFSET,
+    AI_TABLE_ROW_ADD_BUTTON,
+    DEFAULT_FONT_STYLE
+} from '../../constants';
 import { AITable, AITableQueries } from '../../core';
 import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
@@ -48,10 +54,11 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
             const { _id: recordId, type } = row;
             const y = instance.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
             const { rowIndex: pointRowIndex, areaType, targetName } = context.pointPosition();
+            const isHover = pointRowIndex === rowIndex && areaType !== AITableAreaType.none;
+
             switch (type) {
                 case AITableRowType.add: {
-                    const isHoverRow =
-                        areaType !== AITableAreaType.none && pointRowIndex === rowIndex && targetName === AI_TABLE_ROW_ADD_BUTTON;
+                    const isHoverRow = isHover && targetName === AI_TABLE_ROW_ADD_BUTTON;
                     addRowLayout.init({
                         x,
                         y,
@@ -69,9 +76,9 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                 }
                 case AITableRowType.record: {
                     let background = colors.white;
-                    const isHoverRow = pointRowIndex === rowIndex;
                     const isCheckedRow = aiTable.selection().selectedRecords.has(row._id);
                     const isSelected = aiTable.selection().selectedFields.has(field._id);
+                    const isHoverRow = isHover && targetName !== AI_TABLE_FIELD_HEAD;
                     if (isCheckedRow || isSelected) {
                         background = colors.itemActiveBgColor;
                     } else if (isHoverRow) {

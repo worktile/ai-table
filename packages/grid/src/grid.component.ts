@@ -131,16 +131,19 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             const _targetName = e.target.name();
             const { targetName, fieldId, recordId } = getDetailByTargetName(_targetName);
             switch (targetName) {
-                case AI_TABLE_FIELD_HEAD_MORE:
                 case AI_TABLE_FIELD_HEAD: {
                     mouseEvent.preventDefault();
                     if (!fieldId) return;
                     return this.aiTableGridSelectionService.selectField(fieldId);
                 }
-                //         case AI_TABLE_CELL: {
-                //             if (!recordId || !fieldId) return;
-                //             return this.aiTableGridSelectionService.selectCell(recordId, fieldId);
-                //         }
+                // case AI_TABLE_FIELD_HEAD_MORE:{
+                //  弹出菜单
+                //    return
+                // }
+                // case AI_TABLE_CELL: {
+                //  if (!recordId || !fieldId) return;
+                //     return this.aiTableGridSelectionService.selectCell(recordId, fieldId);
+                // }
             }
         });
         this.gridStage.on('click', (e: KonvaEventObject<MouseEvent>) => {
