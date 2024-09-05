@@ -1,3 +1,4 @@
+import { WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
 import { AITableFieldMenuItem } from './field';
@@ -11,6 +12,7 @@ export interface AITableGridData {
     fields: AITableField[];
     records: AITableRecord[];
 }
+
 export interface AITableSelection {
     selectedRecords: Map<string, boolean>;
     selectedFields: Map<string, boolean>;
@@ -35,10 +37,10 @@ export interface AITableReferences {
 
 export interface AITableGridStageOptions {
     aiTable: AITable;
+    context: AITableContext;
     container: HTMLDivElement;
     width: number;
     height: number;
-    linearRows: AITableLinearRow[];
 }
 
 export enum AITableRowColumnType {
@@ -69,4 +71,9 @@ export enum AITableCheckType {
 export interface AITableScrollState {
     scrollTop: number;
     scrollLeft: number;
+}
+
+export interface AITableContext {
+    linearRows: AITableLinearRow[];
+    scrollState: WritableSignal<AITableScrollState>;
 }

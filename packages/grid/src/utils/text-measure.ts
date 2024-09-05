@@ -1,3 +1,11 @@
+import {
+    DEFAULT_FONT_FAMILY,
+    DEFAULT_FONT_SIZE,
+    DEFAULT_FONT_STYLE,
+    DEFAULT_FONT_WEIGHT,
+    DEFAULT_TEXT_LINE_HEIGHT,
+    DEFAULT_TEXT_SCALE
+} from '../constants';
 import { castToString } from './common';
 
 export interface AITableTextMeasureOptions {
@@ -16,13 +24,12 @@ export interface AITableTextMeasureOptions {
  */
 export const TextMeasure = (defaults: AITableTextMeasureOptions = {}) => {
     const {
-        fontFamily = `'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
-        fontSize = 13,
-        fontWeight = 'normal',
-        fontStyle = 'normal',
-        lineHeight = 24,
-        scale = 1
+        fontFamily = DEFAULT_FONT_FAMILY,
+        fontSize = DEFAULT_FONT_SIZE,
+        fontWeight = DEFAULT_FONT_WEIGHT,
+        fontStyle = DEFAULT_FONT_STYLE,
+        lineHeight = DEFAULT_TEXT_LINE_HEIGHT,
+        scale = DEFAULT_TEXT_SCALE
     } = defaults;
     const o: Required<AITableTextMeasureOptions> = {
         fontFamily,
