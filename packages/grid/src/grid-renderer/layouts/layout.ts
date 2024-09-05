@@ -1,5 +1,6 @@
 import { AITableLayout } from '../../types';
 import { Drawer } from '../../utils';
+import { AI_TABLE_ADD_FIELD_BUTTON_WIDTH } from '../../constants/table';
 
 /**
  * 用于处理表格行或单元格的布局和绘制。
@@ -21,8 +22,10 @@ export class Layout extends Drawer {
     // 列数
     protected columnCount = 0;
 
+    protected containerWidth = 0;
+
     // 用于初始化或重置布局的基本属性。这个方法通常在每次渲染新的一行或单元格时调用，确保布局信息是最新的
-    init({ x, y, rowIndex, columnIndex, rowHeight, columnWidth, columnCount }: AITableLayout) {
+    init({ x, y, rowIndex, columnIndex, rowHeight, columnWidth, columnCount, containerWidth }: AITableLayout) {
         this.x = x;
         this.y = y;
         this.rowIndex = rowIndex;
@@ -30,6 +33,7 @@ export class Layout extends Drawer {
         this.rowHeight = rowHeight;
         this.columnWidth = columnWidth;
         this.columnCount = columnCount;
+        this.containerWidth = containerWidth;
     }
 
     // 当前单元格是否是行的第一列
@@ -40,5 +44,18 @@ export class Layout extends Drawer {
     // 当前单元格是否是行的最后一列
     protected get isLast() {
         return this.columnIndex === this.columnCount - 1;
+    }
+
+    protected renderAddFieldBlank() {
+        const width = AI_TABLE_ADD_FIELD_BUTTON_WIDTH;
+        const y = this.y;
+        const rowHeight = this.rowHeight;
+        this.rect({
+            x: this.x + 0.5,
+            y: y - 0.5,
+            width: this.containerWidth - this.x < width ? width : this.containerWidth - this.x,
+            height: rowHeight + 1,
+            fill: this.colors.transparent
+        });
     }
 }

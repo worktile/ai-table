@@ -5,5 +5,7 @@ export const Colors = {
     gray800: '#333',
     gray600: '#999',
     white: '#fff',
-    transparent: 'transparent'
+    transparent: 'transparent',
+    gray80: '#fafafa',
+    itemActiveBgColor: '#6698ff1a'
 };

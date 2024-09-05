@@ -21,14 +21,23 @@ export const AI_TABLE_CELL_MAX_ROW_COUNT = 1;
 export const AI_TABLE_OFFSET = 0.5;
 // 文本间距
 export const AI_TABLE_TEXT_GAP = 8;
-
 // 属性列头标识
 export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD';
 // 单元格标识
 export const AI_TABLE_CELL = 'AI_TABLE_CELL';
+// 行头
+export const AI_TABLE_ROW_HEAD = 'AI_TABLE_ROW_HEAD';
 // 空白区域
 export const AI_TABLE_BLANK = 'AI_TABLE_BLANK';
-// 属性列选择框标识
+// 添加列名称
+export const AI_TABLE_FIELD_ADD_BUTTON = 'AI_TABLE_FIELD_ADD_BUTTON';
+// 添加行名称
+export const AI_TABLE_ROW_ADD_BUTTON = 'AI_TABLE_ROW_ADD_BUTTON';
+// 表头 checkbox 标识
 export const AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX = 'AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX';
+// 行 checkbox
+export const AI_TABLE_ROW_SELECT_CHECKBOX = 'AI_TABLE_ROW_SELECT_CHECKBOX';
 // 添加列宽度
 export const AI_TABLE_ADD_FIELD_BUTTON_WIDTH = 100;
+// 更多图标名称
+export const AI_TABLE_FIELD_HEAD_MORE = 'AI_TABLE_FIELD_HEAD_MORE'; // More button in the column header

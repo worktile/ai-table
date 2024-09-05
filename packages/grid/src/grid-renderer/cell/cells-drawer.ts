@@ -1,8 +1,9 @@
-import { AI_TABLE_OFFSET, DEFAULT_FONT_STYLE } from '../../constants';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_ADD_BUTTON, DEFAULT_FONT_STYLE } from '../../constants';
 import { AITable, AITableQueries } from '../../core';
-import { AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
+import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { cellHelper } from '../cell/cell-helper';
+import { addRowLayout } from '../layouts/add-row-layout';
 import { recordRowLayout } from '../layouts/record-row-layout';
 
 /**
@@ -20,6 +21,7 @@ export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
 
     // 初始化绘图上下文, 为后续的绘制操作做准备
     cellHelper.initCtx(ctx as CanvasRenderingContext2D);
+    addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
 
     // 遍历列, 确定在哪些列上绘制单元格
@@ -42,15 +44,39 @@ export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
         // 遍历行, 从 rowStartIndex 到 rowStopIndex 的所有行，决定将在哪些行上绘制单元格
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > rowCount - 1) break;
-
-            const row = linearRows[rowIndex];
+            const row = linearRows()[rowIndex];
             const { _id: recordId, type } = row;
             const y = instance.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-
+            const { rowIndex: pointRowIndex, realAreaType, targetName } = context.pointPosition();
             switch (type) {
+                case AITableRowType.add: {
+                    const isHoverRow =
+                        realAreaType !== AITableAreaType.none && pointRowIndex === rowIndex && targetName === AI_TABLE_ROW_ADD_BUTTON;
+                    addRowLayout.init({
+                        x,
+                        y,
+                        rowIndex,
+                        columnIndex,
+                        columnWidth,
+                        rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
+                        columnCount,
+                        containerWidth: instance.containerWidth
+                    });
+                    addRowLayout.render({
+                        isHoverRow
+                    });
+                    break;
+                }
                 case AITableRowType.record: {
                     let background = colors.white;
-                    // 使用 recordRowLayout 设置每个单元格的布局，并调用其 render 方法实际绘制单元格背景
+                    const isHoverRow = pointRowIndex === rowIndex;
+                    const isCheckedRow = aiTable.selection().selectedRecords.has(row._id);
+                    const isSelected = aiTable.selection().selectedFields.has(field._id);
+                    if (isCheckedRow || isSelected) {
+                        background = colors.itemActiveBgColor;
+                    } else if (isHoverRow) {
+                        background = colors.gray80;
+                    }
                     recordRowLayout.init({
                         x,
                         y,
@@ -58,10 +84,15 @@ export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
                         columnIndex,
                         columnWidth,
                         rowHeight,
-                        columnCount
+                        columnCount,
+                        containerWidth: instance.containerWidth
                     });
-                    recordRowLayout.render({ row, style: { fill: background } });
-
+                    recordRowLayout.render({
+                        row,
+                        style: { fill: background },
+                        isHoverRow,
+                        isCheckedRow
+                    });
                     const { width, offset } = getCellHorizontalPosition({
                         columnIndex,
                         columnWidth,

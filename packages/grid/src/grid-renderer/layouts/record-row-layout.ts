@@ -1,6 +1,6 @@
 import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH, DEFAULT_FONT_SIZE } from '../../constants';
 import { AITable } from '../../core';
-import { AITableFirstCell } from '../../types';
+import { AITableCell } from '../../types';
 import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from './../../constants/text';
 import { Layout } from './layout';
 
@@ -10,7 +10,7 @@ import { Layout } from './layout';
  */
 export class RecordRowLayout extends Layout {
     // 首列
-    private renderFirstCell({ row, style }: AITableFirstCell) {
+    private renderFirstCell({ row, style, isHoverRow, isCheckedRow }: AITableCell) {
         if (!this.isFirst) return;
 
         const { fill } = style;
@@ -21,9 +21,9 @@ export class RecordRowLayout extends Layout {
 
         // 背景、边框
         this.customRect({
-            x: 0,
+            x: AI_TABLE_ROW_HEAD_WIDTH,
             y,
-            width: AI_TABLE_ROW_HEAD_WIDTH + columnWidth + AI_TABLE_OFFSET,
+            width: columnWidth + AI_TABLE_OFFSET,
             height: rowHeight,
             fill: fill,
             strokes: {
@@ -37,11 +37,23 @@ export class RecordRowLayout extends Layout {
             y,
             width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET,
             height: rowHeight,
-            fill: fill,
+            fill: colors.transparent,
             strokes: {
-                right: colors.gray200
+                right: colors.gray200,
+                bottom: colors.gray200
             }
         });
+
+        if (isHoverRow || isCheckedRow) {
+            const fill: string = isCheckedRow ? colors.itemActiveBgColor : colors.gray80;
+            return this.rect({
+                x: AI_TABLE_OFFSET,
+                y: y + AI_TABLE_OFFSET,
+                width: AI_TABLE_ROW_HEAD_WIDTH,
+                height: rowHeight - 1,
+                fill
+            });
+        }
         // 设置字体样式，居中绘制行号
         this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
         this.text({
@@ -54,7 +66,7 @@ export class RecordRowLayout extends Layout {
     }
 
     // 尾列
-    private renderLastCell({ style }: Pick<AITableFirstCell, 'style'>) {
+    private renderLastCell({ style }: Pick<AITableCell, 'style'>) {
         if (!this.isLast || this.isFirst) return;
 
         const { fill, stroke } = style;
@@ -74,7 +86,7 @@ export class RecordRowLayout extends Layout {
     }
 
     // 绘制中间的普通单元格
-    private renderCommonCell({ style }: Pick<AITableFirstCell, 'style'>) {
+    private renderCommonCell({ style }: Pick<AITableCell, 'style'>) {
         if (this.isFirst || this.isLast) return;
 
         const { fill, stroke } = style;
@@ -91,10 +103,9 @@ export class RecordRowLayout extends Layout {
         });
     }
 
-    render(config: AITableFirstCell) {
-        const { row, style } = config;
-
-        this.renderFirstCell({ row, style });
+    render(config: AITableCell) {
+        const { row, style, isCheckedRow, isHoverRow } = config;
+        this.renderFirstCell({ row, style, isCheckedRow, isHoverRow });
         this.renderCommonCell({ style });
         this.renderLastCell({ style });
     }

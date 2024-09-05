@@ -7,6 +7,7 @@ export class Coordinate {
     protected _rowHeight: number;
     public rowCount: number;
     public columnCount: number;
+    public container: HTMLDivElement;
     public containerWidth: number;
     public containerHeight: number;
     // 用 index 映射 每一行的 高度
@@ -28,8 +29,7 @@ export class Coordinate {
         rowHeight,
         rowCount,
         columnCount,
-        containerWidth,
-        containerHeight,
+        container,
         rowIndicesMap = {},
         columnIndicesMap = {},
         rowInitSize = 0,
@@ -41,11 +41,12 @@ export class Coordinate {
         this.columnCount = columnCount;
         this.rowInitSize = rowInitSize;
         this.columnInitSize = columnInitSize;
-        this.containerWidth = containerWidth;
+        this.containerWidth = container.offsetWidth;
         this.rowIndicesMap = rowIndicesMap;
         this.columnIndicesMap = columnIndicesMap;
-        this.containerHeight = containerHeight;
+        this.containerHeight = container.offsetHeight;
         this.frozenColumnCount = frozenColumnCount;
+        this.container = container;
     }
 
     public get rowHeight() {
@@ -108,7 +109,7 @@ export class Coordinate {
             }
 
             for (let i = lastMeasuredIndex + 1; i <= index; i++) {
-                const size = isColumnType ? this.columnIndicesMap[i] : this.rowIndicesMap[i] ?? this.rowHeight;
+                const size = isColumnType ? this.columnIndicesMap[i] : (this.rowIndicesMap[i] ?? this.rowHeight);
 
                 cellMetadataMap[i] = {
                     offset,

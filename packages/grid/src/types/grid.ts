@@ -1,8 +1,8 @@
-import { WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
+import { Signal, WritableSignal } from '@angular/core';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
@@ -41,6 +41,7 @@ export interface AITableGridStageOptions {
     container: HTMLDivElement;
     width: number;
     height: number;
+    instance: Coordinate;
 }
 
 export enum AITableRowColumnType {
@@ -53,8 +54,7 @@ export type AITableSizeMap = Record<number, number>;
 export interface AITableCoordinate {
     rowCount: number;
     columnCount: number;
-    containerWidth: number;
-    containerHeight: number;
+    container: HTMLDivElement;
     rowHeight: number;
     rowInitSize?: number;
     rowIndicesMap: AITableSizeMap;
@@ -73,7 +73,26 @@ export interface AITableScrollState {
     scrollLeft: number;
 }
 
+export enum AITableAreaType {
+    grid = 'grid',
+    none = 'none'
+}
+
+export type AITablePointPosition = {
+    x: number; // The mouse targets the visible area of the x
+    y: number; // The mouse targets the visible area of the  y
+    areaType: AITableAreaType;
+    realAreaType: AITableAreaType;
+    targetName: string;
+    realTargetName: string;
+    rowIndex: number;
+    columnIndex: number;
+    offsetTop: number;
+    offsetLeft: number;
+};
+
 export interface AITableContext {
-    linearRows: AITableLinearRow[];
+    linearRows: Signal<AITableLinearRow[]>;
+    pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
 }

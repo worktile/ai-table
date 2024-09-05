@@ -34,7 +34,10 @@ export interface AITableRenderStyle {
     fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter';
 }
 
-export interface AITableFirstCell {
+export interface AITableCell {
     row: AITableLinearRowRecord;
-    style: any;
+    style?: any;
+    isHoverRow: boolean;
+    isCheckedRow: boolean;
+    width?: number;
 }

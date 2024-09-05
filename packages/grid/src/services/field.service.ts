@@ -16,10 +16,17 @@ export class AITableGridFieldService {
         this.aiFieldConfig = aiFieldConfig;
     }
 
-    editFieldProperty(origin: HTMLElement | ElementRef<any>, aiTable: AITable, aiEditField: WritableSignal<AITableField>, isUpdate: boolean) {
+    editFieldProperty(
+        aiTable: AITable,
+        aiEditField: WritableSignal<AITableField>,
+        isUpdate: boolean,
+        origin?: any,
+        position?: { x: number; y: number }
+    ) {
         const component = this.aiFieldConfig?.fieldPropertyEditor ?? AITableFieldPropertyEditor;
         this.thyPopover.open(component, {
             origin: origin,
+            originPosition: position,
             manualClosure: true,
             placement: 'bottomLeft',
             initialState: {

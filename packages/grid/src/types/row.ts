@@ -1,3 +1,6 @@
+import { AITable, Context, Coordinate } from '../core';
+import { AITableContext } from './grid';
+
 export enum AITableRowType {
     add = 'add',
     record = 'record'
@@ -22,3 +25,20 @@ export type AITableLinearRowRecord = {
 };
 
 export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord;
+
+export interface AITableRowHeadOperationOptions {
+    instance: Coordinate;
+    isCheckedRow: boolean;
+    isHoverRow: boolean;
+    rowIndex: number;
+    isHoverCheckbox: boolean;
+    recordId: string;
+}
+
+export interface AITableRowHeadsOptions {
+    instance: Coordinate;
+    rowStartIndex: number;
+    rowStopIndex: number;
+    context: AITableContext;
+    aiTable: AITable;
+}

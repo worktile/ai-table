@@ -3,7 +3,7 @@ import { AITableCellsOptions } from '../types';
 import { cellsDrawer } from './cell/cells-drawer';
 
 export const createCells = (options: AITableCellsOptions) => {
-    const { instance, columnStartIndex } = options;
+    const { instance, columnStartIndex, columnStopIndex } = options;
     const { frozenColumnCount } = instance;
 
     // 冻结列
@@ -27,7 +27,8 @@ export const createCells = (options: AITableCellsOptions) => {
             cellsDrawer({
                 ...options,
                 ctx,
-                columnStartIndex: Math.max(columnStartIndex, frozenColumnCount)
+                columnStartIndex: Math.max(columnStartIndex, frozenColumnCount),
+                columnStopIndex
             })
     });
 
