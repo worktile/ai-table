@@ -1,7 +1,6 @@
 import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as Y from 'yjs';
-import { LiveFeedRoom } from '../feed-room';
 import { ServerLiveFeedRoom } from './utils';
 import { LiveFeedObject } from '../feed-object';
 
@@ -59,9 +58,6 @@ export const readSyncMessage = (
             break;
         case messageYjsSyncStep2:
             readSyncStep2(decoder, room, transactionOrigin);
-            room.objects.forEach((object) => {
-                console.log(object.get('ai-table').toJSON(), 'data');
-            })
             break;
         case messageYjsUpdate:
             readUpdate(decoder, room, transactionOrigin);

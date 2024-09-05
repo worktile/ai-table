@@ -89,8 +89,7 @@ export class TableService {
         this.provider = getProvider(this.feedRoom!, isDevMode());
         this.provider.once('synced', () => {
             console.log('synced');
-            console.log(this.provider!.synced, [this.feedRoom!.getObject(roomId).store.clients.keys()].length);
-            if (this.provider!.synced && [this.feedRoom!.getObject(roomId).store.clients.keys()].length === 0) {
+            if (this.provider!.synced && [...this.feedRoom!.getObject(roomId).store.clients.keys()].length === 0) {
                 console.log('init shared type');
                 const value = getDefaultValue();
                 initSharedType(this.feedRoom!.getObject(roomId), {

@@ -28,9 +28,7 @@ export const readSyncStep2 = (decoder: decoding.Decoder, room: LiveFeedRoom, tra
     try {
         while (decoding.hasContent(decoder)) {
             const guid = decoding.readVarString(decoder);
-            console.log(`apply guid: ${guid}`);
             Y.applyUpdate(room.getObject(guid), decoding.readVarUint8Array(decoder), transactionOrigin);
-            console.log(room.getObject(guid).get('ai-table').toJSON())
         }
     } catch (error) {
         // This catches errors that are thrown by event handlers
@@ -56,4 +54,9 @@ export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Enc
             throw new Error('Unknown message type');
     }
     return messageType;
+};
+
+export const writeUpdate = (encoder: encoding.Encoder, update: Uint8Array) => {
+    encoding.writeVarUint(encoder, messageYjsUpdate);
+    encoding.writeVarUint8Array(encoder, update);
 };

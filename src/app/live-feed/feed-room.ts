@@ -31,7 +31,7 @@ export class LiveFeedRoom extends Observable<string> {
             throw new Error('can not resolve typeName');
         }
         this.objects.set(object.guid, object);
-        object.get(object.typeName).observeDeep((events: Array<Y.YEvent<any>>, transaction: Y.Transaction) => {
+        object.getMap(object.typeName).observeDeep((events: Array<Y.YEvent<any>>, transaction: Y.Transaction) => {
             this.#emitObjectChange(events, object, transaction);
         });
         object.on('update', this.#emitObjectUpdate);
@@ -46,23 +46,24 @@ export class LiveFeedRoom extends Observable<string> {
         if (!this.#isPendingChange) {
             this.#isPendingChange = true;
             Promise.resolve().then(() => {
-                this.emit('change', this.#pendingChanges);
+                this.emit('change', [this.#pendingChanges]);
                 this.#pendingChanges = [];
                 this.#isPendingChange = false;
             });
         }
     }
 
-    #emitObjectUpdate = (update: Uint8Array, arg1: any, doc: Y.Doc, transaction: Y.Transaction) => {
+    #emitObjectUpdate = (update: Uint8Array, origin: any, doc: Y.Doc, transaction: Y.Transaction) => {
         this.#pendingUpdates.push({
             update,
+            origin,
             transaction,
             guid: doc.guid
         });
         if (!this.#isPendingUpdate) {
             this.#isPendingUpdate = true;
             Promise.resolve().then(() => {
-                this.emit('update', this.#pendingUpdates);
+                this.emit('update', [this.#pendingUpdates]);
                 this.#pendingUpdates = [];
                 this.#isPendingUpdate = false;
             });
@@ -91,6 +92,7 @@ export class LiveFeedRoom extends Observable<string> {
 
 export interface LiveFeedObjectUpdate {
     update: Uint8Array;
+    origin: any;
     transaction: Y.Transaction;
     guid: string;
 }

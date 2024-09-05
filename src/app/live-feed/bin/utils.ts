@@ -7,8 +7,9 @@ import { ObservableV2 } from 'lib0/observable';
 import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as map from 'lib0/map';
-import { LiveFeedRoom } from '../feed-room';
-import { messageYjsSyncStep1, readSyncMessage } from './server-sync';
+import { LiveFeedObjectUpdate, LiveFeedRoom } from '../feed-room';
+import { messageYjsSyncStep1, messageYjsUpdate, readSyncMessage } from './server-sync';
+import { LiveFeedObject } from '../feed-object';
 
 const wsReadyStateConnecting = 0;
 const wsReadyStateOpen = 1;
@@ -24,12 +25,27 @@ const messageAwareness = 1;
 
 export class ServerLiveFeedRoom extends LiveFeedRoom {
     conns: Map<any, Set<any>> = new Map();
+
+    constructor(options: { roomId: string; objects: LiveFeedObject[] }) {
+        super(options);
+    }
 }
 
 export const getRoom = (roomId: string) => {
     return map.setIfUndefined(docs, roomId, () => {
         const serverRoom = new ServerLiveFeedRoom({ roomId: roomId, objects: [] });
         docs.set(roomId, serverRoom);
+        serverRoom.on('update', (updates: LiveFeedObjectUpdate[]) => {
+            const encoder = encoding.createEncoder();
+            encoding.writeVarUint(encoder, messageSync);
+            encoding.writeVarUint(encoder, messageYjsUpdate);
+            updates.forEach((update) => {
+                encoding.writeVarString(encoder, update.guid);
+                encoding.writeVarUint8Array(encoder, update.update);
+            });
+            const message = encoding.toUint8Array(encoder)
+            serverRoom.conns.forEach((_, conn) => send(serverRoom, conn, message))
+        });
         return serverRoom;
     });
 };

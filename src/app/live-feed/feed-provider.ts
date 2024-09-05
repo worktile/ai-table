@@ -7,8 +7,8 @@ import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as syncProtocol from 'y-protocols/sync';
 import * as Y from 'yjs';
-import { messageYjsSyncStep1, readSyncMessage } from './sync';
-import { LiveFeedRoom } from './feed-room';
+import { messageYjsSyncStep1, messageYjsUpdate, readSyncMessage, writeUpdate } from './sync';
+import { LiveFeedObjectUpdate, LiveFeedRoom } from './feed-room';
 
 export const messageSync = 0;
 export const messageQueryAwareness = 3;
@@ -46,6 +46,22 @@ export class LiveFeedProvider extends Observable<string> {
         this.options = options;
         this.serverUrl = serverUrl;
         this.shouldConnect = options.connect;
+
+        this.room.on('update', (updates: LiveFeedObjectUpdate[]) => {
+            const pendingUpdates = updates.filter((value) => value.origin !== this);
+            if (pendingUpdates.length > 0) {
+                const encoder = encoding.createEncoder();
+                encoding.writeVarUint(encoder, messageSync);
+                encoding.writeVarUint(encoder, messageYjsUpdate);
+                pendingUpdates.forEach((update) => {
+                    encoding.writeVarString(encoder, update.guid);
+                    encoding.writeVarUint8Array(encoder, update.update);
+                });
+                if (this.hasConnected && this.ws && this.ws.readyState === this.ws.OPEN) {
+                    this.ws.send(encoding.toUint8Array(encoder));
+                }
+            }
+        });
         if (options.connect) {
             this.connect();
         }

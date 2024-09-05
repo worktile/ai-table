@@ -21,7 +21,9 @@ export const YjsAITable = {
         fn();
 
         if (!wasLocal) {
-            IS_LOCAL.delete(aiTable);
+            setTimeout(() => {
+                IS_LOCAL.delete(aiTable);                
+            }, 0);
         }
     },
 
@@ -36,7 +38,9 @@ export const YjsAITable = {
         fn();
 
         if (!wasRemote) {
-            Promise.resolve().then(() => IS_REMOTE.delete(aiTable));
+            setTimeout(() => {
+                Promise.resolve().then(() => IS_REMOTE.delete(aiTable));                
+            }, 0);
         }
     },
 
