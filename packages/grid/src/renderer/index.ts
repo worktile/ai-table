@@ -6,6 +6,6 @@ export * from './creations/create-text';
 export * from './creations/create-heads';
 export * from './creations/create-add-field-column';
 export * from './creations/create-all-cells';
-export * from './creations/create-row-head-operation';
+export * from './creations/create-hover-row-heads';
 export * from './creations/create-other-rows';
 export * from './creations/create-cells';

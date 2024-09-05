@@ -44,9 +44,9 @@ export const createRowHeadOperation = (options: AITableRowHeadOperationOptions) 
     return group;
 };
 
-export const hoverRowHeadOperation = (options: AITableRowHeadsOptions) => {
+export const createHoverRowHeads = (options: AITableRowHeadsOptions) => {
     const { instance, rowStartIndex, rowStopIndex, context, aiTable } = options;
-    const hoverRowHeadOperation = [];
+    const hoverRowHeads = [];
     for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         if (rowIndex > instance.rowCount - 1) break;
         const row = context.linearRows()[rowIndex];
@@ -60,7 +60,7 @@ export const hoverRowHeadOperation = (options: AITableRowHeadsOptions) => {
         const isHoverRow = recordId === pointRecordId && pointRowType === AITableRowType.record;
         const isHoverCheckbox = getDetailByTargetName(realTargetName).targetName === AI_TABLE_ROW_SELECT_CHECKBOX;
         const operationGroup = createRowHeadOperation({ instance, isCheckedRow, isHoverRow, recordId, rowIndex, isHoverCheckbox });
-        hoverRowHeadOperation.push(operationGroup);
+        hoverRowHeads.push(operationGroup);
     }
-    return hoverRowHeadOperation;
+    return hoverRowHeads;
 };

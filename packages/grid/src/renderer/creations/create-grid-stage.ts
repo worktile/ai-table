@@ -5,7 +5,7 @@ import { getVisibleRangeInfo } from '../../utils';
 import { createAllCells } from './create-all-cells';
 import { createColumnHeads } from './create-heads';
 import { createAddFieldColumn } from './create-add-field-column';
-import { hoverRowHeadOperation } from './create-row-head-operation';
+import { createHoverRowHeads } from './create-hover-row-heads';
 import { createOtherRows } from './create-other-rows';
 
 Konva.pixelRatio = 2;
@@ -57,7 +57,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const frozenCellsGroup = new Konva.Group();
     frozenGroup.add(frozenColumnHeadGroup);
     frozenCellsGroup.add(frozenCells);
-    const rowHeadsOperations = hoverRowHeadOperation({
+    const hoverRowHeads = createHoverRowHeads({
         aiTable,
         context,
         instance: coordinateInstance,
@@ -72,7 +72,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         rowStartIndex,
         rowStopIndex
     });
-    frozenCellsGroup.add(...rowHeadsOperations, ...otherRows);
+    frozenCellsGroup.add(...hoverRowHeads, ...otherRows);
     frozenGroup.add(frozenCellsGroup);
     const columnHeadGroup = new Konva.Group();
     columnHeadGroup.add(...columnHeads);
