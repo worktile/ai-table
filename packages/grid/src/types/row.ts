@@ -1,5 +1,4 @@
 import { AITable, Context, Coordinate } from '../core';
-import { AITableContext } from './grid';
 
 export enum AITableRowType {
     add = 'add',
@@ -39,6 +38,6 @@ export interface AITableRowHeadsOptions {
     instance: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;
-    context: AITableContext;
+    context: Context;
     aiTable: AITable;
 }

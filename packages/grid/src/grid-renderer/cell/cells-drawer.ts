@@ -47,11 +47,11 @@ export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
             const row = linearRows()[rowIndex];
             const { _id: recordId, type } = row;
             const y = instance.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-            const { rowIndex: pointRowIndex, realAreaType, targetName } = context.pointPosition();
+            const { rowIndex: pointRowIndex, areaType, targetName } = context.pointPosition();
             switch (type) {
                 case AITableRowType.add: {
                     const isHoverRow =
-                        realAreaType !== AITableAreaType.none && pointRowIndex === rowIndex && targetName === AI_TABLE_ROW_ADD_BUTTON;
+                        areaType !== AITableAreaType.none && pointRowIndex === rowIndex && targetName === AI_TABLE_ROW_ADD_BUTTON;
                     addRowLayout.init({
                         x,
                         y,

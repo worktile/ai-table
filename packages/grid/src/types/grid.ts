@@ -1,5 +1,5 @@
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Context, Coordinate } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 import { Signal, WritableSignal } from '@angular/core';
@@ -37,7 +37,7 @@ export interface AITableReferences {
 
 export interface AITableGridStageOptions {
     aiTable: AITable;
-    context: AITableContext;
+    context: Context;
     container: HTMLDivElement;
     width: number;
     height: number;
@@ -82,7 +82,6 @@ export type AITablePointPosition = {
     x: number; // The mouse targets the visible area of the x
     y: number; // The mouse targets the visible area of the  y
     areaType: AITableAreaType;
-    realAreaType: AITableAreaType;
     targetName: string;
     realTargetName: string;
     rowIndex: number;

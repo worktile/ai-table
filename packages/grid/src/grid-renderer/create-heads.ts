@@ -17,7 +17,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex, pointPosition, aiTable } = props;
     const colors = Colors;
     const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
-    const { columnIndex: pointColumnIndex, targetName: pointTargetName, realAreaType: pointAreaType } = pointPosition;
+    const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
 
     const getFieldHeadStatus = (fieldId: string) => {
         const iconVisible =

@@ -53,9 +53,9 @@ export const hoverRowHeadOperation = (options: AITableRowHeadsOptions) => {
         if (row == null) continue;
         const { type, _id: recordId } = row;
         if (type !== AITableRowType.record || recordId == null) continue;
-        const { realAreaType, rowIndex: pointRowIndex, realTargetName } = context.pointPosition();
+        const { areaType, rowIndex: pointRowIndex, realTargetName } = context.pointPosition();
         const isCheckedRow = aiTable.selection().selectedRecords.has(recordId);
-        if (!isCheckedRow && realAreaType === AITableAreaType.none) continue;
+        if (!isCheckedRow && areaType === AITableAreaType.none) continue;
         const { type: pointRowType, _id: pointRecordId } = context.linearRows()[pointRowIndex];
         const isHoverRow = recordId === pointRecordId && pointRowType === AITableRowType.record;
         const isHoverCheckbox = getDetailByTargetName(realTargetName).targetName === AI_TABLE_ROW_SELECT_CHECKBOX;

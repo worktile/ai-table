@@ -121,7 +121,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
                     this.context,
                     targetName
                 );
-                handleMouseStyle(curMousePosition.realTargetName, curMousePosition.realAreaType, this.container);
+                handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.container);
                 this.context.setPointPosition(curMousePosition);
                 this.timer = null;
             });

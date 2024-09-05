@@ -19,18 +19,16 @@ export const getMousePosition = (
     const offsetLeft = isWithinFrozenColumnBoundary(x, instance.frozenColumnWidth) ? x : scrollLeft + x;
     const columnIndex = instance.getColumnStartIndex(offsetLeft);
     const areaType = offsetLeft <= scrollMaxWidth && offsetTop <= scrollMaxHeight ? AITableAreaType.grid : AITableAreaType.none;
-    const realAreaType = areaType;
     const targetName = getTargetName(_targetName);
     return {
         areaType,
-        realAreaType,
         targetName, // As a simple operational identifier, with prefix name only
         realTargetName: _targetName || AI_TABLE_BLANK, // Real name
         rowIndex,
         columnIndex,
         offsetTop,
         offsetLeft,
-        x: x,
+        x,
         y
     };
 };

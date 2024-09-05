@@ -23,7 +23,6 @@ export const RowHeight = {
 
 export const DEFAULT_POINT_POSITION = {
     areaType: AITableAreaType.none,
-    realAreaType: AITableAreaType.none,
     targetName: AI_TABLE_BLANK,
     realTargetName: AI_TABLE_BLANK,
     rowIndex: -1,

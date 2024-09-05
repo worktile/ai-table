@@ -12,11 +12,13 @@ Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableGridStageOptions) => {
     const { width, height, container, aiTable, context, instance: coordinateInstance } = config;
+
     const fields = AITable.getVisibleFields(aiTable);
-    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinateInstance, {
-        scrollLeft: 0,
-        scrollTop: 0
-    });
+
+    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(
+        coordinateInstance,
+        context.scrollState()
+    );
 
     const gridStage = new Konva.Stage({
         container: container,
@@ -56,7 +58,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     frozenGroup.add(frozenColumnHeadGroup);
     frozenCellsGroup.add(frozenCells);
     const rowHeadsOperations = hoverRowHeadOperation({
-        aiTable: aiTable,
+        aiTable,
         context,
         instance: coordinateInstance,
         rowStartIndex,
@@ -64,7 +66,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     });
 
     const otherRows = createOtherRows({
-        aiTable: aiTable,
+        aiTable,
         context,
         instance: coordinateInstance,
         rowStartIndex,
