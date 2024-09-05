@@ -8,10 +8,10 @@ import {
     ColumnRatingFilledPath,
     ColumnSelectFilledPath,
     ColumnTextFilledPath
-} from '../constants';
-import { AITableFieldType, SelectSettings } from '../core';
-import { AITableFieldTypeIconOptions } from '../types';
-import { createIcon } from './icon';
+} from '../../constants';
+import { AITableFieldType, SelectSettings } from '../../core';
+import { AITableFieldTypeIconOptions } from '../../types';
+import { createIcon } from './create-icon';
 
 export const createFieldIcon = (options: AITableFieldTypeIconOptions) => {
     const { field, x, y, width, height, fill } = options;
