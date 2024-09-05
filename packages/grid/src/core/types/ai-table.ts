@@ -21,5 +21,8 @@ export const AITable = {
     },
     getVisibleFields(aiTable: AITable) {
         return aiTable.fields().filter((field) => !field.hidden);
+    },
+    getVisibleRows(aiTable: AITable) {
+        return aiTable.records();
     }
 };

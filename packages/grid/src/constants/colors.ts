@@ -4,5 +4,6 @@ export const Colors = {
     gray300: '#ddd',
     gray800: '#333',
     gray600: '#999',
-    white: '#fff'
+    white: '#fff',
+    transparent: 'transparent'
 };

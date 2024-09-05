@@ -1,6 +1,5 @@
 export const DEFAULT_ICON_SHAPE = 'square';
 export const DEFAULT_ICON_SIZE = 16;
-export const DEFAULT_ICON_BACKGROUND = 'transparent';
 
 export const Check = `
     M13,1H2C1.4,1,1,1.4,1,2v11c0,0.6,0.4,1,1,1h11c0.6,0,1-0.4,1-1V2C14,1.4,13.6,1,13,1z M11.6,6l-4.3,4.2
