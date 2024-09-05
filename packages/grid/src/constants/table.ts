@@ -10,11 +10,25 @@ export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8;
 export const AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH = 30;
 // 表格行头 checkbox 列的宽度
 export const AI_TABLE_ROW_HEAD_WIDTH = 44;
+// 表头 checkbox 标识
+// 默认列宽
+export const AI_TABLE_DEFAULT_COLUMN_WIDTH = 200;
+// 单元格滑动容器的滚动条宽度
+export const AI_TABLE_SCROLL_BAR_PADDING = 3;
+// 默认单元格展示的最大行数
+export const AI_TABLE_CELL_MAX_ROW_COUNT = 1;
+// 边框线偏移值
+export const AI_TABLE_OFFSET = 0.5;
+// 文本间距
+export const AI_TABLE_TEXT_GAP = 8;
+
 // 属性列头标识
 export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD';
+// 单元格标识
+export const AI_TABLE_CELL = 'AI_TABLE_CELL';
 // 空白区域
 export const AI_TABLE_BLANK = 'AI_TABLE_BLANK';
-// 表头 checkbox 标识
+// 属性列选择框标识
 export const AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX = 'AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX';
 // 添加列宽度
 export const AI_TABLE_ADD_FIELD_BUTTON_WIDTH = 100;

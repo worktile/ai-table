@@ -5,6 +5,7 @@ import {
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
+    AI_TABLE_OFFSET,
     DEFAULT_FONT_SIZE
 } from '../constants';
 import { AITable } from '../core';
@@ -37,8 +38,8 @@ export const createFieldHead = (options: AITableFieldHeadOptions) => {
 
     const group = new Konva.Group({ x: x, y: y });
     const rect = new Konva.Rect({
-        x: 0.5,
-        y: 0.5,
+        x: AI_TABLE_OFFSET,
+        y: AI_TABLE_OFFSET,
         name: generateTargetName({
             targetName: AI_TABLE_FIELD_HEAD,
             fieldId

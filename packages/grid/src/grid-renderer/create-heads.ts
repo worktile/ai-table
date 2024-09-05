@@ -3,12 +3,13 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
+    AI_TABLE_OFFSET,
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../constants';
+import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
 import { createFieldHead } from './field-head';
 import { createIcon } from './icon';
-import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
 
 export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex } = props;
@@ -30,7 +31,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
                 width: columnWidth,
                 height: fieldHeadHeight,
                 field,
-                stroke: columnIndex === 0 ? 'transparent' : undefined
+                stroke: columnIndex === 0 ? colors.transparent : undefined
             });
 
             _fieldHeads.push(fieldHead);
@@ -43,16 +44,16 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
         const topLine = new Konva.Line({
-            x: 0.5,
-            y: 0.5,
+            x: AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
             points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
             stroke: colors.gray200,
             strokeWidth: 1,
             listening: false
         });
         const bottomLine = new Konva.Line({
-            x: 0.5,
-            y: 0.5,
+            x: AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
             points: [AI_TABLE_ROW_HEAD_WIDTH, fieldHeadHeight, 0, fieldHeadHeight],
             stroke: colors.gray200,
             strokeWidth: 1,
@@ -66,13 +67,13 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             fill: isChecked ? colors.primary : colors.gray300
         });
         const rect1 = new Konva.Rect({
-            x: AI_TABLE_ROW_HEAD_WIDTH + 0.5,
-            y: 0.5,
+            x: AI_TABLE_ROW_HEAD_WIDTH + AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
             width: frozenColumnWidth,
             height: fieldHeadHeight,
             stroke: colors.gray200,
             strokeWidth: 1,
-            fill: 'transparent',
+            fill: colors.transparent,
             listening: false
         });
         headGroup.push(topLine, bottomLine, icon, ...head, rect1);
