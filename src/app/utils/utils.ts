@@ -447,8 +447,6 @@ export function getCanvasDefaultValue() {
                     'column-1': '文本 1-1',
                     'column-2': ['1'],
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
                     'column-4': 1682235946,
                     'column-5': ['member_01'],
@@ -457,7 +455,11 @@ export function getCanvasDefaultValue() {
                     'column-8': {
                         url: 'https://www.baidu.com',
                         text: '百度链接'
-                    }
+                    },
+                    'column-9': ['member_01']
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             },
             {
@@ -470,14 +472,16 @@ export function getCanvasDefaultValue() {
                     'column-1': '文本 2-1',
                     'column-2': ['2'],
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
                     'column-4': 1682235946,
                     'column-5': ['member_01', 'member_02'],
                     'column-6': 50,
                     'column-7': 1,
-                    'column-8': {}
+                    'column-8': {},
+                    'column-9': ['member_01']
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             },
             {
@@ -495,34 +499,35 @@ export function getCanvasDefaultValue() {
                         '66b31d0c8097a908f74bcd8c',
                         '66b31d0c8097a908f74bcd8d'
                     ],
-                    'column-21': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-22': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
                     'column-3': 100,
                     'column-4': 1682235946,
                     'column-5': [],
                     'column-6': 100,
                     'column-7': 1,
-                    'column-8': {}
+                    'column-8': {},
+                    'column-9': []
+                    // 'column-10': 1682235946,
+                    // 'column-11': ['member_02'],
+                    // 'column-12': 1720490727
                 }
             }
         ],
         fields: [
             {
+                _id: 'column-1',
+                name: '单行文本',
+                positions: {
+                    view1: 0,
+                    view2: 16
+                },
+                type: AITableFieldType.text
+            },
+            {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 0,
-                    view2: 15
+                    view1: 1,
+                    view2: 16
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -545,15 +550,6 @@ export function getCanvasDefaultValue() {
                         }
                     ]
                 }
-            },
-            {
-                _id: 'column-1',
-                name: '单行文本',
-                positions: {
-                    view1: 1,
-                    view2: 16
-                },
-                type: AITableFieldType.text
             },
             {
                 _id: 'column-20',
@@ -662,7 +658,43 @@ export function getCanvasDefaultValue() {
                     view2: 6
                 },
                 type: AITableFieldType.link
+            },
+            {
+                _id: 'column-9',
+                name: '创建人',
+                positions: {
+                    view1: 11,
+                    view2: 5
+                },
+                type: AITableFieldType.createdBy
             }
+            // {
+            //     _id: 'column-10',
+            //     name: '创建时间',
+            //     positions: {
+            //         view1: 12,
+            //         view2: 4
+            //     },
+            //     type: AITableFieldType.createdAt
+            // },
+            // {
+            //     _id: 'column-11',
+            //     name: '更新人',
+            //     positions: {
+            //         view1: 13,
+            //         view2: 3
+            //     },
+            //     type: AITableFieldType.updatedBy
+            // },
+            // {
+            //     _id: 'column-12',
+            //     name: '更新时间',
+            //     positions: {
+            //         view1: 14,
+            //         view2: 2
+            //     },
+            //     type: AITableFieldType.updatedAt
+            // }
         ]
     };
     return initValue;
