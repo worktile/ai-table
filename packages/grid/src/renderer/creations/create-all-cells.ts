@@ -1,8 +1,8 @@
 import Konva from 'konva';
-import { AITableCellsOptions } from '../types';
-import { cellsDrawer } from './cell/cells-drawer';
+import { AITableCellsOptions } from '../../types';
+import { createCells } from './create-cells';
 
-export const createCells = (options: AITableCellsOptions) => {
+export const createAllCells = (options: AITableCellsOptions) => {
     const { instance, columnStartIndex } = options;
     const { frozenColumnCount } = instance;
 
@@ -11,7 +11,7 @@ export const createCells = (options: AITableCellsOptions) => {
         listening: false,
         perfectDrawEnabled: false,
         sceneFunc: (ctx: Konva.Context) =>
-            cellsDrawer({
+            createCells({
                 ...options,
                 ctx,
                 columnStartIndex: 0,
@@ -24,7 +24,7 @@ export const createCells = (options: AITableCellsOptions) => {
         listening: false,
         perfectDrawEnabled: false,
         sceneFunc: (ctx: Konva.Context) =>
-            cellsDrawer({
+            createCells({
                 ...options,
                 ctx,
                 columnStartIndex: Math.max(columnStartIndex, frozenColumnCount)

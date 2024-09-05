@@ -1,6 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { AITableGridBase } from './grid-base.component';
-import { createGridStage } from './grid-renderer/create-grid-stage';
+import { createGridStage } from './renderer/creations/create-grid-stage';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
