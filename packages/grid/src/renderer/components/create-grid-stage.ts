@@ -3,7 +3,7 @@ import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../../const
 import { AITable, Coordinate } from '../../core';
 import { AITableGridStageOptions } from '../../types';
 import { getColumnIndicesMap, getVisibleRangeInfo } from '../../utils';
-import { createCells } from './create-cells';
+import { createEntireCells } from './create-entire-cells';
 import { createColumnHeads } from './create-heads';
 import { createAddFieldColumn } from './create-add-field-column';
 
@@ -46,7 +46,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         fields: aiTable.fields()
     });
 
-    const { frozenCells, cells } = createCells({
+    const { frozenCells, cells } = createAllCells({
         aiTable,
         context,
         instance: coordinateInstance,
