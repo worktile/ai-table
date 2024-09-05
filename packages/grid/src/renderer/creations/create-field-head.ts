@@ -7,12 +7,12 @@ import {
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
     DEFAULT_FONT_SIZE
-} from '../constants';
-import { AITable } from '../core';
-import { AITableFieldHeadOptions } from '../types';
-import { generateTargetName, TextMeasure } from '../utils';
-import { createFieldIcon } from './field-icon';
-import { createText } from './text';
+} from '../../constants';
+import { AITable } from '../../core';
+import { AITableFieldHeadOptions } from '../../types';
+import { generateTargetName, TextMeasure } from '../../utils';
+import { createFieldIcon } from './create-field-icon';
+import { createText } from './create-text';
 
 export const createFieldHead = (options: AITableFieldHeadOptions) => {
     const colors = AITable.getColors();

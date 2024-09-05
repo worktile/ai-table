@@ -2,15 +2,15 @@ import { AI_TABLE_OFFSET, DEFAULT_FONT_STYLE } from '../../constants';
 import { AITable, AITableQueries } from '../../core';
 import { AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
-import { cellHelper } from '../cell/cell-helper';
-import { recordRowLayout } from '../layouts/record-row-layout';
+import { cellHelper } from '../drawers/cell-drawer';
+import { recordRowLayout } from '../drawers/record-row-layout-drawer';
 
 /**
  * 绘制单元格内容的函数
  * 利用 Canvas API 绘制每个单元格的背景颜色、文本以及其他可能的样式。这个函数通常用于自定义表格渲染，尤其是在处理大量数据时，通过直接操作 Canvas 来提高渲染性能
  * @param options
  */
-export const cellsDrawer = (options: AITableCellsDrawerOptions) => {
+export const createCells = (options: AITableCellsDrawerOptions) => {
     const { aiTable, context, instance, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = options;
     const { fields } = aiTable;
     const { linearRows } = context;

@@ -1,6 +1,6 @@
 import Konva from 'konva';
-import { Check, Colors, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../constants';
-import { AITableCheckType, AITableIconOptions } from '../types';
+import { Check, Colors, DEFAULT_ICON_SHAPE, DEFAULT_ICON_SIZE, Unchecked } from '../../constants';
+import { AITableCheckType, AITableIconOptions } from '../../types';
 
 export const createIcon = (config: AITableIconOptions) => {
     const {

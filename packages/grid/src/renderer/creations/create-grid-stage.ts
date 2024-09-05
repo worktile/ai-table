@@ -1,9 +1,9 @@
 import Konva from 'konva/lib';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITable, Coordinate } from '../core';
-import { AITableGridStageOptions } from '../types';
-import { getColumnIndicesMap, getVisibleRangeInfo } from '../utils';
-import { createCells } from './create-cells';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants';
+import { AITable, Coordinate } from '../../core';
+import { AITableGridStageOptions } from '../../types';
+import { getColumnIndicesMap, getVisibleRangeInfo } from '../../utils';
+import { createAllCells } from './create-all-cells';
 import { createColumnHeads } from './create-heads';
 import { createAddFieldColumn } from './create-add-field-column';
 
@@ -47,7 +47,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         fields: aiTable.fields()
     });
 
-    const { frozenCells, cells } = createCells({
+    const { frozenCells, cells } = createAllCells({
         aiTable,
         context,
         instance: coordinateInstance,
