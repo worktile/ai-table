@@ -18,51 +18,45 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
-
-        // 背景、边框
-        this.customRect({
-            x: AI_TABLE_ROW_HEAD_WIDTH,
-            y,
-            width: columnWidth + AI_TABLE_OFFSET,
-            height: rowHeight,
-            fill: fill,
-            strokes: {
-                top: colors.gray200,
-                right: colors.gray200,
-                bottom: colors.gray200
-            }
-        });
+        // 编号的上下边框
+        let fillBg = colors.transparent;
+        if (isCheckedRow) {
+            fillBg = colors.itemActiveBgColor;
+        } else if (isHoverRow) {
+            fillBg = colors.gray80;
+        }
         this.customRect({
             x: 1,
             y,
             width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET,
             height: rowHeight,
-            fill: colors.transparent,
+            fill: fillBg,
             strokes: {
                 right: colors.gray200,
                 bottom: colors.gray200
             }
         });
+        // 第一列单元格
+        this.rect({
+            x: AI_TABLE_ROW_HEAD_WIDTH,
+            y,
+            width: columnWidth + AI_TABLE_OFFSET,
+            height: rowHeight,
+            fill: fill,
+            stroke: colors.gray200
+        });
 
-        if (isHoverRow || isCheckedRow) {
-            const fill: string = isCheckedRow ? colors.itemActiveBgColor : colors.gray80;
-            return this.rect({
-                x: AI_TABLE_OFFSET,
-                y: y + AI_TABLE_OFFSET,
-                width: AI_TABLE_ROW_HEAD_WIDTH,
-                height: rowHeight - 1,
-                fill
+        if (!isCheckedRow && !isHoverRow) {
+            // 设置字体样式，居中绘制行号
+            this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
+            this.text({
+                x: AI_TABLE_ROW_HEAD_WIDTH / 2,
+                y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                text: String(row.displayIndex),
+                textAlign: DEFAULT_TEXT_ALIGN_CENTER,
+                verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
             });
         }
-        // 设置字体样式，居中绘制行号
-        this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
-        this.text({
-            x: AI_TABLE_ROW_HEAD_WIDTH / 2,
-            y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
-            text: String(row.displayIndex),
-            textAlign: DEFAULT_TEXT_ALIGN_CENTER,
-            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
-        });
     }
 
     // 尾列
