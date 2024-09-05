@@ -1,7 +1,7 @@
-import { AddOutlinedPath, AI_TABLE_ADD_FIELD_BUTTON_WIDTH, AI_TABLE_CELL_PADDING, AI_TABLE_ICON_COMMON_SIZE, Colors } from '../constants';
-import { Coordinate } from '../core';
+import { AddOutlinedPath, AI_TABLE_ADD_FIELD_BUTTON_WIDTH, AI_TABLE_CELL_PADDING, AI_TABLE_ICON_COMMON_SIZE, Colors } from '../../constants';
+import { Coordinate } from '../../core';
 import Konva from 'konva/lib';
-import { createIcon } from './icon';
+import { createIcon } from './create-icon';
 
 export const createAddFieldColumn = (instance: Coordinate, columnLength: number, columnStopIndex: number) => {
     if (columnStopIndex !== columnLength - 1) return;
