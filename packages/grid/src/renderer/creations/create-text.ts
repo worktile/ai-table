@@ -10,7 +10,7 @@ import {
     DEFAULT_TEXT_TRANSFORMS_ENABLED,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_WRAP
-} from '../constants';
+} from '../../constants';
 
 export const createText = (config: Konva.ShapeConfig) => {
     const {
