@@ -1,4 +1,3 @@
-import { Layout } from './layout';
 import {
     AddOutlinedPath,
     AI_TABLE_ADD_FIELD_BUTTON_WIDTH,
@@ -8,6 +7,7 @@ import {
     AI_TABLE_ROW_HEAD_WIDTH
 } from '../../constants';
 import { AITableCell } from '../../types';
+import { Layout } from './layout-drawer';
 
 export class AddRowLayout extends Layout {
     override renderAddFieldBlank() {

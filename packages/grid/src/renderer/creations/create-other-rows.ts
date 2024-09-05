@@ -1,6 +1,6 @@
 import Konva from 'konva';
-import { AITableRowHeadsOptions, AITableRowType } from '../types';
-import { AI_TABLE_ROW_ADD_BUTTON } from '../constants';
+import { AITableRowHeadsOptions, AITableRowType } from '../../types';
+import { AI_TABLE_ROW_ADD_BUTTON } from '../../constants';
 
 export const createOtherRows = (options: AITableRowHeadsOptions) => {
     const { instance, rowStartIndex, rowStopIndex, context } = options;

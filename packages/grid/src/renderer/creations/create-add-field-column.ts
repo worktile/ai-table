@@ -5,11 +5,11 @@ import {
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_ICON_COMMON_SIZE,
     Colors
-} from '../constants';
-import { AITableField, Coordinate } from '../core';
+} from '../../constants';
+import { AITableField, Coordinate } from '../../core';
 import Konva from 'konva/lib';
-import { createIcon } from './icon';
-import { generateTargetName } from '../utils';
+import { createIcon } from './create-icon';
+import { generateTargetName } from '../../utils';
 
 export const createAddFieldColumn = (instance: Coordinate, fields: AITableField[], columnStopIndex: number) => {
     const columnLength = fields.length;

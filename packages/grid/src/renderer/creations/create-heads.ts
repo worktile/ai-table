@@ -8,10 +8,10 @@ import {
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
-} from '../constants';
-import { AITableCheckType, AITableCreateHeadsOptions } from '../types';
-import { createFieldHead } from './field-head';
-import { createIcon } from './icon';
+} from '../../constants';
+import { AITableCheckType, AITableCreateHeadsOptions } from '../../types';
+import { createFieldHead } from './create-field-head';
+import { createIcon } from './create-icon';
 
 export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     const { fields, instance, columnStartIndex, columnStopIndex, pointPosition, aiTable } = props;

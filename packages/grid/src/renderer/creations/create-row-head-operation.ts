@@ -1,15 +1,15 @@
 import Konva from 'konva';
-import { AITable } from '../core';
-import { generateTargetName, getDetailByTargetName } from '../utils';
+import { AITable } from '../../core';
+import { generateTargetName, getDetailByTargetName } from '../../utils';
 import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX
-} from '../constants';
-import { AITableAreaType, AITableCheckType, AITableRowHeadOperationOptions, AITableRowHeadsOptions, AITableRowType } from '../types';
-import { createIcon } from './icon';
+} from '../../constants';
+import { AITableAreaType, AITableCheckType, AITableRowHeadOperationOptions, AITableRowHeadsOptions, AITableRowType } from '../../types';
+import { createIcon } from './create-icon';
 
 export const createRowHeadOperation = (options: AITableRowHeadOperationOptions) => {
     const { instance, isCheckedRow, isHoverRow, rowIndex, recordId, isHoverCheckbox } = options;

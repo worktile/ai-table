@@ -1,10 +1,10 @@
 import Konva from 'konva/lib';
-import { AITableGridStageOptions } from '../types';
-import { AITable } from '../core';
-import { getVisibleRangeInfo } from '../utils';
+import { AITable } from '../../core';
+import { AITableGridStageOptions } from '../../types';
+import { getVisibleRangeInfo } from '../../utils';
+import { createAllCells } from './create-all-cells';
 import { createColumnHeads } from './create-heads';
 import { createAddFieldColumn } from './create-add-field-column';
-import { createCells } from './create-cells';
 import { hoverRowHeadOperation } from './create-row-head-operation';
 import { createOtherRows } from './create-other-rows';
 
@@ -38,7 +38,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         aiTable
     });
 
-    const { frozenCells, cells } = createCells({
+    const { frozenCells, cells } = createAllCells({
         aiTable,
         context,
         instance: coordinateInstance,

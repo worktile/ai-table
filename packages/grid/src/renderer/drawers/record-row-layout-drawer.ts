@@ -2,7 +2,7 @@ import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH, D
 import { AITable } from '../../core';
 import { AITableCell } from '../../types';
 import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from './../../constants/text';
-import { Layout } from './layout';
+import { Layout } from './layout-drawer';
 
 /**
  * 绘制行的布局，通过直接操作 Canvas 提供高效的渲染方法。

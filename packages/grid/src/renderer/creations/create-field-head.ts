@@ -9,13 +9,13 @@ import {
     AI_TABLE_OFFSET,
     DEFAULT_FONT_SIZE,
     MoreStandOutlinedPath
-} from '../constants';
-import { AITable } from '../core';
-import { AITableFieldHeadOptions } from '../types';
-import { generateTargetName, TextMeasure } from '../utils';
-import { createFieldIcon } from './field-icon';
-import { createText } from './text';
-import { createIcon } from './icon';
+} from '../../constants';
+import { AITable } from '../../core';
+import { AITableFieldHeadOptions } from '../../types';
+import { generateTargetName, TextMeasure } from '../../utils';
+import { createFieldIcon } from './create-field-icon';
+import { createText } from './create-text';
+import { createIcon } from './create-icon';
 
 export const createFieldHead = (options: AITableFieldHeadOptions) => {
     const colors = AITable.getColors();
