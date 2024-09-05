@@ -2,7 +2,7 @@ import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_ADD_BUTTON, D
 import { AITable, AITableQueries } from '../../core';
 import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
-import { addRowLayout } from '../drawers/add-row-layout';
+import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellHelper } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
 
