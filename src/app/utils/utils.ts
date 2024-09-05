@@ -1,5 +1,13 @@
 import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
 import { AITableViewFields, AITableViewRecords } from '@ai-table/state';
+import { LiveFeedObject } from '../live-feed/feed-object';
+import { LiveFeedRoom } from '../live-feed/feed-room';
+
+export const createFeedRoom = (roomId: string) => {
+    const feedObject = new LiveFeedObject({ guid: roomId, typeName: 'ai-table' });
+    const feedRoom = new LiveFeedRoom({ roomId: roomId, objects: [feedObject] });
+    return feedRoom;
+};
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);

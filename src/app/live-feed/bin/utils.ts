@@ -2,13 +2,13 @@ import * as Y from 'yjs';
 import * as Websocket from 'ws';
 const syncProtocol = require('y-protocols/sync');
 const awarenessProtocol = require('y-protocols/awareness');
-import { IncomingMessage } from 'http';
+import { IncomingMessage, request } from 'http';
 import { ObservableV2 } from 'lib0/observable';
 import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as map from 'lib0/map';
 import { LiveFeedRoom } from '../feed-room';
-import { messageYjsSyncStep1, readSyncMessage } from '../sync';
+import { messageYjsSyncStep1, readSyncMessage } from './server-sync';
 
 const wsReadyStateConnecting = 0;
 const wsReadyStateOpen = 1;
@@ -26,12 +26,10 @@ export class ServerLiveFeedRoom extends LiveFeedRoom {
     conns: Map<any, Set<any>> = new Map();
 }
 
-exports.ServerLiveFeedRoom = ServerLiveFeedRoom;
-
-export const getRoom = (guid: string) => {
-    return map.setIfUndefined(docs, guid, () => {
-        const serverRoom = new ServerLiveFeedRoom({ guid, objects: [] });
-        docs.set(guid, serverRoom);
+export const getRoom = (roomId: string) => {
+    return map.setIfUndefined(docs, roomId, () => {
+        const serverRoom = new ServerLiveFeedRoom({ roomId: roomId, objects: [] });
+        docs.set(roomId, serverRoom);
         return serverRoom;
     });
 };
@@ -112,11 +110,11 @@ const pingTimeout = 30000;
 export const setupWSConnection = (
     conn: Websocket,
     req: IncomingMessage,
-    { docName = (req.url || '').slice(1).split('?')[0], gc = true } = {}
+    { roomId = (req.url || '').slice(1).split('?')[0], gc = true } = {}
 ) => {
     conn.binaryType = 'arraybuffer';
     // get doc, initialize if it does not exist yet
-    const room = getRoom(docName);
+    const room = getRoom(roomId);
     room.conns.set(conn, new Set());
     // listen and reply to events
     conn.on('message', /** @param {ArrayBuffer} message */ (message: ArrayBuffer) => messageListener(conn, room, new Uint8Array(message)));

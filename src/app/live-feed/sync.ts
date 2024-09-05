@@ -7,12 +7,11 @@ export const messageYjsSyncStep1 = 0;
 export const messageYjsSyncStep2 = 1;
 export const messageYjsUpdate = 2;
 
-export const writeSyncStep2 = (decoder: decoding.Decoder, encoder: encoding.Encoder, room: LiveFeedRoom, step1Ref?: string[]) => {
+export const writeSyncStep2 = (decoder: decoding.Decoder, encoder: encoding.Encoder, room: LiveFeedRoom) => {
     encoding.writeVarUint(encoder, messageYjsSyncStep2);
 
     while (decoding.hasContent(decoder)) {
         const guid = decoding.readVarString(decoder);
-        step1Ref?.push(guid);
         const diffUpdate = Y.encodeStateAsUpdate(room.getObject(guid), decoding.readVarUint8Array(decoder));
         if (diffUpdate.length > 0) {
             encoding.writeVarString(encoder, guid);
@@ -21,15 +20,17 @@ export const writeSyncStep2 = (decoder: decoding.Decoder, encoder: encoding.Enco
     }
 };
 
-export const readSyncStep1 = (decoder: decoding.Decoder, encoder: encoding.Encoder, room: LiveFeedRoom, step1Ref?: string[]) => {
-    writeSyncStep2(decoder, encoder, room, step1Ref);
+export const readSyncStep1 = (decoder: decoding.Decoder, encoder: encoding.Encoder, room: LiveFeedRoom) => {
+    writeSyncStep2(decoder, encoder, room);
 };
 
 export const readSyncStep2 = (decoder: decoding.Decoder, room: LiveFeedRoom, transactionOrigin: any) => {
     try {
         while (decoding.hasContent(decoder)) {
             const guid = decoding.readVarString(decoder);
+            console.log(`apply guid: ${guid}`);
             Y.applyUpdate(room.getObject(guid), decoding.readVarUint8Array(decoder), transactionOrigin);
+            console.log(room.getObject(guid).get('ai-table').toJSON())
         }
     } catch (error) {
         // This catches errors that are thrown by event handlers
@@ -39,17 +40,11 @@ export const readSyncStep2 = (decoder: decoding.Decoder, room: LiveFeedRoom, tra
 
 export const readUpdate = readSyncStep2;
 
-export const readSyncMessage = (
-    decoder: decoding.Decoder,
-    encoder: encoding.Encoder,
-    room: LiveFeedRoom,
-    transactionOrigin: any,
-    step1Ref?: string[]
-) => {
+export const readSyncMessage = (decoder: decoding.Decoder, encoder: encoding.Encoder, room: LiveFeedRoom, transactionOrigin: any) => {
     const messageType = decoding.readVarUint(decoder);
     switch (messageType) {
         case messageYjsSyncStep1:
-            readSyncStep1(decoder, encoder, room, step1Ref);
+            readSyncStep1(decoder, encoder, room);
             break;
         case messageYjsSyncStep2:
             readSyncStep2(decoder, room, transactionOrigin);

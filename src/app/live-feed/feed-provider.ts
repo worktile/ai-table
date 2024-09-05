@@ -46,16 +46,20 @@ export class LiveFeedProvider extends Observable<string> {
         this.options = options;
         this.serverUrl = serverUrl;
         this.shouldConnect = options.connect;
+        if (options.connect) {
+            this.connect();
+        }
     }
 
-    url() {
+    get url() {
         const encodedParams = url.encodeQueryParams(this.options.params);
-        return this.serverUrl + '/' + this.room.guid + (encodedParams.length === 0 ? '' : '?' + encodedParams);
+        return this.serverUrl + '/' + this.room.roomId + (encodedParams.length === 0 ? '' : '?' + encodedParams);
     }
 
     connect() {
+        console.log('connect');
         this.shouldConnect = true;
-        if (!this.hasConnected && this.ws === null) {
+        if (!this.hasConnected && !this.ws) {
             setupWS(this);
         }
     }
@@ -70,6 +74,13 @@ export class LiveFeedProvider extends Observable<string> {
             this.emit('synced', [state]);
         }
     }
+
+    disconnect() {
+        this.shouldConnect = false;
+        if (this.ws) {
+            this.ws.close();
+        }
+    }
 }
 
 const reconnectTimeoutBase = 1200;
@@ -77,8 +88,9 @@ const maxReconnectTimeout = 12000;
 const messageReconnectTimeout = 60000;
 
 const setupWS = (provider: LiveFeedProvider) => {
-    if (provider.shouldConnect && provider.ws === null) {
-        const websocket = new provider.options.WebSocketPolyfill(provider.serverUrl);
+    if (provider.shouldConnect && !provider.ws) {
+        console.log(provider.url);
+        const websocket = new provider.options.WebSocketPolyfill(provider.url);
         websocket.binaryType = 'arraybuffer';
         provider.ws = websocket;
         provider.connecting = true;
@@ -117,6 +129,7 @@ const setupWS = (provider: LiveFeedProvider) => {
                 provider
             );
         };
+
         websocket.onopen = () => {
             provider.lastMessageReceived = time.getUnixTime();
             provider.connecting = false;

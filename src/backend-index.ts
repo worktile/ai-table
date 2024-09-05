@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import http, { IncomingMessage, Server } from 'http';
-import { docs, setupWSConnection } from './utils';
+import { docs, setupWSConnection } from './app/live-feed/bin/utils';
 const port = (process.env['PORT'] || 3000) as number;
 
 const server: Server = http.createServer((request, response) => {
@@ -28,7 +28,7 @@ setInterval(() => {
     });
     const stats = {
         conns,
-        docs: docs.size,
+        rooms: docs.size,
         websocket: `ws://localhost:${port}`,
         http: `http://localhost:${port}`
     };

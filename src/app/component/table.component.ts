@@ -43,7 +43,7 @@ const initViews = [
 export class DemoTable implements OnInit, OnDestroy {
     provider!: WebsocketProvider | null;
 
-    room = 'share-demo-action-1';
+    roomId = 'share-demo-action-1';
 
     router = inject(Router);
 
@@ -69,7 +69,7 @@ export class DemoTable implements OnInit, OnDestroy {
     }
 
     handleShared() {
-        this.tableService.handleShared(this.room);
+        this.tableService.handleShared(this.roomId);
     }
 
     updateValue() {

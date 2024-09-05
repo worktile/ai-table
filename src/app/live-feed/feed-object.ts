@@ -9,7 +9,7 @@ export const convertYDocToFeedObject = (yDoc: Y.Doc, typeName: string) => {
 export class LiveFeedObject extends Y.Doc {
     typeName?: string;
 
-    constructor(options: { guid: string; typeName: string }) {
+    constructor(options: { guid?: string; typeName: string }) {
         super({ guid: options.guid });
         this.typeName = options.typeName;
     }

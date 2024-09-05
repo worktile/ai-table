@@ -7,7 +7,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve demo",
-        "start-ws": "npx ts-node ./backend/src/index",
+        "start-ws": "npx ts-node ./src/backend-index",
         "build": "npm run build:packages && npm run sync-styles",
         "build:packages": "ts-node --project ./scripts/tsconfig.json ./scripts/build-packages.ts",
         "build:demo": "ng build demo --configuration production",

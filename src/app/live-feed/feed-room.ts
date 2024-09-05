@@ -4,7 +4,7 @@ import { LiveFeedObject } from './feed-object';
 
 export class LiveFeedRoom extends Observable<string> {
     objects: Map<string, LiveFeedObject> = new Map();
-    guid: string;
+    roomId: string;
 
     #pendingUpdates: LiveFeedObjectUpdate[] = [];
 
@@ -14,9 +14,10 @@ export class LiveFeedRoom extends Observable<string> {
 
     #isPendingChange = false;
 
-    constructor(options: { guid: string; objects: LiveFeedObject[] }) {
+    constructor(options: { roomId: string; objects: LiveFeedObject[] }) {
         super();
-        this.guid = options.guid;
+        this.roomId = options.roomId;
+        this.initObjects(options.objects);
     }
 
     initObjects(objects: LiveFeedObject[]) {
@@ -45,7 +46,7 @@ export class LiveFeedRoom extends Observable<string> {
         if (!this.#isPendingChange) {
             this.#isPendingChange = true;
             Promise.resolve().then(() => {
-                this.emit('update', this.#pendingChanges);
+                this.emit('change', this.#pendingChanges);
                 this.#pendingChanges = [];
                 this.#isPendingChange = false;
             });
@@ -80,6 +81,11 @@ export class LiveFeedRoom extends Observable<string> {
             throw new Error(`can not resolve feed object by guid: ${guid}`);
         }
         return object;
+    }
+
+    hasObject(guid: string) {
+        const object = this.objects.get(guid);
+        return !!object;
     }
 }
 
