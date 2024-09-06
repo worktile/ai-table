@@ -1,5 +1,5 @@
 import Konva from 'konva/lib';
-import { AITable } from '../../core';
+import { AITable, Context } from '../../core';
 import { AITableGridStageOptions } from '../../types';
 import { getVisibleRangeInfo } from '../../utils';
 import { createAllCells } from './create-all-cells';
@@ -11,7 +11,8 @@ import { createOtherRows } from './create-other-rows';
 Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableGridStageOptions) => {
-    const { width, height, container, aiTable, context, instance: coordinateInstance } = config;
+    const { width, height, container, aiTable, coordinate: coordinateInstance } = config;
+    const context = aiTable.context as Context;
 
     const fields = AITable.getVisibleFields(aiTable);
 
@@ -30,7 +31,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
     const { columnHeads, frozenColumnHead } = createColumnHeads({
-        instance: coordinateInstance,
+        coordinate: coordinateInstance,
         columnStartIndex,
         columnStopIndex,
         fields: fields,
@@ -40,8 +41,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
 
     const { frozenCells, cells } = createAllCells({
         aiTable,
-        context,
-        instance: coordinateInstance,
+        coordinate: coordinateInstance,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
@@ -59,16 +59,14 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     frozenCellsGroup.add(frozenCells);
     const hoverRowHeads = createHoverRowHeads({
         aiTable,
-        context,
-        instance: coordinateInstance,
+        coordinate: coordinateInstance,
         rowStartIndex,
         rowStopIndex
     });
 
     const otherRows = createOtherRows({
         aiTable,
-        context,
-        instance: coordinateInstance,
+        coordinate: coordinateInstance,
         rowStartIndex,
         rowStopIndex
     });

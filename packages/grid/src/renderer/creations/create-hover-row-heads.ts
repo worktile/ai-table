@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITable } from '../../core';
+import { AITable, Context } from '../../core';
 import { generateTargetName, getDetailByTargetName } from '../../utils';
 import {
     AI_TABLE_CELL_PADDING,
@@ -14,14 +14,14 @@ import { createIcon } from './create-icon';
 import { Group } from 'konva/lib/Group';
 
 export const createRowHeadOperation = (options: AITableRowHeadOperationOptions) => {
-    const { instance, isCheckedRow, rowIndex, recordId } = options;
-    const y = instance.getRowOffset(rowIndex);
+    const { coordinate, isCheckedRow, rowIndex, recordId } = options;
+    const y = coordinate.getRowOffset(rowIndex);
     const colors = AITable.getColors();
     const group = new Konva.Group({ x: 0, y });
     const rect = new Konva.Rect({
         name: generateTargetName({ targetName: AI_TABLE_ROW_HEAD, recordId }),
         width: AI_TABLE_ROW_HEAD_WIDTH + 1,
-        height: instance.rowHeight,
+        height: coordinate.rowHeight,
         fill: colors.transparent
     });
     const iconOffsetY = (AI_TABLE_FIELD_HEAD_HEIGHT - 16) / 2;
@@ -42,11 +42,11 @@ export const createRowHeadOperation = (options: AITableRowHeadOperationOptions) 
 };
 
 export const createHoverRowHeads = (options: AITableRowHeadsOptions) => {
-    const { instance, rowStartIndex, rowStopIndex, context, aiTable } = options;
+    const { coordinate, rowStartIndex, rowStopIndex, aiTable } = options;
+    const context = aiTable.context as Context;
     const hoverRowHeads: Group[] = [];
-
     for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
-        if (rowIndex > instance.rowCount - 1) break;
+        if (rowIndex > coordinate.rowCount - 1) break;
         const row = context.linearRows()[rowIndex];
         if (row == null) continue;
         const { type, _id: recordId } = row;
@@ -61,7 +61,7 @@ export const createHoverRowHeads = (options: AITableRowHeadsOptions) => {
         }
         if (isCheckedRow || isHoverRow) {
             const isHoverCheckbox = getDetailByTargetName(realTargetName).targetName === AI_TABLE_ROW_SELECT_CHECKBOX;
-            const operationGroup = createRowHeadOperation({ instance, isCheckedRow, recordId, rowIndex, isHoverCheckbox });
+            const operationGroup = createRowHeadOperation({ coordinate, isCheckedRow, recordId, rowIndex, isHoverCheckbox });
             hoverRowHeads.push(operationGroup);
         }
     }

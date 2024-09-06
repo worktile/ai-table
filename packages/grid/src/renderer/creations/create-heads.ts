@@ -13,10 +13,10 @@ import { AITableCheckType, AITableCreateHeadsOptions } from '../../types';
 import { createFieldHead } from './create-field-head';
 import { createIcon } from './create-icon';
 
-export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
-    const { fields, instance, columnStartIndex, columnStopIndex, pointPosition, aiTable } = props;
+export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
+    const { fields, coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = options;
     const colors = Colors;
-    const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
+    const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
 
     const getFieldHeadStatus = (fieldId: string) => {
@@ -38,8 +38,8 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             if (columnIndex < 0) continue;
             const field = fields[columnIndex];
             if (field == null) continue;
-            const x = instance.getColumnOffset(columnIndex);
-            const columnWidth = instance.getColumnWidth(columnIndex);
+            const x = coordinate.getColumnOffset(columnIndex);
+            const columnWidth = coordinate.getColumnWidth(columnIndex);
             const { iconVisible, isSelected, isHoverIcon } = getFieldHeadStatus(field._id);
             const fieldHead = createFieldHead({
                 x,

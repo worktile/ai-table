@@ -7,17 +7,17 @@ import { getTargetName } from './common';
 export const getMousePosition = (
     x: number,
     y: number,
-    instance: Coordinate,
+    coordinate: Coordinate,
     fields: AITableField[],
     context: Context,
     _targetName?: string
 ) => {
     const { scrollTop, scrollLeft } = context.scrollState();
-    const { scrollMaxWidth, scrollMaxHeight } = scrollMax(instance, fields);
+    const { scrollMaxWidth, scrollMaxHeight } = scrollMax(coordinate, fields);
     const offsetTop = scrollTop + y;
-    const rowIndex = instance.getRowStartIndex(offsetTop);
-    const offsetLeft = isWithinFrozenColumnBoundary(x, instance.frozenColumnWidth) ? x : scrollLeft + x;
-    const columnIndex = instance.getColumnStartIndex(offsetLeft);
+    const rowIndex = coordinate.getRowStartIndex(offsetTop);
+    const offsetLeft = isWithinFrozenColumnBoundary(x, coordinate.frozenColumnWidth) ? x : scrollLeft + x;
+    const columnIndex = coordinate.getColumnStartIndex(offsetLeft);
     const areaType = offsetLeft <= scrollMaxWidth && offsetTop <= scrollMaxHeight ? AITableAreaType.grid : AITableAreaType.none;
     const targetName = getTargetName(_targetName);
     return {

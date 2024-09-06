@@ -37,11 +37,10 @@ export interface AITableReferences {
 
 export interface AITableGridStageOptions {
     aiTable: AITable;
-    context: Context;
     container: HTMLDivElement;
     width: number;
     height: number;
-    instance: Coordinate;
+    coordinate: Coordinate;
 }
 
 export enum AITableRowColumnType {
@@ -79,8 +78,8 @@ export enum AITableAreaType {
 }
 
 export type AITablePointPosition = {
-    x: number; // The mouse targets the visible area of the x
-    y: number; // The mouse targets the visible area of the  y
+    x: number;
+    y: number;
     areaType: AITableAreaType;
     targetName: string;
     realTargetName: string;

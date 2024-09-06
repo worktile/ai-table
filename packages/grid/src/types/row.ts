@@ -26,7 +26,7 @@ export type AITableLinearRowRecord = {
 export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord;
 
 export interface AITableRowHeadOperationOptions {
-    instance: Coordinate;
+    coordinate: Coordinate;
     isCheckedRow: boolean;
     rowIndex: number;
     isHoverCheckbox: boolean;
@@ -34,9 +34,8 @@ export interface AITableRowHeadOperationOptions {
 }
 
 export interface AITableRowHeadsOptions {
-    instance: Coordinate;
+    coordinate: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;
-    context: Context;
     aiTable: AITable;
 }

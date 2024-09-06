@@ -10,7 +10,6 @@ import {
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
-    AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_HEAD_WIDTH,
@@ -61,7 +60,8 @@ export class AITableGrid extends AITableGridBase implements OnInit {
 
     override ngOnInit(): void {
         super.ngOnInit();
-        this.context = this.initContext();
+        this.aiTable.context = this.initContext();
+        this.context = this.aiTable.context;
     }
 
     gridLinearRows = computed(() => {
@@ -98,8 +98,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             container: this.container,
             width: this.container.offsetWidth,
             height: this.container.offsetHeight,
-            context: this.context,
-            instance: this.coordinate
+            coordinate: this.coordinate
         });
         this.gridStage.draw();
         this.bindEvent();
@@ -107,8 +106,10 @@ export class AITableGrid extends AITableGridBase implements OnInit {
 
     bindEvent() {
         this.gridStage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
-            if (this.timer) return;
-            this.timer = window.requestAnimationFrame(() => {
+            if (this.timer) {
+                cancelAnimationFrame(this.timer);
+            }
+            this.timer = requestAnimationFrame(() => {
                 const targetName = e.target.name();
                 const pos = this.gridStage.getPointerPosition();
                 if (pos == null) return;

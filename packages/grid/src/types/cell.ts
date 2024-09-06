@@ -4,8 +4,7 @@ import { AITableLinearRowRecord } from './row';
 
 export interface AITableCellsOptions {
     aiTable: AITable;
-    context: Context;
-    instance: Coordinate;
+    coordinate: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;
     columnStartIndex: number;

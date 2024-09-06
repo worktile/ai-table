@@ -29,7 +29,7 @@ export interface AITableFieldHeadOptions {
 
 export interface AITableCreateHeadsOptions {
     fields: AITableField[];
-    instance: Coordinate;
+    coordinate: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
     pointPosition: AITablePointPosition;

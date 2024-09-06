@@ -5,7 +5,7 @@ import {
     AI_TABLE_ROW_ADD_BUTTON,
     DEFAULT_FONT_STYLE
 } from '../../constants';
-import { AITable, AITableQueries } from '../../core';
+import { AITable, AITableQueries, Context } from '../../core';
 import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
@@ -18,10 +18,9 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
  * @param options
  */
 export const createCells = (options: AITableCellsDrawerOptions) => {
-    const { aiTable, context, instance, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = options;
-    const { fields } = aiTable;
-    const { linearRows } = context;
-    const { rowHeight, columnCount, rowCount } = instance;
+    const { aiTable, coordinate, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = options;
+    const context = aiTable.context as Context;
+    const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();
     const visibleColumns = AITable.getVisibleFields(aiTable);
 
@@ -39,9 +38,9 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
         if (field == null) continue;
 
         // 获取该列对应的宽度
-        const columnWidth = instance.getColumnWidth(columnIndex);
-        const x = instance.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
-        const isLastColumn = columnIndex === fields.length - 1;
+        const columnWidth = coordinate.getColumnWidth(columnIndex);
+        const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
+        const isLastColumn = columnIndex === aiTable.fields.length - 1;
 
         if (columnIndex === 1) {
             cellHelper.initStyle(field, { fontWeight: DEFAULT_FONT_STYLE });
@@ -50,9 +49,9 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
         // 遍历行, 从 rowStartIndex 到 rowStopIndex 的所有行，决定将在哪些行上绘制单元格
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > rowCount - 1) break;
-            const row = linearRows()[rowIndex];
+            const row = context.linearRows()[rowIndex];
             const { _id: recordId, type } = row;
-            const y = instance.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+            const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
             const { rowIndex: pointRowIndex, areaType, targetName } = context.pointPosition();
             const isHover = pointRowIndex === rowIndex && areaType !== AITableAreaType.none;
 
@@ -67,7 +66,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                         columnWidth,
                         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
                         columnCount,
-                        containerWidth: instance.containerWidth
+                        containerWidth: coordinate.containerWidth
                     });
                     addRowLayout.render({
                         isHoverRow
@@ -92,7 +91,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                         columnWidth,
                         rowHeight,
                         columnCount,
-                        containerWidth: instance.containerWidth
+                        containerWidth: coordinate.containerWidth
                     });
                     recordRowLayout.render({
                         row,
