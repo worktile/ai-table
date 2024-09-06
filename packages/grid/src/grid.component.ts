@@ -35,8 +35,6 @@ import { AITableMouseDownType } from './types';
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit {
-    context!: Context;
-
     container!: HTMLDivElement;
 
     timer: number | null | undefined;
@@ -50,7 +48,6 @@ export class AITableGrid extends AITableGridBase implements OnInit {
 
         afterNextRender(() => {
             this.container = this.elementRef.nativeElement.querySelector('.table-grid-container');
-            this.initGridRender();
         });
 
         effect(() => {
@@ -61,7 +58,6 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
         this.aiTable.context = this.initContext();
-        this.context = this.aiTable.context;
     }
 
     gridLinearRows = computed(() => {
@@ -81,7 +77,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         return new Coordinate({
             container: this.container,
             rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
-            rowCount: this.context.linearRows().length,
+            rowCount: (this.aiTable.context as Context).linearRows().length,
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
             columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
@@ -105,6 +101,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     }
 
     bindEvent() {
+        const context = this.aiTable.context as Context;
         this.gridStage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
             if (this.timer) {
                 cancelAnimationFrame(this.timer);
@@ -119,11 +116,11 @@ export class AITableGrid extends AITableGridBase implements OnInit {
                     y,
                     this.coordinate,
                     AITable.getVisibleFields(this.aiTable),
-                    this.context,
+                    context,
                     targetName
                 );
                 handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.container);
-                this.context.setPointPosition(curMousePosition);
+                context.setPointPosition(curMousePosition);
                 this.timer = null;
             });
         });
@@ -150,14 +147,14 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.gridStage.on('click', (e: KonvaEventObject<MouseEvent>) => {
             const mouseEvent = e.evt;
             mouseEvent.preventDefault();
-            const { targetName, rowIndex: pointRowIndex, x, y } = this.context.pointPosition();
+            const { targetName, rowIndex: pointRowIndex, x, y } = context.pointPosition();
             if (mouseEvent.button !== AITableMouseDownType.Left) return;
             switch (targetName) {
                 case AI_TABLE_ROW_ADD_BUTTON: {
                     return this.addRecord();
                 }
                 case AI_TABLE_ROW_SELECT_CHECKBOX: {
-                    const pointRecordId = this.context.linearRows()[pointRowIndex]?._id;
+                    const pointRecordId = context.linearRows()[pointRowIndex]?._id;
                     return this.selectRecord(pointRecordId);
                 }
                 case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
