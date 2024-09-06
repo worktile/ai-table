@@ -11,15 +11,12 @@ import { createOtherRows } from './create-other-rows';
 Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableGridStageOptions) => {
-    const { width, height, container, aiTable, coordinate: coordinateInstance } = config;
+    const { width, height, container, aiTable, coordinate } = config;
     const context = aiTable.context as Context;
 
     const fields = AITable.getVisibleFields(aiTable);
 
-    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(
-        coordinateInstance,
-        context.scrollState()
-    );
+    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinate, context.scrollState());
 
     const gridStage = new Konva.Stage({
         container: container,
@@ -31,7 +28,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
     const { columnHeads, frozenColumnHead } = createColumnHeads({
-        coordinate: coordinateInstance,
+        coordinate,
         columnStartIndex,
         columnStopIndex,
         fields: fields,
@@ -41,7 +38,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
 
     const { frozenCells, cells } = createAllCells({
         aiTable,
-        coordinate: coordinateInstance,
+        coordinate,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
@@ -59,14 +56,14 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     frozenCellsGroup.add(frozenCells);
     const hoverRowHeads = createHoverRowHeads({
         aiTable,
-        coordinate: coordinateInstance,
+        coordinate,
         rowStartIndex,
         rowStopIndex
     });
 
     const otherRows = createOtherRows({
         aiTable,
-        coordinate: coordinateInstance,
+        coordinate,
         rowStartIndex,
         rowStopIndex
     });
@@ -74,7 +71,7 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     frozenGroup.add(frozenCellsGroup);
     const columnHeadGroup = new Konva.Group();
     columnHeadGroup.add(...columnHeads);
-    const addFieldColumn = createAddFieldColumn(coordinateInstance, fields, columnStopIndex);
+    const addFieldColumn = createAddFieldColumn(coordinate, fields, columnStopIndex);
     if (addFieldColumn) {
         columnHeadGroup.add(addFieldColumn);
     }
