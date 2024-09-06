@@ -97,6 +97,9 @@ export class DemoTableContent {
     onChange(options: AITableChangeOptions) {
         if (this.tableService.getSharedAITable()) {
             if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
+                // 本地的修改需要等 -> yjs -> promise period -> sync
+                // 本地的修改需要等 -> yjs -> promise period -> observerDeep(同步) -> 回调中 isLocal 就是 false 了
+                // 因此 observerDeep 不可以等 promise period
                 YjsAITable.asLocal(this.aiTable, () => {
                     applyActionOps(this.tableService.getSharedAITable(), options.actions, this.aiTable);
                 });
