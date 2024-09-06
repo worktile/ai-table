@@ -1,12 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, OnInit, signal } from '@angular/core';
-import { AITableGridBase } from './grid-base.component';
-import { createGridStage } from './renderer/creations/create-grid-stage';
-import { AITableGridEventService } from './services/event.service';
-import { AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.service';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName } from './utils';
-import { AITable, Context, Coordinate } from './core';
+import { KonvaEventObject } from 'konva/lib/Node';
+import { Stage } from 'konva/lib/Stage';
 import {
+    AI_TABLE_CELL,
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
@@ -17,21 +13,25 @@ import {
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE
 } from './constants';
-import { Stage } from 'konva/lib/Stage';
+import { AITable, Context, Coordinate } from './core';
+import { AITableGridBase } from './grid-base.component';
+import { createGridStage } from './renderer/creations/create-grid-stage';
+import { AITableGridEventService } from './services/event.service';
+import { AITableGridFieldService } from './services/field.service';
+import { AITableGridSelectionService } from './services/selection.service';
+import { AITableEditPosition, AITableMouseDownType } from './types';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName } from './utils';
 import { getMousePosition } from './utils/position';
 import { handleMouseStyle } from './utils/style';
-import { KonvaEventObject } from 'konva/lib/Node';
-import { AITableMouseDownType } from './types';
 
 @Component({
     selector: 'ai-table-grid',
-    template: '<div class="table-grid-container d-block w-100 h-100"></div>',
+    templateUrl: './grid.component.html',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'ai-table-grid d-block w-100 h-100'
     },
-    imports: [],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit {
@@ -43,11 +43,16 @@ export class AITableGrid extends AITableGridBase implements OnInit {
 
     coordinate!: Coordinate;
 
+    gridLinearRows = computed(() => {
+        return buildGridLinearRows(this.aiRecords());
+    });
+
     constructor() {
         super();
 
         afterNextRender(() => {
-            this.container = this.elementRef.nativeElement.querySelector('.table-grid-container');
+            this.container = this.elementRef.nativeElement.querySelector('.grid-view');
+            this.initGridRender();
         });
 
         effect(() => {
@@ -60,15 +65,17 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.aiTable.context = this.initContext();
     }
 
-    gridLinearRows = computed(() => {
-        return buildGridLinearRows(this.aiRecords());
-    });
-
     initContext() {
         return new Context({
             linearRows: this.gridLinearRows,
             pointPosition: signal(DEFAULT_POINT_POSITION),
-            scrollState: signal(DEFAULT_SCROLL_STATE)
+            scrollState: signal(DEFAULT_SCROLL_STATE),
+            toggleEditing: (options: { aiTable: AITable; recordId: string; fieldId: string; position: AITableEditPosition }) => {
+                this.aiTableGridEventService.openCanvasEdit({
+                    ...options,
+                    container: this.container
+                });
+            }
         });
     }
 
@@ -127,21 +134,26 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.gridStage.on('mousedown', (e: KonvaEventObject<MouseEvent>) => {
             const mouseEvent = e.evt;
             const _targetName = e.target.name();
+
             const { targetName, fieldId, recordId } = getDetailByTargetName(_targetName);
             switch (targetName) {
                 case AI_TABLE_FIELD_HEAD: {
                     mouseEvent.preventDefault();
                     if (!fieldId) return;
-                    return this.aiTableGridSelectionService.selectField(fieldId);
+                    this.aiTableGridSelectionService.selectField(fieldId);
+                    return;
+                }
+                case AI_TABLE_CELL: {
+                    if (!recordId || !fieldId) return;
+                    this.aiTableGridSelectionService.selectCell(recordId, fieldId);
+                    return;
                 }
                 // case AI_TABLE_FIELD_HEAD_MORE:{
                 //  弹出菜单
                 //    return
                 // }
-                // case AI_TABLE_CELL: {
-                //  if (!recordId || !fieldId) return;
-                //     return this.aiTableGridSelectionService.selectCell(recordId, fieldId);
-                // }
+                default:
+                    this.aiTableGridSelectionService.clearSelection();
             }
         });
         this.gridStage.on('click', (e: KonvaEventObject<MouseEvent>) => {

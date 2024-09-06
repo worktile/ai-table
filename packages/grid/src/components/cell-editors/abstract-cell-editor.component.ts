@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Input, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Input, input, OnInit, output } from '@angular/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { Actions, AITable, AITableField, AITableQueries, AITableRecord } from '../../core';
 
@@ -15,9 +15,11 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     @Input({ required: true }) aiTable!: AITable;
 
+    exitEditAction = output();
+
     modelValue!: TValue;
 
-    protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>);
+    protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>, { optional: true });
 
     ngOnInit(): void {
         this.modelValue = computed(() => {

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
@@ -15,13 +14,13 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
             [thyAutofocus]="true"
             [(ngModel)]="modelValue"
             (ngModelChange)="valueChange()"
-            (thyEnter)="updateValue()"
-            (blur)="updateValue()"
+            (thyEnter)="updateValue($event)"
+            (blur)="updateValue($event)"
         ></textarea>
     `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective],
+    imports: [FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective],
     host: {
         class: 'text-cell-editor'
     }
@@ -48,7 +47,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         const height = textarea.scrollHeight < this.maxHeight ? textarea.scrollHeight : this.maxHeight;
 
         this.render2.setStyle(textarea, 'height', `${height}px`);
-        this.render2.setStyle(textarea, 'min-height', `44px`);
+        this.render2.setStyle(textarea, 'min-height', `46px`);
         this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
         this.render2.setStyle(textarea, 'resize', 'none');
     }
@@ -57,7 +56,10 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         this.updateStyle();
     }
 
-    updateValue() {
+    updateValue(e: Event) {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.updateFieldValue();
         this.closePopover();
     }

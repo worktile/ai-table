@@ -2,12 +2,9 @@
 export const AI_TABLE_FIELD_HEAD_HEIGHT = 44;
 // 单元格内容的内边距
 export const AI_TABLE_CELL_PADDING = 12;
-// 表格图标的通用尺寸
-export const AI_TABLE_ICON_COMMON_SIZE = 16;
+
 // 表格图标action背景的通用尺寸
 export const AI_TABLE_ACTION_COMMON_SIZE = 32;
-// 字段表列头图标的间距
-export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8;
 // 字段列头文本的最小宽度
 export const AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH = 30;
 // 表格行头 checkbox 列的宽度
@@ -43,3 +40,23 @@ export const AI_TABLE_ROW_SELECT_CHECKBOX = 'AI_TABLE_ROW_SELECT_CHECKBOX';
 export const AI_TABLE_ADD_FIELD_BUTTON_WIDTH = 100;
 // 更多图标名称
 export const AI_TABLE_FIELD_HEAD_MORE = 'AI_TABLE_FIELD_HEAD_MORE'; // More button in the column header
+
+/**
+ * CellValue
+ */
+export const AI_TABLE_ICON_COMMON_SIZE = 16; // 表格图标的通用尺寸
+export const AI_TABLE_CELL_VALUE_PADDING = 12; // 单元格内容默认间距
+export const AI_TABLE_CELL_MULTI_PADDING_TOP = 10;
+export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP = 4;
+export const AI_TABLE_CELL_MULTI_PADDING_LEFT = 4;
+export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8; // 字段表列头图标的间距
+export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_LEFT = 8;
+export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE = 8; // 选项删除按钮的宽度
+export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET = 8; // 选项字段删除按钮大小的偏移量
+export const AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH = 36; // 选项字段项的最小宽度
+
+// Option
+export const AI_TABLE_OPTION_ITEM_PADDING = 12; // 选项按钮间距
+export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
+export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 12;
+export const AI_TABLE_OPTION_ITEM_RADIUS = 18;

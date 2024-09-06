@@ -109,4 +109,51 @@ export class AITableGridEventService {
         });
         return ref;
     }
+
+    openCanvasEdit(options: {
+        aiTable: AITable;
+        container: HTMLDivElement;
+        recordId: string;
+        fieldId: string;
+        position: { x: number; y: number; width: number; height: number };
+    }) {
+        const { aiTable, container, recordId, fieldId, position } = options;
+        const { x, y, width, height } = position;
+        const field = getRecordOrField(this.aiTable.fields, fieldId) as Signal<AITableField>;
+        const record = getRecordOrField(this.aiTable.records, recordId) as Signal<AITableRecord>;
+        const component = this.getEditorComponent(field().type);
+        const originRect = container.getBoundingClientRect();
+
+        // 修正位置，以覆盖 cell border
+        const yOffset = 2;
+        const widthOffset = 3;
+
+        const ref = this.thyPopover.open(component, {
+            origin: container,
+            originPosition: {
+                x: x + originRect.x,
+                y: y + originRect.y - yOffset,
+                width: width,
+                height: height
+            },
+            width: width + widthOffset + 'px',
+            height: height + 'px',
+            placement: 'top',
+            offset: -(height + 4),
+            minWidth: width,
+            initialState: {
+                field: field,
+                record: record,
+                aiTable: aiTable
+            },
+            panelClass: 'grid-cell-editor',
+            outsideClosable: false,
+            hasBackdrop: false,
+            manualClosure: true,
+            animationDisabled: true,
+            autoAdaptive: true,
+            scrollStrategy: this.overlay.scrollStrategies.close()
+        });
+        return ref;
+    }
 }
