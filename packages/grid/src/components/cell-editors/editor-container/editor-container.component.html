@@ -1,0 +1,10 @@
+@if (field() && record()) {
+    @switch (field()!.type) {
+        @case (AITableFieldType.text) {
+            <text-cell-editor [aiTable]="aiTable" [field]="field()!" [record]="record()!" [ngStyle]="editorRect()"></text-cell-editor>
+        }
+        @case (AITableFieldType.select) {
+            <select-cell-editor [aiTable]="aiTable" [field]="field()!" [record]="record()!" [ngStyle]="editorRect()"></select-cell-editor>
+        }
+    }
+}

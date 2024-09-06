@@ -1,5 +1,5 @@
 import { AITableLayout } from '../../types';
-import { Drawer } from '../../utils';
+import { Drawer } from './drawer';
 
 /**
  * 用于处理表格行或单元格的布局和绘制。

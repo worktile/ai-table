@@ -13,7 +13,7 @@ import {
 } from '../../constants';
 import { AITableField, AITableFieldType } from '../../core';
 import { AITableRender, AITableWrapTextData } from '../../types';
-import { Drawer } from '../../utils/drawer';
+import { Drawer } from './drawer';
 
 const DEFAULT_RENDER_DATA = {
     width: 0,

@@ -15,8 +15,8 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
             [thyAutofocus]="true"
             [(ngModel)]="modelValue"
             (ngModelChange)="valueChange()"
-            (thyEnter)="updateValue()"
-            (blur)="updateValue()"
+            (thyEnter)="updateValue($event)"
+            (blur)="updateValue($event)"
         ></textarea>
     `,
     standalone: true,
@@ -57,7 +57,10 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         this.updateStyle();
     }
 
-    updateValue() {
+    updateValue(e: Event) {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.updateFieldValue();
         this.closePopover();
     }

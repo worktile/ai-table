@@ -9,8 +9,8 @@ import {
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
     DEFAULT_WRAP_TEXT_MAX_ROW
-} from '../constants';
-import { AITable } from '../core';
+} from '../../constants';
+import { AITable } from '../../core';
 import {
     AITableCtxStyle,
     AITableLabel,
@@ -20,9 +20,9 @@ import {
     AITableTextEllipsis,
     AITableWrapText,
     AITableWrapTextData
-} from '../types';
-import { getTextWidth, textDataCache } from './get-text-width';
-import { TextMeasure } from './text-measure';
+} from '../../types';
+import { getTextWidth, textDataCache } from '../../utils/get-text-width';
+import { TextMeasure } from '../../utils/text-measure';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();
@@ -299,22 +299,6 @@ export class Drawer {
             showLineWidth += singleTextWidth;
             const diffWidth = isLimitRow ? showLineWidth + (isEllipsis ? ellipsisWidth : 0) : showLineWidth;
             const isLineEnd = diffWidth > maxWidth;
-
-            // 遇到链接片段的开头
-            if (!isUnderline) {
-                if (n !== 0) {
-                    resultData.push({
-                        offsetX,
-                        offsetY,
-                        width: Math.ceil(showTextWidth),
-                        text: showText
-                    });
-                }
-                showText = singleText;
-                offsetX += showTextWidth;
-                showTextWidth = singleTextWidth;
-                continue;
-            }
 
             // 遇到换行符或行尾
             if ((isLineEnd || isLineBreak) && rowCount < maxRow) {

@@ -157,3 +157,21 @@
         border-radius: 0;
     }
 }
+
+.ai-table-grid {
+    position: relative;
+
+    .editor-grid {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+    .ai-table-editor-container {
+        position: absolute;
+        z-index: 9;
+        background: variables.$white;
+    }
+}

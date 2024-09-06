@@ -32,3 +32,14 @@ export const AI_TABLE_BLANK = 'AI_TABLE_BLANK';
 export const AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX = 'AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX';
 // 添加列宽度
 export const AI_TABLE_ADD_FIELD_BUTTON_WIDTH = 100;
+
+export const DEFAULT_POINT_POSITION = {
+    targetName: AI_TABLE_BLANK,
+    realTargetName: AI_TABLE_BLANK,
+    rowIndex: -1,
+    columnIndex: -1,
+    x: 0,
+    y: 0,
+    offsetTop: 0,
+    offsetLeft: 0
+};

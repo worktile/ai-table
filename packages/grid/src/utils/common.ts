@@ -1,3 +1,4 @@
+import { AI_TABLE_BLANK } from '../constants';
 import { AITableTargetNameOptions } from '../types';
 
 /**
@@ -6,6 +7,34 @@ import { AITableTargetNameOptions } from '../types';
 export const generateTargetName = ({ targetName, fieldId, recordId, mouseStyle }: AITableTargetNameOptions) => {
     const flag = '$';
     return `${targetName}.${fieldId || flag}.${recordId || flag}.${mouseStyle || flag}`;
+};
+
+/**
+ * Parse targetName for built-in information
+ */
+export const getDetailByTargetName = (_targetName: string | null) => {
+    if (_targetName == null) {
+        return {
+            targetName: null,
+            fieldId: null,
+            recordId: null,
+            mouseStyle: null
+        };
+    }
+
+    const flag = '$';
+    const [targetName, fieldId, recordId, mouseStyle] = _targetName.split('.');
+    return {
+        targetName,
+        fieldId: fieldId === flag ? null : fieldId,
+        recordId: recordId === flag ? null : recordId,
+        mouseStyle: mouseStyle === flag ? null : mouseStyle
+    };
+};
+
+export const getTargetName = (targetName?: string | null) => {
+    if (targetName == null || targetName === '') return AI_TABLE_BLANK;
+    return targetName.split('.')[0];
 };
 
 /**

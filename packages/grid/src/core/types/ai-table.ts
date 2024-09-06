@@ -24,5 +24,20 @@ export const AITable = {
     },
     getVisibleRows(aiTable: AITable) {
         return aiTable.records();
+    },
+    getActiveCell(aiTable: AITable): { recordId: string; fieldId: string } | null {
+        const selection = aiTable.selection();
+        let selectedCells = [];
+        for (let [recordId, fieldIds] of selection.selectedCells.entries()) {
+            for (let fieldId of Object.keys(fieldIds)) {
+                if ((fieldIds as { [key: string]: boolean })[fieldId]) {
+                    selectedCells.push({
+                        recordId,
+                        fieldId
+                    });
+                }
+            }
+        }
+        return selectedCells ? selectedCells[0] : null;
     }
 };

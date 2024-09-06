@@ -38,3 +38,69 @@ export interface AITableFirstCell {
     row: AITableLinearRowRecord;
     style: any;
 }
+
+export interface AITableDynamicCellsOptions {
+    aiTable: AITable;
+    context: AITableContext;
+    instance: Coordinate;
+    rowStartIndex: number;
+    rowStopIndex: number;
+    columnStartIndex: number;
+    columnStopIndex: number;
+}
+
+export interface AITableCellHeightOptions {
+    field: AITableField | null;
+    rowHeight: number;
+    activeHeight?: number;
+    isActive?: boolean;
+}
+
+export interface AITablePlaceholderDrawerOptions {
+    aiTable: AITable;
+    context: AITableContext;
+    instance: Coordinate;
+    columnStartIndex: number;
+    columnStopIndex: number;
+    rowStartIndex: number;
+    rowStopIndex: number;
+}
+
+export interface AITableActiveCellOptions {
+    aiTable: AITable;
+    context: AITableContext;
+    instance: Coordinate;
+    columnStartIndex: number;
+    columnStopIndex: number;
+    rowStartIndex: number;
+    rowStopIndex: number;
+}
+
+export interface AITableCellScrollContainerOptions {
+    aiTable: AITable;
+    context: AITableContext;
+    x: number;
+    y: number;
+    columnWidth: number;
+    rowHeight: number;
+    fieldId: string;
+    recordId: string;
+    renderData: any;
+    children: any[];
+    [key: string]: any;
+}
+
+export interface AITableCellOptions {
+    aiTable: AITable;
+    context: AITableContext;
+    field: AITableField;
+    recordId: string;
+    x: number;
+    y: number;
+    rowHeight: number;
+    columnWidth: number;
+    cellValue: FieldValue;
+    renderData: any;
+    isActive?: boolean;
+    style?: any;
+}

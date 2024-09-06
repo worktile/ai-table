@@ -1,0 +1,23 @@
+<!-- 渲染层 -->
+<div class="d-block w-100 h-100 vika-grid-view"></div>
+
+<!-- 编辑层 -->
+<div class="editor-grid">
+    <div
+        [ngStyle]="{
+            transform: 'translate3d(0px, 0px, 0px)',
+            'pointer-events': 'auto'
+        }"
+    >
+        @if (isCellActive()) {
+            <div
+                aiTableEditorContainer
+                [aiTable]="aiTable"
+                [context]="context"
+                [editPosition]="editPosition"
+                [field]="selectedField()!"
+                [record]="selectedRecord()!"
+            ></div>
+        }
+    </div>
+</div>

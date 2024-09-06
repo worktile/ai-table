@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Input, input, OnInit } from '@angular/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { Actions, AITable, AITableField, AITableQueries, AITableRecord } from '../../core';
+import { AITableGridSelectionService } from '../../services/selection.service';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -17,7 +18,9 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     modelValue!: TValue;
 
-    protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>);
+    protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>, { optional: true });
+
+    protected aiTableGridSelectionService = inject(AITableGridSelectionService, { optional: true });
 
     ngOnInit(): void {
         this.modelValue = computed(() => {
@@ -31,5 +34,6 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     closePopover() {
         this.thyPopoverRef?.close();
+        this.aiTableGridSelectionService?.clearSelection();
     }
 }

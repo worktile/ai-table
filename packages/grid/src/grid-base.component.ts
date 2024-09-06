@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { mergeWith } from 'rxjs/operators';
 import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
 import {
     Actions,
@@ -134,11 +133,11 @@ export class AITableGridBase implements OnInit {
             this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.dblClick(event);
             });
-            this.aiTableGridEventService.mousedownEvent$
-                .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
-                .subscribe((event) => {
-                    this.aiTableGridSelectionService.updateSelect(event);
-                });
+            // this.aiTableGridEventService.mousedownEvent$
+            //     .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
+            //     .subscribe((event) => {
+            //         this.aiTableGridSelectionService.updateSelect(event);
+            //     });
 
             this.aiTableGridEventService.mouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.mouseoverHandle(event);

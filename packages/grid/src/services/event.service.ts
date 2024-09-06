@@ -109,4 +109,47 @@ export class AITableGridEventService {
         });
         return ref;
     }
+
+    openCanvasEdit(options: {
+        aiTable: AITable;
+        recordId: string;
+        fieldId: string;
+        position: { x: number; y: number; width: number; height: number };
+    }) {
+        const { aiTable, recordId, fieldId, position } = options;
+        const { x, y, width, height } = position;
+        const field = getRecordOrField(this.aiTable.fields, fieldId) as Signal<AITableField>;
+        const record = getRecordOrField(this.aiTable.records, recordId) as Signal<AITableRecord>;
+        const component = this.getEditorComponent(field().type);
+        const origin = document.querySelector('.vika-grid-view') as HTMLElement;
+        const originRect = origin.getBoundingClientRect();
+
+        const ref = this.thyPopover.open(component, {
+            origin,
+            originPosition: {
+                x: x + originRect.x,
+                y: y + originRect.y,
+                width,
+                height
+            },
+            width: width + 1 + 'px',
+            height: height + 2 + 'px',
+            placement: 'top',
+            offset: -(height + 4),
+            minWidth: width,
+            initialState: {
+                field: field,
+                record: record,
+                aiTable: aiTable
+            },
+            panelClass: 'grid-cell-editor',
+            outsideClosable: false,
+            hasBackdrop: false,
+            manualClosure: true,
+            animationDisabled: true,
+            autoAdaptive: true,
+            scrollStrategy: this.overlay.scrollStrategies.close()
+        });
+        return ref;
+    }
 }
