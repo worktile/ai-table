@@ -8,11 +8,7 @@ export class LiveFeedRoom extends Observable<string> {
 
     #pendingUpdates: LiveFeedObjectUpdate[] = [];
 
-    #pendingChanges: LiveFeedObjectChange[] = [];
-
     #isPendingUpdate = false;
-
-    #isPendingChange = false;
 
     constructor(options: { roomId: string; objects: LiveFeedObject[] }) {
         super();
@@ -32,25 +28,13 @@ export class LiveFeedRoom extends Observable<string> {
         }
         this.objects.set(object.guid, object);
         object.getMap(object.typeName).observeDeep((events: Array<Y.YEvent<any>>, transaction: Y.Transaction) => {
-            this.#emitObjectChange(events, object, transaction);
+            this.emit('change', [{
+                events,
+                guid: object.guid,
+                transaction
+            }]);
         });
         object.on('update', this.#emitObjectUpdate);
-    }
-
-    #emitObjectChange(events: Y.YEvent<any>[], doc: Y.Doc, transaction: Y.Transaction) {
-        this.#pendingChanges.push({
-            events,
-            guid: doc.guid,
-            transaction
-        });
-        if (!this.#isPendingChange) {
-            this.#isPendingChange = true;
-            Promise.resolve().then(() => {
-                this.emit('change', [this.#pendingChanges]);
-                this.#pendingChanges = [];
-                this.#isPendingChange = false;
-            });
-        }
     }
 
     #emitObjectUpdate = (update: Uint8Array, origin: any, doc: Y.Doc, transaction: Y.Transaction) => {

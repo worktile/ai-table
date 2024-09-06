@@ -70,20 +70,18 @@ export class TableService {
         let isInitialized = false;
         if (!this.feedRoom) {
             this.feedRoom = createFeedRoom(roomId);
-            this.feedRoom?.on('change', (changes: LiveFeedObjectChange[]) => {
-                changes.forEach((change: LiveFeedObjectChange) => {
-                    if (!YjsAITable.isLocal(this.aiTable)) {
-                        if (!isInitialized) {
-                            const data = initTable(this.getSharedAITable());
-                            this.views.set(data.views);
-                            this.buildRenderFields(data.fields);
-                            this.buildRenderRecords(data.records);
-                            isInitialized = true;
-                        } else {
-                            applyYjsEvents(this.aiTable, this.getSharedAITable(), change.events);
-                        }
+            this.feedRoom?.on('change', (change: LiveFeedObjectChange) => {
+                if (!YjsAITable.isLocal(this.aiTable)) {
+                    if (!isInitialized) {
+                        const data = initTable(this.getSharedAITable());
+                        this.views.set(data.views);
+                        this.buildRenderFields(data.fields);
+                        this.buildRenderRecords(data.records);
+                        isInitialized = true;
+                    } else {
+                        applyYjsEvents(this.aiTable, this.getSharedAITable(), change.events);
                     }
-                });
+                }
             });
         }
         this.provider = getProvider(this.feedRoom!, isDevMode());

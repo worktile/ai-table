@@ -1,4 +1,4 @@
-import { AITable } from "@ai-table/grid";
+import { AITable } from '@ai-table/grid';
 
 const IS_LOCAL: WeakSet<any> = new WeakSet();
 const IS_REMOTE: WeakSet<any> = new WeakSet();
@@ -21,9 +21,7 @@ export const YjsAITable = {
         fn();
 
         if (!wasLocal) {
-            setTimeout(() => {
-                IS_LOCAL.delete(aiTable);                
-            }, 0);
+            IS_LOCAL.delete(aiTable);
         }
     },
 
@@ -38,9 +36,7 @@ export const YjsAITable = {
         fn();
 
         if (!wasRemote) {
-            setTimeout(() => {
-                Promise.resolve().then(() => IS_REMOTE.delete(aiTable));                
-            }, 0);
+            Promise.resolve().then(() => IS_REMOTE.delete(aiTable));
         }
     },
 
