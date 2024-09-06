@@ -1,38 +1,31 @@
 import Konva from 'konva/lib';
-import { AITable, RendererContext } from '../../core';
+import { AITable } from '../../core';
 import { AITableGridStageOptions } from '../../types';
 import { getVisibleRangeInfo } from '../../utils';
+import { createActiveCellBorder } from './create-active-cell-border';
+import { createAddFieldColumn } from './create-add-field-column';
 import { createAllCells } from './create-all-cells';
 import { createColumnHeads } from './create-heads';
-import { createAddFieldColumn } from './create-add-field-column';
 import { createHoverRowHeads } from './create-hover-row-heads';
 import { createOtherRows } from './create-other-rows';
+import { createPlaceHolderCells } from './create-placeholder-cells';
 
 Konva.pixelRatio = 2;
 
-export const createGridStage = (config: AITableGridStageOptions) => {
-    const { width, height, container, aiTable, coordinate } = config;
-    const context = aiTable.context as RendererContext;
+export const createGridStage = (options: AITableGridStageOptions) => {
+    const { aiTable, width, height, container, coordinate } = options;
+    const { scrollState, pointPosition } = aiTable.context!;
 
     const fields = AITable.getVisibleFields(aiTable);
 
-    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinate, context.scrollState());
+    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinate, scrollState());
 
-    const gridStage = new Konva.Stage({
-        container: container,
-        width: width,
-        height: height,
-        listening: true
-    });
-
-    const gridLayer = new Konva.Layer();
-    const gridGroup = new Konva.Group();
-    const { columnHeads, frozenColumnHead } = createColumnHeads({
+    const { frozenColumnHead, columnHeads } = createColumnHeads({
         coordinate,
         columnStartIndex,
         columnStopIndex,
         fields: fields,
-        pointPosition: context.pointPosition(),
+        pointPosition: pointPosition(),
         aiTable
     });
 
@@ -45,15 +38,6 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         columnStopIndex
     });
 
-    const frozenGroup = new Konva.Group();
-    const commonGroup = new Konva.Group();
-    gridGroup.add(frozenGroup);
-    gridGroup.add(commonGroup);
-    const frozenColumnHeadGroup = new Konva.Group();
-    frozenColumnHeadGroup.add(...frozenColumnHead);
-    const frozenCellsGroup = new Konva.Group();
-    frozenGroup.add(frozenColumnHeadGroup);
-    frozenCellsGroup.add(frozenCells);
     const hoverRowHeads = createHoverRowHeads({
         aiTable,
         coordinate,
@@ -67,19 +51,79 @@ export const createGridStage = (config: AITableGridStageOptions) => {
         rowStartIndex,
         rowStopIndex
     });
-    frozenCellsGroup.add(...hoverRowHeads, ...otherRows);
-    frozenGroup.add(frozenCellsGroup);
-    const columnHeadGroup = new Konva.Group();
-    columnHeadGroup.add(...columnHeads);
-    const addFieldColumn = createAddFieldColumn(coordinate, fields, columnStopIndex);
-    if (addFieldColumn) {
-        columnHeadGroup.add(addFieldColumn);
-    }
+
+    const frozenPlaceHolderCells = createPlaceHolderCells({
+        aiTable,
+        coordinate,
+        rowStartIndex,
+        rowStopIndex,
+        columnStartIndex: 0,
+        columnStopIndex: coordinate.frozenColumnCount - 1
+    });
+
+    const placeHolderCells = createPlaceHolderCells({
+        aiTable,
+        coordinate,
+        rowStartIndex,
+        rowStopIndex,
+        columnStartIndex,
+        columnStopIndex
+    });
+
+    const { frozenActiveCellBorder, activeCellBorder } = createActiveCellBorder({
+        aiTable,
+        coordinate,
+        columnStartIndex,
+        columnStopIndex,
+        rowStartIndex,
+        rowStopIndex
+    });
+
+    const addFieldBtn = createAddFieldColumn(coordinate, fields, columnStopIndex);
+
+    const gridStage = new Konva.Stage({
+        container: container,
+        width: width,
+        height: height,
+        listening: true
+    });
+    const gridLayer = new Konva.Layer();
+    const gridGroup = new Konva.Group();
+    const frozenGroup = new Konva.Group();
+    const commonGroup = new Konva.Group();
+    const attachGroup = new Konva.Group();
+    const frozenAttachGroup = new Konva.Group();
     const cellsGroup = new Konva.Group();
-    commonGroup.add(columnHeadGroup);
-    cellsGroup.add(cells);
-    commonGroup.add(cellsGroup);
-    gridLayer.add(gridGroup);
+    const cellHeadGroup = new Konva.Group();
+    const commonAttachContainerGroup = new Konva.Group();
+    const frozenActiveGroup = new Konva.Group();
+
     gridStage.add(gridLayer);
+    gridLayer.add(gridGroup);
+    gridGroup.add(frozenGroup);
+
+    frozenGroup.add(frozenCells);
+    frozenGroup.add(...otherRows);
+    frozenGroup.add(...hoverRowHeads);
+    frozenPlaceHolderCells && frozenGroup.add(...frozenPlaceHolderCells);
+
+    gridGroup.add(...frozenColumnHead);
+
+    gridGroup.add(commonGroup);
+    commonGroup.add(cellsGroup);
+    cellsGroup.add(cells);
+    commonGroup.add(cellHeadGroup);
+    cellHeadGroup.add(...columnHeads);
+    addFieldBtn && cellHeadGroup.add(addFieldBtn);
+
+    gridGroup.add(attachGroup);
+    attachGroup.add(commonAttachContainerGroup);
+    placeHolderCells && commonAttachContainerGroup.add(...placeHolderCells);
+    activeCellBorder && commonAttachContainerGroup.add(activeCellBorder);
+
+    gridGroup.add(frozenAttachGroup);
+    frozenAttachGroup.add(frozenActiveGroup);
+    frozenActiveCellBorder && frozenActiveGroup.add(frozenActiveCellBorder);
+
     return gridStage;
 };

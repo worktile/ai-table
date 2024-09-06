@@ -435,7 +435,10 @@ export function getCanvasDefaultValue() {
                     view2: 1
                 },
                 values: {
-                    'column-1': '文本 1-1',
+                    'column-1':
+                        '文本 1-1 - 超级长的文本，用来测试文本省略或折行, 当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。',
+                    'column-13':
+                        '文本 1-1 - 超级长的文本，用来测试文本省略或折行, 当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。',
                     'column-2': ['1'],
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
@@ -461,6 +464,7 @@ export function getCanvasDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 2-1',
+                    'column-13': '文本 2-1',
                     'column-2': ['2'],
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
@@ -483,6 +487,7 @@ export function getCanvasDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 3-1',
+                    'column-13': '文本 3-1',
                     'column-2': ['3'],
                     'column-20': [
                         '66b31d0c8097a908f74bcd8a',
@@ -514,10 +519,19 @@ export function getCanvasDefaultValue() {
                 type: AITableFieldType.text
             },
             {
+                _id: 'column-13',
+                name: '单行文本',
+                positions: {
+                    view1: 1,
+                    view2: 15
+                },
+                type: AITableFieldType.text
+            },
+            {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 1,
+                    view1: 2,
                     view2: 16
                 },
                 type: AITableFieldType.select,
@@ -589,7 +603,7 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 2,
+                    view1: 4,
                     view2: 14
                 }
             },
@@ -601,64 +615,64 @@ export function getCanvasDefaultValue() {
                     view2: 11
                 },
                 type: AITableFieldType.number
-            },
-            {
-                _id: 'column-4',
-                name: '日期',
-                positions: {
-                    view1: 6,
-                    view2: 10
-                },
-                type: AITableFieldType.date
-            },
-            {
-                _id: 'column-5',
-                name: '成员',
-                positions: {
-                    view1: 7,
-                    view2: 9
-                },
-                settings: {
-                    is_multiple: true
-                },
-                type: AITableFieldType.member
-            },
-            {
-                _id: 'column-6',
-                name: '进度',
-                positions: {
-                    view1: 8,
-                    view2: 8
-                },
-                type: AITableFieldType.progress
-            },
-            {
-                _id: 'column-7',
-                name: '评分',
-                positions: {
-                    view1: 9,
-                    view2: 7
-                },
-                type: AITableFieldType.rate
-            },
-            {
-                _id: 'column-8',
-                name: '链接',
-                positions: {
-                    view1: 10,
-                    view2: 6
-                },
-                type: AITableFieldType.link
-            },
-            {
-                _id: 'column-9',
-                name: '创建人',
-                positions: {
-                    view1: 11,
-                    view2: 5
-                },
-                type: AITableFieldType.createdBy
             }
+            // {
+            //     _id: 'column-4',
+            //     name: '日期',
+            //     positions: {
+            //         view1: 6,
+            //         view2: 10
+            //     },
+            //     type: AITableFieldType.date
+            // },
+            // {
+            //     _id: 'column-5',
+            //     name: '成员',
+            //     positions: {
+            //         view1: 7,
+            //         view2: 9
+            //     },
+            //     settings: {
+            //         is_multiple: true
+            //     },
+            //     type: AITableFieldType.member
+            // },
+            // {
+            //     _id: 'column-6',
+            //     name: '进度',
+            //     positions: {
+            //         view1: 8,
+            //         view2: 8
+            //     },
+            //     type: AITableFieldType.progress
+            // },
+            // {
+            //     _id: 'column-7',
+            //     name: '评分',
+            //     positions: {
+            //         view1: 9,
+            //         view2: 7
+            //     },
+            //     type: AITableFieldType.rate
+            // }
+            // {
+            //     _id: 'column-8',
+            //     name: '链接',
+            //     positions: {
+            //         view1: 10,
+            //         view2: 6
+            //     },
+            //     type: AITableFieldType.link
+            // },
+            // {
+            //     _id: 'column-9',
+            //     name: '创建人',
+            //     positions: {
+            //         view1: 11,
+            //         view2: 5
+            //     },
+            //     type: AITableFieldType.createdBy
+            // }
             // {
             //     _id: 'column-10',
             //     name: '创建时间',

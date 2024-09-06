@@ -1,8 +1,8 @@
+import { Signal, WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
 import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
-import { Signal, WritableSignal } from '@angular/core';
 
 export interface AITableGridCellRenderSchema {
     editor: any;
@@ -88,6 +88,20 @@ export type AITablePointPosition = {
     offsetTop: number;
     offsetLeft: number;
 };
+
+export interface AITableEditPosition {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+export interface AITableOpenEditOptions {
+    recordId: string;
+    fieldId: string;
+    position: AITableEditPosition;
+    container?: HTMLDivElement;
+}
 
 export interface AITableContext {
     linearRows: Signal<AITableLinearRow[]>;
