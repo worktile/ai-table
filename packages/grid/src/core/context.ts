@@ -13,7 +13,14 @@ export class Context {
 
     setPointPosition(position: Partial<AITablePointPosition>) {
         const oldPosition = this.pointPosition();
-        const newPosition = { ...oldPosition, ...position };
-        this.pointPosition.set(newPosition);
+        if (
+            oldPosition.areaType !== position.areaType ||
+            oldPosition.rowIndex !== position.rowIndex ||
+            oldPosition.columnIndex !== position.columnIndex ||
+            oldPosition.targetName !== position.targetName
+        ) {
+            const newPosition = { ...oldPosition, ...position };
+            this.pointPosition.set(newPosition);
+        }
     }
 }
