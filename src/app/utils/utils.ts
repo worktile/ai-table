@@ -114,6 +114,7 @@ export function getDefaultValue() {
                     view1: 0,
                     view2: 16
                 },
+                icon: 'font',
                 type: AITableFieldType.text
             },
             {
@@ -302,6 +303,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-3',
                 name: '数字',
+                icon: 'hashtag',
                 positions: {
                     view1: 5,
                     view2: 11
@@ -311,6 +313,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-4',
                 name: '日期',
+                icon: 'calendar',
                 positions: {
                     view1: 6,
                     view2: 10
@@ -320,6 +323,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-5',
                 name: '成员(📌)',
+                icon: 'user',
                 positions: {
                     view1: 7,
                     view2: 9
@@ -332,6 +336,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-6',
                 name: '进度',
+                icon: 'progress',
                 positions: {
                     view1: 8,
                     view2: 8
@@ -341,6 +346,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-7',
                 name: '评分(📌)',
+                icon: 'star-circle',
                 positions: {
                     view1: 9,
                     view2: 7
@@ -350,6 +356,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-8',
                 name: '链接(📌)',
+                icon: 'link-insert',
                 positions: {
                     view1: 10,
                     view2: 6
@@ -360,6 +367,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-9',
                 name: '创建人',
+                icon: 'user',
                 positions: {
                     view1: 11,
                     view2: 5
@@ -369,6 +377,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-10',
                 name: '创建时间',
+                icon: 'calendar',
                 positions: {
                     view1: 12,
                     view2: 4
@@ -378,6 +387,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-11',
                 name: '更新人',
+                icon: 'user',
                 positions: {
                     view1: 13,
                     view2: 3
@@ -387,6 +397,7 @@ export function getDefaultValue() {
             {
                 _id: 'column-12',
                 name: '更新时间',
+                icon: 'calendar',
                 positions: {
                     view1: 14,
                     view2: 2

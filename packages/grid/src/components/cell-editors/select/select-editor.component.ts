@@ -12,7 +12,7 @@ import { SelectOptionPipe } from '../../../pipes';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
-import { AITableSelectOptionStyle } from '../../../core';
+import { Actions, AITableQueries, AITableSelectOptionStyle } from '../../../core';
 
 @Component({
     selector: 'select-cell-editor',
@@ -37,7 +37,7 @@ import { AITableSelectOptionStyle } from '../../../core';
         SelectOptionComponent
     ]
 })
-export class SelectCellEditorComponent extends AbstractEditCellEditor<string, AITableSelectField> {
+export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], AITableSelectField> {
     selectOptions = computed(() => {
         return this.field().settings.options;
     });
@@ -52,9 +52,23 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string, AI
         super();
     }
 
+    override ngOnInit(): void {
+        this.modelValue = computed(() => {
+            const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
+            if (!this.field().settings.is_multiple) {
+                return value[0];
+            }
+            return value;
+        })();
+    }
+
     updateValue(value: boolean) {
         if (!value) {
-            this.updateFieldValue();
+            if (!this.field().settings.is_multiple) {
+                Actions.updateFieldValue(this.aiTable, [this.modelValue], [this.record()._id, this.field()._id]);
+            } else {
+                this.updateFieldValue();
+            }
             this.closePopover();
         }
     }

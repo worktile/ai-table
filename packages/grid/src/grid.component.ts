@@ -41,6 +41,7 @@ import {
     AITableFieldType,
     AITableRecords,
     AITableSelectOptionStyle,
+    AITableValue,
     createAITable,
     createDefaultField,
     getDefaultRecord
@@ -50,7 +51,6 @@ import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
-import { buildGridData } from './utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -107,11 +107,23 @@ export class AITableGrid implements OnInit {
 
     aiReferences = input<AITableReferences>();
 
+    aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
+
     AITableFieldType = AITableFieldType;
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;
 
     aiTable!: AITable;
+
+    gridData = computed(() => {
+        if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
+            return this.aiBuildRenderDataFn()!(this.aiTable);
+        }
+        return {
+            records: this.aiRecords(),
+            fields: this.aiFields()
+        };
+    });
 
     isSelectedAll = computed(() => {
         return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
@@ -125,15 +137,16 @@ export class AITableGrid implements OnInit {
 
     mouseoverRef!: ThyPopoverRef<any>;
 
-    gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
-    });
-
     private ngZone = inject(NgZone);
+
     private elementRef = inject(ElementRef);
+
     private destroyRef = inject(DestroyRef);
+
     private aiTableGridFieldService = inject(AITableGridFieldService);
+
     private aiTableGridEventService = inject(AITableGridEventService);
+
     public aiTableGridSelectionService = inject(AITableGridSelectionService);
 
     ngOnInit(): void {
