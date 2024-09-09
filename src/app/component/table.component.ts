@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@
 import { Router, RouterOutlet } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { ThyAction } from 'ngx-tethys/action';
-import { AITableGrid, idCreator } from '@ai-table/grid';
+import { AITableGrid } from '@ai-table/grid';
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
-import { AITableView, ViewActions } from '@ai-table/state';
+import { addView, AITableViewFields, AITableViewRecords, removeView, ViewActions } from '@ai-table/state';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
@@ -87,17 +87,17 @@ export class DemoTable implements OnInit, OnDestroy {
         this.activeViewName = value;
     }
 
-    addView() {
-        const index = this.tableService.views().length;
-        const newView: AITableView = {
-            _id: idCreator(),
-            name: '表格视图 ' + index
-        };
-        ViewActions.addView(this.tableService.aiTable, newView, [index]);
+    addView(type: 'add' | 'copy') {
+        const newView = addView(this.tableService.aiTable, type);
+        if (newView) {
+            this.tableService.setActiveView(newView._id);
+        }
     }
 
     removeView() {
-        ViewActions.removeView(this.tableService.aiTable, [this.tableService.activeViewId()]);
+        const records = this.tableService.aiTable.records() as AITableViewRecords;
+        const fields = this.tableService.aiTable.fields() as AITableViewFields;
+        removeView(this.tableService.aiTable, records, fields, this.tableService.activeViewId());
     }
 
     ngOnDestroy(): void {

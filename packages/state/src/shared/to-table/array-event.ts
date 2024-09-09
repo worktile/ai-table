@@ -7,6 +7,7 @@ import {
     AITableViewFields,
     AITableViewRecords,
     AIViewTable,
+    PositionActionName,
     SharedType,
     SyncArrayElement,
     SyncMapElement,
@@ -15,13 +16,14 @@ import {
 import { translatePositionToPath, getShareTypeNumberPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 
-export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: string, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
+export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
     const isViewsTranslate = event.path.includes('views');
     const actions: AITableSharedAction[] = [];
+    const activeViewId = aiTable.activeViewId();
 
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
@@ -78,22 +80,47 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
                         });
                     } else {
                         try {
+                            const sharedRecords = sharedType.get('records')! as Y.Array<SyncArrayElement>;
+                            const sharedFields = sharedType.get('fields')! as Y.Array<SyncMapElement>;
                             delta.insert?.map((item: any) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
-                                const recordId = getSharedRecordId(sharedType.get('records')! as Y.Array<SyncArrayElement>, recordIndex);
-                                const fieldId = getSharedMapValueId(sharedType.get('fields')! as Y.Array<SyncMapElement>, fieldIndex);
-                                const path = [recordId, fieldId] as AIFieldValueIdPath;
-                                const fieldValue = AITableQueries.getFieldValue(aiTable, path);
+                                const record = (aiTable.records() as AITableViewRecords)[recordIndex];
+                                if (isPositionOperation(fieldIndex, sharedFields)) {
+                                    for (const key in item) {
+                                        if (!record.positions[key] && record.positions[key] !== 0) {
+                                            actions.push({
+                                                type: PositionActionName.AddRecordPosition,
+                                                path: [record._id],
+                                                position: {
+                                                    [key]: item[key]
+                                                }
+                                            });
+                                        }
+                                    }
+                                    for (const key in record.positions) {
+                                        if (!item[key] && item[key] !== 0) {
+                                            actions.push({
+                                                type: PositionActionName.RemoveRecordPosition,
+                                                path: [key, record._id]
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    const recordId = getSharedRecordId(sharedRecords, recordIndex);
+                                    const fieldId = getSharedMapValueId(sharedFields, fieldIndex);
+                                    const path = [recordId, fieldId] as AIFieldValueIdPath;
+                                    const fieldValue = AITableQueries.getFieldValue(aiTable, path);
 
-                                // To exclude insert triggered by field inserts.
-                                if (fieldValue !== item) {
-                                    actions.push({
-                                        type: ActionName.UpdateFieldValue,
-                                        path,
-                                        fieldValue,
-                                        newFieldValue: item
-                                    });
+                                    // To exclude insert triggered by field inserts.
+                                    if (fieldValue !== item) {
+                                        actions.push({
+                                            type: ActionName.UpdateFieldValue,
+                                            path,
+                                            fieldValue,
+                                            newFieldValue: item
+                                        });
+                                    }
                                 }
                             });
                         } catch (error) {}
@@ -132,6 +159,10 @@ export default function translateArrayEvent(aiTable: AIViewTable, activeViewId: 
 
 export function isAddOrRemove(targetPath: number[]): boolean {
     return targetPath.length === 0;
+}
+
+export function isPositionOperation(fieldIndex: number, sharedFields: Y.Array<SyncMapElement>): boolean {
+    return fieldIndex === sharedFields.length;
 }
 
 export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord) {

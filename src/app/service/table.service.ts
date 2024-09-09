@@ -82,7 +82,7 @@ export class TableService {
                         this.buildRenderRecords(data.records);
                         isInitialized = true;
                     } else {
-                        applyYjsEvents(this.aiTable, this.activeViewId(), this.sharedType!, events);
+                        applyYjsEvents(this.aiTable, this.sharedType!, events);
                     }
                 }
             });

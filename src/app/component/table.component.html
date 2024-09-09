@@ -44,11 +44,14 @@
     <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
         <span>重命名</span>
     </a>
+    <a thyDropdownMenuItem href="javascript:;" (click)="addView('copy')">
+        <span>复制</span>
+    </a>
     <a thyDropdownMenuItem href="javascript:;" (click)="removeView()">
         <span>删除</span>
     </a>
 </thy-dropdown-menu>
 
 <ng-template #extra>
-    <thy-action thyIcon="plus" class="cursor-pointer" (click)="addView()"></thy-action>
+    <thy-action thyIcon="plus" class="cursor-pointer" (click)="addView('add')"></thy-action>
 </ng-template>

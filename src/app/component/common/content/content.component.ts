@@ -74,9 +74,14 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            const value = getDefaultValue();
-            this.tableService.buildRenderRecords(value.records);
-            this.tableService.buildRenderFields(value.fields);
+            if (this.tableService.records && this.tableService.fields) {
+                this.tableService.buildRenderRecords(this.tableService.records());
+                this.tableService.buildRenderFields(this.tableService.fields());
+            } else {
+                const value = getDefaultValue();
+                this.tableService.buildRenderRecords(value.records);
+                this.tableService.buildRenderFields(value.fields);
+            }
         }
         console.time('render');
     }

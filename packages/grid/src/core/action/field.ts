@@ -37,13 +37,13 @@ export function removeField(aiTable: AITable, path: AIFieldIdPath) {
     aiTable.apply(operation);
 }
 
-export function setField(aiTable: AITable, value: Partial<AITableField>, path: AIFieldIdPath) {
-    const field = AITableQueries.getField(aiTable, path);
+export function setField<T extends AITableField = AITableField>(aiTable: AITable, value: Partial<T>, path: AIFieldIdPath) {
+    const field = AITableQueries.getField(aiTable, path) as T;
     if (field) {
-        const properties: Partial<AITableField> = {};
-        const newProperties: Partial<AITableField> = {};
+        const properties: Partial<T> = {};
+        const newProperties: Partial<T> = {};
         for (const key in value) {
-            const k = key as keyof AITableField;
+            const k = key as keyof T;
             if (JSON.stringify(field[k]) !== JSON.stringify(value[k])) {
                 if (field.hasOwnProperty(k)) {
                     properties[k] = field[k] as any;
