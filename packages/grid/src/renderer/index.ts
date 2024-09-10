@@ -4,3 +4,8 @@ export * from './creations/create-field-icon';
 export * from './creations/create-icon';
 export * from './creations/create-text';
 export * from './creations/create-heads';
+export * from './creations/create-add-field-column';
+export * from './creations/create-all-cells';
+export * from './creations/create-hover-row-heads';
+export * from './creations/create-other-rows';
+export * from './creations/create-cells';

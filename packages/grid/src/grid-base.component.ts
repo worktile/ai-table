@@ -82,7 +82,6 @@ export class AITableGridBase implements OnInit {
         this.initAITable();
         this.initService();
         this.buildFieldMenus();
-        this.subscribeEvents();
     }
 
     initAITable() {
@@ -124,12 +123,12 @@ export class AITableGridBase implements OnInit {
         this.aiTableGridSelectionService.toggleSelectAll(checked);
     }
 
-    addField(gridColumnBlank: HTMLElement) {
+    addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
         const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
-        this.aiTableGridFieldService.editFieldProperty(gridColumnBlank, this.aiTable, field, false);
+        this.aiTableGridFieldService.editFieldProperty(this.aiTable, field, false, gridColumnBlank, position);
     }
 
-    private subscribeEvents() {
+    public subscribeEvents() {
         this.ngZone.runOutsideAngular(() => {
             this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.dblClick(event);

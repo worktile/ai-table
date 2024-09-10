@@ -11,8 +11,11 @@ export const createIcon = (config: AITableIconOptions) => {
         x,
         y,
         size = DEFAULT_ICON_SIZE,
+        backgroundWidth,
+        backgroundHeight,
         fill = Colors.gray600,
         stroke,
+        strokeWidth = 1,
         background = Colors.transparent,
         rotation,
         scaleX,
@@ -36,8 +39,9 @@ export const createIcon = (config: AITableIconOptions) => {
     if (shape === 'square') {
         const rect = new Konva.Rect({
             name,
-            width: size,
-            height: size,
+            width: backgroundWidth || size,
+            height: backgroundHeight || size,
+            strokeWidth,
             fill: background,
             cornerRadius,
             opacity
@@ -56,6 +60,8 @@ export const createIcon = (config: AITableIconOptions) => {
             break;
     }
     const path = new Konva.Path({
+        x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
+        y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
         data: pathData,
         width: size,
         height: size,
@@ -66,6 +72,7 @@ export const createIcon = (config: AITableIconOptions) => {
         scaleY,
         rotation,
         stroke,
+        strokeWidth,
         transformsEnabled,
         perfectDrawEnabled: false,
         listening: false

@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyAvatarModule } from 'ngx-tethys/avatar';
@@ -64,8 +64,13 @@ import { buildGridData } from './utils';
     ],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableDomGrid extends AITableGridBase {
+export class AITableDomGrid extends AITableGridBase implements OnInit {
     gridData = computed(() => {
         return buildGridData(this.aiRecords(), this.aiFields());
     });
+
+    override ngOnInit(): void {
+        super.ngOnInit();
+        this.subscribeEvents();
+    }
 }
