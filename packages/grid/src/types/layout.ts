@@ -6,4 +6,5 @@ export interface AITableLayout {
     rowHeight: number;
     columnWidth: number;
     columnCount: number;
+    containerWidth: number;
 }

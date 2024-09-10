@@ -1,5 +1,6 @@
 import Konva from 'konva';
-import { AITableField, Coordinate } from '../core';
+import { AITable, AITableField, Coordinate } from '../core';
+import { AITablePointPosition } from './grid';
 
 export interface AITableIconOptions extends Konva.ShapeConfig {
     size?: number;
@@ -21,13 +22,18 @@ export interface AITableFieldHeadOptions {
     height: number;
     field: AITableField;
     stroke?: string;
+    iconVisible?: boolean;
+    isSelected?: boolean;
+    isHoverIcon?: boolean;
 }
 
 export interface AITableCreateHeadsOptions {
     fields: AITableField[];
-    instance: Coordinate;
+    coordinate: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
+    pointPosition: AITablePointPosition;
+    aiTable: AITable;
 }
 
 export interface AITableTargetNameOptions {
@@ -35,4 +41,17 @@ export interface AITableTargetNameOptions {
     fieldId?: string;
     recordId?: string;
     mouseStyle?: string;
+}
+
+export interface AITableTargetNameDetail {
+    targetName: string | null;
+    fieldId?: string | null;
+    recordId?: string | null;
+    mouseStyle?: string | null;
+}
+
+export enum AITableMouseDownType {
+    Left,
+    Center,
+    Right
 }

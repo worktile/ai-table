@@ -1,6 +1,7 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
+import { RendererContext } from '../context';
 import { AITableAction } from './action';
 import { AITableField, AITableFields, AITableRecord, AITableRecords } from './core';
 
@@ -8,6 +9,7 @@ export interface AITable {
     records: WritableSignal<AITableRecords>;
     fields: WritableSignal<AITableFields>;
     actions: AITableAction[];
+    context?: RendererContext;
     selection: WritableSignal<AITableSelection>;
     recordsMap: Signal<{ [kay: string]: AITableRecord }>;
     fieldsMap: Signal<{ [kay: string]: AITableField }>;

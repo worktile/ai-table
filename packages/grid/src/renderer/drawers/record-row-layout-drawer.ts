@@ -1,7 +1,7 @@
 import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH, DEFAULT_FONT_SIZE } from '../../constants';
 import { AITable } from '../../core';
-import { AITableFirstCell } from '../../types';
-import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from '../../constants/text';
+import { AITableCell } from '../../types';
+import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from './../../constants/text';
 import { Layout } from './layout-drawer';
 
 /**
@@ -10,7 +10,7 @@ import { Layout } from './layout-drawer';
  */
 export class RecordRowLayout extends Layout {
     // 首列
-    private renderFirstCell({ row, style }: AITableFirstCell) {
+    private renderFirstCell({ row, style, isHoverRow, isCheckedRow }: AITableCell) {
         if (!this.isFirst) return;
 
         const { fill } = style;
@@ -18,43 +18,49 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
-
-        // 背景、边框
-        this.customRect({
-            x: 0,
-            y,
-            width: AI_TABLE_ROW_HEAD_WIDTH + columnWidth + AI_TABLE_OFFSET,
-            height: rowHeight,
-            fill: fill,
-            strokes: {
-                top: colors.gray200,
-                right: colors.gray200,
-                bottom: colors.gray200
-            }
-        });
+        // 编号的上下边框
+        let fillBg = colors.transparent;
+        if (isCheckedRow) {
+            fillBg = colors.itemActiveBgColor;
+        } else if (isHoverRow) {
+            fillBg = colors.gray80;
+        }
         this.customRect({
             x: 1,
             y,
             width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET,
             height: rowHeight,
-            fill: fill,
+            fill: fillBg,
             strokes: {
-                right: colors.gray200
+                right: colors.gray200,
+                bottom: colors.gray200
             }
         });
-        // 设置字体样式，居中绘制行号
-        this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
-        this.text({
-            x: AI_TABLE_ROW_HEAD_WIDTH / 2,
-            y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
-            text: String(row.displayIndex),
-            textAlign: DEFAULT_TEXT_ALIGN_CENTER,
-            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+        // 第一列单元格
+        this.rect({
+            x: AI_TABLE_ROW_HEAD_WIDTH,
+            y,
+            width: columnWidth + AI_TABLE_OFFSET,
+            height: rowHeight,
+            fill: fill,
+            stroke: colors.gray200
         });
+
+        if (!isCheckedRow && !isHoverRow) {
+            // 设置字体样式，居中绘制行号
+            this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
+            this.text({
+                x: AI_TABLE_ROW_HEAD_WIDTH / 2,
+                y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                text: String(row.displayIndex),
+                textAlign: DEFAULT_TEXT_ALIGN_CENTER,
+                verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+            });
+        }
     }
 
     // 尾列
-    private renderLastCell({ style }: Pick<AITableFirstCell, 'style'>) {
+    private renderLastCell({ style }: Pick<AITableCell, 'style'>) {
         if (!this.isLast || this.isFirst) return;
 
         const { fill, stroke } = style;
@@ -74,7 +80,7 @@ export class RecordRowLayout extends Layout {
     }
 
     // 绘制中间的普通单元格
-    private renderCommonCell({ style }: Pick<AITableFirstCell, 'style'>) {
+    private renderCommonCell({ style }: Pick<AITableCell, 'style'>) {
         if (this.isFirst || this.isLast) return;
 
         const { fill, stroke } = style;
@@ -91,10 +97,9 @@ export class RecordRowLayout extends Layout {
         });
     }
 
-    render(config: AITableFirstCell) {
-        const { row, style } = config;
-
-        this.renderFirstCell({ row, style });
+    render(config: AITableCell) {
+        const { row, style, isCheckedRow, isHoverRow } = config;
+        this.renderFirstCell({ row, style, isCheckedRow, isHoverRow });
         this.renderCommonCell({ style });
         this.renderLastCell({ style });
     }

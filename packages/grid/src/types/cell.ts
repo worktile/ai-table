@@ -1,12 +1,10 @@
 import Konva from 'konva';
 import { AITable, AITableField, Coordinate, FieldValue } from '../core';
-import { AITableContext } from './grid';
 import { AITableLinearRowRecord } from './row';
 
 export interface AITableCellsOptions {
     aiTable: AITable;
-    context: AITableContext;
-    instance: Coordinate;
+    coordinate: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;
     columnStartIndex: number;
@@ -34,7 +32,10 @@ export interface AITableRenderStyle {
     fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter';
 }
 
-export interface AITableFirstCell {
+export interface AITableCell {
     row: AITableLinearRowRecord;
-    style: any;
+    style?: any;
+    isHoverRow: boolean;
+    isCheckedRow: boolean;
+    width?: number;
 }
