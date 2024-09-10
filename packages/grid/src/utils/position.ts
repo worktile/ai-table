@@ -1,6 +1,6 @@
 import { AI_TABLE_BLANK, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITableAreaType } from '../types';
-import { AITableField, Context, Coordinate } from '../core';
+import { AITableField, RendererContext, Coordinate } from '../core';
 import { scrollMax } from './visible-range';
 import { getTargetName } from './common';
 
@@ -9,7 +9,7 @@ export const getMousePosition = (
     y: number,
     coordinate: Coordinate,
     fields: AITableField[],
-    context: Context,
+    context: RendererContext,
     _targetName?: string
 ) => {
     const { scrollTop, scrollLeft } = context.scrollState();

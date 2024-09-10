@@ -1,7 +1,7 @@
 import { AITableContext, AITablePointPosition, AITableLinearRow, AITableScrollState } from '../types';
 import { Signal, WritableSignal } from '@angular/core';
 
-export class Context {
+export class RendererContext {
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;

@@ -5,7 +5,7 @@ import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName } from './utils';
-import { AITable, Context, Coordinate } from './core';
+import { AITable, Coordinate, RendererContext } from './core';
 import {
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_HEAD,
@@ -65,7 +65,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     });
 
     initContext() {
-        return new Context({
+        return new RendererContext({
             linearRows: this.gridLinearRows,
             pointPosition: signal(DEFAULT_POINT_POSITION),
             scrollState: signal(DEFAULT_SCROLL_STATE)
@@ -77,7 +77,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         return new Coordinate({
             container: this.container,
             rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
-            rowCount: (this.aiTable.context as Context).linearRows().length,
+            rowCount: (this.aiTable.context as RendererContext).linearRows().length,
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
             columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
@@ -101,7 +101,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     }
 
     bindEvent() {
-        const context = this.aiTable.context as Context;
+        const context = this.aiTable.context as RendererContext;
         this.gridStage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
             if (this.timer) {
                 cancelAnimationFrame(this.timer);

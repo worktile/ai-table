@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITable, Context } from '../../core';
+import { AITable, RendererContext } from '../../core';
 import { generateTargetName, getDetailByTargetName } from '../../utils';
 import {
     AI_TABLE_CELL_PADDING,
@@ -43,7 +43,7 @@ export const createRowHeadOperation = (options: AITableRowHeadOperationOptions) 
 
 export const createHoverRowHeads = (options: AITableRowHeadsOptions) => {
     const { coordinate, rowStartIndex, rowStopIndex, aiTable } = options;
-    const context = aiTable.context as Context;
+    const context = aiTable.context as RendererContext;
     const hoverRowHeads: Group[] = [];
     for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         if (rowIndex > coordinate.rowCount - 1) break;

@@ -5,7 +5,7 @@ import {
     AI_TABLE_ROW_ADD_BUTTON,
     DEFAULT_FONT_STYLE
 } from '../../constants';
-import { AITable, AITableQueries, Context } from '../../core';
+import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
@@ -19,7 +19,7 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
  */
 export const createCells = (options: AITableCellsDrawerOptions) => {
     const { aiTable, coordinate, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = options;
-    const context = aiTable.context as Context;
+    const context = aiTable.context as RendererContext;
     const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();
     const visibleColumns = AITable.getVisibleFields(aiTable);

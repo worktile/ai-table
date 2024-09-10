@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITable, AITableField, Context, Coordinate, FieldValue } from '../core';
+import { AITable, AITableField, Coordinate, FieldValue } from '../core';
 import { AITableLinearRowRecord } from './row';
 
 export interface AITableCellsOptions {

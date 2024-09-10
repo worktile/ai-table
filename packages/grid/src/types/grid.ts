@@ -1,5 +1,5 @@
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, Context, Coordinate } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 import { Signal, WritableSignal } from '@angular/core';

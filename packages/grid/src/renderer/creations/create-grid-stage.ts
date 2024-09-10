@@ -1,5 +1,5 @@
 import Konva from 'konva/lib';
-import { AITable, Context } from '../../core';
+import { AITable, RendererContext } from '../../core';
 import { AITableGridStageOptions } from '../../types';
 import { getVisibleRangeInfo } from '../../utils';
 import { createAllCells } from './create-all-cells';
@@ -12,7 +12,7 @@ Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableGridStageOptions) => {
     const { width, height, container, aiTable, coordinate } = config;
-    const context = aiTable.context as Context;
+    const context = aiTable.context as RendererContext;
 
     const fields = AITable.getVisibleFields(aiTable);
 

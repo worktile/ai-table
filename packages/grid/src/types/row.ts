@@ -1,4 +1,4 @@
-import { AITable, Context, Coordinate } from '../core';
+import { AITable, Coordinate } from '../core';
 
 export enum AITableRowType {
     add = 'add',
