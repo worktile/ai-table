@@ -1,21 +1,31 @@
-import { AddOutlinedPath, AI_TABLE_ADD_FIELD_BUTTON_WIDTH, AI_TABLE_CELL_PADDING, AI_TABLE_ICON_COMMON_SIZE, Colors } from '../../constants';
-import { Coordinate } from '../../core';
+import {
+    AddOutlinedPath,
+    AI_TABLE_ADD_FIELD_BUTTON_WIDTH,
+    AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_ADD_BUTTON,
+    AI_TABLE_ICON_COMMON_SIZE,
+    Colors
+} from '../../constants';
+import { AITableField, Coordinate } from '../../core';
 import Konva from 'konva/lib';
 import { createIcon } from './create-icon';
+import { generateTargetName } from '../../utils';
 
-export const createAddFieldColumn = (instance: Coordinate, columnLength: number, columnStopIndex: number) => {
+export const createAddFieldColumn = (coordinate: Coordinate, fields: AITableField[], columnStopIndex: number) => {
+    const columnLength = fields.length;
     if (columnStopIndex !== columnLength - 1) return;
-    const lastColumnOffset = instance.getColumnOffset(columnStopIndex);
-    const lastColumnWidth = instance.getColumnWidth(columnStopIndex);
+    const lastColumnOffset = coordinate.getColumnOffset(columnStopIndex);
+    const lastColumnWidth = coordinate.getColumnWidth(columnStopIndex);
     const x = lastColumnOffset + lastColumnWidth;
     const btnWidth = AI_TABLE_ADD_FIELD_BUTTON_WIDTH;
-    const offsetY = (instance.rowInitSize - AI_TABLE_ICON_COMMON_SIZE) / 2;
+    const offsetY = (coordinate.rowInitSize - AI_TABLE_ICON_COMMON_SIZE) / 2;
     const btnGroup = new Konva.Group({ x });
     const react = new Konva.Rect({
+        name: generateTargetName({ targetName: AI_TABLE_FIELD_ADD_BUTTON, fieldId: fields[columnStopIndex]._id, mouseStyle: 'pointer' }),
         x: 0.5,
         y: 0.5,
-        width: instance.containerWidth - x < btnWidth ? btnWidth : instance.containerWidth - x,
-        height: instance.rowInitSize,
+        width: coordinate.containerWidth - x < btnWidth ? btnWidth : coordinate.containerWidth - x,
+        height: coordinate.rowInitSize,
         stroke: Colors.gray200,
         strokeWidth: 1,
         listening: true

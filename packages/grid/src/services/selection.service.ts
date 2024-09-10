@@ -20,11 +20,18 @@ export class AITableGridSelectionService {
     }
 
     selectCell(recordId: string, fieldId: string) {
+        const fields = this.aiTable.selection().selectedCells.get(recordId);
+        if (fields?.hasOwnProperty(fieldId)) {
+            return;
+        }
         this.clearSelection();
         this.aiTable.selection().selectedCells.set(recordId, { [fieldId]: true });
     }
 
     selectField(fieldId: string) {
+        if (this.aiTable.selection().selectedFields.has(fieldId)) {
+            return;
+        }
         this.clearSelection();
         this.aiTable.selection().selectedFields.set(fieldId, true);
     }

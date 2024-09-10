@@ -3,8 +3,8 @@ import { AITableCellsOptions } from '../../types';
 import { createCells } from './create-cells';
 
 export const createAllCells = (options: AITableCellsOptions) => {
-    const { instance, columnStartIndex } = options;
-    const { frozenColumnCount } = instance;
+    const { coordinate, columnStartIndex, columnStopIndex } = options;
+    const { frozenColumnCount } = coordinate;
 
     // 冻结列
     const frozenCells = new Konva.Shape({
@@ -27,7 +27,8 @@ export const createAllCells = (options: AITableCellsOptions) => {
             createCells({
                 ...options,
                 ctx,
-                columnStartIndex: Math.max(columnStartIndex, frozenColumnCount)
+                columnStartIndex: Math.max(columnStartIndex, frozenColumnCount),
+                columnStopIndex
             })
     });
 
