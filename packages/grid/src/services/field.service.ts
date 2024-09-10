@@ -1,7 +1,7 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { Injectable, WritableSignal } from '@angular/core';
 import { ThyPopover } from 'ngx-tethys/popover';
-import { AITable, AITableField } from '../core';
 import { AITableFieldPropertyEditor } from '../components';
+import { AITable, AITableField } from '../core';
 import { AIFieldConfig } from '../types';
 
 export const AI_TABLE_GRID_FIELD_SERVICE_MAP = new WeakMap<AITable, AITableGridFieldService>();
@@ -16,10 +16,17 @@ export class AITableGridFieldService {
         this.aiFieldConfig = aiFieldConfig;
     }
 
-    editFieldProperty(origin: HTMLElement | ElementRef<any>, aiTable: AITable, aiEditField: AITableField, isUpdate: boolean) {
+    editFieldProperty(
+        aiTable: AITable,
+        aiEditField: WritableSignal<AITableField>,
+        isUpdate: boolean,
+        origin?: any,
+        position?: { x: number; y: number }
+    ) {
         const component = this.aiFieldConfig?.fieldPropertyEditor ?? AITableFieldPropertyEditor;
         this.thyPopover.open(component, {
             origin: origin,
+            originPosition: position,
             manualClosure: true,
             placement: 'bottomLeft',
             initialState: {

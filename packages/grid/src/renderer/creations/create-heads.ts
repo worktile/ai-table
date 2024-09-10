@@ -1,6 +1,8 @@
 import Konva from 'konva';
 import {
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD,
+    AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
@@ -11,10 +13,23 @@ import { AITableCheckType, AITableCreateHeadsOptions } from '../../types';
 import { createFieldHead } from './create-field-head';
 import { createIcon } from './create-icon';
 
-export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
-    const { fields, instance, columnStartIndex, columnStopIndex } = props;
+export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
+    const { fields, coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = options;
     const colors = Colors;
-    const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = instance;
+    const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = coordinate;
+    const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
+
+    const getFieldHeadStatus = (fieldId: string) => {
+        const iconVisible =
+            [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields[pointColumnIndex]?._id === fieldId;
+        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields[pointColumnIndex]?._id === fieldId;
+        const isSelected = aiTable.selection().selectedFields.has(fieldId);
+        return {
+            iconVisible,
+            isSelected,
+            isHoverIcon
+        };
+    };
 
     const getColumnHead = (columnStartIndex: number, columnStopIndex: number) => {
         const _fieldHeads: Konva.Group[] = [];
@@ -23,15 +38,19 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
             if (columnIndex < 0) continue;
             const field = fields[columnIndex];
             if (field == null) continue;
-            const x = instance.getColumnOffset(columnIndex);
-            const columnWidth = instance.getColumnWidth(columnIndex);
+            const x = coordinate.getColumnOffset(columnIndex);
+            const columnWidth = coordinate.getColumnWidth(columnIndex);
+            const { iconVisible, isSelected, isHoverIcon } = getFieldHeadStatus(field._id);
             const fieldHead = createFieldHead({
                 x,
                 y: 0,
                 width: columnWidth,
                 height: fieldHeadHeight,
                 field,
-                stroke: columnIndex === 0 ? colors.transparent : undefined
+                stroke: columnIndex === 0 ? colors.transparent : undefined,
+                iconVisible,
+                isSelected,
+                isHoverIcon
             });
 
             _fieldHeads.push(fieldHead);
@@ -40,7 +59,7 @@ export const createColumnHeads = (props: AITableCreateHeadsOptions) => {
     };
 
     const getFrozenColumnHead = () => {
-        const isChecked = false;
+        const isChecked = aiTable.selection().selectedRecords.size === aiTable.records().length;
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
         const topLine = new Konva.Line({
