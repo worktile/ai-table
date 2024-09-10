@@ -1,56 +1,44 @@
 import Konva from 'konva/lib';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants';
-import { AITable, Coordinate } from '../../core';
+import { AITable, RendererContext } from '../../core';
 import { AITableGridStageOptions } from '../../types';
-import { getColumnIndicesMap, getVisibleRangeInfo } from '../../utils';
+import { getVisibleRangeInfo } from '../../utils';
 import { createAddFieldColumn } from './create-add-field-column';
 import { createAllCells } from './create-all-cells';
 import { createColumnHeads } from './create-heads';
+import { createHoverRowHeads } from './create-hover-row-heads';
+import { createOtherRows } from './create-other-rows';
 
 Konva.pixelRatio = 2;
 
 export const createGridStage = (config: AITableGridStageOptions) => {
-    const { aiTable, context, width, height, container } = config;
-    const { linearRows } = context;
+    const { width, height, container, aiTable, coordinate } = config;
+    const context = aiTable.context as RendererContext;
+
     const fields = AITable.getVisibleFields(aiTable);
 
-    const coordinateInstance = new Coordinate({
-        rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
-        rowCount: linearRows.length,
-        columnCount: fields.length,
-        containerWidth: width,
-        containerHeight: height,
-        rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
-        columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
-        rowIndicesMap: {},
-        columnIndicesMap: getColumnIndicesMap(fields),
-        frozenColumnCount: 1
-    });
-
-    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinateInstance, {
-        scrollLeft: 0,
-        scrollTop: 0
-    });
+    const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinate, context.scrollState());
 
     const gridStage = new Konva.Stage({
         container: container,
         width: width,
         height: height,
-        listening: false
+        listening: true
     });
+
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group();
     const { columnHeads, frozenColumnHead } = createColumnHeads({
-        instance: coordinateInstance,
+        coordinate,
         columnStartIndex,
         columnStopIndex,
-        fields: aiTable.fields()
+        fields: fields,
+        pointPosition: context.pointPosition(),
+        aiTable
     });
 
     const { frozenCells, cells } = createAllCells({
         aiTable,
-        context,
-        instance: coordinateInstance,
+        coordinate,
         rowStartIndex,
         rowStopIndex,
         columnStartIndex,
@@ -66,10 +54,24 @@ export const createGridStage = (config: AITableGridStageOptions) => {
     const frozenCellsGroup = new Konva.Group();
     frozenGroup.add(frozenColumnHeadGroup);
     frozenCellsGroup.add(frozenCells);
+    const hoverRowHeads = createHoverRowHeads({
+        aiTable,
+        coordinate,
+        rowStartIndex,
+        rowStopIndex
+    });
+
+    const otherRows = createOtherRows({
+        aiTable,
+        coordinate,
+        rowStartIndex,
+        rowStopIndex
+    });
+    frozenCellsGroup.add(...hoverRowHeads, ...otherRows);
     frozenGroup.add(frozenCellsGroup);
     const columnHeadGroup = new Konva.Group();
     columnHeadGroup.add(...columnHeads);
-    const addFieldColumn = createAddFieldColumn(coordinateInstance, fields.length, columnStopIndex);
+    const addFieldColumn = createAddFieldColumn(coordinate, fields, columnStopIndex);
     if (addFieldColumn) {
         columnHeadGroup.add(addFieldColumn);
     }

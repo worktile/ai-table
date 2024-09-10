@@ -185,45 +185,33 @@ export class Drawer {
     public customRect(options: AITableRect) {
         const { x, y, width, height, fill, strokes } = options;
         if (fill) this.setStyle({ fillStyle: fill });
-
+        this.ctx.fillRect(x, y, width, height);
         if (strokes) {
             const { top, right, bottom, left } = strokes;
-
             // 上边框
-            if (top) {
-                this.ctx.beginPath();
-                this.setStyle({ strokeStyle: top });
-                this.ctx.moveTo(x, y);
-                this.ctx.lineTo(x + width, y);
-                this.ctx.stroke();
-            }
-
+            this.ctx.beginPath();
+            this.setStyle({ strokeStyle: top ?? this.colors.transparent });
+            this.ctx.moveTo(x, y);
+            this.ctx.lineTo(x + width, y);
+            this.ctx.stroke();
             // 右边框
-            if (right) {
-                this.ctx.beginPath();
-                this.setStyle({ strokeStyle: right });
-                this.ctx.moveTo(x + width, y);
-                this.ctx.lineTo(x + width, y + height);
-                this.ctx.stroke();
-            }
-
+            this.ctx.beginPath();
+            this.setStyle({ strokeStyle: right ?? this.colors.transparent });
+            this.ctx.moveTo(x + width, y);
+            this.ctx.lineTo(x + width, y + height);
+            this.ctx.stroke();
             // 下边框
-            if (bottom) {
-                this.ctx.beginPath();
-                this.setStyle({ strokeStyle: bottom });
-                this.ctx.moveTo(x, y + height);
-                this.ctx.lineTo(x + width, y + height);
-                this.ctx.stroke();
-            }
-
+            this.ctx.beginPath();
+            this.setStyle({ strokeStyle: bottom ?? this.colors.transparent });
+            this.ctx.moveTo(x, y + height);
+            this.ctx.lineTo(x + width, y + height);
+            this.ctx.stroke();
             // 左边框
-            if (left) {
-                this.ctx.beginPath();
-                this.setStyle({ strokeStyle: left });
-                this.ctx.moveTo(x, y);
-                this.ctx.lineTo(x, y + height);
-                this.ctx.stroke();
-            }
+            this.ctx.beginPath();
+            this.setStyle({ strokeStyle: left ?? this.colors.transparent });
+            this.ctx.moveTo(x, y);
+            this.ctx.lineTo(x, y + height);
+            this.ctx.stroke();
         }
     }
 
