@@ -7,7 +7,7 @@
             <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }
         @case (AITableSelectOptionStyle.tag) {
-            @if (displayOption.bg_color || displayOption.color || defaultColor; as color) {
+            @if (displayOption.bg_color || displayOption.color || 'default'; as color) {
                 <thy-tag thyTheme="fill" thyShape="pill" [thyColor]="color">
                     @if (displayOption['icon']) {
                         <thy-icon class="text-white" [thyIconName]="displayOption['icon']"></thy-icon>

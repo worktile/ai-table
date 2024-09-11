@@ -37,7 +37,7 @@ export interface AITableProgressConfig {
         '[attr.recordId]': 'record()._id'
     }
 })
-export class ProgressEditorComponent extends AbstractEditCellEditor<number> implements OnInit {
+export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
     config: Partial<AITableProgressConfig | undefined> = {
         max: 100,
         min: 0,
@@ -50,10 +50,6 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> impl
     @HostListener('mousedown', ['$event'])
     mousedownHandler(event: Event) {
         event.preventDefault();
-    }
-
-    constructor() {
-        super();
     }
 
     sliderMousedownHandler(event: Event) {

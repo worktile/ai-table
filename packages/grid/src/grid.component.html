@@ -115,7 +115,7 @@
                             }
                         }
                         @case (AITableFieldType.date) {
-                            {{ record.values[field._id] | thyDatePickerFormat }}
+                            {{ record.values[field._id].timestamp | thyDatePickerFormat }}
                         }
                         @case (AITableFieldType.updatedAt) {
                             <div class="d-block user-select-none">

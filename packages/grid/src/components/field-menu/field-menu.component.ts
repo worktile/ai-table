@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, ElementRef, Signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ElementRef, computed } from '@angular/core';
 import { AITableFieldMenuItem } from '../../types/field';
-import { AITable, AITableField } from '../../core';
+import { AITable } from '../../core';
 import {
     ThyDropdownMenuItemDirective,
     ThyDropdownMenuItemNameDirective,
@@ -9,7 +9,6 @@ import {
 } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyDivider } from 'ngx-tethys/divider';
-import { getRecordOrField } from '../../utils';
 
 @Component({
     selector: 'field-menu',
@@ -34,8 +33,13 @@ export class FieldMenu {
 
     @Input() origin!: HTMLElement | ElementRef<any>;
 
+    field = computed(() => {
+        return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
+    });
+
     execute(menu: AITableFieldMenuItem) {
-        const field = getRecordOrField(this.aiTable.fields, this.fieldId) as Signal<AITableField>;
-        menu.exec && menu.exec(this.aiTable, field, this.origin);
+        if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
+            menu.exec && menu.exec(this.aiTable, this.field, this.origin);
+        }
     }
 }
