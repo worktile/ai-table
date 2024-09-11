@@ -1,5 +1,6 @@
 import { FieldValue } from '@ai-table/grid';
 import { AITableFilterCondition, AITableFilterOperation } from '../../types';
+import { isEmpty } from '../common';
 
 export abstract class Field {
     protected stringInclude(str: string, searchStr: string) {
@@ -21,10 +22,10 @@ export abstract class Field {
     isEmptyOrNot(operation: AITableFilterOperation.empty | AITableFilterOperation.exists, cellValue: FieldValue) {
         switch (operation) {
             case AITableFilterOperation.empty: {
-                return cellValue == null;
+                return isEmpty(cellValue);
             }
             case AITableFilterOperation.exists: {
-                return cellValue != null;
+                return !isEmpty(cellValue);
             }
             default: {
                 throw new Error('compare operator type error');

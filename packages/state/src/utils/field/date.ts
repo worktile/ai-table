@@ -3,15 +3,16 @@ import { DateFieldValue } from '@ai-table/grid';
 import { fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
 import { AITableFilterCondition, AITableFilterOperation } from '../../types'
+import { isEmpty } from '../common';
 
 export class DateField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
         switch (condition.operation) {
             case AITableFilterOperation.empty:
-                return cellValue.timestamp == null;
+                return isEmpty(cellValue.timestamp) || cellValue.timestamp === 0;
             case AITableFilterOperation.exists:
-                return cellValue.timestamp != null;
+                return !isEmpty(cellValue.timestamp) && cellValue.timestamp !== 0;
             case AITableFilterOperation.eq:
                 return left <= cellValue.timestamp && cellValue.timestamp < right;
             case AITableFilterOperation.gt:

@@ -10,6 +10,7 @@ import {
     AITableViewFields,
     AITableViewRecords
 } from '../types';
+import { isEmpty } from './common';
 
 export function getFilteredRecords(records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};
@@ -54,10 +55,10 @@ function doFilterOperations(fields: AITableViewFields, record: AITableRecord, co
 
 export function doFilter(condition: AITableFilterCondition, field: AITableViewField, cellValue: FieldValue) {
     if (condition.operation === AITableFilterOperation.empty) {
-        return cellValue === null;
+        return isEmpty(cellValue);
     }
     if (condition.operation === AITableFilterOperation.exists) {
-        return cellValue !== null;
+        return !isEmpty(cellValue);
     }
 
     return ViewOperationMap[field.type].isMeetFilter(condition, cellValue);

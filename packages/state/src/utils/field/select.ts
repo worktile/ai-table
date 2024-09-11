@@ -1,3 +1,4 @@
+import { isEmpty } from '../common';
 import { AITableFilterCondition, AITableFilterOperation } from '../../types';
 import { Field } from './field';
 import { SelectFieldValue } from '@ai-table/grid';
@@ -6,9 +7,9 @@ export class SelectField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
-                return cellValue == null;
+                return isEmpty(cellValue);
             case AITableFilterOperation.exists:
-                return cellValue != null;
+                return !isEmpty(cellValue);
             case AITableFilterOperation.in:
                 return Array.isArray(condition.value) && hasIntersect(cellValue, condition.value);
             case AITableFilterOperation.nin:
