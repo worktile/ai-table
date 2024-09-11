@@ -58,7 +58,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
             if (!this.field().settings.is_multiple) {
                 return value[0];
             }
-            return value;
+            return value || [];
         })();
     }
 

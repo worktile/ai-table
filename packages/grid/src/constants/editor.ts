@@ -1,5 +1,5 @@
 import {
-    DateTimeCellEditorComponent,
+    DateCellEditorComponent,
     LinkCellEditorComponent,
     NumberCellEditorComponent,
     ProgressEditorComponent,
@@ -14,7 +14,7 @@ export const GRID_CELL_EDITOR_MAP: Partial<Record<AITableFieldType, any>> = {
     [AITableFieldType.richText]: TextCellEditorComponent,
     [AITableFieldType.select]: SelectCellEditorComponent,
     [AITableFieldType.number]: NumberCellEditorComponent,
-    [AITableFieldType.date]: DateTimeCellEditorComponent,
+    [AITableFieldType.date]: DateCellEditorComponent,
     [AITableFieldType.rate]: RatingCellEditorComponent,
     [AITableFieldType.link]: LinkCellEditorComponent,
     [AITableFieldType.progress]: ProgressEditorComponent

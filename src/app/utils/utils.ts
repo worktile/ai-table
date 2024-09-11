@@ -24,7 +24,10 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 1-1',
                     'column-2': ['1'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a']
+                    'column-20': ['66b31d0c8097a908f74bcd8a'],
+                    'column-4': {
+                        timestamp: 1682235946
+                    }
                     // 'column-21': ['66b31d0c8097a908f74bcd8a'],
                     // 'column-22': ['66b31d0c8097a908f74bcd8a'],
                     // 'column-3': 1,
@@ -51,11 +54,13 @@ export function getDefaultValue() {
                 values: {
                     'column-1': '文本 2-1',
                     'column-2': ['2'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     // 'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     // 'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     // 'column-3': 10,
-                    // 'column-4': 1682235946,
+                    'column-4': {
+                        timestamp: 1682235946
+                    }
                     // 'column-5': ['member_01', 'member_02'],
                     // 'column-6': 50,
                     // 'column-7': 1,
@@ -80,7 +85,10 @@ export function getDefaultValue() {
                         '66b31d0c8097a908f74bcd8b',
                         '66b31d0c8097a908f74bcd8c',
                         '66b31d0c8097a908f74bcd8d'
-                    ]
+                    ],
+                    'column-4': {
+                        timestamp: 1682235946
+                    }
                     // 'column-21': [
                     //     '66b31d0c8097a908f74bcd8a',
                     //     '66b31d0c8097a908f74bcd8b',
@@ -196,7 +204,7 @@ export function getDefaultValue() {
                     view1: 2,
                     view2: 14
                 }
-            }
+            },
             // {
             //     _id: 'column-21',
             //     type: AITableFieldType.select,
@@ -309,15 +317,15 @@ export function getDefaultValue() {
             //     },
             //     type: AITableFieldType.number
             // },
-            // {
-            //     _id: 'column-4',
-            //     name: '日期',
-            //     positions: {
-            //         view1: 6,
-            //         view2: 10
-            //     },
-            //     type: AITableFieldType.date
-            // },
+            {
+                _id: 'column-4',
+                name: '日期',
+                positions: {
+                    view1: 6,
+                    view2: 10
+                },
+                type: AITableFieldType.date
+            }
             // {
             //     _id: 'column-5',
             //     name: '成员(📌)',
