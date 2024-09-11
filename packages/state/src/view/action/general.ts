@@ -18,9 +18,7 @@ export const GeneralViewActions = {
     transform(aiTable: AIViewTable, action: AITableViewAction): void {
         const views = createDraft(aiTable.views());
         applyView(aiTable, views, action);
-        aiTable.views.update(() => {
-            return finishDraft(views);
-        });
+        aiTable.views.set(finishDraft(views));
     }
 };
 
@@ -72,14 +70,10 @@ export const GeneralActions = {
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
         apply(aiTable, records, fields, action);
         if (action.type === ActionName.AddRecord) {
-            aiTable.records.update(() => {
-                return finishDraft(records);
-            });
+            aiTable.records.set(finishDraft(records));
         }
         if (action.type === ActionName.AddField) {
-            aiTable.fields.update(() => {
-                return finishDraft(fields);
-            });
+            aiTable.fields.set(finishDraft(fields));
         }
     }
 };
@@ -89,12 +83,19 @@ export const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields:
         case ActionName.AddRecord: {
             const [recordIndex] = action.path;
             if (recordIndex > -1) {
-                (action.record as AITableViewRecord).positions = createDefaultPositions(
-                    aiTable.views(),
-                    aiTable.activeViewId(),
-                    aiTable.records() as AITableViewRecords,
-                    action.path[0]
-                );
+                if (!(action.record as AITableViewRecord).positions) {
+                    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
+                    let index = recordIndex;
+                    if (activeView?.settings?.conditions) {
+                        index = records.length;
+                    }
+                    (action.record as AITableViewRecord).positions = createDefaultPositions(
+                        aiTable.views(),
+                        aiTable.activeViewId(),
+                        aiTable.records() as AITableViewRecords,
+                        index
+                    );
+                }
                 records.splice(recordIndex, 0, action.record as AITableViewRecord);
             }
             break;

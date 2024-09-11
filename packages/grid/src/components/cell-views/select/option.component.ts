@@ -19,6 +19,8 @@ import { AITableSelectField } from '../../../types';
 export class SelectOptionComponent {
     field = input.required<AITableField>();
 
+    defaultColor = '#f5f5f5';
+
     displayOption = input.required<AITableSelectOption>();
 
     optionStyle = computed(() => {

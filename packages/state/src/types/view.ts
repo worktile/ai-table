@@ -24,12 +24,12 @@ export enum Direction {
     descending = -1
 }
 
-export enum LogicalOperator {
+export enum AITableFilterLogical {
     and = 'and',
     or = 'or'
 }
 
-export enum FilterOperationSymbol {
+export enum AITableFilterOperation {
     eq = 'eq',
     gte = 'gte',
     lte = 'lte',
@@ -53,18 +53,23 @@ export interface AITableView {
     settings?: GridSettings;
 }
 
-export class GridSettings {
+export interface AITableFilterCondition<TValue = unknown> {
+    field_id: Id;
+    operation: AITableFilterOperation;
+    value: TValue;
+}
+
+export interface AITableFilterConditions<TValue = unknown> {
+    condition_logical?: AITableFilterLogical;
+    conditions?: AITableFilterCondition<TValue>[];
+}
+
+export interface GridSettings<TValue = unknown> extends AITableFilterConditions<TValue> {
     is_keep_sort?: boolean;
     sorts?: {
         sort_by: Id;
         direction: Direction;
         // xxx
-    }[];
-    condition_logical?: LogicalOperator;
-    conditions?: {
-        field_id: Id;
-        operation: FilterOperationSymbol;
-        value: string | []; // TODO 明确类型
     }[];
 }
 

@@ -114,6 +114,7 @@ export function getDefaultValue() {
                     view1: 0,
                     view2: 16
                 },
+                icon: 'font',
                 type: AITableFieldType.text
             },
             {
