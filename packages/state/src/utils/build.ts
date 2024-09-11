@@ -1,5 +1,5 @@
 import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
-import { getFilteredRecords } from './view-filter-derivate';
+import { getFilteredRecords } from './filter-records';
 
 export function sortByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
