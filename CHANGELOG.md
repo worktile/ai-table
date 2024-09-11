@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.10](https://github.com/worktile/ai-table/compare/0.0.9...0.0.10) (2024-09-11)
+
+
+### Bug Fixes
+
+* adjust date render and exec field menu function #WIK-16486 ([#94](https://github.com/worktile/ai-table/issues/94)) ([cc59fca](https://github.com/worktile/ai-table/commit/cc59fca7cf394a170dc1f299459fba63ca97be12)), closes [#WIK-16486](https://github.com/worktile/ai-table/issues/WIK-16486)
+
+
+### Features
+
+* **core:** add aiBuildRenderDataFn input and update single select type value to array #WIK-16086 ([#92](https://github.com/worktile/ai-table/issues/92)) ([3177bf3](https://github.com/worktile/ai-table/commit/3177bf35bf7408714d94e7d2824cd209521775e0)), closes [#WIK-16086](https://github.com/worktile/ai-table/issues/WIK-16086)
+* **state:** support add and remove record position  ([#84](https://github.com/worktile/ai-table/issues/84)) ([d57428a](https://github.com/worktile/ai-table/commit/d57428aabb2a4050b1dc99e18c47891be172a7e7))
+* **state:** support filter records function#WIK-16463 ([#95](https://github.com/worktile/ai-table/issues/95)) ([83f750b](https://github.com/worktile/ai-table/commit/83f750b312d4fa3faedf206b48f212c587c85021)), closes [function#WIK-16463](https://github.com/function/issues/WIK-16463)
+
+
+
 ## [0.0.9](https://github.com/worktile/ai-table/compare/0.0.8...0.0.9) (2024-08-27)
 
 
