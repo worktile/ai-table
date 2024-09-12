@@ -48,9 +48,10 @@ export const createActiveCellBorder = (options: AITableCellsOptions) => {
                     columnIndex,
                     columnCount: totalColumnCount
                 });
+                const borderOffset = 1;
 
                 const currentCellBorder = new Konva.Rect({
-                    x: x + offset,
+                    x: x + offset + borderOffset,
                     y,
                     width: width,
                     height: rowHeight,

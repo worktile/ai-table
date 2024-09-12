@@ -2,13 +2,23 @@
     <div (mousedown)="prevent($event)">
         <thy-segment
             class="mb-2 mr-2"
-            [thySize]="'md'"
+            thySize="md"
             thyMode="inline"
-            [thyActiveIndex]="renderMode"
+            [thyActiveIndex]="renderModeActiveIndex()"
             (thySelectChange)="changeRenderMode($event)"
         >
-            <thy-segment-item thyValue="1" thyIcon="list">Canvas</thy-segment-item>
-            <thy-segment-item thyValue="2" thyIcon="paperclip">DOM</thy-segment-item>
+            <thy-segment-item thyValue="canvas" thyIcon="list">Canvas</thy-segment-item>
+            <thy-segment-item thyValue="dom" thyIcon="paperclip">DOM</thy-segment-item>
+        </thy-segment>
+        <thy-segment
+            class="mb-2 mr-2"
+            thyMode="inline"
+            thySize="md"
+            [thyActiveIndex]="dateModeActiveIndex()"
+            (thySelectChange)="changeDataMode($event)"
+        >
+            <thy-segment-item thyValue="default" thyIcon="bars">默认</thy-segment-item>
+            <thy-segment-item thyValue="big-data" thyIcon="trend">大数据量</thy-segment-item>
         </thy-segment>
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
         <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
@@ -16,7 +26,7 @@
     </div>
     <div class="table-content">
         @switch (renderMode()) {
-            @case (1) {
+            @case ('canvas') {
                 <ai-table-grid
                     [(aiRecords)]="tableService.records"
                     [(aiFields)]="tableService.fields"
@@ -27,7 +37,7 @@
                     (aiTableInitialized)="aiTableInitialized($event)"
                 ></ai-table-grid>
             }
-            @case (2) {
+            @case ('dom') {
                 <ai-table-dom-grid
                     [(aiRecords)]="tableService.records"
                     [(aiFields)]="tableService.fields"

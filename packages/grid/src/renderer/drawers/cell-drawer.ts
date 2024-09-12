@@ -91,7 +91,7 @@ export class CellHelper extends Drawer {
             y: renderY,
             text: renderText,
             maxWidth: textMaxWidth,
-            maxRow: isActive ? Infinity : AI_TABLE_CELL_MAX_ROW_COUNT,
+            maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
             lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
             textAlign,
             verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
@@ -99,14 +99,14 @@ export class CellHelper extends Drawer {
             fontWeight,
             textDecoration,
             fieldType,
-            needDraw: !isActive
+            needDraw: true
         });
     }
 
     private renderCellSelect(render: AITableRender, ctx?: any) {
         const { field } = render;
 
-        if ((field as AITableSelectField).settings.is_multiple) {
+        if ((field as AITableSelectField).settings?.is_multiple) {
             return;
         } else {
             this.renderSingleSelectCell(render, ctx);
