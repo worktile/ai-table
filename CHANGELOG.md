@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.11](https://github.com/worktile/ai-table/compare/0.0.10...0.0.11) (2024-09-12)
+
+
+### Bug Fixes
+
+* bump ngx-tethys and adjust popover input value #WIK-16493 ([#98](https://github.com/worktile/ai-table/issues/98)) ([718de81](https://github.com/worktile/ai-table/commit/718de813759a05e22e0944e0b3fa421f201622f7)), closes [#WIK-16493](https://github.com/worktile/ai-table/issues/WIK-16493)
+
+
+
 ## [0.0.10](https://github.com/worktile/ai-table/compare/0.0.9...0.0.10) (2024-09-11)
 
 
