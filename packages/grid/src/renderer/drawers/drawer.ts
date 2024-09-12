@@ -4,13 +4,15 @@ import {
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
+    DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
+    DEFAULT_TEXT_ALIGN_RIGHT,
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
     DEFAULT_WRAP_TEXT_MAX_ROW
-} from '../constants';
-import { AITable } from '../core';
+} from '../../constants';
+import { AITable } from '../../core';
 import {
     AITableCtxStyle,
     AITableLabel,
@@ -20,9 +22,9 @@ import {
     AITableTextEllipsis,
     AITableWrapText,
     AITableWrapTextData
-} from '../types';
-import { getTextWidth, textDataCache } from './get-text-width';
-import { TextMeasure } from './text-measure';
+} from '../../types';
+import { getTextWidth, textDataCache } from '../../utils/get-text-width';
+import { TextMeasure } from '../../utils/text-measure';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();
@@ -288,22 +290,6 @@ export class Drawer {
             const diffWidth = isLimitRow ? showLineWidth + (isEllipsis ? ellipsisWidth : 0) : showLineWidth;
             const isLineEnd = diffWidth > maxWidth;
 
-            // 遇到链接片段的开头
-            if (!isUnderline) {
-                if (n !== 0) {
-                    resultData.push({
-                        offsetX,
-                        offsetY,
-                        width: Math.ceil(showTextWidth),
-                        text: showText
-                    });
-                }
-                showText = singleText;
-                offsetX += showTextWidth;
-                showTextWidth = singleTextWidth;
-                continue;
-            }
-
             // 遇到换行符或行尾
             if ((isLineEnd || isLineBreak) && rowCount < maxRow) {
                 const isLastLetter = n === arrText.length - 1;
@@ -386,7 +372,7 @@ export class Drawer {
     }
 
     // 绘制标签
-    public label(options: AITableLabel): { width: number; height: number } {
+    public tag(options: AITableLabel): { width: number; height: number } {
         const {
             x,
             y,
@@ -417,9 +403,9 @@ export class Drawer {
 
         let textOffsetX = padding;
 
-        if (textAlign === 'center') {
+        if (textAlign === DEFAULT_TEXT_ALIGN_CENTER) {
             textOffsetX = width / 2;
-        } else if (textAlign === 'right') {
+        } else if (textAlign === DEFAULT_TEXT_ALIGN_RIGHT) {
             textOffsetX = width - padding;
         }
         this.text({

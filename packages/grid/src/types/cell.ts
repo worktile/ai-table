@@ -23,6 +23,7 @@ export interface AITableRender {
     recordId: string;
     field: AITableField;
     cellValue: FieldValue;
+    isActive: boolean;
     style: AITableRenderStyle;
 }
 

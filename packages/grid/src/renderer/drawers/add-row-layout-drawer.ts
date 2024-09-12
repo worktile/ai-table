@@ -1,9 +1,10 @@
 import {
     AddOutlinedPath,
-    AI_TABLE_ADD_FIELD_BUTTON_WIDTH,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_ROW_HEAD_SIZE,
     AI_TABLE_ROW_HEAD_WIDTH
 } from '../../constants';
 import { AITableCell } from '../../types';
@@ -12,9 +13,11 @@ import { Layout } from './layout-drawer';
 export class AddRowLayout extends Layout {
     override renderAddFieldBlank() {
         super.renderAddFieldBlank();
+
         const rowHeight = this.rowHeight;
-        const defaultWidth = AI_TABLE_ADD_FIELD_BUTTON_WIDTH;
+        const defaultWidth = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
         const width = this.containerWidth - this.x < defaultWidth ? defaultWidth : this.containerWidth - this.x;
+
         this.line({
             x: this.x + this.columnWidth,
             y: this.y,
@@ -28,9 +31,10 @@ export class AddRowLayout extends Layout {
         const y = this.y;
         const rowHeight = this.rowHeight;
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
+
         this.rect({
             x,
-            y: y + 0.5,
+            y: y + AI_TABLE_OFFSET,
             width: width as number,
             height: rowHeight,
             fill
@@ -50,9 +54,10 @@ export class AddRowLayout extends Layout {
         const columnWidth = this.columnWidth;
         const frozenOffset = AI_TABLE_OFFSET;
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
+
         this.rect({
             x: frozenOffset,
-            y: y + 0.5,
+            y: y + AI_TABLE_OFFSET,
             width: columnWidth + AI_TABLE_ROW_HEAD_WIDTH - frozenOffset + 1,
             height: rowHeight,
             fill
@@ -66,24 +71,11 @@ export class AddRowLayout extends Layout {
 
         this.path({
             x: AI_TABLE_CELL_PADDING,
-            y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - 0.5,
+            y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - AI_TABLE_OFFSET,
             data: AddOutlinedPath,
-            size: 16,
+            size: AI_TABLE_ROW_HEAD_SIZE,
             fill: this.colors.gray600
         });
-        if (isHoverRow) {
-            this.setStyle({
-                fontSize: 13,
-                fontWeight: 'normal'
-            });
-            this.text({
-                x: AI_TABLE_CELL_PADDING + 18,
-                y: y + rowHeight / 2,
-                verticalAlign: 'middle',
-                text: '新增一行',
-                fillStyle: this.colors.gray800
-            });
-        }
     }
 
     private renderLastCell({ isHoverRow }: Pick<AITableCell, 'isHoverRow'>) {
