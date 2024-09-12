@@ -1,4 +1,4 @@
-import { WritableSignal } from '@angular/core';
+import { Signal, WritableSignal } from '@angular/core';
 import { Id } from 'ngx-tethys/types';
 import { AITableSelection } from '../../types';
 import { AITableAction } from './action';
@@ -63,16 +63,16 @@ export interface AITableField {
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
 
-export interface TextSettings { }
+export interface TextSettings {}
 
-export interface RichTextSettings { }
+export interface RichTextSettings {}
 
 export interface SelectSettings extends IsMultiple {
     option_style?: AITableSelectOptionStyle;
     options: AITableSelectOption[];
 }
 
-export interface MemberSettings extends IsMultiple { }
+export interface MemberSettings extends IsMultiple {}
 
 export interface IsMultiple {
     is_multiple?: boolean;
@@ -136,6 +136,8 @@ export interface AITable {
     fields: WritableSignal<AITableFields>;
     actions: AITableAction[];
     selection: WritableSignal<AITableSelection>;
+    recordsMap: Signal<{ [kay: string]: AITableRecord }>;
+    fieldsMap: Signal<{ [kay: string]: AITableField }>;
     onChange: () => void;
     apply: (action: AITableAction) => void;
 }

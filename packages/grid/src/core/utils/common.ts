@@ -1,7 +1,7 @@
 import { Actions } from '../action';
-import { AITable, AITableAction, AITableFields, AITableRecords, Path } from '../types';
+import { AITable, AITableAction, AITableField, AITableFields, AITableRecord, AITableRecords, Path } from '../types';
 import { FLUSHING } from './weak-map';
-import { WritableSignal, signal } from '@angular/core';
+import { WritableSignal, computed, signal } from '@angular/core';
 
 export function createAITable(records: WritableSignal<AITableRecords>, fields: WritableSignal<AITableFields>): AITable {
     const aiTable: AITable = {
@@ -12,6 +12,24 @@ export function createAITable(records: WritableSignal<AITableRecords>, fields: W
             selectedRecords: new Map(),
             selectedFields: new Map(),
             selectedCells: new Map()
+        }),
+        recordsMap: computed(() => {
+            return records().reduce(
+                (object, item) => {
+                    object[item._id] = item;
+                    return object;
+                },
+                {} as { [kay: string]: AITableRecord }
+            );
+        }),
+        fieldsMap: computed(() => {
+            return fields().reduce(
+                (object, item) => {
+                    object[item._id] = item;
+                    return object;
+                },
+                {} as { [kay: string]: AITableField }
+            );
         }),
         onChange: () => {},
         apply: (action: AITableAction) => {
