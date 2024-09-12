@@ -404,30 +404,6 @@ export function getDefaultValue() {
             // }
         ]
     };
-
-    // console.time('build data');
-    // initValue.fields = [];
-    // for (let index = 0; index < 5; index++) {
-    //     initValue.fields.push({
-    //         _id: `column-${index}`,
-    //         name: '文本',
-    //         positions: { view1: index, view2: index },
-    //         type: AITableFieldType.text
-    //     });
-    // }
-    // initValue.records = [];
-    // for (let index = 0; index < 40 * 3 * 2 * 30; index++) {
-    //     const value: any = {};
-    //     initValue.fields.forEach((column, columnIndex) => {
-    //         value[`${column._id}`] = `name-${index}-${columnIndex}`;
-    //     });
-    //     initValue.records.push({
-    //         _id: `row-${index + 1}`,
-    //         positions: { view1: index, view2: index },
-    //         values: value
-    //     });
-    // }
-    // console.timeEnd('build data');
     return initValue;
 }
 
@@ -624,93 +600,160 @@ export function getCanvasDefaultValue() {
                     view2: 11
                 },
                 type: AITableFieldType.number
+            },
+            {
+                _id: 'column-4',
+                name: '日期',
+                positions: {
+                    view1: 6,
+                    view2: 10
+                },
+                type: AITableFieldType.date
+            },
+            {
+                _id: 'column-5',
+                name: '成员',
+                positions: {
+                    view1: 7,
+                    view2: 9
+                },
+                settings: {
+                    is_multiple: true
+                },
+                type: AITableFieldType.member
+            },
+            {
+                _id: 'column-6',
+                name: '进度',
+                positions: {
+                    view1: 8,
+                    view2: 8
+                },
+                type: AITableFieldType.progress
+            },
+            {
+                _id: 'column-7',
+                name: '评分',
+                positions: {
+                    view1: 9,
+                    view2: 7
+                },
+                type: AITableFieldType.rate
+            },
+            {
+                _id: 'column-8',
+                name: '链接',
+                positions: {
+                    view1: 10,
+                    view2: 6
+                },
+                type: AITableFieldType.link
+            },
+            {
+                _id: 'column-9',
+                name: '创建人',
+                positions: {
+                    view1: 11,
+                    view2: 5
+                },
+                type: AITableFieldType.createdBy
+            },
+            {
+                _id: 'column-10',
+                name: '创建时间',
+                positions: {
+                    view1: 12,
+                    view2: 4
+                },
+                type: AITableFieldType.createdAt
+            },
+            {
+                _id: 'column-11',
+                name: '更新人',
+                positions: {
+                    view1: 13,
+                    view2: 3
+                },
+                type: AITableFieldType.updatedBy
+            },
+            {
+                _id: 'column-12',
+                name: '更新时间',
+                positions: {
+                    view1: 14,
+                    view2: 2
+                },
+                type: AITableFieldType.updatedAt
             }
-            // {
-            //     _id: 'column-4',
-            //     name: '日期',
-            //     positions: {
-            //         view1: 6,
-            //         view2: 10
-            //     },
-            //     type: AITableFieldType.date
-            // },
-            // {
-            //     _id: 'column-5',
-            //     name: '成员',
-            //     positions: {
-            //         view1: 7,
-            //         view2: 9
-            //     },
-            //     settings: {
-            //         is_multiple: true
-            //     },
-            //     type: AITableFieldType.member
-            // },
-            // {
-            //     _id: 'column-6',
-            //     name: '进度',
-            //     positions: {
-            //         view1: 8,
-            //         view2: 8
-            //     },
-            //     type: AITableFieldType.progress
-            // },
-            // {
-            //     _id: 'column-7',
-            //     name: '评分',
-            //     positions: {
-            //         view1: 9,
-            //         view2: 7
-            //     },
-            //     type: AITableFieldType.rate
-            // }
-            // {
-            //     _id: 'column-8',
-            //     name: '链接',
-            //     positions: {
-            //         view1: 10,
-            //         view2: 6
-            //     },
-            //     type: AITableFieldType.link
-            // },
-            // {
-            //     _id: 'column-9',
-            //     name: '创建人',
-            //     positions: {
-            //         view1: 11,
-            //         view2: 5
-            //     },
-            //     type: AITableFieldType.createdBy
-            // }
-            // {
-            //     _id: 'column-10',
-            //     name: '创建时间',
-            //     positions: {
-            //         view1: 12,
-            //         view2: 4
-            //     },
-            //     type: AITableFieldType.createdAt
-            // },
-            // {
-            //     _id: 'column-11',
-            //     name: '更新人',
-            //     positions: {
-            //         view1: 13,
-            //         view2: 3
-            //     },
-            //     type: AITableFieldType.updatedBy
-            // },
-            // {
-            //     _id: 'column-12',
-            //     name: '更新时间',
-            //     positions: {
-            //         view1: 14,
-            //         view2: 2
-            //     },
-            //     type: AITableFieldType.updatedAt
-            // }
         ]
     };
+    return initValue;
+}
+
+export function getBigData() {
+    const initValue: {
+        records: AITableViewRecords;
+        fields: AITableViewFields;
+    } = {
+        records: [],
+        fields: []
+    };
+
+    console.time('build data');
+    initValue.fields = [];
+    for (let index = 0; index < 20; index++) {
+        if (index === 0) {
+            initValue.fields.push({
+                _id: `column-${index}`,
+                name: '文本',
+                positions: { view1: index, view2: index },
+                type: AITableFieldType.text
+            });
+        } else {
+            initValue.fields.push({
+                _id: `column-${index}`,
+                name: '单选',
+                positions: { view1: index, view2: index },
+                type: AITableFieldType.select,
+                settings: {
+                    options: [
+                        {
+                            _id: '1',
+                            text: '开始',
+                            color: '#5dcfff'
+                        },
+                        {
+                            _id: '2',
+                            text: '进行中',
+                            color: '#ffcd5d'
+                        },
+                        {
+                            _id: '3',
+                            text: '已完成',
+                            color: '#73d897'
+                        }
+                    ]
+                }
+            });
+        }
+    }
+    initValue.records = [];
+    for (let index = 0; index < 100; index++) {
+        const value: any = {};
+        initValue.fields.forEach((column, columnIndex) => {
+            if (columnIndex === 0) {
+                value[`${column._id}`] = `name-${index}-${columnIndex}`;
+            } else {
+                value[`${column._id}`] = ['1'];
+            }
+        });
+        initValue.records.push({
+            _id: `row-${index + 1}`,
+            positions: { view1: index, view2: index },
+            values: value
+        });
+    }
+    console.timeEnd('build data');
     return initValue;
 }
 
