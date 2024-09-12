@@ -4,9 +4,9 @@ import { LiveFeedObject } from '../live-feed/feed-object';
 import { LiveFeedRoom } from '../live-feed/feed-room';
 
 export const createFeedRoom = (roomId: string) => {
-    const feedObject = new LiveFeedObject({ guid: roomId, typeName: 'ai-table' });
-    const feedRoom = new LiveFeedRoom({ roomId: roomId, objects: [feedObject] });
-    return feedRoom;
+    const tableDoc = new LiveFeedObject({ guid: roomId, typeName: 'ai-table' });
+    const feedRoom = new LiveFeedRoom({ roomId: roomId, objects: [tableDoc] });
+    return { feedRoom, tableDoc, recordDocs: [] };
 };
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {

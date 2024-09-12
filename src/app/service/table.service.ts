@@ -14,6 +14,7 @@ import { getProvider } from '../provider';
 import { Router } from '@angular/router';
 import { LiveFeedObjectChange, LiveFeedRoom } from '../live-feed/feed-room';
 import { LiveFeedProvider } from '../live-feed/feed-provider';
+import * as Y from 'yjs';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -32,6 +33,10 @@ export class TableService {
     provider!: LiveFeedProvider | null;
 
     feedRoom!: LiveFeedRoom | null;
+
+    tableDoc!: Y.Doc;
+
+    recordDocs!: Y.Doc[];
 
     activeViewId: WritableSignal<string> = signal('');
 
@@ -69,7 +74,10 @@ export class TableService {
         }
         let isInitialized = false;
         if (!this.feedRoom) {
-            this.feedRoom = createFeedRoom(roomId);
+            const { feedRoom, tableDoc, recordDocs } = createFeedRoom(roomId);
+            this.tableDoc = tableDoc;
+            this.feedRoom = feedRoom;
+            this.recordDocs = recordDocs;
             this.feedRoom?.on('change', (change: LiveFeedObjectChange) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
