@@ -57,6 +57,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         });
 
         effect(() => {
+            console.time('gridRender');
             this.initGridRender();
         });
     }
@@ -100,6 +101,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         });
         this.gridStage.draw();
         this.bindEvent();
+        console.timeEnd('gridRender');
     }
 
     bindEvent() {

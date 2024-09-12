@@ -106,7 +106,7 @@ export class CellHelper extends Drawer {
     private renderCellSelect(render: AITableRender, ctx?: any) {
         const { field } = render;
 
-        if ((field as AITableSelectField).settings.is_multiple) {
+        if ((field as AITableSelectField).settings?.is_multiple) {
             return;
         } else {
             this.renderSingleSelectCell(render, ctx);
