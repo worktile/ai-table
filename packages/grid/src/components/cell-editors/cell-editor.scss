@@ -14,7 +14,16 @@
         padding: 0.55rem 0.75rem;
         min-height: 44px;
         border-width: 2px;
+        line-height: 24px;
         resize: none;
+        scrollbar-width: none;
+        overflow-y: scroll;
+        border-radius: 0;
+
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
     }
 }
 
@@ -39,6 +48,9 @@
 }
 
 .grid-cell-editor {
+    .thy-popover-container {
+        border: none;
+    }
     .select-cell-editor .form-control {
         height: auto;
     }

@@ -5,7 +5,7 @@ import { ThyPopover } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
-import { AITableGridCellRenderSchema } from '../types';
+import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getRecordOrField } from '../utils';
 
 @Injectable()
@@ -98,6 +98,47 @@ export class AITableGridEventService {
                 field: field,
                 record: record,
                 aiTable: this.aiTable
+            },
+            panelClass: 'grid-cell-editor',
+            outsideClosable: false,
+            hasBackdrop: false,
+            manualClosure: true,
+            animationDisabled: true,
+            autoAdaptive: true,
+            scrollStrategy: this.overlay.scrollStrategies.close()
+        });
+        return ref;
+    }
+
+    openCanvasEdit(aiTable: AITable, options: AITableOpenEditOptions) {
+        const { container, recordId, fieldId, position } = options;
+        const { x, y, width, height } = position;
+        const field = getRecordOrField(this.aiTable.fields, fieldId) as Signal<AITableField>;
+        const record = getRecordOrField(this.aiTable.records, recordId) as Signal<AITableRecord>;
+        const component = this.getEditorComponent(field().type);
+        const originRect = container!.getBoundingClientRect();
+
+        // 修正位置，以覆盖 cell border
+        const yOffset = 2;
+        const widthOffset = 3;
+
+        const ref = this.thyPopover.open(component, {
+            origin: container!,
+            originPosition: {
+                x: x + originRect.x,
+                y: y + originRect.y + yOffset,
+                width: width,
+                height: height
+            },
+            width: width + widthOffset + 'px',
+            height: height + 'px',
+            placement: 'top',
+            offset: -height,
+            minWidth: width,
+            initialState: {
+                field: field,
+                record: record,
+                aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: false,

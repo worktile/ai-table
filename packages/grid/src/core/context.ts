@@ -1,11 +1,13 @@
-import { AITableContext, AITablePointPosition, AITableLinearRow, AITableScrollState } from '../types';
 import { Signal, WritableSignal } from '@angular/core';
+import { AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState } from '../types';
 
 export class RendererContext {
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
-    constructor({ linearRows, pointPosition, scrollState }: AITableContext) {
+
+    constructor(options: AITableContext) {
+        const { linearRows, pointPosition, scrollState } = options;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;
         this.scrollState = scrollState;
