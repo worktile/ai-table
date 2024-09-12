@@ -62,6 +62,14 @@ export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
         const isChecked = aiTable.selection().selectedRecords.size === aiTable.records().length;
         const head = getColumnHead(0, frozenColumnCount - 1);
         const headGroup = [];
+        const numberHeadBg = new Konva.Rect({
+            x: AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
+            width: AI_TABLE_ROW_HEAD_WIDTH,
+            height: fieldHeadHeight,
+            fill: colors.white,
+            listening: false
+        });
         const topLine = new Konva.Line({
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
@@ -85,8 +93,8 @@ export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
             type: isChecked ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill: isChecked ? colors.primary : colors.gray300
         });
-        const rect1 = new Konva.Rect({
-            x: AI_TABLE_ROW_HEAD_WIDTH + AI_TABLE_OFFSET,
+        const headBg = new Konva.Rect({
+            x: AI_TABLE_ROW_HEAD_WIDTH,
             y: AI_TABLE_OFFSET,
             width: frozenColumnWidth,
             height: fieldHeadHeight,
@@ -95,7 +103,7 @@ export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
             fill: colors.transparent,
             listening: false
         });
-        headGroup.push(topLine, bottomLine, icon, ...head, rect1);
+        headGroup.push(numberHeadBg, topLine, bottomLine, icon, ...head, headBg);
 
         return headGroup;
     };

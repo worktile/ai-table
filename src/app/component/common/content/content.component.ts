@@ -15,7 +15,7 @@ import {
     RemoveFieldItem
 } from '@ai-table/grid';
 import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/state';
-import { ChangeDetectionStrategy, Component, inject, signal, Signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, Renderer2, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
@@ -27,8 +27,11 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
+import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
+
+const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
+const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 
 @Component({
     selector: 'demo-table-content',
@@ -83,10 +86,28 @@ export class DemoTableContent {
 
     references = signal(getReferences());
 
-    renderMode = signal(1);
+    renderMode = signal<'dom' | 'canvas'>('canvas');
+
+    dateMode = signal<'default' | 'big-data'>('default');
+
+    renderModeActiveIndex = computed(() => (this.renderMode() === 'canvas' ? 0 : 1));
+
+    dateModeActiveIndex = computed(() => (this.dateMode() === 'default' ? 0 : 1));
+
+    private renderer2 = inject(Renderer2);
 
     constructor() {
         this.registryIcon();
+
+        afterNextRender(() => {
+            if (this.renderMode() === 'canvas' && this.dateMode() === 'big-data') {
+                const container = document.querySelector('.grid-view');
+                const containerWidth = this.tableService.fields().length * 300;
+                const containerHeight = this.tableService.records().length * 50;
+                this.renderer2.setStyle(container, 'width', `${containerWidth}px`);
+                this.renderer2.setStyle(container, 'height', `${containerHeight}px`);
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -94,9 +115,9 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
-            this.tableService.buildRenderRecords(value.records);
-            this.tableService.buildRenderFields(value.fields);
+            this.renderMode.set(this.getLocalRenderMode(LOCAL_STORAGE_RENDER_MODE) || 'canvas');
+            this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
+            this.setValue();
         }
         console.time('render');
     }
@@ -109,11 +130,23 @@ export class DemoTableContent {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
     }
 
-    changeRenderMode(e: ThySegmentEvent) {
-        this.renderMode.set(Number(e.value));
-        const value = this.renderMode() === 1 ? getCanvasDefaultValue() : getDefaultValue();
+    setValue() {
+        const value =
+            this.dateMode() === 'default' ? (this.renderMode() === 'canvas' ? getCanvasDefaultValue() : getDefaultValue()) : getBigData();
         this.tableService.buildRenderRecords(value.records);
         this.tableService.buildRenderFields(value.fields);
+    }
+
+    changeRenderMode(e: ThySegmentEvent<any>) {
+        this.renderMode.set(e.value);
+        this.setLocalStorage(LOCAL_STORAGE_RENDER_MODE, e.value);
+        this.setValue();
+    }
+
+    changeDataMode(e: ThySegmentEvent<any>) {
+        this.dateMode.set(e.value);
+        this.setLocalStorage(LOCAL_STORAGE_DATA_MODE, e.value);
+        this.setValue();
     }
 
     onChange(options: AITableChangeOptions) {
@@ -177,5 +210,19 @@ export class DemoTableContent {
             const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
             Actions.moveRecord(this.aiTable, path, newPath);
         });
+    }
+
+    getLocalRenderMode(key: string) {
+        const value = localStorage.getItem(key) as 'dom' | 'canvas';
+        return value ? value : null;
+    }
+
+    getLocalDataMode(key: string) {
+        const value = localStorage.getItem(key) as 'default' | 'big-data';
+        return value ? value : null;
+    }
+
+    setLocalStorage(key: string, mode: string) {
+        localStorage.setItem(key, mode);
     }
 }
