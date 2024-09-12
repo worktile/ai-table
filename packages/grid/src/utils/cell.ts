@@ -17,6 +17,7 @@ export function getColumnIndicesMap(fields: AITableField[]) {
 }
 
 /**
+ * 获取单元格位置
  * 根据单元格是否是第一列/最后一列确定单元格所在的位置
  */
 export const getCellHorizontalPosition = (options: { columnWidth: number; columnIndex: number; columnCount: number }) => {

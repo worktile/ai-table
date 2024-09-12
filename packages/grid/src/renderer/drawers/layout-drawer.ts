@@ -1,6 +1,6 @@
+import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH } from '../../constants/table';
 import { AITableLayout } from '../../types';
-import { Drawer } from '../../utils';
-import { AI_TABLE_ADD_FIELD_BUTTON_WIDTH } from '../../constants/table';
+import { Drawer } from './drawer';
 
 /**
  * 用于处理表格行或单元格的布局和绘制。
@@ -47,7 +47,7 @@ export class Layout extends Drawer {
     }
 
     protected renderAddFieldBlank() {
-        const width = AI_TABLE_ADD_FIELD_BUTTON_WIDTH;
+        const width = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
         const y = this.y;
         const rowHeight = this.rowHeight;
         this.rect({

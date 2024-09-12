@@ -116,6 +116,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                         recordId: recordId,
                         field,
                         cellValue,
+                        isActive: isSelected,
                         style,
                         colors
                     };
