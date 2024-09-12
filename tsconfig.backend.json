@@ -14,6 +14,6 @@
         "importHelpers": true,
         "esModuleInterop": true
     },
-    "files": ["backend/src/index.ts"],
-    "include": ["backend/src/**/*.d.ts"]
+    "files": ["src/backend-index.ts"],
+    "include": ["src/**/*.d.ts"]
 }
