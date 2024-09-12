@@ -2,18 +2,18 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyDot } from 'ngx-tethys/dot';
+import { ThyEmptyModule } from 'ngx-tethys/empty';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThySelect } from 'ngx-tethys/select';
 import { ThyOption } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
+import { Actions, AITableQueries, AITableSelectOptionStyle } from '../../../core';
 import { SelectOptionPipe } from '../../../pipes';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
-import { Actions, AITableQueries, AITableSelectOptionStyle } from '../../../core';
-import { ThyEmptyModule } from 'ngx-tethys/empty';
 
 @Component({
     selector: 'select-cell-editor',
@@ -45,7 +45,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
     });
 
     optionStyle = computed(() => {
-        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.tag;
+        return (this.field() as AITableSelectField).settings.option_style ?? AITableSelectOptionStyle.tag;
     });
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;
