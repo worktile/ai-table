@@ -1,9 +1,9 @@
 .table-container {
     display: block;
-    margin: 0 20px;
+    margin: 0 0 0 20px;
     margin-bottom: 0;
     overflow-x: auto;
-    height: calc(100vh - 20px);
+    height: 100vh;
 
     .thy-nav-list {
         flex: none;
@@ -14,7 +14,7 @@
     }
     .thy-tab-content {
         // 155 视图 tab 的高度
-        height: calc(100vh - 175px);
+        height: calc(100vh - 120px);
         .table-content {
             // 44 是操作列的高度
             height: calc(100% - 44px);

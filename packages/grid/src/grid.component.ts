@@ -1,13 +1,26 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, OnInit, Signal, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    OnInit,
+    Signal,
+    signal,
+    viewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage } from 'konva/lib/Stage';
+import { fromEvent, map } from 'rxjs';
 import {
     AI_TABLE_CELL,
     AI_TABLE_FIELD_ADD_BUTTON,
+    AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-    AI_TABLE_OFFSET,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
@@ -22,9 +35,8 @@ import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AITableMouseDownType } from './types';
-import { buildGridLinearRows, getCellHorizontalPosition, getColumnIndicesMap, getDetailByTargetName, getRecordOrField } from './utils';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, getRecordOrField, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
-import { handleMouseStyle } from './utils/style';
 
 @Component({
     selector: 'ai-table-grid',
@@ -32,32 +44,51 @@ import { handleMouseStyle } from './utils/style';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'ai-table-grid d-block w-100 h-100'
+        class: 'ai-table-grid'
     },
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit {
-    container!: HTMLDivElement;
-
     timer: number | null | undefined;
 
     gridStage!: Stage;
 
     coordinate!: Coordinate;
 
+    fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
+
+    ADD_BUTTON_WIDTH = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
+
+    isRenderDone = signal(false);
+
+    container = viewChild<ElementRef>('container');
+
+    verticalBarRef = viewChild<ElementRef>('verticalBar');
+
+    horizontalBarRef = viewChild<ElementRef>('horizontalBar');
+
     gridLinearRows = computed(() => {
         return buildGridLinearRows(this.aiRecords());
+    });
+
+    containerElement = computed(() => {
+        return this.container()?.nativeElement;
     });
 
     constructor() {
         super();
 
         afterNextRender(() => {
-            this.container = this.elementRef.nativeElement.querySelector('.grid-view');
+            this.initGridRender();
+            this.bindWheel();
+            this.isRenderDone.set(true);
         });
-
         effect(() => {
-            console.time('gridRender');
+            if (this.isRenderDone()) {
+                this.bindScrollBarScroll();
+            }
+        });
+        effect(() => {
             this.initGridRender();
         });
     }
@@ -67,7 +98,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.aiTable.context = this.initContext();
     }
 
-    initContext() {
+    private initContext() {
         return new RendererContext({
             linearRows: this.gridLinearRows,
             pointPosition: signal(DEFAULT_POINT_POSITION),
@@ -75,10 +106,10 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         });
     }
 
-    initCoordinate() {
+    private initCoordinate() {
         const fields = AITable.getVisibleFields(this.aiTable);
         return new Coordinate({
-            container: this.container,
+            container: this.containerElement(),
             rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
             rowCount: (this.aiTable.context as RendererContext).linearRows().length,
             columnCount: fields.length,
@@ -90,21 +121,20 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         });
     }
 
-    initGridRender() {
+    private initGridRender() {
         this.coordinate = this.initCoordinate();
         this.gridStage = createGridStage({
             aiTable: this.aiTable,
-            container: this.container,
-            width: this.container.offsetWidth,
-            height: this.container.offsetHeight,
+            container: this.container()?.nativeElement!,
+            width: this.containerElement().offsetWidth,
+            height: this.containerElement().offsetHeight,
             coordinate: this.coordinate
         });
         this.gridStage.draw();
         this.bindEvent();
-        console.timeEnd('gridRender');
     }
 
-    bindEvent() {
+    private bindEvent() {
         const context = this.aiTable.context as RendererContext;
         this.gridStage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
             if (this.timer) {
@@ -112,7 +142,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             }
             this.timer = requestAnimationFrame(() => {
                 const targetName = e.target.name();
-                const pos = this.gridStage.getPointerPosition();
+                const pos = this.gridStage?.getPointerPosition();
                 if (pos == null) return;
                 const { x, y } = pos;
                 const curMousePosition = getMousePosition(
@@ -123,7 +153,7 @@ export class AITableGrid extends AITableGridBase implements OnInit {
                     context,
                     targetName
                 );
-                handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.container);
+                handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
                 context.setPointPosition(curMousePosition);
                 this.timer = null;
             });
@@ -189,36 +219,85 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.gridStage.on('dblclick', (e: KonvaEventObject<MouseEvent>) => {
             const _targetName = e.target.name();
             const { fieldId, recordId } = getDetailByTargetName(_targetName);
+            if (!this.coordinate || !recordId || !fieldId) {
+                return;
+            }
+
             const field = getRecordOrField(this.aiTable.fields, fieldId!) as Signal<AITableField>;
             const fieldType = field().type;
             if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
                 return;
             }
-            const { scrollState } = this.aiTable.context!;
-            if (this.coordinate && recordId && fieldId) {
-                const { rowHeight, columnCount } = this.coordinate;
-                const { rowIndex, columnIndex } = AITable.getCellIndex(this.aiTable, { recordId, fieldId })!;
-
-                const x = this.coordinate.getColumnOffset(columnIndex);
-                const y = this.coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-                const columnWidth = this.coordinate.getColumnWidth(columnIndex);
-                const { width, offset } = getCellHorizontalPosition({
-                    columnWidth,
-                    columnIndex,
-                    columnCount
-                });
-                this.aiTableGridEventService.openCanvasEdit(this.aiTable, {
-                    container: this.container,
-                    recordId,
-                    fieldId,
-                    position: {
-                        x: x + offset - scrollState().scrollLeft,
-                        y: y - scrollState().scrollTop,
-                        width,
-                        height: rowHeight
-                    }
-                });
-            }
+            this.aiTableGridEventService.openEditByDblClick(this.aiTable, {
+                container: this.containerElement(),
+                coordinate: this.coordinate,
+                fieldId: fieldId!,
+                recordId: recordId!
+            });
         });
     }
+
+    private bindWheel() {
+        if (!this.container()) {
+            return;
+        }
+        const isWindows = isWindowsOS();
+        let timer: number | null = null;
+        fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((e: WheelEvent) => {
+                e.preventDefault();
+                if (timer) {
+                    return;
+                }
+                timer = requestAnimationFrame(() => {
+                    const { deltaX, deltaY, shiftKey } = e;
+                    const fixedDeltaY = shiftKey && isWindows ? 0 : deltaY;
+                    const fixedDeltaX = shiftKey && isWindows ? deltaY : deltaX;
+                    const horizontalBar = this.horizontalBarRef()?.nativeElement;
+                    const verticalBar = this.verticalBarRef()?.nativeElement;
+                    if (horizontalBar) {
+                        horizontalBar.scrollLeft = horizontalBar.scrollLeft + fixedDeltaX;
+                    }
+                    if (verticalBar) {
+                        verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
+                    }
+                    timer = null;
+                });
+            });
+    }
+
+    bindScrollBarScroll() {
+        fromEvent<WheelEvent>(this.horizontalBarRef()?.nativeElement, 'scroll', { passive: true })
+            .pipe(
+                map((e: any) => ({
+                    scrollLeft: e.target.scrollLeft,
+                    isScrolling: true
+                })),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((scrollState) => {
+                this.aiTable.context!.setScrollState(scrollState);
+                this.resetScrolling();
+            });
+
+        fromEvent<WheelEvent>(this.verticalBarRef()?.nativeElement, 'scroll', { passive: true })
+            .pipe(
+                map((e: any) => ({
+                    scrollTop: e.target.scrollTop,
+                    isScrolling: true
+                })),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((scrollState) => {
+                this.aiTable.context!.setScrollState(scrollState);
+                this.resetScrolling();
+            });
+    }
+
+    private resetScrolling = () => {
+        this.aiTable.context!.setScrollState({
+            isScrolling: false
+        });
+    };
 }

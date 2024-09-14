@@ -38,7 +38,10 @@ const initViews = [
     ],
     templateUrl: './table.component.html',
     providers: [TableService],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'd-block w-100 h-100'
+    }
 })
 export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     provider!: WebsocketProvider | null;
