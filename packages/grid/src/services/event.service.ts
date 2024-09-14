@@ -3,10 +3,11 @@ import { DestroyRef, inject, Injectable, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopover } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
+import { AI_TABLE_OFFSET } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
-import { AITable, AITableField, AITableFieldType, AITableRecord } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { getRecordOrField } from '../utils';
+import { getCellHorizontalPosition, getRecordOrField } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -149,5 +150,34 @@ export class AITableGridEventService {
             scrollStrategy: this.overlay.scrollStrategies.close()
         });
         return ref;
+    }
+
+    openEditByDblClick(
+        aiTable: AITable,
+        options: { container: HTMLDivElement; coordinate: Coordinate; recordId: string; fieldId: string }
+    ) {
+        const { container, coordinate, recordId, fieldId } = options;
+        const { scrollState } = aiTable.context!;
+        const { rowHeight, columnCount } = coordinate;
+        const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, { recordId, fieldId })!;
+        const x = coordinate.getColumnOffset(columnIndex);
+        const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+        const columnWidth = coordinate.getColumnWidth(columnIndex);
+        const { width, offset } = getCellHorizontalPosition({
+            columnWidth,
+            columnIndex,
+            columnCount
+        });
+        this.openCanvasEdit(aiTable, {
+            container,
+            recordId,
+            fieldId,
+            position: {
+                x: x + offset - scrollState().scrollLeft,
+                y: y - scrollState().scrollTop,
+                width,
+                height: rowHeight
+            }
+        });
     }
 }
