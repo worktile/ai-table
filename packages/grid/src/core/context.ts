@@ -25,4 +25,8 @@ export class RendererContext {
             this.pointPosition.set(newPosition);
         }
     }
+
+    setScrollState(scrollState: Partial<AITableScrollState>) {
+        this.scrollState.set({ ...this.scrollState(), ...scrollState });
+    }
 }
