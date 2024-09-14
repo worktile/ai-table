@@ -27,7 +27,7 @@ import { Drawer } from './drawer';
 /**
  * 处理和渲染表格单元格的内容
  */
-export class CellHelper extends Drawer {
+export class CellDrawer extends Drawer {
     // 样式初始化
     public initStyle(field: AITableField, styleProps: { fontWeight: any }): void | null {
         const { type: fieldType } = field;
@@ -170,4 +170,4 @@ export class CellHelper extends Drawer {
     }
 }
 
-export const cellHelper = new CellHelper();
+export const cellDrawer = new CellDrawer();
