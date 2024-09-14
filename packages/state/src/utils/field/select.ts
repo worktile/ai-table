@@ -1,7 +1,8 @@
 import { isEmpty } from '../common';
 import { AITableFilterCondition, AITableFilterOperation } from '../../types';
 import { Field } from './field';
-import { SelectFieldValue } from '@ai-table/grid';
+import { AITableField, AITableSelectOption, SelectFieldValue, SelectSettings } from '@ai-table/grid';
+import { Id } from 'ngx-tethys/types';
 
 export class SelectField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
@@ -17,6 +18,32 @@ export class SelectField extends Field {
             default:
                 return super.isMeetFilter(condition, cellValue);
         }
+    }
+
+    cellValueToString(cellValue: SelectFieldValue, field: AITableField): string | null {
+        return this.arrayValueToString(this.cellValueToArray(cellValue, field));
+    }
+
+    cellValueToArray(cellValue: SelectFieldValue, field: AITableField): string[] | null {
+        if (!cellValue) {
+            return null;
+        }
+        const result: string[] = [];
+        for (let i = 0, l = cellValue.length; i < l; i++) {
+            const option = this.findOptionById(field, cellValue[i]);
+            if (option) {
+                result.push(option.text);
+            }
+        }
+        return result;
+    }
+
+    findOptionById(field: AITableField, id: Id): AITableSelectOption | null {
+        return (field.settings as SelectSettings).options.find(option => option._id === id) || null;
+    }
+
+    arrayValueToString(cellValues: string[] | null): string | null {
+        return cellValues && cellValues.length ? cellValues.join(', ') : null;
     }
 }
 

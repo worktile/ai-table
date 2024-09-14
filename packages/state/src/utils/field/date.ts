@@ -55,4 +55,26 @@ export class DateField extends Field {
                 ];
         }
     }
+
+    cellValueToString(_cellValue: DateFieldValue): string | null {
+        return null;
+    }
+
+    static _compare(cellValue1: DateFieldValue, cellValue2: DateFieldValue): number {
+        if (isEmpty(cellValue1?.timestamp) && isEmpty(cellValue2?.timestamp)) {
+            return 0;
+        }
+        if (isEmpty(cellValue1?.timestamp)) {
+            return -1;
+        }
+        if (isEmpty(cellValue2?.timestamp)) {
+            return 1;
+        }
+
+        return cellValue1.timestamp === cellValue2.timestamp ? 0 : cellValue1.timestamp > cellValue2.timestamp ? 1 : -1;
+    }
+
+    override compare(cellValue1: DateFieldValue, cellValue2: DateFieldValue): number {
+        return DateField._compare(cellValue1, cellValue2);
+    }
 }

@@ -20,4 +20,12 @@ export class TextField extends Field {
     static stringInclude(str: string, searchStr: string) {
         return str.toLowerCase().includes(searchStr.trim().toLowerCase());
     }
+
+    override eq(cv1: string | null, cv2: string | null): boolean {
+        return this.cellValueToString(cv1) === this.cellValueToString(cv2);
+    }
+
+    cellValueToString(cellValue: string | null): string | null {
+        return cellValue;
+    }
 }
