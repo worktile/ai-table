@@ -93,8 +93,7 @@ export enum ViewActionName {
 
 export enum PositionActionName {
     AddRecordPosition = 'add_record_position',
-    RemoveRecordPosition = 'remove_record_position',
-    SetRecordPosition = 'set_record_position'
+    RemoveRecordPosition = 'remove_record_position'
 }
 
 export interface SetViewAction {
