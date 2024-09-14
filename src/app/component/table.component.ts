@@ -1,17 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { WebsocketProvider } from 'y-websocket';
-import { ThyAction } from 'ngx-tethys/action';
 import { AITableGrid, idCreator } from '@ai-table/grid';
-import { FormsModule } from '@angular/forms';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyTabs, ThyTab } from 'ngx-tethys/tabs';
-import { ThyInputDirective } from 'ngx-tethys/input';
-import { TableService, LOCAL_STORAGE_KEY } from '../service/table.service';
 import { AITableView, ViewActions } from '@ai-table/state';
-import { ThyIconModule } from 'ngx-tethys/icon';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
+import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
+import { ThyIconModule } from 'ngx-tethys/icon';
+import { ThyInputDirective } from 'ngx-tethys/input';
+import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
+import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
+import { WebsocketProvider } from 'y-websocket';
+import { LOCAL_STORAGE_KEY, TableService } from '../service/table.service';
 
 const initViews = [
     { _id: 'view1', name: '表格视图' },
@@ -38,7 +38,10 @@ const initViews = [
     ],
     templateUrl: './table.component.html',
     providers: [TableService],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'd-block w-100 h-100'
+    }
 })
 export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     provider!: WebsocketProvider | null;

@@ -70,6 +70,7 @@ export enum AITableCheckType {
 export interface AITableScrollState {
     scrollTop: number;
     scrollLeft: number;
+    isScrolling: boolean;
 }
 
 export enum AITableAreaType {

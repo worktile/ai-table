@@ -13,19 +13,21 @@ export const createActiveCellBorder = (options: AITableCellsOptions) => {
     const activeCell = AITable.getActiveCell(aiTable);
     const totalColumnCount = visibleColumns.length;
 
-    const checkIsVisible = (rowIndex: number, columnIndex: number) => {
-        if (columnIndex < frozenColumnCount) {
-            return true;
-        }
-        return rowIndex >= rowStartIndex && rowIndex <= rowStopIndex && columnIndex >= columnStartIndex && columnIndex <= columnStopIndex;
-    };
-
     let activeCellBorder: Konva.Rect | null = null;
     let frozenActiveCellBorder: Konva.Rect | null = null;
 
     if (activeCell != null) {
         const { fieldId } = activeCell;
         const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, activeCell)!;
+
+        const checkIsVisible = (rowIndex: number, columnIndex: number) => {
+            if (columnIndex < frozenColumnCount) {
+                return true;
+            }
+            return (
+                rowIndex >= rowStartIndex && rowIndex <= rowStopIndex && columnIndex >= columnStartIndex && columnIndex <= columnStopIndex
+            );
+        };
 
         if (rowIndex != null && columnIndex != null && checkIsVisible(rowIndex, columnIndex)) {
             const { type } = linearRows()[rowIndex];
