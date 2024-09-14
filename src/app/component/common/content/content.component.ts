@@ -15,7 +15,7 @@ import {
     RemoveFieldItem
 } from '@ai-table/grid';
 import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/state';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, Renderer2, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
@@ -94,20 +94,8 @@ export class DemoTableContent {
 
     dateModeActiveIndex = computed(() => (this.dateMode() === 'default' ? 0 : 1));
 
-    private renderer2 = inject(Renderer2);
-
     constructor() {
         this.registryIcon();
-
-        afterNextRender(() => {
-            if (this.renderMode() === 'canvas' && this.dateMode() === 'big-data') {
-                const container = document.querySelector('.grid-view');
-                const containerWidth = this.tableService.fields().length * 300;
-                const containerHeight = this.tableService.records().length * 50;
-                this.renderer2.setStyle(container, 'width', `${containerWidth}px`);
-                this.renderer2.setStyle(container, 'height', `${containerHeight}px`);
-            }
-        });
     }
 
     ngOnInit(): void {
