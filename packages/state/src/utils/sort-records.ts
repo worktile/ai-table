@@ -1,14 +1,7 @@
 import { AITable, AITableQueries } from '@ai-table/grid';
 import { ViewOperationMap } from './field';
-import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
-
-export function sortByViewPosition(data: AITableViewRecords | AITableViewFields, activeView: AITableView) {
-    const hasPositions = data.every((item) => item.positions && item.positions);
-    if (hasPositions) {
-        return [...data].sort((a, b) => a.positions[activeView._id] - b.positions[activeView._id]);
-    }
-    return data;
-}
+import { AITableView, AITableViewRecords } from '../types';
+import { sortByViewPosition } from './view';
 
 export function getSortRecords(aiTable: AITable, records: AITableViewRecords, activeView: AITableView) {
     if (!activeView?.settings || !activeView.settings.sorts?.length) {

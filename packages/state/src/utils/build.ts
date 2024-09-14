@@ -1,8 +1,8 @@
 import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
 import { getFilteredRecords } from './filter-records';
 import { AITable } from '@ai-table/grid';
-import { getSortRecords, sortByViewPosition } from './sort-records';
-
+import { getSortRecords } from './sort-records';
+import { sortByViewPosition } from './view';
 
 export function buildRecordsByView(aiTable: AITable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const filteredRecords = getFilteredRecords(records, fields, activeView);
