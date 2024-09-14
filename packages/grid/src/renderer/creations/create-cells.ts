@@ -9,7 +9,7 @@ import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
-import { cellHelper } from '../drawers/cell-drawer';
+import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
 
 /**
@@ -25,7 +25,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
     const visibleColumns = AITable.getVisibleFields(aiTable);
 
     // 初始化绘图上下文, 为后续的绘制操作做准备
-    cellHelper.initCtx(ctx as CanvasRenderingContext2D);
+    cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
 
@@ -43,7 +43,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
         const isLastColumn = columnIndex === aiTable.fields.length - 1;
 
         if (columnIndex === 1) {
-            cellHelper.initStyle(field, { fontWeight: DEFAULT_FONT_STYLE });
+            cellDrawer.initStyle(field, { fontWeight: DEFAULT_FONT_STYLE });
         }
 
         // 遍历行, 从 rowStartIndex 到 rowStopIndex 的所有行，决定将在哪些行上绘制单元格
@@ -121,17 +121,17 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                         colors
                     };
 
-                    cellHelper.initStyle(field, style);
+                    cellDrawer.initStyle(field, style);
                     // 最后一列，且单元格内容存在，需要裁剪内容，以防止文本溢出单元格边界
                     // 然后，根据计算好的样式和布局绘制单元格内容
                     if (isLastColumn && cellValue != null) {
                         ctx.save();
                         ctx.rect(realX, realY, width, rowHeight);
                         ctx.clip();
-                        cellHelper.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
+                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
                         ctx.restore();
                     } else {
-                        cellHelper.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
+                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
                     }
                 }
             }
