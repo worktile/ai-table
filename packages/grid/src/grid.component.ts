@@ -5,6 +5,7 @@ import {
     computed,
     effect,
     ElementRef,
+    OnDestroy,
     OnInit,
     Signal,
     signal,
@@ -13,7 +14,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage } from 'konva/lib/Stage';
-import { fromEvent, map } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import {
     AI_TABLE_CELL,
     AI_TABLE_FIELD_ADD_BUTTON,
@@ -48,18 +49,22 @@ import { getMousePosition } from './utils/position';
     },
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
-export class AITableGrid extends AITableGridBase implements OnInit {
-    timer: number | null | undefined;
+export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
+    timer!: number | null;
 
     gridStage!: Stage;
 
     coordinate!: Coordinate;
+
+    resizeObserver!: ResizeObserver;
 
     fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
 
     ADD_BUTTON_WIDTH = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
 
     isRenderDone = signal(false);
+
+    containerRect = signal({ width: 0, height: 0 });
 
     container = viewChild<ElementRef>('container');
 
@@ -79,7 +84,9 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         super();
 
         afterNextRender(() => {
+            this.setContainerRect();
             this.initGridRender();
+            this.containerResizeListener();
             this.bindWheel();
             this.isRenderDone.set(true);
         });
@@ -96,6 +103,10 @@ export class AITableGrid extends AITableGridBase implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
         this.aiTable.context = this.initContext();
+    }
+
+    ngOnDestroy(): void {
+        this.resizeObserver?.disconnect();
     }
 
     private initContext() {
@@ -126,8 +137,6 @@ export class AITableGrid extends AITableGridBase implements OnInit {
         this.gridStage = createGridStage({
             aiTable: this.aiTable,
             container: this.container()?.nativeElement!,
-            width: this.containerElement().offsetWidth,
-            height: this.containerElement().offsetHeight,
             coordinate: this.coordinate
         });
         this.gridStage.draw();
@@ -267,31 +276,17 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             });
     }
 
-    bindScrollBarScroll() {
+    private bindScrollBarScroll() {
         fromEvent<WheelEvent>(this.horizontalBarRef()?.nativeElement, 'scroll', { passive: true })
-            .pipe(
-                map((e: any) => ({
-                    scrollLeft: e.target.scrollLeft,
-                    isScrolling: true
-                })),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((scrollState) => {
-                this.aiTable.context!.setScrollState(scrollState);
-                this.resetScrolling();
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((e) => {
+                this.horizontalScroll(e);
             });
 
         fromEvent<WheelEvent>(this.verticalBarRef()?.nativeElement, 'scroll', { passive: true })
-            .pipe(
-                map((e: any) => ({
-                    scrollTop: e.target.scrollTop,
-                    isScrolling: true
-                })),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((scrollState) => {
-                this.aiTable.context!.setScrollState(scrollState);
-                this.resetScrolling();
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((e) => {
+                this.verticalScroll(e);
             });
     }
 
@@ -300,4 +295,42 @@ export class AITableGrid extends AITableGridBase implements OnInit {
             isScrolling: false
         });
     };
+
+    private horizontalScroll = (e: any) => {
+        const { scrollLeft } = e.target;
+        this.aiTable.context!.setScrollState({
+            scrollLeft,
+            isScrolling: true
+        });
+        this.resetScrolling();
+    };
+
+    private verticalScroll(e: any) {
+        const { scrollTop } = e.target;
+        this.aiTable.context!.setScrollState({
+            scrollTop,
+            isScrolling: true
+        });
+        this.resetScrolling();
+    }
+
+    private setContainerRect() {
+        this.containerRect.set({
+            width: this.container()?.nativeElement!.offsetWidth,
+            height: this.container()?.nativeElement!.offsetHeight
+        });
+    }
+
+    private containerResizeListener() {
+        this.resizeObserver = new ResizeObserver(() => {
+            const containerWidth = this.container()?.nativeElement!.offsetWidth;
+            const totalWidth = this.coordinate?.totalWidth + this.ADD_BUTTON_WIDTH;
+            this.setContainerRect();
+            if (containerWidth >= totalWidth) {
+                this.aiTable.context!.setScrollState({ scrollLeft: 0 });
+                return;
+            }
+        });
+        this.resizeObserver.observe(this.container()?.nativeElement!);
+    }
 }

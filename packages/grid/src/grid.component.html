@@ -1,18 +1,15 @@
 <div #container class="ai-table-grid-view"></div>
 
 @if (isRenderDone()) {
-    <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerElement().offsetWidth">
+    <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
         <div class="ai-table-scroll-bar-inner" [style.width.px]="coordinate.totalWidth + ADD_BUTTON_WIDTH"></div>
     </div>
     <div
         #verticalBar
         class="ai-table-vertical-scroll-bar-wrapper"
-        [style.height.px]="containerElement().offsetHeight - fieldHeadHeight"
+        [style.height.px]="containerRect().height - fieldHeadHeight"
         [style.top.px]="fieldHeadHeight"
     >
-        <div
-            class="ai-table-scroll-bar-inner"
-            [style.height.px]="coordinate.totalHeight + containerElement().offsetHeight + fieldHeadHeight"
-        ></div>
+        <div class="ai-table-scroll-bar-inner" [style.height.px]="coordinate.totalHeight + containerRect().height + fieldHeadHeight"></div>
     </div>
 }

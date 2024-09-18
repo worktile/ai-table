@@ -14,10 +14,10 @@ import { createPlaceHolderCells } from './create-placeholder-cells';
 Konva.pixelRatio = 2;
 
 export const createGridStage = (options: AITableGridStageOptions) => {
-    const { aiTable, width, height, container, coordinate } = options;
+    const { aiTable, container, coordinate } = options;
     const { scrollState, pointPosition } = aiTable.context!;
-    const { frozenColumnWidth, rowInitSize } = coordinate;
-    const { scrollLeft, scrollTop } = scrollState();
+    const { containerWidth, containerHeight, frozenColumnWidth, rowInitSize } = coordinate;
+    const { scrollLeft, scrollTop, isScrolling } = scrollState();
     const fields = AITable.getVisibleFields(aiTable);
 
     const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = getVisibleRangeInfo(coordinate, scrollState());
@@ -26,7 +26,7 @@ export const createGridStage = (options: AITableGridStageOptions) => {
     const lastColumnOffset = coordinate.getColumnOffset(columnStopIndex);
     const addFieldBtnWidth = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     const cellGroupClipWidth = Math.min(
-        width - frozenAreaWidth,
+        containerWidth - frozenAreaWidth,
         addFieldBtnWidth + lastColumnOffset + lastColumnWidth - scrollLeft - frozenAreaWidth
     );
 
@@ -93,16 +93,16 @@ export const createGridStage = (options: AITableGridStageOptions) => {
 
     const gridStage = new Konva.Stage({
         container: container,
-        width: width,
-        height: height,
-        listening: true
+        width: containerWidth,
+        height: containerHeight,
+        listening: isScrolling ? false : true
     });
     const gridLayer = new Konva.Layer();
     const gridGroup = new Konva.Group({
         clipX: 0,
         clipY: 0,
-        clipWidth: width,
-        clipHeight: height
+        clipWidth: containerWidth,
+        clipHeight: containerHeight
     });
     const frozenGroup = new Konva.Group({
         offsetY: scrollTop
@@ -111,24 +111,25 @@ export const createGridStage = (options: AITableGridStageOptions) => {
         clipX: frozenAreaWidth + 1,
         clipY: 0,
         clipWidth: cellGroupClipWidth,
-        clipHeight: height
+        clipHeight: containerHeight
     });
     const attachGroup = new Konva.Group({
         clipX: frozenAreaWidth - 1,
         clipY: rowInitSize - 1,
-        clipWidth: width - frozenAreaWidth,
-        clipHeight: height - rowInitSize
+        clipWidth: containerWidth - frozenAreaWidth,
+        clipHeight: containerHeight - rowInitSize
     });
     const frozenAttachGroup = new Konva.Group({
         clipX: 0,
         clipY: rowInitSize - 1,
         clipWidth: frozenAreaWidth + 4,
-        clipHeight: height - rowInitSize
+        clipHeight: containerHeight - rowInitSize
     });
     const cellsGroup = new Konva.Group({
         offsetY: scrollTop,
         offsetX: scrollLeft
     });
+
     const cellHeadGroup = new Konva.Group({
         offsetX: scrollLeft
     });

@@ -38,8 +38,6 @@ export interface AITableReferences {
 export interface AITableGridStageOptions {
     aiTable: AITable;
     container: HTMLDivElement;
-    width: number;
-    height: number;
     coordinate: Coordinate;
 }
 
