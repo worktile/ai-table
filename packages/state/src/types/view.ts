@@ -1,5 +1,5 @@
 import { AIRecordIdPath, AITable, AITableAction, AITableField, AITableRecord } from '@ai-table/grid';
-import { WritableSignal } from '@angular/core';
+import { Signal, WritableSignal } from '@angular/core';
 import { Id } from 'ngx-tethys/types';
 
 export class Positions {
@@ -46,11 +46,13 @@ export enum AITableFilterOperation {
     notContain = 'not_contain'
 }
 
+export type ViewSettings = AITableFilterConditions & AITableSortOptions
+
 export interface AITableView {
     _id: string;
     name: string;
     emoji_icon?: string;
-    settings?: GridSettings;
+    settings?: ViewSettings;
 }
 
 export interface AITableFilterCondition<TValue = unknown> {
@@ -64,12 +66,11 @@ export interface AITableFilterConditions<TValue = unknown> {
     conditions?: AITableFilterCondition<TValue>[];
 }
 
-export interface GridSettings<TValue = unknown> extends AITableFilterConditions<TValue> {
+export interface AITableSortOptions {
     is_keep_sort?: boolean;
     sorts?: {
         sort_by: Id;
         direction: Direction;
-        // xxx
     }[];
 }
 
@@ -80,6 +81,7 @@ export type AIViewIdPath = [string];
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;
     activeViewId: WritableSignal<string>;
+    viewsMap: Signal<{ [key: string]: AITableView }>;
     apply: (action: AITableSharedAction) => void;
 }
 

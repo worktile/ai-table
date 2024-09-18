@@ -1,19 +1,14 @@
 import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
 import { getFilteredRecords } from './filter-records';
+import { AITable } from '@ai-table/grid';
+import { getSortRecords } from './sort-records';
+import { sortByViewPosition } from './view';
 
-export function sortByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
-    const hasPositions = data.every((item) => item.positions && item.positions);
-    if (hasPositions) {
-        return [...data].sort((a, b) => a.positions[activeViewId] - b.positions[activeViewId]);
-    }
-    return data;
-}
-
-export function buildRecordsByView(records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
+export function buildRecordsByView(aiTable: AITable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const filteredRecords = getFilteredRecords(records, fields, activeView);
-    return sortByView(filteredRecords, activeView._id);
+    return getSortRecords(aiTable, filteredRecords, activeView);
 }
 
 export function buildFieldsByView(fields: AITableViewFields, activeView: AITableView) {
-    return sortByView(fields as AITableViewFields, activeView._id);
+    return sortByViewPosition(fields as AITableViewFields, activeView);
 }
