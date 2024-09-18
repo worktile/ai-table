@@ -1,8 +1,9 @@
-import { ElementRef, Injectable, ModelSignal, WritableSignal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ThyPopover } from 'ngx-tethys/popover';
-import { AITable, AITableField, AITableFields } from '../core';
 import { AITableFieldPropertyEditor } from '../components';
-import { AIFieldConfig } from '../types';
+import { FieldMenu } from '../components/field-menu/field-menu.component';
+import { AITable } from '../core';
+import { AIFieldConfig, AITableEditFieldOptions, AITableFieldMenuOptions } from '../types';
 
 export const AI_TABLE_GRID_FIELD_SERVICE_MAP = new WeakMap<AITable, AITableGridFieldService>();
 
@@ -16,24 +17,39 @@ export class AITableGridFieldService {
         this.aiFieldConfig = aiFieldConfig;
     }
 
-    editFieldProperty(
-        aiTable: AITable,
-        aiEditField: WritableSignal<AITableField>,
-        isUpdate: boolean,
-        origin?: any,
-        position?: { x: number; y: number }
-    ) {
+    editFieldProperty(aiTable: AITable, options: AITableEditFieldOptions) {
+        const { field, isUpdate, origin, position } = options;
         const component = this.aiFieldConfig?.fieldPropertyEditor ?? AITableFieldPropertyEditor;
         this.thyPopover.open(component, {
-            origin: origin,
+            origin,
             originPosition: position,
             manualClosure: true,
             placement: 'bottomLeft',
             initialState: {
                 aiTable,
-                aiEditField,
+                aiEditField: field,
                 isUpdate
             }
         });
+    }
+
+    openFieldMenu(aiTable: AITable, options: AITableFieldMenuOptions) {
+        const { origin, editOrigin, position, fieldId, fieldMenus } = options;
+        const ref = this.thyPopover.open(FieldMenu, {
+            origin,
+            originPosition: position,
+            placement: 'bottomLeft',
+            originActiveClass: origin ? 'active' : undefined,
+            hasBackdrop: false,
+            insideClosable: true,
+            initialState: {
+                origin: editOrigin,
+                position: options.editOriginPosition,
+                aiTable,
+                fieldId,
+                fieldMenus
+            }
+        });
+        return ref;
     }
 }

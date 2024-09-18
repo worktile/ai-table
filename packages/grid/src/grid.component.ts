@@ -21,6 +21,7 @@ import {
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_HEAD_WIDTH,
@@ -173,21 +174,40 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
             const { targetName, fieldId, recordId } = getDetailByTargetName(_targetName);
             switch (targetName) {
-                case AI_TABLE_FIELD_HEAD: {
+                case AI_TABLE_FIELD_HEAD:
                     mouseEvent.preventDefault();
                     if (!fieldId) return;
                     this.aiTableGridSelectionService.selectField(fieldId);
                     return;
-                }
-                case AI_TABLE_CELL: {
+                case AI_TABLE_CELL:
                     if (!recordId || !fieldId) return;
                     this.aiTableGridSelectionService.selectCell(recordId, fieldId);
                     return;
-                }
-                // case AI_TABLE_FIELD_HEAD_MORE:{
-                //  弹出菜单
-                //    return
-                // }
+                case AI_TABLE_FIELD_HEAD_MORE:
+                    mouseEvent.preventDefault();
+                    if (fieldId) {
+                        const moreRect = e.target.getClientRect();
+                        const fieldGroupRect = e.target.getParent()?.getParent()?.getClientRect()!;
+                        const containerRect = this.containerElement().getBoundingClientRect();
+
+                        const position = {
+                            x: containerRect.x + moreRect.x,
+                            y: containerRect.y + moreRect.y + moreRect.height
+                        };
+                        const editOriginPosition = {
+                            x: containerRect.x + fieldGroupRect.x,
+                            y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                        };
+
+                        this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+                            origin: this.containerElement(),
+                            fieldId: fieldId,
+                            fieldMenus: this.fieldMenus,
+                            position,
+                            editOriginPosition
+                        });
+                    }
+                    return;
                 case AI_TABLE_ROW_ADD_BUTTON:
                 case AI_TABLE_FIELD_ADD_BUTTON:
                 case AI_TABLE_ROW_SELECT_CHECKBOX:
