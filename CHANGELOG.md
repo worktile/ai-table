@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.12](https://github.com/worktile/ai-table/compare/0.0.11...0.0.12) (2024-09-18)
+
+
+### Features
+
+* **state:** support sort records when is_keep_sort is true #WIK-16424 ([#100](https://github.com/worktile/ai-table/issues/100)) ([587b575](https://github.com/worktile/ai-table/commit/587b575caa94d5695ba06df25107e8dbd8242751)), closes [#WIK-16424](https://github.com/worktile/ai-table/issues/WIK-16424)
+
+
+
 ## [0.0.11](https://github.com/worktile/ai-table/compare/0.0.10...0.0.11) (2024-09-12)
 
 
