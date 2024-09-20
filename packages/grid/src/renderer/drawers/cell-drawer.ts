@@ -1,4 +1,3 @@
-import { hexToRgb } from 'ngx-tethys/util';
 import {
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET,
@@ -6,11 +5,17 @@ import {
     AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH,
     AI_TABLE_CELL_MULTI_PADDING_TOP,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_COMMON_FONT_SIZE,
+    AI_TABLE_DOT_RADIUS,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
     AI_TABLE_OPTION_ITEM_HEIGHT,
     AI_TABLE_OPTION_ITEM_PADDING,
     AI_TABLE_OPTION_ITEM_RADIUS,
+    AI_TABLE_PIECE_RADIUS,
+    AI_TABLE_PIECE_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_TEXT_GAP,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
     DEFAULT_TEXT_ALIGN_CENTER,
@@ -118,53 +123,86 @@ export class CellDrawer extends Drawer {
         if (cellValue == null || cellValue.length === 0) {
             return;
         }
-        const colors = AITable.getColors();
         const isOperating = isActive;
         const item = (field as AITableSelectField).settings.options?.find((option) => option._id === cellValue[0]);
         const itemName = item?.text || '';
-
-        const optionStyle = (field as AITableSelectField).settings.option_style;
-        let color = item?.color || colors.gray800;
-        let background = item?.color ? hexToRgb(item?.color, 0.1) : colors.primary;
-        switch (optionStyle) {
-            case AITableSelectOptionStyle.dot:
-            case AITableSelectOptionStyle.piece:
-                color = item?.color || colors.gray700;
-                background = item?.bg_color || colors.gray100;
-                break;
-            default:
-                color = colors.white;
-                background = item?.color ? item?.color : colors.primary;
-                break;
-        }
-
-        let maxTextWidth = columnWidth - 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_OPTION_ITEM_PADDING);
-        maxTextWidth -= isOperating ? AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET : 0;
-
-        const { text, textWidth } = this.textEllipsis({
-            text: itemName,
-            maxWidth: columnWidth && maxTextWidth,
-            fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
-        });
-        const width = Math.max(textWidth + 2 * AI_TABLE_OPTION_ITEM_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
+        const getTextEllipsis = (maxTextWidth: number, fontSize: number = AI_TABLE_COMMON_FONT_SIZE) => {
+            maxTextWidth -= isOperating ? AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET : 0;
+            return this.textEllipsis({
+                text: itemName,
+                maxWidth: columnWidth && maxTextWidth,
+                fontSize: fontSize
+            });
+        };
         if (ctx) {
             ctx.save();
             ctx.globalAlpha = 1;
+            const colors = AITable.getColors();
+            const optionStyle = (field as AITableSelectField).settings.option_style;
+            let background = item?.color ?? colors.primary;
+            const dotMaxTextWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PIECE_WIDTH - AI_TABLE_TEXT_GAP;
+            switch (optionStyle) {
+                case AITableSelectOptionStyle.dot:
+                    this.arc({
+                        x: x + AI_TABLE_CELL_PADDING + AI_TABLE_DOT_RADIUS,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS,
+                        radius: AI_TABLE_DOT_RADIUS,
+                        fill: background
+                    });
+                    this.text({
+                        x: x + AI_TABLE_PIECE_WIDTH + AI_TABLE_TEXT_GAP + AI_TABLE_CELL_PADDING,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        text: getTextEllipsis(dotMaxTextWidth).text,
+                        fillStyle: colors.gray800
+                    });
+                    break;
+                case AITableSelectOptionStyle.piece:
+                    this.rect({
+                        x: x + AI_TABLE_CELL_PADDING,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2,
+                        width: AI_TABLE_PIECE_WIDTH,
+                        height: AI_TABLE_PIECE_WIDTH,
+                        radius: AI_TABLE_PIECE_RADIUS,
+                        fill: background
+                    });
+                    this.text({
+                        x: x + AI_TABLE_PIECE_WIDTH + AI_TABLE_TEXT_GAP + AI_TABLE_CELL_PADDING,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        text: getTextEllipsis(dotMaxTextWidth).text,
+                        fillStyle: colors.gray800
+                    });
+                    break;
 
-            this.tag({
-                x: x + AI_TABLE_CELL_PADDING,
-                y: y + AI_TABLE_CELL_MULTI_PADDING_TOP,
-                width,
-                height: AI_TABLE_OPTION_ITEM_HEIGHT,
-                text,
-                background,
-                color,
-                radius: AI_TABLE_OPTION_ITEM_RADIUS,
-                padding: AI_TABLE_OPTION_ITEM_PADDING,
-                fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE,
-                stroke: background,
-                textAlign: DEFAULT_TEXT_ALIGN_CENTER
-            });
+                case AITableSelectOptionStyle.tag:
+                    const maxTextWidth = columnWidth - 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_OPTION_ITEM_PADDING);
+                    const { textWidth, text } = getTextEllipsis(maxTextWidth, AI_TABLE_OPTION_ITEM_FONT_SIZE);
+                    const width = Math.max(textWidth + 2 * AI_TABLE_OPTION_ITEM_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
+                    this.tag({
+                        x: x + AI_TABLE_CELL_PADDING,
+                        y: y + AI_TABLE_CELL_MULTI_PADDING_TOP,
+                        width,
+                        height: AI_TABLE_OPTION_ITEM_HEIGHT,
+                        text,
+                        background,
+                        color: colors.white,
+                        radius: AI_TABLE_OPTION_ITEM_RADIUS,
+                        padding: AI_TABLE_OPTION_ITEM_PADDING,
+                        fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE,
+                        stroke: background,
+                        textAlign: DEFAULT_TEXT_ALIGN_CENTER
+                    });
+                    break;
+                default:
+                    const textMaxTextWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
+                    this.text({
+                        x: x + AI_TABLE_CELL_PADDING,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        text: getTextEllipsis(textMaxTextWidth).text,
+                        fillStyle: colors.gray800
+                    });
+                    break;
+            }
+
             ctx.restore();
         }
     }

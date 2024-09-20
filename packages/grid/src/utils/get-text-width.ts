@@ -24,6 +24,7 @@ export const getTextWidth = (ctx: CanvasRenderingContext2D, text: string, font: 
     }
     width = cacheOfFont.get(text);
     if (width == null) {
+        ctx.font = font;
         width = ctx!.measureText(text).width;
         cacheOfFont.set(text, width);
     }
