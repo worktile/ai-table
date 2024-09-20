@@ -1,28 +1,17 @@
-import Konva from 'konva';
-import {
-    AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_HEAD,
-    AI_TABLE_FIELD_HEAD_MORE,
-    AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-    AI_TABLE_ICON_COMMON_SIZE,
-    AI_TABLE_OFFSET,
-    AI_TABLE_ROW_HEAD_WIDTH,
-    Colors
-} from '../../constants';
-import { AITableCheckType, AITableCreateHeadsOptions } from '../../types';
-import { createFieldHead } from './create-field-head';
-import { createIcon } from './create-icon';
+import { AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../constants';
+import { AITableCreateHeadsOptions, AITableFieldHeadOptions } from '../../types';
 
 export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
-    const { fields, coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = options;
+    const { coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = options;
     const colors = Colors;
-    const { columnCount, frozenColumnWidth, frozenColumnCount, rowInitSize: fieldHeadHeight } = coordinate;
+    const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
+    const { fields } = aiTable;
 
     const getFieldHeadStatus = (fieldId: string) => {
         const iconVisible =
-            [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields[pointColumnIndex]?._id === fieldId;
-        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields[pointColumnIndex]?._id === fieldId;
+            [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields()[pointColumnIndex]?._id === fieldId;
+        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields()[pointColumnIndex]?._id === fieldId;
         const isSelected = aiTable.selection().selectedFields.has(fieldId);
         return {
             iconVisible,
@@ -31,92 +20,28 @@ export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
         };
     };
 
-    const getColumnHead = (columnStartIndex: number, columnStopIndex: number) => {
-        const _fieldHeads: Konva.Group[] = [];
-        for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
-            if (columnIndex > columnCount - 1) break;
-            if (columnIndex < 0) continue;
-            const field = fields[columnIndex];
-            if (field == null) continue;
-            const x = coordinate.getColumnOffset(columnIndex);
-            const columnWidth = coordinate.getColumnWidth(columnIndex);
-            const { iconVisible, isSelected, isHoverIcon } = getFieldHeadStatus(field._id);
-            const fieldHead = createFieldHead({
-                x,
-                y: 0,
-                width: columnWidth,
-                height: fieldHeadHeight,
-                field,
-                stroke: columnIndex === 0 ? colors.transparent : undefined,
-                iconVisible,
-                isSelected,
-                isHoverIcon
-            });
-
-            _fieldHeads.push(fieldHead);
-        }
-        return _fieldHeads;
-    };
-
-    const getFrozenColumnHead = () => {
-        const isChecked = aiTable.selection().selectedRecords.size === aiTable.records().length;
-        const head = getColumnHead(0, frozenColumnCount - 1);
-        const headGroup = [];
-        const numberHeadBg = new Konva.Rect({
-            x: AI_TABLE_OFFSET,
-            y: AI_TABLE_OFFSET,
-            width: AI_TABLE_ROW_HEAD_WIDTH,
+    const fieldHeads: AITableFieldHeadOptions[] = [];
+    for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
+        if (columnIndex > columnCount - 1) break;
+        if (columnIndex < 0) continue;
+        const field = fields()[columnIndex];
+        if (field == null) continue;
+        const x = coordinate.getColumnOffset(columnIndex);
+        const columnWidth = coordinate.getColumnWidth(columnIndex);
+        const { iconVisible, isSelected, isHoverIcon } = getFieldHeadStatus(field._id);
+        const fieldHead = {
+            x,
+            y: 0,
+            width: columnWidth,
             height: fieldHeadHeight,
-            fill: colors.white,
-            listening: false
-        });
-        const topLine = new Konva.Line({
-            x: AI_TABLE_OFFSET,
-            y: AI_TABLE_OFFSET,
-            points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
-            stroke: colors.gray200,
-            strokeWidth: 1,
-            listening: false
-        });
-        const bottomLine = new Konva.Line({
-            x: AI_TABLE_OFFSET,
-            y: AI_TABLE_OFFSET,
-            points: [AI_TABLE_ROW_HEAD_WIDTH, fieldHeadHeight, 0, fieldHeadHeight],
-            stroke: colors.gray200,
-            strokeWidth: 1,
-            listening: false
-        });
-        const icon = createIcon({
-            name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: AI_TABLE_CELL_PADDING,
-            y: (fieldHeadHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
-            type: isChecked ? AITableCheckType.checked : AITableCheckType.unchecked,
-            fill: isChecked ? colors.primary : colors.gray300
-        });
-        const headBg = new Konva.Rect({
-            x: AI_TABLE_ROW_HEAD_WIDTH,
-            y: AI_TABLE_OFFSET,
-            width: frozenColumnWidth,
-            height: fieldHeadHeight,
-            stroke: colors.gray200,
-            strokeWidth: 1,
-            fill: colors.transparent,
-            listening: false
-        });
-        headGroup.push(numberHeadBg, topLine, bottomLine, icon, ...head, headBg);
+            field,
+            stroke: columnIndex === 0 ? colors.transparent : undefined,
+            iconVisible,
+            isSelected,
+            isHoverIcon
+        };
 
-        return headGroup;
-    };
-
-    /**
-     * 绘制其他列标题
-     */
-    const columnHeads = getColumnHead(Math.max(columnStartIndex, frozenColumnCount), columnStopIndex);
-
-    const frozenColumnHead = getFrozenColumnHead();
-
-    return {
-        columnHeads,
-        frozenColumnHead
-    };
+        fieldHeads.push(fieldHead);
+    }
+    return fieldHeads;
 };
