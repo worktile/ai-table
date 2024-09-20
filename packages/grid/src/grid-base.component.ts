@@ -125,7 +125,12 @@ export class AITableGridBase implements OnInit {
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
         const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
-        this.aiTableGridFieldService.editFieldProperty(this.aiTable, field, false, gridColumnBlank, position);
+        this.aiTableGridFieldService.editFieldProperty(this.aiTable, {
+            field,
+            isUpdate: false,
+            origin: gridColumnBlank!,
+            position
+        });
     }
 
     public subscribeEvents() {

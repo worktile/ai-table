@@ -15,16 +15,12 @@
                 <span>{{ field.name }}</span>
             </span>
             <a
+                href="javascript:;"
                 class="grid-field-action"
                 thyAction
-                thyActiveClass="active"
                 thyIcon="more-vertical"
-                [thyDropdown]="fieldMenu"
-                href="javascript:;"
+                (click)="openFieldMenu($event, field, fieldAction)"
             >
-                <thy-dropdown-menu #fieldMenu>
-                    <field-menu [origin]="fieldAction" [fieldId]="field._id" [aiTable]="aiTable" [fieldMenus]="fieldMenus"></field-menu>
-                </thy-dropdown-menu>
             </a>
         </div>
     }

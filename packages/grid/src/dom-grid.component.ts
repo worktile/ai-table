@@ -16,6 +16,7 @@ import { ThyTag } from 'ngx-tethys/tag';
 import { ProgressEditorComponent, SelectOptionComponent } from './components';
 import { FieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldPropertyEditor } from './components/field-property-editor/field-property-editor.component';
+import { AITableField } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
@@ -72,5 +73,15 @@ export class AITableDomGrid extends AITableGridBase implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
         this.subscribeEvents();
+    }
+
+    openFieldMenu(e: Event, field: AITableField, fieldAction: HTMLElement) {
+        const moreBtn = (e.target as HTMLElement)!.closest('.grid-field-action');
+        this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+            origin: moreBtn,
+            editOrigin: fieldAction,
+            fieldId: field._id,
+            fieldMenus: this.fieldMenus
+        });
     }
 }
