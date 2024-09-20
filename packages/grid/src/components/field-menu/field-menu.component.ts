@@ -1,14 +1,15 @@
-import { Component, ChangeDetectionStrategy, Input, ElementRef, computed } from '@angular/core';
-import { AITableFieldMenuItem } from '../../types/field';
-import { AITable } from '../../core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, computed } from '@angular/core';
+import { ThyDivider } from 'ngx-tethys/divider';
 import {
+    ThyDropdownAbstractMenu,
+    ThyDropdownMenuComponent,
     ThyDropdownMenuItemDirective,
-    ThyDropdownMenuItemNameDirective,
     ThyDropdownMenuItemIconDirective,
-    ThyDropdownMenuComponent
+    ThyDropdownMenuItemNameDirective
 } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { ThyDivider } from 'ngx-tethys/divider';
+import { AITable } from '../../core';
+import { AITableFieldMenuItem } from '../../types/field';
 
 @Component({
     selector: 'field-menu',
@@ -24,7 +25,7 @@ import { ThyDivider } from 'ngx-tethys/divider';
         ThyDropdownMenuItemIconDirective
     ]
 })
-export class FieldMenu {
+export class FieldMenu extends ThyDropdownAbstractMenu {
     @Input({ required: true }) fieldId!: string;
 
     @Input({ required: true }) aiTable!: AITable;
@@ -33,13 +34,15 @@ export class FieldMenu {
 
     @Input() origin!: HTMLElement | ElementRef<any>;
 
+    @Input() position!: { x: number; y: number };
+
     field = computed(() => {
         return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
     });
 
     execute(menu: AITableFieldMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
-            menu.exec && menu.exec(this.aiTable, this.field, this.origin);
+            menu.exec && menu.exec(this.aiTable, this.field, this.origin, this.position);
         }
     }
 }
