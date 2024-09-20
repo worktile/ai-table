@@ -1,22 +1,16 @@
-import Konva from 'konva';
-import { AI_TABLE_CELL, AI_TABLE_OFFSET } from '../../constants';
-import { AITable } from '../../core';
-import { AITableCellsOptions, AITableRowType } from '../../types';
-import { generateTargetName, getCellHorizontalPosition } from '../../utils';
+import { AI_TABLE_CELL, AI_TABLE_OFFSET, Colors } from '../constants';
+import { AITable } from '../core';
+import { AITableCellsOptions, AITableRowType } from '../types';
+import { getCellHorizontalPosition } from './cell';
+import { generateTargetName } from './common';
 
-/**
- * 生成占位符单元格的函数
- * @param options
- * @returns
- */
-export const createPlaceHolderCells = (options: AITableCellsOptions) => {
+export function getPlaceHolderCellsConfigs(options: AITableCellsOptions) {
     const { aiTable, coordinate, columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = options;
     const { linearRows } = aiTable.context!;
     const { rowHeight, columnCount, rowCount } = coordinate;
-    const colors = AITable.getColors();
     const visibleColumns = AITable.getVisibleFields(aiTable);
-    const placeHolderCells: Konva.Rect[] = [];
 
+    let configs = [];
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
         // 当前列索引超出总列数范围，返回空
         if (columnIndex > columnCount - 1) {
@@ -55,7 +49,7 @@ export const createPlaceHolderCells = (options: AITableCellsOptions) => {
             });
 
             const height = rowHeight;
-            const rect = new Konva.Rect({
+            configs.unshift({
                 key: `placeholder-cell-${fieldId}-${recordId}`,
                 name: generateTargetName({
                     targetName: AI_TABLE_CELL,
@@ -66,16 +60,14 @@ export const createPlaceHolderCells = (options: AITableCellsOptions) => {
                 y,
                 width,
                 height,
-                fill: colors.transparent,
+                fill: Colors.transparent,
                 strokeEnabled: false,
                 hitStrokeWidth: 0,
                 transformsEnabled: 'position',
                 perfectDrawEnabled: false,
                 shadowEnabled: false
             });
-
-            placeHolderCells.unshift(rect);
         }
     }
-    return placeHolderCells;
-};
+    return configs;
+}
