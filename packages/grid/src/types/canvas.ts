@@ -53,6 +53,12 @@ export interface AITableRect extends AITableGraph {
     };
 }
 
+export interface AITableArc extends AITableGraph {
+    fill?: string;
+    stroke?: string;
+    radius: number;
+}
+
 export interface AITableText extends AITableGraph {
     text: string;
     fillStyle?: string;
