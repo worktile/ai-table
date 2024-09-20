@@ -3,17 +3,10 @@
     [thyAutoExpand]="true"
     [thyAllowClear]="true"
     [thyMode]="field().settings.is_multiple ? 'multiple' : ''"
-    [thyPreset]="'tag'"
     (thyOnExpandStatusChange)="updateValue($event)"
 >
     <ng-template #selectedDisplay let-option>
-        @if (optionStyle() === AITableSelectOptionStyle.tag) {
-            <select-option [field]="field()" [displayOption]="option"></select-option>
-        } @else {
-            <div thyTag class="mb-1 mr-1">
-                <select-option [field]="field()" [displayOption]="option"></select-option>
-            </div>
-        }
+        <select-option [field]="field()" [displayOption]="option"></select-option>
     </ng-template>
     @for (option of selectOptions(); track option._id) {
         <thy-option [thyValue]="option._id" [thyRawValue]="option" [thyShowOptionCustom]="true" [thyLabelText]="option.text">

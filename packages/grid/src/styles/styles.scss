@@ -2,7 +2,7 @@
 @use 'ngx-tethys/styles/index.scss';
 @use 'ngx-tethys/styles/variables.scss';
 @use '../components/cell-editors/cell-editor.scss';
-
+@use '../components/cell-views/select/option.scss';
 .ai-table-dom-grid {
     display: table;
     width: 100%;

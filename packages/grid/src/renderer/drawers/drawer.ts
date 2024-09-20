@@ -1,6 +1,7 @@
 import GraphemeSplitter from 'grapheme-splitter';
 import {
     AI_TABLE_OFFSET,
+    AI_TABLE_OPTION_ITEM_FONT_SIZE,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
@@ -14,6 +15,7 @@ import {
 } from '../../constants';
 import { AITable } from '../../core';
 import {
+    AITableArc,
     AITableCtxStyle,
     AITableLabel,
     AITableLine,
@@ -136,6 +138,22 @@ export class Drawer {
         }
         this.ctx.stroke();
         this.ctx.restore();
+    }
+
+    // 绘制圆
+    public arc(options: AITableArc) {
+        const { x, y, stroke, fill, radius } = options;
+        this.ctx.save();
+        this.ctx.beginPath();
+        if (fill) this.setStyle({ fillStyle: fill });
+        if (stroke) this.setStyle({ strokeStyle: stroke });
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        if (fill) {
+            this.ctx.fill();
+        }
+        if (stroke) {
+            this.ctx.stroke();
+        }
     }
 
     // 绘制矩形
@@ -368,6 +386,7 @@ export class Drawer {
         const baselineOffset = verticalAlign === DEFAULT_TEXT_VERTICAL_ALIGN_TOP ? fontSize / 2 : 0;
         if (fillStyle) this.setStyle({ fillStyle });
         this.ctx.textAlign = textAlign;
+        this.ctx.font = fontStyle;
         this.ctx.fillText(text, x, y + baselineOffset);
     }
 
@@ -382,7 +401,7 @@ export class Drawer {
             radius,
             background,
             color = this.colors.gray800,
-            fontSize = DEFAULT_FONT_SIZE,
+            fontSize = AI_TABLE_OPTION_ITEM_FONT_SIZE,
             textAlign = DEFAULT_TEXT_ALIGN_LEFT,
             verticalAlign = DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
             fontWeight = DEFAULT_FONT_WEIGHT,
