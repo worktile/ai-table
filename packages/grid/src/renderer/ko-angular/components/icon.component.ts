@@ -1,0 +1,99 @@
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { StageConfig } from 'konva/lib/Stage';
+import { Check, Colors, DEFAULT_ICON_SIZE, Unchecked } from '../../../constants';
+import { AITableCheckType, AITableIconOptions } from '../../../types';
+import { KoCoreShape } from './core-shape.component';
+
+@Component({
+    selector: 'ko-icon',
+    template: `
+        <ko-group [config]="groupConfig()">
+            <ko-rect [config]="squareShapeConfig()"></ko-rect>
+            <ko-path [config]="iconConfig()"></ko-path>
+        </ko-group>
+    `,
+    standalone: true,
+    imports: [KoCoreShape],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KoIcon {
+    options = input.required<AITableIconOptions>();
+
+    groupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            x: this.options()!.x,
+            y: this.options()!.y
+        };
+    });
+
+    squareShapeConfig = computed(() => {
+        const {
+            name,
+            backgroundWidth,
+            backgroundHeight,
+            size = DEFAULT_ICON_SIZE,
+            strokeWidth = 1,
+            background = Colors.transparent,
+            cornerRadius,
+            opacity
+        } = this.options();
+        return {
+            name,
+            width: backgroundWidth || size,
+            height: backgroundHeight || size,
+            strokeWidth,
+            fill: background,
+            cornerRadius,
+            opacity
+        };
+    });
+
+    iconConfig = computed(() => {
+        const {
+            type,
+            data,
+            backgroundWidth,
+            backgroundHeight,
+            size = DEFAULT_ICON_SIZE,
+            stroke,
+            strokeWidth = 1,
+            scaleX,
+            scaleY,
+            offsetX,
+            offsetY,
+            rotation,
+            fill = Colors.gray600,
+            transformsEnabled = 'position'
+        } = this.options();
+
+        let pathData = data;
+
+        switch (type) {
+            case AITableCheckType.checked:
+                pathData = Check;
+                break;
+            case AITableCheckType.unchecked:
+                pathData = Unchecked;
+                break;
+        }
+
+        return {
+            x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
+            y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
+            data: pathData,
+            width: size,
+            height: size,
+            fill,
+            offsetX,
+            offsetY,
+            scaleX,
+            scaleY,
+            rotation,
+            stroke,
+            strokeWidth,
+            transformsEnabled,
+            perfectDrawEnabled: false,
+            listening: false
+        };
+    });
+}

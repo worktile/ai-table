@@ -1,4 +1,14 @@
-<div #container class="ai-table-grid-view"></div>
+<div #container class="ai-table-grid-view">
+    @if (stageOptions) {
+        <ai-table-stage
+            [options]="stageOptions"
+            (onMousemove)="stageMousemove($event)"
+            (onMousedown)="stageMousedown($event)"
+            (onClick)="stageClick($event)"
+            (onDblclick)="stageDblclick($event)"
+        ></ai-table-stage>
+    }
+</div>
 
 @if (isRenderDone()) {
     <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">

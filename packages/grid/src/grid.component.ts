@@ -1,10 +1,12 @@
 import {
     afterNextRender,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     computed,
     effect,
     ElementRef,
+    inject,
     OnDestroy,
     OnInit,
     Signal,
@@ -12,7 +14,6 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage } from 'konva/lib/Stage';
 import { fromEvent } from 'rxjs';
 import {
@@ -32,11 +33,12 @@ import {
 } from './constants';
 import { AITable, AITableField, Coordinate, RendererContext } from './core';
 import { AITableGridBase } from './grid-base.component';
-import { createGridStage } from './renderer/creations/create-grid-stage';
+import { KoEventObject } from './renderer/ko-angular/interfaces/ko-event-object';
+import { AITableStage } from './renderer/ko-angular/stage.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableMouseDownType } from './types';
+import { AITableGridStageOptions, AITableMouseDownType } from './types';
 import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, getRecordOrField, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 
@@ -48,6 +50,7 @@ import { getMousePosition } from './utils/position';
     host: {
         class: 'ai-table-grid'
     },
+    imports: [AITableStage],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
@@ -80,6 +83,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     containerElement = computed(() => {
         return this.container()?.nativeElement;
     });
+
+    stageOptions!: AITableGridStageOptions;
+
+    private cdr = inject(ChangeDetectorRef);
 
     constructor() {
         super();
@@ -135,134 +142,128 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private initGridRender() {
         this.coordinate = this.initCoordinate();
-        this.gridStage = createGridStage({
+        this.stageOptions = {
             aiTable: this.aiTable,
             container: this.container()?.nativeElement!,
             coordinate: this.coordinate
-        });
-        this.gridStage.draw();
-        this.bindEvent();
+        };
+        this.cdr.markForCheck();
     }
 
-    private bindEvent() {
-        const context = this.aiTable.context as RendererContext;
-        this.gridStage.on('mousemove', (e: KonvaEventObject<MouseEvent>) => {
-            if (this.timer) {
-                cancelAnimationFrame(this.timer);
-            }
-            this.timer = requestAnimationFrame(() => {
-                const targetName = e.target.name();
-                const pos = this.gridStage?.getPointerPosition();
-                if (pos == null) return;
-                const { x, y } = pos;
-                const curMousePosition = getMousePosition(
-                    x,
-                    y,
-                    this.coordinate,
-                    AITable.getVisibleFields(this.aiTable),
-                    context,
-                    targetName
-                );
-                handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
-                context.setPointPosition(curMousePosition);
-                this.timer = null;
-            });
+    stageMousemove(e: KoEventObject<MouseEvent>) {
+        if (this.timer) {
+            cancelAnimationFrame(this.timer);
+        }
+        this.timer = requestAnimationFrame(() => {
+            const targetName = e.event.target.name();
+            const pos = this.gridStage?.getPointerPosition();
+            if (pos == null) return;
+            const { context } = this.aiTable;
+            const { x, y } = pos;
+            const curMousePosition = getMousePosition(x, y, this.coordinate, AITable.getVisibleFields(this.aiTable), context!, targetName);
+            handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
+            context!.setPointPosition(curMousePosition);
+            this.timer = null;
         });
-        this.gridStage.on('mousedown', (e: KonvaEventObject<MouseEvent>) => {
-            const mouseEvent = e.evt;
-            const _targetName = e.target.name();
+    }
 
-            const { targetName, fieldId, recordId } = getDetailByTargetName(_targetName);
-            switch (targetName) {
-                case AI_TABLE_FIELD_HEAD:
-                    mouseEvent.preventDefault();
-                    if (!fieldId) return;
-                    this.aiTableGridSelectionService.selectField(fieldId);
-                    return;
-                case AI_TABLE_CELL:
-                    if (!recordId || !fieldId) return;
-                    this.aiTableGridSelectionService.selectCell(recordId, fieldId);
-                    return;
-                case AI_TABLE_FIELD_HEAD_MORE:
-                    mouseEvent.preventDefault();
-                    if (fieldId) {
-                        const moreRect = e.target.getClientRect();
-                        const fieldGroupRect = e.target.getParent()?.getParent()?.getClientRect()!;
-                        const containerRect = this.containerElement().getBoundingClientRect();
+    stageMousedown(e: KoEventObject<MouseEvent>) {
+        const mouseEvent = e.event.evt;
+        const _targetName = e.event.target.name();
 
-                        const position = {
-                            x: containerRect.x + moreRect.x,
-                            y: containerRect.y + moreRect.y + moreRect.height
-                        };
-                        const editOriginPosition = {
-                            x: containerRect.x + fieldGroupRect.x,
-                            y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
-                        };
+        const { targetName, fieldId, recordId } = getDetailByTargetName(_targetName);
+        switch (targetName) {
+            case AI_TABLE_FIELD_HEAD:
+                mouseEvent.preventDefault();
+                if (!fieldId) return;
+                this.aiTableGridSelectionService.selectField(fieldId);
+                return;
+            case AI_TABLE_CELL:
+                if (!recordId || !fieldId) return;
+                this.aiTableGridSelectionService.selectCell(recordId, fieldId);
+                return;
+            case AI_TABLE_FIELD_HEAD_MORE:
+                mouseEvent.preventDefault();
+                if (fieldId) {
+                    const moreRect = e.event.target.getClientRect();
+                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
+                    const containerRect = this.containerElement().getBoundingClientRect();
 
-                        this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
-                            origin: this.containerElement(),
-                            fieldId: fieldId,
-                            fieldMenus: this.fieldMenus,
-                            position,
-                            editOriginPosition
-                        });
-                    }
-                    return;
-                case AI_TABLE_ROW_ADD_BUTTON:
-                case AI_TABLE_FIELD_ADD_BUTTON:
-                case AI_TABLE_ROW_SELECT_CHECKBOX:
-                case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
-                    return;
-                default:
-                    this.aiTableGridSelectionService.clearSelection();
-            }
-        });
-        this.gridStage.on('click', (e: KonvaEventObject<MouseEvent>) => {
-            const mouseEvent = e.evt;
-            mouseEvent.preventDefault();
-            const { targetName, rowIndex: pointRowIndex, x, y } = context.pointPosition();
-            if (mouseEvent.button !== AITableMouseDownType.Left) return;
-            switch (targetName) {
-                case AI_TABLE_ROW_ADD_BUTTON: {
-                    this.aiTableGridSelectionService.clearSelection();
-                    this.addRecord();
-                    return;
+                    const position = {
+                        x: containerRect.x + moreRect.x,
+                        y: containerRect.y + moreRect.y + moreRect.height
+                    };
+                    const editOriginPosition = {
+                        x: containerRect.x + fieldGroupRect.x,
+                        y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                    };
+
+                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+                        origin: this.containerElement(),
+                        fieldId: fieldId,
+                        fieldMenus: this.fieldMenus,
+                        position,
+                        editOriginPosition
+                    });
                 }
-                case AI_TABLE_ROW_SELECT_CHECKBOX: {
-                    const pointRecordId = context.linearRows()[pointRowIndex]?._id;
-                    this.selectRecord(pointRecordId);
-                    return;
-                }
-                case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
-                    const isChecked = this.aiTable.selection().selectedRecords.size === this.aiTable.records().length;
-                    this.toggleSelectAll(!isChecked);
-                    return;
-                }
-                case AI_TABLE_FIELD_ADD_BUTTON: {
-                    this.aiTableGridSelectionService.clearSelection();
-                    this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
-                    return;
-                }
-            }
-        });
-        this.gridStage.on('dblclick', (e: KonvaEventObject<MouseEvent>) => {
-            const _targetName = e.target.name();
-            const { fieldId, recordId } = getDetailByTargetName(_targetName);
-            if (!this.coordinate || !recordId || !fieldId) {
+                return;
+            case AI_TABLE_ROW_ADD_BUTTON:
+            case AI_TABLE_FIELD_ADD_BUTTON:
+            case AI_TABLE_ROW_SELECT_CHECKBOX:
+            case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
+                return;
+            default:
+                this.aiTableGridSelectionService.clearSelection();
+        }
+    }
+
+    stageClick(e: KoEventObject<MouseEvent>) {
+        const mouseEvent = e.event.evt;
+        mouseEvent.preventDefault();
+        const { context } = this.aiTable;
+        const { targetName, rowIndex: pointRowIndex, x, y } = context!.pointPosition();
+        if (mouseEvent.button !== AITableMouseDownType.Left) return;
+        switch (targetName) {
+            case AI_TABLE_ROW_ADD_BUTTON: {
+                this.aiTableGridSelectionService.clearSelection();
+                this.addRecord();
                 return;
             }
-
-            const field = getRecordOrField(this.aiTable.fields, fieldId!) as Signal<AITableField>;
-            const fieldType = field().type;
-            if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
+            case AI_TABLE_ROW_SELECT_CHECKBOX: {
+                const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
+                this.selectRecord(pointRecordId);
                 return;
             }
-            this.aiTableGridEventService.openEditByDblClick(this.aiTable, {
-                container: this.containerElement(),
-                coordinate: this.coordinate,
-                fieldId: fieldId!,
-                recordId: recordId!
-            });
+            case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
+                const isChecked = this.aiTable.selection().selectedRecords.size === this.aiTable.records().length;
+                this.toggleSelectAll(!isChecked);
+                return;
+            }
+            case AI_TABLE_FIELD_ADD_BUTTON: {
+                this.aiTableGridSelectionService.clearSelection();
+                this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
+                return;
+            }
+        }
+    }
+
+    stageDblclick(e: KoEventObject<MouseEvent>) {
+        const _targetName = e.event.target.name();
+        const { fieldId, recordId } = getDetailByTargetName(_targetName);
+        if (!this.coordinate || !recordId || !fieldId) {
+            return;
+        }
+
+        const field = getRecordOrField(this.aiTable.fields, fieldId!) as Signal<AITableField>;
+        const fieldType = field().type;
+        if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
+            return;
+        }
+        this.aiTableGridEventService.openEditByDblClick(this.aiTable, {
+            container: this.containerElement(),
+            coordinate: this.coordinate,
+            fieldId: fieldId!,
+            recordId: recordId!
         });
     }
 
