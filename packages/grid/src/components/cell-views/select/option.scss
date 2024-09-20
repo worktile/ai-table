@@ -1,0 +1,10 @@
+.select-option {
+    width: 100%;
+    height: 100%;
+    .thy-tag {
+        max-width: 100%;
+    }
+    &.select-option-tag {
+        display: flex;
+    }
+}

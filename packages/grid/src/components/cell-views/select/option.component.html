@@ -1,8 +1,8 @@
 @if (displayOption(); as displayOption) {
     @switch (optionStyle()) {
         @case (AITableSelectOptionStyle.dot) {
-            @if (displayOption.bg_color) {
-                <thy-dot [thyColor]="displayOption.bg_color" [thySize]="'sm'" class="mr-2"></thy-dot>
+            @if (displayOption.bg_color || displayOption.color; as color) {
+                <thy-dot [thyColor]="color" [thySize]="'md'" class="mr-2"></thy-dot>
             }
             <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }
@@ -18,7 +18,7 @@
         }
         @case (AITableSelectOptionStyle.piece) {
             @if (displayOption.bg_color || displayOption.color; as color) {
-                <thy-dot thyShape="square" [thyColor]="color" [thySize]="'sm'" class="mr-2"></thy-dot>
+                <thy-dot thyShape="square" [thyColor]="color" [thySize]="'md'" class="mr-2"></thy-dot>
             }
             <span thyFlexibleText [thyTooltipContent]="displayOption.text">{{ displayOption.text }}</span>
         }

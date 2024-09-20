@@ -12,7 +12,8 @@ import { AITableSelectField } from '../../../types';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'd-flex align-items-center select-option'
+        class: 'select-option thy-text',
+        '[class.select-option-tag]': 'optionStyle === AITableSelectOptionStyle.tag'
     },
     imports: [ThyTag, ThyIcon, ThyTooltipModule, ThyDot, ThyFlexibleText]
 })
@@ -22,7 +23,7 @@ export class SelectOptionComponent {
     displayOption = input.required<AITableSelectOption>();
 
     optionStyle = computed(() => {
-        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.tag;
+        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.text;
     });
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;
