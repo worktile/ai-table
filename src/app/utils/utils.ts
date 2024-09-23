@@ -23,7 +23,7 @@ export function getDefaultValue() {
                 },
                 values: {
                     'column-1': '文本 1-1',
-                    'column-2': ['1'],
+                    'column-2': '1',
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8a'],
@@ -416,6 +416,9 @@ export function getCanvasDefaultValue() {
                     'column-13':
                         '文本 1-1 - 超级长的文本，用来测试文本省略或折行, 当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。',
                     'column-2': '1',
+                    'column-110': '1',
+                    'column-111': '1',
+                    'column-112': '1',
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
                     'column-4': 1682235946,
@@ -442,6 +445,9 @@ export function getCanvasDefaultValue() {
                     'column-1': '文本 2-1',
                     'column-13': '文本 2-1',
                     'column-2': '2',
+                    'column-110': '2',
+                    'column-111': '2',
+                    'column-112': '2',
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
                     'column-4': 1682235946,
@@ -465,6 +471,9 @@ export function getCanvasDefaultValue() {
                     'column-1': '文本 3-1',
                     'column-13': '文本 3-1',
                     'column-2': '3',
+                    'column-110': '3',
+                    'column-111': '3',
+                    'column-112': '3',
                     'column-20': [
                         '66b31d0c8097a908f74bcd8a',
                         '66b31d0c8097a908f74bcd8b',
@@ -490,7 +499,7 @@ export function getCanvasDefaultValue() {
                 name: '单行文本',
                 positions: {
                     view1: 0,
-                    view2: 16
+                    view2: 18
                 },
                 type: AITableFieldType.text
             },
@@ -499,7 +508,7 @@ export function getCanvasDefaultValue() {
                 name: '单行文本',
                 positions: {
                     view1: 1,
-                    view2: 15
+                    view2: 17
                 },
                 type: AITableFieldType.text
             },
@@ -521,6 +530,36 @@ export function getCanvasDefaultValue() {
                         },
                         {
                             _id: '2',
+                            text: '进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中',
+                            color: '#ffcd5d'
+                        },
+                        {
+                            _id: '3',
+                            text: '已完成',
+                            color: '#73d897'
+                        }
+                    ]
+                }
+            },
+            {
+                _id: 'column-110',
+                name: 'dot单选',
+                positions: {
+                    view1: 3,
+                    view2: 15
+                },
+                type: AITableFieldType.select,
+                icon: 'check-circle',
+                settings: {
+                    option_style: AITableSelectOptionStyle.dot,
+                    options: [
+                        {
+                            _id: '1',
+                            text: '开始开始开始开始开始开始开始开始开始开始开始开始开始开始开始开始开始开始',
+                            color: '#5dcfff'
+                        },
+                        {
+                            _id: '2',
                             text: '进行中',
                             color: '#ffcd5d'
                         },
@@ -532,6 +571,67 @@ export function getCanvasDefaultValue() {
                     ]
                 }
             },
+            {
+                _id: 'column-111',
+                name: 'piece单选',
+                positions: {
+                    view1: 4,
+                    view2: 14
+                },
+                type: AITableFieldType.select,
+                icon: 'check-circle',
+                settings: {
+                    option_style: AITableSelectOptionStyle.piece,
+                    options: [
+                        {
+                            _id: '1',
+                            text: '开始',
+                            color: '#5dcfff'
+                        },
+                        {
+                            _id: '2',
+                            text: '进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中进行中',
+                            color: '#ffcd5d'
+                        },
+                        {
+                            _id: '3',
+                            text: '已完成',
+                            color: '#73d897'
+                        }
+                    ]
+                }
+            },
+            {
+                _id: 'column-112',
+                name: 'tag单选',
+                positions: {
+                    view1: 5,
+                    view2: 13
+                },
+                type: AITableFieldType.select,
+                icon: 'check-circle',
+                settings: {
+                    option_style: AITableSelectOptionStyle.tag,
+                    options: [
+                        {
+                            _id: '1',
+                            text: '开始',
+                            color: '#5dcfff'
+                        },
+                        {
+                            _id: '2',
+                            text: '进行中',
+                            color: '#ffcd5d'
+                        },
+                        {
+                            _id: '3',
+                            text: '已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成已完成',
+                            color: '#73d897'
+                        }
+                    ]
+                }
+            },
+            //
             {
                 _id: 'column-20',
                 type: AITableFieldType.select,
@@ -579,15 +679,15 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 4,
-                    view2: 14
+                    view1: 6,
+                    view2: 12
                 }
             },
             {
                 _id: 'column-3',
                 name: '数字',
                 positions: {
-                    view1: 5,
+                    view1: 7,
                     view2: 11
                 },
                 type: AITableFieldType.number
@@ -596,7 +696,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-4',
                 name: '日期',
                 positions: {
-                    view1: 6,
+                    view1: 8,
                     view2: 10
                 },
                 type: AITableFieldType.date
@@ -605,7 +705,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-5',
                 name: '成员',
                 positions: {
-                    view1: 7,
+                    view1: 9,
                     view2: 9
                 },
                 settings: {
@@ -617,7 +717,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-6',
                 name: '进度',
                 positions: {
-                    view1: 8,
+                    view1: 10,
                     view2: 8
                 },
                 type: AITableFieldType.progress
@@ -626,7 +726,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-7',
                 name: '评分',
                 positions: {
-                    view1: 9,
+                    view1: 11,
                     view2: 7
                 },
                 type: AITableFieldType.rate
@@ -635,7 +735,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-8',
                 name: '链接',
                 positions: {
-                    view1: 10,
+                    view1: 12,
                     view2: 6
                 },
                 type: AITableFieldType.link
@@ -644,7 +744,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-9',
                 name: '创建人',
                 positions: {
-                    view1: 11,
+                    view1: 13,
                     view2: 5
                 },
                 type: AITableFieldType.createdBy
@@ -653,7 +753,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-10',
                 name: '创建时间',
                 positions: {
-                    view1: 12,
+                    view1: 14,
                     view2: 4
                 },
                 type: AITableFieldType.createdAt
@@ -662,7 +762,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-11',
                 name: '更新人',
                 positions: {
-                    view1: 13,
+                    view1: 15,
                     view2: 3
                 },
                 type: AITableFieldType.updatedBy
@@ -671,7 +771,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-12',
                 name: '更新时间',
                 positions: {
-                    view1: 14,
+                    view1: 16,
                     view2: 2
                 },
                 type: AITableFieldType.updatedAt
