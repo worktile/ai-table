@@ -59,11 +59,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
 
     updateValue(value: boolean) {
         if (!value) {
-            if (!this.field().settings.is_multiple) {
-                Actions.updateFieldValue(this.aiTable, [this.modelValue], [this.record()._id, this.field()._id]);
-            } else {
-                this.updateFieldValue();
-            }
+            this.updateFieldValue();
             this.closePopover();
         }
     }
