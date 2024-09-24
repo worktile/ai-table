@@ -1,4 +1,4 @@
-import Konva from 'konva';
+import { RectConfig } from 'konva/lib/shapes/Rect';
 import { AI_TABLE_CELL_BORDER } from '../../constants';
 import { AITable } from '../../core';
 import { AITableCellsOptions, AITableRowType } from '../../types';
@@ -13,8 +13,8 @@ export const createActiveCellBorder = (options: AITableCellsOptions) => {
     const activeCell = AITable.getActiveCell(aiTable);
     const totalColumnCount = visibleColumns.length;
 
-    let activeCellBorder: Konva.Rect | null = null;
-    let frozenActiveCellBorder: Konva.Rect | null = null;
+    let activeCellBorder: RectConfig | null = null;
+    let frozenActiveCellBorder: RectConfig | null = null;
 
     if (activeCell != null) {
         const { fieldId } = activeCell;
@@ -52,21 +52,21 @@ export const createActiveCellBorder = (options: AITableCellsOptions) => {
                 });
                 const borderOffset = 1;
 
-                const currentCellBorder = new Konva.Rect({
+                const currentConfig = {
                     x: x + offset + borderOffset,
-                    y,
-                    width: width,
-                    height: rowHeight,
+                    y: y + borderOffset,
+                    width: width - borderOffset,
+                    height: rowHeight - borderOffset,
                     strokeWidth: AI_TABLE_CELL_BORDER,
                     stroke: colors.primary,
                     fillEnabled: false,
                     listening: false
-                });
+                };
 
                 if (isFrozenColumn) {
-                    frozenActiveCellBorder = currentCellBorder;
+                    frozenActiveCellBorder = currentConfig;
                 } else {
-                    activeCellBorder = currentCellBorder;
+                    activeCellBorder = currentConfig;
                 }
             }
         }
