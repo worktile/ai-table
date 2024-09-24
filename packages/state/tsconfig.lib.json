@@ -7,10 +7,10 @@
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
-        "lib": ["dom", "es2018"],
+        "lib": ["dom", "ES2022"],
         "paths": {
-            "@ai-table/grid": ["dist/grid"],
-        },
+            "@ai-table/grid": ["dist/grid"]
+        }
     },
     "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"]
 }
