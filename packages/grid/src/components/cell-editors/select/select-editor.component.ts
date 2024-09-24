@@ -13,6 +13,7 @@ import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { Actions, AITableQueries, AITableSelectOptionStyle } from '../../../core';
+import { ThyEmptyModule } from 'ngx-tethys/empty';
 
 @Component({
     selector: 'select-cell-editor',
@@ -34,7 +35,8 @@ import { Actions, AITableQueries, AITableSelectOptionStyle } from '../../../core
         ThyDot,
         ThyFlexibleText,
         SelectOptionPipe,
-        SelectOptionComponent
+        SelectOptionComponent,
+        ThyEmptyModule
     ]
 })
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], AITableSelectField> {

@@ -81,7 +81,7 @@
 
                                 <div class="d-flex">
                                     @if (fieldValue | selectOptions: options; as selectedOptions) {
-                                        @for (option of selectedOptions; track option!._id; let i = $index) {
+                                        @for (option of selectedOptions; track option?._id || $index; let i = $index) {
                                             @if (i + 1 <= maxShowCount) {
                                                 @if (isTagStyle) {
                                                     <select-option
