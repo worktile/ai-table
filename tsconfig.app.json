@@ -7,12 +7,12 @@
         "types": [],
         "paths": {
             "@ai-table/grid": ["./packages/grid/src/index"],
-            "@ai-table/state": ["./packages/state/src/public-api"],
+            "@ai-table/state": ["./packages/state/src/public-api"]
         },
         "moduleResolution": "node",
         "importHelpers": true,
         "module": "es2020",
-        "lib": ["es2018", "dom"]
+        "lib": ["es2022", "dom"]
     },
     "files": ["src/main.ts"],
     "include": ["src/**/*.d.ts"]

@@ -39,6 +39,8 @@ export interface AITableGridStageOptions {
     aiTable: AITable;
     container: HTMLDivElement;
     coordinate: Coordinate;
+    containerWidth: number;
+    containerHeight: number;
 }
 
 export enum AITableRowColumnType {

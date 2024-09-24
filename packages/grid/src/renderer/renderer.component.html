@@ -1,0 +1,56 @@
+<ko-stage
+    [config]="stageConfig()"
+    (koMousemove)="stageMousemove($event)"
+    (koMousedown)="stageMousedown($event)"
+    (koClick)="stageClick($event)"
+    (koDblclick)="stageDblclick($event)"
+>
+    <ko-layer>
+        <ko-group [config]="gridGroupConfig()">
+            <ko-group [config]="offsetYConfig()">
+                <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
+                <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
+                <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
+                <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
+            </ko-group>
+
+            <ko-group>
+                <ai-table-frozen-column-heads [config]="columnHeadConfig()"></ai-table-frozen-column-heads>
+            </ko-group>
+
+            <ko-group [config]="commonGroupConfig()">
+                <ko-group [config]="offsetConfig()">
+                    <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
+                </ko-group>
+
+                <ko-group [config]="offsetXConfig()">
+                    <ai-table-column-heads [config]="columnHeadConfig()"></ai-table-column-heads>
+                    <ai-table-add-field
+                        [coordinate]="coordinate()"
+                        [fields]="fields()"
+                        [columnStopIndex]="visibleRangeInfo().columnStopIndex"
+                    ></ai-table-add-field>
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="attachGroupConfig()">
+                <ko-group [config]="offsetConfig()">
+                    <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
+                    @if (activeCellBorderConfig().activeCellBorder) {
+                        <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
+                    }
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="frozenAttachGroupConfig()">
+                <ko-group [config]="offsetYConfig()">
+                    @if (activeCellBorderConfig().frozenActiveCellBorder) {
+                        <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
+                    }
+                </ko-group>
+            </ko-group>
+        </ko-group>
+    </ko-layer>
+</ko-stage>
+
+<ng-content></ng-content>

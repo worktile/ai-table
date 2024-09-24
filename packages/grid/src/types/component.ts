@@ -28,12 +28,11 @@ export interface AITableFieldHeadOptions {
 }
 
 export interface AITableCreateHeadsOptions {
-    fields: AITableField[];
+    aiTable: AITable;
     coordinate: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
-    aiTable: AITable;
 }
 
 export interface AITableTargetNameOptions {
