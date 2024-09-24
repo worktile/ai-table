@@ -1,12 +1,10 @@
 import {
     afterNextRender,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     effect,
     ElementRef,
-    inject,
     OnDestroy,
     OnInit,
     Signal,
@@ -55,17 +53,17 @@ import { getMousePosition } from './utils/position';
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     timer!: number | null;
 
-    coordinate!: Coordinate;
-
     resizeObserver!: ResizeObserver;
 
     fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
 
     ADD_BUTTON_WIDTH = AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
 
-    isRenderDone = signal(false);
-
     containerRect = signal({ width: 0, height: 0 });
+
+    hasContainerRect = computed(() => {
+        return this.containerRect().width > 0 && this.containerRect().height > 0;
+    });
 
     container = viewChild<ElementRef>('container');
 
@@ -73,61 +71,29 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     horizontalBarRef = viewChild<ElementRef>('horizontalBar');
 
-    gridLinearRows = computed(() => {
+    linearRows = computed(() => {
         return buildGridLinearRows(this.aiRecords());
     });
 
-    containerElement = computed(() => {
-        return this.container()?.nativeElement;
+    visibleColumnsMap = computed(() => {
+        const columns = AITable.getVisibleFields(this.aiTable);
+        return new Map(columns?.map((item, index) => [item._id, index]));
     });
 
-    stageOptions!: AITableGridStageOptions;
+    visibleRowsIndexMap = computed(() => {
+        return new Map(this.linearRows().map((row, index) => [row._id, index]));
+    });
 
-    private cdr = inject(ChangeDetectorRef);
+    containerElement = computed(() => {
+        return this.container()!.nativeElement;
+    });
 
-    constructor() {
-        super();
-
-        afterNextRender(() => {
-            this.setContainerRect();
-            this.initGridRender();
-            this.containerResizeListener();
-            this.bindWheel();
-            this.isRenderDone.set(true);
-        });
-        effect(() => {
-            if (this.isRenderDone()) {
-                this.bindScrollBarScroll();
-            }
-        });
-        effect(() => {
-            this.initGridRender();
-        });
-    }
-
-    override ngOnInit(): void {
-        super.ngOnInit();
-        this.aiTable.context = this.initContext();
-    }
-
-    ngOnDestroy(): void {
-        this.resizeObserver?.disconnect();
-    }
-
-    private initContext() {
-        return new RendererContext({
-            linearRows: this.gridLinearRows,
-            pointPosition: signal(DEFAULT_POINT_POSITION),
-            scrollState: signal(DEFAULT_SCROLL_STATE)
-        });
-    }
-
-    private initCoordinate() {
+    stageOptions: Signal<AITableGridStageOptions> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
-        return new Coordinate({
+        const coordinate = new Coordinate({
             container: this.containerElement(),
             rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
-            rowCount: (this.aiTable.context as RendererContext).linearRows().length,
+            rowCount: this.linearRows().length,
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
             columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
@@ -135,18 +101,50 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             columnIndicesMap: getColumnIndicesMap(fields),
             frozenColumnCount: 1
         });
-    }
-
-    private initGridRender() {
-        this.coordinate = this.initCoordinate();
-        this.stageOptions = {
+        return {
             aiTable: this.aiTable,
-            container: this.container()?.nativeElement!,
-            coordinate: this.coordinate,
+            container: this.containerElement(),
+            coordinate: coordinate,
             containerWidth: this.containerRect().width,
             containerHeight: this.containerRect().height
         };
-        this.cdr.markForCheck();
+    });
+
+    coordinate = computed(() => {
+        return this.stageOptions().coordinate;
+    });
+
+    constructor() {
+        super();
+        afterNextRender(() => {
+            this.setContainerRect();
+            this.containerResizeListener();
+            this.bindWheel();
+        });
+        effect(() => {
+            if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
+                this.bindScrollBarScroll();
+            }
+        });
+    }
+
+    override ngOnInit(): void {
+        super.ngOnInit();
+        this.initContext();
+    }
+
+    ngOnDestroy(): void {
+        this.resizeObserver?.disconnect();
+    }
+
+    private initContext() {
+        this.aiTable.context = new RendererContext({
+            linearRows: this.linearRows,
+            visibleColumnsMap: this.visibleColumnsMap,
+            visibleRowsIndexMap: this.visibleRowsIndexMap,
+            pointPosition: signal(DEFAULT_POINT_POSITION),
+            scrollState: signal(DEFAULT_SCROLL_STATE)
+        });
     }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
@@ -160,7 +158,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             if (pos == null) return;
             const { context } = this.aiTable;
             const { x, y } = pos;
-            const curMousePosition = getMousePosition(x, y, this.coordinate, AITable.getVisibleFields(this.aiTable), context!, targetName);
+            const curMousePosition = getMousePosition(
+                x,
+                y,
+                this.coordinate(),
+                AITable.getVisibleFields(this.aiTable),
+                context!,
+                targetName
+            );
             handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
             context!.setPointPosition(curMousePosition);
             this.timer = null;
@@ -250,10 +255,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     stageDblclick(e: KoEventObject<MouseEvent>) {
         const _targetName = e.event.target.name();
         const { fieldId, recordId } = getDetailByTargetName(_targetName);
-        if (!this.coordinate || !recordId || !fieldId) {
+        if (!recordId || !fieldId) {
             return;
         }
-
         const field = getRecordOrField(this.aiTable.fields, fieldId!) as Signal<AITableField>;
         const fieldType = field().type;
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
@@ -261,26 +265,22 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
         this.aiTableGridEventService.openEditByDblClick(this.aiTable, {
             container: this.containerElement(),
-            coordinate: this.coordinate,
+            coordinate: this.coordinate(),
             fieldId: fieldId!,
             recordId: recordId!
         });
     }
 
     private bindWheel() {
-        if (!this.container()) {
-            return;
-        }
         const isWindows = isWindowsOS();
-        let timer: number | null = null;
         fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e: WheelEvent) => {
                 e.preventDefault();
-                if (timer) {
-                    return;
+                if (this.timer) {
+                    cancelAnimationFrame(this.timer);
                 }
-                timer = requestAnimationFrame(() => {
+                this.timer = requestAnimationFrame(() => {
                     const { deltaX, deltaY, shiftKey } = e;
                     const fixedDeltaY = shiftKey && isWindows ? 0 : deltaY;
                     const fixedDeltaX = shiftKey && isWindows ? deltaY : deltaX;
@@ -292,19 +292,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     if (verticalBar) {
                         verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
                     }
-                    timer = null;
+                    this.timer = null;
                 });
             });
     }
 
     private bindScrollBarScroll() {
-        fromEvent<WheelEvent>(this.horizontalBarRef()?.nativeElement, 'scroll', { passive: true })
+        fromEvent<WheelEvent>(this.horizontalBarRef()!.nativeElement, 'scroll', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
                 this.horizontalScroll(e);
             });
 
-        fromEvent<WheelEvent>(this.verticalBarRef()?.nativeElement, 'scroll', { passive: true })
+        fromEvent<WheelEvent>(this.verticalBarRef()!.nativeElement, 'scroll', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
                 this.verticalScroll(e);
@@ -337,21 +337,21 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private setContainerRect() {
         this.containerRect.set({
-            width: this.container()?.nativeElement!.offsetWidth,
-            height: this.container()?.nativeElement!.offsetHeight
+            width: this.containerElement().offsetWidth,
+            height: this.containerElement().offsetHeight
         });
     }
 
     private containerResizeListener() {
         this.resizeObserver = new ResizeObserver(() => {
-            const containerWidth = this.container()?.nativeElement!.offsetWidth;
-            const totalWidth = this.coordinate?.totalWidth + this.ADD_BUTTON_WIDTH;
+            const containerWidth = this.containerElement().offsetWidth;
+            const totalWidth = this.coordinate().totalWidth + this.ADD_BUTTON_WIDTH;
             this.setContainerRect();
             if (containerWidth >= totalWidth) {
                 this.aiTable.context!.setScrollState({ scrollLeft: 0 });
                 return;
             }
         });
-        this.resizeObserver.observe(this.container()?.nativeElement!);
+        this.resizeObserver.observe(this.containerElement());
     }
 }

@@ -5,12 +5,16 @@ export class RendererContext {
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
+    visibleColumnsMap: Signal<Map<string, number>>;
+    visibleRowsIndexMap: Signal<Map<string, number>>;
 
     constructor(options: AITableContext) {
-        const { linearRows, pointPosition, scrollState } = options;
+        const { linearRows, pointPosition, scrollState, visibleColumnsMap, visibleRowsIndexMap } = options;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;
         this.scrollState = scrollState;
+        this.visibleColumnsMap = visibleColumnsMap;
+        this.visibleRowsIndexMap = visibleRowsIndexMap;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {
