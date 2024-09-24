@@ -75,6 +75,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return buildGridLinearRows(this.aiRecords());
     });
 
+    visibleColumnsMap = computed(() => {
+        const columns = AITable.getVisibleFields(this.aiTable);
+        return new Map(columns?.map((item, index) => [item._id, index]));
+    });
+
+    visibleRowsIndexMap = computed(() => {
+        return new Map(this.linearRows().map((row, index) => [row._id, index]));
+    });
+
     containerElement = computed(() => {
         return this.container()!.nativeElement;
     });
@@ -131,6 +140,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private initContext() {
         this.aiTable.context = new RendererContext({
             linearRows: this.linearRows,
+            visibleColumnsMap: this.visibleColumnsMap,
+            visibleRowsIndexMap: this.visibleRowsIndexMap,
             pointPosition: signal(DEFAULT_POINT_POSITION),
             scrollState: signal(DEFAULT_SCROLL_STATE)
         });
@@ -262,15 +273,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private bindWheel() {
         const isWindows = isWindowsOS();
-        let timer: number | null = null;
         fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e: WheelEvent) => {
                 e.preventDefault();
-                if (timer) {
-                    return;
+                if (this.timer) {
+                    cancelAnimationFrame(this.timer);
                 }
-                timer = requestAnimationFrame(() => {
+                this.timer = requestAnimationFrame(() => {
                     const { deltaX, deltaY, shiftKey } = e;
                     const fixedDeltaY = shiftKey && isWindows ? 0 : deltaY;
                     const fixedDeltaX = shiftKey && isWindows ? deltaY : deltaX;
@@ -282,7 +292,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     if (verticalBar) {
                         verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
                     }
-                    timer = null;
+                    this.timer = null;
                 });
             });
     }

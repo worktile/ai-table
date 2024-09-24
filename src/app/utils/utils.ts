@@ -738,7 +738,7 @@ export function getBigData() {
         }
     }
     initValue.records = [];
-    for (let index = 0; index < 100; index++) {
+    for (let index = 0; index < 500000; index++) {
         const value: any = {};
         initValue.fields.forEach((column, columnIndex) => {
             if (columnIndex === 0) {
