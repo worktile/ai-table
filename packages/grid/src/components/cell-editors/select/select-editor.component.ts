@@ -9,7 +9,7 @@ import { ThySelect } from 'ngx-tethys/select';
 import { ThyOption } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
-import { Actions, AITableQueries } from '../../../core';
+import { AITableQueries } from '../../../core';
 import { SelectOptionPipe } from '../../../pipes';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
