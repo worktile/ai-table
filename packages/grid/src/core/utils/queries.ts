@@ -29,11 +29,11 @@ export const AITableQueries = {
         if (!path) {
             throw new Error(`path does not exist as path [${path}]`);
         }
-        const recordIndex = aiTable.records().findIndex((item) => item._id === path[0]);
-        if (recordIndex < 0) {
+        const record = aiTable.recordsMap()[path[0]];
+        if (!record) {
             throw new Error(`can not find record at path [${path}]`);
         }
-        return aiTable.records()[recordIndex].values[path[1]];
+        return record.values[path[1]];
     },
 
     getField(aiTable: AITable, path: AIFieldIdPath): AITableField | undefined {

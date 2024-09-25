@@ -44,24 +44,17 @@ export const AITable = {
         }
         return selectedCells ? selectedCells[0] : null;
     },
-    getVisibleColumnsMap(aiTable: AITable) {
-        const columns = AITable.getVisibleFields(aiTable);
-        return new Map(columns?.map((item, index) => [item._id, index]));
-    },
-    getVisibleRowsIndexMap(aiTable: AITable) {
-        return new Map(aiTable.context!.linearRows().map((row, index) => [row._id, index]));
-    },
     isCellVisible(aiTable: AITable, cell: { recordId: string; fieldId: string }) {
-        const visibleRowIndexMap = AITable.getVisibleRowsIndexMap(aiTable);
-        const visibleColumnIndexMap = AITable.getVisibleColumnsMap(aiTable);
+        const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
+        const visibleColumnIndexMap = aiTable.context!.visibleColumnsMap();
         return visibleRowIndexMap!.has(cell.recordId) && visibleColumnIndexMap.has(cell.fieldId);
     },
     getCellIndex(aiTable: AITable, cell: { recordId: string; fieldId: string }): { rowIndex: number; columnIndex: number } | null {
-        const visibleColumnIndexMap = AITable.getVisibleColumnsMap(aiTable);
-        const linearRowIndexMap = AITable.getVisibleRowsIndexMap(aiTable);
+        const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
+        const visibleColumnIndexMap = aiTable.context!.visibleColumnsMap();
         if (AITable.isCellVisible(aiTable, cell)) {
             return {
-                rowIndex: linearRowIndexMap!.get(cell.recordId)!,
+                rowIndex: visibleRowIndexMap!.get(cell.recordId)!,
                 columnIndex: visibleColumnIndexMap.get(cell.fieldId)!
             };
         }

@@ -1,6 +1,5 @@
-import { AITableField } from 'dist/grid';
 import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
+import { AITableField, AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
 import { AITableScrollState } from '../types';
 
 export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITableScrollState) => {

@@ -108,4 +108,6 @@ export interface AITableContext {
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
+    visibleColumnsMap: Signal<Map<string, number>>;
+    visibleRowsIndexMap: Signal<Map<string, number>>;
 }

@@ -1,25 +1,23 @@
 <div #container class="ai-table-grid-view">
-    @if (stageOptions) {
+    @if (hasContainerRect()) {
         <ai-table-renderer
-            [options]="stageOptions"
+            [options]="stageOptions()"
             (koMousemove)="stageMousemove($event)"
             (koMousedown)="stageMousedown($event)"
             (koClick)="stageClick($event)"
             (koDblclick)="stageDblclick($event)"
         >
-            @if (isRenderDone()) {
-                <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
-                    <div class="ai-table-scroll-bar-inner" [style.width.px]="coordinate.totalWidth + ADD_BUTTON_WIDTH"></div>
-                </div>
-                <div
-                    #verticalBar
-                    class="ai-table-vertical-scroll-bar-wrapper"
-                    [style.height.px]="containerRect().height - fieldHeadHeight"
-                    [style.top.px]="fieldHeadHeight"
-                >
-                    <div class="ai-table-scroll-bar-inner" [style.height.px]="coordinate.totalHeight + fieldHeadHeight"></div>
-                </div>
-            }
+            <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
+                <div class="ai-table-scroll-bar-inner" [style.width.px]="coordinate().totalWidth + ADD_BUTTON_WIDTH"></div>
+            </div>
+            <div
+                #verticalBar
+                class="ai-table-vertical-scroll-bar-wrapper"
+                [style.height.px]="containerRect().height - fieldHeadHeight"
+                [style.top.px]="fieldHeadHeight"
+            >
+                <div class="ai-table-scroll-bar-inner" [style.height.px]="coordinate().totalHeight + fieldHeadHeight"></div>
+            </div>
         </ai-table-renderer>
     }
 </div>
