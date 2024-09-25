@@ -114,6 +114,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return this.stageOptions().coordinate;
     });
 
+    scrollTotalHeight = computed(() => {
+        return Math.max(this.coordinate().totalHeight, this.containerRect().height - this.fieldHeadHeight);
+    });
+
     constructor() {
         super();
         afterNextRender(() => {

@@ -806,6 +806,7 @@ export function getBigData() {
                 positions: { view1: index, view2: index },
                 type: AITableFieldType.select,
                 settings: {
+                    option_style: AITableSelectOptionStyle.tag,
                     options: [
                         {
                             _id: '1',

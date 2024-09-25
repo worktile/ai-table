@@ -16,7 +16,7 @@
                 [style.height.px]="containerRect().height - fieldHeadHeight"
                 [style.top.px]="fieldHeadHeight"
             >
-                <div class="ai-table-scroll-bar-inner" [style.height.px]="coordinate().totalHeight + fieldHeadHeight"></div>
+                <div class="ai-table-scroll-bar-inner" [style.height.px]="scrollTotalHeight()"></div>
             </div>
         </ai-table-renderer>
     }
