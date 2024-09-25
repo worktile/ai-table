@@ -118,14 +118,14 @@ export class AITableGridEventService {
         const originRect = container!.getBoundingClientRect();
 
         // 修正位置，以覆盖 cell border
-        const yOffset = 2;
-        const widthOffset = 3;
+        const yOffset = 3;
+        const widthOffset = 1;
 
         const ref = this.thyPopover.open(component, {
             origin: container!,
             originPosition: {
-                x: x + originRect.x,
-                y: y + originRect.y + yOffset,
+                x: x + originRect.x + AI_TABLE_OFFSET,
+                y: y + originRect.y + yOffset + AI_TABLE_OFFSET,
                 width: width,
                 height: height
             },

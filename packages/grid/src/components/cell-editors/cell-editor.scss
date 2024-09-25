@@ -36,6 +36,16 @@
 }
 
 .select-cell-editor {
+    .select-control {
+        padding-bottom: 6px !important;
+        border: 2px solid variables.$primary;
+        outline: none;
+    }
+    .thy-select-custom:focus .form-control-custom:not(.disabled) {
+        border: 2px solid variables.$primary;
+        outline: none;
+    }
+
     &:not(.tag) {
         .select-control-multiple {
             .choice-remove-link {

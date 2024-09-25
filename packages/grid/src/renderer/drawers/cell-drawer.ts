@@ -15,6 +15,7 @@ import {
     AI_TABLE_PIECE_RADIUS,
     AI_TABLE_PIECE_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_TAG_PADDING,
     AI_TABLE_TEXT_GAP,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
@@ -141,11 +142,12 @@ export class CellDrawer extends Drawer {
             const optionStyle = (field as AITableSelectField).settings.option_style;
             let background = item?.color ?? colors.primary;
             const dotMaxTextWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PIECE_WIDTH - AI_TABLE_TEXT_GAP;
+            const borderWidth = 1;
             switch (optionStyle) {
                 case AITableSelectOptionStyle.dot:
                     this.arc({
                         x: x + AI_TABLE_CELL_PADDING + AI_TABLE_DOT_RADIUS,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS + borderWidth,
                         radius: AI_TABLE_DOT_RADIUS,
                         fill: background
                     });
@@ -159,7 +161,7 @@ export class CellDrawer extends Drawer {
                 case AITableSelectOptionStyle.piece:
                     this.rect({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + borderWidth,
                         width: AI_TABLE_PIECE_WIDTH,
                         height: AI_TABLE_PIECE_WIDTH,
                         radius: AI_TABLE_PIECE_RADIUS,
@@ -174,22 +176,21 @@ export class CellDrawer extends Drawer {
                     break;
 
                 case AITableSelectOptionStyle.tag:
-                    const maxTextWidth = columnWidth - 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_OPTION_ITEM_PADDING);
+                    const maxTextWidth = columnWidth - 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_TAG_PADDING);
                     const { textWidth, text } = getTextEllipsis(maxTextWidth, AI_TABLE_OPTION_ITEM_FONT_SIZE);
-                    const width = Math.max(textWidth + 2 * AI_TABLE_OPTION_ITEM_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
+                    const width = Math.max(textWidth + 2 * AI_TABLE_TAG_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
                     this.tag({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + AI_TABLE_CELL_MULTI_PADDING_TOP,
+                        y: y + AI_TABLE_CELL_MULTI_PADDING_TOP + borderWidth,
                         width,
-                        height: AI_TABLE_OPTION_ITEM_HEIGHT,
+                        height: AI_TABLE_OPTION_ITEM_HEIGHT - 1,
                         text,
                         background,
                         color: colors.white,
                         radius: AI_TABLE_OPTION_ITEM_RADIUS,
                         padding: AI_TABLE_OPTION_ITEM_PADDING,
                         fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE,
-                        stroke: background,
-                        textAlign: DEFAULT_TEXT_ALIGN_CENTER
+                        stroke: background
                     });
                     break;
                 default:
