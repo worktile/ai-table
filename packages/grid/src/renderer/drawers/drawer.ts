@@ -143,7 +143,6 @@ export class Drawer {
     // 绘制圆
     public arc(options: AITableArc) {
         const { x, y, stroke, fill, radius } = options;
-        this.ctx.save();
         this.ctx.beginPath();
         if (fill) this.setStyle({ fillStyle: fill });
         if (stroke) this.setStyle({ strokeStyle: stroke });

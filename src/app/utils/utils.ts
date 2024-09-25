@@ -429,10 +429,10 @@ export function getCanvasDefaultValue() {
                         url: 'https://www.baidu.com',
                         text: '百度链接'
                     },
-                    'column-9': ['member_01']
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
+                    'column-9': ['member_01'],
+                    'column-10': 1682235946,
+                    'column-11': ['member_02'],
+                    'column-12': 1720490727
                 }
             },
             {
@@ -455,10 +455,10 @@ export function getCanvasDefaultValue() {
                     'column-6': 50,
                     'column-7': 1,
                     'column-8': {},
-                    'column-9': ['member_01']
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
+                    'column-9': ['member_01'],
+                    'column-10': 1682235946,
+                    'column-11': ['member_02'],
+                    'column-12': 1720490727
                 }
             },
             {
@@ -486,10 +486,10 @@ export function getCanvasDefaultValue() {
                     'column-6': 100,
                     'column-7': 1,
                     'column-8': {},
-                    'column-9': []
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
+                    'column-9': [],
+                    'column-10': 1682235946,
+                    'column-11': ['member_02'],
+                    'column-12': 1720490727
                 }
             }
         ],
@@ -631,7 +631,6 @@ export function getCanvasDefaultValue() {
                     ]
                 }
             },
-            //
             {
                 _id: 'column-20',
                 type: AITableFieldType.select,
