@@ -27,10 +27,12 @@ export class RendererContext {
         ) {
             const newPosition = { ...oldPosition, ...position };
             this.pointPosition.set(newPosition);
+            // console.log(new Date().getTime(), 'grid - stageMousemove - setPointPosition');
         }
     }
 
     setScrollState(scrollState: Partial<AITableScrollState>) {
+        console.log(new Date().getTime(), 'grid - scrolling - setScrollState');
         this.scrollState.set({ ...this.scrollState(), ...scrollState });
     }
 }

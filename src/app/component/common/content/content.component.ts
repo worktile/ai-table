@@ -107,12 +107,9 @@ export class DemoTableContent {
             this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
             this.setValue();
         }
-        console.time('render');
     }
 
-    ngAfterViewInit() {
-        console.timeEnd('render');
-    }
+    ngAfterViewInit() {}
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));

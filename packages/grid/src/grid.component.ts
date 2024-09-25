@@ -101,6 +101,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             columnIndicesMap: getColumnIndicesMap(fields),
             frozenColumnCount: 1
         });
+        console.log(new Date().getTime(), 'grid - computed stageOptions');
         return {
             aiTable: this.aiTable,
             container: this.containerElement(),
@@ -116,10 +117,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     constructor() {
         super();
+        console.time('init');
         afterNextRender(() => {
-            this.setContainerRect();
             this.containerResizeListener();
             this.bindWheel();
+            console.log(new Date().getTime(), 'grid - afterNextRender');
         });
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
@@ -131,6 +133,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     override ngOnInit(): void {
         super.ngOnInit();
         this.initContext();
+        console.log(new Date().getTime(), 'grid - ngOnInit');
     }
 
     ngOnDestroy(): void {
@@ -301,12 +304,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         fromEvent<WheelEvent>(this.horizontalBarRef()!.nativeElement, 'scroll', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
+                console.log(new Date().getTime(), 'grid - horizontal scrolling');
                 this.horizontalScroll(e);
             });
 
         fromEvent<WheelEvent>(this.verticalBarRef()!.nativeElement, 'scroll', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
+                console.log(new Date().getTime(), 'grid - vertical scrolling');
                 this.verticalScroll(e);
             });
     }
@@ -321,21 +326,20 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const { scrollLeft } = e.target;
         this.aiTable.context!.setScrollState({
             scrollLeft,
-            isScrolling: true
+            isScrolling: false
         });
-        this.resetScrolling();
     };
 
     private verticalScroll(e: any) {
         const { scrollTop } = e.target;
         this.aiTable.context!.setScrollState({
             scrollTop,
-            isScrolling: true
+            isScrolling: false
         });
-        this.resetScrolling();
     }
 
     private setContainerRect() {
+        console.log(new Date().getTime(), 'grid - setContainerRect');
         this.containerRect.set({
             width: this.containerElement().offsetWidth,
             height: this.containerElement().offsetHeight

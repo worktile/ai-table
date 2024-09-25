@@ -113,8 +113,11 @@ export const GeneralActions = {
         aiTable.fields.update(() => {
             return finishDraft(fields);
         });
+        console.time('immer update time');
         aiTable.records.update(() => {
             return finishDraft(records);
         });
+        console.timeEnd('immer update time');
+        console.log(new Date().getTime(), `ai-table update field value`);
     }
 };

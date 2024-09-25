@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, input, OnInit, output } from '@angular/core';
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
@@ -45,7 +45,7 @@ Konva.pixelRatio = 2;
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableRenderer {
+export class AITableRenderer implements OnInit {
     options = input.required<AITableGridStageOptions>();
 
     koMousemove = output<KoEventObject<MouseEvent>>();
@@ -200,6 +200,18 @@ export class AITableRenderer {
     activeCellBorderConfig = computed(() => {
         return createActiveCellBorder(this.cellsConfig());
     });
+
+    constructor() {
+        afterNextRender(() => {
+            console.log(new Date().getTime(), 'renderer - afterNextRender');
+            console.timeEnd('konva render');
+        });
+    }
+
+    ngOnInit(): void {
+        console.log(new Date().getTime(), 'renderer - ngOnInit');
+        console.time('konva render');
+    }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
         this.koMousemove.emit(e as KoEventObject<MouseEvent>);
