@@ -27,6 +27,9 @@ export const AI_TABLE_CELL_BORDER = 2; // 单元格边框宽度
 export const AI_TABLE_CELL_MULTI_PADDING_TOP = 10;
 export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP = 4;
 export const AI_TABLE_CELL_MULTI_PADDING_LEFT = 4;
+// 最少显示文字宽度，一个文字+ 三个点
+export const AI_TABLE_MIN_TEXT_WIDTH = 24;
+export const AI_TABLE_CELL_MULTI_DOT_RADIUS = 4;
 export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_LEFT = 8;
 export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE = 8; // 选项删除按钮的宽度
 export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET = 12; // 选项字段删除按钮大小的偏移量
