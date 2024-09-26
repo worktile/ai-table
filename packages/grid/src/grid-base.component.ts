@@ -25,6 +25,7 @@ import {
     AITableFieldType,
     AITableRecords,
     AITableSelectOptionStyle,
+    AITableValue,
     createAITable,
     createDefaultField,
     getDefaultRecord
@@ -67,9 +68,21 @@ export class AITableGridBase implements OnInit {
 
     aiTableInitialized = output<AITable>();
 
+    aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
+
     fieldMenus!: AITableFieldMenuItem[];
 
     mouseoverRef!: ThyPopoverRef<any>;
+
+    gridData = computed(() => {
+        if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
+            return this.aiBuildRenderDataFn()!(this.aiTable);
+        }
+        return {
+            records: this.aiRecords(),
+            fields: this.aiFields()
+        };
+    });
 
     protected ngZone = inject(NgZone);
     protected elementRef = inject(ElementRef);
@@ -124,7 +137,7 @@ export class AITableGridBase implements OnInit {
     }
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
-        const field = signal(createDefaultField(this.aiTable, AITableFieldType.text));
+        const field = createDefaultField(this.aiTable, AITableFieldType.text);
         this.aiTableGridFieldService.editFieldProperty(this.aiTable, {
             field,
             isUpdate: false,
