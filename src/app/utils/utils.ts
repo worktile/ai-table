@@ -421,18 +421,18 @@ export function getCanvasDefaultValue() {
                     'column-112': '1',
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
-                    'column-4': 1682235946,
+                    'column-4': { timestamp: 1682235946 },
                     'column-5': ['member_01'],
                     'column-6': 10,
-                    'column-7': 3,
+                    'column-7': 5,
                     'column-8': {
                         url: 'https://www.baidu.com',
                         text: '百度链接'
                     },
                     'column-9': ['member_01'],
-                    'column-10': 1682235946,
+                    'column-10': { timestamp: 1682235946 },
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': { timestamp: 1720490727 }
                 }
             },
             {
@@ -450,15 +450,15 @@ export function getCanvasDefaultValue() {
                     'column-112': '2',
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
-                    'column-4': 1682235946,
+                    'column-4': { timestamp: 1682235946 },
                     'column-5': ['member_01', 'member_02'],
                     'column-6': 50,
-                    'column-7': 1,
+                    'column-7': 4,
                     'column-8': {},
                     'column-9': ['member_01'],
-                    'column-10': 1682235946,
+                    'column-10': { timestamp: 1682235946 },
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': { timestamp: 1720490727 }
                 }
             },
             {
@@ -481,15 +481,15 @@ export function getCanvasDefaultValue() {
                         '66b31d0c8097a908f74bcd8d'
                     ],
                     'column-3': 100,
-                    'column-4': 1682235946,
+                    'column-4': { timestamp: 1682235946 },
                     'column-5': [],
                     'column-6': 100,
-                    'column-7': 1,
+                    'column-7': 3,
                     'column-8': {},
                     'column-9': [],
-                    'column-10': 1682235946,
+                    'column-10': { timestamp: 1727254598 },
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': { timestamp: 1720490727 }
                 }
             }
         ],
@@ -725,7 +725,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-7',
                 name: '评分',
                 positions: {
-                    view1: 11,
+                    view1: 2,
                     view2: 7
                 },
                 type: AITableFieldType.rate
@@ -790,58 +790,31 @@ export function getBigData() {
     };
 
     console.time('build data');
-    initValue.fields = [];
-    for (let index = 0; index < 20; index++) {
-        if (index === 0) {
-            initValue.fields.push({
-                _id: `column-${index}`,
-                name: '文本',
-                positions: { view1: index, view2: index },
-                type: AITableFieldType.text
-            });
-        } else {
-            initValue.fields.push({
-                _id: `column-${index}`,
-                name: '单选',
-                positions: { view1: index, view2: index },
-                type: AITableFieldType.select,
-                settings: {
-                    option_style: AITableSelectOptionStyle.tag,
-                    options: [
-                        {
-                            _id: '1',
-                            text: '开始',
-                            color: '#5dcfff'
-                        },
-                        {
-                            _id: '2',
-                            text: '进行中',
-                            color: '#ffcd5d'
-                        },
-                        {
-                            _id: '3',
-                            text: '已完成',
-                            color: '#73d897'
-                        }
-                    ]
-                }
-            });
-        }
-    }
+    initValue.fields = getCanvasDefaultValue().fields;
     initValue.records = [];
     for (let index = 0; index < 500000; index++) {
-        const value: any = {};
-        initValue.fields.forEach((column, columnIndex) => {
-            if (columnIndex === 0) {
-                value[`${column._id}`] = `name-${index}-${columnIndex}`;
-            } else {
-                value[`${column._id}`] = ['1'];
-            }
-        });
         initValue.records.push({
             _id: `row-${index + 1}`,
             positions: { view1: index, view2: index },
-            values: value
+            values: {
+                'column-1': '文本 2-1',
+                'column-13': '文本 2-1',
+                'column-2': '2',
+                'column-110': '2',
+                'column-111': '2',
+                'column-112': '2',
+                'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                'column-3': 10,
+                'column-4': { timestamp: 1682235946 },
+                'column-5': ['member_01', 'member_02'],
+                'column-6': 50,
+                'column-7': 3,
+                'column-8': {},
+                'column-9': ['member_01'],
+                'column-10': { timestamp: 1682235946 },
+                'column-11': ['member_02'],
+                'column-12': { timestamp: 1720490727 }
+            }
         });
     }
     console.timeEnd('build data');

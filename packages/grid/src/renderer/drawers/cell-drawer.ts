@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET,
@@ -27,6 +28,7 @@ import {
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle } from '../../core';
 import { AITableRender, AITableSelectField } from '../../types';
+import { transformCellValue } from '../../utils';
 import { Drawer } from './drawer';
 
 /**
@@ -39,9 +41,11 @@ export class CellDrawer extends Drawer {
         const { fontWeight = DEFAULT_FONT_WEIGHT } = styleProps;
 
         switch (fieldType) {
-            case AITableFieldType.text: {
+            case AITableFieldType.text:
+            case AITableFieldType.date:
+            case AITableFieldType.createdAt:
+            case AITableFieldType.updatedAt:
                 return this.setStyle({ fontSize: DEFAULT_FONT_SIZE, fontWeight });
-            }
             default:
                 return null;
         }
@@ -59,6 +63,11 @@ export class CellDrawer extends Drawer {
                 return;
             case AITableFieldType.select:
                 this.renderCellSelect(render, ctx);
+                return;
+            case AITableFieldType.date:
+            case AITableFieldType.createdAt:
+            case AITableFieldType.updatedAt:
+                this.renderCellDate(render, ctx);
                 return;
             default:
                 return null;
@@ -226,6 +235,30 @@ export class CellDrawer extends Drawer {
             }
 
             ctx.restore();
+        }
+    }
+
+    private renderCellDate(render: AITableRender, ctx?: any) {
+        const { aiTable, x, y, cellValue, field, columnWidth, style } = render;
+        const colors = AITable.getColors();
+        let cellText = transformCellValue<string>(aiTable, field, cellValue);
+
+        if (cellText == null || !_.isString(cellText)) {
+            return;
+        }
+
+        const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
+        const { text } = this.textEllipsis({ text: cellText, maxWidth: columnWidth && textMaxWidth });
+        if (ctx) {
+            const color = style?.color || colors.gray800;
+            this.text({
+                x: x + AI_TABLE_CELL_PADDING,
+                y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                text,
+                fillStyle: color,
+                fontWeight: style?.fontWeight,
+                verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+            });
         }
     }
 }

@@ -109,6 +109,7 @@ export const createCells = (options: AITableCellsDrawerOptions) => {
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
                     const render = {
+                        aiTable,
                         x: realX,
                         y: realY,
                         columnWidth: width,

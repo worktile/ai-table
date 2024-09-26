@@ -7,9 +7,11 @@ import {
     AITableChangeOptions,
     AITableDomGrid,
     AITableField,
+    AITableFieldType,
     AITableGrid,
     AITableQueries,
     AITableRecord,
+    DateFieldValue,
     DividerMenuItem,
     EditFieldPropertyItem,
     RemoveFieldItem
@@ -20,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { ThyAction } from 'ngx-tethys/action';
+import { DateHelperService, ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyLoading } from 'ngx-tethys/loading';
@@ -61,6 +64,26 @@ export class DemoTableContent {
     plugins = [withView, withRemoveView];
 
     aiFieldConfig: AIFieldConfig = {
+        fieldRenderers: {
+            [AITableFieldType.date]: {
+                transform: (field: AITableField, value: DateFieldValue) => {
+                    const datePickerFormatPipe = new ThyDatePickerFormatPipe(this.dateHelperService);
+                    return datePickerFormatPipe.transform(value.timestamp as any);
+                }
+            },
+            [AITableFieldType.createdAt]: {
+                transform: (field: AITableField, value: DateFieldValue) => {
+                    const datePickerFormatPipe = new ThyDatePickerFormatPipe(this.dateHelperService);
+                    return datePickerFormatPipe.transform(value.timestamp as any);
+                }
+            },
+            [AITableFieldType.updatedAt]: {
+                transform: (field: AITableField, value: DateFieldValue) => {
+                    const datePickerFormatPipe = new ThyDatePickerFormatPipe(this.dateHelperService);
+                    return datePickerFormatPipe.transform(value.timestamp as any);
+                }
+            }
+        },
         fieldPropertyEditor: FieldPropertyEditor,
         fieldMenus: [
             EditFieldPropertyItem,
@@ -83,6 +106,8 @@ export class DemoTableContent {
     sanitizer = inject(DomSanitizer);
 
     tableService = inject(TableService);
+
+    dateHelperService = inject(DateHelperService);
 
     references = signal(getReferences());
 

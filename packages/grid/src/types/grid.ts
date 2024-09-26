@@ -1,12 +1,14 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate, FieldValue } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 
 export interface AITableGridCellRenderSchema {
-    editor: any;
+    editor?: any;
+    transform?: (field: AITableField, value: FieldValue) => any;
 }
+
 export interface AITableGridData {
     type: 'grid';
     fields: AITableField[];

@@ -12,7 +12,7 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent } from 'rxjs';
+import { filter, fromEvent } from 'rxjs';
 import { KoEventObject } from './angular-konva';
 import {
     AI_TABLE_CELL,
@@ -122,6 +122,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         super();
         afterNextRender(() => {
             this.setContainerRect();
+            this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
         });
@@ -312,6 +313,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
                 this.verticalScroll(e);
+            });
+    }
+
+    private bindGlobalMousedown() {
+        fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
+            .pipe(
+                filter((e) => e.target instanceof Element && e.target.closest('.ai-table-grid-view') === null),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                this.aiTableGridSelectionService.clearSelection();
+                this.aiTableGridFieldService.closeFieldMenu();
             });
     }
 

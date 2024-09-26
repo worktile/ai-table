@@ -16,6 +16,7 @@ export interface AITableCellsDrawerOptions extends AITableCellsOptions {
 }
 
 export interface AITableRender {
+    aiTable: AITable;
     x: number;
     y: number;
     columnWidth: number;
