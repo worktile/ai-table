@@ -183,7 +183,7 @@ export class CellDrawer extends Drawer {
                         x: x + AI_TABLE_CELL_PADDING,
                         y: y + AI_TABLE_CELL_MULTI_PADDING_TOP + borderWidth,
                         width,
-                        height: AI_TABLE_OPTION_ITEM_HEIGHT - 1,
+                        height: AI_TABLE_OPTION_ITEM_HEIGHT - borderWidth,
                         text,
                         background,
                         color: colors.white,
