@@ -172,6 +172,7 @@ export class CellDrawer extends Drawer {
             cellValue.length - (drawableIndex + 1) > 0 ? getTextWidth(ctx, circleText, fontStyle) + 2 * AI_TABLE_CELL_PADDING : 0;
         // 剩余空间
         let remainSpace = maxContainerWidth - circleWidth - (circleWidth > 0 ? AI_TABLE_CELL_MULTI_PADDING_LEFT : 0);
+
         for (let index = 0; index < cellValue.length; index++) {
             const optionId = cellValue[index];
             const bgConfig = {
@@ -283,7 +284,7 @@ export class CellDrawer extends Drawer {
         if (circleWidth > 0) {
             if (optionStyle === AITableSelectOptionStyle.tag) {
                 this.tag({
-                    x: x + columnWidth - AI_TABLE_CELL_PADDING - circleWidth,
+                    x: currentX,
                     y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                     width: circleWidth,
                     height: AI_TABLE_OPTION_ITEM_HEIGHT,
@@ -296,7 +297,7 @@ export class CellDrawer extends Drawer {
                 });
             } else {
                 this.rect({
-                    x: x + columnWidth - AI_TABLE_CELL_PADDING - circleWidth,
+                    x: currentX,
                     y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                     width: circleWidth,
                     height: AI_TABLE_OPTION_ITEM_HEIGHT,
@@ -304,7 +305,7 @@ export class CellDrawer extends Drawer {
                     radius: AI_TABLE_PIECE_RADIUS
                 });
                 this.text({
-                    x: x + columnWidth - circleWidth,
+                    x: currentX + AI_TABLE_CELL_PADDING,
                     y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
                     text: circleText,
                     fillStyle: Colors.gray700,
