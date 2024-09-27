@@ -10,5 +10,6 @@ export const Colors = {
     transparent: 'transparent',
     gray80: '#fafafa',
     headSelectedBgColor: '#EAEFFA',
-    itemActiveBgColor: '#6698ff1a'
+    itemActiveBgColor: '#6698ff1a',
+    waring: '#ffcd5d'
 };
