@@ -37,7 +37,7 @@ export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
 }
 
-export interface AITableGridStageOptions {
+export interface AITableRendererConfig {
     aiTable: AITable;
     container: HTMLDivElement;
     coordinate: Coordinate;

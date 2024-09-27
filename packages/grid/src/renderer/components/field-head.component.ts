@@ -14,7 +14,7 @@ import {
     DEFAULT_FONT_SIZE,
     MoreStandOutlinedPath
 } from '../../constants';
-import { AITableFieldHeadOptions } from '../../types';
+import { AITableFieldHeadConfig } from '../../types';
 import { generateTargetName, TextMeasure } from '../../utils';
 import { AITableFieldIcon } from './field-icon.component';
 import { AITableIcon } from './icon.component';
@@ -39,7 +39,7 @@ import { AITableText } from './text.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFieldHead {
-    config = input.required<AITableFieldHeadOptions>();
+    config = input.required<AITableFieldHeadConfig>();
 
     textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
 

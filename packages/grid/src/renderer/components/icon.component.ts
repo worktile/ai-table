@@ -3,7 +3,7 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import { Check, Colors, DEFAULT_ICON_SIZE, Unchecked } from '../../constants';
-import { AITableCheckType, AITableIconOptions } from '../../types';
+import { AITableCheckType, AITableIconConfig } from '../../types';
 
 @Component({
     selector: 'ai-table-icon',
@@ -18,7 +18,7 @@ import { AITableCheckType, AITableIconOptions } from '../../types';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableIcon {
-    config = input.required<AITableIconOptions>();
+    config = input.required<AITableIconConfig>();
 
     groupConfig = computed<Partial<StageConfig>>(() => {
         const { x, y, listening } = this.config();

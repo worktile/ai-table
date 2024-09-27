@@ -1,8 +1,8 @@
 import { AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../constants';
-import { AITableCreateHeadsOptions, AITableFieldHeadOptions } from '../../types';
+import { AITableCreateHeadsConfig, AITableFieldHeadConfig } from '../../types';
 
-export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
-    const { coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = options;
+export const createColumnHeads = (config: AITableCreateHeadsConfig) => {
+    const { coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = config;
     const colors = Colors;
     const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
@@ -20,7 +20,7 @@ export const createColumnHeads = (options: AITableCreateHeadsOptions) => {
         };
     };
 
-    const fieldHeads: AITableFieldHeadOptions[] = [];
+    const fieldHeads: AITableFieldHeadConfig[] = [];
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
         if (columnIndex > columnCount - 1) break;
         if (columnIndex < 0) continue;

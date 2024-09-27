@@ -4,7 +4,7 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITable } from '../core';
-import { AITableGridStageOptions } from '../types';
+import { AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -46,7 +46,7 @@ Konva.pixelRatio = 2;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableRenderer {
-    options = input.required<AITableGridStageOptions>();
+    config = input.required<AITableRendererConfig>();
 
     koMousemove = output<KoEventObject<MouseEvent>>();
 
@@ -59,23 +59,23 @@ export class AITableRenderer {
     koDblclick = output<KoEventObject<MouseEvent>>();
 
     fields = computed(() => {
-        return AITable.getVisibleFields(this.options().aiTable);
+        return AITable.getVisibleFields(this.config().aiTable);
     });
 
     coordinate = computed(() => {
-        return this.options()?.coordinate;
+        return this.config()?.coordinate;
     });
 
     containerWidth = computed<number>(() => {
-        return this.options().containerWidth;
+        return this.config().containerWidth;
     });
 
     containerHeight = computed<number>(() => {
-        return this.options().containerHeight;
+        return this.config().containerHeight;
     });
 
     scrollState = computed(() => {
-        return this.options()?.aiTable!.context!.scrollState();
+        return this.config()?.aiTable!.context!.scrollState();
     });
 
     visibleRangeInfo = computed(() => {
@@ -171,7 +171,7 @@ export class AITableRenderer {
 
     columnHeadConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
-        const { aiTable, coordinate } = this.options();
+        const { aiTable, coordinate } = this.config();
         const { pointPosition } = aiTable.context!;
         const fields = this.fields();
         return {
@@ -185,7 +185,7 @@ export class AITableRenderer {
     });
 
     cellsConfig = computed(() => {
-        const { aiTable, coordinate } = this.options();
+        const { aiTable, coordinate } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,

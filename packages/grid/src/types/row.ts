@@ -25,15 +25,7 @@ export type AITableLinearRowRecord = {
 
 export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord;
 
-export interface AITableRowHeadOperationOptions {
-    coordinate: Coordinate;
-    isCheckedRow: boolean;
-    rowIndex: number;
-    isHoverCheckbox: boolean;
-    recordId: string;
-}
-
-export interface AITableRowHeadsOptions {
+export interface AITableRowHeadsConfig {
     coordinate: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;

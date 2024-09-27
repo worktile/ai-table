@@ -1,10 +1,10 @@
 import { AI_TABLE_CELL, AI_TABLE_OFFSET, Colors } from '../constants';
 import { AITable } from '../core';
-import { AITableCellsOptions, AITableRowType } from '../types';
+import { AITableCellsConfig, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
 import { generateTargetName } from './common';
 
-export function getPlaceHolderCellsConfigs(options: AITableCellsOptions) {
+export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
     const { aiTable, coordinate, columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = options;
     const { linearRows } = aiTable.context!;
     const { rowHeight, columnCount, rowCount } = coordinate;

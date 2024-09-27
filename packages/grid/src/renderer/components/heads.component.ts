@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { AITableCreateHeadsOptions } from '../../types';
+import { AITableCreateHeadsConfig } from '../../types';
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 
@@ -15,7 +15,7 @@ import { AITableFieldHead } from './field-head.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableColumnHeads {
-    config = input.required<AITableCreateHeadsOptions>();
+    config = input.required<AITableCreateHeadsConfig>();
 
     headConfigs = computed(() => {
         const { coordinate, columnStartIndex } = this.config();

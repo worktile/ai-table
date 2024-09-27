@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import Konva from 'konva';
 import { KoShape } from '../../angular-konva';
-import { AITableCellsOptions } from '../../types';
+import { AITableCellsConfig } from '../../types';
 import { createCells } from '../creations/create-cells';
 
 @Component({
     selector: 'ai-table-cells',
-    template: ` <ko-shape [config]="cellsConfig()"></ko-shape> `,
+    template: ` <ko-shape [config]="cellsShapeConfig()"></ko-shape> `,
     standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCells {
-    config = input.required<AITableCellsOptions>();
+    config = input.required<AITableCellsConfig>();
 
-    cellsConfig = computed(() => {
+    cellsShapeConfig = computed(() => {
         const { coordinate, columnStartIndex } = this.config();
         const { frozenColumnCount } = coordinate;
         return {
