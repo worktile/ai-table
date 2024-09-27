@@ -25,7 +25,6 @@ import {
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
-    DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_ALIGN_RIGHT,
     DEFAULT_TEXT_DECORATION,
@@ -34,9 +33,8 @@ import {
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle } from '../../core';
 import { AITableRender, AITableSelectField } from '../../types';
-import { transformCellValue } from '../../utils';
-import { Drawer } from './drawer';
 import { getTextWidth } from '../../utils/get-text-width';
+import { Drawer } from './drawer';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -82,9 +80,9 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, cellValue, field, columnWidth, isActive, style } = render;
+        const { x, y, transformValue, field, columnWidth, style } = render;
 
-        let renderText: string | null = cellValue;
+        let renderText: string | null = transformValue;
 
         if (renderText == null) {
             return;
@@ -156,8 +154,8 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellMultiSelect(render: AITableRender, ctx?: any) {
-        const { x, y, field, cellValue, columnWidth } = render;
-        if (!cellValue?.length || !Array.isArray(cellValue)) return;
+        const { x, y, field, transformValue, columnWidth } = render;
+        if (!transformValue?.length || !Array.isArray(transformValue)) return;
         let currentX = x + AI_TABLE_CELL_PADDING;
         const maxContainerWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
         const optionStyle = (field as AITableSelectField).settings.option_style;
@@ -167,11 +165,11 @@ export class CellDrawer extends Drawer {
         let totalWidth = 0;
         const cellItemInfoMap = new Map();
         let drawableIndex = 0;
-        cellValue.forEach((optionId, index) => {
+        transformValue.forEach((optionId, index) => {
             const item = (field as AITableSelectField).settings.options?.find((option) => option._id === optionId);
             const textWidth = getTextWidth(ctx, item?.text as string, fontStyle);
             totalWidth += textWidth + 2 * AI_TABLE_CELL_PADDING;
-            if (index < cellValue.length - 1) {
+            if (index < transformValue.length - 1) {
                 totalWidth += AI_TABLE_CELL_MULTI_PADDING_LEFT;
             }
             if (isDotOrPiece) {
@@ -186,12 +184,12 @@ export class CellDrawer extends Drawer {
 
         const baseWidth = AI_TABLE_MIN_TEXT_WIDTH + AI_TABLE_CELL_PADDING * 2;
         const minWidth = isDotOrPiece ? baseWidth + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT : baseWidth;
-        if (cellValue[drawableIndex + 1]) {
-            const { offset: offsetWidth } = cellItemInfoMap.get(cellValue[drawableIndex]);
-            const { offset: nextOffset } = cellItemInfoMap.get(cellValue[drawableIndex + 1]);
+        if (transformValue[drawableIndex + 1]) {
+            const { offset: offsetWidth } = cellItemInfoMap.get(transformValue[drawableIndex]);
+            const { offset: nextOffset } = cellItemInfoMap.get(transformValue[drawableIndex + 1]);
             drawableIndex =
                 maxContainerWidth - offsetWidth > minWidth && nextOffset > maxContainerWidth ? drawableIndex + 1 : drawableIndex;
-            const number = cellValue.length - (drawableIndex + 1);
+            const number = transformValue.length - (drawableIndex + 1);
             if (number > 0) {
                 const circleWidth = getTextWidth(ctx, `+{number}`, fontStyle) + 2 * AI_TABLE_CELL_PADDING;
                 const max = maxContainerWidth - AI_TABLE_CELL_MULTI_PADDING_LEFT - circleWidth;
@@ -199,14 +197,14 @@ export class CellDrawer extends Drawer {
             }
         }
 
-        const circleText = `+${cellValue.length - (drawableIndex + 1)}`;
+        const circleText = `+${transformValue.length - (drawableIndex + 1)}`;
         const circleWidth =
-            cellValue.length - (drawableIndex + 1) > 0 ? getTextWidth(ctx, circleText, fontStyle) + 2 * AI_TABLE_CELL_PADDING : 0;
+            transformValue.length - (drawableIndex + 1) > 0 ? getTextWidth(ctx, circleText, fontStyle) + 2 * AI_TABLE_CELL_PADDING : 0;
         // 剩余空间
         let remainSpace = maxContainerWidth - circleWidth - (circleWidth > 0 ? AI_TABLE_CELL_MULTI_PADDING_LEFT : 0);
 
-        for (let index = 0; index < cellValue.length; index++) {
-            const optionId = cellValue[index];
+        for (let index = 0; index < transformValue.length; index++) {
+            const optionId = transformValue[index];
             const bgConfig = {
                 x: currentX,
                 y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
@@ -225,7 +223,7 @@ export class CellDrawer extends Drawer {
                 }
                 const { textWidth, item } = cellItemInfoMap.get(optionId);
                 const completeWidth = baseWidth + textWidth;
-                if (index !== cellValue.length - 1) {
+                if (index !== transformValue.length - 1) {
                     remainSpace -= AI_TABLE_CELL_MULTI_PADDING_LEFT;
                 }
                 const bgWidth = remainSpace > completeWidth ? completeWidth : remainSpace;
@@ -348,12 +346,12 @@ export class CellDrawer extends Drawer {
     }
 
     private renderSingleSelectCell(render: AITableRender, ctx?: any) {
-        const { x, y, cellValue, field, columnWidth, isActive } = render;
-        if (cellValue == null) {
+        const { x, y, transformValue, field, columnWidth, isActive } = render;
+        if (transformValue == null) {
             return;
         }
         const isOperating = isActive;
-        const item = (field as AITableSelectField).settings.options?.find((option) => option._id === cellValue[0]);
+        const item = (field as AITableSelectField).settings.options?.find((option) => option._id === transformValue[0]);
         const itemName = item?.text || '';
         const getTextEllipsis = (maxTextWidth: number, fontSize: number = AI_TABLE_COMMON_FONT_SIZE) => {
             maxTextWidth -= isOperating ? AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET : 0;
@@ -437,9 +435,9 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellDate(render: AITableRender, ctx?: any) {
-        const { aiTable, x, y, cellValue, field, columnWidth, style } = render;
+        const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
-        let cellText = transformCellValue<string>(aiTable, field, cellValue);
+        let cellText = transformValue;
 
         if (cellText == null || !_.isString(cellText)) {
             return;

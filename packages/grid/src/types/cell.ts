@@ -24,6 +24,7 @@ export interface AITableRender {
     recordId: string;
     field: AITableField;
     cellValue: FieldValue;
+    transformValue: any;
     isActive: boolean;
     style: AITableRenderStyle;
 }

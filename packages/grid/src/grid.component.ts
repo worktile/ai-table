@@ -192,31 +192,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId || !fieldId) return;
                 this.aiTableGridSelectionService.selectCell(recordId, fieldId);
                 return;
-            case AI_TABLE_FIELD_HEAD_MORE:
-                mouseEvent.preventDefault();
-                if (fieldId) {
-                    const moreRect = e.event.target.getClientRect();
-                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
-                    const containerRect = this.containerElement().getBoundingClientRect();
-
-                    const position = {
-                        x: containerRect.x + moreRect.x,
-                        y: containerRect.y + moreRect.y + moreRect.height
-                    };
-                    const editOriginPosition = {
-                        x: containerRect.x + fieldGroupRect.x,
-                        y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
-                    };
-
-                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
-                        origin: this.containerElement(),
-                        fieldId: fieldId,
-                        fieldMenus: this.fieldMenus,
-                        position,
-                        editOriginPosition
-                    });
-                }
-                return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
             case AI_TABLE_ROW_SELECT_CHECKBOX:
@@ -254,6 +229,33 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
                 return;
             }
+            case AI_TABLE_FIELD_HEAD_MORE:
+                mouseEvent.preventDefault();
+                const _targetName = e.event.target.name();
+                const { fieldId } = getDetailByTargetName(_targetName);
+                if (fieldId) {
+                    const moreRect = e.event.target.getClientRect();
+                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
+                    const containerRect = this.containerElement().getBoundingClientRect();
+
+                    const position = {
+                        x: containerRect.x + moreRect.x,
+                        y: containerRect.y + moreRect.y + moreRect.height
+                    };
+                    const editOriginPosition = {
+                        x: containerRect.x + fieldGroupRect.x,
+                        y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                    };
+
+                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+                        origin: this.containerElement(),
+                        fieldId: fieldId,
+                        fieldMenus: this.fieldMenus,
+                        position,
+                        editOriginPosition
+                    });
+                }
+                return;
         }
     }
 
@@ -319,12 +321,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private bindGlobalMousedown() {
         fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
             .pipe(
-                filter((e) => e.target instanceof Element && e.target.closest('.ai-table-grid-view') === null),
+                filter((e) => e.target instanceof Element && !this.containerElement().contains(e.target)),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
                 this.aiTableGridSelectionService.clearSelection();
-                this.aiTableGridFieldService.closeFieldMenu();
             });
     }
 
