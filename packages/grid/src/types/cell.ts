@@ -16,6 +16,7 @@ export interface AITableCellsDrawerConfig extends AITableCellsConfig {
 }
 
 export interface AITableRender {
+    aiTable: AITable;
     x: number;
     y: number;
     columnWidth: number;
@@ -23,6 +24,7 @@ export interface AITableRender {
     recordId: string;
     field: AITableField;
     cellValue: FieldValue;
+    transformValue: any;
     isActive: boolean;
     style: AITableRenderStyle;
 }

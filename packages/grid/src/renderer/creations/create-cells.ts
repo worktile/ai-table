@@ -6,8 +6,8 @@ import {
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableAreaType, AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { getCellHorizontalPosition } from '../../utils';
+import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
+import { getCellHorizontalPosition, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
@@ -108,7 +108,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const realY = y - AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
+                    const transformValue = transformCellValue(aiTable, field, cellValue);
                     const render = {
+                        aiTable,
                         x: realX,
                         y: realY,
                         columnWidth: width,
@@ -116,6 +118,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         recordId: recordId,
                         field,
                         cellValue,
+                        transformValue,
                         isActive: isSelected,
                         style,
                         colors

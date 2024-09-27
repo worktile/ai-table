@@ -42,6 +42,7 @@ export class AITableGridFieldService {
             originActiveClass: origin ? 'active' : undefined,
             hasBackdrop: false,
             insideClosable: true,
+            outsideClosable: true,
             initialState: {
                 origin: editOrigin,
                 position: options.editOriginPosition,

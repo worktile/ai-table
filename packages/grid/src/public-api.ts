@@ -5,5 +5,6 @@ export * from './dom-grid.component';
 export * from './grid.component';
 export * from './pipes';
 export * from './renderer';
+export * from './services';
 export * from './types';
 export * from './utils';
