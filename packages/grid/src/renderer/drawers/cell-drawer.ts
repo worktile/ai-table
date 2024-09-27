@@ -54,20 +54,18 @@ export class CellDrawer extends Drawer {
         const fieldType = field.type;
 
         switch (fieldType) {
-            case AITableFieldType.text: {
+            case AITableFieldType.text:
+            case AITableFieldType.number:
                 this.renderCellText(render, ctx);
                 return;
-            }
-            case AITableFieldType.select: {
+            case AITableFieldType.select:
                 this.renderCellSelect(render, ctx);
                 return;
-            }
             default:
                 return null;
         }
     }
 
-    // 文本类型渲染
     private renderCellText(render: AITableRender, ctx?: any) {
         const { x, y, cellValue, field, columnWidth, isActive, style } = render;
 
@@ -77,10 +75,12 @@ export class CellDrawer extends Drawer {
             return;
         }
 
-        const isSingleLine = !columnWidth;
         const fieldType = field.type;
+        const isSingleLine = !columnWidth;
+        const isTextField = fieldType === AITableFieldType.text;
+        const isNumberField = fieldType === AITableFieldType.number;
 
-        if (isSingleLine) {
+        if (isTextField && isSingleLine) {
             renderText = renderText.replace(/\r|\n/g, ' ');
         }
 
@@ -92,21 +92,43 @@ export class CellDrawer extends Drawer {
         const renderY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
         const textDecoration = DEFAULT_TEXT_DECORATION;
 
-        this.wrapText({
-            x: renderX,
-            y: renderY,
-            text: renderText,
-            maxWidth: textMaxWidth,
-            maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
-            lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
-            textAlign,
-            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-            fillStyle: color,
-            fontWeight,
-            textDecoration,
-            fieldType,
-            needDraw: true
-        });
+        if (isNumberField) {
+            renderText = String(renderText);
+            const { text } = this.textEllipsis({
+                text: renderText,
+                maxWidth: columnWidth && textMaxWidth,
+                fontWeight
+            });
+            if (ctx) {
+                let pureText = text;
+                this.text({
+                    x: renderX,
+                    y: renderY,
+                    text: pureText,
+                    textAlign,
+                    fillStyle: color,
+                    fontWeight,
+                    textDecoration,
+                    verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                });
+            }
+        } else {
+            this.wrapText({
+                x: renderX,
+                y: renderY,
+                text: renderText,
+                maxWidth: textMaxWidth,
+                maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
+                lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
+                textAlign,
+                verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+                fillStyle: color,
+                fontWeight,
+                textDecoration,
+                fieldType,
+                needDraw: true
+            });
+        }
     }
 
     private renderCellSelect(render: AITableRender, ctx?: any) {

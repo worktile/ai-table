@@ -14,7 +14,7 @@ export const EditFieldPropertyItem = {
     icon: 'edit',
     exec: (aiTable: AITable, field: Signal<AITableField>, origin?: HTMLElement | ElementRef<any>, position?: { x: number; y: number }) => {
         const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
-        const copyField: WritableSignal<AITableField> = signal(_.cloneDeep(field()));
+        const copyField: AITableField = _.cloneDeep(field());
         if (origin && position) {
             fieldService?.editFieldProperty(aiTable, {
                 field: copyField,

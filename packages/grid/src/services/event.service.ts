@@ -1,13 +1,13 @@
 import { Overlay } from '@angular/cdk/overlay';
-import { DestroyRef, inject, Injectable, Signal } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopover } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { AI_TABLE_OFFSET } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
-import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate } from '../core';
+import { AITable, AITableFieldType, Coordinate } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { getCellHorizontalPosition, getRecordOrField } from '../utils';
+import { getCellHorizontalPosition } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -112,15 +112,13 @@ export class AITableGridEventService {
     openCanvasEdit(aiTable: AITable, options: AITableOpenEditOptions) {
         const { container, recordId, fieldId, position } = options;
         const { x, y, width, height } = position;
-        const field = getRecordOrField(this.aiTable.fields, fieldId) as Signal<AITableField>;
-        const record = getRecordOrField(this.aiTable.records, recordId) as Signal<AITableRecord>;
-        const component = this.getEditorComponent(field().type);
+        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const originRect = container!.getBoundingClientRect();
 
         // 修正位置，以覆盖 cell border
         const yOffset = 3;
         const widthOffset = 1;
-
+ 
         const ref = this.thyPopover.open(component, {
             origin: container!,
             originPosition: {
@@ -135,8 +133,8 @@ export class AITableGridEventService {
             offset: -height,
             minWidth: width,
             initialState: {
-                field: field,
-                record: record,
+                fieldId: fieldId,
+                recordId: recordId,
                 aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
