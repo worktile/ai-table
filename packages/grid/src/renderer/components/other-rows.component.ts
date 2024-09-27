@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { KoShape } from '../../angular-konva';
 import { AI_TABLE_ROW_ADD_BUTTON } from '../../constants';
 import { RendererContext } from '../../core';
-import { AITableRowHeadsOptions, AITableRowType } from '../../types';
+import { AITableRowHeadsConfig, AITableRowType } from '../../types';
 
 @Component({
     selector: 'ai-table-other-rows',
@@ -20,7 +20,7 @@ import { AITableRowHeadsOptions, AITableRowType } from '../../types';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableOtherRows {
-    config = input.required<AITableRowHeadsOptions>();
+    config = input.required<AITableRowHeadsConfig>();
 
     AITableRowType = AITableRowType;
 
@@ -28,8 +28,8 @@ export class AITableOtherRows {
         return this.createOtherRows(this.config());
     });
 
-    createOtherRows = (options: AITableRowHeadsOptions) => {
-        const { coordinate, rowStartIndex, rowStopIndex, aiTable } = options;
+    createOtherRows = (config: AITableRowHeadsConfig) => {
+        const { coordinate, rowStartIndex, rowStopIndex, aiTable } = config;
         const otherRowConfigs = [];
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > coordinate.rowCount - 1) break;

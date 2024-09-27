@@ -6,7 +6,7 @@ import {
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
+import { AITableAreaType, AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
@@ -15,10 +15,10 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
 /**
  * 绘制单元格内容的函数
  * 利用 Canvas API 绘制每个单元格的背景颜色、文本以及其他可能的样式。这个函数通常用于自定义表格渲染，尤其是在处理大量数据时，通过直接操作 Canvas 来提高渲染性能
- * @param options
+ * @param config
  */
-export const createCells = (options: AITableCellsDrawerOptions) => {
-    const { aiTable, coordinate, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = options;
+export const createCells = (config: AITableCellsDrawerConfig) => {
+    const { aiTable, coordinate, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
     const context = aiTable.context as RendererContext;
     const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();

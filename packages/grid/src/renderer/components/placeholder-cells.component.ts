@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoShape } from '../../angular-konva';
-import { AITableCellsOptions } from '../../types';
+import { AITableCellsConfig } from '../../types';
 import { getPlaceHolderCellsConfigs } from '../../utils';
 
 @Component({
@@ -15,7 +15,7 @@ import { getPlaceHolderCellsConfigs } from '../../utils';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITablePlaceholderCells {
-    config = input.required<AITableCellsOptions>();
+    config = input.required<AITableCellsConfig>();
 
     frozenPlaceHolderCellsConfig = computed(() => {
         return getPlaceHolderCellsConfigs(this.config());

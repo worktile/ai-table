@@ -2,11 +2,11 @@ import Konva from 'konva';
 import { AITable, AITableField, Coordinate } from '../core';
 import { AITablePointPosition } from './grid';
 
-export interface AITableIconOptions extends Konva.ShapeConfig {
+export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
 }
 
-export interface AITableFieldTypeIconOptions {
+export interface AITableFieldTypeIconConfig {
     field: AITableField;
     x?: number;
     y?: number;
@@ -15,7 +15,7 @@ export interface AITableFieldTypeIconOptions {
     fill?: string;
 }
 
-export interface AITableFieldHeadOptions {
+export interface AITableFieldHeadConfig {
     x?: number;
     y?: number;
     width: number;
@@ -27,7 +27,7 @@ export interface AITableFieldHeadOptions {
     isHoverIcon?: boolean;
 }
 
-export interface AITableCreateHeadsOptions {
+export interface AITableCreateHeadsConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     columnStartIndex: number;

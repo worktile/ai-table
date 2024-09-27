@@ -35,7 +35,7 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableGridStageOptions, AITableMouseDownType } from './types';
+import { AITableRendererConfig, AITableMouseDownType } from './types';
 import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 
@@ -88,7 +88,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return this.container()!.nativeElement;
     });
 
-    stageOptions: Signal<AITableGridStageOptions> = computed(() => {
+    stageOptions: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
         const coordinate = new Coordinate({
             container: this.containerElement(),

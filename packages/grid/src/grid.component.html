@@ -1,7 +1,7 @@
 <div #container class="ai-table-grid-view">
     @if (hasContainerRect()) {
         <ai-table-renderer
-            [options]="stageOptions()"
+            [config]="stageOptions()"
             (koMousemove)="stageMousemove($event)"
             (koMousedown)="stageMousedown($event)"
             (koClick)="stageClick($event)"
