@@ -152,7 +152,7 @@ export function getDefaultValue() {
                 name: '多选',
                 settings: {
                     is_multiple: true,
-                    option_style: AITableSelectOptionStyle.tag,
+                    option_style: AITableSelectOptionStyle.dot,
                     options: [
                         {
                             text: '111',
@@ -419,7 +419,7 @@ export function getCanvasDefaultValue() {
                     'column-110': '1',
                     'column-111': '1',
                     'column-112': '1',
-                    'column-20': ['66b31d0c8097a908f74bcd8a'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a1'],
                     'column-3': 1,
                     'column-4': 1682235946,
                     'column-5': ['member_01'],
@@ -432,7 +432,10 @@ export function getCanvasDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
                 }
             },
             {
@@ -448,7 +451,7 @@ export function getCanvasDefaultValue() {
                     'column-110': '2',
                     'column-111': '2',
                     'column-112': '2',
-                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2'],
                     'column-3': 10,
                     'column-4': 1682235946,
                     'column-5': ['member_01', 'member_02'],
@@ -458,7 +461,10 @@ export function getCanvasDefaultValue() {
                     'column-9': ['member_01'],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
                 }
             },
             {
@@ -475,10 +481,10 @@ export function getCanvasDefaultValue() {
                     'column-111': '3',
                     'column-112': '3',
                     'column-20': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
+                        '66b31d0c8097a908f74bcd8a1',
+                        '66b31d0c8097a908f74bcd8b2',
+                        '66b31d0c8097a908f74bcd8c3',
+                        '66b31d0c8097a908f74bcd8d4'
                     ],
                     'column-3': 100,
                     'column-4': 1682235946,
@@ -489,7 +495,10 @@ export function getCanvasDefaultValue() {
                     'column-9': [],
                     'column-10': 1682235946,
                     'column-11': ['member_02'],
-                    'column-12': 1720490727
+                    'column-12': 1720490727,
+                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
                 }
             }
         ],
@@ -643,37 +652,37 @@ export function getCanvasDefaultValue() {
                         {
                             text: '111',
                             bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
+                            _id: '66b31d0c8097a908f74bcd8a1'
                         },
                         {
-                            text: '222',
+                            text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
                             bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
+                            _id: '66b31d0c8097a908f74bcd8b2'
                         },
                         {
                             text: '333',
                             bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
+                            _id: '66b31d0c8097a908f74bcd8c3'
                         },
                         {
                             text: '444',
                             bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
+                            _id: '66b31d0c8097a908f74bcd8d4'
                         },
                         {
                             text: '555',
                             bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
+                            _id: '66b31d0c8097a908f74bcd8e5'
                         },
                         {
                             text: '666',
                             bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
+                            _id: '66b31d0c8097a908f74bcd8f6'
                         },
                         {
                             text: '777',
                             bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
+                            _id: '66b31d0c8097a908f74bcd907'
                         }
                     ]
                 },
@@ -774,6 +783,158 @@ export function getCanvasDefaultValue() {
                     view2: 2
                 },
                 type: AITableFieldType.updatedAt
+            },
+            {
+                _id: 'column-21',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选 piece',
+                settings: {
+                    is_multiple: true,
+                    option_style: AITableSelectOptionStyle.piece,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a1'
+                        },
+                        {
+                            text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b2'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c3'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d4'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e5'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f6'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd907'
+                        }
+                    ]
+                },
+                positions: {
+                    view1: 17,
+                    view2: 1
+                }
+            },
+            {
+                _id: 'column-22',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选 dot',
+                settings: {
+                    is_multiple: true,
+                    option_style: AITableSelectOptionStyle.dot,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a1'
+                        },
+                        {
+                            text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b2'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c3'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d4'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e5'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f6'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd907'
+                        }
+                    ]
+                },
+                positions: {
+                    view1: 18,
+                    view2: 0
+                }
+            },
+            {
+                _id: 'column-23',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '多选 text',
+                settings: {
+                    is_multiple: true,
+                    options: [
+                        {
+                            text: '111',
+                            bg_color: '#E48483',
+                            _id: '66b31d0c8097a908f74bcd8a1'
+                        },
+                        {
+                            text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
+                            bg_color: '#E0B75D',
+                            _id: '66b31d0c8097a908f74bcd8b2'
+                        },
+                        {
+                            text: '333',
+                            bg_color: '#69B1E4',
+                            _id: '66b31d0c8097a908f74bcd8c3'
+                        },
+                        {
+                            text: '444',
+                            bg_color: '#77C386',
+                            _id: '66b31d0c8097a908f74bcd8d4'
+                        },
+                        {
+                            text: '555',
+                            bg_color: '#6EC4C4',
+                            _id: '66b31d0c8097a908f74bcd8e5'
+                        },
+                        {
+                            text: '666',
+                            bg_color: '#E581D4',
+                            _id: '66b31d0c8097a908f74bcd8f6'
+                        },
+                        {
+                            text: '777',
+                            bg_color: '#B0C774',
+                            _id: '66b31d0c8097a908f74bcd907'
+                        }
+                    ]
+                },
+                positions: {
+                    view1: 19,
+                    view2: -1
+                }
             }
         ]
     };
