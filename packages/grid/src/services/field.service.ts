@@ -27,7 +27,7 @@ export class AITableGridFieldService {
             placement: 'bottomLeft',
             initialState: {
                 aiTable,
-                aiEditField: field(),
+                aiEditField: field,
                 isUpdate
             }
         });

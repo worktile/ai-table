@@ -66,10 +66,6 @@ import { buildGridData } from './utils';
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableDomGrid extends AITableGridBase implements OnInit {
-    gridData = computed(() => {
-        return buildGridData(this.aiRecords(), this.aiFields());
-    });
-
     override ngOnInit(): void {
         super.ngOnInit();
         this.subscribeEvents();

@@ -12,12 +12,6 @@ import {
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
 import { AITableSizeMap } from '../types';
 
-export function getRecordOrField(value: Signal<AITableRecords | AITableFields>, _id: string): Signal<AITableField | AITableRecord> {
-    return computed(() => {
-        return value().find((item) => item._id === _id)!;
-    });
-}
-
 export function getColumnIndicesMap(fields: AITableField[]) {
     const columnIndicesMap: AITableSizeMap = {};
     fields?.forEach((field, index) => {

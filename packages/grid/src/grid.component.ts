@@ -29,14 +29,14 @@ import {
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE
 } from './constants';
-import { AITable, AITableField, Coordinate, RendererContext } from './core';
+import { AITable, Coordinate, RendererContext } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AITableGridStageOptions, AITableMouseDownType } from './types';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, getRecordOrField, handleMouseStyle, isWindowsOS } from './utils';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 
 @Component({
@@ -72,7 +72,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     horizontalBarRef = viewChild<ElementRef>('horizontalBar');
 
     linearRows = computed(() => {
-        return buildGridLinearRows(this.aiRecords());
+        return buildGridLinearRows(this.gridData().records);
     });
 
     visibleColumnsMap = computed(() => {
@@ -263,8 +263,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!recordId || !fieldId) {
             return;
         }
-        const field = getRecordOrField(this.aiTable.fields, fieldId!) as Signal<AITableField>;
-        const fieldType = field().type;
+        const field = this.aiTable.fieldsMap()[fieldId];
+        const fieldType = field.type;
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
             return;
         }

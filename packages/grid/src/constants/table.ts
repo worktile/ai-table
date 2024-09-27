@@ -22,11 +22,15 @@ export const AI_TABLE_FIELD_HEAD_MORE = 'AI_TABLE_FIELD_HEAD_MORE'; // 更多图
 
 export const AI_TABLE_ICON_COMMON_SIZE = 16; // 表格图标的通用尺寸
 export const AI_TABLE_CELL = 'AI_TABLE_CELL'; // 单元格标识
-export const AI_TABLE_CELL_PADDING = 12; // 单元格内容的内边距
+// 因为 dom 的边距 12 是不包含 边框的，所以加上边框 2px  才能跟 编辑里面的内容对其；
+export const AI_TABLE_CELL_PADDING = 14; // 单元格内容的内边距
 export const AI_TABLE_CELL_BORDER = 2; // 单元格边框宽度
 export const AI_TABLE_CELL_MULTI_PADDING_TOP = 10;
 export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP = 4;
 export const AI_TABLE_CELL_MULTI_PADDING_LEFT = 4;
+// 最少显示文字宽度，一个文字+ 三个点
+export const AI_TABLE_MIN_TEXT_WIDTH = 24;
+export const AI_TABLE_CELL_MULTI_DOT_RADIUS = 4;
 export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_LEFT = 8;
 export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE = 8; // 选项删除按钮的宽度
 export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET = 12; // 选项字段删除按钮大小的偏移量
@@ -37,6 +41,7 @@ export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
 export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 12;
 export const AI_TABLE_OPTION_ITEM_RADIUS = 18;
+export const AI_TABLE_TAG_PADDING = 12;
 
 export const AI_TABLE_PIECE_WIDTH = 10;
 export const AI_TABLE_PIECE_RADIUS = 2;
