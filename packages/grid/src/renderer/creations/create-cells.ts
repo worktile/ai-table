@@ -6,7 +6,7 @@ import {
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableAreaType, AITableCellsDrawerOptions, AITableRender, AITableRowType } from '../../types';
+import { AITableAreaType, AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
