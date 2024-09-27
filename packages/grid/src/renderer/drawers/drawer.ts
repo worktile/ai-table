@@ -2,12 +2,11 @@ import GraphemeSplitter from 'grapheme-splitter';
 import {
     AI_TABLE_OFFSET,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
+    AI_TABLE_TAG_PADDING,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
-    DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
-    DEFAULT_TEXT_ALIGN_RIGHT,
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
@@ -401,10 +400,7 @@ export class Drawer {
             background,
             color = this.colors.gray800,
             fontSize = AI_TABLE_OPTION_ITEM_FONT_SIZE,
-            textAlign = DEFAULT_TEXT_ALIGN_LEFT,
-            verticalAlign = DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
             fontWeight = DEFAULT_FONT_WEIGHT,
-            padding = 0,
             stroke
         } = options;
 
@@ -419,21 +415,12 @@ export class Drawer {
             stroke
         });
 
-        let textOffsetX = padding;
-
-        if (textAlign === DEFAULT_TEXT_ALIGN_CENTER) {
-            textOffsetX = width / 2;
-        } else if (textAlign === DEFAULT_TEXT_ALIGN_RIGHT) {
-            textOffsetX = width - padding;
-        }
         this.text({
-            x: x + textOffsetX,
+            x: x + AI_TABLE_TAG_PADDING,
             y: y + (height - fontSize) / 2,
             text,
             fillStyle: color,
             fontSize,
-            textAlign,
-            verticalAlign,
             fontWeight
         });
 

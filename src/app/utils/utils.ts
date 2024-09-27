@@ -615,7 +615,7 @@ export function getCanvasDefaultValue() {
                     options: [
                         {
                             _id: '1',
-                            text: '开始',
+                            text: '开',
                             color: '#5dcfff'
                         },
                         {
