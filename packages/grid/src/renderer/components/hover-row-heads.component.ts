@@ -10,7 +10,7 @@ import {
     Colors
 } from '../../constants';
 import { RendererContext } from '../../core';
-import { AITableAreaType, AITableCheckType, AITablePointPosition, AITableRowHeadsOptions, AITableRowType } from '../../types';
+import { AITableAreaType, AITableCheckType, AITablePointPosition, AITableRowHeadsConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
 
@@ -33,7 +33,7 @@ import { AITableIcon } from './icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableHoverRowHeads {
-    config = input.required<AITableRowHeadsOptions>();
+    config = input.required<AITableRowHeadsConfig>();
 
     pointPosition = computed(() => {
         return this.config().aiTable.context!.pointPosition();

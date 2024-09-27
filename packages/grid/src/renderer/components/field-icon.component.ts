@@ -11,7 +11,7 @@ import {
     ColumnTextFilledPath
 } from '../../constants';
 import { AITableFieldType, SelectSettings } from '../../core';
-import { AITableFieldTypeIconOptions } from '../../types';
+import { AITableFieldTypeIconConfig } from '../../types';
 import { AITableIcon } from './icon.component';
 
 @Component({
@@ -22,7 +22,7 @@ import { AITableIcon } from './icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFieldIcon {
-    config = input.required<AITableFieldTypeIconOptions>();
+    config = input.required<AITableFieldTypeIconConfig>();
 
     iconConfig = computed(() => {
         const { field, x, y, width, height, fill } = this.config();
