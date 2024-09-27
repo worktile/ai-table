@@ -88,7 +88,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return this.container()!.nativeElement;
     });
 
-    stageOptions: Signal<AITableRendererConfig> = computed(() => {
+    rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
         const coordinate = new Coordinate({
             container: this.containerElement(),
@@ -111,7 +111,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     });
 
     coordinate = computed(() => {
-        return this.stageOptions().coordinate;
+        return this.rendererConfig().coordinate;
     });
 
     scrollTotalHeight = computed(() => {
