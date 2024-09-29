@@ -12,12 +12,16 @@ import {
     AI_TABLE_DOT_RADIUS,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_MIN_TEXT_WIDTH,
+    AI_TABLE_OFFSET,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
     AI_TABLE_OPTION_ITEM_HEIGHT,
     AI_TABLE_OPTION_ITEM_PADDING,
     AI_TABLE_OPTION_ITEM_RADIUS,
     AI_TABLE_PIECE_RADIUS,
     AI_TABLE_PIECE_WIDTH,
+    AI_TABLE_PROGRESS_BAR_HEIGHT,
+    AI_TABLE_PROGRESS_BAR_RADIUS,
+    AI_TABLE_PROGRESS_TEXT_Width,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_TAG_PADDING,
     AI_TABLE_TEXT_GAP,
@@ -50,6 +54,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
+            case AITableFieldType.progress:
                 return this.setStyle({ fontSize: DEFAULT_FONT_SIZE, fontWeight });
             default:
                 return null;
@@ -73,6 +78,9 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
                 this.renderCellDate(render, ctx);
+                return;
+            case AITableFieldType.progress:
+                this.renderCellProgress(render, ctx);
                 return;
             default:
                 return null;
@@ -466,6 +474,50 @@ export class CellDrawer extends Drawer {
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
             });
         }
+    }
+
+    private renderCellProgress(render: AITableRender, ctx?: any) {
+        const { x, y, transformValue, columnWidth, style } = render;
+        const colors = AITable.getColors();
+        const cellText = transformValue;
+
+        if (cellText == null || !_.isNumber(cellText)) {
+            return;
+        }
+
+        const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_Width;
+        const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
+        const offsetX = AI_TABLE_CELL_PADDING;
+        const offsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - height / 2;
+
+        // 绘制背景
+        this.roundedRect({
+            x: x + offsetX,
+            y: y + offsetY,
+            width,
+            height,
+            radius: AI_TABLE_PROGRESS_BAR_RADIUS,
+            fill: colors.gray200
+        });
+
+        // 计算并绘制进度
+        const progressWidth = (transformValue / 100) * width;
+        this.roundedRect({
+            x: x + offsetX,
+            y: y + offsetY,
+            width: progressWidth,
+            height,
+            radius: AI_TABLE_PROGRESS_BAR_RADIUS,
+            fill: colors.success
+        });
+
+        this.text({
+            x: x + offsetX + width + AI_TABLE_TEXT_GAP - AI_TABLE_OFFSET,
+            y: y + offsetY - 1.5,
+            text: `${transformValue}%`,
+            fillStyle: colors.gray800,
+            fontSize: 14
+        });
     }
 }
 

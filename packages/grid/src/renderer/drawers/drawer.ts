@@ -232,6 +232,27 @@ export class Drawer {
         }
     }
 
+    // 绘制圆角矩形
+    public roundedRect(options: AITableRect) {
+        const { x, y, width, height, fill, radius } = options;
+        const radiusValue = (radius as number) ?? 0;
+
+        this.ctx.beginPath();
+        if (fill) this.setStyle({ fillStyle: fill });
+
+        this.ctx.moveTo(x + radiusValue, y);
+        this.ctx.lineTo(x + width - radiusValue, y);
+        this.ctx.quadraticCurveTo(x + width, y, x + width, y + radiusValue);
+        this.ctx.lineTo(x + width, y + height - radiusValue);
+        this.ctx.quadraticCurveTo(x + width, y + height, x + width - radiusValue, y + height);
+        this.ctx.lineTo(x + radiusValue, y + height);
+        this.ctx.quadraticCurveTo(x, y + height, x, y + height - radiusValue);
+        this.ctx.lineTo(x, y + radiusValue);
+        this.ctx.quadraticCurveTo(x, y, x + radiusValue, y);
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+
     // 换行文本绘制
     public wrapText(options: AITableWrapText) {
         const {

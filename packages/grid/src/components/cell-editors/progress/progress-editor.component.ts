@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThySlider, ThySliderSize, ThySliderType } from 'ngx-tethys/slider';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -50,6 +50,12 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
     @HostListener('mousedown', ['$event'])
     mousedownHandler(event: Event) {
         event.preventDefault();
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    handleMouseleave(event: MouseEvent) {
+        event.stopPropagation();
+        this.closePopover();
     }
 
     sliderMousedownHandler(event: Event) {
