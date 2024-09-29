@@ -1,11 +1,11 @@
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { AI_TABLE_CELL_BORDER } from '../../constants';
 import { AITable } from '../../core';
-import { AITableCellsOptions, AITableRowType } from '../../types';
+import { AITableCellsConfig, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
 
-export const createActiveCellBorder = (options: AITableCellsOptions) => {
-    const { aiTable, coordinate, columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = options;
+export const createActiveCellBorder = (config: AITableCellsConfig) => {
+    const { aiTable, coordinate, columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = config;
     const { linearRows } = aiTable.context!;
     const { rowHeight, frozenColumnCount } = coordinate;
     const colors = AITable.getColors();

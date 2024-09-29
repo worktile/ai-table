@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import Konva from 'konva';
 import { KoShape } from '../../angular-konva';
-import { AITableCellsOptions } from '../../types';
+import { AITableCellsConfig } from '../../types';
 import { createCells } from '../creations/create-cells';
 
 @Component({
@@ -12,7 +12,7 @@ import { createCells } from '../creations/create-cells';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenCells {
-    config = input.required<AITableCellsOptions>();
+    config = input.required<AITableCellsConfig>();
 
     frozenCellsConfig = computed(() => {
         const { coordinate } = this.config();

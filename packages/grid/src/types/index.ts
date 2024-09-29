@@ -1,6 +1,6 @@
 export * from './canvas';
 export * from './cell';
-export * from './component';
+export * from './component-config';
 export * from './field';
 export * from './grid';
 export * from './layout';

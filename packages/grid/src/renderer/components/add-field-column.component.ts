@@ -11,7 +11,7 @@ import {
     Colors
 } from '../../constants';
 import { AITableField, Coordinate } from '../../core';
-import { AITableIconOptions } from '../../types';
+import { AITableIconConfig } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
 
@@ -20,7 +20,7 @@ import { AITableIcon } from './icon.component';
     template: `
         <ko-group [config]="{ x: x() }">
             <ko-rect [config]="rectConfig()"></ko-rect>
-            <ai-table-icon [config]="addIconOptions()"></ai-table-icon>
+            <ai-table-icon [config]="addIconConfig()"></ai-table-icon>
         </ko-group>
     `,
     standalone: true,
@@ -60,7 +60,7 @@ export class AITableAddField {
         };
     });
 
-    addIconOptions = computed<AITableIconOptions>(() => {
+    addIconConfig = computed<AITableIconConfig>(() => {
         const offsetY = (this.coordinate().rowInitSize - AI_TABLE_ICON_COMMON_SIZE) / 2;
         return {
             x: AI_TABLE_CELL_PADDING,

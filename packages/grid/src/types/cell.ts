@@ -2,7 +2,7 @@ import Konva from 'konva';
 import { AITable, AITableField, Coordinate, FieldValue } from '../core';
 import { AITableLinearRowRecord } from './row';
 
-export interface AITableCellsOptions {
+export interface AITableCellsConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     rowStartIndex: number;
@@ -11,11 +11,12 @@ export interface AITableCellsOptions {
     columnStopIndex: number;
 }
 
-export interface AITableCellsDrawerOptions extends AITableCellsOptions {
+export interface AITableCellsDrawerConfig extends AITableCellsConfig {
     ctx: Konva.Context | CanvasRenderingContext2D;
 }
 
 export interface AITableRender {
+    aiTable: AITable;
     x: number;
     y: number;
     columnWidth: number;
@@ -23,6 +24,7 @@ export interface AITableRender {
     recordId: string;
     field: AITableField;
     cellValue: FieldValue;
+    transformValue: any;
     isActive: boolean;
     style: AITableRenderStyle;
 }

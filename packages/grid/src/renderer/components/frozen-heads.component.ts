@@ -9,7 +9,7 @@ import {
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../../constants';
-import { AITableCheckType, AITableCreateHeadsOptions } from '../../types';
+import { AITableCheckType, AITableCreateHeadsConfig } from '../../types';
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 import { AITableIcon } from './icon.component';
@@ -32,7 +32,7 @@ import { AITableIcon } from './icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenColumnHeads {
-    config = input.required<AITableCreateHeadsOptions>();
+    config = input.required<AITableCreateHeadsConfig>();
 
     coordinate = computed(() => {
         return this.config().coordinate;

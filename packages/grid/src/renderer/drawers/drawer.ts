@@ -24,8 +24,7 @@ import {
     AITableWrapText,
     AITableWrapTextData
 } from '../../types';
-import { getTextWidth, textDataCache } from '../../utils/get-text-width';
-import { TextMeasure } from '../../utils/text-measure';
+import { getTextWidth, textDataCache, TextMeasure } from '../../utils';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();

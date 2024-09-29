@@ -12,7 +12,7 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent } from 'rxjs';
+import { filter, fromEvent } from 'rxjs';
 import { KoEventObject } from './angular-konva';
 import {
     AI_TABLE_CELL,
@@ -35,7 +35,7 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableGridStageOptions, AITableMouseDownType } from './types';
+import { AITableRendererConfig, AITableMouseDownType } from './types';
 import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 
@@ -88,7 +88,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return this.container()!.nativeElement;
     });
 
-    stageOptions: Signal<AITableGridStageOptions> = computed(() => {
+    rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
         const coordinate = new Coordinate({
             container: this.containerElement(),
@@ -111,7 +111,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     });
 
     coordinate = computed(() => {
-        return this.stageOptions().coordinate;
+        return this.rendererConfig().coordinate;
     });
 
     scrollTotalHeight = computed(() => {
@@ -122,6 +122,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         super();
         afterNextRender(() => {
             this.setContainerRect();
+            this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
         });
@@ -191,31 +192,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId || !fieldId) return;
                 this.aiTableGridSelectionService.selectCell(recordId, fieldId);
                 return;
-            case AI_TABLE_FIELD_HEAD_MORE:
-                mouseEvent.preventDefault();
-                if (fieldId) {
-                    const moreRect = e.event.target.getClientRect();
-                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
-                    const containerRect = this.containerElement().getBoundingClientRect();
-
-                    const position = {
-                        x: containerRect.x + moreRect.x,
-                        y: containerRect.y + moreRect.y + moreRect.height
-                    };
-                    const editOriginPosition = {
-                        x: containerRect.x + fieldGroupRect.x,
-                        y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
-                    };
-
-                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
-                        origin: this.containerElement(),
-                        fieldId: fieldId,
-                        fieldMenus: this.fieldMenus,
-                        position,
-                        editOriginPosition
-                    });
-                }
-                return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
             case AI_TABLE_ROW_SELECT_CHECKBOX:
@@ -253,6 +229,33 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
                 return;
             }
+            case AI_TABLE_FIELD_HEAD_MORE:
+                mouseEvent.preventDefault();
+                const _targetName = e.event.target.name();
+                const { fieldId } = getDetailByTargetName(_targetName);
+                if (fieldId) {
+                    const moreRect = e.event.target.getClientRect();
+                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
+                    const containerRect = this.containerElement().getBoundingClientRect();
+
+                    const position = {
+                        x: containerRect.x + moreRect.x,
+                        y: containerRect.y + moreRect.y + moreRect.height
+                    };
+                    const editOriginPosition = {
+                        x: containerRect.x + fieldGroupRect.x,
+                        y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                    };
+
+                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+                        origin: this.containerElement(),
+                        fieldId: fieldId,
+                        fieldMenus: this.fieldMenus,
+                        position,
+                        editOriginPosition
+                    });
+                }
+                return;
         }
     }
 
@@ -312,6 +315,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e) => {
                 this.verticalScroll(e);
+            });
+    }
+
+    private bindGlobalMousedown() {
+        fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
+            .pipe(
+                filter((e) => e.target instanceof Element && !this.containerElement().contains(e.target)),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                this.aiTableGridSelectionService.clearSelection();
             });
     }
 
