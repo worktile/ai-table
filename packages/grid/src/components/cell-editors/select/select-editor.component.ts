@@ -43,10 +43,8 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
         return this.field().settings.options;
     });
 
-    AITableSelectOptionStyle = AITableSelectOptionStyle;
-
-    optionStyle = computed(() => {
-        return (this.field() as AITableSelectField).settings.option_style || AITableSelectOptionStyle.text;
+    preset = computed(() => {
+        return this.field().settings.is_multiple && this.field().settings.option_style === AITableSelectOptionStyle.tag ? 'tag' : '';
     });
 
     constructor() {

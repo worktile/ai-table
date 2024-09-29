@@ -3,7 +3,7 @@
     [(ngModel)]="modelValue"
     [thyAutoExpand]="true"
     [thyAllowClear]="true"
-    [thyPreset]="field().settings.is_multiple && optionStyle() === AITableSelectOptionStyle.tag ? 'tag' : ''"
+    [thyPreset]="preset()"
     [thyMode]="field().settings.is_multiple ? 'multiple' : ''"
     (thyOnExpandStatusChange)="updateValue($event)"
 >
