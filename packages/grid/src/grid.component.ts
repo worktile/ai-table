@@ -27,7 +27,8 @@ import {
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
-    DEFAULT_SCROLL_STATE
+    DEFAULT_SCROLL_STATE,
+    MOUSEOVER_EDIT_TYPE
 } from './constants';
 import { AITable, Coordinate, RendererContext } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -35,7 +36,7 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableRendererConfig, AITableMouseDownType } from './types';
+import { AITableMouseDownType, AITableRendererConfig } from './types';
 import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 
@@ -129,6 +130,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
                 this.bindScrollBarScroll();
+            }
+        });
+        effect(() => {
+            if (this.aiTable.context?.pointPosition()) {
+                this.toggleCellEditor();
             }
         });
     }
@@ -270,7 +276,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
             return;
         }
-        this.aiTableGridEventService.openEditByDblClick(this.aiTable, {
+        this.aiTableGridEventService.openCellEditor(this.aiTable, {
             container: this.containerElement(),
             coordinate: this.coordinate(),
             fieldId: fieldId!,
@@ -371,5 +377,30 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
         });
         this.resizeObserver.observe(this.containerElement());
+    }
+
+    private toggleCellEditor() {
+        const { realTargetName } = this.aiTable.context?.pointPosition()!;
+        const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
+
+        if (targetName === AI_TABLE_CELL && recordId && fieldId) {
+            const field = this.aiTable.fieldsMap()[fieldId];
+            if (!field || !MOUSEOVER_EDIT_TYPE.includes(field.type)) {
+                return;
+            }
+            this.aiTableGridEventService.closeCellEditor();
+
+            setTimeout(() => {
+                this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                    container: this.containerElement(),
+                    coordinate: this.coordinate(),
+                    fieldId: fieldId!,
+                    recordId: recordId!,
+                    isHoverEdit: true
+                });
+            });
+        } else {
+            this.aiTableGridEventService.closeCellEditor();
+        }
     }
 }

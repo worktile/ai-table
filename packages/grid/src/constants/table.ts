@@ -36,6 +36,8 @@ export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE = 8; // 选项删除按钮的
 export const AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET = 12; // 选项字段删除按钮大小的偏移量
 export const AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH = 36; // 选项字段项的最小宽度
 export const AI_TABLE_CELL_MAX_ROW_COUNT = 1; // 默认单元格展示的最大行数
+export const AI_TABLE_CELL_EMOJI_SIZE = 18;
+export const AI_TABLE_CELL_EMOJI_PADDING = 8;
 
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
