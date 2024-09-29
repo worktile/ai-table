@@ -3,6 +3,7 @@
     [(ngModel)]="modelValue"
     [thyAutoExpand]="true"
     [thyAllowClear]="true"
+    [thyPreset]="preset()"
     [thyMode]="field().settings.is_multiple ? 'multiple' : ''"
     (thyOnExpandStatusChange)="updateValue($event)"
 >

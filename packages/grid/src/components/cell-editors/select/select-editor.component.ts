@@ -9,7 +9,7 @@ import { ThySelect } from 'ngx-tethys/select';
 import { ThyOption } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
-import { AITableQueries } from '../../../core';
+import { AITableQueries, AITableSelectOptionStyle } from '../../../core';
 import { SelectOptionPipe } from '../../../pipes';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
@@ -41,6 +41,10 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], AITableSelectField> {
     selectOptions = computed(() => {
         return this.field().settings.options;
+    });
+
+    preset = computed(() => {
+        return this.field().settings.is_multiple && this.field().settings.option_style === AITableSelectOptionStyle.tag ? 'tag' : '';
     });
 
     constructor() {
