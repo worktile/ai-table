@@ -183,15 +183,14 @@ export class CellDrawer extends Drawer {
 
         const baseWidth = AI_TABLE_MIN_TEXT_WIDTH + AI_TABLE_CELL_PADDING * 2;
         const minWidth = isDotOrPiece ? baseWidth + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT : baseWidth;
- 
 
         if (transformValue[drawableIndex + 1]) {
-            const { offset: currentOffset } = cellItemInfoMap.get(cellValue[drawableIndex]);
+            const { offset: currentOffset } = cellItemInfoMap.get(transformValue[drawableIndex]);
             const canDrawerNext = maxContainerWidth - currentOffset > minWidth;
             drawableIndex = canDrawerNext ? drawableIndex + 1 : drawableIndex;
             // 上面过程是  没有 +数字  的情况下最大能放几个；
-            const number = cellValue.length - (drawableIndex + 1);
- 
+            const number = transformValue.length - (drawableIndex + 1);
+
             if (number > 0) {
                 // 说明有 +数字，重新计算
                 const circleWidth = getTextWidth(ctx, `+{number}`, fontStyle) + 2 * AI_TABLE_CELL_PADDING;
@@ -199,7 +198,7 @@ export class CellDrawer extends Drawer {
                 // 如果当前已经超出了，看是否能容下当前的，不能就减去  1；
                 const currentItemHasOver = currentOffset > max;
                 if (currentItemHasOver) {
-                    const lastOffset = drawableIndex === 0 ? 0 : cellItemInfoMap.get(cellValue[drawableIndex - 1]);
+                    const lastOffset = drawableIndex === 0 ? 0 : cellItemInfoMap.get(transformValue[drawableIndex - 1]);
                     drawableIndex = max - lastOffset > minWidth ? drawableIndex : drawableIndex - 1;
                 } else {
                     // 还有剩余空间, 看是否能多渲染一个
