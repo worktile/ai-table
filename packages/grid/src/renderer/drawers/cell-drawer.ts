@@ -64,6 +64,7 @@ export class CellDrawer extends Drawer {
         switch (fieldType) {
             case AITableFieldType.text:
             case AITableFieldType.number:
+            case AITableFieldType.link:
                 this.renderCellText(render, ctx);
                 return;
             case AITableFieldType.select:
@@ -81,14 +82,11 @@ export class CellDrawer extends Drawer {
 
     private renderCellText(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, field, columnWidth, style } = render;
-
-        let renderText: string | null = transformValue;
-
+        const fieldType = field.type;
+        let renderText: string | null = fieldType === AITableFieldType.link ? transformValue.text : transformValue;
         if (renderText == null) {
             return;
         }
-
-        const fieldType = field.type;
         const isSingleLine = !columnWidth;
         const isTextField = fieldType === AITableFieldType.text;
         const isNumberField = fieldType === AITableFieldType.number;
@@ -135,7 +133,7 @@ export class CellDrawer extends Drawer {
                 lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
                 textAlign,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-                fillStyle: color,
+                fillStyle: fieldType === AITableFieldType.link ? Colors.primary : color,
                 fontWeight,
                 textDecoration,
                 fieldType,
@@ -357,7 +355,7 @@ export class CellDrawer extends Drawer {
 
     private renderSingleSelectCell(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, field, columnWidth, isActive } = render;
-        if (transformValue == null) {
+        if (transformValue == null || transformValue === '') {
             return;
         }
         const isOperating = isActive;

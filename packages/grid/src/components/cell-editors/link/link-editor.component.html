@@ -6,9 +6,9 @@
         thyInput
         thySize="md"
         [disabled]="disabled"
-        [(ngModel)]="modelValue.text"
+        [(ngModel)]="text"
         (blur)="blur($event)"
-        (thyEnter)="updateFieldValue()"
+        (thyEnter)="updateValue()"
     />
     <ng-template #suffix>
         <a

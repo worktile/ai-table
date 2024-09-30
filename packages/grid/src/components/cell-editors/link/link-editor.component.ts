@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -10,7 +10,6 @@ import { ThyPopover } from 'ngx-tethys/popover';
 import { LINK_URL_REGEX, LinkEditComponent } from './edit-link/edit-link.component';
 import * as _ from 'lodash';
 import { ThyNotifyService } from 'ngx-tethys/notify';
-import { AI_TABLE_NOTIFY_CONFIG } from '../../../angular-konva';
 
 @Component({
     selector: 'link-cell-editor',
@@ -28,16 +27,21 @@ import { AI_TABLE_NOTIFY_CONFIG } from '../../../angular-konva';
         ThyFlexibleTextModule,
         LinkEditComponent
     ],
-    providers: [AI_TABLE_NOTIFY_CONFIG],
     host: {
         class: 'ai-table-link-editor'
     }
 })
-export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> {
+export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> implements OnInit {
     @ViewChild('inputElement', { static: false })
     inputElement!: ElementRef;
 
     elementRef = inject(ElementRef);
+
+    text = '';
+
+    url = '';
+
+    originValue = {};
 
     thyPopover = inject(ThyPopover);
 
@@ -62,7 +66,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     createLinkValue(link: { text: string; url: string }) {
         const text = link?.text?.trim();
         if (!text) {
-            return null;
+            return { url: '', text: '' };
         } else {
             const url = link.url?.trim();
             return { url: url || text, text: text || url };
@@ -76,14 +80,22 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         }
     }
 
+    override ngOnInit(): void {
+        super.ngOnInit();
+        this.originValue = this.modelValue;
+        this.text = this.modelValue.text ?? '';
+        this.url = this.modelValue.url ?? '';
+    }
+
     updateValue() {
-        if (!this.isValidLink(this.modelValue)) {
+        if (!this.isValidLink({ text: this.text, url: this.url ?? '' })) {
             this.notifyService.error(undefined, '链接格式不正确');
             return;
         }
-        const link = this.createLinkValue(this.modelValue);
-        if (_.isEqual(link, this.modelValue)) {
+        this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
+        if (JSON.stringify(this.originValue) !== JSON.stringify(this.modelValue)) {
             this.updateFieldValue();
+            this.originValue = this.modelValue;
         }
     }
 
@@ -96,14 +108,16 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
             minWidth: '320px',
             width: this.elementRef.nativeElement.clientWidth + 'px',
             initialState: {
-                url: this.modelValue.url,
-                text: this.modelValue.text
+                url: this.url ?? '',
+                text: this.text ?? ''
             }
         });
 
         if (popoverRef) {
             popoverRef.componentInstance.confirm.subscribe((value: { url: string; text: string }) => {
-                this.modelValue = value;
+                this.text = value.text;
+                this.url = value.url;
+                this.updateValue();
             });
 
             popoverRef.beforeClosed().subscribe(() => {
