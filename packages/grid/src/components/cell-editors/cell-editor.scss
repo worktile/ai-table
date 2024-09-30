@@ -1,5 +1,6 @@
 @use 'ngx-tethys/styles/variables.scss';
 @use './progress/progress-editor.component.scss';
+@use './rating/rating-editor.component.scss';
 
 .date-cell-editor {
     .thy-calendar-picker {

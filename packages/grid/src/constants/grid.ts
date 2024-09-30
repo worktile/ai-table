@@ -12,7 +12,7 @@ export const DBL_CLICK_EDIT_TYPE = [
     AITableFieldType.member
 ];
 
-export const MOUSEOVER_EDIT_TYPE = [AITableFieldType.progress];
+export const MOUSEOVER_EDIT_TYPE = [AITableFieldType.progress, AITableFieldType.rate];
 
 export const RowHeight = {
     Short: 32,

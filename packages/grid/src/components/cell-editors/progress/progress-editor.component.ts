@@ -52,12 +52,6 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
         event.preventDefault();
     }
 
-    @HostListener('mouseleave', ['$event'])
-    handleMouseleave(event: MouseEvent) {
-        event.stopPropagation();
-        this.closePopover();
-    }
-
     sliderMousedownHandler(event: Event) {
         event.preventDefault();
         event.stopPropagation();

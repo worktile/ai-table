@@ -2,6 +2,8 @@ import _ from 'lodash';
 import {
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET,
+    AI_TABLE_CELL_EMOJI_PADDING,
+    AI_TABLE_CELL_EMOJI_SIZE,
     AI_TABLE_CELL_MAX_ROW_COUNT,
     AI_TABLE_CELL_MULTI_DOT_RADIUS,
     AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH,
@@ -33,9 +35,10 @@ import {
     DEFAULT_TEXT_ALIGN_RIGHT,
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_LINE_HEIGHT,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+    StarFill
 } from '../../constants';
-import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle } from '../../core';
+import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, RateFieldValue } from '../../core';
 import { AITableRender, AITableSelectField } from '../../types';
 import { getTextWidth } from '../../utils/get-text-width';
 import { Drawer } from './drawer';
@@ -54,6 +57,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
+            case AITableFieldType.rate:
             case AITableFieldType.progress:
                 return this.setStyle({ fontSize: DEFAULT_FONT_SIZE, fontWeight });
             default:
@@ -78,6 +82,9 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
                 this.renderCellDate(render, ctx);
+                return;
+            case AITableFieldType.rate:
+                this.renderCellRate(render, ctx);
                 return;
             case AITableFieldType.progress:
                 this.renderCellProgress(render, ctx);
@@ -474,6 +481,32 @@ export class CellDrawer extends Drawer {
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
             });
         }
+    }
+
+    private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+        const { x, y, transformValue: _cellValue } = render;
+        const max = 5;
+        const cellValue = (_cellValue as RateFieldValue) || 0;
+        const size = AI_TABLE_CELL_EMOJI_SIZE;
+
+        return [...Array(max).keys()].map((item, index) => {
+            const value = index + 1;
+            const checked = value <= cellValue;
+            const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
+            const iconY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - size / 2;
+
+            if (ctx && checked) {
+                this.path({
+                    x: x + iconX,
+                    y: y + iconY,
+                    size: 22,
+                    data: StarFill,
+                    fill: this.colors.waring,
+                    scaleX: 1.14,
+                    scaleY: 1.14
+                });
+            }
+        });
     }
 
     private renderCellProgress(render: AITableRender, ctx?: any) {
