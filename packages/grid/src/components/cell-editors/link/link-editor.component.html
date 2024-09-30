@@ -1,0 +1,24 @@
+<thy-input-group class="link-input-group h-100" thySize="lg">
+    <input
+        class="h-100"
+        #inputElement
+        class="link-input"
+        thyInput
+        thySize="md"
+        [disabled]="disabled"
+        [(ngModel)]="modelValue.text"
+        (blur)="blur($event)"
+        (thyEnter)="updateFieldValue()"
+    />
+    <ng-template #suffix>
+        <a
+            thyAction
+            thyIcon="link-insert"
+            thyTooltip="链接"
+            class="font-size-base edit-icon"
+            [class.active]="isOpened"
+            href="javascript:;"
+            (click)="openEdit()"
+        ></a>
+    </ng-template>
+</thy-input-group>

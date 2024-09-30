@@ -1,6 +1,6 @@
 @use 'ngx-tethys/styles/variables.scss';
 @use './progress/progress-editor.component.scss';
-
+@use './link/link-editor.component.scss';
 .date-cell-editor {
     .thy-calendar-picker {
         height: 100%;

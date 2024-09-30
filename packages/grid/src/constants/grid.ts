@@ -9,7 +9,8 @@ export const DBL_CLICK_EDIT_TYPE = [
     AITableFieldType.number,
     AITableFieldType.select,
     AITableFieldType.date,
-    AITableFieldType.member
+    AITableFieldType.member,
+    AITableFieldType.link
 ];
 
 export const MOUSEOVER_EDIT_TYPE = [AITableFieldType.progress];

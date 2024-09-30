@@ -1,0 +1,115 @@
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
+import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
+import { ThyInputGroup, ThyInputModule } from 'ngx-tethys/input';
+import { ThyTooltipModule } from 'ngx-tethys/tooltip';
+import { ThyAction } from 'ngx-tethys/action';
+import { ThyFlexibleTextModule } from 'ngx-tethys/flexible-text';
+import { ThyPopover } from 'ngx-tethys/popover';
+import { LINK_URL_REGEX, LinkEditComponent } from './edit-link/edit-link.component';
+import * as _ from 'lodash';
+import { ThyNotifyService } from 'ngx-tethys/notify';
+import { AI_TABLE_NOTIFY_CONFIG } from '../../../angular-konva';
+
+@Component({
+    selector: 'link-cell-editor',
+    templateUrl: `./link-editor.component.html`,
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FormsModule,
+        ThyAutofocusDirective,
+        ThyEnterDirective,
+        ThyInputGroup,
+        ThyTooltipModule,
+        ThyAction,
+        ThyInputModule,
+        ThyFlexibleTextModule,
+        LinkEditComponent
+    ],
+    providers: [AI_TABLE_NOTIFY_CONFIG],
+    host: {
+        class: 'ai-table-link-editor'
+    }
+})
+export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> {
+    @ViewChild('inputElement', { static: false })
+    inputElement!: ElementRef;
+
+    elementRef = inject(ElementRef);
+
+    thyPopover = inject(ThyPopover);
+
+    cdr = inject(ChangeDetectorRef);
+
+    notifyService = inject(ThyNotifyService);
+
+    disabled = false;
+
+    isOpened = false;
+
+    isValidLink(link: { text: string; url: string }) {
+        if (!link?.text?.trim()) {
+            return true;
+        }
+        if (!link.url) {
+            return LINK_URL_REGEX.test(link.text);
+        }
+        return true;
+    }
+
+    createLinkValue(link: { text: string; url: string }) {
+        const text = link?.text?.trim();
+        if (!text) {
+            return null;
+        } else {
+            const url = link.url?.trim();
+            return { url: url || text, text: text || url };
+        }
+    }
+
+    public blur(event: FocusEvent) {
+        const action = this.elementRef.nativeElement.querySelector('.edit-icon');
+        if (!(event.relatedTarget as HTMLElement)?.contains(action)) {
+            this.updateValue();
+        }
+    }
+
+    updateValue() {
+        if (!this.isValidLink(this.modelValue)) {
+            this.notifyService.error(undefined, '链接格式不正确');
+            return;
+        }
+        const link = this.createLinkValue(this.modelValue);
+        if (_.isEqual(link, this.modelValue)) {
+            this.updateFieldValue();
+        }
+    }
+
+    openEdit() {
+        this.isOpened = true;
+        const popoverRef = this.thyPopover.open(LinkEditComponent, {
+            origin: this.elementRef.nativeElement,
+            originActiveClass: 'editing',
+            placement: 'bottomLeft',
+            minWidth: '320px',
+            width: this.elementRef.nativeElement.clientWidth + 'px',
+            initialState: {
+                url: this.modelValue.url,
+                text: this.modelValue.text
+            }
+        });
+
+        if (popoverRef) {
+            popoverRef.componentInstance.confirm.subscribe((value: { url: string; text: string }) => {
+                this.modelValue = value;
+            });
+
+            popoverRef.beforeClosed().subscribe(() => {
+                this.isOpened = false;
+                this.cdr.markForCheck();
+            });
+        }
+    }
+}

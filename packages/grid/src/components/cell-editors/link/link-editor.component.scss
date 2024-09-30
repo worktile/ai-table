@@ -1,0 +1,18 @@
+@use 'ngx-tethys/styles/variables.scss';
+
+.ai-table-link-editor {
+    display: block;
+    height: 45px;
+    .link-input-group {
+        border-color: variables.$primary;
+        border-width: 2px;
+        .link-input {
+            color: variables.$primary;
+            padding-left: 15px !important;
+            line-height: variables.$line-height-lg;
+        }
+        .input-group-suffix {
+            margin-right: 8px;
+        }
+    }
+}
