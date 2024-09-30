@@ -104,6 +104,7 @@ export interface AITableOpenEditOptions {
     fieldId: string;
     position: AITableEditPosition;
     container?: HTMLDivElement;
+    isHoverEdit?: boolean;
 }
 
 export interface AITableContext {
