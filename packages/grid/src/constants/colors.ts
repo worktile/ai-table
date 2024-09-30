@@ -11,5 +11,6 @@ export const Colors = {
     gray80: '#fafafa',
     headSelectedBgColor: '#EAEFFA',
     itemActiveBgColor: '#6698ff1a',
-    waring: '#ffcd5d'
+    waring: '#ffcd5d',
+    success: '#73d897'
 };

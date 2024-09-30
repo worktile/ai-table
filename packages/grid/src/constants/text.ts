@@ -1,7 +1,8 @@
 import { Colors } from '../constants';
 
 export const DEFAULT_FONT_SIZE = 14;
-export const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular';
+export const DEFAULT_FONT_FAMILY =
+    '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Helvetica Neue,Noto Sans,Noto Sans CJK SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif';
 export const DEFAULT_FONT_STYLE = 'normal';
 export const DEFAULT_TEXT_LINE_HEIGHT = 24;
 export const DEFAULT_TEXT_FILL = Colors.gray800;

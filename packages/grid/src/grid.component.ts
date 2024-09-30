@@ -386,6 +386,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (targetName === AI_TABLE_CELL && recordId && fieldId) {
             const field = this.aiTable.fieldsMap()[fieldId];
             if (!field || !MOUSEOVER_EDIT_TYPE.includes(field.type)) {
+                this.aiTableGridEventService.closeCellEditor();
                 return;
             }
             this.aiTableGridEventService.closeCellEditor();

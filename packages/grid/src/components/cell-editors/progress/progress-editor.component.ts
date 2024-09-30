@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThySlider, ThySliderSize, ThySliderType } from 'ngx-tethys/slider';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';

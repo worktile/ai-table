@@ -49,3 +49,7 @@ export const AI_TABLE_PIECE_WIDTH = 10;
 export const AI_TABLE_PIECE_RADIUS = 2;
 export const AI_TABLE_COMMON_FONT_SIZE = 14;
 export const AI_TABLE_DOT_RADIUS = 5;
+
+export const AI_TABLE_PROGRESS_BAR_HEIGHT = 10;
+export const AI_TABLE_PROGRESS_BAR_RADIUS = 5;
+export const AI_TABLE_PROGRESS_TEXT_Width = 46;
