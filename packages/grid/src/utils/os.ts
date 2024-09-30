@@ -9,6 +9,9 @@ export const isWindowsOS = () => {
     return false;
 };
 
+export const isWindows = isWindowsOS();
+
+
 export const isMac = () => {
     const agent = navigator.userAgent;
     return /macintosh/i.test(agent);
