@@ -4,17 +4,17 @@ import {
     AITableViewRecords,
     AIViewTable,
     applyYjsEvents,
-    createSharedType,
     initSharedType,
     initTable,
-    SharedType,
     YjsAITable
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
-import { getDefaultValue, sortDataByView } from '../utils/utils';
+import { createFeedRoom, getDefaultValue, sortDataByView } from '../utils/utils';
+import { LiveFeedProvider } from '../live-feed/feed-provider';
+import { LiveFeedObjectChange, LiveFeedRoom } from '../live-feed/feed-room';
+import * as Y from 'yjs';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -30,9 +30,13 @@ export class TableService {
 
     aiTable!: AIViewTable;
 
-    provider!: WebsocketProvider | null;
+    provider!: LiveFeedProvider | null;
 
-    sharedType!: SharedType | null;
+    feedRoom!: LiveFeedRoom | null;
+
+    tableDoc!: Y.Doc;
+
+    recordDocs!: Y.Doc[];
 
     activeViewId: WritableSignal<string> = signal('');
 
@@ -63,36 +67,38 @@ export class TableService {
         this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeViewId()) as AITableViewFields);
     }
 
-    handleShared(room: string) {
+    handleShared(roomId: string) {
         if (this.provider) {
             this.disconnect();
             return;
         }
-
         let isInitialized = false;
-        if (!this.sharedType) {
-            this.sharedType = createSharedType();
-            this.sharedType.observeDeep((events: any) => {
+        if (!this.feedRoom) {
+            const { feedRoom, tableDoc, recordDocs } = createFeedRoom(roomId);
+            this.tableDoc = tableDoc;
+            this.feedRoom = feedRoom;
+            this.recordDocs = recordDocs;
+            this.feedRoom?.on('change', (change: LiveFeedObjectChange) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
-                        const data = initTable(this.sharedType!);
+                        const data = initTable(this.getSharedAITable());
                         this.views.set(data.views);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
                         isInitialized = true;
                     } else {
-                        applyYjsEvents(this.aiTable, this.sharedType!, events);
+                        applyYjsEvents(this.aiTable, this.getSharedAITable(), change.events);
                     }
                 }
             });
         }
-        this.provider = getProvider(this.sharedType.doc!, room, isDevMode());
-        this.provider.connect();
+        this.provider = getProvider(this.feedRoom!, isDevMode());
         this.provider.once('synced', () => {
-            if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
+            console.log('synced');
+            if (this.provider!.synced && [...this.feedRoom!.getObject(roomId).store.clients.keys()].length === 0) {
                 console.log('init shared type');
                 const value = getDefaultValue();
-                initSharedType(this.sharedType!.doc!, {
+                initSharedType(this.feedRoom!.getObject(roomId), {
                     records: value.records,
                     fields: value.fields,
                     views: this.views()
@@ -101,11 +107,22 @@ export class TableService {
         });
     }
 
+    getSharedAITable() {
+        const feedObject = this.feedRoom!.getObject(this.feedRoom!.roomId);
+        const sharedType = feedObject.getMap<any>('ai-table');
+        return sharedType;
+    }
+
+    hasSharedAITable() {
+        const feedObject = this.feedRoom && this.feedRoom!.getObject(this.feedRoom!.roomId);
+        return !!feedObject;
+    }
+
     disconnect() {
         if (this.provider) {
             this.provider.disconnect();
             this.provider = null;
-            this.sharedType = null;
+            this.feedRoom = null;
         }
     }
 }
