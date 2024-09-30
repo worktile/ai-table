@@ -93,7 +93,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
             return;
         }
         this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
-        if (JSON.stringify(this.originValue) !== JSON.stringify(this.modelValue)) {
+        if (!_.isEqual(this.originValue, this.modelValue)) {
             this.updateFieldValue();
             this.originValue = this.modelValue;
         }
