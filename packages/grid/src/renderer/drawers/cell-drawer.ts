@@ -524,7 +524,7 @@ export class CellDrawer extends Drawer {
         const offsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - height / 2;
 
         // 绘制背景
-        this.roundedRect({
+        this.rect({
             x: x + offsetX,
             y: y + offsetY,
             width,
@@ -535,7 +535,7 @@ export class CellDrawer extends Drawer {
 
         // 计算并绘制进度
         const progressWidth = (transformValue / 100) * width;
-        this.roundedRect({
+        this.rect({
             x: x + offsetX,
             y: y + offsetY,
             width: progressWidth,
@@ -548,8 +548,7 @@ export class CellDrawer extends Drawer {
             x: x + offsetX + width + AI_TABLE_TEXT_GAP - AI_TABLE_OFFSET,
             y: y + offsetY - 1.5,
             text: `${transformValue}%`,
-            fillStyle: colors.gray800,
-            fontSize: 14
+            fillStyle: colors.gray800
         });
     }
 }
