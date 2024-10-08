@@ -1,13 +1,15 @@
-import { Overlay } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { AI_TABLE_OFFSET } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
-import { AITable, AITableFieldType, Coordinate } from '../core';
+import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition } from '../utils';
+import { AbstractEditCellEditor } from '../components/cell-editors/abstract-cell-editor.component';
+import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 
 @Injectable()
 export class AITableGridEventService {
@@ -25,11 +27,9 @@ export class AITableGridEventService {
 
     globalMousedownEvent$ = new Subject<MouseEvent>();
 
-    private cellEditorPopoverRef!: ThyPopoverRef<any>;
+    private cellEditorPopoverRef!: ThyPopoverRef<AbstractEditCellEditor<any>>;
 
     private destroyRef = inject(DestroyRef);
-
-    private overlay = inject(Overlay);
 
     private thyPopover = inject(ThyPopover);
 
@@ -105,35 +105,48 @@ export class AITableGridEventService {
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,
-            autoAdaptive: true,
-            scrollStrategy: this.overlay.scrollStrategies.close()
+            autoAdaptive: true
         });
         return ref;
     }
 
-    openCanvasEdit(aiTable: AITable, options: AITableOpenEditOptions) {
-        const { container, recordId, fieldId, position, isHoverEdit } = options;
-        const { x, y, width, height } = position;
-        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+    getOriginPosition(aiTable: AITable, options: AITableOpenEditOptions) {
+        const { container, coordinate, recordId, fieldId, isHoverEdit } = options;
+        const { scrollState } = aiTable.context!;
+        const { rowHeight, columnCount } = coordinate;
+        const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, { recordId, fieldId })!;
+        const x = coordinate.getColumnOffset(columnIndex);
+        const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+        const columnWidth = coordinate.getColumnWidth(columnIndex);
+        const { width, offset } = getCellHorizontalPosition({
+            columnWidth,
+            columnIndex,
+            columnCount
+        });
         const originRect = container!.getBoundingClientRect();
-
-        // 修正位置，以覆盖 cell border
         const yOffset = 3;
+        return {
+            x: x + offset - scrollState().scrollLeft + originRect.x + AI_TABLE_OFFSET,
+            y: y - scrollState().scrollTop + originRect.y + yOffset + AI_TABLE_OFFSET,
+            width,
+            height: rowHeight
+        };
+    }
+
+    openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
+        const { container, recordId, fieldId, isHoverEdit } = options;
+        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const originPosition = this.getOriginPosition(aiTable, options);
+        // 修正位置，以覆盖 cell border
         const widthOffset = 1;
         const xBorderWidth = 2;
         const yBorderWidth = 2;
-        const popoverWidth = isHoverEdit ? width - xBorderWidth : width + widthOffset;
-        const popoverHeight = isHoverEdit ? height - yBorderWidth : height;
-        const offset = isHoverEdit ? height - AI_TABLE_OFFSET * 2 : height;
-
-        const ref = this.thyPopover.open(component, {
+        const popoverWidth = isHoverEdit ? originPosition.width - xBorderWidth : originPosition.width + widthOffset;
+        const popoverHeight = isHoverEdit ? originPosition.height - yBorderWidth : originPosition.height;
+        const offset = isHoverEdit ? originPosition.height - AI_TABLE_OFFSET * 2 : originPosition.height;
+        this.cellEditorPopoverRef = this.thyPopover.open(component, {
             origin: container!,
-            originPosition: {
-                x: x + originRect.x + AI_TABLE_OFFSET,
-                y: y + originRect.y + yOffset + AI_TABLE_OFFSET,
-                width,
-                height
-            },
+            originPosition,
             width: popoverWidth + 'px',
             height: popoverHeight + 'px',
             placement: 'top',
@@ -149,39 +162,28 @@ export class AITableGridEventService {
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,
-            autoAdaptive: true,
-            scrollStrategy: this.overlay.scrollStrategies.close()
+            autoAdaptive: true
         });
-        return ref;
-    }
-
-    openCellEditor(
-        aiTable: AITable,
-        options: { container: HTMLDivElement; coordinate: Coordinate; recordId: string; fieldId: string; isHoverEdit?: boolean }
-    ) {
-        const { container, coordinate, recordId, fieldId, isHoverEdit } = options;
-        const { scrollState } = aiTable.context!;
-        const { rowHeight, columnCount } = coordinate;
-        const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, { recordId, fieldId })!;
-        const x = coordinate.getColumnOffset(columnIndex);
-        const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-        const columnWidth = coordinate.getColumnWidth(columnIndex);
-        const { width, offset } = getCellHorizontalPosition({
-            columnWidth,
-            columnIndex,
-            columnCount
-        });
-        this.cellEditorPopoverRef = this.openCanvasEdit(aiTable, {
-            container,
-            recordId,
-            fieldId,
-            position: {
-                x: x + offset - scrollState().scrollLeft,
-                y: y - scrollState().scrollTop,
-                width,
-                height: rowHeight
-            },
-            isHoverEdit
+        const wheelEvent = fromEvent<WheelEvent>(this.cellEditorPopoverRef.componentInstance.elementRef.nativeElement, 'wheel').subscribe(
+            (event: WheelEvent) => {
+                event.preventDefault();
+                this.aiTable.context?.scrollAction({
+                    deltaX: event.deltaX,
+                    deltaY: event.deltaY,
+                    shiftKey: event.shiftKey,
+                    callback: () => {
+                        const originPosition = this.getOriginPosition(aiTable, options);
+                        const positionStrategy = (this.cellEditorPopoverRef as ThyAbstractInternalOverlayRef<any, any, any>)
+                            .getOverlayRef()
+                            .getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
+                        positionStrategy.setOrigin(originPosition);
+                        positionStrategy.apply();
+                    }
+                });
+            }
+        );
+        this.cellEditorPopoverRef.afterClosed().subscribe(() => {
+            wheelEvent.unsubscribe();
         });
         return this.cellEditorPopoverRef;
     }

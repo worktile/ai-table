@@ -75,6 +75,13 @@ export interface AITableScrollState {
     isScrolling: boolean;
 }
 
+export interface ScrollActionOptions {
+    deltaX: number;
+    deltaY: number;
+    shiftKey: boolean;
+    callback?: () => void;
+}
+
 export enum AITableAreaType {
     grid = 'grid',
     none = 'none'
@@ -102,7 +109,7 @@ export interface AITableEditPosition {
 export interface AITableOpenEditOptions {
     recordId: string;
     fieldId: string;
-    position: AITableEditPosition;
+    coordinate: Coordinate;
     container?: HTMLDivElement;
     isHoverEdit?: boolean;
 }
@@ -111,6 +118,7 @@ export interface AITableContext {
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
+    scrollAction: (options: ScrollActionOptions) => void;
     visibleColumnsMap: Signal<Map<string, number>>;
     visibleRowsIndexMap: Signal<Map<string, number>>;
 }
