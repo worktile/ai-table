@@ -233,7 +233,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
             case AI_TABLE_FIELD_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
-                this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
+                this.addField(this.containerElement(), { x: mouseEvent.x, y: mouseEvent.y });
                 return;
             }
             case AI_TABLE_FIELD_HEAD_MORE:
@@ -242,7 +242,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const { fieldId } = getDetailByTargetName(_targetName);
                 if (fieldId) {
                     const moreRect = e.event.target.getClientRect();
-                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
+                    const fieldGroupRect = e.event.target.getParent()?.getParent()?.getParent()?.getClientRect()!;
                     const containerRect = this.containerElement().getBoundingClientRect();
 
                     const position = {
@@ -259,6 +259,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         fieldId: fieldId,
                         fieldMenus: this.fieldMenus,
                         position,
+                        editOrigin: this.containerElement().firstChild,
                         editOriginPosition
                     });
                 }

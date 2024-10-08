@@ -20,7 +20,7 @@ export interface AITableSelectField extends AITableField {
 }
 
 export interface AITableEditFieldOptions {
-    field: AITableField;
+    field: Signal<AITableField>;
     isUpdate: boolean;
     origin: HTMLElement | ElementRef<any>;
     position?: { x: number; y: number };

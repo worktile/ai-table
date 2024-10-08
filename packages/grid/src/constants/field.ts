@@ -1,4 +1,4 @@
-import { ElementRef, signal, Signal, WritableSignal } from '@angular/core';
+import { ElementRef, signal, Signal } from '@angular/core';
 import _ from 'lodash';
 import { Actions, AITable, AITableField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services/field.service';
@@ -17,7 +17,7 @@ export const EditFieldPropertyItem = {
         const copyField: AITableField = _.cloneDeep(field());
         if (origin && position) {
             fieldService?.editFieldProperty(aiTable, {
-                field: copyField,
+                field: signal(copyField),
                 isUpdate: true,
                 origin,
                 position

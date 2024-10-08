@@ -15,7 +15,5 @@ export class FieldPropertyEditor {
 
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
-    field!: WritableSignal<AITableField>;
-
     AITableFieldType = AITableFieldType;
 }
