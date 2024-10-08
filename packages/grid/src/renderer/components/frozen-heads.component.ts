@@ -17,11 +17,10 @@ import { AITableIcon } from './icon.component';
 @Component({
     selector: 'ai-table-frozen-column-heads',
     template: `
-        <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
+        <!-- <ko-rect [config]="numberHeadBgConfig()"></ko-rect> -->
         <ko-line [config]="topLineConfig"></ko-line>
         <ko-line [config]="bottomLineConfig()"></ko-line>
         <ai-table-icon [config]="iconConfig()"></ai-table-icon>
-
         @for (config of headConfigs(); track $index) {
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
@@ -55,16 +54,16 @@ export class AITableFrozenColumnHeads {
         });
     });
 
-    numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
-        return {
-            x: AI_TABLE_OFFSET,
-            y: AI_TABLE_OFFSET,
-            width: AI_TABLE_ROW_HEAD_WIDTH,
-            height: this.fieldHeadHeight(),
-            fill: Colors.white,
-            listening: false
-        };
-    });
+    // numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
+    //     return {
+    //         x: AI_TABLE_OFFSET,
+    //         y: AI_TABLE_OFFSET,
+    //         width: AI_TABLE_ROW_HEAD_WIDTH,
+    //         height: this.fieldHeadHeight(),
+    //         fill: Colors.white,
+    //         listening: false
+    //     };
+    // });
 
     topLineConfig = {
         x: AI_TABLE_OFFSET,
@@ -92,7 +91,10 @@ export class AITableFrozenColumnHeads {
             x: AI_TABLE_CELL_PADDING,
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
-            fill: this.isChecked() ? Colors.primary : Colors.gray300
+            fill:
+                this.isChecked() || (this.config().pointPosition.targetName === AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX && !this.isChecked())
+                    ? Colors.primary
+                    : Colors.gray300
         };
     });
 
