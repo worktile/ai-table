@@ -49,8 +49,6 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
 
     notifyService = inject(ThyNotifyService);
 
-    disabled = false;
-
     isOpened = false;
 
     isValidLink(link: { text: string; url: string }) {
