@@ -35,8 +35,6 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     @ViewChild('inputElement', { static: false })
     inputElement!: ElementRef;
 
-    elementRef = inject(ElementRef);
-
     text = '';
 
     url = '';
