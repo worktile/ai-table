@@ -33,7 +33,8 @@ export class ServerLiveFeedRoom extends LiveFeedRoom {
 
 export const getRoom = (roomId: string) => {
     return map.setIfUndefined(docs, roomId, () => {
-        const serverRoom = new ServerLiveFeedRoom({ roomId: roomId, objects: [] });
+        const object = new LiveFeedObject({ guid: roomId, typeName: 'ai-table' });
+        const serverRoom = new ServerLiveFeedRoom({ roomId: roomId, objects: [object] });
         docs.set(roomId, serverRoom);
         serverRoom.on('update', (updates: LiveFeedObjectUpdate[]) => {
             const encoder = encoding.createEncoder();

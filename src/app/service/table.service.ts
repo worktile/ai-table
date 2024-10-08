@@ -1,20 +1,11 @@
-import {
-    AITableView,
-    AITableViewFields,
-    AITableViewRecords,
-    AIViewTable,
-    applyYjsEvents,
-    initSharedType,
-    initTable,
-    YjsAITable
-} from '@ai-table/state';
+import { AITableView, AITableViewFields, AITableViewRecords, AIViewTable, applyYjsEvents, initTable, YjsAITable } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { getProvider } from '../provider';
 import { createFeedRoom, getDefaultValue, sortDataByView } from '../utils/utils';
 import { LiveFeedProvider } from '../live-feed/feed-provider';
 import { LiveFeedObjectChange, LiveFeedRoom } from '../live-feed/feed-room';
 import * as Y from 'yjs';
+import { initSharedType } from '../utils/shared';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -98,10 +89,13 @@ export class TableService {
             if (this.provider!.synced && [...this.feedRoom!.getObject(roomId).store.clients.keys()].length === 0) {
                 console.log('init shared type');
                 const value = getDefaultValue();
-                initSharedType(this.feedRoom!.getObject(roomId), {
+                const { recordDocs } = initSharedType(this.feedRoom!.getObject(roomId), {
                     records: value.records,
                     fields: value.fields,
                     views: this.views()
+                });
+                recordDocs.forEach((value) => {
+                    this.feedRoom?.addObject(value);
                 });
             }
         });
@@ -126,3 +120,11 @@ export class TableService {
         }
     }
 }
+
+export const getProvider = (room: LiveFeedRoom, isDev: boolean) => {
+    // 在线地址：wss://demos.yjs.dev/ws
+    const prodUrl = `ws${location.protocol.slice(4)}//${location.host}/collaboration`;
+    const devUrl = `ws${location.protocol.slice(4)}//${location.hostname}:3000`;
+    const provider = new LiveFeedProvider(room, isDev ? devUrl : prodUrl);
+    return provider;
+};

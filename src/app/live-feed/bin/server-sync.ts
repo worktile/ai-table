@@ -15,8 +15,7 @@ export const writeSyncStep2 = (decoder: decoding.Decoder, encoder: encoding.Enco
         const guid = decoding.readVarString(decoder);
         step1Ref?.push(guid);
         if (!room.hasObject(guid)) {
-            const object = new LiveFeedObject({ guid, typeName: 'ai-table' });
-            room.addObject(object);
+            
         }
         const diffUpdate = Y.encodeStateAsUpdate(room.getObject(guid), decoding.readVarUint8Array(decoder));
         if (diffUpdate.length > 0) {

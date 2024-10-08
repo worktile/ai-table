@@ -12,7 +12,8 @@ export const initSharedType = (
 ) => {
     const sharedType = tableDoc.getMap<any>('ai-table');
     toSharedTable(sharedType, initializeValue);
-    return sharedType;
+    const recordDocs = toSharedRecords(sharedType.doc as Y.Doc, initializeValue);
+    return { sharedType, recordDocs };
 };
 
 export function toSharedTable(
@@ -47,7 +48,7 @@ export function toSharedRecords(
             const typeName = 'record-array';
             const recordDoc = new LiveFeedObject({ guid: record._id, typeName });
             const yArray = recordDoc.getArray(typeName);
-            yArray.insert(0, toRecordSyncElement(record))
+            yArray.insert(0, toRecordSyncElement(record));
         });
     });
     return recordDocs;
