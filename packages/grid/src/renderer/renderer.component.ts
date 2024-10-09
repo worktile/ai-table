@@ -185,11 +185,12 @@ export class AITableRenderer {
     });
 
     cellsConfig = computed(() => {
-        const { aiTable, coordinate } = this.config();
+        const { aiTable, coordinate, references } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
             coordinate,
+            references,
             rowStartIndex,
             rowStopIndex,
             columnStartIndex,

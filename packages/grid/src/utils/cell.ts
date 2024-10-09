@@ -1,14 +1,4 @@
-import { computed, Signal } from '@angular/core';
-import {
-    AITable,
-    AITableField,
-    AITableFieldOption,
-    AITableFields,
-    AITableRecord,
-    AITableRecords,
-    FieldValue,
-    getFieldOptionByField
-} from '../core';
+import { AITable, AITableField, AITableFieldOption, FieldValue, getFieldOptionByField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
 import { AITableSizeMap } from '../types';
 
@@ -53,4 +43,50 @@ export function transformCellValue<T = any>(aiTable: AITable, field: AITableFiel
     }
 
     return cellText;
+}
+
+/**
+ * `\u4e00`: https://www.compart.com/en/unicode/U+4E00
+ * `\u9fa5`: https://www.compart.com/en/unicode/U+9FA5
+ */
+const UNIFIED_IDEOGRAPHS_REGEX = /^[\u4e00-\u9fa5]+$/;
+
+const SET_OF_LETTERS_REGEX = /^[a-zA-Z\/ ]+$/;
+
+export function getAvatarShortName(name: string | null | undefined): string {
+    if (!name) {
+        return '';
+    }
+
+    name = name.trim();
+
+    if (UNIFIED_IDEOGRAPHS_REGEX.test(name) && name.length > 2) {
+        return name.slice(name.length - 2);
+    }
+
+    if (SET_OF_LETTERS_REGEX.test(name) && name.indexOf(' ') > 0) {
+        const words: string[] = name.split(' ');
+        return (words[0].slice(0, 1) + words[1].slice(0, 1)).toUpperCase();
+    }
+
+    return name.length > 2 ? name.slice(0, 2).toUpperCase() : name.toUpperCase();
+}
+
+export function getAvatarBgColor(name: string) {
+    if (!name) {
+        return;
+    }
+    const colors = ['#56abfb', '#5dcfff', '#84e17e', '#73d897', '#ff9f73', '#fa8888', '#fb7fb7', '#9a7ef4', '#868af6'];
+    const nameArray: string[] = name.split('');
+    const code: number =
+        name && name.length > 0
+            ? nameArray.reduce(
+                  function (result, item) {
+                      result.value += item.charCodeAt(0);
+                      return result;
+                  },
+                  { value: 0 }
+              ).value
+            : 0;
+    return colors[code % 9];
 }

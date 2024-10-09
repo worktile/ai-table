@@ -1,11 +1,15 @@
 import _ from 'lodash';
 import {
+    AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET,
     AI_TABLE_CELL_EMOJI_PADDING,
     AI_TABLE_CELL_EMOJI_SIZE,
     AI_TABLE_CELL_MAX_ROW_COUNT,
+    AI_TABLE_CELL_MEMBER_ITEM_HEIGHT,
+    AI_TABLE_CELL_MEMBER_ITEM_PADDING,
     AI_TABLE_CELL_MULTI_DOT_RADIUS,
+    AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP,
     AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH,
     AI_TABLE_CELL_MULTI_PADDING_LEFT,
     AI_TABLE_CELL_MULTI_PADDING_TOP,
@@ -13,6 +17,9 @@ import {
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_MEMBER_AVATAR_SIZE,
+    AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
+    AI_TABLE_MEMBER_ITEM_PADDING_RIGHT,
     AI_TABLE_MIN_TEXT_WIDTH,
     AI_TABLE_OFFSET,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
@@ -36,11 +43,12 @@ import {
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+    FONT_SIZE_SM,
     StarFill
 } from '../../constants';
-import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, RateFieldValue } from '../../core';
-import { AITableRender, AITableSelectField } from '../../types';
-import { getTextWidth } from '../../utils/get-text-width';
+import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
+import { AITableAvatarSize, AITableAvatarType, AITableMemberType, AITableRender, AITableSelectField } from '../../types';
+import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
 
 /**
@@ -59,6 +67,9 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.updatedAt:
             case AITableFieldType.rate:
             case AITableFieldType.progress:
+            case AITableFieldType.member:
+            case AITableFieldType.createdBy:
+            case AITableFieldType.updatedBy:
                 return this.setStyle({ fontSize: DEFAULT_FONT_SIZE, fontWeight });
             default:
                 return null;
@@ -74,22 +85,21 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.text:
             case AITableFieldType.number:
             case AITableFieldType.link:
-                this.renderCellText(render, ctx);
-                return;
+                return this.renderCellText(render, ctx);
             case AITableFieldType.select:
-                this.renderCellSelect(render, ctx);
-                return;
+                return this.renderCellSelect(render, ctx);
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
-                this.renderCellDate(render, ctx);
-                return;
+                return this.renderCellDate(render, ctx);
             case AITableFieldType.rate:
-                this.renderCellRate(render, ctx);
-                return;
+                return this.renderCellRate(render, ctx);
             case AITableFieldType.progress:
-                this.renderCellProgress(render, ctx);
-                return;
+                return this.renderCellProgress(render, ctx);
+            case AITableFieldType.member:
+            case AITableFieldType.createdBy:
+            case AITableFieldType.updatedBy:
+                return this.renderCellMember(render, ctx);
             default:
                 return null;
         }
@@ -548,6 +558,108 @@ export class CellDrawer extends Drawer {
             text: `${transformValue}%`,
             fillStyle: colors.gray800
         });
+    }
+
+    private renderCellMember(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+        const { references, x, y, field, transformValue: _cellValue, rowHeight, columnWidth, isActive } = render;
+        const cellValue = _cellValue;
+
+        if (!cellValue?.length || !references) {
+            return;
+        }
+        const settings = field.settings as MemberSettings;
+        const avatarSize = AI_TABLE_MEMBER_AVATAR_SIZE;
+        const itemHeight = AI_TABLE_CELL_MEMBER_ITEM_HEIGHT;
+        const isOperating = isActive;
+        const isMulti = settings?.is_multiple;
+
+        let currentX = AI_TABLE_CELL_PADDING;
+        let currentY = (AI_TABLE_FIELD_HEAD_HEIGHT - avatarSize) / 2;
+        const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_PADDING_RIGHT + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
+        const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
+        const maxTextWidth = isOperating
+            ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
+            : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
+
+        const listCount = cellValue.length;
+        let isOverflow = false;
+
+        for (let index = 0; index < listCount; index++) {
+            const userInfo = references?.members[cellValue[index]];
+            if (!userInfo) continue;
+
+            const { uid, display_name, avatar } = userInfo;
+            const type = AITableMemberType.member;
+            const itemWidth = AITableAvatarSize.size24 + (isMulti ? AI_TABLE_CELL_MEMBER_ITEM_PADDING : 0);
+
+            currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
+
+            let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
+            if (index === 0 && isOperating) {
+                const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
+                // item No space to display, then perform a line feed
+                if (operatingMaxWidth <= 20) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                    currentY += AI_TABLE_OPTION_ITEM_HEIGHT + AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP;
+                } else {
+                    realMaxTextWidth = operatingMaxWidth;
+                }
+            }
+
+            let isMore = currentX + itemWidth > columnWidth - 2 * AI_TABLE_CELL_PADDING;
+            if (columnWidth != null) {
+                // 在非活动状态下，当超出列宽时，不会渲染后续内容
+                if (!isActive && currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
+                    break;
+                }
+                // 如果不是非活动状态的最后一行，则换行渲染溢出内容
+                if (!isActive && currentX > columnWidth - 2 * AI_TABLE_CELL_PADDING) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                }
+                if (isActive && currentX + itemWidth > columnWidth - AI_TABLE_CELL_PADDING) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                    currentY += itemHeight;
+                }
+                if (isActive && currentY >= maxHeight) {
+                    isOverflow = true;
+                }
+            }
+
+            if (ctx && !isActive) {
+                this.avatar({
+                    x: x + currentX,
+                    y: y + currentY,
+                    url: avatar!,
+                    id: uid!,
+                    title: getAvatarShortName(display_name),
+                    bgColor: getAvatarBgColor(display_name!),
+                    type: AITableAvatarType.member,
+                    size: AITableAvatarSize.size24
+                });
+
+                if (isMore) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.3;
+                    this.rect({
+                        x: x + currentX,
+                        y: y + currentY,
+                        width: AITableAvatarSize.size24,
+                        height: AITableAvatarSize.size24,
+                        radius: 24,
+                        fill: this.colors.black
+                    });
+                    ctx.restore();
+                    this.text({
+                        x: x + currentX + FONT_SIZE_SM / 2,
+                        y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                        fillStyle: this.colors.white,
+                        fontSize: FONT_SIZE_SM,
+                        text: `+${listCount - index - 1}`,
+                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                    });
+                }
+            }
+        }
     }
 }
 

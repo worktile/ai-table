@@ -38,6 +38,14 @@ export const AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH = 36; // 选项字段项的最�
 export const AI_TABLE_CELL_MAX_ROW_COUNT = 1; // 默认单元格展示的最大行数
 export const AI_TABLE_CELL_EMOJI_SIZE = 18;
 export const AI_TABLE_CELL_EMOJI_PADDING = 8;
+export const AI_TABLE_CELL_MEMBER_MAX_HEIGHT = 130; // 成员字段项最大高度
+export const AI_TABLE_CELL_MEMBER_ITEM_HEIGHT = 24; // 成员字段项高度
+export const AI_TABLE_CELL_MEMBER_ITEM_PADDING = 4; // 多个成员头像间距
+export const AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE = 22; // 成员/选项/链接字段的新按钮大小
+
+export const AI_TABLE_MEMBER_AVATAR_SIZE = 24; // 成员头像大小
+export const AI_TABLE_MEMBER_ITEM_PADDING_RIGHT = 8; // 成员字段项右边距
+export const AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT = 8; // 成员头像与成员名之间的间距
 
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;

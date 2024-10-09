@@ -43,6 +43,7 @@ export interface AITableRendererConfig {
     coordinate: Coordinate;
     containerWidth: number;
     containerHeight: number;
+    references: AITableReferences;
 }
 
 export enum AITableRowColumnType {

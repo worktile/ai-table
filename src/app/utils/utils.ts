@@ -454,7 +454,7 @@ export function getCanvasDefaultValue() {
                     'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
                     'column-4': { timestamp: 1682235946 },
-                    'column-5': ['member_01', 'member_02'],
+                    'column-5': ['member_01', 'member_02', 'member_03', 'member_04', 'member_05', 'member_06', 'member_07', 'member_08'],
                     'column-6': 50,
                     'column-7': 4,
                     'column-8': {},
@@ -734,7 +734,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-7',
                 name: '评分',
                 positions: {
-                    view1: 2,
+                    view1: 11,
                     view2: 7
                 },
                 type: AITableFieldType.rate
@@ -988,11 +988,41 @@ export function getReferences(): AITableReferences {
             member_01: {
                 uid: 'member_01',
                 display_name: 'admin',
-                avatar: ''
+                avatar: 'https://web.on-premises-alpha.pingcode.live/pc-avatar/c04446a4-bfcc-4a05-846c-e3241e1b68df_80x80.png'
             },
             member_02: {
                 uid: 'member_02',
                 display_name: 'member',
+                avatar: ''
+            },
+            member_03: {
+                uid: 'member_03',
+                display_name: 'Maple13',
+                avatar: ''
+            },
+            member_04: {
+                uid: 'member_04',
+                display_name: 'canvas',
+                avatar: ''
+            },
+            member_05: {
+                uid: 'member_05',
+                display_name: 'svg',
+                avatar: ''
+            },
+            member_06: {
+                uid: 'member_06',
+                display_name: 'html',
+                avatar: ''
+            },
+            member_07: {
+                uid: 'member_07',
+                display_name: 'css',
+                avatar: ''
+            },
+            member_08: {
+                uid: 'member_08',
+                display_name: 'Angular',
                 avatar: ''
             }
         }
