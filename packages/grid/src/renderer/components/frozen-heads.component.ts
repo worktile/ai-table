@@ -13,21 +13,24 @@ import { AITableCheckType, AITableCreateHeadsConfig } from '../../types';
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 import { AITableIcon } from './icon.component';
+import { KoContainer } from '../../angular-konva/components/container.component';
 
 @Component({
     selector: 'ai-table-frozen-column-heads',
     template: `
-        <!-- <ko-rect [config]="numberHeadBgConfig()"></ko-rect> -->
+        <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
         <ko-line [config]="topLineConfig"></ko-line>
         <ko-line [config]="bottomLineConfig()"></ko-line>
-        <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+        <ko-group>
+            <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+        </ko-group>
         @for (config of headConfigs(); track $index) {
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
         <ko-rect [config]="headBgConfig()"></ko-rect>
     `,
     standalone: true,
-    imports: [KoStage, KoShape, AITableFieldHead, AITableIcon],
+    imports: [KoStage, KoShape, AITableFieldHead, AITableIcon, KoContainer],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenColumnHeads {
@@ -54,16 +57,16 @@ export class AITableFrozenColumnHeads {
         });
     });
 
-    // numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
-    //     return {
-    //         x: AI_TABLE_OFFSET,
-    //         y: AI_TABLE_OFFSET,
-    //         width: AI_TABLE_ROW_HEAD_WIDTH,
-    //         height: this.fieldHeadHeight(),
-    //         fill: Colors.white,
-    //         listening: false
-    //     };
-    // });
+    numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            x: AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
+            width: AI_TABLE_ROW_HEAD_WIDTH,
+            height: this.fieldHeadHeight(),
+            fill: Colors.white,
+            listening: false
+        };
+    });
 
     topLineConfig = {
         x: AI_TABLE_OFFSET,
