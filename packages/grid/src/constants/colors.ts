@@ -7,6 +7,7 @@ export const Colors = {
     gray600: '#999',
     gray700: '#666',
     white: '#fff',
+    black: '#000',
     transparent: 'transparent',
     gray80: '#fafafa',
     headSelectedBgColor: '#EAEFFA',
