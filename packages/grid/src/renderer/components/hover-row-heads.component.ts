@@ -99,7 +99,7 @@ export class AITableHoverRowHeads {
                     x: AI_TABLE_CELL_PADDING,
                     y: iconOffsetY,
                     type: isCheckedRow ? AITableCheckType.checked : AITableCheckType.unchecked,
-                    fill: isCheckedRow ? Colors.primary : Colors.gray300
+                    fill: isCheckedRow || (targetName === AI_TABLE_ROW_SELECT_CHECKBOX && !isCheckedRow) ? Colors.primary : Colors.gray300
                 };
                 headConfigs.push(operationGroup);
             }
