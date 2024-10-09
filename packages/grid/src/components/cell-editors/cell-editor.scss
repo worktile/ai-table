@@ -5,9 +5,15 @@
 
 // cell 编辑组件左内边距以 13.5 作为基准
 
+$cell-editor-padding-left: 13.5px;
+
 .date-cell-editor {
     .thy-calendar-picker {
         height: 100%;
+    }
+    .form-control {
+        padding-left: $cell-editor-padding-left;
+        border-width: 2px;
     }
 }
 
@@ -17,7 +23,7 @@
     // 左间距 13.5 加上 editor border 带来的向右偏移的 1 等于 14.5 等于文字的真实渲染位置
     // 上间距 8 的计算逻辑为：line-height 24 加上 上下间距 8*2 加上 上下 border 2*2 等于 44
     textarea {
-        padding: 8px 13.5px;
+        padding: 8px $cell-editor-padding-left;
         min-height: 44px;
         border-width: 2px;
         line-height: 24px;
@@ -74,6 +80,7 @@
     }
     .select-cell-editor .form-control {
         height: auto;
+        padding-left: $cell-editor-padding-left;
     }
     &.thy-popover-panel {
         padding: 0;
