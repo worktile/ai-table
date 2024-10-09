@@ -104,8 +104,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         columnCount
                     });
-                    const realX = x + offset - AI_TABLE_OFFSET;
-                    const realY = y - AI_TABLE_OFFSET;
+                    const realX = x + offset + AI_TABLE_OFFSET;
+                    const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
                     const transformValue = transformCellValue(aiTable, field, cellValue);

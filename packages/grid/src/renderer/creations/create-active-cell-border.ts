@@ -50,13 +50,11 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                     columnIndex,
                     columnCount: totalColumnCount
                 });
-                const borderOffset = 1;
-
                 const currentConfig = {
-                    x: x + offset + borderOffset,
-                    y: y + borderOffset,
-                    width: width - borderOffset,
-                    height: rowHeight - borderOffset,
+                    x: x + offset + AI_TABLE_CELL_BORDER / 2,
+                    y: y + AI_TABLE_CELL_BORDER / 2,
+                    width: width - AI_TABLE_CELL_BORDER,
+                    height: rowHeight - AI_TABLE_CELL_BORDER,
                     strokeWidth: AI_TABLE_CELL_BORDER,
                     stroke: colors.primary,
                     fillEnabled: false,
