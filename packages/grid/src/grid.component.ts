@@ -107,7 +107,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             container: this.containerElement(),
             coordinate: coordinate,
             containerWidth: this.containerRect().width,
-            containerHeight: this.containerRect().height
+            containerHeight: this.containerRect().height,
+            references: this.aiReferences()
         };
     });
 

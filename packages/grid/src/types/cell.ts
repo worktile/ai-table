@@ -1,5 +1,6 @@
 import Konva from 'konva';
 import { AITable, AITableField, Coordinate, FieldValue } from '../core';
+import { AITableReferences } from './grid';
 import { AITableLinearRowRecord } from './row';
 
 export interface AITableCellsConfig {
@@ -9,6 +10,7 @@ export interface AITableCellsConfig {
     rowStopIndex: number;
     columnStartIndex: number;
     columnStopIndex: number;
+    references?: AITableReferences;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
@@ -27,6 +29,7 @@ export interface AITableRender {
     transformValue: any;
     isActive: boolean;
     style: AITableRenderStyle;
+    references?: AITableReferences;
 }
 
 export interface AITableRenderStyle {

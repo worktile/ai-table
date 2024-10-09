@@ -84,3 +84,12 @@ export type AITableLabel = Omit<AITableRect & AITableText, 'fillStyle'> & {
     color?: string;
     padding?: number;
 };
+
+export interface AITableImage extends AITableGraph {
+    name: string;
+    url: string;
+    width: number;
+    height: number;
+    opacity?: number;
+    clipFunc?: (ctx: any) => void;
+}

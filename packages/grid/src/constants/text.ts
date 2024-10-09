@@ -21,3 +21,4 @@ export const DEFAULT_TEXT_VERTICAL_ALIGN_TOP = 'top';
 export const DEFAULT_TEXT_DECORATION = 'none';
 export const DEFAULT_TEXT_SCALE = 1;
 export const DEFAULT_TEXT_MAX_CACHE = 500;
+export const FONT_SIZE_SM = 12;
