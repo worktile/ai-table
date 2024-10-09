@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoShape, KoStage } from '../../angular-konva';
+import { KoShape, KoStage, KoContainer } from '../../angular-konva';
 import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
@@ -13,7 +13,6 @@ import { AITableCheckType, AITableCreateHeadsConfig } from '../../types';
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 import { AITableIcon } from './icon.component';
-import { KoContainer } from '../../angular-konva/components/container.component';
 
 @Component({
     selector: 'ai-table-frozen-column-heads',
