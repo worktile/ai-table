@@ -10,7 +10,7 @@ export interface AITableFieldMenuItem {
         field: Signal<AITableField>,
         origin?: HTMLElement | ElementRef<any>,
         position?: { x: number; y: number }
-    ) => void;
+    ) => any;
     hidden?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
     disabled?: (aiTable: AITable, field: Signal<AITableField>) => boolean;
 }

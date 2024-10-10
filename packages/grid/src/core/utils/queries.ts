@@ -1,18 +1,18 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { AITable, AITableField, AITableRecord, AIFieldValueIdPath, AIRecordPath, AIFieldPath, AIFieldIdPath } from '../types';
+import { AITable, AITableField, AITableRecord, AIFieldValueIdPath, IdPath, NumberPath } from '../types';
 
 export const AITableQueries = {
     findRecordPath(aiTable: AITable, record: AITableRecord) {
         const recordIndex = record && aiTable.records().indexOf(record);
         if (!isUndefinedOrNull(recordIndex) && recordIndex > -1) {
-            return [recordIndex] as AIRecordPath;
+            return [recordIndex] as NumberPath;
         }
         throw new Error(`can not find the record path: ${JSON.stringify({ ...(record || {}) })}`);
     },
     findFieldPath(aiTable: AITable, field: AITableField) {
         const fieldIndex = field && aiTable.fields().indexOf(field);
         if (!isUndefinedOrNull(fieldIndex) && fieldIndex > -1) {
-            return [fieldIndex] as AIFieldPath;
+            return [fieldIndex] as NumberPath;
         }
         throw new Error(`can not find the field path: ${JSON.stringify({ ...(field || {}) })}`);
     },
@@ -36,7 +36,7 @@ export const AITableQueries = {
         return record.values[path[1]];
     },
 
-    getField(aiTable: AITable, path: AIFieldIdPath): AITableField | undefined {
+    getField(aiTable: AITable, path: IdPath): AITableField | undefined {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
         }
@@ -46,7 +46,7 @@ export const AITableQueries = {
         return aiTable.fields().find(item=> item._id === path[0]);
     },
 
-    getRecord(aiTable: AITable, path: AIRecordPath): AITableRecord {
+    getRecord(aiTable: AITable, path: NumberPath): AITableRecord {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
         }

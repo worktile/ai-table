@@ -57,7 +57,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     updateValue() {
-        this.updateFieldValue();
+        super.update();
         this.closePopover();
     }
 }

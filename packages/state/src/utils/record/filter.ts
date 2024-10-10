@@ -1,5 +1,4 @@
-import { AITableRecord, FieldValue } from '@ai-table/grid';
-import { ViewOperationMap } from './field';
+import { AITable, AITableRecord, FieldValue } from '@ai-table/grid';
 import {
     AITableFilterCondition,
     AITableFilterConditions,
@@ -8,11 +7,13 @@ import {
     AITableView,
     AITableViewField,
     AITableViewFields,
-    AITableViewRecords
-} from '../types';
-import { isEmpty } from './common';
+    AITableViewRecords,
+    AIViewTable
+} from '../../types';
+import { ViewOperationMap } from '../field/model';
+import { isEmpty } from '../common';
 
-export function getFilteredRecords(records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
+export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};
     if (!conditions) {
         return records;
@@ -21,7 +22,11 @@ export function getFilteredRecords(records: AITableViewRecords, fields: AITableV
     if (!illegalConditions.length) {
         return records;
     }
+    const recordsWillHidden = aiTable.recordsWillHidden();
     return records.filter((record) => {
+        if(recordsWillHidden && recordsWillHidden.length && recordsWillHidden.includes(record._id)){
+            return true;
+        }
         return checkConditions(fields, record, { conditions: illegalConditions, condition_logical });
     });
 }
@@ -62,4 +67,17 @@ export function doFilter(condition: AITableFilterCondition, field: AITableViewFi
     }
 
     return ViewOperationMap[field.type].isMeetFilter(condition, cellValue);
+}
+
+export function getDefaultRecordDataByFilter(
+    recordValues: Record<string, FieldValue>,
+    conditions: AITableFilterCondition[],
+    conditionLogical?: AITableFilterLogical
+) {
+    if (conditions.length === 1) {
+        // recordValues[conditions[0].field_id] = conditions[0].value;
+    } else {
+        //...
+    }
+    return recordValues;
 }

@@ -1,14 +1,15 @@
-import { ActionName, AddFieldAction, AddRecordAction, getDefaultFieldValue } from '@ai-table/grid';
+import { getDefaultFieldValue } from '@ai-table/grid';
 import * as Y from 'yjs';
 import {
+    ActionName,
+    AddFieldAction,
+    AddRecordAction,
     AddRecordPositionAction,
     AddViewAction,
     AITableViewRecord,
-    PositionActionName,
     SharedType,
     SyncArrayElement,
-    SyncMapElement,
-    ViewActionName
+    SyncMapElement
 } from '../../types';
 import { getSharedRecordIndex, toRecordSyncElement, toSyncElement } from '../utils';
 
@@ -23,10 +24,10 @@ export default function addNode(
         case ActionName.AddRecord:
             records && records.push([toRecordSyncElement(action.record as AITableViewRecord)]);
             break;
-        case ViewActionName.AddView:
+        case ActionName.AddView:
             views && views.push([toSyncElement(action.view)]);
             break;
-        case PositionActionName.AddRecordPosition:
+        case ActionName.AddRecordPosition:
             if (records) {
                 const recordIndex = getSharedRecordIndex(records, action.path[0]);
                 const record = records.get(recordIndex);

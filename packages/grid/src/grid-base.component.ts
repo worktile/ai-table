@@ -9,18 +9,17 @@ import {
     model,
     NgZone,
     OnInit,
-    output,
-    signal
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { mergeWith } from 'rxjs';
-import { DBL_CLICK_EDIT_TYPE, DefaultFieldMenus, MOUSEOVER_EDIT_TYPE } from './constants';
+import { DBL_CLICK_EDIT_TYPE, MOUSEOVER_EDIT_TYPE } from './constants';
 import {
-    Actions,
+    AddFieldOptions,
+    AddRecordOptions,
     AIPlugin,
     AITable,
-    AITableChangeOptions,
     AITableFields,
     AITableFieldType,
     AITableRecords,
@@ -28,12 +27,13 @@ import {
     AITableValue,
     createAITable,
     createDefaultField,
-    getDefaultRecord
+    UpdateFieldValueOptions
 } from './core';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableReferences } from './types';
+import { AITableFieldPropertyEditor } from './components';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -53,6 +53,8 @@ export class AITableGridBase implements OnInit {
     aiPlugins = input<AIPlugin[]>();
 
     aiReferences = input<AITableReferences>();
+    
+    aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
 
     AITableFieldType = AITableFieldType;
 
@@ -64,11 +66,13 @@ export class AITableGridBase implements OnInit {
         return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
     });
 
-    onChange = output<AITableChangeOptions>();
-
     aiTableInitialized = output<AITable>();
 
-    aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
+    aiAddRecord = output<AddRecordOptions>();
+
+    aiAddField = output<AddFieldOptions>();
+
+    aiUpdateFieldValue = output<UpdateFieldValueOptions>();
 
     fieldMenus!: AITableFieldMenuItem[];
 
@@ -103,13 +107,6 @@ export class AITableGridBase implements OnInit {
             this.aiTable = plugin(this.aiTable);
         });
         this.aiTableInitialized.emit(this.aiTable);
-        this.aiTable.onChange = () => {
-            this.onChange.emit({
-                records: this.aiRecords(),
-                fields: this.aiFields(),
-                actions: this.aiTable.actions
-            });
-        };
     }
 
     initService() {
@@ -121,11 +118,15 @@ export class AITableGridBase implements OnInit {
     }
 
     buildFieldMenus() {
-        this.fieldMenus = this.aiFieldConfig()?.fieldMenus ?? DefaultFieldMenus;
+        this.fieldMenus = this.aiFieldConfig()?.fieldMenus || [];
     }
 
     addRecord() {
-        Actions.addRecord(this.aiTable, getDefaultRecord(this.aiFields()), [this.aiRecords().length]);
+        const records = this.gridData().records;
+        const recordCount = records.length;
+        this.aiAddRecord.emit({
+            recordId: recordCount > 0 ? records[records.length - 1]._id : ''
+        });
     }
 
     selectRecord(recordId: string) {
@@ -138,12 +139,22 @@ export class AITableGridBase implements OnInit {
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
         const field = createDefaultField(this.aiTable, AITableFieldType.text);
-        this.aiTableGridFieldService.editFieldProperty(this.aiTable, {
+        const popoverRef = this.aiTableGridFieldService.editFieldProperty(this.aiTable, {
             field,
             isUpdate: false,
             origin: gridColumnBlank!,
             position
         });
+        if (popoverRef && !this.aiFieldConfig()?.fieldPropertyEditor) {
+            (popoverRef.componentInstance as AITableFieldPropertyEditor).addField.subscribe((value) => {
+                const fields = this.gridData().fields;
+                const fieldCount = fields.length;
+                this.aiAddField.emit({
+                    fieldId: fieldCount > 0 ? fields[fields.length - 1]._id : '',
+                    fieldValue: value
+                });
+            });
+        }
     }
 
     public subscribeEvents() {

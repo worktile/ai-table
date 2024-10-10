@@ -1,5 +1,4 @@
 import { Id } from 'ngx-tethys/types';
-import { AITableAction } from './action';
 
 export enum AITableFieldType {
     text = 'text', // 包含多行文本
@@ -129,8 +128,40 @@ export interface AITableValue {
     fields: AITableFields;
 }
 
-export interface AITableChangeOptions {
-    records: AITableRecord[];
-    fields: AITableField[];
-    actions: AITableAction[];
+export enum Direction {
+    before = 'before',
+    after = 'after'
 }
+
+export interface AddRecordOptions {
+    recordId: string;
+    direction?: Direction;
+    isDuplicate?: boolean;
+    count?: number;
+}
+
+export interface AddFieldOptions {
+    fieldId: string;
+    fieldValue: Partial<AITableField>;
+    direction?: Direction;
+    isDuplicate?: boolean;
+    count?: number;
+}
+
+export interface UpdateFieldValueOptions<T = unknown> {
+    value: T;
+    path: AIFieldValueIdPath;
+}
+
+export interface SetFieldOptions<T = unknown> {
+    field: AITableField;
+    path: IdPath;
+}
+
+export type NumberPath = [number];
+
+export type IdPath = [string];
+
+export type AIFieldValueIdPath = [string, string];
+
+export type Path = NumberPath | IdPath | AIFieldValueIdPath;

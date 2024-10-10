@@ -33,8 +33,11 @@
                     [aiFieldConfig]="aiFieldConfig"
                     [aiPlugins]="plugins"
                     [aiReferences]="references()"
-                    (onChange)="onChange($event)"
+                    (aiAddRecord)="addRecord($event)"
+                    (aiAddField)="addField($event)"
+                    (aiUpdateFieldValue)="updateFieldValue($event)"
                     (aiTableInitialized)="aiTableInitialized($event)"
+                    [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
                 ></ai-table-grid>
             }
             @case ('dom') {
@@ -44,8 +47,11 @@
                     [aiFieldConfig]="aiFieldConfig"
                     [aiPlugins]="plugins"
                     [aiReferences]="references()"
-                    (onChange)="onChange($event)"
+                    (aiAddRecord)="addRecord($event)"
+                    (aiAddField)="addField($event)"
+                    (aiUpdateFieldValue)="updateFieldValue($event)"
                     (aiTableInitialized)="aiTableInitialized($event)"
+                    [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
                 ></ai-table-dom-grid>
             }
         }

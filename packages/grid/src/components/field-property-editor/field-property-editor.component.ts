@@ -1,5 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyButton } from 'ngx-tethys/button';
 import {
@@ -20,10 +20,10 @@ import {
     AITable,
     AITableField,
     AITableFieldOption,
-    Actions,
     FieldOptions,
     createDefaultFieldName,
-    getFieldOptionByField
+    getFieldOptionByField,
+    SetFieldOptions
 } from '../../core';
 
 @Component({
@@ -73,6 +73,10 @@ export class AITableFieldPropertyEditor {
 
     @Input({ transform: booleanAttribute }) isUpdate!: boolean;
 
+    addField = output<AITableField>();
+
+    setField = output<SetFieldOptions>();
+
     selectedFieldOption = computed(() => {
         return getFieldOptionByField(this.aiEditField())!;
     });
@@ -108,9 +112,12 @@ export class AITableFieldPropertyEditor {
 
     editFieldProperty() {
         if (this.isUpdate) {
-            Actions.setField(this.aiTable, this.aiEditField(), [this.aiEditField()._id]);
+            this.setField.emit({
+                field: this.aiEditField(),
+                path: [this.aiEditField()._id]
+            });
         } else {
-            Actions.addField(this.aiTable, this.aiEditField(), [this.aiTable.fields().length]);
+            this.addField.emit(this.aiEditField());
         }
         this.thyPopoverRef.close();
     }

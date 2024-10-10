@@ -1,5 +1,5 @@
-import { isEmpty } from '../common';
-import { AITableFilterCondition, AITableFilterOperation } from '../../types';
+import { isEmpty } from '../../common';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { Field } from './field';
 import { AITableField, AITableSelectOption, SelectFieldValue, SelectSettings } from '@ai-table/grid';
 import { Id } from 'ngx-tethys/types';

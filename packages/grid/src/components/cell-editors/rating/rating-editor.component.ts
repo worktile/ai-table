@@ -5,7 +5,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 
 @Component({
     selector: 'rating-cell-editor',
-    template: ` <thy-rate [(ngModel)]="modelValue" (ngModelChange)="updateValue()"></thy-rate> `,
+    template: ` <thy-rate [(ngModel)]="modelValue" (ngModelChange)="update()"></thy-rate> `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyRate],
@@ -13,8 +13,4 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
         class: 'd-flex align-items-center h-100 px-3 rating-cell-editor'
     }
 })
-export class RatingCellEditorComponent extends AbstractEditCellEditor<number> {
-    updateValue() {
-        this.updateFieldValue();
-    }
-}
+export class RatingCellEditorComponent extends AbstractEditCellEditor<number> {}

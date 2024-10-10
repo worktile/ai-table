@@ -22,7 +22,7 @@ export interface AITableProgressConfig {
             [thyStep]="config?.step || 1"
             [thyType]="config?.progressType || 'success'"
             [thySize]="config?.size || 'md'"
-            (ngModelChange)="updateValue($event)"
+            (ngModelChange)="update()"
             (mousedown)="sliderMousedownHandler($event)"
         ></thy-slider>
         <span class="progress-text">{{ modelValue }}{{ config?.suffix || '%' }}</span>
@@ -55,9 +55,5 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
     sliderMousedownHandler(event: Event) {
         event.preventDefault();
         event.stopPropagation();
-    }
-
-    updateValue(value: number) {
-        this.updateFieldValue();
     }
 }

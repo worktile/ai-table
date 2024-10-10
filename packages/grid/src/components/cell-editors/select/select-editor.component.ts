@@ -63,7 +63,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
 
     updateValue(value: boolean) {
         if (!value) {
-            this.updateFieldValue();
+            super.update();
             this.closePopover();
         }
     }

@@ -13,7 +13,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 })
 export class LinkCellEditorComponent extends AbstractEditCellEditor<number> {
     updateValue() {
-        this.updateFieldValue();
+        super.update();
         this.closePopover();
     }
 }

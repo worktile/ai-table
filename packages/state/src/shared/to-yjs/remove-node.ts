@@ -1,13 +1,13 @@
-import { ActionName, RemoveFieldAction, RemoveRecordAction } from '@ai-table/grid';
 import * as Y from 'yjs';
 import {
-    PositionActionName,
+    ActionName,
+    RemoveFieldAction,
+    RemoveRecordAction,
     RemoveRecordPositionAction,
     RemoveViewAction,
     SharedType,
     SyncArrayElement,
-    SyncMapElement,
-    ViewActionName
+    SyncMapElement
 } from '../../types';
 import { getSharedMapValueIndex, getSharedRecordIndex } from '../utils';
 
@@ -28,7 +28,7 @@ export default function removeNode(
                 }
             }
             break;
-        case ViewActionName.RemoveView:
+        case ActionName.RemoveView:
             if (views) {
                 const viewIndex = getSharedMapValueIndex(views, action.path[0]);
                 if (viewIndex > -1) {
@@ -36,7 +36,7 @@ export default function removeNode(
                 }
             }
             break;
-        case PositionActionName.RemoveRecordPosition:
+        case ActionName.RemoveRecordPosition:
             if (records) {
                 const recordIndex = getSharedRecordIndex(records, action.path[1]);
                 const record = records.get(recordIndex);

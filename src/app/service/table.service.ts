@@ -4,17 +4,20 @@ import {
     AITableViewRecords,
     AIViewTable,
     applyYjsEvents,
+    buildFieldsByView,
+    buildRecordsByView,
     createSharedType,
     initSharedType,
     initTable,
     SharedType,
     YjsAITable
 } from '@ai-table/state';
-import { computed, inject, Injectable, isDevMode, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getDefaultValue, sortDataByView } from '../utils/utils';
+import { AITableRecords, AITableFields, AITableValue } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 
@@ -40,6 +43,24 @@ export class TableService {
 
     activeView = computed(() => {
         return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
+    });
+
+
+    renderRecords = computed(()=>{
+        return buildRecordsByView(this.aiTable, this.records(), this.fields(), this.activeView()) as AITableViewRecords;
+    }) 
+
+    renderFields = computed(()=>{
+        return buildFieldsByView(this.aiTable, this.fields(), this.activeView()) as AITableViewFields;
+    }) 
+
+    aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
+        return () => {
+            return {
+                records: this.renderRecords(),
+                fields: this.renderFields()
+            };
+        };
     });
 
     initData(views: AITableView[]) {

@@ -1,44 +1,42 @@
+import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 import {
     ActionName,
     AddFieldAction,
-    AIFieldIdPath,
-    AIFieldPath,
-    AITable,
-    AITableField,
     MoveFieldAction,
     RemoveFieldAction,
-    SetFieldAction
+    SetFieldAction,
+    AIViewTable
 } from '../types';
-import { AITableQueries } from '../utils';
+import { AITableViewField } from '../types/view';
 
-export function addField(aiTable: AITable, field: AITableField, path: AIFieldPath) {
+export function addField(AIViewTable: AIViewTable, field: AITableField, path: NumberPath) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
         path
     };
-    aiTable.apply(operation);
+    AIViewTable.apply(operation);
 }
 
-export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldPath) {
+export function moveField(AIViewTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
     const operation: MoveFieldAction = {
         type: ActionName.MoveField,
         path,
         newPath
     };
-    aiTable.apply(operation);
+    AIViewTable.apply(operation);
 }
 
-export function removeField(aiTable: AITable, path: AIFieldIdPath) {
+export function removeField(AIViewTable: AIViewTable, path: IdPath) {
     const operation: RemoveFieldAction = {
         type: ActionName.RemoveField,
         path
     };
-    aiTable.apply(operation);
+    AIViewTable.apply(operation);
 }
 
-export function setField<T extends AITableField = AITableField>(aiTable: AITable, value: Partial<T>, path: AIFieldIdPath) {
-    const field = AITableQueries.getField(aiTable, path) as T;
+export function setField<T extends AITableViewField = AITableViewField>(AIViewTable: AIViewTable, value: Partial<T>, path: IdPath) {
+    const field = AITableQueries.getField(AIViewTable, path) as T;
     if (field) {
         const properties: Partial<T> = {};
         const newProperties: Partial<T> = {};
@@ -61,7 +59,7 @@ export function setField<T extends AITableField = AITableField>(aiTable: AITable
             path
         };
 
-        aiTable.apply(operation);
+        AIViewTable.apply(operation);
     }
 }
 

@@ -1,8 +1,8 @@
-import { ElementRef, signal, Signal, WritableSignal } from '@angular/core';
+import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITable, AITableField, AITableFieldMenuItem } from '@ai-table/grid';
+import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
-import { Actions, AITable, AITableField } from '../core';
-import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services/field.service';
-import { AITableFieldMenuItem } from '../types';
+import { Actions } from '../action';
+import { AIViewTable } from '../types';
 
 export const DividerMenuItem = {
     type: 'divider'
@@ -16,13 +16,15 @@ export const EditFieldPropertyItem = {
         const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
         const copyField: AITableField = _.cloneDeep(field());
         if (origin && position) {
-            fieldService?.editFieldProperty(aiTable, {
+            const popoverRef = fieldService?.editFieldProperty(aiTable, {
                 field: copyField,
                 isUpdate: true,
-                origin,
+                origin: origin!,
                 position
             });
+            return popoverRef;
         }
+        return  undefined;
     }
 };
 
@@ -31,8 +33,10 @@ export const RemoveFieldItem = {
     name: '删除列',
     icon: 'trash',
     exec: (aiTable: AITable, field: Signal<AITableField>) => {
-        Actions.removeField(aiTable, [field()._id]);
+        Actions.removeField(aiTable as AIViewTable, [field()._id]);
     }
 };
 
-export const DefaultFieldMenus: AITableFieldMenuItem[] = [EditFieldPropertyItem, RemoveFieldItem];
+
+
+

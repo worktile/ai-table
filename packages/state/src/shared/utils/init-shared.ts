@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { AITableViewFields, AITableViewRecord, AITableViewRecords, AITableViews, Positions, SyncMapElement } from '../../types';
+import { AITableViewFields, AITableViewRecord, AITableViewRecords, AITableViews, SyncMapElement } from '../../types';
 
 export const createSharedType = () => {
     const doc = new Y.Doc();

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ThyDatePicker } from 'ngx-tethys/date-picker';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTimePickerModule } from 'ngx-tethys/time-picker';
-import { Actions, AITableQueries, DateFieldValue } from '../../../core';
+import { AITableQueries, DateFieldValue } from '../../../core';
 
 @Component({
     selector: 'date-cell-editor',
@@ -45,7 +45,10 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
     }
 
     updateValue(value: number) {
-        Actions.updateFieldValue(this.aiTable, { timestamp: value }, [this.record()._id, this.field()._id]);
+        this.updateFieldValue.emit({
+            value: { timestamp: value },
+            path: [this.record()._id, this.field()._id]
+        });
         this.closePopover();
     }
 
