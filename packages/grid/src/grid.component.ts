@@ -386,17 +386,22 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private toggleHoverCellEditor() {
         const { realTargetName } = this.aiTable.context?.pointPosition()!;
         const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
+        const selectedCell = AITable.getActiveCell(this.aiTable);
+        const isEditOpened = this.aiTableGridEventService.isEditOpened;
 
         if (targetName === AI_TABLE_CELL && recordId && fieldId) {
             const field = this.aiTable.fieldsMap()[fieldId];
-            const isEditOpened = this.aiTableGridEventService.isEditOpened;
 
             if (!field) {
                 return;
             }
             if (isEditOpened) {
-                const selectedCell = AITable.getActiveCell(this.aiTable);
-                if (selectedCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[selectedCell.fieldId].type)) {
+                // 1. 当前编辑打开并且选中元素也是 mouseover 编辑元素时，先关闭之前打开的编辑组件
+                // 2. 当前编辑打开但没有选中元素，当前 mouseover 元素是编辑元素时，先关闭之前打开的编辑组件
+                if (
+                    (selectedCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[selectedCell.fieldId].type)) ||
+                    (!selectedCell && MOUSEOVER_EDIT_TYPE.includes(field.type))
+                ) {
                     this.aiTableGridEventService.closeCellEditor();
                 } else {
                     return;
@@ -415,6 +420,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     isHoverEdit: true
                 });
             });
+        } else {
+            // 位于其他区域时，当前编辑打开并且没有选中元素时关闭编辑（说明打开的是 hover 编辑元素）
+            if (!selectedCell && isEditOpened) {
+                this.aiTableGridEventService.closeCellEditor();
+            }
         }
     }
 }
