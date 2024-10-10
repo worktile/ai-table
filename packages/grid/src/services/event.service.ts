@@ -1,15 +1,15 @@
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
-import { AI_TABLE_CELL_BORDER, AI_TABLE_OFFSET } from '../constants';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
+import { AbstractEditCellEditor } from '../components';
+import { AI_TABLE_OFFSET, GRID_CELL_EDITOR_MAP, AI_TABLE_CELL_BORDER } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition } from '../utils';
-import { AbstractEditCellEditor } from '../components/cell-editors/abstract-cell-editor.component';
-import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 
 @Injectable()
 export class AITableGridEventService {
@@ -32,6 +32,14 @@ export class AITableGridEventService {
     private destroyRef = inject(DestroyRef);
 
     private thyPopover = inject(ThyPopover);
+
+    get isEditOpened() {
+        return (
+            this.cellEditorPopoverRef &&
+            this.cellEditorPopoverRef.getOverlayRef() &&
+            this.cellEditorPopoverRef.getOverlayRef().hasAttached()
+        );
+    }
 
     initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
         this.aiTable = aiTable;

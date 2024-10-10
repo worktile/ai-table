@@ -4,9 +4,9 @@ import {
     NumberCellEditorComponent,
     ProgressEditorComponent,
     RatingCellEditorComponent,
+    SelectCellEditorComponent,
     TextCellEditorComponent
 } from '../components';
-import { SelectCellEditorComponent } from '../components/cell-editors/select/select-editor.component';
 import { AITableFieldType } from '../core';
 
 export const GRID_CELL_EDITOR_MAP: Partial<Record<AITableFieldType, any>> = {
