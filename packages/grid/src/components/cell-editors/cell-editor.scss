@@ -59,7 +59,7 @@ $cell-editor-padding-bottom: 5.5px;
 .select-cell-editor {
     .select-control {
         // 实际 canvas 渲染的行的高度要比，dom 的 44 高一些，大概 45px，所以 canvas 的高度在垂直居中的情况要比 dom 的文本要靠上一些（0.5），这里为了弥补这个差异所以调整了下内边距
-        padding-top: $cell-editor-padding-top !important;
+        padding-top: $cell-editor-padding-top-28 !important;
         padding-bottom: 5.5px !important;
         border: 2px solid variables.$primary;
         outline: none;
