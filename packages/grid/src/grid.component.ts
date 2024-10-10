@@ -33,12 +33,9 @@ import {
 import { AITable, Coordinate, RendererContext } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
-import { AITableGridEventService } from './services/event.service';
-import { AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.service';
+import { AITableGridEventService, AITableGridFieldService, AITableGridSelectionService } from './services';
 import { AITableMouseDownType, AITableRendererConfig, ScrollActionOptions } from './types';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindows, isWindowsOS } from './utils';
-import { getMousePosition } from './utils/position';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, getMousePosition, handleMouseStyle, isWindows } from './utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -135,7 +132,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
         effect(() => {
             if (this.aiTable.context?.pointPosition()) {
-                this.toggleCellEditor();
+                this.toggleHoverCellEditor();
             }
         });
     }
@@ -386,14 +383,25 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
-    private toggleCellEditor() {
+    private toggleHoverCellEditor() {
         const { realTargetName } = this.aiTable.context?.pointPosition()!;
         const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
 
         if (targetName === AI_TABLE_CELL && recordId && fieldId) {
             const field = this.aiTable.fieldsMap()[fieldId];
-            if (!field || !MOUSEOVER_EDIT_TYPE.includes(field.type)) {
-                this.aiTableGridEventService.closeCellEditor();
+            const isEditOpened = this.aiTableGridEventService.isEditOpened;
+
+            if (!field) {
+                return;
+            }
+            if (isEditOpened) {
+                const selectedCell = AITable.getActiveCell(this.aiTable);
+                if (selectedCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[selectedCell.fieldId].type)) {
+                    this.aiTableGridEventService.closeCellEditor();
+                } else {
+                    return;
+                }
+            } else if (!MOUSEOVER_EDIT_TYPE.includes(field.type)) {
                 return;
             }
             this.aiTableGridEventService.closeCellEditor();
@@ -407,8 +415,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     isHoverEdit: true
                 });
             });
-        } else {
-            this.aiTableGridEventService.closeCellEditor();
         }
     }
 }
