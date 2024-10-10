@@ -32,6 +32,7 @@ import {
     AI_TABLE_PROGRESS_BAR_RADIUS,
     AI_TABLE_PROGRESS_TEXT_Width,
     AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
     AI_TABLE_TEXT_GAP,
     Colors,
@@ -300,10 +301,10 @@ export class CellDrawer extends Drawer {
                         text: this.textEllipsis({
                             text: item.text,
                             maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                            fontSize: AI_TABLE_TAG_FONT_SIZE
                         }).text,
                         radius: AI_TABLE_OPTION_ITEM_RADIUS,
-                        fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE,
+                        fontSize: AI_TABLE_TAG_FONT_SIZE,
                         height: bgConfig.height,
                         color: Colors.white,
                         padding: AI_TABLE_CELL_PADDING,
@@ -313,14 +314,14 @@ export class CellDrawer extends Drawer {
                     this.rect(bgConfig);
                     this.text({
                         x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_TAG_FONT_SIZE) / 2,
                         text: this.textEllipsis({
                             text: item.text,
                             maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                            fontSize: AI_TABLE_TAG_FONT_SIZE
                         }).text,
                         fillStyle: Colors.gray700,
-                        fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                        fontSize: AI_TABLE_TAG_FONT_SIZE
                     });
                 }
                 const currentWidth = bgConfig.width;
@@ -356,7 +357,7 @@ export class CellDrawer extends Drawer {
                     color: Colors.gray700,
                     radius: AI_TABLE_OPTION_ITEM_RADIUS,
                     padding: AI_TABLE_CELL_PADDING,
-                    fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                    fontSize: AI_TABLE_TAG_FONT_SIZE
                 });
             } else {
                 this.rect({
@@ -369,10 +370,10 @@ export class CellDrawer extends Drawer {
                 });
                 this.text({
                     x: currentX + AI_TABLE_CELL_PADDING,
-                    y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                    y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_TAG_FONT_SIZE) / 2,
                     text: circleText,
                     fillStyle: Colors.gray700,
-                    fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                    fontSize: AI_TABLE_TAG_FONT_SIZE
                 });
             }
         }
@@ -437,7 +438,7 @@ export class CellDrawer extends Drawer {
 
                 case AITableSelectOptionStyle.tag:
                     const maxTextWidth = columnWidth - 2 * (AI_TABLE_CELL_PADDING + AI_TABLE_TAG_PADDING);
-                    const { textWidth, text } = getTextEllipsis(maxTextWidth, AI_TABLE_OPTION_ITEM_FONT_SIZE);
+                    const { textWidth, text } = getTextEllipsis(maxTextWidth, AI_TABLE_TAG_FONT_SIZE);
                     const width = Math.max(textWidth + 2 * AI_TABLE_TAG_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
                     this.tag({
                         x: x + AI_TABLE_CELL_PADDING,
@@ -449,7 +450,7 @@ export class CellDrawer extends Drawer {
                         color: colors.white,
                         radius: AI_TABLE_OPTION_ITEM_RADIUS,
                         padding: AI_TABLE_OPTION_ITEM_PADDING,
-                        fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE,
+                        fontSize: AI_TABLE_TAG_FONT_SIZE,
                         stroke: background
                     });
                     break;

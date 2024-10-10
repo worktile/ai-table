@@ -52,6 +52,7 @@ export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
 export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 14;
 export const AI_TABLE_OPTION_ITEM_RADIUS = 18;
 export const AI_TABLE_TAG_PADDING = 12;
+export const AI_TABLE_TAG_FONT_SIZE = 12;
 
 export const AI_TABLE_PIECE_WIDTH = 10;
 export const AI_TABLE_PIECE_RADIUS = 2;
