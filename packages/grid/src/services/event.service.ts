@@ -4,8 +4,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
+import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AbstractEditCellEditor } from '../components';
-import { AI_TABLE_OFFSET, GRID_CELL_EDITOR_MAP } from '../constants';
+import { AI_TABLE_OFFSET, AI_TABLE_CELL_BORDER } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition } from '../utils';
@@ -131,10 +132,9 @@ export class AITableGridEventService {
             columnCount
         });
         const originRect = container!.getBoundingClientRect();
-        const yOffset = 3;
         return {
             x: x + offset - scrollState().scrollLeft + originRect.x + AI_TABLE_OFFSET,
-            y: y - scrollState().scrollTop + originRect.y + yOffset + AI_TABLE_OFFSET,
+            y: y - scrollState().scrollTop + originRect.y + AI_TABLE_OFFSET,
             width,
             height: rowHeight
         };
@@ -144,28 +144,42 @@ export class AITableGridEventService {
         const { container, recordId, fieldId, isHoverEdit } = options;
         const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const originPosition = this.getOriginPosition(aiTable, options);
-        // 修正位置，以覆盖 cell border
-        const widthOffset = 1;
-        const xBorderWidth = 2;
-        const yBorderWidth = 2;
-        const popoverWidth = isHoverEdit ? originPosition.width - xBorderWidth : originPosition.width + widthOffset;
-        const popoverHeight = isHoverEdit ? originPosition.height - yBorderWidth : originPosition.height;
-        const offset = isHoverEdit ? originPosition.height - AI_TABLE_OFFSET * 2 : originPosition.height;
+        // 基于盒子模型：2px 的外边距算在了整个宽高中，所以为了和 canvas 渲染保持对齐，需要向左和向上各偏移 AI_TABLE_CELL_BORDER / 2
+        // AI_TABLE_OFFSET 是根据情况进行的调整
+        let x = originPosition.x - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
+        let y = originPosition.y - AI_TABLE_CELL_BORDER / 2;
+        let width = originPosition.width;
+        let height = originPosition.height;
+        let offset = -height;
+        if (isHoverEdit) {
+            width = originPosition.width - AI_TABLE_CELL_BORDER;
+            height = originPosition.height - AI_TABLE_CELL_BORDER;
+            x = originPosition.x + AI_TABLE_CELL_BORDER / 2;
+            y = originPosition.y + AI_TABLE_CELL_BORDER / 2;
+            offset = -height;
+        }
+        const offsetOriginPosition = {
+            ...originPosition,
+            x: x,
+            y: y,
+            width: width,
+            height: height
+        };
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             origin: container!,
-            originPosition,
-            width: popoverWidth + 'px',
-            height: popoverHeight + 'px',
-            placement: 'top',
-            offset: -offset,
-            minWidth: popoverWidth,
+            originPosition: offsetOriginPosition,
+            width: width + 'px',
+            height: height + 'px',
+            minWidth: width + 'px',
+            placement: 'bottom',
+            offset,
             initialState: {
                 fieldId: fieldId,
                 recordId: recordId,
                 aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
-            outsideClosable: true,
+            outsideClosable: false,
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,

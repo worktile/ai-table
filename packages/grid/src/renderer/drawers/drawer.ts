@@ -1,7 +1,7 @@
 import GraphemeSplitter from 'grapheme-splitter';
 import {
     AI_TABLE_OFFSET,
-    AI_TABLE_OPTION_ITEM_FONT_SIZE,
+    AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
@@ -404,7 +404,7 @@ export class Drawer {
             radius,
             background,
             color = this.colors.gray800,
-            fontSize = AI_TABLE_OPTION_ITEM_FONT_SIZE,
+            fontSize = AI_TABLE_TAG_FONT_SIZE,
             fontWeight = DEFAULT_FONT_WEIGHT,
             stroke
         } = options;

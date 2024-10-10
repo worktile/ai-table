@@ -10,7 +10,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyRate],
     host: {
-        class: 'd-flex align-items-center h-100 px-3 rating-cell-editor'
+        class: 'd-flex align-items-center h-100 rating-cell-editor'
     }
 })
 export class RatingCellEditorComponent extends AbstractEditCellEditor<number> {

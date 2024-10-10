@@ -49,9 +49,10 @@ export const AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT = 8; // 成员头像与成
 
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
-export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 12;
+export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 14;
 export const AI_TABLE_OPTION_ITEM_RADIUS = 18;
 export const AI_TABLE_TAG_PADDING = 12;
+export const AI_TABLE_TAG_FONT_SIZE = 12;
 
 export const AI_TABLE_PIECE_WIDTH = 10;
 export const AI_TABLE_PIECE_RADIUS = 2;
