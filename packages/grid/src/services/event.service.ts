@@ -6,7 +6,7 @@ import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AbstractEditCellEditor } from '../components';
-import { AI_TABLE_OFFSET, GRID_CELL_EDITOR_MAP, AI_TABLE_CELL_BORDER } from '../constants';
+import { AI_TABLE_OFFSET, AI_TABLE_CELL_BORDER } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition } from '../utils';
