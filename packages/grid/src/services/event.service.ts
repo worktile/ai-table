@@ -202,6 +202,6 @@ export class AITableGridEventService {
     }
 
     closeCellEditor() {
-        // this.cellEditorPopoverRef?.close();
+        this.cellEditorPopoverRef?.close();
     }
 }
