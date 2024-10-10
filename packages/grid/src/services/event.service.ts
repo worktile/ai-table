@@ -137,9 +137,9 @@ export class AITableGridEventService {
         const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const originPosition = this.getOriginPosition(aiTable, options);
         // 基于盒子模型：2px 的外边距算在了整个宽高中，所以为了和 canvas 渲染保持对齐，需要向左和向上各偏移 AI_TABLE_CELL_BORDER / 2
-        let x = originPosition.x - AI_TABLE_CELL_BORDER / 2;
-        // 保持和 canvas 一直在垂直方向上额外加上边框偏移的距离，不好在内部内边距上加，可能影响 line-height
-        let y = originPosition.y - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
+        // AI_TABLE_OFFSET 是根据情况进行的调整
+        let x = originPosition.x - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
+        let y = originPosition.y - AI_TABLE_CELL_BORDER / 2;
         let width = originPosition.width;
         let height = originPosition.height;
         let offset = -height;
@@ -202,6 +202,6 @@ export class AITableGridEventService {
     }
 
     closeCellEditor() {
-        this.cellEditorPopoverRef?.close();
+        // this.cellEditorPopoverRef?.close();
     }
 }

@@ -404,9 +404,10 @@ export class CellDrawer extends Drawer {
             const borderWidth = 1;
             switch (optionStyle) {
                 case AITableSelectOptionStyle.dot:
+                    // 这里的 AI_TABLE_OFFSET 偏移不确定是为啥（包括 piece 的），只是为了保持和编辑组件中的对齐
                     this.arc({
                         x: x + AI_TABLE_CELL_PADDING + AI_TABLE_DOT_RADIUS,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS + borderWidth,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS - AI_TABLE_OFFSET,
                         radius: AI_TABLE_DOT_RADIUS,
                         fill: background
                     });
@@ -420,7 +421,7 @@ export class CellDrawer extends Drawer {
                 case AITableSelectOptionStyle.piece:
                     this.rect({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + borderWidth,
+                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 - AI_TABLE_OFFSET,
                         width: AI_TABLE_PIECE_WIDTH,
                         height: AI_TABLE_PIECE_WIDTH,
                         radius: AI_TABLE_PIECE_RADIUS,
