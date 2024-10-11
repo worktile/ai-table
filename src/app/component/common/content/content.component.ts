@@ -178,7 +178,6 @@ export class DemoTableContent {
     }
 
     addField(data: AddFieldOptions){
-        console.log(42342)
         addFields(this.aiTable, data);
     }
 
