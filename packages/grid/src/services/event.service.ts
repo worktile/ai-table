@@ -136,7 +136,7 @@ export class AITableGridEventService {
         const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const originPosition = this.getOriginPosition(aiTable, options);
         // 基于盒子模型：2px 的外边距算在了整个宽高中，所以为了和 canvas 渲染保持对齐，需要向左和向上各偏移 AI_TABLE_CELL_BORDER / 2
-        // AI_TABLE_OFFSET 是根据情况进行的调整
+        // canvas 渲染差异：AI_TABLE_OFFSET 是根据情况进行的调整，减少高亮边框的重叠
         let x = originPosition.x - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
         let y = originPosition.y - AI_TABLE_CELL_BORDER / 2;
         let width = originPosition.width;
@@ -145,7 +145,7 @@ export class AITableGridEventService {
         if (isHoverEdit) {
             width = originPosition.width - AI_TABLE_CELL_BORDER;
             height = originPosition.height - AI_TABLE_CELL_BORDER;
-            x = originPosition.x + AI_TABLE_CELL_BORDER / 2;
+            x = originPosition.x + AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
             y = originPosition.y + AI_TABLE_CELL_BORDER / 2;
             offset = -height;
         }
