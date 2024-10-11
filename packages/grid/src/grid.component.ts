@@ -14,6 +14,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, fromEvent } from 'rxjs';
 import { KoEventObject } from './angular-konva';
+import { AbstractEditCellEditor } from './components/cell-editors/abstract-cell-editor.component';
 import {
     AI_TABLE_CELL,
     AI_TABLE_FIELD_ADD_BUTTON,
@@ -38,9 +39,8 @@ import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
 import { AITableMouseDownType, AITableRendererConfig, ScrollActionOptions } from './types';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindows, isWindowsOS } from './utils';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindows } from './utils';
 import { getMousePosition } from './utils/position';
-import { AbstractEditCellEditor } from './components/cell-editors/abstract-cell-editor.component';
 
 @Component({
     selector: 'ai-table-grid',
@@ -200,6 +200,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
+                this.aiTableGridEventService.closeCellEditor();
                 this.aiTableGridSelectionService.selectCell(recordId, fieldId);
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
