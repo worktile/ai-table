@@ -41,6 +41,7 @@
     .thy-input-number {
         .input-number-input {
             border-width: 2px;
+            padding: cellEditorVariables.$cell-editor-padding-top cellEditorVariables.$cell-editor-padding-left;
         }
     }
 }
