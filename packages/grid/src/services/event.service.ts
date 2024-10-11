@@ -4,9 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
-import { GRID_CELL_EDITOR_MAP } from '../constants/editor';
 import { AbstractEditCellEditor } from '../components';
-import { AI_TABLE_OFFSET, AI_TABLE_CELL_BORDER } from '../constants';
+import { AI_TABLE_CELL_BORDER, AI_TABLE_OFFSET, GRID_CELL_EDITOR_MAP } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition } from '../utils';
@@ -32,14 +31,6 @@ export class AITableGridEventService {
     private destroyRef = inject(DestroyRef);
 
     private thyPopover = inject(ThyPopover);
-
-    get isEditOpened() {
-        return (
-            this.cellEditorPopoverRef &&
-            this.cellEditorPopoverRef.getOverlayRef() &&
-            this.cellEditorPopoverRef.getOverlayRef().hasAttached()
-        );
-    }
 
     initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
         this.aiTable = aiTable;
@@ -185,8 +176,12 @@ export class AITableGridEventService {
             animationDisabled: true,
             autoAdaptive: true
         });
-        const wheelEvent = fromEvent<WheelEvent>(this.cellEditorPopoverRef.componentInstance.elementRef.nativeElement, 'wheel').subscribe(
-            (event: WheelEvent) => {
+
+        if (this.cellEditorPopoverRef) {
+            const wheelEvent = fromEvent<WheelEvent>(
+                this.cellEditorPopoverRef.componentInstance.elementRef.nativeElement,
+                'wheel'
+            ).subscribe((event: WheelEvent) => {
                 event.preventDefault();
                 this.aiTable.context?.scrollAction({
                     deltaX: event.deltaX,
@@ -201,15 +196,33 @@ export class AITableGridEventService {
                         positionStrategy.apply();
                     }
                 });
-            }
-        );
-        this.cellEditorPopoverRef.afterClosed().subscribe(() => {
-            wheelEvent.unsubscribe();
-        });
+            });
+            this.cellEditorPopoverRef.afterClosed().subscribe(() => {
+                wheelEvent.unsubscribe();
+            });
+        }
         return this.cellEditorPopoverRef;
     }
 
     closeCellEditor() {
-        this.cellEditorPopoverRef?.close();
+        if (this.cellEditorPopoverRef) {
+            this.cellEditorPopoverRef.close();
+        }
+    }
+
+    getCurrentEditCell() {
+        if (this.cellEditorPopoverRef) {
+            const recordId = this.cellEditorPopoverRef.componentInstance?.recordId;
+            const fieldId = this.cellEditorPopoverRef.componentInstance?.fieldId;
+
+            if (recordId && fieldId) {
+                return {
+                    recordId,
+                    fieldId
+                };
+            }
+            return null;
+        }
+        return null;
     }
 }

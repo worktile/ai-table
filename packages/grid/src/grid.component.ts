@@ -386,8 +386,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private toggleHoverCellEditor() {
         const { realTargetName } = this.aiTable.context?.pointPosition()!;
         const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
-        const selectedCell = AITable.getActiveCell(this.aiTable);
-        const isEditOpened = this.aiTableGridEventService.isEditOpened;
+        const editingCell = this.aiTableGridEventService.getCurrentEditCell();
 
         if (targetName === AI_TABLE_CELL && recordId && fieldId) {
             const field = this.aiTable.fieldsMap()[fieldId];
@@ -395,21 +394,24 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             if (!field) {
                 return;
             }
-            if (isEditOpened) {
-                // 1. 当前编辑打开并且选中元素也是 mouseover 编辑元素时，先关闭之前打开的编辑组件
-                // 2. 当前编辑打开但没有选中元素，当前 mouseover 元素是编辑元素时，先关闭之前打开的编辑组件
-                if (
-                    (selectedCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[selectedCell.fieldId].type)) ||
-                    (!selectedCell && MOUSEOVER_EDIT_TYPE.includes(field.type))
-                ) {
-                    this.aiTableGridEventService.closeCellEditor();
-                } else {
-                    return;
-                }
-            } else if (!MOUSEOVER_EDIT_TYPE.includes(field.type)) {
+
+            const fieldType = field.type;
+            const editingFieldType = editingCell ? this.aiTable.fieldsMap()[editingCell.fieldId].type : null;
+            const isEditingFieldTypeHovered = editingFieldType ? MOUSEOVER_EDIT_TYPE.includes(editingFieldType) : false;
+            const isFieldTypeHovered = MOUSEOVER_EDIT_TYPE.includes(fieldType);
+
+            if (editingCell && isEditingFieldTypeHovered) {
+                this.aiTableGridEventService.closeCellEditor();
+            }
+
+            if (!editingCell && !isFieldTypeHovered) {
+                this.aiTableGridEventService.closeCellEditor();
                 return;
             }
-            this.aiTableGridEventService.closeCellEditor();
+
+            if (editingCell && ((!isEditingFieldTypeHovered && isFieldTypeHovered) || !isFieldTypeHovered)) {
+                return;
+            }
 
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
@@ -421,8 +423,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 });
             });
         } else {
-            // 位于其他区域时，当前编辑打开并且没有选中元素时关闭编辑（说明打开的是 hover 编辑元素）
-            if (!selectedCell && isEditOpened) {
+            // 鼠标位于非单元格区域时，如果当前有 mouseover 编辑元素，则结束编辑
+            if (editingCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[editingCell.fieldId].type)) {
                 this.aiTableGridEventService.closeCellEditor();
             }
         }
