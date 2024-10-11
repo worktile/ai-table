@@ -62,3 +62,4 @@ export const AI_TABLE_DOT_RADIUS = 5;
 export const AI_TABLE_PROGRESS_BAR_HEIGHT = 10;
 export const AI_TABLE_PROGRESS_BAR_RADIUS = 5;
 export const AI_TABLE_PROGRESS_TEXT_Width = 46;
+export const AI_TABLE_POPOVER_LEFT_OFFSET = 4;
