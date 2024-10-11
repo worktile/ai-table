@@ -236,7 +236,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
             case AI_TABLE_FIELD_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
-                this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
+                const fieldGroupRect = e.event.target.getParent()?.getClientRect()!;
+                const containerRect = this.containerElement().getBoundingClientRect();
+                this.addField(this.containerElement(), {
+                    x: fieldGroupRect.x + containerRect.x,
+                    y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                });
                 return;
             }
             case AI_TABLE_FIELD_HEAD_MORE:
