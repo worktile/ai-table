@@ -1,10 +1,11 @@
 <thy-input-group class="link-input-group h-100" thySize="lg">
     <input
-        class="h-100"
         #inputElement
+        class="h-100"
         class="link-input"
         thyInput
         thySize="md"
+        [thyAutofocus]="true"
         [(ngModel)]="text"
         (blur)="blur($event)"
         (thyEnter)="updateValue()"
