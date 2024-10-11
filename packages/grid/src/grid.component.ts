@@ -22,6 +22,7 @@ import {
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
+    AI_TABLE_POPOVER_LEFT_OFFSET,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
@@ -231,7 +232,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
             case AI_TABLE_FIELD_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
-                this.addField(undefined, { x: mouseEvent.x, y: mouseEvent.y });
+                const fieldGroupRect = e.event.target.getParent()?.getClientRect()!;
+                const containerRect = this.containerElement().getBoundingClientRect();
+                this.addField(this.containerElement(), {
+                    x: fieldGroupRect.x + containerRect.x,
+                    y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
+                });
                 return;
             }
             case AI_TABLE_FIELD_HEAD_MORE:
@@ -248,15 +254,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         y: containerRect.y + moreRect.y + moreRect.height
                     };
                     const editOriginPosition = {
-                        x: containerRect.x + fieldGroupRect.x,
+                        x: AI_TABLE_POPOVER_LEFT_OFFSET + fieldGroupRect.x,
                         y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
                     };
 
+                    const editOrigin = this.containerElement().querySelector('.konvajs-content') as HTMLElement;
                     this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
-                        origin: this.containerElement(),
                         fieldId: fieldId,
                         fieldMenus: this.fieldMenus,
+                        origin: this.containerElement(),
                         position,
+                        editOrigin: editOrigin,
                         editOriginPosition
                     });
                 }
