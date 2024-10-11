@@ -114,56 +114,56 @@ export class AITableGridEventService {
         const { scrollState } = aiTable.context!;
         const { rowHeight, columnCount } = coordinate;
         const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, { recordId, fieldId })!;
-        const x = coordinate.getColumnOffset(columnIndex);
-        const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+        const originX = coordinate.getColumnOffset(columnIndex);
+        const originY = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
         const columnWidth = coordinate.getColumnWidth(columnIndex);
-        const { width, offset } = getCellHorizontalPosition({
+        const { width: originWidth, offset: originOffset } = getCellHorizontalPosition({
             columnWidth,
             columnIndex,
             columnCount
         });
         const originRect = container!.getBoundingClientRect();
-        return {
-            x: x + offset - scrollState().scrollLeft + originRect.x + AI_TABLE_OFFSET,
-            y: y - scrollState().scrollTop + originRect.y + AI_TABLE_OFFSET,
-            width,
+        const originPosition = {
+            x: originX + originOffset - scrollState().scrollLeft + originRect.x + AI_TABLE_OFFSET,
+            y: originY - scrollState().scrollTop + originRect.y + AI_TABLE_OFFSET,
+            width: originWidth,
             height: rowHeight
         };
-    }
 
-    openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
-        const { container, recordId, fieldId, isHoverEdit } = options;
-        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
-        const originPosition = this.getOriginPosition(aiTable, options);
         // 基于盒子模型：2px 的外边距算在了整个宽高中，所以为了和 canvas 渲染保持对齐，需要向左和向上各偏移 AI_TABLE_CELL_BORDER / 2
         // canvas 渲染差异：AI_TABLE_OFFSET 是根据情况进行的调整，减少高亮边框的重叠
         let x = originPosition.x - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
         let y = originPosition.y - AI_TABLE_CELL_BORDER / 2;
         let width = originPosition.width;
         let height = originPosition.height;
-        let offset = -height;
         if (isHoverEdit) {
             width = originPosition.width - AI_TABLE_CELL_BORDER;
             height = originPosition.height - AI_TABLE_CELL_BORDER;
             x = originPosition.x + AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
             y = originPosition.y + AI_TABLE_CELL_BORDER / 2;
-            offset = -height;
         }
-        const offsetOriginPosition = {
+        return {
             ...originPosition,
             x: x,
             y: y,
             width: width,
             height: height
         };
+    }
+
+    openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
+        const { container, recordId, fieldId, isHoverEdit } = options;
+        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const offsetOriginPosition = this.getOriginPosition(aiTable, options);
+
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             origin: container!,
             originPosition: offsetOriginPosition,
-            width: width + 'px',
-            height: height + 'px',
-            minWidth: width + 'px',
+            width: offsetOriginPosition.width + 'px',
+            height: offsetOriginPosition.height + 'px',
+            minWidth: offsetOriginPosition.width + 'px',
             placement: 'bottom',
-            offset,
+            offset: -offsetOriginPosition.height,
             initialState: {
                 fieldId: fieldId,
                 recordId: recordId,
