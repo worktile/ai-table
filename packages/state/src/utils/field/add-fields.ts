@@ -15,7 +15,6 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
     const newRecordIds = getNewIdsByCount(count);
     newRecordIds.forEach((id, index) => {
         const newField = { _id: id, ...fieldValue } as AITableField;
-        console.log(newField);
         Actions.addField(aiTable, newField, [addIndex + index]);
     });
 }
