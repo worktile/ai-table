@@ -1,5 +1,5 @@
-import { isEmpty } from '../common';
-import { AITableFilterCondition, AITableFilterOperation } from '../../types';
+import { isEmpty } from '../../common';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { Field } from './field';
 import { RateFieldValue } from '@ai-table/grid';
 

@@ -1,4 +1,4 @@
-import { AddViewAction, AITableView, AIViewTable, RemoveViewAction, SetViewAction, ViewActionName } from '../../types';
+import { ActionName, AddViewAction, AITableView, AIViewTable, RemoveViewAction, SetViewAction } from "../types";
 
 function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
@@ -18,7 +18,7 @@ function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [strin
         }
 
         const operation: SetViewAction = {
-            type: ViewActionName.SetView,
+            type: ActionName.SetView,
             properties,
             newProperties,
             path
@@ -29,7 +29,7 @@ function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [strin
 
 function addView(aiTable: AIViewTable, view: AITableView, path: [number]) {
     const operation: AddViewAction = {
-        type: ViewActionName.AddView,
+        type: ActionName.AddView,
         view,
         path
     };
@@ -38,7 +38,7 @@ function addView(aiTable: AIViewTable, view: AITableView, path: [number]) {
 
 function removeView(aiTable: AIViewTable, path: [string]) {
     const operation: RemoveViewAction = {
-        type: ViewActionName.RemoveView,
+        type: ActionName.RemoveView,
         path
     };
     aiTable.apply(operation);

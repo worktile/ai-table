@@ -1,17 +1,15 @@
+import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 import {
     ActionName,
     AddFieldAction,
-    AIFieldIdPath,
-    AIFieldPath,
-    AITable,
-    AITableField,
     MoveFieldAction,
     RemoveFieldAction,
-    SetFieldAction
+    SetFieldAction,
+    AIViewTable
 } from '../types';
-import { AITableQueries } from '../utils';
+import { AITableViewField } from '../types/view';
 
-export function addField(aiTable: AITable, field: AITableField, path: AIFieldPath) {
+export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
@@ -20,7 +18,7 @@ export function addField(aiTable: AITable, field: AITableField, path: AIFieldPat
     aiTable.apply(operation);
 }
 
-export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldPath) {
+export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
     const operation: MoveFieldAction = {
         type: ActionName.MoveField,
         path,
@@ -29,7 +27,7 @@ export function moveField(aiTable: AITable, path: AIFieldPath, newPath: AIFieldP
     aiTable.apply(operation);
 }
 
-export function removeField(aiTable: AITable, path: AIFieldIdPath) {
+export function removeField(aiTable: AIViewTable, path: IdPath) {
     const operation: RemoveFieldAction = {
         type: ActionName.RemoveField,
         path
@@ -37,7 +35,7 @@ export function removeField(aiTable: AITable, path: AIFieldIdPath) {
     aiTable.apply(operation);
 }
 
-export function setField<T extends AITableField = AITableField>(aiTable: AITable, value: Partial<T>, path: AIFieldIdPath) {
+export function setField<T extends AITableViewField = AITableViewField>(aiTable: AIViewTable, value: Partial<T>, path: IdPath) {
     const field = AITableQueries.getField(aiTable, path) as T;
     if (field) {
         const properties: Partial<T> = {};

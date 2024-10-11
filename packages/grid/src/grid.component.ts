@@ -34,9 +34,13 @@ import {
 import { AITable, Coordinate, RendererContext } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
-import { AITableGridEventService, AITableGridFieldService, AITableGridSelectionService } from './services';
+import { AITableGridEventService } from './services/event.service';
+import { AITableGridFieldService } from './services/field.service';
+import { AITableGridSelectionService } from './services/selection.service';
 import { AITableMouseDownType, AITableRendererConfig, ScrollActionOptions } from './types';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, getMousePosition, handleMouseStyle, isWindows } from './utils';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindows, isWindowsOS } from './utils';
+import { getMousePosition } from './utils/position';
+import { AbstractEditCellEditor } from './components/cell-editors/abstract-cell-editor.component';
 
 @Component({
     selector: 'ai-table-grid',
@@ -283,12 +287,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
             return;
         }
-        this.aiTableGridEventService.openCellEditor(this.aiTable, {
+        const popoverRef = this.aiTableGridEventService.openCellEditor(this.aiTable, {
             container: this.containerElement(),
             coordinate: this.coordinate(),
             fieldId: fieldId!,
             recordId: recordId!
         });
+        if (popoverRef && !(this.aiFieldConfig()?.fieldPropertyEditor && this.aiFieldConfig()?.fieldPropertyEditor[fieldType])) {
+            (popoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValue.subscribe((value) => {
+                this.aiUpdateFieldValue.emit(value);
+            });
+        }
     }
 
     private bindWheel() {

@@ -1,6 +1,8 @@
-import { Actions, idCreator } from '@ai-table/grid';
+import { idCreator } from '@ai-table/grid';
 import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
-import { PositionActions, ViewActions } from '../view/action';
+import { Actions } from '../action';
+import { ViewActions } from '../action/view';
+import { PositionActions } from '../action/position';
 
 export function createDefaultPositions(
     views: AITableView[],
@@ -49,7 +51,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy') {
     }
     ViewActions.addView(aiTable, newView, [index]);
     (aiTable.records() as AITableViewRecords).forEach((record) => {
-        PositionActions.addRecordPosition(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
+        PositionActions.setRecordPosition(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
         Actions.setField<AITableViewField>(
@@ -84,10 +86,4 @@ export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fi
     ViewActions.removeView(aiTable, [activeViewId]);
 }
 
-export function sortByViewPosition(data: AITableViewRecords | AITableViewFields, activeView: AITableView) {
-    const hasPositions = data.every((item) => item.positions && item.positions);
-    if (hasPositions) {
-        return [...data].sort((a, b) => a.positions[activeView._id] - b.positions[activeView._id]);
-    }
-    return data;
-}
+

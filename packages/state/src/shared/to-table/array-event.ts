@@ -1,28 +1,27 @@
-import { ActionName, AIFieldIdPath, AIFieldPath, AIFieldValueIdPath, AIRecordPath, AITableField, AITableQueries } from '@ai-table/grid';
 import { isArray } from 'ngx-tethys/util';
 import * as Y from 'yjs';
 import {
-    AITableSharedAction,
+    ActionName,
+    AITableAction,
     AITableView,
     AITableViewFields,
     AITableViewRecords,
     AIViewTable,
-    PositionActionName,
     SharedType,
     SyncArrayElement,
     SyncMapElement,
-    ViewActionName
 } from '../../types';
 import { getShareTypeNumberPath, translatePositionToPath } from '../utils';
 import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
+import { AIFieldValueIdPath, AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 
-export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableSharedAction[] {
+export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
     const isViewsTranslate = event.path.includes('views');
-    const actions: AITableSharedAction[] = [];
+    const actions: AITableAction[] = [];
     const activeViewId = aiTable.activeViewId();
 
     event.changes.delta.forEach((delta) => {
@@ -36,7 +35,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     const removeView = aiTable.views()[offset];
                     if (removeView) {
                         actions.push({
-                            type: ViewActionName.RemoveView,
+                            type: ActionName.RemoveView,
                             path: [removeView._id]
                         });
                     }
@@ -67,7 +66,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 aiTable.records() as AITableViewRecords,
                                 position,
                                 activeViewId
-                            ) as AIRecordPath;
+                            ) as NumberPath;
 
                             actions.push({
                                 type: ActionName.AddRecord,
@@ -90,7 +89,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                     for (const key in item) {
                                         if (!record.positions[key] && record.positions[key] !== 0) {
                                             actions.push({
-                                                type: PositionActionName.AddRecordPosition,
+                                                type: ActionName.AddRecordPosition,
                                                 path: [record._id],
                                                 position: {
                                                     [key]: item[key]
@@ -101,7 +100,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                     for (const key in record.positions) {
                                         if (!item[key] && item[key] !== 0) {
                                             actions.push({
-                                                type: PositionActionName.RemoveRecordPosition,
+                                                type: ActionName.RemoveRecordPosition,
                                                 path: [key, record._id]
                                             });
                                         }
@@ -133,7 +132,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                             aiTable.fields() as AITableViewFields,
                             data['positions'][activeViewId],
                             activeViewId
-                        ) as AIFieldPath;
+                        ) as NumberPath;
                         actions.push({
                             type: ActionName.AddField,
                             path,
@@ -145,7 +144,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     delta.insert?.map((item: Y.Map<any>, index) => {
                         const data = item.toJSON();
                         actions.push({
-                            type: ViewActionName.AddView,
+                            type: ActionName.AddView,
                             path: [offset + index],
                             view: data as AITableView
                         });
@@ -178,7 +177,7 @@ export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField 
         (item) => {
             if (item instanceof Y.Item && item.deleted) {
                 if (type === ActionName.RemoveField && item.parentSub === '_id') {
-                    ids.push(item.content.getContent() as AIFieldIdPath);
+                    ids.push(item.content.getContent() as IdPath);
                 }
                 if (type === ActionName.RemoveRecord) {
                     const content = item.content.getContent();

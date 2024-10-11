@@ -1,13 +1,13 @@
-import { ActionName, AITableField } from '@ai-table/grid';
+import { AITableField } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { getShareTypeNumberPath } from '../utils';
-import { AITableSharedAction, AITableView, AIViewTable, SharedType, SyncMapElement, ViewActionName } from '../../types';
+import { ActionName, AITableAction, AITableView, AIViewTable, SharedType, SyncMapElement } from '../../types';
 
 export default function translateMapEvent(
     aiTable: AIViewTable,
     sharedType: SharedType,
     event: Y.YMapEvent<unknown>
-): AITableSharedAction[] {
+): AITableAction[] {
     const isFieldsTranslate = event.path.includes('fields');
     const isViewTranslate = event.path.includes('views');
 
@@ -45,7 +45,7 @@ export default function translateMapEvent(
                 const k = key as keyof (AITableView | AITableField);
                 properties[k] = value;
             }
-            const type = isFieldsTranslate ? ActionName.SetField : ViewActionName.SetView;
+            const type = isFieldsTranslate ? ActionName.SetField : ActionName.SetView;
             return [
                 {
                     type,
@@ -53,7 +53,7 @@ export default function translateMapEvent(
                     newProperties: newProperties,
                     path: [targetElement._id]
                 }
-            ] as AITableSharedAction[];
+            ] as AITableAction[];
         }
     }
     return [];

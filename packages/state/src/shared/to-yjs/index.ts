@@ -1,6 +1,6 @@
-import { AITable, AITableAction } from '@ai-table/grid';
+import { AITable } from '@ai-table/grid';
 import updateFieldValue from './update-field-value';
-import { SharedType } from '../../types';
+import { AITableAction, SharedType } from '../../types';
 import setNode from './set-node';
 import addNode from './add-node';
 import removeNode from './remove-node';

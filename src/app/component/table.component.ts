@@ -1,5 +1,13 @@
 import { AITableGrid } from '@ai-table/grid';
-import { addView, AITableViewFields, AITableViewRecords, removeView, ViewActions } from '@ai-table/state';
+import {
+    Actions,
+    addView,
+    AITableFilterOperation,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    removeView
+} from '@ai-table/state';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
@@ -13,8 +21,20 @@ import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
 import { WebsocketProvider } from 'y-websocket';
 import { LOCAL_STORAGE_KEY, TableService } from '../service/table.service';
 
-const initViews = [
-    { _id: 'view1', name: '表格视图' },
+const initViews: AITableView[] = [
+    {
+        _id: 'view1',
+        name: '表格视图',
+        settings: {
+            // conditions: [
+            //     {
+            //         field_id: 'column-1',
+            //         operation: AITableFilterOperation.contain,
+            //         value: '文本 2-1'
+            //     }
+            // ]
+        }
+    },
     { _id: 'view2', name: '表格视图 1' }
 ];
 
@@ -82,7 +102,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     updateValue() {
         this.isEdit = false;
         if (this.activeViewName !== this.tableService.activeView().name) {
-            ViewActions.setView(this.tableService.aiTable, { name: this.activeViewName }, [this.tableService.activeView()._id]);
+            Actions.setView(this.tableService.aiTable, { name: this.activeViewName }, [this.tableService.activeView()._id]);
         }
     }
 

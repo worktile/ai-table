@@ -1,6 +1,6 @@
 import { AITableField, FieldValue } from '@ai-table/grid';
-import { AITableFilterCondition, AITableFilterOperation } from '../../types';
-import { isEmpty } from '../common';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { isEmpty } from '../../common';
 import { isEqual } from 'lodash';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;

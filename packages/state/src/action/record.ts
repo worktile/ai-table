@@ -1,18 +1,7 @@
-import {
-    ActionName,
-    AddRecordAction,
-    AIRecordPath,
-    UpdateFieldValueAction,
-    AITable,
-    AITableRecord,
-    AIFieldValueIdPath,
-    MoveRecordAction,
-    RemoveRecordAction,
-    AIRecordIdPath
-} from '../types';
-import { AITableQueries } from '../utils';
+import { AIFieldValueIdPath, AITableQueries, AITableRecord, IdPath, NumberPath } from "@ai-table/grid";
+import { UpdateFieldValueAction, ActionName, AddRecordAction, MoveRecordAction, RemoveRecordAction, AIViewTable } from "../types";
 
-export function updateFieldValue(aiTable: AITable, value: any, path: AIFieldValueIdPath) {
+export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIFieldValueIdPath) {
     const field = AITableQueries.getFieldValue(aiTable, path);
     if (field !== value) {
         const operation: UpdateFieldValueAction = {
@@ -25,7 +14,7 @@ export function updateFieldValue(aiTable: AITable, value: any, path: AIFieldValu
     }
 }
 
-export function addRecord(aiTable: AITable, record: AITableRecord, path: AIRecordPath) {
+export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: NumberPath) {
     const operation: AddRecordAction = {
         type: ActionName.AddRecord,
         record,
@@ -34,7 +23,7 @@ export function addRecord(aiTable: AITable, record: AITableRecord, path: AIRecor
     aiTable.apply(operation);
 }
 
-export function moveRecord(aiTable: AITable, path: AIRecordPath, newPath: AIRecordPath) {
+export function moveRecord(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
     const operation: MoveRecordAction = {
         type: ActionName.MoveRecord,
         path,
@@ -43,7 +32,7 @@ export function moveRecord(aiTable: AITable, path: AIRecordPath, newPath: AIReco
     aiTable.apply(operation);
 }
 
-export function removeRecord(aiTable: AITable, path: AIRecordIdPath) {
+export function removeRecord(aiTable: AIViewTable, path: IdPath) {
     const operation: RemoveRecordAction = {
         type: ActionName.RemoveRecord,
         path

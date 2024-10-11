@@ -20,7 +20,7 @@ export class AITableGridFieldService {
     editFieldProperty(aiTable: AITable, options: AITableEditFieldOptions) {
         const { field, isUpdate, origin, position } = options;
         const component = this.aiFieldConfig?.fieldPropertyEditor ?? AITableFieldPropertyEditor;
-        this.thyPopover.open(component, {
+        return this.thyPopover.open(component, {
             origin,
             originPosition: position,
             manualClosure: true,

@@ -1,7 +1,7 @@
-import { AITableFilterCondition, AITableFilterOperation } from '../../types';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { Field } from './field';
 import { FieldValue } from '@ai-table/grid';
-import { isEmpty } from '../common';
+import { isEmpty } from '../../common';
 
 export class NumberField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: FieldValue) {

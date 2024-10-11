@@ -1,10 +1,8 @@
 import {
-    Actions,
+    AddFieldOptions,
+    AddRecordOptions,
     AIFieldConfig,
-    AIFieldPath,
-    AIRecordPath,
     AITable,
-    AITableChangeOptions,
     AITableDomGrid,
     AITableField,
     AITableFieldType,
@@ -12,11 +10,23 @@ import {
     AITableQueries,
     AITableRecord,
     DateFieldValue,
+    NumberPath,
+    UpdateFieldValueOptions
+} from '@ai-table/grid';
+import {
+    Actions,
+    addFields,
+    addRecords,
+    AITableView,
+    AIViewTable,
+    applyActionOps,
     DividerMenuItem,
     EditFieldPropertyItem,
-    RemoveFieldItem
-} from '@ai-table/grid';
-import { AIViewTable, applyActionOps, withView, YjsAITable } from '@ai-table/state';
+    RemoveFieldItem,
+    updateFieldValue,
+    withState,
+    YjsAITable
+} from '@ai-table/state';
 import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -31,7 +41,6 @@ import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment'
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
-import { FieldPropertyEditor } from '../field-property-editor/field-property-editor.component';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
@@ -42,7 +51,6 @@ const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
     imports: [
         RouterOutlet,
         ThyPopoverModule,
-        FieldPropertyEditor,
         ThyAction,
         FormsModule,
         ThyInputDirective,
@@ -61,7 +69,7 @@ const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 export class DemoTableContent {
     aiTable!: AIViewTable;
 
-    plugins = [withView, withRemoveView];
+    plugins = [withState, withRemoveView];
 
     aiFieldConfig: AIFieldConfig = {
         fieldRenderers: {
@@ -84,7 +92,6 @@ export class DemoTableContent {
                 }
             }
         },
-        fieldPropertyEditor: FieldPropertyEditor,
         fieldMenus: [
             EditFieldPropertyItem,
             DividerMenuItem,
@@ -162,14 +169,16 @@ export class DemoTableContent {
         this.setValue();
     }
 
-    onChange(options: AITableChangeOptions) {
-        if (this.tableService.sharedType) {
-            if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
-                YjsAITable.asLocal(this.aiTable, () => {
-                    applyActionOps(this.tableService.sharedType!, options.actions, this.aiTable);
-                });
-            }
-        }
+    addRecord(data: AddRecordOptions) {
+        addRecords(this.aiTable, data);
+    }
+
+    updateFieldValue(value: UpdateFieldValueOptions) {
+        updateFieldValue(this.aiTable, value);
+    }
+
+    addField(data: AddFieldOptions){
+        addFields(this.aiTable, data);
     }
 
     prevent(event: Event) {
@@ -181,6 +190,24 @@ export class DemoTableContent {
         this.aiTable = aiTable as AIViewTable;
         this.aiTable.views = this.tableService.views;
         this.aiTable.activeViewId = this.tableService.activeViewId;
+        this.aiTable.viewsMap = computed(() => {
+            return this.tableService.views().reduce(
+                (object, item) => {
+                    object[item._id] = item;
+                    return object;
+                },
+                {} as { [kay: string]: AITableView }
+            );
+        });
+        this.aiTable.onChange = () => {
+            if (this.tableService.sharedType) {
+                if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
+                    YjsAITable.asLocal(this.aiTable, () => {
+                        applyActionOps(this.tableService.sharedType!, this.aiTable.actions, this.aiTable);
+                    });
+                }
+            }
+        };
         TABLE_SERVICE_MAP.set(this.aiTable, this.tableService);
         this.tableService.setAITable(this.aiTable);
     }
@@ -197,7 +224,7 @@ export class DemoTableContent {
         const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
         const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
         selectedFields.forEach((item) => {
-            const path = AITableQueries.findFieldPath(this.aiTable, item) as AIFieldPath;
+            const path = AITableQueries.findFieldPath(this.aiTable, item) as NumberPath;
             Actions.moveField(this.aiTable, path, [newIndex]);
         });
     }
@@ -209,7 +236,7 @@ export class DemoTableContent {
         let offset = 0;
         const newIndex = 2;
         selectedRecords.forEach((item) => {
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
+            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
             if (path[0] < newIndex) {
                 Actions.moveRecord(this.aiTable, path, [newIndex]);
                 offset = 1;
@@ -219,8 +246,8 @@ export class DemoTableContent {
         });
 
         selectedRecordsAfterNewPath.reverse().forEach((item) => {
-            const newPath = [newIndex + offset] as AIRecordPath;
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as AIRecordPath;
+            const newPath = [newIndex + offset] as NumberPath;
+            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
             Actions.moveRecord(this.aiTable, path, newPath);
         });
     }
