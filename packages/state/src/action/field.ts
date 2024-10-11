@@ -9,34 +9,34 @@ import {
 } from '../types';
 import { AITableViewField } from '../types/view';
 
-export function addField(AIViewTable: AIViewTable, field: AITableField, path: NumberPath) {
+export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
         path
     };
-    AIViewTable.apply(operation);
+    aiTable.apply(operation);
 }
 
-export function moveField(AIViewTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
+export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
     const operation: MoveFieldAction = {
         type: ActionName.MoveField,
         path,
         newPath
     };
-    AIViewTable.apply(operation);
+    aiTable.apply(operation);
 }
 
-export function removeField(AIViewTable: AIViewTable, path: IdPath) {
+export function removeField(aiTable: AIViewTable, path: IdPath) {
     const operation: RemoveFieldAction = {
         type: ActionName.RemoveField,
         path
     };
-    AIViewTable.apply(operation);
+    aiTable.apply(operation);
 }
 
-export function setField<T extends AITableViewField = AITableViewField>(AIViewTable: AIViewTable, value: Partial<T>, path: IdPath) {
-    const field = AITableQueries.getField(AIViewTable, path) as T;
+export function setField<T extends AITableViewField = AITableViewField>(aiTable: AIViewTable, value: Partial<T>, path: IdPath) {
+    const field = AITableQueries.getField(aiTable, path) as T;
     if (field) {
         const properties: Partial<T> = {};
         const newProperties: Partial<T> = {};
@@ -59,7 +59,7 @@ export function setField<T extends AITableViewField = AITableViewField>(AIViewTa
             path
         };
 
-        AIViewTable.apply(operation);
+        aiTable.apply(operation);
     }
 }
 

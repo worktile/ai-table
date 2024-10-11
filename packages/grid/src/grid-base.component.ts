@@ -125,7 +125,7 @@ export class AITableGridBase implements OnInit {
         const records = this.gridData().records;
         const recordCount = records.length;
         this.aiAddRecord.emit({
-            recordId: recordCount > 0 ? records[records.length - 1]._id : ''
+            originId: recordCount > 0 ? records[records.length - 1]._id : ''
         });
     }
 
@@ -146,12 +146,12 @@ export class AITableGridBase implements OnInit {
             position
         });
         if (popoverRef && !this.aiFieldConfig()?.fieldPropertyEditor) {
-            (popoverRef.componentInstance as AITableFieldPropertyEditor).addField.subscribe((value) => {
+            (popoverRef.componentInstance as AITableFieldPropertyEditor).addField.subscribe((defaultValue) => {
                 const fields = this.gridData().fields;
                 const fieldCount = fields.length;
                 this.aiAddField.emit({
-                    fieldId: fieldCount > 0 ? fields[fields.length - 1]._id : '',
-                    fieldValue: value
+                    originId: fieldCount > 0 ? fields[fields.length - 1]._id : '',
+                    defaultValue
                 });
             });
         }

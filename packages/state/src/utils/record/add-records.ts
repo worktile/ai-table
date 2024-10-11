@@ -7,15 +7,15 @@ import { Actions } from '../../action';
 import { getDefaultRecordDataByFilter } from './filter';
 
 export function addRecords(aiTable: AIViewTable, options: AddRecordOptions) {
-    const { recordId, direction = Direction.after, isDuplicate, count = 1 } = options;
+    const { originId, direction = Direction.after, isDuplicate, count = 1 } = options;
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
     const records = getSortRecords(aiTable, aiTable.records() as AITableViewRecords, activeView);
-    let addIndex = records.findIndex((item) => item._id === recordId);
+    let addIndex = records.findIndex((item) => item._id === originId);
     if (direction === Direction.after) {
         addIndex++;
     }
     const newRecordIds = getNewIdsByCount(count);
-    const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, recordId);
+    const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
     // TODO: 判断如果存在筛选条件，且 newRecordValues 中没有一项满足筛选条件
     // 把 id 添加到 RECORDS_WILL_HIDDEN 中
     if (activeView.settings?.conditions?.length) {
