@@ -90,7 +90,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         }
         this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
         if (!_.isEqual(this.originValue, this.modelValue)) {
-            this.updateFieldValue();
+            super.update()
             this.originValue = this.modelValue;
         }
     }

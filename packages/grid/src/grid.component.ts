@@ -288,7 +288,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             fieldId: fieldId!,
             recordId: recordId!
         });
-        if (popoverRef && !this.aiFieldConfig()?.fieldPropertyEditor[fieldType]) {
+        if (popoverRef && !(this.aiFieldConfig()?.fieldPropertyEditor && this.aiFieldConfig()?.fieldPropertyEditor[fieldType])) {
             (popoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValue.subscribe((value) => {
                 this.aiUpdateFieldValue.emit(value);
             });
