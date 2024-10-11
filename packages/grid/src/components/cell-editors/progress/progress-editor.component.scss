@@ -1,10 +1,13 @@
 @use 'ngx-tethys/styles/variables.scss';
+@use '../cell-editor.variables.scss' as cellEditorVariables;
 
 .progress-editor {
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 13.5px;
+    padding: 0 cellEditorVariables.$cell-editor-padding-left;
+    // canvas 渲染差异：和 canvas 比进度条偏上
+    margin-top: 0.5px;
 
     .thy-slider {
         flex: 1;
@@ -12,11 +15,14 @@
     }
     .progress-text {
         display: inline-block;
+        width: 38px;
         margin-left: 8px;
-        width: 40px;
         white-space: nowrap;
         font-size: 0.875rem;
         font-weight: normal;
-        flex-shrink: 0;
+        position: relative;
+        // canvas 渲染差异：和 canvas 比文本偏下
+        top: -1px;
+        line-height: 24px;
     }
 }

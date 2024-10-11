@@ -1,6 +1,9 @@
+@use '../cell-editor.variables.scss' as cellEditorVariables;
+
 .rating-cell-editor {
     .thy-rate .thy-rate-container .thy-rate-star,
     .thy-rate .thy-rate-container .thy-rate-star .thy-rate-item-all {
         transition: none;
     }
+    padding-left: cellEditorVariables.$cell-editor-padding-left;
 }

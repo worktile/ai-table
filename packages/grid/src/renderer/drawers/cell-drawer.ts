@@ -530,8 +530,10 @@ export class CellDrawer extends Drawer {
 
         const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_Width;
         const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
+        const textHeight = AI_TABLE_COMMON_FONT_SIZE;
         const offsetX = AI_TABLE_CELL_PADDING;
         const offsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - height / 2;
+        const textOffsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - textHeight / 2;
 
         // 绘制背景
         this.rect({
@@ -555,8 +557,8 @@ export class CellDrawer extends Drawer {
         });
 
         this.text({
-            x: x + offsetX + width + AI_TABLE_TEXT_GAP - AI_TABLE_OFFSET,
-            y: y + offsetY - 1.5,
+            x: x + offsetX + width + AI_TABLE_TEXT_GAP,
+            y: y + textOffsetY,
             text: `${transformValue}%`,
             fillStyle: colors.gray800
         });
