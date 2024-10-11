@@ -36,8 +36,8 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableMouseDownType, AITableRendererConfig } from './types';
-import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindowsOS } from './utils';
+import { AITableMouseDownType, AITableRendererConfig, ScrollActionOptions } from './types';
+import { buildGridLinearRows, getColumnIndicesMap, getDetailByTargetName, handleMouseStyle, isWindows, isWindowsOS } from './utils';
 import { getMousePosition } from './utils/position';
 import { AbstractEditCellEditor } from './components/cell-editors/abstract-cell-editor.component';
 
@@ -108,7 +108,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             container: this.containerElement(),
             coordinate: coordinate,
             containerWidth: this.containerRect().width,
-            containerHeight: this.containerRect().height
+            containerHeight: this.containerRect().height,
+            references: this.aiReferences()
         };
     });
 
@@ -135,7 +136,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
         effect(() => {
             if (this.aiTable.context?.pointPosition()) {
-                this.toggleCellEditor();
+                this.toggleHoverCellEditor();
             }
         });
     }
@@ -155,7 +156,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             visibleColumnsMap: this.visibleColumnsMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
             pointPosition: signal(DEFAULT_POINT_POSITION),
-            scrollState: signal(DEFAULT_SCROLL_STATE)
+            scrollState: signal(DEFAULT_SCROLL_STATE),
+            scrollAction: this.scrollAction
         });
     }
 
@@ -291,30 +293,35 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private bindWheel() {
-        const isWindows = isWindowsOS();
         fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((e: WheelEvent) => {
                 e.preventDefault();
-                if (this.timer) {
-                    cancelAnimationFrame(this.timer);
-                }
-                this.timer = requestAnimationFrame(() => {
-                    const { deltaX, deltaY, shiftKey } = e;
-                    const fixedDeltaY = shiftKey && isWindows ? 0 : deltaY;
-                    const fixedDeltaX = shiftKey && isWindows ? deltaY : deltaX;
-                    const horizontalBar = this.horizontalBarRef()?.nativeElement;
-                    const verticalBar = this.verticalBarRef()?.nativeElement;
-                    if (horizontalBar) {
-                        horizontalBar.scrollLeft = horizontalBar.scrollLeft + fixedDeltaX;
-                    }
-                    if (verticalBar) {
-                        verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
-                    }
-                    this.timer = null;
-                });
+                this.aiTableGridEventService.closeCellEditor();
+                this.scrollAction({ deltaX: e.deltaX, deltaY: e.deltaY, shiftKey: e.shiftKey });
             });
     }
+
+    scrollAction = (options: ScrollActionOptions) => {
+        if (this.timer) {
+            cancelAnimationFrame(this.timer);
+        }
+        this.timer = requestAnimationFrame(() => {
+            const { deltaX, deltaY, shiftKey } = options;
+            const fixedDeltaY = shiftKey && isWindows ? 0 : deltaY;
+            const fixedDeltaX = shiftKey && isWindows ? deltaY : deltaX;
+            const horizontalBar = this.horizontalBarRef()?.nativeElement;
+            const verticalBar = this.verticalBarRef()?.nativeElement;
+            if (horizontalBar) {
+                horizontalBar.scrollLeft = horizontalBar.scrollLeft + fixedDeltaX;
+            }
+            if (verticalBar) {
+                verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
+            }
+            options.callback && options.callback();
+            this.timer = null;
+        });
+    };
 
     private bindScrollBarScroll() {
         fromEvent<WheelEvent>(this.horizontalBarRef()!.nativeElement, 'scroll', { passive: true })
@@ -385,17 +392,35 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
-    private toggleCellEditor() {
+    private toggleHoverCellEditor() {
         const { realTargetName } = this.aiTable.context?.pointPosition()!;
         const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
+        const editingCell = this.aiTableGridEventService.getCurrentEditCell();
 
         if (targetName === AI_TABLE_CELL && recordId && fieldId) {
             const field = this.aiTable.fieldsMap()[fieldId];
-            if (!field || !MOUSEOVER_EDIT_TYPE.includes(field.type)) {
+
+            if (!field) {
+                return;
+            }
+
+            const fieldType = field.type;
+            const editingFieldType = editingCell ? this.aiTable.fieldsMap()[editingCell.fieldId].type : null;
+            const isEditingFieldTypeHovered = editingFieldType ? MOUSEOVER_EDIT_TYPE.includes(editingFieldType) : false;
+            const isFieldTypeHovered = MOUSEOVER_EDIT_TYPE.includes(fieldType);
+
+            if (editingCell && isEditingFieldTypeHovered) {
+                this.aiTableGridEventService.closeCellEditor();
+            }
+
+            if (!editingCell && !isFieldTypeHovered) {
                 this.aiTableGridEventService.closeCellEditor();
                 return;
             }
-            this.aiTableGridEventService.closeCellEditor();
+
+            if (editingCell && ((!isEditingFieldTypeHovered && isFieldTypeHovered) || !isFieldTypeHovered)) {
+                return;
+            }
 
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
@@ -407,7 +432,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 });
             });
         } else {
-            this.aiTableGridEventService.closeCellEditor();
+            // 鼠标位于非单元格区域时，如果当前有 mouseover 编辑元素，则结束编辑
+            if (editingCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[editingCell.fieldId].type)) {
+                this.aiTableGridEventService.closeCellEditor();
+            }
         }
     }
 }

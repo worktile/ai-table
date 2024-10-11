@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoShape, KoStage } from '../../angular-konva';
+import { KoShape, KoStage, KoContainer } from '../../angular-konva';
 import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
@@ -20,15 +20,16 @@ import { AITableIcon } from './icon.component';
         <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
         <ko-line [config]="topLineConfig"></ko-line>
         <ko-line [config]="bottomLineConfig()"></ko-line>
-        <ai-table-icon [config]="iconConfig()"></ai-table-icon>
-
+        <ko-group>
+            <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+        </ko-group>
         @for (config of headConfigs(); track $index) {
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
         <ko-rect [config]="headBgConfig()"></ko-rect>
     `,
     standalone: true,
-    imports: [KoStage, KoShape, AITableFieldHead, AITableIcon],
+    imports: [KoStage, KoShape, AITableFieldHead, AITableIcon, KoContainer],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenColumnHeads {
@@ -92,7 +93,10 @@ export class AITableFrozenColumnHeads {
             x: AI_TABLE_CELL_PADDING,
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
-            fill: this.isChecked() ? Colors.primary : Colors.gray300
+            fill:
+                this.isChecked() || (this.config().pointPosition.targetName === AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX && !this.isChecked())
+                    ? Colors.primary
+                    : Colors.gray300
         };
     });
 

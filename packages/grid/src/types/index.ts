@@ -1,3 +1,4 @@
+export * from './avatar';
 export * from './canvas';
 export * from './cell';
 export * from './component-config';

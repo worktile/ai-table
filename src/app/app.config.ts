@@ -6,6 +6,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { routes } from './app.routes';
+import { THY_NOTIFY_DEFAULT_CONFIG_PROVIDER } from 'ngx-tethys/notify';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideHttpClient(),
         provideAnimations(),
-        provideRouter(routes)
+        provideRouter(routes),
+        THY_NOTIFY_DEFAULT_CONFIG_PROVIDER
     ]
 };

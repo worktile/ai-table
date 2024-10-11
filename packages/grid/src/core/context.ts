@@ -1,5 +1,5 @@
 import { Signal, WritableSignal } from '@angular/core';
-import { AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState } from '../types';
+import { AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
 
 export class RendererContext {
     linearRows: Signal<AITableLinearRow[]>;
@@ -7,12 +7,14 @@ export class RendererContext {
     scrollState: WritableSignal<AITableScrollState>;
     visibleColumnsMap: Signal<Map<string, number>>;
     visibleRowsIndexMap: Signal<Map<string, number>>;
+    scrollAction: (options: ScrollActionOptions) => void;
 
     constructor(options: AITableContext) {
-        const { linearRows, pointPosition, scrollState, visibleColumnsMap, visibleRowsIndexMap } = options;
+        const { linearRows, pointPosition, scrollState, visibleColumnsMap, visibleRowsIndexMap, scrollAction } = options;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;
         this.scrollState = scrollState;
+        this.scrollAction = scrollAction;
         this.visibleColumnsMap = visibleColumnsMap;
         this.visibleRowsIndexMap = visibleRowsIndexMap;
     }

@@ -1,18 +1,33 @@
 @use 'ngx-tethys/styles/variables.scss';
 @use './progress/progress-editor.component.scss';
+@use './link/link-editor.component.scss';
 @use './rating/rating-editor.component.scss';
+
+// cell 编辑组件左内边距以 13 作为基准
+// 文本的 line-height 为 24 则 padding-top 为 8.5，里面的高度是 28 的则 padding-top 为 6.5
+$cell-editor-padding-left: 13px;
+$cell-editor-padding-top: 8.5px;
+$cell-editor-padding-top-28: 6.5px;
+$cell-editor-padding-bottom: 5.5px;
 
 .date-cell-editor {
     .thy-calendar-picker {
         height: 100%;
     }
+    .form-control {
+        padding-left: $cell-editor-padding-left;
+        border-width: 2px;
+        padding-top: $cell-editor-padding-top-28;
+        padding-bottom: $cell-editor-padding-bottom;
+    }
 }
 
 .text-cell-editor {
     display: block;
-
+    // 左间距 13 加上 editor border 带来的向右偏移的 1 再加上 AI_TABLE_OFFSET 等于 14.5 等于文字的真实渲染位置
+    // 上间距 8 的计算逻辑为：line-height 24 加上 上下间距 8*2 加上 上下 border 2*2 等于 44
     textarea {
-        padding: 0.55rem 0.75rem;
+        padding: $cell-editor-padding-top $cell-editor-padding-left;
         min-height: 44px;
         border-width: 2px;
         line-height: 24px;
@@ -28,6 +43,11 @@
     }
 }
 
+// 左间距 13.5 加上 editor 向右偏移的 1（避免编辑组件盖住单元格边框） 等于 14.5 等于评分编辑组件的真实渲染位置
+.rating-cell-editor {
+    padding-left: 13.5px;
+}
+
 .number-cell-editor {
     .thy-input-number {
         .input-number-input {
@@ -38,7 +58,9 @@
 
 .select-cell-editor {
     .select-control {
-        padding-bottom: 6px !important;
+        // 实际 canvas 渲染的行的高度要比，dom 的 44 高一些，大概 45px，所以 canvas 的高度在垂直居中的情况要比 dom 的文本要靠上一些（0.5），这里为了弥补这个差异所以调整了下内边距
+        padding-top: $cell-editor-padding-top-28 !important;
+        padding-bottom: 5.5px !important;
         border: 2px solid variables.$primary;
         outline: none;
     }
@@ -64,5 +86,9 @@
     }
     .select-cell-editor .form-control {
         height: auto;
+        padding-left: $cell-editor-padding-left;
+    }
+    &.thy-popover-panel {
+        padding: 0;
     }
 }

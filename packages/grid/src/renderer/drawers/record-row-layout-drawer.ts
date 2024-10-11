@@ -26,7 +26,7 @@ export class RecordRowLayout extends Layout {
             fillBg = colors.gray80;
         }
         this.customRect({
-            x: 1,
+            x: AI_TABLE_OFFSET,
             y,
             width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET,
             height: rowHeight,

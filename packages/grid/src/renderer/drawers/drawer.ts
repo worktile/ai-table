@@ -1,21 +1,27 @@
 import GraphemeSplitter from 'grapheme-splitter';
 import {
     AI_TABLE_OFFSET,
-    AI_TABLE_OPTION_ITEM_FONT_SIZE,
+    AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
+    DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
-    DEFAULT_WRAP_TEXT_MAX_ROW
+    DEFAULT_WRAP_TEXT_MAX_ROW,
+    FONT_SIZE_SM,
+    WebOutlinedPath
 } from '../../constants';
 import { AITable } from '../../core';
 import {
     AITableArc,
+    AITableAvatarSize,
+    AITableAvatarType,
     AITableCtxStyle,
+    AITableImage,
     AITableLabel,
     AITableLine,
     AITableRect,
@@ -24,7 +30,7 @@ import {
     AITableWrapText,
     AITableWrapTextData
 } from '../../types';
-import { getTextWidth, textDataCache, TextMeasure } from '../../utils';
+import { getTextWidth, imageCache, textDataCache, TextMeasure } from '../../utils';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();
@@ -398,7 +404,7 @@ export class Drawer {
             radius,
             background,
             color = this.colors.gray800,
-            fontSize = AI_TABLE_OPTION_ITEM_FONT_SIZE,
+            fontSize = AI_TABLE_TAG_FONT_SIZE,
             fontWeight = DEFAULT_FONT_WEIGHT,
             stroke
         } = options;
@@ -427,6 +433,121 @@ export class Drawer {
             width,
             height
         };
+    }
+
+    public image(options: AITableImage, crossOrigin?: boolean, allowDefault?: boolean) {
+        const { x, y, url, width, height, opacity = 1, clipFunc } = options;
+        const colors = AITable.getColors();
+        if (!url) {
+            return;
+        }
+        const image = imageCache.getImage(url);
+        // Not loaded successfully
+        if (image === false) {
+            if (allowDefault) {
+                this.path({
+                    x,
+                    y: y + 2,
+                    data: WebOutlinedPath,
+                    size: 16,
+                    fill: colors.gray600
+                });
+            }
+            return;
+        }
+        // Unloaded
+        if (image == null) {
+            return imageCache.loadImage(url, url, { crossOrigin });
+        }
+        const isOrigin = opacity === 1;
+
+        if (!clipFunc && isOrigin) {
+            return this.ctx.drawImage(image, x, y, width, height);
+        }
+
+        if (!clipFunc && !isOrigin) {
+            this.ctx.save();
+            this.ctx.globalAlpha = opacity;
+            this.ctx.drawImage(image, x, y, width, height);
+            this.ctx.restore();
+            return;
+        }
+
+        if (clipFunc) {
+            this.ctx.save();
+            this.ctx.beginPath();
+            clipFunc(this.ctx);
+            this.ctx.clip();
+            this.ctx.globalAlpha = opacity;
+            this.ctx.drawImage(image, x, y, width, height);
+            this.ctx.restore();
+        }
+    }
+
+    public avatar(options: {
+        x: number;
+        y: number;
+        url: string;
+        id: string;
+        title: string;
+        type?: AITableAvatarType;
+        size?: AITableAvatarSize;
+        opacity?: number;
+        bgColor?: string;
+    }) {
+        const {
+            x = 0,
+            y = 0,
+            id,
+            url,
+            title,
+            bgColor = this.colors.white,
+            size = AITableAvatarSize.size36,
+            type = AITableAvatarType.member,
+            opacity = 1
+        } = options;
+
+        if (title == null || id == null) return null;
+        const colors = AITable.getColors();
+        const avatarSrc = url || '';
+        const avatarName = title;
+        const avatarBg = avatarSrc ? colors.white : bgColor;
+
+        switch (type) {
+            case AITableAvatarType.member: {
+                const radius = size / 2;
+                if (!avatarSrc) {
+                    this.ctx.fillStyle = avatarBg;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                    return this.text({
+                        x: x + radius,
+                        y: y + radius,
+                        text: avatarName,
+                        textAlign: DEFAULT_TEXT_ALIGN_CENTER,
+                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+                        fontSize: FONT_SIZE_SM,
+                        fillStyle: colors.white
+                    });
+                }
+                return this.image({
+                    name: avatarSrc,
+                    x,
+                    y,
+                    url: avatarSrc,
+                    width: size,
+                    height: size,
+                    clipFunc: (ctx) => {
+                        ctx.fillStyle = avatarBg;
+                        ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
+                        ctx.fill();
+                    },
+                    opacity
+                });
+            }
+        }
     }
 
     /**

@@ -52,8 +52,8 @@ export class AITableGridBase implements OnInit {
 
     aiPlugins = input<AIPlugin[]>();
 
-    aiReferences = input<AITableReferences>();
-    
+    aiReferences = input.required<AITableReferences>();
+
     aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
 
     AITableFieldType = AITableFieldType;

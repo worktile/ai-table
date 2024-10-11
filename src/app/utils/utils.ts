@@ -419,7 +419,7 @@ export function getCanvasDefaultValue() {
                     'column-110': '1',
                     'column-111': '1',
                     'column-112': '1',
-                    'column-20': ['66b31d0c8097a908f74bcd8a1'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 1,
                     'column-4': { timestamp: 1682235946 },
                     'column-5': ['member_01'],
@@ -433,9 +433,9 @@ export function getCanvasDefaultValue() {
                     'column-10': { timestamp: 1682235946 },
                     'column-11': ['member_02'],
                     'column-12': { timestamp: 1720490727 },
-                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
-                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
                 }
             },
             {
@@ -451,10 +451,10 @@ export function getCanvasDefaultValue() {
                     'column-110': '2',
                     'column-111': '2',
                     'column-112': '2',
-                    'column-20': ['66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-3': 10,
                     'column-4': { timestamp: 1682235946 },
-                    'column-5': ['member_01', 'member_02'],
+                    'column-5': ['member_01', 'member_02', 'member_03', 'member_04', 'member_05', 'member_06', 'member_07', 'member_08'],
                     'column-6': 50,
                     'column-7': 4,
                     'column-8': {},
@@ -462,9 +462,9 @@ export function getCanvasDefaultValue() {
                     'column-10': { timestamp: 1682235946 },
                     'column-11': ['member_02'],
                     'column-12': { timestamp: 1720490727 },
-                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
-                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
                 }
             },
             {
@@ -481,10 +481,10 @@ export function getCanvasDefaultValue() {
                     'column-111': '3',
                     'column-112': '3',
                     'column-20': [
-                        '66b31d0c8097a908f74bcd8a1',
-                        '66b31d0c8097a908f74bcd8b2',
-                        '66b31d0c8097a908f74bcd8c3',
-                        '66b31d0c8097a908f74bcd8d4'
+                        '66b31d0c8097a908f74bcd8a',
+                        '66b31d0c8097a908f74bcd8b',
+                        '66b31d0c8097a908f74bcd8c',
+                        '66b31d0c8097a908f74bcd8d'
                     ],
                     'column-3': 100,
                     'column-4': { timestamp: 1682235946 },
@@ -496,9 +496,9 @@ export function getCanvasDefaultValue() {
                     'column-10': { timestamp: 1727254598 },
                     'column-11': ['member_02'],
                     'column-12': { timestamp: 1720490727 },
-                    'column-21': ['66b31d0c8097a908f74bcd8a1'],
-                    'column-22': ['66b31d0c8097a908f74bcd8b2', '66b31d0c8097a908f74bcd8a1'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e5', '66b31d0c8097a908f74bcd8a1', '66b31d0c8097a908f74bcd8b2']
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
                 }
             }
         ],
@@ -652,37 +652,37 @@ export function getCanvasDefaultValue() {
                         {
                             text: '111',
                             bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a1'
+                            _id: '66b31d0c8097a908f74bcd8a'
                         },
                         {
                             text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
                             bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b2'
+                            _id: '66b31d0c8097a908f74bcd8b'
                         },
                         {
                             text: '333',
                             bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c3'
+                            _id: '66b31d0c8097a908f74bcd8c'
                         },
                         {
                             text: '444',
                             bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d4'
+                            _id: '66b31d0c8097a908f74bcd8d'
                         },
                         {
                             text: '555',
                             bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e5'
+                            _id: '66b31d0c8097a908f74bcd8e'
                         },
                         {
                             text: '666',
                             bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f6'
+                            _id: '66b31d0c8097a908f74bcd8f'
                         },
                         {
                             text: '777',
                             bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd907'
+                            _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
                 },
@@ -734,7 +734,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-7',
                 name: '评分',
                 positions: {
-                    view1: 2,
+                    view1: 11,
                     view2: 7
                 },
                 type: AITableFieldType.rate
@@ -796,37 +796,37 @@ export function getCanvasDefaultValue() {
                         {
                             text: '111',
                             bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a1'
+                            _id: '66b31d0c8097a908f74bcd8a'
                         },
                         {
                             text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
                             bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b2'
+                            _id: '66b31d0c8097a908f74bcd8b'
                         },
                         {
                             text: '333',
                             bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c3'
+                            _id: '66b31d0c8097a908f74bcd8c'
                         },
                         {
                             text: '444',
                             bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d4'
+                            _id: '66b31d0c8097a908f74bcd8d'
                         },
                         {
                             text: '555',
                             bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e5'
+                            _id: '66b31d0c8097a908f74bcd8e'
                         },
                         {
                             text: '666',
                             bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f6'
+                            _id: '66b31d0c8097a908f74bcd8f'
                         },
                         {
                             text: '777',
                             bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd907'
+                            _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
                 },
@@ -847,37 +847,37 @@ export function getCanvasDefaultValue() {
                         {
                             text: '111',
                             bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a1'
+                            _id: '66b31d0c8097a908f74bcd8a'
                         },
                         {
                             text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
                             bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b2'
+                            _id: '66b31d0c8097a908f74bcd8b'
                         },
                         {
                             text: '333',
                             bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c3'
+                            _id: '66b31d0c8097a908f74bcd8c'
                         },
                         {
                             text: '444',
                             bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d4'
+                            _id: '66b31d0c8097a908f74bcd8d'
                         },
                         {
                             text: '555',
                             bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e5'
+                            _id: '66b31d0c8097a908f74bcd8e'
                         },
                         {
                             text: '666',
                             bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f6'
+                            _id: '66b31d0c8097a908f74bcd8f'
                         },
                         {
                             text: '777',
                             bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd907'
+                            _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
                 },
@@ -897,37 +897,37 @@ export function getCanvasDefaultValue() {
                         {
                             text: '111',
                             bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a1'
+                            _id: '66b31d0c8097a908f74bcd8a'
                         },
                         {
                             text: '选项卡2选项卡2选项卡2选项卡2选项卡2选项卡2',
                             bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b2'
+                            _id: '66b31d0c8097a908f74bcd8b'
                         },
                         {
                             text: '333',
                             bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c3'
+                            _id: '66b31d0c8097a908f74bcd8c'
                         },
                         {
                             text: '444',
                             bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d4'
+                            _id: '66b31d0c8097a908f74bcd8d'
                         },
                         {
                             text: '555',
                             bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e5'
+                            _id: '66b31d0c8097a908f74bcd8e'
                         },
                         {
                             text: '666',
                             bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f6'
+                            _id: '66b31d0c8097a908f74bcd8f'
                         },
                         {
                             text: '777',
                             bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd907'
+                            _id: '66b31d0c8097a908f74bcd90'
                         }
                     ]
                 },
@@ -988,11 +988,41 @@ export function getReferences(): AITableReferences {
             member_01: {
                 uid: 'member_01',
                 display_name: 'admin',
-                avatar: ''
+                avatar: 'https://web.on-premises-alpha.pingcode.live/pc-avatar/c04446a4-bfcc-4a05-846c-e3241e1b68df_80x80.png'
             },
             member_02: {
                 uid: 'member_02',
                 display_name: 'member',
+                avatar: ''
+            },
+            member_03: {
+                uid: 'member_03',
+                display_name: 'Maple13',
+                avatar: ''
+            },
+            member_04: {
+                uid: 'member_04',
+                display_name: 'canvas',
+                avatar: ''
+            },
+            member_05: {
+                uid: 'member_05',
+                display_name: 'svg',
+                avatar: ''
+            },
+            member_06: {
+                uid: 'member_06',
+                display_name: 'html',
+                avatar: ''
+            },
+            member_07: {
+                uid: 'member_07',
+                display_name: 'css',
+                avatar: ''
+            },
+            member_08: {
+                uid: 'member_08',
+                display_name: 'Angular',
                 avatar: ''
             }
         }

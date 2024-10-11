@@ -18,7 +18,7 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
  * @param config
  */
 export const createCells = (config: AITableCellsDrawerConfig) => {
-    const { aiTable, coordinate, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { aiTable, coordinate, references, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
     const context = aiTable.context as RendererContext;
     const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();
@@ -104,8 +104,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         columnCount
                     });
-                    const realX = x + offset - AI_TABLE_OFFSET;
-                    const realY = y - AI_TABLE_OFFSET;
+                    const realX = x + offset + AI_TABLE_OFFSET;
+                    const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
                     const transformValue = transformCellValue(aiTable, field, cellValue);
@@ -119,6 +119,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         field,
                         cellValue,
                         transformValue,
+                        references,
                         isActive: isSelected,
                         style,
                         colors
