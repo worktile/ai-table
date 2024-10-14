@@ -1,5 +1,5 @@
 import { RectConfig } from 'konva/lib/shapes/Rect';
-import { AI_TABLE_CELL_BORDER } from '../../constants';
+import { AI_TABLE_CELL_BORDER, AI_TABLE_OFFSET } from '../../constants';
 import { AITable } from '../../core';
 import { AITableCellsConfig, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
@@ -50,11 +50,12 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                     columnIndex,
                     columnCount: totalColumnCount
                 });
+                // active 外边界和非 active 外边界 box 大小保持一致
                 const currentConfig = {
-                    x: x + offset + AI_TABLE_CELL_BORDER / 2,
-                    y: y + AI_TABLE_CELL_BORDER / 2,
-                    width: width - AI_TABLE_CELL_BORDER,
-                    height: rowHeight - AI_TABLE_CELL_BORDER,
+                    x: x + offset + AI_TABLE_OFFSET,
+                    y: y + AI_TABLE_OFFSET,
+                    width: width - AI_TABLE_CELL_BORDER / 2,
+                    height: rowHeight - AI_TABLE_CELL_BORDER / 2,
                     strokeWidth: AI_TABLE_CELL_BORDER,
                     stroke: colors.primary,
                     fillEnabled: false,

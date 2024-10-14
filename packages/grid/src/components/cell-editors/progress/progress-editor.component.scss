@@ -6,23 +6,25 @@
     align-items: center;
     height: 100%;
     padding: 0 cellEditorVariables.$cell-editor-padding-left;
-    // canvas 渲染差异：和 canvas 比进度条偏上
-    margin-top: 0.5px;
+    
 
     .thy-slider {
         flex: 1;
-        padding: 2px 0;
+        padding: 0px;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
     .progress-text {
         display: inline-block;
-        width: 38px;
+        // 46（文本宽度） - 8（左边距） - 编辑组件总宽度比 BLANK_WIDTH 少 2px
+        width: 36px;
         margin-left: 8px;
         white-space: nowrap;
         font-size: 0.875rem;
         font-weight: normal;
         position: relative;
-        // canvas 渲染差异：和 canvas 比文本偏下
-        top: -1px;
         line-height: 24px;
+        height: 24px;
     }
 }
