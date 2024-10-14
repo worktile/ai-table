@@ -1,4 +1,4 @@
-import { AI_TABLE_BLANK, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
+import { AI_TABLE_BLANK, AI_TABLE_CELL_ACTIVE_BORDER_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITableField, Coordinate, RendererContext } from '../core';
 import { AITableAreaType } from '../types';
 import { getTargetName } from './common';
@@ -37,4 +37,18 @@ export const isWithinFrozenColumnBoundary = (x: number, frozenColumnWidth: numbe
     const max = AI_TABLE_ROW_HEAD_WIDTH + frozenColumnWidth;
     const min = AI_TABLE_ROW_HEAD_WIDTH;
     return x > min && x < max;
+};
+
+export const getCellEditorBorderSpace = () => {
+    return AI_TABLE_CELL_ACTIVE_BORDER_WIDTH * 2 - AI_TABLE_OFFSET * 2;
+};
+
+export const getEditorSpace = (widthOrHeight: number) => {
+    const borderSpace = getCellEditorBorderSpace();
+    return widthOrHeight - borderSpace;
+};
+
+export const getEditorBoxOffset = () => {
+    const borderSpace = getCellEditorBorderSpace();
+    return borderSpace / 2;
 };

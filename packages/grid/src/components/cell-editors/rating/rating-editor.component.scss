@@ -4,6 +4,7 @@
     .thy-rate .thy-rate-container .thy-rate-star,
     .thy-rate .thy-rate-container .thy-rate-star .thy-rate-item-all {
         transition: none;
+        height: 28px;
     }
     padding-left: cellEditorVariables.$cell-editor-padding-left;
 }

@@ -1,6 +1,6 @@
-// cell 编辑组件左内边距以 13 作为基准
-// 文本的 line-height 为 24 则 padding-top 为 8.5，里面的高度是 28 的则 padding-top 为 6.5
-$cell-editor-padding-left: 13px;
+// 文字距离边框的最左边的距离为 15px（14px + 1px）
+// editor 左键向右偏移 1.5px，
+$cell-editor-padding-left: 13.5px;
 $cell-editor-padding-top: 8.5px;
 $cell-editor-padding-top-28: 6.5px;
 $cell-editor-padding-bottom: 5.5px;

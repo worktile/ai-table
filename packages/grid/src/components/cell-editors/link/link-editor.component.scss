@@ -1,14 +1,14 @@
 @use 'ngx-tethys/styles/variables.scss';
+@use '../cell-editor.variables.scss' as cellEditorVariables;
 
 .ai-table-link-editor {
     display: block;
-    height: 45px;
+    height: 100%;
     .link-input-group {
-        border-color: variables.$primary;
-        border-width: 2px;
+        border: none;
         .link-input {
             color: variables.$primary;
-            padding-left: 15px !important;
+            padding-left: cellEditorVariables.$cell-editor-padding-left !important;
             line-height: variables.$line-height-lg;
         }
         .input-group-suffix {

@@ -5,10 +5,10 @@ import { ThyAbstractInternalOverlayRef } from 'ngx-tethys/core';
 import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { AbstractEditCellEditor } from '../components';
-import { AI_TABLE_CELL_BORDER, AI_TABLE_OFFSET, GRID_CELL_EDITOR_MAP } from '../constants';
+import { GRID_CELL_EDITOR_MAP } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { getCellHorizontalPosition } from '../utils';
+import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -115,7 +115,7 @@ export class AITableGridEventService {
         const { rowHeight, columnCount } = coordinate;
         const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, { recordId, fieldId })!;
         const originX = coordinate.getColumnOffset(columnIndex);
-        const originY = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+        const originY = coordinate.getRowOffset(rowIndex);
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const { width: originWidth, offset: originOffset } = getCellHorizontalPosition({
             columnWidth,
@@ -124,24 +124,15 @@ export class AITableGridEventService {
         });
         const originRect = container!.getBoundingClientRect();
         const originPosition = {
-            x: originX + originOffset - scrollState().scrollLeft + originRect.x + AI_TABLE_OFFSET,
-            y: originY - scrollState().scrollTop + originRect.y + AI_TABLE_OFFSET,
+            x: originX + originOffset - scrollState().scrollLeft + originRect.x,
+            y: originY - scrollState().scrollTop + originRect.y,
             width: originWidth,
             height: rowHeight
         };
-
-        // 基于盒子模型：2px 的外边距算在了整个宽高中，所以为了和 canvas 渲染保持对齐，需要向左和向上各偏移 AI_TABLE_CELL_BORDER / 2
-        // canvas 渲染差异：AI_TABLE_OFFSET 是根据情况进行的调整，减少高亮边框的重叠
-        let x = originPosition.x - AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
-        let y = originPosition.y - AI_TABLE_CELL_BORDER / 2;
-        let width = originPosition.width;
-        let height = originPosition.height;
-        if (isHoverEdit) {
-            width = originPosition.width - AI_TABLE_CELL_BORDER;
-            height = originPosition.height - AI_TABLE_CELL_BORDER;
-            x = originPosition.x + AI_TABLE_CELL_BORDER / 2 + AI_TABLE_OFFSET;
-            y = originPosition.y + AI_TABLE_CELL_BORDER / 2;
-        }
+        let x = originPosition.x + getEditorBoxOffset();
+        let y = originPosition.y + getEditorBoxOffset();
+        let width = getEditorSpace(originPosition.width);
+        let height = getEditorSpace(originPosition.height);
         return {
             ...originPosition,
             x: x,

@@ -31,7 +31,7 @@ import {
     AI_TABLE_PROGRESS_BAR_HEIGHT,
     AI_TABLE_PROGRESS_BAR_RADIUS,
     AI_TABLE_PROGRESS_TEXT_Width,
-    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
     AI_TABLE_TEXT_GAP,
@@ -126,7 +126,7 @@ export class CellDrawer extends Drawer {
         const fontWeight = style?.fontWeight;
         const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
         const renderX = textAlign === DEFAULT_TEXT_ALIGN_RIGHT ? x + columnWidth - AI_TABLE_CELL_PADDING : x + AI_TABLE_CELL_PADDING;
-        const renderY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+        const renderY = y + AI_TABLE_ROW_BLANK_HEIGHT / 2;
         const textDecoration = DEFAULT_TEXT_DECORATION;
 
         if (isNumberField) {
@@ -241,7 +241,7 @@ export class CellDrawer extends Drawer {
             const optionId = transformValue[index];
             const bgConfig = {
                 x: currentX,
-                y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
+                y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                 height: AI_TABLE_OPTION_ITEM_HEIGHT,
                 radius: AI_TABLE_PIECE_RADIUS,
                 fill: Colors.gray100,
@@ -267,7 +267,7 @@ export class CellDrawer extends Drawer {
                     if (shape === 'rect') {
                         this.rect({
                             x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                            y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2,
+                            y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2,
                             width: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
                             height: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
                             radius: AI_TABLE_PIECE_RADIUS,
@@ -276,7 +276,7 @@ export class CellDrawer extends Drawer {
                     } else if (shape === 'arc') {
                         this.arc({
                             x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                            y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2 + AI_TABLE_CELL_MULTI_DOT_RADIUS,
+                            y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2 + AI_TABLE_CELL_MULTI_DOT_RADIUS,
                             radius: AI_TABLE_CELL_MULTI_DOT_RADIUS,
                             fill: item?.color ?? Colors.primary
                         });
@@ -284,7 +284,7 @@ export class CellDrawer extends Drawer {
 
                     this.text({
                         x: bgConfig.x + AI_TABLE_CELL_PADDING + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
                         text: this.textEllipsis({
                             text: item.text,
                             maxWidth: bgWidth - baseWidth,
@@ -314,7 +314,7 @@ export class CellDrawer extends Drawer {
                     this.rect(bgConfig);
                     this.text({
                         x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_TAG_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_TAG_FONT_SIZE) / 2,
                         text: this.textEllipsis({
                             text: item.text,
                             maxWidth: bgWidth - baseWidth,
@@ -349,7 +349,7 @@ export class CellDrawer extends Drawer {
             if (optionStyle === AITableSelectOptionStyle.tag) {
                 this.tag({
                     x: currentX,
-                    y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
+                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                     width: circleWidth,
                     height: AI_TABLE_OPTION_ITEM_HEIGHT,
                     text: circleText,
@@ -362,7 +362,7 @@ export class CellDrawer extends Drawer {
             } else {
                 this.rect({
                     x: currentX,
-                    y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
+                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                     width: circleWidth,
                     height: AI_TABLE_OPTION_ITEM_HEIGHT,
                     fill: Colors.gray100,
@@ -370,7 +370,7 @@ export class CellDrawer extends Drawer {
                 });
                 this.text({
                     x: currentX + AI_TABLE_CELL_PADDING,
-                    y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_TAG_FONT_SIZE) / 2,
+                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_TAG_FONT_SIZE) / 2,
                     text: circleText,
                     fillStyle: Colors.gray700,
                     fontSize: AI_TABLE_TAG_FONT_SIZE
@@ -408,13 +408,13 @@ export class CellDrawer extends Drawer {
                     // 这里的 AI_TABLE_OFFSET 偏移不确定是为啥（包括 piece 的），只是为了保持和编辑组件中的对齐
                     this.arc({
                         x: x + AI_TABLE_CELL_PADDING + AI_TABLE_DOT_RADIUS,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS - AI_TABLE_OFFSET,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PIECE_WIDTH) / 2 + AI_TABLE_DOT_RADIUS - AI_TABLE_OFFSET,
                         radius: AI_TABLE_DOT_RADIUS,
                         fill: background
                     });
                     this.text({
                         x: x + AI_TABLE_PIECE_WIDTH + AI_TABLE_TEXT_GAP + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
                         text: getTextEllipsis(dotMaxTextWidth).text,
                         fillStyle: colors.gray800
                     });
@@ -422,7 +422,7 @@ export class CellDrawer extends Drawer {
                 case AITableSelectOptionStyle.piece:
                     this.rect({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_PIECE_WIDTH) / 2 - AI_TABLE_OFFSET,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PIECE_WIDTH) / 2 - AI_TABLE_OFFSET,
                         width: AI_TABLE_PIECE_WIDTH,
                         height: AI_TABLE_PIECE_WIDTH,
                         radius: AI_TABLE_PIECE_RADIUS,
@@ -430,7 +430,7 @@ export class CellDrawer extends Drawer {
                     });
                     this.text({
                         x: x + AI_TABLE_PIECE_WIDTH + AI_TABLE_TEXT_GAP + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
                         text: getTextEllipsis(dotMaxTextWidth).text,
                         fillStyle: colors.gray800
                     });
@@ -442,9 +442,9 @@ export class CellDrawer extends Drawer {
                     const width = Math.max(textWidth + 2 * AI_TABLE_TAG_PADDING, AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH);
                     this.tag({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + AI_TABLE_CELL_MULTI_PADDING_TOP + borderWidth,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
                         width,
-                        height: AI_TABLE_OPTION_ITEM_HEIGHT - borderWidth,
+                        height: AI_TABLE_OPTION_ITEM_HEIGHT,
                         text,
                         background,
                         color: colors.white,
@@ -458,7 +458,7 @@ export class CellDrawer extends Drawer {
                     const textMaxTextWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
                     this.text({
                         x: x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
                         text: getTextEllipsis(textMaxTextWidth).text,
                         fillStyle: colors.gray800
                     });
@@ -484,7 +484,7 @@ export class CellDrawer extends Drawer {
             const color = style?.color || colors.gray800;
             this.text({
                 x: x + AI_TABLE_CELL_PADDING,
-                y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
                 text,
                 fillStyle: color,
                 fontWeight: style?.fontWeight,
@@ -503,7 +503,7 @@ export class CellDrawer extends Drawer {
             const value = index + 1;
             const checked = value <= cellValue;
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
-            const iconY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - size / 2;
+            const iconY = (AI_TABLE_ROW_BLANK_HEIGHT - size) / 2;
 
             if (ctx && checked) {
                 this.path({
@@ -532,8 +532,8 @@ export class CellDrawer extends Drawer {
         const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
         const textHeight = AI_TABLE_COMMON_FONT_SIZE;
         const offsetX = AI_TABLE_CELL_PADDING;
-        const offsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - height / 2;
-        const textOffsetY = AI_TABLE_FIELD_HEAD_HEIGHT / 2 - textHeight / 2;
+        const offsetY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PROGRESS_BAR_HEIGHT) / 2;
+        const textOffsetY = (AI_TABLE_ROW_BLANK_HEIGHT - textHeight) / 2;
 
         // 绘制背景
         this.rect({
@@ -578,7 +578,7 @@ export class CellDrawer extends Drawer {
         const isMulti = settings?.is_multiple;
 
         let currentX = AI_TABLE_CELL_PADDING;
-        let currentY = (AI_TABLE_FIELD_HEAD_HEIGHT - avatarSize) / 2;
+        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - avatarSize) / 2;
         const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_PADDING_RIGHT + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
         const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
         const maxTextWidth = isOperating
@@ -655,7 +655,7 @@ export class CellDrawer extends Drawer {
                     ctx.restore();
                     this.text({
                         x: x + currentX + FONT_SIZE_SM / 2,
-                        y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
+                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
                         fillStyle: this.colors.white,
                         fontSize: FONT_SIZE_SM,
                         text: `+${listCount - index - 1}`,

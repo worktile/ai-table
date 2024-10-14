@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
@@ -44,8 +44,9 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
         if (textarea) {
             const height = textarea.scrollHeight < this.maxHeight ? textarea.scrollHeight : this.maxHeight;
-            this.render2.setStyle(textarea, 'height', `${height}px`);
-            this.render2.setStyle(textarea, 'min-height', `44px`);
+            // 不知道为何导入 getEditorSpace 函数会导致组件创建时失败
+            this.render2.setStyle(textarea, 'height', `${height - 3}px`);
+            this.render2.setStyle(textarea, 'min-height', `${41}px`);
             this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
             this.render2.setStyle(textarea, 'resize', 'none');
         }
