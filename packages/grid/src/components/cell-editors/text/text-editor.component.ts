@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { AI_TABLE_ROW_HEIGHT } from '../../../constants/table';
-import { getEditorSpace } from '@ai-table/grid';
+import { getEditorSpace } from '../../../utils/position';
 
 @Component({
     selector: 'text-cell-editor',
