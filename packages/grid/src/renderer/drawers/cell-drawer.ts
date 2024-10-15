@@ -16,7 +16,6 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
-    AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_MEMBER_AVATAR_SIZE,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
     AI_TABLE_MEMBER_ITEM_PADDING_RIGHT,
@@ -271,14 +270,14 @@ export class CellDrawer extends Drawer {
                             width: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
                             height: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
                             radius: AI_TABLE_PIECE_RADIUS,
-                            fill: item?.color ?? Colors.primary
+                            fill: item?.bg_color ?? item?.color ?? Colors.primary
                         });
                     } else if (shape === 'arc') {
                         this.arc({
                             x: bgConfig.x + AI_TABLE_CELL_PADDING,
                             y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2 + AI_TABLE_CELL_MULTI_DOT_RADIUS,
                             radius: AI_TABLE_CELL_MULTI_DOT_RADIUS,
-                            fill: item?.color ?? Colors.primary
+                            fill: item?.bg_color ?? item?.color ?? Colors.primary
                         });
                     }
 
