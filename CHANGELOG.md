@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.13](https://github.com/worktile/ai-table/compare/0.0.12...0.0.13) (2024-10-15)
+
+
+### Bug Fixes
+
+* adjust  drawable index ([#122](https://github.com/worktile/ai-table/issues/122)) ([d3776f8](https://github.com/worktile/ai-table/commit/d3776f8f79fce550c4de9c90b0530d5bbddac00a))
+* align progress editor and rating editor ([9d27ddf](https://github.com/worktile/ai-table/commit/9d27ddffe297018b14480c4a414e04b8a87d0ccc))
+* cellValue to transformValue ([#126](https://github.com/worktile/ai-table/issues/126)) ([3fb4efd](https://github.com/worktile/ai-table/commit/3fb4efd96ee2db42bfc14ad2c62cb16628fff1dc))
+* correct link editor style ([3378946](https://github.com/worktile/ai-table/commit/3378946e73815ae3a55ecfdd402bb6ed367034f4))
+* correct number editor align ([14ca50c](https://github.com/worktile/ai-table/commit/14ca50c8dde5f036c8320ad5cd402b9063590f18))
+* correct origin position when scrolling ([6257cbe](https://github.com/worktile/ai-table/commit/6257cbe1af604dc5992624b99d7f66e9edc08d08))
+* **edit:** fix edit style and position ([#117](https://github.com/worktile/ai-table/issues/117)) ([de2ec7a](https://github.com/worktile/ai-table/commit/de2ec7aa42462456c64cba2aaa41e1f213cd67dd))
+* fix hover checkbox change color ([#132](https://github.com/worktile/ai-table/issues/132)) ([86feb13](https://github.com/worktile/ai-table/commit/86feb1398317bcf382f31a5974d512ea2009b17e))
+* fix link editor error ([#131](https://github.com/worktile/ai-table/issues/131)) ([72cf6ed](https://github.com/worktile/ai-table/commit/72cf6edf0b43cae1ebda7dbc3221924a27c7854b))
+* fix tag display when multiple select ([#125](https://github.com/worktile/ai-table/issues/125)) ([a6c6d39](https://github.com/worktile/ai-table/commit/a6c6d391e81061cbb3c77cf88cd0cfafa09e49a0))
+* fix type error ([#123](https://github.com/worktile/ai-table/issues/123)) ([802cdc0](https://github.com/worktile/ai-table/commit/802cdc00949a5109eec7746c626a9b3010593476))
+* **grid:** end the opened edit when clicking on the switch cell #WIK-16660 ([1be6f3f](https://github.com/worktile/ai-table/commit/1be6f3f250e30ef82e08b308a444a811f2a1b680)), closes [#WIK-16660](https://github.com/worktile/ai-table/issues/WIK-16660)
+* **grid:** fix dom render error #WIK-16537 ([#105](https://github.com/worktile/ai-table/issues/105)) ([92927be](https://github.com/worktile/ai-table/commit/92927bee338d5369aa1c64e4e14d5835805a884b)), closes [#WIK-16537](https://github.com/worktile/ai-table/issues/WIK-16537)
+* **grid:** fix the position and error of the add column popup window ([#142](https://github.com/worktile/ai-table/issues/142)) ([d58a5e4](https://github.com/worktile/ai-table/commit/d58a5e47af9294773b111e749375c1ce5f5b81d4))
+* **grid:** fix the style and color error of the selected option #WIK-16677 ([83bd54d](https://github.com/worktile/ai-table/commit/83bd54df0601dd123a4cb328d4b9352823e411c7)), closes [#WIK-16677](https://github.com/worktile/ai-table/issues/WIK-16677)
+* **grid:** fix the style and color error of the selected option #WIK-16677 ([3e637c7](https://github.com/worktile/ai-table/commit/3e637c712ef1b84c3292c25013363e55d7470154)), closes [#WIK-16677](https://github.com/worktile/ai-table/issues/WIK-16677)
+* **grid:** restore code in origin develop #WIK-16519 ([#119](https://github.com/worktile/ai-table/issues/119)) ([0667869](https://github.com/worktile/ai-table/commit/066786911635a99a4cfa158cb90b545e53c13898)), closes [#WIK-16519](https://github.com/worktile/ai-table/issues/WIK-16519)
+* link icon ([#146](https://github.com/worktile/ai-table/issues/146)) ([9b94203](https://github.com/worktile/ai-table/commit/9b9420300728d5a8375c173245e463ef1bf80f66))
+* **number-editor:** fix number editor style ([00acc0a](https://github.com/worktile/ai-table/commit/00acc0a2a31f67a61f7f3342d02c82d6cb9d4ff7))
+* **select:** fix draw dot ([#115](https://github.com/worktile/ai-table/issues/115)) ([ea348f7](https://github.com/worktile/ai-table/commit/ea348f7997857e07352334ebe78572dad0908887))
+* 增加单选数据 ([#109](https://github.com/worktile/ai-table/issues/109)) ([c5f42c9](https://github.com/worktile/ai-table/commit/c5f42c96a76fd710563fb7b5d89d69baf294f81f))
+
+
+### Features
+
+* add build linear row and coordinate ([#74](https://github.com/worktile/ai-table/issues/74)) ([f309bb6](https://github.com/worktile/ai-table/commit/f309bb631f581c8627547d44e5227f607bf0869a))
+* add field and add record and selection and hover #WIK-16306 ([#88](https://github.com/worktile/ai-table/issues/88)) ([60d835b](https://github.com/worktile/ai-table/commit/60d835b9bb2f0d2c4d630c87c5e5e9bb01b2a314)), closes [#WIK-16306](https://github.com/worktile/ai-table/issues/WIK-16306)
+* add grid renderer ([ecfad4e](https://github.com/worktile/ai-table/commit/ecfad4e9bbb32c90ba42c915a0b0c7c8e34a4f02))
+* **addField:** add field column ([#86](https://github.com/worktile/ai-table/issues/86)) ([7f78625](https://github.com/worktile/ai-table/commit/7f786253c139b21dc78c4b25523eb38c122e6569))
+* **editor:** remove 2px border of editor and refactor position logic ([#145](https://github.com/worktile/ai-table/issues/145)) ([af9a1ce](https://github.com/worktile/ai-table/commit/af9a1ce9ad23a8de02e951b4c9ad8568eb6d57de))
+* **editor:** set different editor style by the editor has border or not ([f8b362e](https://github.com/worktile/ai-table/commit/f8b362e5f24593d91ec421c57b51a03057dc7b40))
+* **head:** create heads ([#82](https://github.com/worktile/ai-table/issues/82)) ([569e90a](https://github.com/worktile/ai-table/commit/569e90ae63e645ad23f9749e281cd55170a4f2a3))
+* **icon-renderer:** modified check/checked icon #WIK-16614 ([7e1a019](https://github.com/worktile/ai-table/commit/7e1a0192adcdcf6b7dc649b96ef3dedbaf29cdde)), closes [#WIK-16614](https://github.com/worktile/ai-table/issues/WIK-16614)
+* **renderer:** correct text icon ([eb5c71e](https://github.com/worktile/ai-table/commit/eb5c71e15a2803f9e861703bb06b497b032c7c86))
+* **renderer:** support link ([#129](https://github.com/worktile/ai-table/issues/129)) ([caeb600](https://github.com/worktile/ai-table/commit/caeb600a404b1429ac0d3539247543c743cd27d2))
+* **scrolling:** support scroll action when cell is editing #WIK-16633 ([#130](https://github.com/worktile/ai-table/issues/130)) ([4eaf3e7](https://github.com/worktile/ai-table/commit/4eaf3e7519ce9a6c4ed407287b86fcc75570bdc9)), closes [#WIK-16633](https://github.com/worktile/ai-table/issues/WIK-16633)
+* **single-select:**  support different type select ([#108](https://github.com/worktile/ai-table/issues/108)) ([1a33675](https://github.com/worktile/ai-table/commit/1a33675a8ae19aaf9ef907fb0391d406bd58f594))
+* support multiple select ([#120](https://github.com/worktile/ai-table/issues/120)) ([f102df3](https://github.com/worktile/ai-table/commit/f102df353cd006f29a1844ad95d42bd82f6c247d))
+
+
+
 ## [0.0.12](https://github.com/worktile/ai-table/compare/0.0.11...0.0.12) (2024-09-18)
 
 ### Features
