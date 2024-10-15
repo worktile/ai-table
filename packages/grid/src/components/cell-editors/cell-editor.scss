@@ -4,26 +4,28 @@
 @use './link/link-editor.component.scss';
 @use './rating/rating-editor.component.scss';
 
-.date-cell-editor {
-    .thy-calendar-picker {
-        height: 100%;
+.grid-cell-editor {
+    .thy-popover-container {
+        box-shadow: none;
+        border: none;
+    }
+    &.thy-popover-panel {
+        padding: 0;
     }
     .form-control {
-        padding-left: cellEditorVariables.$cell-editor-padding-left;
         border: none;
-        padding-top: cellEditorVariables.$cell-editor-padding-top-28;
-        padding-bottom: cellEditorVariables.$cell-editor-padding-top-28;
+        min-height: 41px;
+        border-radius: 0;
+        padding-top: cellEditorVariables.$cell-editor-padding-top;
+        padding-bottom: cellEditorVariables.$cell-editor-padding-top;
+        padding-left: cellEditorVariables.$cell-editor-padding-left;
     }
 }
 
 .text-cell-editor {
     display: block;
-    // 左间距 13 加上 editor border 带来的向右偏移的 1 再加上 AI_TABLE_OFFSET 等于 14.5 等于文字的真实渲染位置
-    // 上间距 8 的计算逻辑为：line-height 24 加上 上下间距 8*2 加上 上下 border 2*2 等于 44
     textarea {
         border: none;
-        padding: cellEditorVariables.$cell-editor-padding-top cellEditorVariables.$cell-editor-padding-left;
-        min-height: 41px;
         line-height: 24px;
         resize: none;
         scrollbar-width: none;
@@ -37,48 +39,9 @@
     }
 }
 
-.number-cell-editor {
-    .thy-input-number {
-        .input-number-input {
-            border: none;
-            padding: cellEditorVariables.$cell-editor-padding-top cellEditorVariables.$cell-editor-padding-left;
-        }
-    }
-}
-
 .select-cell-editor {
-    .select-control {
-        // 实际 canvas 渲染的行的高度要比，dom 的 44 高一些，大概 45px，所以 canvas 的高度在垂直居中的情况要比 dom 的文本要靠上一些（0.5），这里为了弥补这个差异所以调整了下内边距
-        padding-top: cellEditorVariables.$cell-editor-padding-top-28 !important;
-        padding-bottom: 5.5px !important;
-        border: none;
-        outline: none;
-    }
     .thy-select-custom:focus .form-control-custom:not(.disabled) {
         border: none;
         outline: none;
-    }
-
-    &:not(.tag) {
-        .select-control-multiple {
-            .choice-remove-link {
-                .thy-icon-close {
-                    color: variables.$gray-700;
-                }
-            }
-        }
-    }
-}
-
-.grid-cell-editor {
-    .thy-popover-container {
-        border: none;
-    }
-    .select-cell-editor .form-control {
-        height: auto;
-        padding-left: cellEditorVariables.$cell-editor-padding-left;
-    }
-    &.thy-popover-panel {
-        padding: 0;
     }
 }
