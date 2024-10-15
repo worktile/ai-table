@@ -39,16 +39,24 @@ export const isWithinFrozenColumnBoundary = (x: number, frozenColumnWidth: numbe
     return x > min && x < max;
 };
 
+export const getEditorSpace = (widthOrHeight: number) => {
+    return widthOrHeight + AI_TABLE_OFFSET * 2;
+};
+
+export const getEditorBoxOffset = () => {
+    return -AI_TABLE_OFFSET;
+};
+
 export const getCellEditorBorderSpace = () => {
     return AI_TABLE_CELL_ACTIVE_BORDER_WIDTH * 2 - AI_TABLE_OFFSET * 2;
 };
 
-export const getEditorSpace = (widthOrHeight: number) => {
+export const getHoverEditorSpace = (widthOrHeight: number) => {
     const borderSpace = getCellEditorBorderSpace();
     return widthOrHeight - borderSpace;
 };
 
-export const getEditorBoxOffset = () => {
+export const getHoverEditorBoxOffset = () => {
     const borderSpace = getCellEditorBorderSpace();
     return borderSpace / 2;
 };

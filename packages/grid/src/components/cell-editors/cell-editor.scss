@@ -8,13 +8,14 @@
     .thy-popover-container {
         box-shadow: none;
         border: none;
+        border-radius: 0;
     }
     &.thy-popover-panel {
         padding: 0;
     }
     .form-control {
-        border: none;
-        min-height: 41px;
+        border: 2px solid variables.$primary;
+        min-height: 45px;
         border-radius: 0;
         padding-top: cellEditorVariables.$cell-editor-padding-top;
         padding-bottom: cellEditorVariables.$cell-editor-padding-top;
@@ -41,7 +42,7 @@
 
 .select-cell-editor {
     .thy-select-custom:focus .form-control-custom:not(.disabled) {
-        border: none;
+        border: 2px solid variables.$primary;
         outline: none;
     }
 }
