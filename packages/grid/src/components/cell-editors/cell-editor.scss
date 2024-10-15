@@ -46,3 +46,13 @@
         outline: none;
     }
 }
+
+.number-cell-editor {
+    .thy-input-number {
+        .input-number-handler-wrap {
+            height: calc(100% - 4px);
+            top: 2px;
+            right: 2px;
+        }
+    }
+}
