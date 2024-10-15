@@ -8,7 +8,7 @@ import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../constants';
 import { AITable, AITableFieldType } from '../core';
 import { AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace } from '../utils';
+import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, getHoverEditorBoxOffset, getHoverEditorSpace } from '../utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -133,6 +133,13 @@ export class AITableGridEventService {
         let y = originPosition.y + getEditorBoxOffset();
         let width = getEditorSpace(originPosition.width);
         let height = getEditorSpace(originPosition.height);
+        // hover 编辑组件无边框
+        if (isHoverEdit) {
+            x = originPosition.x + getHoverEditorBoxOffset();
+            y = originPosition.y + getHoverEditorBoxOffset();
+            width = getHoverEditorSpace(originPosition.width);
+            height = getHoverEditorSpace(originPosition.height);
+        }
         return {
             ...originPosition,
             x: x,
