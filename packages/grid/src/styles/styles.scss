@@ -145,19 +145,6 @@
     }
 }
 
-.grid-cell-editor {
-    .thy-popover-container {
-        box-shadow: none;
-        border-radius: inherit;
-    }
-    .form-control,
-    .thy-select-custom,
-    .select-control-rendered {
-        height: 100%;
-        border-radius: 0;
-    }
-}
-
 .ai-table-grid {
     display: block;
     width: 100%;
