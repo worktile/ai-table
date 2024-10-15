@@ -307,7 +307,7 @@ export class CellDrawer extends Drawer {
                         height: bgConfig.height,
                         color: Colors.white,
                         padding: AI_TABLE_CELL_PADDING,
-                        background: item?.color ?? Colors.primary
+                        background: item?.bg_color ?? item?.color ?? Colors.primary
                     });
                 } else {
                     this.rect(bgConfig);
@@ -399,7 +399,7 @@ export class CellDrawer extends Drawer {
             ctx.globalAlpha = 1;
             const colors = AITable.getColors();
             const optionStyle = (field as AITableSelectField).settings.option_style;
-            let background = item?.color ?? colors.primary;
+            let background = item?.bg_color ?? item?.color ?? colors.primary;
             const dotMaxTextWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PIECE_WIDTH - AI_TABLE_TEXT_GAP;
             const borderWidth = 1;
             switch (optionStyle) {
