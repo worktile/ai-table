@@ -4,7 +4,10 @@
     "peerDependencies": {
         "@angular/common": "^18.1.4",
         "@angular/core": "^18.1.4",
-        "bson-objectid": "^2.0.4"
+        "bson-objectid": "^2.0.4",
+        "lru-cache": "^11.0.0",
+        "konva": "^9.3.14",
+        "grapheme-splitter": "^1.0.4"
     },
     "dependencies": {
         "tslib": "^2.3.0"
