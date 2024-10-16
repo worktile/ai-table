@@ -1,6 +1,6 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate, FieldValue } from '../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, Coordinate, FieldValue, UpdateFieldValueOptions } from '../core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 
@@ -113,6 +113,7 @@ export interface AITableOpenEditOptions {
     coordinate: Coordinate;
     container?: HTMLDivElement;
     isHoverEdit?: boolean;
+    updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
 }
 
 export interface AITableContext {

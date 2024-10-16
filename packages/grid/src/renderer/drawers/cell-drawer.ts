@@ -380,7 +380,8 @@ export class CellDrawer extends Drawer {
 
     private renderSingleSelectCell(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, field, columnWidth, isActive } = render;
-        if (transformValue == null || transformValue === '') {
+        const isValid = transformValue && Array.isArray(transformValue);
+        if (!isValid || transformValue.length === 0) {
             return;
         }
         const isOperating = isActive;

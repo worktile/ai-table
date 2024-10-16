@@ -32,7 +32,7 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AITable, Coordinate, RendererContext } from './core';
+import { AITable, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -288,17 +288,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
             return;
         }
-        const popoverRef = this.aiTableGridEventService.openCellEditor(this.aiTable, {
+        this.aiTableGridEventService.openCellEditor(this.aiTable, {
             container: this.containerElement(),
             coordinate: this.coordinate(),
             fieldId: fieldId!,
-            recordId: recordId!
-        });
-        if (popoverRef && !(this.aiFieldConfig()?.fieldPropertyEditor && this.aiFieldConfig()?.fieldPropertyEditor[fieldType])) {
-            (popoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValue.subscribe((value) => {
+            recordId: recordId!,
+            updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
                 this.aiUpdateFieldValue.emit(value);
-            });
-        }
+            }
+        });
     }
 
     private bindWheel() {
@@ -437,7 +435,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     coordinate: this.coordinate(),
                     fieldId: fieldId!,
                     recordId: recordId!,
-                    isHoverEdit: true
+                    isHoverEdit: true,
+                    updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                        this.aiUpdateFieldValue.emit(value);
+                    }
                 });
             });
         } else {

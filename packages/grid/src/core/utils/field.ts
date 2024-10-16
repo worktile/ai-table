@@ -2,12 +2,23 @@ import { FieldOptions } from '../constants/field';
 import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple } from '../types';
 import { idCreator } from './id-creator';
 
-export function getDefaultFieldValue(field: AITableField) {
-    if (
+export const isArrayFiled = (field: AITableField) => {
+    return (
         [AITableFieldType.member, AITableFieldType.createdBy, AITableFieldType.updatedBy].includes(field.type) ||
-        (AITableFieldType.select === field.type && (field.settings as IsMultiple).is_multiple)
-    ) {
+        AITableFieldType.select === field.type
+    );
+};
+
+export const isNumberFiled = (field: AITableField) => {
+    return [AITableFieldType.number, AITableFieldType.progress, AITableFieldType.rate].includes(field.type);
+};
+
+export function getDefaultFieldValue(field: AITableField) {
+    if (isArrayFiled(field)) {
         return [];
+    }
+    if (isNumberFiled(field)) {
+        return 0;
     }
     return '';
 }
