@@ -38,6 +38,9 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
     }
 
     update() {
+        if (this.modelValue === AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id])) {
+            return;
+        }
         this.updateFieldValue.emit({
             value: this.modelValue,
             path: [this.record()._id, this.field()._id]

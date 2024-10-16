@@ -38,7 +38,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
         ThyEmptyModule
     ]
 })
-export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], AITableSelectField> {
+export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> {
     selectOptions = computed(() => {
         return this.field().settings.options;
     });
@@ -47,6 +47,10 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
         return this.field().settings.is_multiple && this.field().settings.option_style === AITableSelectOptionStyle.tag ? 'tag' : '';
     });
 
+    get isMultiple() {
+        return !!this.field().settings.is_multiple;
+    }
+
     constructor() {
         super();
     }
@@ -54,7 +58,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
     override ngOnInit(): void {
         this.modelValue = computed(() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
-            if (!this.field().settings.is_multiple) {
+            if (!this.isMultiple) {
                 return value[0];
             }
             return value || [];
@@ -63,7 +67,11 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[], 
 
     updateValue(value: boolean) {
         if (!value) {
-            super.update();
+            const value = this.isMultiple ? this.modelValue : ([this.modelValue] as string[]);
+            this.updateFieldValue.emit({
+                value: value,
+                path: [this.record()._id, this.field()._id]
+            });
             this.closePopover();
         }
     }

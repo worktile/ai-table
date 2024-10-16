@@ -26,7 +26,7 @@ export class AITableGridEventService {
 
     globalMousedownEvent$ = new Subject<MouseEvent>();
 
-    private cellEditorPopoverRef!: ThyPopoverRef<AbstractEditCellEditor<any>>;
+    private cellEditorPopoverRef!: ThyPopoverRef<AbstractEditCellEditor<any>> | null;
 
     private destroyRef = inject(DestroyRef);
 
@@ -153,7 +153,6 @@ export class AITableGridEventService {
         const { container, recordId, fieldId, isHoverEdit } = options;
         const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
-
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             origin: container!,
             originPosition: offsetOriginPosition,
@@ -197,6 +196,10 @@ export class AITableGridEventService {
             });
             this.cellEditorPopoverRef.afterClosed().subscribe(() => {
                 wheelEvent.unsubscribe();
+                this.cellEditorPopoverRef = null;
+            });
+            (this.cellEditorPopoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValue.subscribe((value) => {
+                options.updateFieldValue(value);
             });
         }
         return this.cellEditorPopoverRef;
@@ -205,6 +208,7 @@ export class AITableGridEventService {
     closeCellEditor() {
         if (this.cellEditorPopoverRef) {
             this.cellEditorPopoverRef.close();
+            this.cellEditorPopoverRef = null;
         }
     }
 

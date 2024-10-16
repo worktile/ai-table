@@ -1,12 +1,12 @@
-import { AIFieldValueIdPath, AITableQueries, AITableRecord, IdPath, NumberPath } from "@ai-table/grid";
-import { UpdateFieldValueAction, ActionName, AddRecordAction, MoveRecordAction, RemoveRecordAction, AIViewTable } from "../types";
+import { AIFieldValueIdPath, AITableQueries, AITableRecord, IdPath, NumberPath } from '@ai-table/grid';
+import { UpdateFieldValueAction, ActionName, AddRecordAction, MoveRecordAction, RemoveRecordAction, AIViewTable } from '../types';
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIFieldValueIdPath) {
-    const field = AITableQueries.getFieldValue(aiTable, path);
-    if (field !== value) {
+    const oldValue = AITableQueries.getFieldValue(aiTable, path);
+    if (oldValue !== value) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
-            fieldValue: field,
+            fieldValue: oldValue,
             newFieldValue: value,
             path
         };
