@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.14](https://github.com/worktile/ai-table/compare/0.0.13...0.0.14) (2024-10-16)
+
+
+### Features
+
+* improve rating and progress editor and field default value ([4d364a8](https://github.com/worktile/ai-table/commit/4d364a87ed37d589772f561aaa8af47e87c46596))
+
+
+
 ## [0.0.13](https://github.com/worktile/ai-table/compare/0.0.12...0.0.13) (2024-10-15)
 
 
