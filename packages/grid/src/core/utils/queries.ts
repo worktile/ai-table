@@ -1,5 +1,17 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
-import { AITable, AITableField, AITableRecord, AIFieldValueIdPath, IdPath, NumberPath } from '../types';
+import {
+    AITable,
+    AITableField,
+    AITableRecord,
+    AIFieldValueIdPath,
+    IdPath,
+    NumberPath,
+    AITableFieldType,
+    SystemFieldTypes,
+    DateFieldValue,
+    MemberFieldValue
+} from '../types';
+import { isSystemField } from './field';
 
 export const AITableQueries = {
     findRecordPath(aiTable: AITable, record: AITableRecord) {
@@ -33,9 +45,25 @@ export const AITableQueries = {
         if (!record) {
             throw new Error(`can not find record at path [${path}]`);
         }
+        const field = aiTable.fieldsMap()[path[1]];
+        if (!field) {
+            throw new Error(`can not find field at path [${path}]`);
+        }
+        if (isSystemField(field)) {
+            return AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes);
+        }
         return record.values[path[1]];
     },
-
+    getSystemFieldValue(record: AITableRecord, type: SystemFieldTypes) {
+        const value = record[type];
+        if (type === AITableFieldType.createdAt || type === AITableFieldType.updatedAt) {
+            return { timestamp: value } as DateFieldValue;
+        }
+        if (type === AITableFieldType.createdBy || type === AITableFieldType.updatedBy) {
+            return [value] as MemberFieldValue;
+        }
+        throw new Error(`unexpected ${type}`);
+    },
     getField(aiTable: AITable, path: IdPath): AITableField | undefined {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
@@ -43,7 +71,7 @@ export const AITableQueries = {
         if (!path) {
             throw new Error(`path does not exist as path [${path}]`);
         }
-        return aiTable.fields().find(item=> item._id === path[0]);
+        return aiTable.fields().find((item) => item._id === path[0]);
     },
 
     getRecord(aiTable: AITable, path: NumberPath): AITableRecord {

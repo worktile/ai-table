@@ -1,5 +1,5 @@
 import { AIFieldValueIdPath, AITableField, AITableRecord, IdPath, NumberPath } from '@ai-table/grid';
-import { AITableView, Positions } from './view';
+import { AITableView, AITableViewRecord, Positions } from './view';
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',
@@ -33,7 +33,7 @@ export type UpdateFieldValueAction = {
 export type AddRecordAction = {
     type: ActionName.AddRecord;
     path: NumberPath;
-    record: AITableRecord;
+    record: AITableRecord | AITableViewRecord;
 };
 
 export type AddFieldAction = {

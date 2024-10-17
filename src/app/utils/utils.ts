@@ -9,6 +9,12 @@ export function sortDataByView(data: AITableViewRecords | AITableViewFields, act
     return data;
 }
 
+export const getDefaultTrackableEntity = () => {
+    const member = 'member_01';
+    const time = new Date().getTime();
+    return { created_by: member, created_at: time, updated_by: member, updated_at: time };
+};
+
 export function getDefaultValue() {
     const initValue: {
         records: AITableViewRecords;
@@ -17,6 +23,7 @@ export function getDefaultValue() {
         records: [
             {
                 _id: 'row-1',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 0,
                     view2: 1
@@ -44,6 +51,7 @@ export function getDefaultValue() {
             },
             {
                 _id: 'row-2',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 1,
                     view2: 2
@@ -68,6 +76,7 @@ export function getDefaultValue() {
             },
             {
                 _id: 'row-3',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 2,
                     view2: 0
@@ -406,6 +415,7 @@ export function getCanvasDefaultValue() {
         records: [
             {
                 _id: 'row-1',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 0,
                     view2: 1
@@ -440,6 +450,7 @@ export function getCanvasDefaultValue() {
             },
             {
                 _id: 'row-2',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 1,
                     view2: 2
@@ -469,6 +480,7 @@ export function getCanvasDefaultValue() {
             },
             {
                 _id: 'row-3',
+                ...getDefaultTrackableEntity(),
                 positions: {
                     view1: 2,
                     view2: 0
@@ -956,6 +968,7 @@ export function getBigData() {
     for (let index = 0; index < 500000; index++) {
         initValue.records.push({
             _id: `row-${index + 1}`,
+            ...getDefaultTrackableEntity(),
             positions: { view1: index, view2: index },
             values: {
                 'column-1': '文本 2-1',

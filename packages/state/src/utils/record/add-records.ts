@@ -1,4 +1,4 @@
-import { AddRecordOptions, Direction, FieldValue, getDefaultFieldValue } from '@ai-table/grid';
+import { AddRecordOptions, Direction, FieldValue, getDefaultFieldValue, TrackableEntity } from '@ai-table/grid';
 import { AITableViewFields, AITableViewRecords, AIViewTable } from '../../types';
 import { getSortRecords } from './sort';
 import { getNewIdsByCount } from '../common';
@@ -6,7 +6,7 @@ import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { getDefaultRecordDataByFilter } from './filter';
 
-export function addRecords(aiTable: AIViewTable, options: AddRecordOptions) {
+export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trackableEntity: TrackableEntity) {
     const { originId, direction = Direction.after, isDuplicate, count = 1 } = options;
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
     const records = getSortRecords(aiTable, aiTable.records() as AITableViewRecords, activeView);
@@ -25,16 +25,12 @@ export function addRecords(aiTable: AIViewTable, options: AddRecordOptions) {
         });
     }
     newRecordIds.forEach((id, index) => {
-        const newRecord = { _id: id, values: newRecordValues };
+        const newRecord = { _id: id, values: newRecordValues, ...trackableEntity };
         Actions.addRecord(aiTable, newRecord, [addIndex + index]);
     });
 }
 
-export function getDefaultRecordValues(
-    aiTable: AIViewTable,
-    isDuplicate = false,
-    recordId?: string
-) {
+export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false, recordId?: string) {
     let newRecordValues: Record<string, FieldValue> = {};
     if (isDuplicate && recordId) {
         newRecordValues = aiTable.recordsMap()[recordId].values;
