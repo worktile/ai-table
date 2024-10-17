@@ -288,15 +288,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
             return;
         }
-        this.aiTableGridEventService.openCellEditor(this.aiTable, {
-            container: this.containerElement(),
-            coordinate: this.coordinate(),
-            fieldId: fieldId!,
-            recordId: recordId!,
-            updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
-                this.aiUpdateFieldValue.emit(value);
-            }
-        });
+        setTimeout(() => {
+            this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                container: this.containerElement(),
+                coordinate: this.coordinate(),
+                fieldId: fieldId!,
+                recordId: recordId!,
+                updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                    this.aiUpdateFieldValue.emit(value);
+                }
+            });
+        }, 0);
     }
 
     private bindWheel() {
