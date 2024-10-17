@@ -2,10 +2,16 @@ import { FieldOptions } from '../constants/field';
 import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple } from '../types';
 import { idCreator } from './id-creator';
 
-export const isArrayFiled = (field: AITableField) => {
+export const isArrayField = (field: AITableField) => {
     return (
         [AITableFieldType.member, AITableFieldType.createdBy, AITableFieldType.updatedBy].includes(field.type) ||
         AITableFieldType.select === field.type
+    );
+};
+
+export const isSystemField = (field: AITableField) => {
+    return [AITableFieldType.createdAt, AITableFieldType.createdBy, AITableFieldType.updatedAt, AITableFieldType.updatedBy].includes(
+        field.type
     );
 };
 
@@ -14,7 +20,7 @@ export const isNumberFiled = (field: AITableField) => {
 };
 
 export function getDefaultFieldValue(field: AITableField) {
-    if (isArrayFiled(field)) {
+    if (isArrayField(field)) {
         return [];
     }
     if (isNumberFiled(field)) {

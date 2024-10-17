@@ -1,5 +1,6 @@
 import * as Y from 'yjs';
 import { AITableViewFields, AITableViewRecord, AITableViewRecords, AITableViews, SyncMapElement } from '../../types';
+import { getSystemFieldValues } from './translate';
 
 export const createSharedType = () => {
     const doc = new Y.Doc();
@@ -52,20 +53,20 @@ export function toSyncElement(node: any): SyncMapElement {
 }
 
 export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
-    const nonEditableArray = new Y.Array();
+    // [_id, created_at, created_by, updated_at, updated_by]
+    const systemFieldValues = new Y.Array();
     // 临时方案：为了解决删除时协同操作无法精准获取删除的 id 的问题，将原来的[idValue] 改为[{'_id': idValue}]
-    // 后续可能改为 YMap 或者通过在 views 中存储 positions 解决
-    nonEditableArray.insert(0, [{ _id: record['_id'] }]);
-
-    const editableArray = new Y.Array();
+    systemFieldValues.insert(0, getSystemFieldValues(record));
+    const customFieldValues = new Y.Array();
     const editableFields = [];
     for (const fieldId in record['values']) {
         editableFields.push(record['values'][fieldId]);
     }
-    editableArray.insert(0, [...editableFields, record['positions']]);
+    // TODO: 后续 positions 挪入 systemFieldValues
+    customFieldValues.insert(0, [...editableFields, record['positions']]);
 
     // To save memory, convert map to array.
     const element = new Y.Array<Y.Array<any>>();
-    element.insert(0, [nonEditableArray, editableArray]);
+    element.insert(0, [systemFieldValues, customFieldValues]);
     return element;
 }

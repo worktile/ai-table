@@ -1,4 +1,5 @@
-import { AITableViewFields, AITableViewRecords, SyncArrayElement, SyncMapElement } from '../../types';
+import { TrackableEntity } from '@ai-table/grid';
+import { AITableViewFields, AITableViewRecord, AITableViewRecords, Positions, SyncArrayElement, SyncMapElement } from '../../types';
 import * as Y from 'yjs';
 
 export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
@@ -10,13 +11,14 @@ export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewF
     return recordValue;
 };
 
-export const translateToRecords = (arrayRecords: any[], fields: AITableViewFields) => {
+export const translateToRecords = (arrayRecords: any[], fields: AITableViewFields): AITableViewRecords => {
     return arrayRecords.map((record: any) => {
-        const [nonEditableArray, editableArray] = record;
+        const [systemFieldValues, customFieldValues] = record;
         return {
-            _id: nonEditableArray[0]['_id'],
-            positions: editableArray[editableArray.length - 1],
-            values: translateToRecordValues(editableArray.slice(0, editableArray.length - 1), fields)
+            _id: getIdBySystemFieldValues(systemFieldValues),
+            ...getTrackableEntityBySystemFieldValues(systemFieldValues),
+            positions: getPositionsBySystemFieldValues(customFieldValues),
+            values: translateToRecordValues(customFieldValues, fields)
         };
     });
 };
@@ -70,3 +72,24 @@ export function getSharedMapValueIndex(sharedNodes: Y.Array<SyncMapElement>, id:
     }
     return nodeIndex;
 }
+
+export const getSystemFieldValues = (record: AITableViewRecord) => {
+    return [{ _id: record['_id'] }, record.created_at, record.created_by, record.updated_at, record.updated_by];
+};
+
+export const getTrackableEntityBySystemFieldValues = (systemFieldValues: Array<any>): TrackableEntity => {
+    return {
+        created_at: systemFieldValues[1],
+        created_by: systemFieldValues[2],
+        updated_at: systemFieldValues[3],
+        updated_by: systemFieldValues[4]
+    };
+};
+
+export const getIdBySystemFieldValues = (systemFieldValues: Array<any>): string => {
+    return systemFieldValues[0]['_id'];
+};
+
+export const getPositionsBySystemFieldValues = (customFieldValues: Array<any>): Positions => {
+    return customFieldValues[customFieldValues.length - 1];
+};

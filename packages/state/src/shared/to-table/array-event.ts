@@ -9,10 +9,10 @@ import {
     AIViewTable,
     SharedType,
     SyncArrayElement,
-    SyncMapElement,
+    SyncMapElement
 } from '../../types';
-import { getShareTypeNumberPath, translatePositionToPath } from '../utils';
-import { getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
+import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
+import { getPositionsBySystemFieldValues, getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
 import { AIFieldValueIdPath, AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 
 export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
@@ -60,8 +60,9 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     if (isAddOrRemove(targetPath)) {
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
-                            const [fixedField, customField] = data;
-                            const position = customField[customField.length - 1][activeViewId];
+                            const [systemFieldValues, customFieldValues] = data;
+                            const positions = getPositionsBySystemFieldValues(customFieldValues);
+                            const position = positions[activeViewId];
                             const path = translatePositionToPath(
                                 aiTable.records() as AITableViewRecords,
                                 position,
@@ -72,8 +73,10 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 type: ActionName.AddRecord,
                                 path: path,
                                 record: {
-                                    _id: fixedField[0]['_id'],
-                                    values: translateToRecordValues(customField, aiTable.fields() as AITableViewFields)
+                                    _id: getIdBySystemFieldValues(systemFieldValues),
+                                    ...getTrackableEntityBySystemFieldValues(systemFieldValues),
+                                    positions: getPositionsBySystemFieldValues(customFieldValues),
+                                    values: translateToRecordValues(customFieldValues, aiTable.fields() as AITableViewFields)
                                 }
                             });
                         });

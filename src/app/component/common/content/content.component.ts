@@ -170,14 +170,16 @@ export class DemoTableContent {
     }
 
     addRecord(data: AddRecordOptions) {
-        addRecords(this.aiTable, data);
+        const member = 'member_01';
+        const time = new Date().getTime();
+        addRecords(this.aiTable, data, { created_by: member, created_at: time, updated_by: member, updated_at: time });
     }
 
     updateFieldValue(value: UpdateFieldValueOptions) {
         updateFieldValue(this.aiTable, value);
     }
 
-    addField(data: AddFieldOptions){
+    addField(data: AddFieldOptions) {
         addFields(this.aiTable, data);
     }
 

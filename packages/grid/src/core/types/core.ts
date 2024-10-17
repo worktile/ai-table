@@ -17,6 +17,12 @@ export enum AITableFieldType {
     updatedBy = 'updated_by'
 }
 
+export type SystemFieldTypes =
+    | AITableFieldType.createdAt
+    | AITableFieldType.createdBy
+    | AITableFieldType.updatedAt
+    | AITableFieldType.updatedBy;
+
 export enum AITableStatType {
     None = 0,
     CountAll = 1,
@@ -114,8 +120,24 @@ export type FieldValue =
     | RateFieldValue
     | any;
 
+export interface TrackableEntity {
+    created_at: NumberFieldValue;
+    created_by: string;
+    updated_at: NumberFieldValue;
+    updated_by: string;
+}
+
+export interface UpdateTrackableEntity {
+    updated_at: NumberFieldValue;
+    updated_by: string;
+}
+
 export interface AITableRecord {
     _id: string;
+    created_at: NumberFieldValue;
+    created_by: string;
+    updated_at: NumberFieldValue;
+    updated_by: string;
     values: Record<string, FieldValue>;
 }
 
