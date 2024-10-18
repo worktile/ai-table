@@ -44,6 +44,7 @@ import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } fro
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
+const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
 
 @Component({
     selector: 'demo-table-content',
@@ -202,6 +203,15 @@ export class DemoTableContent {
             );
         });
         this.aiTable.onChange = () => {
+            this.setLocalStorage(
+                LOCAL_STORAGE_AI_TABLE_DATA,
+                JSON.stringify({
+                    records: this.aiTable.records(),
+                    fields: this.aiTable.fields(),
+                    views: this.aiTable.views(),
+                    actions: this.aiTable.actions
+                })
+            );
             if (this.tableService.sharedType) {
                 if (!YjsAITable.isRemote(this.aiTable) && !YjsAITable.isUndo(this.aiTable)) {
                     YjsAITable.asLocal(this.aiTable, () => {

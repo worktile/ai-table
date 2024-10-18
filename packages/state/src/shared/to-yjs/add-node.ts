@@ -4,18 +4,18 @@ import {
     ActionName,
     AddFieldAction,
     AddRecordAction,
-    AddRecordPositionAction,
+    SetRecordPositionAction,
     AddViewAction,
     AITableViewRecord,
     SharedType,
     SyncArrayElement,
     SyncMapElement
 } from '../../types';
-import { getSharedRecordIndex, toRecordSyncElement, toSyncElement } from '../utils';
+import { getPositionsByRecordSyncElement, getSharedRecordIndex, toRecordSyncElement, toSyncElement, setRecordPositions } from '../utils';
 
 export default function addNode(
     sharedType: SharedType,
-    action: AddFieldAction | AddRecordAction | AddViewAction | AddRecordPositionAction
+    action: AddFieldAction | AddRecordAction | AddViewAction | SetRecordPositionAction
 ): SharedType {
     const records = sharedType.get('records')! as Y.Array<SyncArrayElement>;
     const views = sharedType.get('views')!;
@@ -27,16 +27,20 @@ export default function addNode(
         case ActionName.AddView:
             views && views.push([toSyncElement(action.view)]);
             break;
-        case ActionName.AddRecordPosition:
+        case ActionName.SetRecordPositions:
             if (records) {
                 const recordIndex = getSharedRecordIndex(records, action.path[0]);
                 const record = records.get(recordIndex);
-                const customField = record.get(1) as Y.Array<any>;
-                const positionsIndex = customField.length - 1;
-                const positions = customField.get(positionsIndex);
-                const newPositions = { ...positions, ...action.position };
-                customField.delete(positionsIndex);
-                customField.insert(positionsIndex, [newPositions]);
+                const positions = getPositionsByRecordSyncElement(record);
+                const newPositions = { ...positions };
+                for (const key in action.positions) {
+                    if (action.positions[key] === null || action.positions[key] === undefined) {
+                        delete newPositions[key];
+                    } else {
+                        newPositions[key] = action.positions[key];
+                    }
+                }
+                setRecordPositions(record, newPositions);
             }
             break;
         case ActionName.AddField:

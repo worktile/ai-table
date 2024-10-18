@@ -1,24 +1,15 @@
-import { ActionName, AddRecordPositionAction, AIViewTable, Positions, RemoveRecordPositionAction } from "../types";
-import { IdPath } from "@ai-table/grid";
+import { ActionName, SetRecordPositionAction, AIViewTable, Positions, RemovePositions } from '../types';
+import { IdPath } from '@ai-table/grid';
 
-export function setRecordPosition(aiTable: AIViewTable, position: Positions, path: IdPath) {
-    const operation: AddRecordPositionAction = {
-        type: ActionName.AddRecordPosition,
-        position,
+export function setRecordPositions(aiTable: AIViewTable, positions: Positions | RemovePositions, path: IdPath) {
+    const operation: SetRecordPositionAction = {
+        type: ActionName.SetRecordPositions,
+        positions,
         path
     };
     aiTable.apply(operation);
 }
 
-export function removeRecordPosition(aiTable: AIViewTable, path: [string, string]) {
-    const operation: RemoveRecordPositionAction = {
-        type: ActionName.RemoveRecordPosition,
-        path
-    };
-    aiTable.apply(operation);
-}
-
-export const PositionActions = {
-    setRecordPosition,
-    removeRecordPosition
+export const PositionsActions = {
+    setRecordPositions
 };

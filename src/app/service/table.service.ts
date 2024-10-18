@@ -7,8 +7,8 @@ import {
     buildFieldsByView,
     buildRecordsByView,
     createSharedType,
-    initSharedType,
-    initTable,
+    getSharedTypeByData,
+    getDataBySharedType,
     SharedType,
     YjsAITable
 } from '@ai-table/state';
@@ -20,6 +20,7 @@ import { getDefaultValue, sortDataByView } from '../utils/utils';
 import { AITableRecords, AITableFields, AITableValue } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
+const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
 
 export const TABLE_SERVICE_MAP = new WeakMap<AIViewTable, TableService>();
 
@@ -45,14 +46,13 @@ export class TableService {
         return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
     });
 
-
-    renderRecords = computed(()=>{
+    renderRecords = computed(() => {
         return buildRecordsByView(this.aiTable, this.records(), this.fields(), this.activeView()) as AITableViewRecords;
-    }) 
+    });
 
-    renderFields = computed(()=>{
+    renderFields = computed(() => {
         return buildFieldsByView(this.aiTable, this.fields(), this.activeView()) as AITableViewFields;
-    }) 
+    });
 
     aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
@@ -96,7 +96,7 @@ export class TableService {
             this.sharedType.observeDeep((events: any) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
-                        const data = initTable(this.sharedType!);
+                        const data = getDataBySharedType(this.sharedType!);
                         this.views.set(data.views);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
@@ -105,6 +105,7 @@ export class TableService {
                         applyYjsEvents(this.aiTable, this.sharedType!, events);
                     }
                 }
+                localStorage.setItem(LOCAL_STORAGE_AI_TABLE_SHARED_DATA, JSON.stringify(this.sharedType!.toJSON()));
             });
         }
         this.provider = getProvider(this.sharedType.doc!, room, isDevMode());
@@ -113,7 +114,7 @@ export class TableService {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
                 console.log('init shared type');
                 const value = getDefaultValue();
-                initSharedType(this.sharedType!.doc!, {
+                getSharedTypeByData(this.sharedType!.doc!, {
                     records: value.records,
                     fields: value.fields,
                     views: this.views()
