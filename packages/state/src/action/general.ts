@@ -1,4 +1,13 @@
-import { ActionName, AITableAction, AITableView, AITableViewField, AITableViewFields, AITableViewRecord, AITableViewRecords, AIViewTable } from '../types';
+import {
+    ActionName,
+    AITableAction,
+    AITableView,
+    AITableViewField,
+    AITableViewFields,
+    AITableViewRecord,
+    AITableViewRecords,
+    AIViewTable
+} from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions, isPathEqual } from '../utils';
@@ -154,21 +163,20 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             }
             break;
         }
-        case ActionName.AddRecordPosition: {
-            const { position, path } = action;
+        case ActionName.SetRecordPositions: {
+            const { positions, path } = action;
             const record = records.find((item) => item._id === path[0]);
             if (record) {
-                record.positions = {
-                    ...record.positions,
-                    ...position
-                };
+                const newPositions = { ...record.positions };
+                for (const key in positions) {
+                    if (positions[key] === null || positions[key] === undefined) {
+                        delete newPositions[key];
+                    } else {
+                        newPositions[key] = positions[key] as number;
+                    }
+                }
+                record.positions = newPositions;
             }
-            break;
-        }
-        case ActionName.RemoveRecordPosition: {
-            const { path } = action;
-            const record = records.find((item) => item._id === path[1]);
-            delete record?.positions[path[0]];
             break;
         }
     }

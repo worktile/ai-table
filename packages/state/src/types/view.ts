@@ -5,6 +5,10 @@ export class Positions {
     [view_id: string]: number;
 }
 
+export class RemovePositions {
+    [view_id: string]: undefined;
+}
+
 export interface AITableViewRecord extends AITableRecord {
     positions: Positions;
 }

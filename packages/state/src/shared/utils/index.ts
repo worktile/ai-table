@@ -1,3 +1,2 @@
-export * from './init-shared';
-export * from './init-table';
+export * from './initialize';
 export * from './translate';

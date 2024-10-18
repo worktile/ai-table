@@ -1,27 +1,42 @@
 import { TrackableEntity } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecord, AITableViewRecords, Positions, SyncArrayElement, SyncMapElement } from '../../types';
+import {
+    AITableViewFields,
+    AITableViewRecord,
+    AITableViewRecords,
+    CustomFieldValues,
+    Positions,
+    RecordSyncElement,
+    SyncArrayElement,
+    SyncMapElement,
+    SystemFieldValues
+} from '../../types';
 import * as Y from 'yjs';
 
-export const translateToRecordValues = (arrayRecord: any[], fields: AITableViewFields) => {
-    const fieldIds = fields.map((item) => item._id);
-    const recordValue: Record<string, any> = {};
-    fieldIds.forEach((item, index) => {
-        recordValue[item] = arrayRecord[index] || '';
-    });
-    return recordValue;
-};
+export const POSITIONS_INDEX = 3;
 
-export const translateToRecords = (arrayRecords: any[], fields: AITableViewFields): AITableViewRecords => {
-    return arrayRecords.map((record: any) => {
-        const [systemFieldValues, customFieldValues] = record;
-        return {
-            _id: getIdBySystemFieldValues(systemFieldValues),
-            ...getTrackableEntityBySystemFieldValues(systemFieldValues),
-            positions: getPositionsBySystemFieldValues(customFieldValues),
-            values: translateToRecordValues(customFieldValues, fields)
-        };
-    });
-};
+export function toSyncElement(node: any): SyncMapElement {
+    const element: SyncMapElement = new Y.Map();
+    for (const key in node) {
+        element.set(key, node[key]);
+    }
+    return element;
+}
+
+export function toRecordSyncElement(record: AITableViewRecord): Y.Array<Y.Array<any>> {
+    const systemFieldValues = new Y.Array();
+    // 临时方案：为了解决删除时协同操作无法精准获取删除的 id 的问题，将原来的[idValue] 改为[{'_id': idValue}]
+    systemFieldValues.insert(0, getSystemFieldValues(record));
+    const customFieldValues = new Y.Array();
+    const valuesArray = [];
+    for (const fieldId in record['values']) {
+        valuesArray.push(record['values'][fieldId]);
+    }
+    customFieldValues.insert(0, valuesArray);
+    // To save memory, convert map to array.
+    const element: RecordSyncElement = new Y.Array<Y.Array<any>>();
+    element.insert(0, [systemFieldValues, customFieldValues]);
+    return element;
+}
 
 export function translatePositionToPath(data: AITableViewRecords | AITableViewFields, position: number, activeViewId: string) {
     let index = data.findIndex((value, index) => {
@@ -73,23 +88,48 @@ export function getSharedMapValueIndex(sharedNodes: Y.Array<SyncMapElement>, id:
     return nodeIndex;
 }
 
-export const getSystemFieldValues = (record: AITableViewRecord) => {
-    return [{ _id: record['_id'] }, record.created_at, record.created_by, record.updated_at, record.updated_by];
+export const getSystemFieldValues = (record: AITableViewRecord): SystemFieldValues => {
+    return [{ _id: record['_id'] }, record.created_at, record.created_by, record['positions'], record.updated_at, record.updated_by];
 };
 
-export const getTrackableEntityBySystemFieldValues = (systemFieldValues: Array<any>): TrackableEntity => {
+export const getCustomFieldValues = (record: AITableViewRecord): CustomFieldValues => {
+    throw new Error('No implement');
+};
+
+export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: AITableViewFields) => {
+    const fieldIds = fields.map((item) => item._id);
+    const recordValue: Record<string, any> = {};
+    fieldIds.forEach((item, index) => {
+        recordValue[item] = customFieldValues[index] || '';
+    });
+    return recordValue;
+};
+
+export const getTrackableEntityBySystemFieldValues = (systemFieldValues: SystemFieldValues): TrackableEntity => {
     return {
         created_at: systemFieldValues[1],
         created_by: systemFieldValues[2],
-        updated_at: systemFieldValues[3],
-        updated_by: systemFieldValues[4]
+        updated_at: systemFieldValues[4],
+        updated_by: systemFieldValues[5]
     };
 };
 
-export const getIdBySystemFieldValues = (systemFieldValues: Array<any>): string => {
+export const getIdBySystemFieldValues = (systemFieldValues: SystemFieldValues): string => {
     return systemFieldValues[0]['_id'];
 };
 
-export const getPositionsBySystemFieldValues = (customFieldValues: Array<any>): Positions => {
-    return customFieldValues[customFieldValues.length - 1];
+export const getPositionsBySystemFieldValues = (systemFieldValues: SystemFieldValues): Positions => {
+    return systemFieldValues[POSITIONS_INDEX];
+};
+
+export const getPositionsByRecordSyncElement = (recordSyncElement: RecordSyncElement) => {
+    const systemFieldType = recordSyncElement.get(0) as Y.Array<any>;
+    const positions = systemFieldType.get(POSITIONS_INDEX);
+    return positions;
+};
+
+export const setRecordPositions = (recordSyncElement: RecordSyncElement, newPositions: Positions) => {
+    const systemFieldType = recordSyncElement.get(0) as Y.Array<any>;
+    systemFieldType.delete(POSITIONS_INDEX);
+    systemFieldType.insert(POSITIONS_INDEX, [newPositions]);
 };

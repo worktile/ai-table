@@ -2,7 +2,7 @@ import { idCreator } from '@ai-table/grid';
 import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
 import { Actions } from '../action';
 import { ViewActions } from '../action/view';
-import { PositionActions } from '../action/position';
+import { PositionsActions } from '../action/position';
 
 export function createDefaultPositions(
     views: AITableView[],
@@ -51,7 +51,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy') {
     }
     ViewActions.addView(aiTable, newView, [index]);
     (aiTable.records() as AITableViewRecords).forEach((record) => {
-        PositionActions.setRecordPosition(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
+        PositionsActions.setRecordPositions(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
         Actions.setField<AITableViewField>(
@@ -70,7 +70,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy') {
 
 export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeViewId: string) {
     records.forEach((record) => {
-        PositionActions.removeRecordPosition(aiTable, [activeViewId, record._id]);
+        PositionsActions.setRecordPositions(aiTable, { [activeViewId]: undefined }, [record._id]);
     });
     fields.forEach((field) => {
         const positions = { ...field.positions };
@@ -85,5 +85,3 @@ export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fi
     });
     ViewActions.removeView(aiTable, [activeViewId]);
 }
-
-

@@ -3,7 +3,6 @@ import {
     ActionName,
     RemoveFieldAction,
     RemoveRecordAction,
-    RemoveRecordPositionAction,
     RemoveViewAction,
     SharedType,
     SyncArrayElement,
@@ -11,10 +10,7 @@ import {
 } from '../../types';
 import { getSharedMapValueIndex, getSharedRecordIndex } from '../utils';
 
-export default function removeNode(
-    sharedType: SharedType,
-    action: RemoveFieldAction | RemoveRecordAction | RemoveViewAction | RemoveRecordPositionAction
-): SharedType {
+export default function removeNode(sharedType: SharedType, action: RemoveFieldAction | RemoveRecordAction | RemoveViewAction): SharedType {
     const fields = sharedType.get('fields') as Y.Array<SyncMapElement>;
     const records = sharedType.get('records') as Y.Array<SyncArrayElement>;
     const views = sharedType.get('views')! as Y.Array<SyncMapElement>;
@@ -34,18 +30,6 @@ export default function removeNode(
                 if (viewIndex > -1) {
                     views.delete(viewIndex);
                 }
-            }
-            break;
-        case ActionName.RemoveRecordPosition:
-            if (records) {
-                const recordIndex = getSharedRecordIndex(records, action.path[1]);
-                const record = records.get(recordIndex);
-                const customField = record.get(1) as Y.Array<any>;
-                const positionsIndex = customField.length - 1;
-                const positions = customField.get(positionsIndex);
-                delete positions[action.path[0]];
-                customField.delete(positionsIndex);
-                customField.insert(positionsIndex, [positions]);
             }
             break;
         case ActionName.RemoveField:

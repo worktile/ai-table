@@ -7,12 +7,13 @@ import {
     AITableViewFields,
     AITableViewRecords,
     AIViewTable,
+    Positions,
     SharedType,
     SyncArrayElement,
     SyncMapElement
 } from '../../types';
 import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
-import { getPositionsBySystemFieldValues, getSharedMapValueId, getSharedRecordId, translateToRecordValues } from '../utils/translate';
+import { getPositionsBySystemFieldValues, getSharedMapValueId, getSharedRecordId, getValuesByCustomFieldValues, POSITIONS_INDEX } from '../utils/translate';
 import { AIFieldValueIdPath, AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 
 export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
@@ -76,7 +77,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                     _id: getIdBySystemFieldValues(systemFieldValues),
                                     ...getTrackableEntityBySystemFieldValues(systemFieldValues),
                                     positions: getPositionsBySystemFieldValues(customFieldValues),
-                                    values: translateToRecordValues(customFieldValues, aiTable.fields() as AITableViewFields)
+                                    values: getValuesByCustomFieldValues(customFieldValues, aiTable.fields() as AITableViewFields)
                                 }
                             });
                         });
@@ -88,32 +89,25 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset;
                                 const record = (aiTable.records() as AITableViewRecords)[recordIndex];
-                                if (isPositionOperation(fieldIndex, sharedFields)) {
-                                    for (const key in item) {
-                                        if (!record.positions[key] && record.positions[key] !== 0) {
-                                            actions.push({
-                                                type: ActionName.AddRecordPosition,
-                                                path: [record._id],
-                                                position: {
-                                                    [key]: item[key]
-                                                }
-                                            });
+                                if (isSystemFieldOperation(targetPath)) {
+                                    if (isPositionsOperation(fieldIndex)) {
+                                        const newPositions: Positions = {};
+                                        for (const key in item) {
+                                            newPositions[key] = item[key];
                                         }
-                                    }
-                                    for (const key in record.positions) {
-                                        if (!item[key] && item[key] !== 0) {
-                                            actions.push({
-                                                type: ActionName.RemoveRecordPosition,
-                                                path: [key, record._id]
-                                            });
-                                        }
+                                        actions.push({
+                                            type: ActionName.SetRecordPositions,
+                                            path: [record._id],
+                                            positions: newPositions
+                                        });
+                                    } else {
+                                        console.log('更新其它系统字段，比如修改人、修改时间等');
                                     }
                                 } else {
                                     const recordId = getSharedRecordId(sharedRecords, recordIndex);
                                     const fieldId = getSharedMapValueId(sharedFields, fieldIndex);
                                     const path = [recordId, fieldId] as AIFieldValueIdPath;
                                     const fieldValue = AITableQueries.getFieldValue(aiTable, path);
-
                                     // To exclude insert triggered by field inserts.
                                     if (fieldValue !== item) {
                                         actions.push({
@@ -163,8 +157,22 @@ export function isAddOrRemove(targetPath: number[]): boolean {
     return targetPath.length === 0;
 }
 
-export function isPositionOperation(fieldIndex: number, sharedFields: Y.Array<SyncMapElement>): boolean {
-    return fieldIndex === sharedFields.length;
+export function isSystemFieldOperation(targetPath: number[]): boolean {
+    if (targetPath.length === 2 && targetPath[1] === 0) {
+        return true;
+    }
+    return false;
+}
+
+export function isCustomFieldOperation(targetPath: number[]): boolean {
+    if (targetPath.length === 2 && targetPath[1] === 1) {
+        return true;
+    }
+    return false;
+}
+
+export function isPositionsOperation(fieldIndex: number): boolean {
+    return fieldIndex === POSITIONS_INDEX;
 }
 
 export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord) {
