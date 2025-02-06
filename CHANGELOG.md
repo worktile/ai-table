@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.33](https://github.com/worktile/ai-table/compare/0.0.32...0.0.33) (2025-02-06)
+
+
+### Bug Fixes
+
+* **editor:** closeCellEditor invoking will prevent blur event in cell editor component #WIK-17119 ([#238](https://github.com/worktile/ai-table/issues/238)) ([5a50043](https://github.com/worktile/ai-table/commit/5a50043025adcf77e08f9f5cb4a947125c431026)), closes [#WIK-17119](https://github.com/worktile/ai-table/issues/WIK-17119)
+
+
+
 ## [0.0.32](https://github.com/worktile/ai-table/compare/0.0.31...0.0.32) (2025-02-06)
 
 
