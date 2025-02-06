@@ -266,7 +266,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
-                this.aiTableGridEventService.closeCellEditor();
                 const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectionState(true, dragSelectionStart);
                 this.aiTableGridSelectionService.selectCells(dragSelectionStart);
