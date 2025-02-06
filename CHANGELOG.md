@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.32](https://github.com/worktile/ai-table/compare/0.0.31...0.0.32) (2025-02-06)
+
+
+### Bug Fixes
+
+* **cell-drawer:** member can not display when cell is active #WIK-17077 ([#234](https://github.com/worktile/ai-table/issues/234)) ([8890936](https://github.com/worktile/ai-table/commit/8890936cb86b386c3a239b818a47f25f79d9c87b)), closes [#WIK-17077](https://github.com/worktile/ai-table/issues/WIK-17077)
+* **drawer:** set font attribute in wrapText #WIK-17044 ([#233](https://github.com/worktile/ai-table/issues/233)) ([a75d0bc](https://github.com/worktile/ai-table/commit/a75d0bc87d492c06ba2502060e6dc9b02c7046a4)), closes [#WIK-17044](https://github.com/worktile/ai-table/issues/WIK-17044)
+* **state:** transform undefined as null to avoid yjs error for system field #WIK-17191 ([#235](https://github.com/worktile/ai-table/issues/235)) ([52067eb](https://github.com/worktile/ai-table/commit/52067eb295446a228181af53c8b0a4eba73cda9a)), closes [#WIK-17191](https://github.com/worktile/ai-table/issues/WIK-17191)
+* **translate:** fix get custom field value issue when value is 0 #WIK-17102 ([#236](https://github.com/worktile/ai-table/issues/236)) ([2223888](https://github.com/worktile/ai-table/commit/2223888bad93f03274b3bceed526da1b6f7631ae)), closes [#WIK-17102](https://github.com/worktile/ai-table/issues/WIK-17102)
+* **value-editing:** correct editing component position when column is frozen column #WIK-17023 ([#231](https://github.com/worktile/ai-table/issues/231)) ([b944172](https://github.com/worktile/ai-table/commit/b944172183d2f54877056f4d8b65cca150a24fe5)), closes [#WIK-17023](https://github.com/worktile/ai-table/issues/WIK-17023)
+
+
+### Features
+
+* **grid:** move reference to context and remove from table instance and frozenColumnCount to context ([#230](https://github.com/worktile/ai-table/issues/230)) ([ccf9e91](https://github.com/worktile/ai-table/commit/ccf9e91b57c18865e7eadd520689b8f50dcbd061))
+
+
+
 ## [0.0.31](https://github.com/worktile/ai-table/compare/0.0.30...0.0.31) (2025-01-09)
 
 
