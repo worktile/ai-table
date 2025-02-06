@@ -125,7 +125,7 @@ export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValue
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
-        recordValue[item] = customFieldValues[index] || '';
+        recordValue[item] = customFieldValues[index];
     });
     return recordValue;
 };
