@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { isNil } from 'lodash';
 import {
     AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
@@ -499,9 +499,9 @@ export class CellDrawer extends Drawer {
     private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
         const { x, y, transformValue: _cellValue } = render;
         const max = 5;
-        const cellValue = (_cellValue as RateFieldValue) || 0;
+        const cellValue = (_cellValue as RateFieldValue);
         const size = AI_TABLE_CELL_EMOJI_SIZE;
-        const isEmpty = cellValue == null || cellValue === undefined || (cellValue as number) === 0;
+        const isEmpty = isNil(cellValue);
         return [...Array(max).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= cellValue;
@@ -526,7 +526,7 @@ export class CellDrawer extends Drawer {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
         let cellValue = transformValue;
-        if (cellValue == null || cellValue === undefined) {
+        if (isNil(cellValue)) {
             cellValue = 0;
         }
         if (!_.isNumber(cellValue)) {
