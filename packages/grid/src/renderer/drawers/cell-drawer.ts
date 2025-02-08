@@ -501,20 +501,20 @@ export class CellDrawer extends Drawer {
         const max = 5;
         const cellValue = (_cellValue as RateFieldValue) || 0;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
-
+        const isEmpty = cellValue == null || cellValue === undefined || (cellValue as number) === 0;
         return [...Array(max).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= cellValue;
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
             const iconY = (AI_TABLE_ROW_BLANK_HEIGHT - size) / 2;
 
-            if (ctx && checked) {
+            if (ctx && (checked || isEmpty)) {
                 this.path({
                     x: x + iconX,
                     y: y + iconY,
                     size: 22,
                     data: StarFill,
-                    fill: this.colors.waring,
+                    fill: isEmpty ? this.colors.gray100 : this.colors.waring,
                     scaleX: 1.14,
                     scaleY: 1.14
                 });
@@ -525,12 +525,13 @@ export class CellDrawer extends Drawer {
     private renderCellProgress(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
-        const cellText = transformValue;
-
-        if (cellText == null || !_.isNumber(cellText)) {
+        let cellValue = transformValue;
+        if (cellValue == null || cellValue === undefined) {
+            cellValue = 0;
+        }
+        if (!_.isNumber(cellValue)) {
             return;
         }
-
         const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_Width;
         const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
         const textHeight = AI_TABLE_COMMON_FONT_SIZE;
@@ -549,7 +550,7 @@ export class CellDrawer extends Drawer {
         });
 
         // 计算并绘制进度
-        const progressWidth = (transformValue / 100) * width;
+        const progressWidth = (cellValue / 100) * width;
         this.rect({
             x: x + offsetX,
             y: y + offsetY,
@@ -562,7 +563,7 @@ export class CellDrawer extends Drawer {
         this.text({
             x: x + offsetX + width + AI_TABLE_TEXT_GAP,
             y: y + textOffsetY,
-            text: `${transformValue}%`,
+            text: `${cellValue}%`,
             fillStyle: colors.gray800
         });
     }
