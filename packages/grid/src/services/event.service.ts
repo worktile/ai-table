@@ -186,6 +186,10 @@ export class AITableGridEventService {
                 this.cellEditorPopoverRef.componentInstance.elementRef.nativeElement,
                 'wheel'
             ).subscribe((event: WheelEvent) => {
+                const field = aiTable.fieldsMap()[fieldId];
+                if (field.type === AITableFieldType.text || field.type === AITableFieldType.richText) {
+                    return;
+                }
                 event.preventDefault();
                 this.aiTable.context?.scrollAction({
                     deltaX: event.deltaX,
