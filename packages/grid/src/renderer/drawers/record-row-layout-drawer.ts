@@ -15,10 +15,24 @@ import { Layout } from './layout-drawer';
  * 它继承自 Layout 类，包含了用于绘制行中单元格（尤其是首列和尾列）的几个方法
  */
 export class RecordRowLayout extends Layout {
+    protected override renderAddFieldBlank({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>): void {
+        super.renderAddFieldBlank({ isHoverRow, isCheckedRow });
+        const rowHeight = this.rowHeight;
+        const startX = this.x + this.columnWidth;
+        const lineWidth =
+            this.containerWidth - startX < AI_TABLE_FIELD_ADD_BUTTON_WIDTH ? AI_TABLE_FIELD_ADD_BUTTON_WIDTH : this.containerWidth - startX;
+        this.line({
+            x: startX,
+            y: this.y,
+            points: [0, rowHeight, lineWidth, rowHeight],
+            stroke: this.colors.gray200
+        });
+    }
+
+
     // 首列
     private renderFirstCell({ row, style, isHoverRow, isCheckedRow }: AITableCell) {
         if (!this.isFirst) return;
-
         const { fill } = style;
         const y = this.y;
         const rowHeight = this.rowHeight;
@@ -63,12 +77,15 @@ export class RecordRowLayout extends Layout {
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
             });
         }
+        
+        if (this.isLast) {
+            this.renderAddFieldBlank({ isHoverRow, isCheckedRow });
+        }
     }
 
     // 尾列
     private renderLastCell({ style, isHoverRow, isCheckedRow }: Pick<AITableCell, 'style' | 'isHoverRow' | 'isCheckedRow'>) {
         if (!this.isLast || this.isFirst) return;
-
         const { fill, stroke } = style;
         const colors = AITable.getColors();
 
@@ -82,18 +99,7 @@ export class RecordRowLayout extends Layout {
             stroke: stroke || colors.gray200
         });
 
-        // 延伸到 FIELD_ADD_BUTTON
-        super.renderAddFieldBlank({ isHoverRow, isCheckedRow });
-        const rowHeight = this.rowHeight;
-        const startX = this.x + this.columnWidth;
-        const lineWidth =
-            this.containerWidth - startX < AI_TABLE_FIELD_ADD_BUTTON_WIDTH ? AI_TABLE_FIELD_ADD_BUTTON_WIDTH : this.containerWidth - startX;
-        this.line({
-            x: startX,
-            y: this.y,
-            points: [0, rowHeight, lineWidth, rowHeight],
-            stroke: this.colors.gray200
-        });
+        this.renderAddFieldBlank({ isHoverRow, isCheckedRow });
     }
 
     // 绘制中间的普通单元格
