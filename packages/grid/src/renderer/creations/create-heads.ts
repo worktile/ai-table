@@ -21,6 +21,11 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
     };
 
     const fieldHeads: AITableFieldHeadConfig[] = [];
+    const fieldMenus = config.aiTable.context?.aiFieldConfig()?.fieldMenus || [];
+    let noMoreIcon = false;
+    if (fieldMenus.length === 0) {
+        noMoreIcon = true;
+    }
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
         if (columnIndex > columnCount - 1) break;
         if (columnIndex < 0) continue;
@@ -36,7 +41,7 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
             height: fieldHeadHeight,
             field,
             stroke: columnIndex === 0 ? colors.transparent : undefined,
-            iconVisible,
+            iconVisible: noMoreIcon ? false : iconVisible,
             isSelected,
             isHoverIcon
         };
