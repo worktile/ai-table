@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AIRecordFieldIdPath, AITable } from '../core';
+import { AITableSelectAllState } from '../types';
 
 @Injectable()
 export class AITableGridSelectionService {
     aiTable!: AITable;
+
+    get selectAllState() {
+        const selectedRecords = this.aiTable.selection().selectedRecords;
+        return selectedRecords.size === this.aiTable.records().length
+            ? AITableSelectAllState.all
+            : selectedRecords.size === 0
+              ? AITableSelectAllState.none
+              : AITableSelectAllState.partial;
+    }
 
     constructor() {}
 
@@ -16,7 +26,8 @@ export class AITableGridSelectionService {
             selectedRecords: new Set(),
             selectedFields: new Set(),
             selectedCells: new Set(),
-            activeCell: null
+            activeCell: null,
+            selectAllState: AITableSelectAllState.none
         });
     }
 
@@ -38,20 +49,30 @@ export class AITableGridSelectionService {
         } else {
             this.aiTable.selection().selectedRecords.add(recordId);
         }
+        const selectedRecords = this.aiTable.selection().selectedRecords;
         this.aiTable.selection.set({
-            selectedRecords: this.aiTable.selection().selectedRecords,
+            selectedRecords: selectedRecords,
             selectedFields: new Set(),
             selectedCells: new Set(),
-            activeCell: null
+            activeCell: null,
+            selectAllState: this.selectAllState
         });
     }
 
     toggleSelectAll(checked: boolean) {
-        this.clearSelection();
         if (checked) {
-            this.aiTable.records().forEach((item) => {
-                this.selectRecord(item._id);
-            });
+            if (this.aiTable.records().length === 0) {
+                this.aiTable.selection.set({
+                    ...this.aiTable.selection(),
+                    selectAllState: AITableSelectAllState.all
+                });
+            } else {
+                this.aiTable.records().forEach((item) => {
+                    this.selectRecord(item._id);
+                });
+            }
+        } else {
+            this.clearSelection();
         }
     }
 

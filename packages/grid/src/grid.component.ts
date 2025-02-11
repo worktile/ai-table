@@ -40,7 +40,7 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableMouseDownType, AITableRendererConfig, ScrollActionOptions } from './types';
+import { AITableMouseDownType, AITableRendererConfig, AITableSelectAllState, ScrollActionOptions } from './types';
 import {
     buildGridLinearRows,
     getColumnIndicesSizeMap,
@@ -335,7 +335,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             }
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
-                const isChecked = this.aiTable.selection().selectedRecords.size === this.aiTable.records().length;
+                const isChecked = this.aiTable.selection().selectAllState === AITableSelectAllState.all;
                 this.toggleSelectAll(!isChecked);
                 return;
             }

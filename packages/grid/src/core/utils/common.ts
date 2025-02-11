@@ -1,5 +1,6 @@
 import { WritableSignal, computed, signal } from '@angular/core';
 import { AITable, AITableField, AITableFields, AITableRecord, AITableRecords } from '../types';
+import { AITableSelectAllState } from '../../types';
 
 export function createAITable(records: WritableSignal<AITableRecords>, fields: WritableSignal<AITableFields>): AITable {
     const aiTable: AITable = {
@@ -9,7 +10,8 @@ export function createAITable(records: WritableSignal<AITableRecords>, fields: W
             selectedRecords: new Set(),
             selectedFields: new Set(),
             selectedCells: new Set(),
-            activeCell: null
+            activeCell: null,
+            selectAllState: AITableSelectAllState.none
         }),
         keywordsMatchedCells: signal(new Set()),
         recordsMap: computed(() => {

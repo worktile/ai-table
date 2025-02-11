@@ -9,7 +9,7 @@ import {
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../../constants';
-import { AITableCheckType, AITableColumnHeadsConfig } from '../../types';
+import { AITableCheckType, AITableColumnHeadsConfig, AITableSelectAllState } from '../../types';
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 import { AITableIcon } from './icon.component';
@@ -40,8 +40,8 @@ export class AITableFrozenColumnHeads {
     });
 
     isChecked = computed(() => {
-        const { selection, records } = this.config().aiTable;
-        return selection().selectedRecords.size === records().length;
+        // 目前只需要展示全部选中和空的状态
+        return this.config().aiTable.selection().selectAllState === AITableSelectAllState.all;
     });
 
     fieldHeadHeight = computed(() => {
