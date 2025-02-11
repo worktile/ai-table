@@ -138,4 +138,5 @@ export interface AITableContext {
     visibleRowsIndexMap: Signal<Map<string, number>>;
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
+    aiFieldConfig: Signal<AIFieldConfig | undefined>;
 }
