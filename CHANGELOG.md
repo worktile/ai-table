@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.34](https://github.com/worktile/ai-table/compare/0.0.33...0.0.34) (2025-02-12)
+
+
+### Bug Fixes
+
+* #WIK-17103 【AITable】不可编辑表格表头更多菜单点击显示空的弹窗 ([#243](https://github.com/worktile/ai-table/issues/243)) ([6f1f07e](https://github.com/worktile/ai-table/commit/6f1f07e5ce7203063c3a7d3067b0b204b0d26bf6)), closes [#WIK-17103](https://github.com/worktile/ai-table/issues/WIK-17103)
+* **text:** should not prevent default action when edit text, because long text need scrolling #WIK-17096 ([#241](https://github.com/worktile/ai-table/issues/241)) ([5a597dd](https://github.com/worktile/ai-table/commit/5a597dd9fbe6f6a7176e3cde755973f13167f6fe)), closes [#WIK-17096](https://github.com/worktile/ai-table/issues/WIK-17096)
+
+
+### Features
+
+* **cell-drawer:** support render empty data for progress and rate fi… ([#240](https://github.com/worktile/ai-table/issues/240)) ([86f3083](https://github.com/worktile/ai-table/commit/86f30831a4f5dffadbb0537706c9d5a3c97a5aad))
+* **layout-drawer:** support render blank when table only has one field #WIK-17197 ([#242](https://github.com/worktile/ai-table/issues/242)) ([aa94e11](https://github.com/worktile/ai-table/commit/aa94e113d618c6f48982ac6235d5fe6318966269)), closes [#WIK-17197](https://github.com/worktile/ai-table/issues/WIK-17197)
+
+
+
 ## [0.0.33](https://github.com/worktile/ai-table/compare/0.0.32...0.0.33) (2025-02-06)
 
 
