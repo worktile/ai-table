@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 import { AIRecordFieldIdPath, AITable } from '../core';
 import { AITableSelectAllState } from '../types';
 
@@ -6,14 +6,14 @@ import { AITableSelectAllState } from '../types';
 export class AITableGridSelectionService {
     aiTable!: AITable;
 
-    get selectAllState() {
+    selectAllState = computed(() => {
         const selectedRecords = this.aiTable.selection().selectedRecords;
         return selectedRecords.size === this.aiTable.records().length
             ? AITableSelectAllState.all
             : selectedRecords.size === 0
               ? AITableSelectAllState.none
               : AITableSelectAllState.partial;
-    }
+    });
 
     constructor() {}
 
@@ -55,7 +55,7 @@ export class AITableGridSelectionService {
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
-            selectAllState: this.selectAllState
+            selectAllState: this.selectAllState()
         });
     }
 

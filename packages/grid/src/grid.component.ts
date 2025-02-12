@@ -10,6 +10,7 @@ import {
     OnInit,
     Signal,
     signal,
+    untracked,
     viewChild,
     ViewContainerRef
 } from '@angular/core';
@@ -163,6 +164,28 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(
             () => {
                 this.setKeywordsMatchedCells();
+            },
+            { allowSignalWrites: true }
+        );
+
+        effect(
+            () => {
+                const recordIdSet = new Set<string>(this.aiTable.records().map((item) => item._id));
+                untracked(() => {
+                    const selectedRecords = this.aiTable.selection().selectedRecords;
+                    for (const selectedRecordId of selectedRecords.values()) {
+                        if (!recordIdSet.has(selectedRecordId)) {
+                            selectedRecords.delete(selectedRecordId);
+                        }
+                    }
+                    this.aiTable.selection.update((item) => {
+                        return {
+                            ...item,
+                            selectedRecords,
+                            selectAllState: this.aiTableGridSelectionService.selectAllState()
+                        };
+                    });
+                });
             },
             { allowSignalWrites: true }
         );

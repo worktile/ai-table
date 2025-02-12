@@ -112,23 +112,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
             if (recordIndex > -1) {
                 records.splice(recordIndex, 1);
-                const selectedRecords = aiTable.selection().selectedRecords;
-                if (selectedRecords.has(recordId)) {
-                    selectedRecords.delete(recordId);
-                    aiTable.selection.update((selection) => {
-                        if (records.length === 0) {
-                            selection.selectAllState = AITableSelectAllState.none;
-                        } else {
-                            selection.selectAllState =
-                                selectedRecords.size === records.length
-                                    ? AITableSelectAllState.all
-                                    : selectedRecords.size === 0
-                                      ? AITableSelectAllState.none
-                                      : AITableSelectAllState.partial;
-                        }
-                        return selection;
-                    });
-                }
             }
             break;
         }
