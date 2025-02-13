@@ -29,6 +29,7 @@ export interface AITableSelection {
     selectedFields: Set<string>; // `${fieldId}`
     selectedCells: Set<string>; // `${recordId}:${fieldId}`
     activeCell: AIRecordFieldIdPath | null;
+    selectAllState: AITableSelectAllState; // 'all','partial','none'
 }
 
 export interface AIFieldConfig {
@@ -139,4 +140,10 @@ export interface AITableContext {
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
+}
+
+export enum AITableSelectAllState {
+    all = 'all',
+    partial = 'partial',
+    none = 'none'
 }
