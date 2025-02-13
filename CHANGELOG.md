@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.35](https://github.com/worktile/ai-table/compare/0.0.34...0.0.35) (2025-02-13)
+
+
+### Bug Fixes
+
+* **selection:** #WIK-16979 当表格没有数据时，头部 checkbox 不应该处于勾选状态，且，不应该怎么点击都不切换状态 ([#244](https://github.com/worktile/ai-table/issues/244)) ([49c1a71](https://github.com/worktile/ai-table/commit/49c1a71f82021fa0889393b92a3d9a16b1ec6e56)), closes [#WIK-16979](https://github.com/worktile/ai-table/issues/WIK-16979)
+
+
+
 ## [0.0.34](https://github.com/worktile/ai-table/compare/0.0.33...0.0.34) (2025-02-12)
 
 
