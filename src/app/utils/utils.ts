@@ -445,7 +445,8 @@ export function getCanvasDefaultValue() {
                     'column-20': ['66b31d0c8097a908f74bcd8a'],
                     'column-3': 0,
                     'column-4': { timestamp: 1734636127 },
-                    'column-5': ['member_01'],
+                    'column-5': ['member_02'],
+                    'column-566': ['member_02'],
                     'column-6': 10,
                     'column-7': 5,
                     'column-8': {
@@ -480,6 +481,7 @@ export function getCanvasDefaultValue() {
                     'column-3': 10,
                     'column-4': { timestamp: 1682235946 },
                     'column-5': ['member_01', 'member_02', 'member_03', 'member_04', 'member_05', 'member_06', 'member_07', 'member_08'],
+                    'column-566': ['member_01'],
                     'column-6': 50,
                     'column-7': 4,
                     'column-8': {},
@@ -516,6 +518,7 @@ export function getCanvasDefaultValue() {
                     'column-3': 100,
                     'column-4': { timestamp: 1682235946 },
                     'column-5': [],
+                    'column-566': ['member_01'],
                     'column-6': 100,
                     'column-7': 3,
                     'column-8': {},
@@ -745,6 +748,19 @@ export function getCanvasDefaultValue() {
                 },
                 settings: {
                     is_multiple: true
+                },
+                type: AITableFieldType.member
+            },
+            {
+                _id: 'column-566',
+                name: '单成员',
+                positions: {
+                    view1: 9,
+                    view2: 9
+                },
+                width: 100,
+                settings: {
+                    is_multiple: false
                 },
                 type: AITableFieldType.member
             },
