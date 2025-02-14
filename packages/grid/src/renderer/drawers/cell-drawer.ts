@@ -579,11 +579,11 @@ export class CellDrawer extends Drawer {
         const avatarSize = AI_TABLE_MEMBER_AVATAR_SIZE;
         const itemHeight = AI_TABLE_CELL_MEMBER_ITEM_HEIGHT;
         const isOperating = isActive;
-        const isMulti = settings?.is_multiple;
+        const isMultiple = settings?.is_multiple;
 
         let currentX = AI_TABLE_CELL_PADDING;
         let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - avatarSize) / 2;
-        const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_PADDING_RIGHT + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
+        const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
         const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
         const maxTextWidth = isOperating
             ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
@@ -597,7 +597,7 @@ export class CellDrawer extends Drawer {
             if (!userInfo) continue;
 
             const { uid, display_name, avatar } = userInfo;
-            const itemWidth = AITableAvatarSize.size24 + (isMulti ? AI_TABLE_CELL_MEMBER_ITEM_PADDING : 0);
+            const itemWidth = AITableAvatarSize.size24 + (isMultiple ? AI_TABLE_CELL_MEMBER_ITEM_PADDING : 0);
 
             currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
 
@@ -643,6 +643,23 @@ export class CellDrawer extends Drawer {
                     type: AITableAvatarType.member,
                     size: AITableAvatarSize.size24
                 });
+
+                // 在非多选模式下显示名称
+                if (!isMultiple) {
+                    const textX = x + currentX + AITableAvatarSize.size24 + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
+                    this.text({
+                        x: textX,
+                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
+                        text: this.textEllipsis({
+                            text: display_name || '',
+                            maxWidth: maxTextWidth,
+                            fontSize: AI_TABLE_COMMON_FONT_SIZE
+                        }).text,
+                        fillStyle: this.colors.gray800,
+                        fontSize: AI_TABLE_COMMON_FONT_SIZE,
+                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                    });
+                }
 
                 if (isMore) {
                     ctx.save();
