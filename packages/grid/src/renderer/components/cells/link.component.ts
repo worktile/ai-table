@@ -1,36 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import Konva from 'konva';
 import { KoShape } from '../../../angular-konva/components/shape.component';
-import {
-    AI_TABLE_CELL_MAX_ROW_COUNT,
-    AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_HEAD,
-    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
-    AI_TABLE_FIELD_HEAD_MORE,
-    AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
-    AI_TABLE_OFFSET,
-    AI_TABLE_ROW_BLANK_HEIGHT,
-    Colors,
-    DEFAULT_FONT_FAMILY,
-    DEFAULT_FONT_SIZE,
-    DEFAULT_FONT_STYLE,
-    DEFAULT_TEXT_ALIGN_LEFT,
-    DEFAULT_TEXT_ALIGN_RIGHT,
-    DEFAULT_TEXT_DECORATION,
-    DEFAULT_TEXT_ELLIPSIS,
-    DEFAULT_TEXT_FILL,
-    DEFAULT_TEXT_LINE_HEIGHT,
-    DEFAULT_TEXT_LISTENING,
-    DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-    DEFAULT_TEXT_WRAP
-} from '../../../constants';
+import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
 import { KoContainer } from '../../../angular-konva/components/container.component';
-import { StageConfig } from 'konva/lib/Stage';
-import { ShapeConfig } from 'konva/lib/Shape';
-import { generateTargetName, getMousePosition, getTextWidth, handleMouseStyle, TextMeasure } from '../../../utils';
+import { getMousePosition, getTextWidth, handleMouseStyle, TextMeasure } from '../../../utils';
 import { AITableText } from '../text.component';
-import { AITableColumnHeadsConfig, AITableHoverCellConfig, AITableRender } from '../../../types';
+import { AITableHoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
 import { AITable } from '../../../core';
 import { TextConfig } from 'konva/lib/shapes/Text';
