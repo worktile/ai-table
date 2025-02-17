@@ -18,6 +18,8 @@ import {
     AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
+import { AITableHoverCells } from './components/hover-cells.component';
+import { AITableCellLink } from './components/cells/link.component';
 
 Konva.pixelRatio = 2;
 
@@ -34,10 +36,12 @@ Konva.pixelRatio = 2;
         AITableCells,
         AITableFrozenCells,
         AITableFrozenPlaceholderCells,
+        AITableHoverCells,
         AITablePlaceholderCells,
         AITableAddField,
         AITableHoverRowHeads,
-        AITableOtherRows
+        AITableOtherRows,
+        AITableCellLink
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

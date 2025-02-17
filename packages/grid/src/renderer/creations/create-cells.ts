@@ -186,7 +186,7 @@ const isSelectedCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean =>
     return aiTable.selection().selectedCells.has(`${recordId}:${fieldId}`);
 };
 
-const isSelectedField = (fieldId: string, aiTable: AITable): boolean => {
+export const isSelectedField = (fieldId: string, aiTable: AITable): boolean => {
     return aiTable.selection().selectedFields.has(fieldId);
 };
 

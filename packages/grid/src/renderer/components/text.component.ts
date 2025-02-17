@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, input, output, Output } from '@angular/core';
 import Konva from 'konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import {
@@ -13,16 +13,22 @@ import {
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_WRAP
 } from '../../constants';
+import { KoEventObject } from '../../angular-konva';
 
 @Component({
     selector: 'ai-table-text',
-    template: ` <ko-text [config]="textConfig()"></ko-text> `,
+    template: ` <ko-text [config]="textConfig()" (koClick)="onClick($event)" (koMousemove)="onMousemove($event)"></ko-text> `,
     standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableText {
     config = input.required<Konva.ShapeConfig>();
+
+    // @Output() koClick = new EventEmitter<KoEventObject<MouseEvent>>();
+    koClick = output<KoEventObject<MouseEvent>>();
+
+    koMouseMove = output<KoEventObject<MouseEvent>>();
 
     textConfig = computed(() => {
         const {
@@ -66,4 +72,13 @@ export class AITableText {
             ...rest
         };
     });
+
+    onClick(e: KoEventObject<MouseEvent>) {
+        this.koClick.emit(e);
+    }
+    onMousemove(e: KoEventObject<MouseEvent>) {
+        // this.koClick.emit(e);
+        // e.event.cancelBubble = true;
+        this.koMouseMove.emit(e);
+    }
 }

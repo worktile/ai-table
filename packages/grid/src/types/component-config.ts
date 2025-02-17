@@ -1,6 +1,7 @@
 import Konva from 'konva';
 import { AITable, AITableField, Coordinate } from '../core';
 import { AITablePointPosition } from './grid';
+import { AITableRender } from './cell';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
@@ -41,6 +42,16 @@ export interface AITableAddFieldConfig {
     fields: AITableField[];
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
+    readonly?: boolean;
+}
+
+export interface AITableHoverCellConfig {
+    aiTable: AITable;
+    coordinate: Coordinate;
+    field: AITableField;
+    x: number;
+    y: number;
+    render: AITableRender;
     readonly?: boolean;
 }
 
