@@ -36,14 +36,14 @@ import { Constructor } from 'ngx-tethys/core';
 export class AITableHoverCells {
     config = input.required<AITableCellsConfig>();
 
+    componentMap: Partial<Record<AITableFieldType, Constructor<HoverCellComponent>>> = {};
+
     groupConfig = computed(() => {
         return {
             x: this.hoverCellConfig()?.x,
             y: this.hoverCellConfig()?.y
         };
     });
-
-    componentMap: Partial<Record<AITableFieldType, Constructor<HoverCellComponent>>> = {};
 
     renderComponentDefinition = computed(() => {
         const { field } = this.hoverField() ?? {};
