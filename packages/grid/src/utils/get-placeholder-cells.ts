@@ -25,7 +25,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
         }
 
         // 当前列的 X 轴偏移量和列宽度
-        const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
+        const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET * 2;
         const columnWidth = coordinate.getColumnWidth(columnIndex);
 
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
@@ -41,14 +41,14 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
             }
 
             // 当前行的 Y 轴偏移量，并根据列宽和列索引获取单元格的水平位置（宽度和偏移量）
-            const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
+            const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET * 2;
             const { width, offset } = getCellHorizontalPosition({
                 columnWidth,
                 columnIndex,
                 columnCount
             });
 
-            const height = rowHeight;
+            const height = rowHeight - AI_TABLE_OFFSET * 4;
             configs.unshift({
                 key: `placeholder-cell-${fieldId}-${recordId}`,
                 name: generateTargetName({
@@ -58,7 +58,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                 }),
                 x: x + offset,
                 y,
-                width,
+                width: width - AI_TABLE_OFFSET * 4,
                 height,
                 fill: Colors.transparent,
                 strokeEnabled: false,
