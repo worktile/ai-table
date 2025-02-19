@@ -140,7 +140,6 @@ export interface AITableContext {
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
-    notDisplayed: WritableSignal<[string?, string?]>;
 }
 
 export enum AITableSelectAllState {

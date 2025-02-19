@@ -12,7 +12,7 @@ import {
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_ALIGN_RIGHT
 } from '../../constants';
-import { getCellHorizontalPosition, getDetailByTargetName, transformCellValue } from '../../utils';
+import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 
@@ -23,9 +23,10 @@ import { Constructor } from 'ngx-tethys/core';
 @Component({
     selector: 'ai-table-hover-cell',
     template: `
-        @if (hasHoveredCell()) {
+        @if (hoverCell()) {
             <ko-group [config]="groupConfig()">
-                <ng-container *ngComponentOutlet="renderComponentDefinition()!; inputs: { config: hoverCellConfig() }"> </ng-container>
+                <ng-container *ngComponentOutlet="hoverCell()!.renderComponentDefinition; inputs: { config: hoverCellConfig() }">
+                </ng-container>
             </ko-group>
         }
     `,
@@ -45,26 +46,14 @@ export class AITableHoverCells {
         };
     });
 
-    renderComponentDefinition = computed(() => {
-        const { field } = this.hoverField() ?? {};
-        if (field) {
-            return this.componentMap[field.type];
-        }
-        return null;
-    });
-
-    componentType = computed(() => {
-        return this.hoverCellConfig()?.field?.type;
-    });
-
     hoverCellConfig = computed(() => {
         const { aiTable, coordinate } = this.config();
         const pointPosition = aiTable.context!.pointPosition();
-        const { field, recordId, fieldId } = this.hoverField() ?? {};
-        if (!field || !recordId) {
+        const hoverCell = this.hoverCell();
+        if (!hoverCell) {
             return;
         }
-
+        const { field, recordId, fieldId, renderComponentDefinition } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
         const transformValue = transformCellValue(aiTable, field, cellValue) || {};
         if (Object.keys(transformValue).length === 0) {
@@ -78,7 +67,7 @@ export class AITableHoverCells {
         const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-        const { width, offset } = getCellHorizontalPosition({
+        const { width } = getCellHorizontalPosition({
             columnWidth,
             columnIndex,
             columnCount
@@ -118,53 +107,5 @@ export class AITableHoverCells {
         return result;
     });
 
-    hoverField = computed(() => {
-        const { aiTable } = this.config();
-        const pointPosition = aiTable.context!.pointPosition();
-        const { fieldId, recordId } = getDetailByTargetName(pointPosition.realTargetName!);
-        if (!recordId || !fieldId) {
-            return;
-        }
-        return {
-            field: aiTable.fieldsMap()[fieldId],
-            recordId,
-            fieldId
-        };
-    });
-
-    hasHoveredCell = computed<boolean>(() => {
-        const { aiTable } = this.config();
-        if (!this.renderComponentDefinition()) {
-            return false;
-        }
-        const { fieldId, recordId, field } = this.hoverField() ?? {};
-        if (!field || !recordId || !fieldId) {
-            return false;
-        }
-        const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
-        const transformValue = transformCellValue(aiTable, field, cellValue) || {};
-        if (Object.keys(transformValue).length === 0) {
-            return false;
-        }
-
-        return true;
-    });
-
-    constructor() {
-        Object.values(cellComponents).forEach((cellComponent) => {
-            this.componentMap[cellComponent.fieldType] = cellComponent;
-        });
-
-        effect(
-            () => {
-                if (this.hasHoveredCell()) {
-                    const { recordId, fieldId } = this.hoverField()!;
-                    this.config().aiTable.context?.setNotDisplayed([recordId, fieldId]);
-                } else {
-                    this.config().aiTable.context?.setNotDisplayed();
-                }
-            },
-            { allowSignalWrites: true }
-        );
-    }
+    hoverCell = computed(() => getHoverCell(this.config().aiTable));
 }

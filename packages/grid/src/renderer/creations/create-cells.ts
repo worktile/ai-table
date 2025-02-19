@@ -7,7 +7,7 @@ import {
 } from '../../constants';
 import { AIRecordFieldIdPath, AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { getCellHorizontalPosition, transformCellValue } from '../../utils';
+import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
@@ -28,6 +28,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
+
+    const hoverCell = getHoverCell(aiTable);
 
     // 遍历列, 确定在哪些列上绘制单元格
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
@@ -122,7 +124,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         colors
                     };
                     // hover 组件渲染时，底层的 cell 渲染为空
-                    if (aiTable.context?.notDisplayed()[0] === recordId && aiTable.context?.notDisplayed()[1] === fieldId) {
+                    if (hoverCell && hoverCell.recordId === recordId && hoverCell.fieldId === fieldId) {
                         render.cellValue = '';
                         render.transformValue = '';
                     }
