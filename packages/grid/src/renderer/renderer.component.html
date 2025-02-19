@@ -14,7 +14,7 @@
                 <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
                 <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
                 <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
-                <ai-table-hover-cells [config]="cellsConfig()"></ai-table-hover-cells>
+                <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
             </ko-group>
 
             <ko-group>
@@ -32,24 +32,21 @@
                 </ko-group>
             </ko-group>
 
-            <!-- 编辑区域的 active 的交互 -->
             <ko-group [config]="attachGroupConfig()">
                 <ko-group [config]="offsetConfig()">
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
                     @if (activeCellBorderConfig().activeCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
                     }
-                    <ai-table-hover-cells [config]="cellsConfig()"></ai-table-hover-cells>
+                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
             </ko-group>
 
-            <!-- 固定列区域的 active 的交互 -->
             <ko-group [config]="frozenAttachGroupConfig()">
                 <ko-group [config]="offsetYConfig()">
                     @if (activeCellBorderConfig().frozenActiveCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
-                    <!-- <ai-table-hover-cells [config]="cellsConfig()"></ai-table-hover-cells> -->
                 </ko-group>
             </ko-group>
         </ko-group>

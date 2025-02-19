@@ -210,6 +210,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             frozenColumnCount: this.frozenColumnCount,
             references: this.aiReferences,
             aiFieldConfig: this.aiFieldConfig,
+            notDisplayed: signal([]),
             scrollAction: this.scrollAction
         });
     }

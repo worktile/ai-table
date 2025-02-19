@@ -18,7 +18,7 @@ import {
     AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
-import { AITableHoverCells } from './components/hover-cells.component';
+import { AITableHoverCells } from './components/hover-cell.component';
 import { AITableCellLink } from './components/cells/link.component';
 
 Konva.pixelRatio = 2;

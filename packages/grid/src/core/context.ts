@@ -19,6 +19,7 @@ export class RendererContext {
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     scrollAction: (options: ScrollActionOptions) => void;
+    notDisplayed: WritableSignal<[string?, string?]>;
 
     constructor(options: AITableContext) {
         const {
@@ -30,6 +31,7 @@ export class RendererContext {
             frozenColumnCount,
             references,
             aiFieldConfig,
+            notDisplayed,
             scrollAction
         } = options;
         this.linearRows = linearRows;
@@ -41,6 +43,7 @@ export class RendererContext {
         this.frozenColumnCount = frozenColumnCount;
         this.references = references;
         this.aiFieldConfig = aiFieldConfig;
+        this.notDisplayed = notDisplayed;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {
@@ -58,5 +61,9 @@ export class RendererContext {
 
     setScrollState(scrollState: Partial<AITableScrollState>) {
         this.scrollState.set({ ...this.scrollState(), ...scrollState });
+    }
+
+    setNotDisplayed(position: [string?, string?] = [undefined, undefined]) {
+        this.notDisplayed.set(position);
     }
 }

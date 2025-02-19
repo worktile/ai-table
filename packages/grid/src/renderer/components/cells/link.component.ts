@@ -6,9 +6,10 @@ import { getMousePosition, getTextWidth, handleMouseStyle, TextMeasure } from '.
 import { AITableText } from '../text.component';
 import { AITableHoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
-import { AITable } from '../../../core';
+import { AITable, AITableFieldType } from '../../../core';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
+import { HoverCellComponent } from '../../interfaces';
 
 @Component({
     selector: 'ai-table-link',
@@ -21,8 +22,9 @@ import { drawer } from '../../drawers/drawer';
     imports: [KoContainer, KoShape, AITableText],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellLink {
-    // config = input.required<AITableHoverCellConfig | undefined>();
+export class AITableCellLink implements HoverCellComponent {
+    static fieldType = AITableFieldType.link;
+
     config = input<AITableHoverCellConfig | undefined>();
 
     textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;

@@ -121,6 +121,11 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         style,
                         colors
                     };
+                    // hover 组件渲染时，底层的 cell 渲染为空
+                    if (aiTable.context?.notDisplayed()[0] === recordId && aiTable.context?.notDisplayed()[1] === fieldId) {
+                        render.cellValue = '';
+                        render.transformValue = '';
+                    }
 
                     cellDrawer.initStyle(field, style);
                     // 最后一列，且单元格内容存在，需要裁剪内容，以防止文本溢出单元格边界

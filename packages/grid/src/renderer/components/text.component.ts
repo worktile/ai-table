@@ -77,8 +77,6 @@ export class AITableText {
         this.koClick.emit(e);
     }
     onMousemove(e: KoEventObject<MouseEvent>) {
-        // this.koClick.emit(e);
-        // e.event.cancelBubble = true;
         this.koMouseMove.emit(e);
     }
 }
