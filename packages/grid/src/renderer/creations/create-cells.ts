@@ -7,7 +7,7 @@ import {
 } from '../../constants';
 import { AIRecordFieldIdPath, AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { getCellHorizontalPosition, transformCellValue } from '../../utils';
+import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
@@ -28,6 +28,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
+
+    const hoverCell = getHoverCell(aiTable);
 
     // 遍历列, 确定在哪些列上绘制单元格
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
@@ -121,6 +123,11 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         style,
                         colors
                     };
+                    // hover 组件渲染时，底层的 cell 渲染为空
+                    if (hoverCell && hoverCell.recordId === recordId && hoverCell.fieldId === fieldId) {
+                        render.cellValue = '';
+                        render.transformValue = '';
+                    }
 
                     cellDrawer.initStyle(field, style);
                     // 最后一列，且单元格内容存在，需要裁剪内容，以防止文本溢出单元格边界
@@ -186,7 +193,7 @@ const isSelectedCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean =>
     return aiTable.selection().selectedCells.has(`${recordId}:${fieldId}`);
 };
 
-const isSelectedField = (fieldId: string, aiTable: AITable): boolean => {
+export const isSelectedField = (fieldId: string, aiTable: AITable): boolean => {
     return aiTable.selection().selectedFields.has(fieldId);
 };
 

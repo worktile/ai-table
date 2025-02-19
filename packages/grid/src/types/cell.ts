@@ -30,6 +30,7 @@ export interface AITableRender {
     isActive: boolean;
     style: AITableRenderStyle;
     references?: AITableReferences;
+    zIndex?: number;
 }
 
 export interface AITableRenderStyle {

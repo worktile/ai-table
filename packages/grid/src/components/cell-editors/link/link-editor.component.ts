@@ -79,8 +79,8 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     override ngOnInit(): void {
         super.ngOnInit();
         this.originValue = this.modelValue;
-        this.text = this.modelValue.text ?? '';
-        this.url = this.modelValue.url ?? '';
+        this.text = this.modelValue?.text ?? '';
+        this.url = this.modelValue?.url ?? '';
     }
 
     updateValue() {
@@ -90,7 +90,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         }
         this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
         if (!_.isEqual(this.originValue, this.modelValue)) {
-            super.update()
+            super.update();
             this.originValue = this.modelValue;
         }
     }

@@ -108,7 +108,7 @@ export class CellDrawer extends Drawer {
     private renderCellText(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, field, columnWidth, style } = render;
         const fieldType = field.type;
-        let renderText: string | null = fieldType === AITableFieldType.link ? transformValue.text : transformValue;
+        let renderText: string | null = fieldType === AITableFieldType.link ? transformValue?.text : transformValue;
         if (renderText == null) {
             return;
         }
@@ -499,7 +499,7 @@ export class CellDrawer extends Drawer {
     private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
         const { x, y, transformValue: _cellValue } = render;
         const max = 5;
-        const cellValue = (_cellValue as RateFieldValue);
+        const cellValue = _cellValue as RateFieldValue;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
         const isEmpty = isNil(cellValue);
         return [...Array(max).keys()].map((item, index) => {
