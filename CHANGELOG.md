@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.36](https://github.com/worktile/ai-table/compare/0.0.35...0.0.36) (2025-02-19)
+
+
+### Bug Fixes
+
+* #WIK-17280 【AITable】hover事件，获取的 target偶尔有问题 ([#249](https://github.com/worktile/ai-table/issues/249)) ([17b89e0](https://github.com/worktile/ai-table/commit/17b89e0e779ffd472b31b47aacf7fd5dd429af9a)), closes [#WIK-17280](https://github.com/worktile/ai-table/issues/WIK-17280)
+
+
+### Features
+
+* **cell-drawer:** support render member display name #WIK-17248 ([#247](https://github.com/worktile/ai-table/issues/247)) ([7e38059](https://github.com/worktile/ai-table/commit/7e38059e8281f0ba2522b97c125cb2086958b5d7)), closes [#WIK-17248](https://github.com/worktile/ai-table/issues/WIK-17248)
+* **cell:** #WIK-17098 【aitable】链接单元格已有数据时，直接点击文字跳转新窗口打开链接、双击单元格空白处和后方的按钮为编辑 ([#248](https://github.com/worktile/ai-table/issues/248)) ([c2596ae](https://github.com/worktile/ai-table/commit/c2596aea84f626c439223933bea2a9b963ee229c)), closes [#WIK-17098](https://github.com/worktile/ai-table/issues/WIK-17098)
+
+
+
 ## [0.0.35](https://github.com/worktile/ai-table/compare/0.0.34...0.0.35) (2025-02-13)
 
 
