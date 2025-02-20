@@ -5,14 +5,14 @@ export const FieldOptions: AITableFieldOption[] = [
         type: AITableFieldType.text,
         name: '单行文本',
         icon: 'font',
-        width: 200
+        width: 300
     },
     // 多行文本
     {
         type: AITableFieldType.select,
         name: '单选',
         icon: 'check-circle',
-        width: 200
+        width: 160
     },
     {
         type: AITableFieldType.select,
@@ -27,7 +27,7 @@ export const FieldOptions: AITableFieldOption[] = [
         type: AITableFieldType.number,
         name: '数字',
         icon: 'hashtag',
-        width: 200
+        width: 140
     },
     {
         type: AITableFieldType.date,
@@ -39,7 +39,7 @@ export const FieldOptions: AITableFieldOption[] = [
         type: AITableFieldType.member,
         name: '单个成员',
         icon: 'user',
-        width: 200
+        width: 160
     },
     {
         type: AITableFieldType.member,
@@ -62,19 +62,19 @@ export const FieldOptions: AITableFieldOption[] = [
         type: AITableFieldType.rate,
         name: '评分',
         icon: 'star-circle',
-        width: 200
+        width: 160
     },
     {
         type: AITableFieldType.link,
         name: '链接',
         icon: 'link-insert',
-        width: 300
+        width: 200
     },
     {
         type: AITableFieldType.createdBy,
         name: '创建人',
         icon: 'user',
-        width: 200
+        width: 160
     },
     {
         type: AITableFieldType.createdAt,
@@ -86,7 +86,7 @@ export const FieldOptions: AITableFieldOption[] = [
         type: AITableFieldType.updatedBy,
         name: '更新人',
         icon: 'user',
-        width: 200
+        width: 160
     },
     {
         type: AITableFieldType.updatedAt,
