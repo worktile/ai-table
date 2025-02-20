@@ -11,7 +11,7 @@ import { AITableQueries, DateFieldValue } from '../../../core';
         <thy-date-picker
             class="h-100"
             thyTimestampPrecision="seconds"
-            thyPlaceHolder="选择时间"
+            thyPlaceHolder="选择日期"
             [ngModel]="modelValue.timestamp"
             (ngModelChange)="updateValue($event)"
             (thyOpenChange)="thyOpenChange($event)"
