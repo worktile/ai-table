@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, EventEmitter, input, outp
 import Konva from 'konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import {
+    AI_TABLE_OFFSET,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_STYLE,
@@ -14,6 +15,8 @@ import {
     DEFAULT_TEXT_WRAP
 } from '../../constants';
 import { KoEventObject } from '../../angular-konva';
+import { TextConfig } from 'konva/lib/shapes/Text';
+import { Context } from 'konva/lib/Context';
 
 @Component({
     selector: 'ai-table-text',
@@ -30,7 +33,7 @@ export class AITableText {
 
     koMouseMove = output<KoEventObject<MouseEvent>>();
 
-    textConfig = computed(() => {
+    textConfig = computed<TextConfig>(() => {
         const {
             x,
             y,
@@ -51,6 +54,12 @@ export class AITableText {
             fontFamily = DEFAULT_FONT_FAMILY,
             ...rest
         } = this.config();
+        const tmpText = new Konva.Text({
+            text,
+            fontSize,
+            fontFamily
+        });
+        const textBounds = tmpText.getClientRect();
         return {
             x,
             y,
@@ -69,6 +78,12 @@ export class AITableText {
             transformsEnabled,
             listening,
             fontFamily,
+            hitFunc: function (context: Context) {
+                context.beginPath();
+                context.rect(AI_TABLE_OFFSET, (height! - textBounds.height) / 2 - AI_TABLE_OFFSET, textBounds.width, textBounds.height);
+                context.closePath();
+                context.fillStrokeShape(this as any);
+            },
             ...rest
         };
     });
