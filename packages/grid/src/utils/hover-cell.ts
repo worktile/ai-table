@@ -9,9 +9,10 @@ export function getHoverCell(aiTable: AITable) {
     if (!recordId || !fieldId) {
         return;
     }
+    const record = aiTable.recordsMap()[recordId!];
     const field = aiTable.fieldsMap()[fieldId!];
 
-    if (!field || !recordId || !fieldId) {
+    if (!record || !field || !recordId || !fieldId) {
         return;
     }
     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
