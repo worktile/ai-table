@@ -101,8 +101,8 @@ export class AITableGridSelectionService {
 
     selectCells(startCell: AIRecordFieldIdPath, endCell?: AIRecordFieldIdPath) {
         const [startRecordId, startFieldId] = startCell;
-        const records = this.aiTable.context!.linearRows();
-        const fields = AITable.getVisibleFields(this.aiTable);
+        const visibleRecords = this.aiTable.context!.linearRows();
+        const visiblefields = AITable.getVisibleFields(this.aiTable);
         const selectedCells = new Set<string>();
 
         if (!endCell) {
@@ -110,10 +110,13 @@ export class AITableGridSelectionService {
         } else {
             const [endRecordId, endFieldId] = endCell;
 
-            const startRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(startRecordId)!;
-            const endRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(endRecordId)!;
-            const startColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(startFieldId)!;
-            const endColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(endFieldId)!;
+            const recordsIndexMap = this.aiTable.context!.visibleRowsIndexMap();
+            const fieldsIndexMap = this.aiTable.context!.visibleColumnsIndexMap();
+
+            const startRowIndex = recordsIndexMap.get(startRecordId)!;
+            const endRowIndex = recordsIndexMap.get(endRecordId)!;
+            const startColIndex = fieldsIndexMap.get(startFieldId)!;
+            const endColIndex = fieldsIndexMap.get(endFieldId)!;
 
             const minRowIndex = Math.min(startRowIndex, endRowIndex);
             const maxRowIndex = Math.max(startRowIndex, endRowIndex);
@@ -122,7 +125,7 @@ export class AITableGridSelectionService {
 
             for (let i = minRowIndex; i <= maxRowIndex; i++) {
                 for (let j = minColIndex; j <= maxColIndex; j++) {
-                    selectedCells.add(`${records[i]._id}:${fields[j]._id}`);
+                    selectedCells.add(`${visibleRecords[i]._id}:${visiblefields[j]._id}`);
                 }
             }
         }
