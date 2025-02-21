@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.37](https://github.com/worktile/ai-table/compare/0.0.36...0.0.37) (2025-02-21)
+
+
+### Bug Fixes
+
+* **grid:** only operate selected data  which is visible ([#256](https://github.com/worktile/ai-table/issues/256)) ([6f280b1](https://github.com/worktile/ai-table/commit/6f280b1fa558d5e158fe9b94fccf0b8f86fb5f04))
+* **grid:** should not hover deleted record ([#254](https://github.com/worktile/ai-table/issues/254)) ([684b952](https://github.com/worktile/ai-table/commit/684b9520b5d2d546c7316c4b8a8d9f72e62d8beb))
+
+
+### Features
+
+* #WIK-17283 【aitable】link只在文本区域触发事件 ([#253](https://github.com/worktile/ai-table/issues/253)) ([8603ce1](https://github.com/worktile/ai-table/commit/8603ce13442894118e9a8e1b3b4a3ab4b78d7e3d)), closes [#WIK-17283](https://github.com/worktile/ai-table/issues/WIK-17283)
+* **grid:** change date picker placeholder ([#251](https://github.com/worktile/ai-table/issues/251)) ([0aa4d3d](https://github.com/worktile/ai-table/commit/0aa4d3d0852ae7067beb5d4dd25570358573c17c))
+* **grid:** change default width for field options ([#252](https://github.com/worktile/ai-table/issues/252)) ([cbe671f](https://github.com/worktile/ai-table/commit/cbe671f332114ddf44ec0be2065a2c36e1dfda49))
+
+
+
 ## [0.0.36](https://github.com/worktile/ai-table/compare/0.0.35...0.0.36) (2025-02-19)
 
 
