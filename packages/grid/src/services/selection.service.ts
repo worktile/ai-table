@@ -101,8 +101,8 @@ export class AITableGridSelectionService {
 
     selectCells(startCell: AIRecordFieldIdPath, endCell?: AIRecordFieldIdPath) {
         const [startRecordId, startFieldId] = startCell;
-        const records = this.aiTable.records();
-        const fields = this.aiTable.fields();
+        const records = this.aiTable.context!.linearRows();
+        const fields = AITable.getVisibleFields(this.aiTable);
         const selectedCells = new Set<string>();
 
         if (!endCell) {
@@ -110,10 +110,10 @@ export class AITableGridSelectionService {
         } else {
             const [endRecordId, endFieldId] = endCell;
 
-            const startRowIndex = records.findIndex((record) => record._id === startRecordId);
-            const endRowIndex = records.findIndex((record) => record._id === endRecordId);
-            const startColIndex = fields.findIndex((field) => field._id === startFieldId);
-            const endColIndex = fields.findIndex((field) => field._id === endFieldId);
+            const startRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(startRecordId)!;
+            const endRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(endRecordId)!;
+            const startColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(startFieldId)!;
+            const endColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(endFieldId)!;
 
             const minRowIndex = Math.min(startRowIndex, endRowIndex);
             const maxRowIndex = Math.max(startRowIndex, endRowIndex);
