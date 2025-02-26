@@ -65,6 +65,7 @@ export class AITableCellLink implements HoverCellComponent {
                 lineHeight: 1.84,
                 listening: true,
                 ellipsis: true,
+                textDecoration: 'underline',
                 zIndex
             };
         }
