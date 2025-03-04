@@ -44,13 +44,21 @@ export const CopyFieldPropertyItem = (addFieldFn: (data: AddFieldOptions) => voi
         name: '复制列',
         icon: 'copy',
         exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
+            const allFieldNames = (aiTable.fields() || []).map((item) => item.name);
+            let newFieldName = `${field().name} 副本`;
+            let index = 2;
+            while (allFieldNames.includes(newFieldName)) {
+                newFieldName = `${field().name} 副本 ${index}`;
+                index++;
+            }
+
             const fieldOptions: AddFieldOptions = {
                 originId: field()._id,
                 isCopy: true,
                 defaultValue: {
                     ...field(),
                     _id: idCreator(),
-                    name: `${field().name} 副本`
+                    name: newFieldName
                 }
             };
             addFieldFn(fieldOptions);
