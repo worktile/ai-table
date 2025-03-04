@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, computed } from '@angular/core';
 import { ThyDivider } from 'ngx-tethys/divider';
-import {
-    ThyDropdownAbstractMenu,
-    ThyDropdownMenuComponent,
-    ThyDropdownMenuItemDirective,
-    ThyDropdownMenuItemIconDirective,
-    ThyDropdownMenuItemNameDirective
-} from 'ngx-tethys/dropdown';
+import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITable } from '../../core';
 import { AITableFieldMenuItem } from '../../types/field';
@@ -20,15 +14,7 @@ import { NgClass } from '@angular/common';
     host: {
         class: 'field-menu'
     },
-    imports: [
-        ThyIcon,
-        ThyDivider,
-        ThyDropdownMenuComponent,
-        ThyDropdownMenuItemDirective,
-        ThyDropdownMenuItemNameDirective,
-        ThyDropdownMenuItemIconDirective,
-        NgClass
-    ]
+    imports: [ThyIcon, ThyDivider, ThyDropdownMenuItemDirective, NgClass]
 })
 export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     @Input({ required: true }) fieldId!: string;

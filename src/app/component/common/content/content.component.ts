@@ -24,6 +24,7 @@ import {
     buildRemoveFieldItem,
     DividerMenuItem,
     EditFieldPropertyItem,
+    CopyFieldPropertyItem,
     RemoveRecordsItem,
     updateFieldValue,
     withState,
@@ -86,6 +87,12 @@ export class DemoTableContent {
             },
             fieldMenus: [
                 { ...EditFieldPropertyItem, hidden: () => readonly } as any,
+                {
+                    ...CopyFieldPropertyItem((data: AddFieldOptions) => {
+                        this.addField(data);
+                    }),
+                    hidden: () => readonly
+                } as any,
                 { ...DividerMenuItem, hidden: () => readonly },
                 {
                     type: 'filterFields',

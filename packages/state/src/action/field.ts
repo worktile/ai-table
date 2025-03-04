@@ -1,19 +1,14 @@
 import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
-import {
-    ActionName,
-    AddFieldAction,
-    MoveFieldAction,
-    RemoveFieldAction,
-    SetFieldAction,
-    AIViewTable
-} from '../types';
+import { ActionName, AddFieldAction, MoveFieldAction, RemoveFieldAction, SetFieldAction, AIViewTable } from '../types';
 import { AITableViewField } from '../types/view';
 
-export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath) {
+export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath, originId?: string, isCopy?: boolean) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
-        path
+        path,
+        originId,
+        isCopy
     };
     aiTable.apply(operation);
 }

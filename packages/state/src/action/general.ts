@@ -66,14 +66,9 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
                     action.path[0]
                 );
                 fields.splice(fieldIndex, 0, newField as AITableViewField);
-                const newRecord = {
-                    [newField._id]: getDefaultFieldValue(action.field)
-                };
                 records.forEach((item) => {
-                    item.values = {
-                        ...item.values,
-                        ...newRecord
-                    };
+                    item.values[newField._id] =
+                        action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
                 });
             }
             break;

@@ -176,6 +176,7 @@ export interface AddFieldOptions {
     defaultValue: Partial<AITableField>;
     direction?: Direction;
     isDuplicate?: boolean;
+    isCopy?: boolean;
     count?: number;
 }
 

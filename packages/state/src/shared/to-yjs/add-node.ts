@@ -65,14 +65,16 @@ export default function addNode(
             break;
         case ActionName.AddField:
             if (fields && records) {
-                fields.push([toSyncElement(action.field)]);
-                const path = action.path[0];
+                const { field, path } = action;
+                const [insertIndex] = path;
+                const fieldSyncElement = toSyncElement(field);
+                fields.insert(insertIndex, [fieldSyncElement]);
                 for (let value of records) {
                     const customFieldValues = value.get(1);
                     const systemFieldValues = value.get(0);
                     const recordEntity = aiTable.recordsMap()[getIdBySystemFieldValuesType(systemFieldValues)];
                     const newFieldValue = recordEntity.values[action.field._id];
-                    customFieldValues.insert(path, [newFieldValue]);
+                    customFieldValues.insert(insertIndex, [newFieldValue]);
                 }
             }
             break;
