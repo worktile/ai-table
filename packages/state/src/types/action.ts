@@ -40,6 +40,8 @@ export type AddFieldAction = {
     type: ActionName.AddField;
     path: NumberPath;
     field: AITableField;
+    originId?: string;
+    isCopy?: boolean;
 };
 
 export type MoveFieldAction = {

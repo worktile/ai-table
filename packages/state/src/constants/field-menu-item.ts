@@ -1,4 +1,4 @@
-import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITable, AITableField, AITableFieldSetting } from '@ai-table/grid';
+import { AddFieldOptions, AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableField, AITableFieldSetting, idCreator } from '@ai-table/grid';
 import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
 import { Actions } from '../action';
@@ -36,4 +36,32 @@ export const EditFieldPropertyItem = {
         }
         return undefined;
     }
+};
+
+export const CopyFieldPropertyItem = (addFieldFn: (data: AddFieldOptions) => void) => {
+    return {
+        type: 'copyFieldProperty',
+        name: '复制列',
+        icon: 'copy',
+        exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
+            const allFieldNames = (aiTable.fields() || []).map((item) => item.name);
+            let newFieldName = `${field().name} 副本`;
+            let index = 2;
+            while (allFieldNames.includes(newFieldName)) {
+                newFieldName = `${field().name} 副本 ${index}`;
+                index++;
+            }
+
+            const fieldOptions: AddFieldOptions = {
+                originId: field()._id,
+                isCopy: true,
+                defaultValue: {
+                    ...field(),
+                    _id: idCreator(),
+                    name: newFieldName
+                }
+            };
+            addFieldFn(fieldOptions);
+        }
+    };
 };
