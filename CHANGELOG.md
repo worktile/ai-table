@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.38](https://github.com/worktile/ai-table/compare/0.0.37...0.0.38) (2025-03-05)
+
+
+### Bug Fixes
+
+* #WIK-17323 【ai-table】链接 hover 要有下划线 ([#258](https://github.com/worktile/ai-table/issues/258)) ([215e92d](https://github.com/worktile/ai-table/commit/215e92d0888a1a8c781275cfbaefbafb4cfa6c95)), closes [#WIK-17323](https://github.com/worktile/ai-table/issues/WIK-17323)
+
+
+### Features
+
+* **state:** support add field by copy ([#259](https://github.com/worktile/ai-table/issues/259)) ([776f974](https://github.com/worktile/ai-table/commit/776f974f77c5635d4ff2e88024e0410f3744d8e7))
+
+
+
 ## [0.0.37](https://github.com/worktile/ai-table/compare/0.0.36...0.0.37) (2025-02-21)
 
 
