@@ -1,5 +1,16 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, TemplateRef, booleanAttribute, computed, inject, model, output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnInit,
+    TemplateRef,
+    booleanAttribute,
+    computed,
+    inject,
+    model,
+    output
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyButton } from 'ngx-tethys/button';
 import {
@@ -11,6 +22,7 @@ import {
 import { ThyFormModule, ThyFormValidatorConfig, ThyUniqueCheckValidator } from 'ngx-tethys/form';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyInputCount, ThyInputDirective, ThyInputGroup } from 'ngx-tethys/input';
+import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyListItem } from 'ngx-tethys/list';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
@@ -22,7 +34,9 @@ import {
     FieldOptions,
     createDefaultFieldName,
     getFieldOptionByField,
-    SetFieldOptions
+    SetFieldOptions,
+    AITableFieldType,
+    MemberSettings
 } from '../../core';
 import { AITableFieldIsMultiplePipe } from '../../pipes';
 
@@ -45,6 +59,7 @@ import { AITableFieldIsMultiplePipe } from '../../pipes';
         ThyDropdownMenuItemDirective,
         ThyDropdownMenuItemNameDirective,
         ThyButton,
+        ThySwitch,
         ThyFormModule,
         ThyListItem,
         NgTemplateOutlet,
@@ -62,7 +77,7 @@ import { AITableFieldIsMultiplePipe } from '../../pipes';
         `
     ]
 })
-export class AITableFieldSetting {
+export class AITableFieldSetting implements OnInit {
     aiEditField = model.required<AITableField>();
 
     @Input({ required: true }) aiTable!: AITable;
@@ -92,7 +107,17 @@ export class AITableFieldSetting {
 
     fieldOptions = FieldOptions;
 
+    aITableFieldType = AITableFieldType;
+
+    isMultipleMember = false;
+
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
+
+    ngOnInit(): void {
+        if (this.aiEditField().type === AITableFieldType.member) {
+            this.isMultipleMember = !!(this.aiEditField().settings as MemberSettings)?.is_multiple;
+        }
+    }
 
     checkUniqueName = (fieldName: string) => {
         fieldName = fieldName?.trim();
@@ -118,6 +143,16 @@ export class AITableFieldSetting {
             this.addField.emit(this.aiEditField());
         }
         this.thyPopoverRef.close();
+    }
+
+    multipleMemberChange() {
+        this.aiEditField.set({
+            ...this.aiEditField(),
+            settings: {
+                ...(this.aiEditField().settings || {}),
+                is_multiple: this.isMultipleMember
+            }
+        });
     }
 
     cancel() {

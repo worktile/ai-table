@@ -26,6 +26,17 @@
                 <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
             </thy-list-item>
         </div>
+        @if (selectedFieldOption().type === aITableFieldType.member) {
+            <div class="d-flex justify-content-between mt-3" styxI18nTracking>
+                允许选择多个成员
+                <thy-switch
+                    name="isMultipleMember"
+                    [(ngModel)]="isMultipleMember"
+                    (ngModelChange)="multipleMemberChange()"
+                    thySize="sm"
+                ></thy-switch>
+            </div>
+        }
     </thy-form-group>
     <ng-container *ngIf="aiExternalTemplate; else defaultTemplate">
         <ng-container *ngTemplateOutlet="aiExternalTemplate"></ng-container>
