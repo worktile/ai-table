@@ -37,6 +37,7 @@
                 允许选择多个成员
                 <thy-switch
                     name="isMultipleMember"
+                    [thyDisabled]="isEdit"
                     [(ngModel)]="isMultipleMember"
                     (ngModelChange)="multipleMemberChange()"
                     thySize="sm"

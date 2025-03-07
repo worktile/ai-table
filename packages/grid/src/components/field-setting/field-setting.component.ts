@@ -110,11 +110,14 @@ export class AITableFieldSetting implements OnInit {
 
     aITableFieldType = AITableFieldType;
 
+    isEdit = false;
+
     isMultipleMember = false;
 
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
 
     ngOnInit(): void {
+        this.isEdit = !!this.aiEditField()?._id;
         this.isMultipleMember =
             this.aiEditField().type === AITableFieldType.member && !!(this.aiEditField().settings as MemberSettings)?.is_multiple;
     }
