@@ -18,7 +18,6 @@ import {
     AI_TABLE_DOT_RADIUS,
     AI_TABLE_MEMBER_AVATAR_SIZE,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
-    AI_TABLE_MEMBER_ITEM_PADDING_RIGHT,
     AI_TABLE_MIN_TEXT_WIDTH,
     AI_TABLE_OFFSET,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
@@ -47,9 +46,10 @@ import {
     StarFill
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
-import { AITableAvatarSize, AITableAvatarType, AITableMemberType, AITableRender, AITableSelectField } from '../../types';
+import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
 import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
+import { helpers } from 'ngx-tethys/util';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -176,9 +176,18 @@ export class CellDrawer extends Drawer {
         }
     }
 
+    private getValidSelectedValue(field: AITableField, transformValue: string[]) {
+        const fieldOptionsMap = helpers.keyBy((field as AITableSelectField).settings.options || [], '_id');
+        return (transformValue || []).filter((optionId: string) => !!fieldOptionsMap[optionId]);
+    }
+
     private renderCellMultiSelect(render: AITableRender, ctx?: any) {
-        const { x, y, field, transformValue, columnWidth } = render;
-        if (!transformValue?.length || !Array.isArray(transformValue)) return;
+        const { x, y, field, columnWidth } = render;
+        let transformValue = this.getValidSelectedValue(field, render.transformValue);
+        if (!transformValue.length) {
+            return;
+        }
+
         let currentX = x + AI_TABLE_CELL_PADDING;
         const maxContainerWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
         const optionStyle = (field as AITableSelectField).settings.option_style;
@@ -379,9 +388,9 @@ export class CellDrawer extends Drawer {
     }
 
     private renderSingleSelectCell(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, field, columnWidth, isActive } = render;
-        const isValid = transformValue && Array.isArray(transformValue);
-        if (!isValid || transformValue.length === 0) {
+        const { x, y, field, columnWidth, isActive } = render;
+        const transformValue = this.getValidSelectedValue(field, render.transformValue);
+        if (!transformValue.length) {
             return;
         }
         if (!transformValue[0]) {
