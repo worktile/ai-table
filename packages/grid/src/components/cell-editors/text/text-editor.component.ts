@@ -27,8 +27,9 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 })
 export class TextCellEditorComponent extends AbstractEditCellEditor<string> implements AfterViewInit {
     private render2 = inject(Renderer2);
-
     private maxHeight = 148;
+
+    private minHeight = 24;
 
     constructor() {
         super();
@@ -43,9 +44,12 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     updateStyle() {
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
         if (textarea) {
-            const height = textarea.scrollHeight < this.maxHeight ? textarea.scrollHeight : this.maxHeight;
+            this.render2.setStyle(textarea, 'height', 'auto');
+            const scrollHeight = textarea.scrollHeight;
+            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, this.maxHeight)) + 4;
+
             this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
-            this.render2.setStyle(textarea, 'height', `${height}px`);
+            this.render2.setStyle(textarea, 'height', `${newHeight}px`);
             this.render2.setStyle(textarea, 'resize', 'none');
         }
     }
