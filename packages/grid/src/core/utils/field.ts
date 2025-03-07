@@ -1,5 +1,5 @@
-import { FieldOptions } from '../constants/field';
-import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple } from '../types';
+import { FieldOptions, AI_TABLE_FIELD_MIDDLE_WIDTH } from '../constants/field';
+import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings } from '../types';
 import { idCreator } from './id-creator';
 
 export const isArrayField = (field: AITableField) => {
@@ -41,13 +41,17 @@ export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOpti
 }
 
 export function getFieldOptionByField(field: Partial<AITableField>) {
-    return FieldOptions.find((item) => isSameFieldOption(item, field));
+    let fieldOption = FieldOptions.find((item) => isSameFieldOption(item, field));
+    if (fieldOption && field.type === AITableFieldType.member && (field.settings as MemberSettings)?.is_multiple) {
+        fieldOption.width = AI_TABLE_FIELD_MIDDLE_WIDTH;
+    }
+    return fieldOption;
 }
 
 export function isSameFieldOption(fieldOption: AITableFieldOption, field: Partial<AITableField>): boolean {
     return (
         fieldOption.type === field.type &&
-        (fieldOption.type === AITableFieldType.select || fieldOption.type === AITableFieldType.member
+        (fieldOption.type === AITableFieldType.select
             ? !!(fieldOption.settings as IsMultiple)?.is_multiple === !!(field.settings as IsMultiple)?.is_multiple
             : true)
     );

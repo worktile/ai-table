@@ -17,22 +17,39 @@
         </thy-input-group>
     </thy-form-group>
     <thy-form-group thyLabelText="列类型">
-        <div class="ml-n5 mr-n5">
-            <thy-list-item [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" class="justify-content-between">
-                <span>
-                    <thy-icon [thyIconName]="selectedFieldOption().icon" class="text-desc mr-2"></thy-icon>
-                    <span>{{ selectedFieldOption().name }}</span>
+        <div class="thy-dropdown-menu py-0">
+            <div class="ml-n5 mr-n5">
+                <span
+                    thyDropdownMenuItem
+                    [thyDropdown]="menu"
+                    [thyDisabled]="isUpdate()"
+                    thyTrigger="hover"
+                    thyPlacement="right"
+                    (click)="fieldTypeClick($event)"
+                >
+                    <thy-icon thyDropdownMenuItemIcon [thyIconName]="selectedFieldOption().icon"></thy-icon>
+                    <span thyDropdownMenuItemName>{{ selectedFieldOption().name }}</span>
+                    <thy-icon thyDropdownMenuItemExtendIcon thyIconName="angle-right" class="text-desc"></thy-icon>
                 </span>
-                <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
-            </thy-list-item>
+            </div>
         </div>
+
+        @if (selectedFieldOption().type === aITableFieldType.member) {
+            <div class="d-flex justify-content-between mt-3">
+                允许选择多个成员
+                <thy-switch
+                    name="isMultipleMember"
+                    [thyDisabled]="isUpdate()"
+                    [(ngModel)]="isMultipleMember"
+                    (ngModelChange)="multipleMemberChange()"
+                    thySize="sm"
+                ></thy-switch>
+            </div>
+        }
     </thy-form-group>
-    <ng-container *ngIf="aiExternalTemplate; else defaultTemplate">
-        <ng-container *ngTemplateOutlet="aiExternalTemplate"></ng-container>
-    </ng-container>
-    <ng-template #defaultTemplate>
-        <!-- TODO: 内部属性渲染 -->
-    </ng-template>
+    @if (aiExternalTemplate()) {
+        <ng-container *ngTemplateOutlet="aiExternalTemplate()"></ng-container>
+    }
     <thy-form-group-footer thyAlign="right">
         <button thyButton="link-secondary" (click)="cancel()" thySize="sm">取消</button>
         <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">确定</button>
@@ -41,13 +58,11 @@
 
 <thy-dropdown-menu #menu>
     @for (item of fieldOptions; track $index) {
-        @let isSelectedField = aiEditField().type === item.type;
-        @let isSameMultipleMode = (item.settings! | fieldIsMultiple) === (aiEditField().settings! | fieldIsMultiple);
         <a
             thyDropdownMenuItem
             href="javascript:;"
             [ngClass]="{
-                active: isSelectedField && isSameMultipleMode
+                active: (item | fieldIsSameOption: aiEditField())
             }"
             (click)="selectFieldType(item)"
         >

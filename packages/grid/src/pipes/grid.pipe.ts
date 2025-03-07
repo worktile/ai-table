@@ -1,5 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AITableFieldSettings, AITableSelectOption, MemberSettings, SelectSettings } from '../core';
+import {
+    AITableField,
+    AITableFieldOption,
+    AITableFieldSettings,
+    AITableSelectOption,
+    isSameFieldOption,
+    MemberSettings,
+    SelectSettings
+} from '../core';
 import { AITableReferences, AITableSelection } from '../types';
 
 @Pipe({
@@ -75,14 +83,11 @@ export class MemberSettingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'fieldIsMultiple',
+    name: 'fieldIsSameOption',
     standalone: true
 })
-export class AITableFieldIsMultiplePipe implements PipeTransform {
-    transform(settings: AITableFieldSettings) {
-        if (settings && settings.hasOwnProperty('is_multiple')) {
-            return !!(settings as SelectSettings | MemberSettings).is_multiple;
-        }
-        return false;
+export class AITableFieldIsSameOptionPipe implements PipeTransform {
+    transform(fieldOption: AITableFieldOption, field: Partial<AITableField>) {
+        return isSameFieldOption(fieldOption, field);
     }
 }
