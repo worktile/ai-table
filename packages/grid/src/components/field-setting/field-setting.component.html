@@ -18,7 +18,13 @@
     </thy-form-group>
     <thy-form-group thyLabelText="列类型">
         <div class="ml-n5 mr-n5">
-            <thy-list-item [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" class="justify-content-between">
+            <thy-list-item
+                [thyDropdown]="menu"
+                thyTrigger="hover"
+                thyPlacement="right"
+                class="justify-content-between"
+                (click)="fieldTypeClick($event)"
+            >
                 <span>
                     <thy-icon [thyIconName]="selectedFieldOption().icon" class="text-desc mr-2"></thy-icon>
                     <span>{{ selectedFieldOption().name }}</span>
@@ -26,6 +32,17 @@
                 <thy-icon thyIconName="angle-right" class="text-desc"></thy-icon>
             </thy-list-item>
         </div>
+        @if (selectedFieldOption().type === aITableFieldType.member) {
+            <div class="d-flex justify-content-between mt-3">
+                允许选择多个成员
+                <thy-switch
+                    name="isMultipleMember"
+                    [(ngModel)]="isMultipleMember"
+                    (ngModelChange)="multipleMemberChange()"
+                    thySize="sm"
+                ></thy-switch>
+            </div>
+        }
     </thy-form-group>
     <ng-container *ngIf="aiExternalTemplate; else defaultTemplate">
         <ng-container *ngTemplateOutlet="aiExternalTemplate"></ng-container>
@@ -41,13 +58,11 @@
 
 <thy-dropdown-menu #menu>
     @for (item of fieldOptions; track $index) {
-        @let isSelectedField = aiEditField().type === item.type;
-        @let isSameMultipleMode = (item.settings! | fieldIsMultiple) === (aiEditField().settings! | fieldIsMultiple);
         <a
             thyDropdownMenuItem
             href="javascript:;"
             [ngClass]="{
-                active: isSelectedField && isSameMultipleMode
+                active: (item | fieldIsSameOption: aiEditField())
             }"
             (click)="selectFieldType(item)"
         >
