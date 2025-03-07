@@ -18,18 +18,19 @@
     </thy-form-group>
     <thy-form-group thyLabelText="列类型">
         <div class="thy-dropdown-menu py-0">
-            <div
-                thyDropdownMenuItem
-                [thyDropdown]="menu"
-                [thyDisabled]="isUpdate()"
-                thyTrigger="hover"
-                thyPlacement="right"
-                class="px-0"
-                (click)="fieldTypeClick($event)"
-            >
-                <thy-icon thyDropdownMenuItemIcon [thyIconName]="selectedFieldOption().icon"></thy-icon>
-                <span thyDropdownMenuItemName>{{ selectedFieldOption().name }}</span>
-                <thy-icon thyDropdownMenuItemExtendIcon thyIconName="angle-right" class="text-desc"></thy-icon>
+            <div class="ml-n5 mr-n5">
+                <span
+                    thyDropdownMenuItem
+                    [thyDropdown]="menu"
+                    [thyDisabled]="isUpdate()"
+                    thyTrigger="hover"
+                    thyPlacement="right"
+                    (click)="fieldTypeClick($event)"
+                >
+                    <thy-icon thyDropdownMenuItemIcon [thyIconName]="selectedFieldOption().icon"></thy-icon>
+                    <span thyDropdownMenuItemName>{{ selectedFieldOption().name }}</span>
+                    <thy-icon thyDropdownMenuItemExtendIcon thyIconName="angle-right" class="text-desc"></thy-icon>
+                </span>
             </div>
         </div>
 
