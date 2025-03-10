@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.39](https://github.com/worktile/ai-table/compare/0.0.38...0.0.39) (2025-03-10)
+
+
+### Bug Fixes
+
+* #WIK-17288 【aitable】文本框被内容撑高后，将内容减少，文本框未跟随变矮 ([#264](https://github.com/worktile/ai-table/issues/264)) ([68d5c20](https://github.com/worktile/ai-table/commit/68d5c2044d98e34e73a7061cdd0f89821f6ca2d4)), closes [#WIK-17288](https://github.com/worktile/ai-table/issues/WIK-17288)
+* **grid:** invalid single-select and multi-select values ​​should not be rendered ([#263](https://github.com/worktile/ai-table/issues/263)) ([391f2d0](https://github.com/worktile/ai-table/commit/391f2d076ca3a129dc687f754a320bd7cbf22a7a))
+
+
+### Features
+
+* **grid:** merge single and multiple member field, and disable editing field type ([#262](https://github.com/worktile/ai-table/issues/262)) ([bfbff67](https://github.com/worktile/ai-table/commit/bfbff67db2a56dba2a3d872e4106b01178372b67))
+
+
+
 ## [0.0.38](https://github.com/worktile/ai-table/compare/0.0.37...0.0.38) (2025-03-05)
 
 
