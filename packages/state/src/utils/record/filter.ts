@@ -6,7 +6,8 @@ import {
     isSystemField,
     SystemFieldTypes,
     ViewOperationMap,
-    isEmpty
+    isEmpty,
+    AITableFilterOperation
 } from '@ai-table/grid';
 import {
     AITableFilterConditions,
@@ -72,10 +73,12 @@ export function getDefaultRecordDataByFilter(
     conditions: AITableFilterCondition[],
     conditionLogical?: AITableFilterLogical
 ) {
-    if (conditions.length === 1) {
-        // recordValues[conditions[0].field_id] = conditions[0].value;
-    } else {
-        //...
+    if (conditionLogical === AITableFilterLogical.and) {
+        conditions.forEach((condition) => {
+            if ([AITableFilterOperation.eq, AITableFilterOperation.in, AITableFilterOperation.contain].includes(condition.operation)) {
+                recordValues[condition.field_id] = condition.value;
+            }
+        });
     }
     return recordValues;
 }
