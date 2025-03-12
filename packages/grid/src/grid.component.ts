@@ -343,6 +343,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     stageClick(e: KoEventObject<MouseEvent>) {
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
+        this.aiTableGridEventService.closeCellEditor();
         const { context } = this.aiTable;
         const { targetName, rowIndex: pointRowIndex } = context!.pointPosition();
         if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
