@@ -19,7 +19,6 @@ import {
     AITableViewRecords,
     AIViewTable
 } from '../../types';
-import { timestamp } from 'rxjs';
 
 export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};
@@ -85,15 +84,13 @@ export function getDefaultRecordDataByFilter(
     });
     if (conditionLogical === AITableFilterLogical.and) {
         conditions.forEach((condition) => {
-            if (
-                conditionFieldCountMap.get(condition.field_id.toString()) === 1 &&
-                [AITableFilterOperation.eq, AITableFilterOperation.in, AITableFilterOperation.contain].includes(condition.operation)
-            ) {
+            if (conditionFieldCountMap.get(condition.field_id.toString()) === 1) {
                 const field = fieldMap.get(condition.field_id.toString())!;
                 if (
+                    ([AITableFilterOperation.eq, AITableFilterOperation.in].includes(condition.operation),
                     [AITableFieldType.select, AITableFieldType.member].includes(field?.type) &&
-                    ((!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
-                        (field.settings as SelectSettings).is_multiple)
+                        ((!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
+                            (field.settings as SelectSettings).is_multiple))
                 ) {
                     recordValues[condition.field_id] = condition.value;
                 }
@@ -104,7 +101,14 @@ export function getDefaultRecordDataByFilter(
                     };
                 }
 
-                if (field?.type === AITableFieldType.progress && condition.operation === AITableFilterOperation.eq) {
+                if (condition.operation === AITableFilterOperation.contain && AITableFieldType.text === field?.type) {
+                    recordValues[condition.field_id] = condition.value;
+                }
+
+                if (
+                    condition.operation === AITableFilterOperation.eq &&
+                    [AITableFieldType.rate, AITableFieldType.number, AITableFieldType.progress].includes(field?.type)
+                ) {
                     recordValues[condition.field_id] = condition.value;
                 }
             }
