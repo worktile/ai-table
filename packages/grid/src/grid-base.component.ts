@@ -124,7 +124,7 @@ export class AITableGridBase implements OnInit {
     }
 
     addRecord() {
-        const records = this.gridData().records;
+        const records = this.aiRecords();
         const recordCount = records.length;
         this.aiAddRecord.emit({
             originId: recordCount > 0 ? records[records.length - 1]._id : ''
