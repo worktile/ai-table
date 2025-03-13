@@ -98,11 +98,7 @@ export function getDefaultRecordDataByFilter(
                     recordValues[condition.field_id] = condition.value;
                 }
 
-                if (
-                    field?.type === AITableFieldType.date &&
-                    ((!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
-                        (field.settings as SelectSettings).is_multiple)
-                ) {
+                if (field?.type === AITableFieldType.date && condition.operation === AITableFilterOperation.eq) {
                     recordValues[condition.field_id] = {
                         timestamp: condition.value
                     };
