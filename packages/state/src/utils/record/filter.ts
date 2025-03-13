@@ -7,7 +7,8 @@ import {
     SystemFieldTypes,
     ViewOperationMap,
     isEmpty,
-    AITableFilterOperation
+    AITableFilterOperation,
+    SelectSettings
 } from '@ai-table/grid';
 import {
     AITableFilterConditions,
@@ -18,6 +19,7 @@ import {
     AITableViewRecords,
     AIViewTable
 } from '../../types';
+import { timestamp } from 'rxjs';
 
 export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};
@@ -71,12 +73,44 @@ export function doFilter(condition: AITableFilterCondition, field: AITableViewFi
 export function getDefaultRecordDataByFilter(
     recordValues: Record<string, FieldValue>,
     conditions: AITableFilterCondition[],
+    fields: AITableViewFields,
     conditionLogical?: AITableFilterLogical
 ) {
+    const fieldMap = new Map<string, AITableViewField>(fields.map((field) => [field._id, field]));
+    const conditionFieldCountMap = new Map<string, number>();
+    conditions.forEach((condition) => {
+        const fieldId = condition.field_id.toString();
+        const tmpFieldCount = conditionFieldCountMap.get(fieldId) || 0;
+        conditionFieldCountMap.set(fieldId, tmpFieldCount + 1);
+    });
     if (conditionLogical === AITableFilterLogical.and) {
         conditions.forEach((condition) => {
-            if ([AITableFilterOperation.eq, AITableFilterOperation.in, AITableFilterOperation.contain].includes(condition.operation)) {
-                recordValues[condition.field_id] = condition.value;
+            if (
+                conditionFieldCountMap.get(condition.field_id.toString()) === 1 &&
+                [AITableFilterOperation.eq, AITableFilterOperation.in, AITableFilterOperation.contain].includes(condition.operation)
+            ) {
+                const field = fieldMap.get(condition.field_id.toString())!;
+                if (
+                    [AITableFieldType.select, AITableFieldType.member].includes(field?.type) &&
+                    ((!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
+                        (field.settings as SelectSettings).is_multiple)
+                ) {
+                    recordValues[condition.field_id] = condition.value;
+                }
+
+                if (
+                    field?.type === AITableFieldType.date &&
+                    ((!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
+                        (field.settings as SelectSettings).is_multiple)
+                ) {
+                    recordValues[condition.field_id] = {
+                        timestamp: condition.value
+                    };
+                }
+
+                if (field?.type === AITableFieldType.progress && condition.operation === AITableFilterOperation.eq) {
+                    recordValues[condition.field_id] = condition.value;
+                }
             }
         });
     }
