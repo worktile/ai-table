@@ -51,7 +51,7 @@ export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false
         });
         const { conditions, condition_logical } = activeView.settings || {};
         if (conditions && conditions.length) {
-            newRecordValues = getDefaultRecordDataByFilter(newRecordValues, conditions, condition_logical);
+            newRecordValues = getDefaultRecordDataByFilter(newRecordValues, conditions, fields, condition_logical);
         }
     }
     return newRecordValues;
