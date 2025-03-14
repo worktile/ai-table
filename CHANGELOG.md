@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.40](https://github.com/worktile/ai-table/compare/0.0.39...0.0.40) (2025-03-14)
+
+
+### Bug Fixes
+
+* #WIK-17411 【aitable】链接类型的字段，在切换cell时，之前active的cell框没有消失 ([#267](https://github.com/worktile/ai-table/issues/267)) ([679c12a](https://github.com/worktile/ai-table/commit/679c12ad3ae9551effda789e2c856c4cf66eef74)), closes [#WIK-17411](https://github.com/worktile/ai-table/issues/WIK-17411)
+
+
+### Features
+
+* #WIK-17410 有筛选条件时，新增数据插入位置为所有数据的最后一行 ([#268](https://github.com/worktile/ai-table/issues/268)) ([f512b4f](https://github.com/worktile/ai-table/commit/f512b4f2fc420350d12c0a28eec2659e6296aa46)), closes [#WIK-17410](https://github.com/worktile/ai-table/issues/WIK-17410)
+* **default-values:** #WIK-16623 支持根据筛选创建默认值 ([#266](https://github.com/worktile/ai-table/issues/266)) ([4f8e5f7](https://github.com/worktile/ai-table/commit/4f8e5f76ec790437597e96ad428ec2dc5ae5c64d)), closes [#WIK-16623](https://github.com/worktile/ai-table/issues/WIK-16623)
+
+
+
 ## [0.0.39](https://github.com/worktile/ai-table/compare/0.0.38...0.0.39) (2025-03-10)
 
 
