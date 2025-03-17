@@ -1,6 +1,14 @@
-import { AITable, AITableContextMenuItem, AITableGridSelectionService } from '@ai-table/grid';
+import {
+    AITable,
+    AITableContextMenuItem,
+    AITableGridSelectionService,
+    isMac,
+    UpdateFieldValueOptions,
+    writeToAITable
+} from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
+import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 
 export const RemoveRecordsItem: AITableContextMenuItem = {
     type: 'removeRecords',
@@ -20,4 +28,36 @@ export const RemoveRecordsItem: AITableContextMenuItem = {
 
         aiTableGridSelectionService.clearSelection();
     }
+};
+
+export const CopyCellsItem: AITableContextMenuItem = {
+    type: 'copyCells',
+    name: '复制',
+    shortcutKey: isMac() ? `⌘ + C` : `Ctrl + C`,
+    icon: 'copy',
+    exec: (aiTable: AITable) => {
+        const clipboardData = buildClipboardData(aiTable);
+        if (clipboardData) {
+            writeToClipboard(clipboardData);
+        }
+    }
+};
+
+export const PasteCellsItem: (updateValueFn: (data: UpdateFieldValueOptions) => void) => AITableContextMenuItem = (
+    updateValueFn: (data: UpdateFieldValueOptions) => void
+) => {
+    return {
+        type: 'pasteCells',
+        name: '粘贴',
+        shortcutKey: isMac() ? `⌘ + V` : `Ctrl + V`,
+        icon: 'paste',
+        exec: async (
+            aiTable: AITable,
+            targetName: string,
+            position: { x: number; y: number },
+            aiTableGridSelectionService: AITableGridSelectionService
+        ) => {
+            writeToAITable(aiTable, updateValueFn);
+        }
+    };
 };

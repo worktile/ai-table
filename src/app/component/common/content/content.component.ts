@@ -22,9 +22,11 @@ import {
     AIViewTable,
     applyActionOps,
     buildRemoveFieldItem,
+    CopyCellsItem,
     DividerMenuItem,
     EditFieldPropertyItem,
     CopyFieldPropertyItem,
+    PasteCellsItem,
     RemoveRecordsItem,
     updateFieldValue,
     withState,
@@ -116,6 +118,23 @@ export class DemoTableContent {
     });
 
     contextMenuItems: AITableContextMenuItem[] = [
+        {
+            ...CopyCellsItem,
+            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+        },
+        {
+            ...PasteCellsItem((data: UpdateFieldValueOptions) => {
+                this.updateFieldValue(data);
+            }),
+            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+        },
+        {
+            ...DividerMenuItem,
+            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+        },
         {
             ...RemoveRecordsItem,
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
