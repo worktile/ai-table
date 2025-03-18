@@ -543,6 +543,31 @@ export function getCanvasDefaultValue() {
                 type: AITableFieldType.text
             },
             {
+                _id: 'column-5',
+                name: '成员',
+                positions: {
+                    view1: 1,
+                    view2: 9
+                },
+                settings: {
+                    is_multiple: true
+                },
+                type: AITableFieldType.member
+            },
+            {
+                _id: 'column-566',
+                name: '单成员',
+                positions: {
+                    view1: 2,
+                    view2: 9
+                },
+                width: 100,
+                settings: {
+                    is_multiple: false
+                },
+                type: AITableFieldType.member
+            },
+            {
                 _id: 'column-1',
                 name: '单行文本1',
                 positions: {
@@ -738,31 +763,6 @@ export function getCanvasDefaultValue() {
                     view2: 10
                 },
                 type: AITableFieldType.date
-            },
-            {
-                _id: 'column-5',
-                name: '成员',
-                positions: {
-                    view1: 9,
-                    view2: 9
-                },
-                settings: {
-                    is_multiple: true
-                },
-                type: AITableFieldType.member
-            },
-            {
-                _id: 'column-566',
-                name: '单成员',
-                positions: {
-                    view1: 9,
-                    view2: 9
-                },
-                width: 100,
-                settings: {
-                    is_multiple: false
-                },
-                type: AITableFieldType.member
             },
             {
                 _id: 'column-6',
@@ -1034,7 +1034,7 @@ export function getReferences(): AITableReferences {
                 uid: 'member_01',
                 display_name: 'admin',
                 display_name_pinyin: 'admin',
-                avatar: 'https://web.on-premises-alpha.pingcode.live/pc-avatar/c04446a4-bfcc-4a05-846c-e3241e1b68df_80x80.png'
+                avatar: 'https://s3.cn-north-1.amazonaws.com.cn/lcavatar/d242cf52-c1d1-4e95-a113-a7d30b0ede74_80x80.png'
             },
             member_02: {
                 uid: 'member_02',

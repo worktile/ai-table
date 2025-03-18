@@ -453,12 +453,20 @@ export class Drawer {
                     size: 16,
                     fill: colors.gray600
                 });
+            } else {
+                imageCache.imageMapOnload(() => {
+                    this.image(options, crossOrigin, allowDefault);
+                });
             }
             return;
         }
         // Unloaded
         if (image == null) {
-            return imageCache.loadImage(url, url, { crossOrigin });
+            imageCache.loadImage(url, url, { crossOrigin });
+            imageCache.imageMapOnload(() => {
+                this.image(options, crossOrigin, allowDefault);
+            });
+            return;
         }
         const isOrigin = opacity === 1;
 
