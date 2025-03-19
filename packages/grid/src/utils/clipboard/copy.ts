@@ -3,7 +3,7 @@ import { ViewOperationMap } from '../field/model';
 import { transformCellValue } from '../cell';
 import { ClipboardData } from '../../types';
 
-export const aiTableSpecialAttribute = 'ai-table-json-value';
+export const aiTableSpecialAttribute = 'ai-table-fragment';
 
 const encodeClipboardJsonData = (data: any) => {
     const stringifiedData = JSON.stringify(data);
@@ -16,7 +16,6 @@ function formatClipboardData(data: ClipboardData[][], jsonData: string[][]): Cli
         text: data.map((row) => row.map((column) => column.text).join('\t')).join('\r\n'),
         html: `<table ${aiTableSpecialAttribute}="${encodeData}">${data.map((row) => `<tr>${row.map((column) => `<td>${column.html}</td>`).join('')}</tr>`).join('')}</table>`
     };
-    console.log('====> formatClipboardData', formatClipboardData);
     return formatClipboardData;
 }
 
@@ -55,7 +54,5 @@ export const buildClipboardData = (aiTable: AITable): ClipboardData | null => {
 
     const clipboardData = Array.from(dataByRecordId.values());
     const jsonData = Array.from(jsonDataByRecordId.values());
-    // console.log('====> clipboardData', clipboardData);
-    console.log('====> jsonData', jsonData);
     return formatClipboardData(clipboardData, jsonData);
 };
