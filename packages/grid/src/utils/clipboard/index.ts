@@ -1,2 +1,3 @@
 export * from './clipboard';
-export * from './common';
+export * from './copy';
+export * from './paste';
