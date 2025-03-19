@@ -46,7 +46,7 @@ export const AI_TABLE_CELL_EMOJI_PADDING = 8;
 export const AI_TABLE_CELL_MEMBER_MAX_HEIGHT = 130; // 成员字段项最大高度
 export const AI_TABLE_CELL_MEMBER_ITEM_HEIGHT = 24; // 成员字段项高度
 export const AI_TABLE_CELL_MEMBER_ITEM_PADDING = 4; // 多个成员头像间距
-export const AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE = 22; // 成员/选项/链接字段的新按钮大小
+export const AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE = 22; // 成员/选项/链接/附件字段的新按钮大小
 
 export const AI_TABLE_MEMBER_AVATAR_SIZE = 24; // 成员头像大小
 export const AI_TABLE_MEMBER_ITEM_PADDING_RIGHT = 8; // 成员字段项右边距

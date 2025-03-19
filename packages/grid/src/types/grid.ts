@@ -45,8 +45,23 @@ export interface AITableUserInfo {
     [key: string]: any;
 }
 
+export interface AITableAttachmentInfo {
+    _id: string;
+    title: string;
+    addition: {
+        ext: string;
+        summary?: string;
+        size?: number;
+        path?: string;
+        [key: string]: any;
+    };
+    token?: string;
+    [key: string]: any;
+}
+
 export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
+    attachments: Dictionary<AITableAttachmentInfo>;
 }
 
 export interface AITableRendererConfig {

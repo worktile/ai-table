@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import {
+    AttachmentPath,
     ColumnCalendarFilledPath,
     ColumnLinkOutlinedPath,
     ColumnMemberFilledPath,
@@ -55,6 +56,9 @@ export class AITableFieldIcon {
                 break;
             case AITableFieldType.progress:
                 data = ColumnProgressFilledPath;
+                break;
+            case AITableFieldType.attachment:
+                data = AttachmentPath;
                 break;
         }
         return {

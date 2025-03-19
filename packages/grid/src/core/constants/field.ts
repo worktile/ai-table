@@ -92,5 +92,11 @@ export const FieldOptions: AITableFieldOption[] = [
         name: '更新时间',
         icon: 'calendar',
         width: AI_TABLE_FIELD_MIDDLE_WIDTH
+    },
+    {
+        type: AITableFieldType.attachment,
+        name: '附件',
+        icon: 'attachment',
+        width: AI_TABLE_FIELD_MIDDLE_WIDTH
     }
 ];
