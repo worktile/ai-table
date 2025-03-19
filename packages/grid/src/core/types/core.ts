@@ -111,6 +111,8 @@ export type DateFieldValue = { timestamp: number }; // 时间戳
 
 export type MemberFieldValue = Id[];
 
+export type AttachmentFieldValue = string[];
+
 export type ProgressFieldValue = number; // [0,1]
 
 export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
@@ -124,6 +126,7 @@ export type FieldValue =
     | MemberFieldValue
     | ProgressFieldValue
     | RateFieldValue
+    | AttachmentFieldValue
     | any;
 
 export interface TrackableEntity {

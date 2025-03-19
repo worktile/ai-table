@@ -1,30 +1,73 @@
-import { FieldValue } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { AITableField, AttachmentFieldValue, FieldValue } from '../../../core';
+import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
-import { compareString, stringInclude } from '../operate';
+import { compareString, hasIntersect, stringInclude } from '../operate';
 import { Field } from './field';
 
 export class AttachmentField extends Field {
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue) {
+    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
             case AITableFilterOperation.exists:
                 return !isEmpty(cellValue);
-            case AITableFilterOperation.contain:
-                return !isEmpty(cellValue) && stringInclude(cellValue, condition.value);
+            case AITableFilterOperation.in:
+                return Array.isArray(condition.value) && hasIntersect(cellValue, condition.value);
+            case AITableFilterOperation.nin:
+                return Array.isArray(condition.value) && !hasIntersect(cellValue, condition.value);
             default:
                 return super.isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: FieldValue, cellValue2: FieldValue): number {
-        const value1 = cellValueToSortValue(cellValue1);
-        const value2 = cellValueToSortValue(cellValue2);
+    override compare(
+        cellValue1: AttachmentFieldValue,
+        cellValue2: AttachmentFieldValue,
+        field: AITableField,
+        references: AITableReferences,
+        sortKey: string
+    ): number {
+        const value1 = cellValueToSortValue(cellValue1, field, references, sortKey);
+        const value2 = cellValueToSortValue(cellValue2, field, references, sortKey);
         return compareString(value1, value2);
+    }
+
+    override cellFullText(transformValue: string[], field: AITableField, references?: AITableReferences): string[] {
+        let fullText: string[] = [];
+        if (transformValue?.length && references) {
+            for (let index = 0; index < transformValue.length; index++) {
+                const attachmentInfo = references?.attachments[transformValue[index]];
+                if (!attachmentInfo) {
+                    continue;
+                }
+                if (attachmentInfo.title) {
+                    fullText.push(attachmentInfo.title);
+                }
+            }
+        }
+        return fullText;
     }
 }
 
-function cellValueToSortValue(cellValue: FieldValue): string | null {
-    return (cellValue && cellValue.trim()) || null;
+function cellValueToSortValue(
+    cellValue: AttachmentFieldValue,
+    field: AITableField,
+    references: AITableReferences,
+    sortKey = 'title'
+): string | null {
+    let values: string[] = [];
+    if (cellValue?.length && references) {
+        for (let index = 0; index < cellValue.length; index++) {
+            const attachmentInfo = references?.attachments[cellValue[index]];
+            if (!attachmentInfo) {
+                continue;
+            }
+
+            const value = attachmentInfo[sortKey];
+            if (value) {
+                values.push(value);
+            }
+        }
+    }
+    return values && values.length ? values.join(', ') : null;
 }
