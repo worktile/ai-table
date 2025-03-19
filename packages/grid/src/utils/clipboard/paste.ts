@@ -1,5 +1,6 @@
-import { AITable, AITableFieldType, UpdateFieldValueOptions } from '../../core';
+import { AITable, FieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableSpecialAttribute } from '../clipboard';
+import { ViewOperationMap } from '../field/model';
 
 const aiTableAttributePattern = new RegExp(`${aiTableSpecialAttribute}="(.+?)"`, 'm');
 
@@ -58,9 +59,10 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const visibleFields = AITable.getVisibleFields(aiTable);
     const linearRows = aiTable.context!.linearRows();
+    const references = aiTable.context!.references();
 
     pasteData.forEach((row, i) => {
-        row.forEach((value, j) => {
+        row.forEach((data, j) => {
             const targetRowIndex = startRowIndex + i;
             const targetColIndex = startColIndex + j;
             if (targetRowIndex >= linearRows.length || targetColIndex >= visibleFields.length) {
@@ -70,18 +72,26 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
             const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
 
-            // TODO 完善 handlePasteData 逻辑之后，移除这个 if 判断
-            if (targetField.type === AITableFieldType.text) {
+            let value: FieldValue | null = null;
+            if (isJson) {
+                const jsonData = JSON.parse(data);
+                const field = aiTable.fieldsMap()[jsonData.fieldId!];
+                const cellValue = jsonData.cellValue;
+                const originData = {
+                    field,
+                    cellValue
+                };
+                value = ViewOperationMap[targetField.type].pasteValue(jsonData.cellFullText, targetField, originData, references);
+            } else {
+                value = ViewOperationMap[targetField.type].pasteValue(data, targetField, null, references);
+            }
+
+            if (value !== null) {
                 updateValueFn({
-                    value: handlePasteData(aiTable, value, isJson),
+                    value,
                     path: [targetRecord._id, targetField._id]
                 });
             }
         });
     });
-};
-
-export const handlePasteData = (aiTable: AITable, value: string, isJson: boolean) => {
-    // TODO 处理不同 field 类型、处理边界粘贴
-    return isJson ? (JSON.parse(value)?.cellFullText ?? value) : value;
 };
