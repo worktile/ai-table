@@ -1,3 +1,4 @@
+import { AITableCellContent } from '../../types';
 import { AITable, FieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableSpecialAttribute } from '../clipboard';
 import { ViewOperationMap } from '../field/model';
@@ -74,14 +75,13 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
 
             let value: FieldValue | null = null;
             if (isJson) {
-                const jsonData = JSON.parse(data);
-                const field = aiTable.fieldsMap()[jsonData.fieldId!];
-                const cellValue = jsonData.cellValue;
+                const cellContent: AITableCellContent = JSON.parse(data);
+                const { field, cellValue, cellFullText } = cellContent;
                 const originData = {
                     field,
                     cellValue
                 };
-                value = ViewOperationMap[targetField.type].pasteValue(jsonData.cellFullText, targetField, originData, references);
+                value = ViewOperationMap[targetField.type].pasteValue(cellFullText, targetField, originData, references);
             } else {
                 value = ViewOperationMap[targetField.type].pasteValue(data, targetField, null, references);
             }

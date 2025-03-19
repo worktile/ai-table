@@ -1,7 +1,7 @@
 import { AITable, AITableFieldType, AITableQueries } from '../../core';
 import { ViewOperationMap } from '../field/model';
 import { transformCellValue } from '../cell';
-import { ClipboardData } from '../../types';
+import { AITableCellContent, ClipboardData } from '../../types';
 
 export const aiTableSpecialAttribute = 'ai-table-fragment';
 
@@ -12,7 +12,7 @@ const encodeClipboardJsonData = (data: any) => {
 
 function formatClipboardData(data: ClipboardData[][], jsonData: string[][]): ClipboardData {
     const encodeData = encodeClipboardJsonData(jsonData);
-    const formatClipboardData = {
+    const formatClipboardData: ClipboardData = {
         text: data.map((row) => row.map((column) => column.text).join('\t')).join('\r\n'),
         html: `<table ${aiTableSpecialAttribute}="${encodeData}">${data.map((row) => `<tr>${row.map((column) => `<td>${column.html}</td>`).join('')}</tr>`).join('')}</table>`
     };
@@ -21,8 +21,8 @@ function formatClipboardData(data: ClipboardData[][], jsonData: string[][]): Cli
 
 export const buildClipboardData = (aiTable: AITable): ClipboardData | null => {
     const copiedCells = Array.from(aiTable.selection().selectedCells);
-    const dataByRecordId = new Map<string, ClipboardData[]>();
-    const jsonDataByRecordId = new Map<string, string[]>();
+    const clipboardContentByRecordId = new Map<string, ClipboardData[]>();
+    const aiTableContentByRecordId = new Map<string, string[]>();
     if (!copiedCells.length) {
         return null;
     }
@@ -35,24 +35,24 @@ export const buildClipboardData = (aiTable: AITable): ClipboardData | null => {
         const references = aiTable.context!.references();
         const cellTexts: string[] = ViewOperationMap[field.type].cellFullText(transformValue, field, references);
 
-        let cellContent = {
+        let cellClipboardContent = {
             text: cellTexts.join(','),
             html: cellTexts.join(',')
         };
         if (field.type === AITableFieldType.link && cellValue && cellValue.url) {
-            cellContent.html = `<a href="${cellValue.url}" target="_blank">${cellValue.text}</a>`;
+            cellClipboardContent.html = `<a href="${cellValue.url}" target="_blank">${cellValue.text}</a>`;
         }
-        dataByRecordId.set(recordId, [...(dataByRecordId.get(recordId) || []), cellContent]);
+        clipboardContentByRecordId.set(recordId, [...(clipboardContentByRecordId.get(recordId) || []), cellClipboardContent]);
 
-        const cellJsonData = JSON.stringify({
-            fieldId,
+        const cellAITableContent: AITableCellContent = {
+            field,
             cellValue,
             cellFullText: cellTexts.join(',')
-        });
-        jsonDataByRecordId.set(recordId, [...(jsonDataByRecordId.get(recordId) || []), cellJsonData]);
+        };
+        aiTableContentByRecordId.set(recordId, [...(aiTableContentByRecordId.get(recordId) || []), JSON.stringify(cellAITableContent)]);
     });
 
-    const clipboardData = Array.from(dataByRecordId.values());
-    const jsonData = Array.from(jsonDataByRecordId.values());
-    return formatClipboardData(clipboardData, jsonData);
+    const clipboardData = Array.from(clipboardContentByRecordId.values());
+    const aiTableContentData = Array.from(aiTableContentByRecordId.values());
+    return formatClipboardData(clipboardData, aiTableContentData);
 };
