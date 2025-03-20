@@ -81,9 +81,9 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
                     field,
                     cellValue
                 };
-                value = ViewOperationMap[targetField.type].pasteValue(cellFullText, targetField, originData, references);
+                value = ViewOperationMap[targetField.type].toFieldValue(cellFullText, targetField, originData, references);
             } else {
-                value = ViewOperationMap[targetField.type].pasteValue(data, targetField, null, references);
+                value = ViewOperationMap[targetField.type].toFieldValue(data, targetField, null, references);
             }
 
             if (value !== null) {
