@@ -24,9 +24,13 @@ export class TextField extends Field {
         return compareString(value1, value2);
     }
 
-    override pasteValue(plainText: string): FieldValue | null {
-        return plainText.trim();
+    override toFieldValue(plainText: string): FieldValue | null {
+        return toTextFieldValue(plainText);
     }
+}
+
+export function toTextFieldValue(plainText: string): FieldValue | null {
+    return plainText.trim();
 }
 
 function cellValueToSortValue(cellValue: FieldValue): string | null {

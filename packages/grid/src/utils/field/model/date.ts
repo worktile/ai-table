@@ -33,37 +33,12 @@ export class DateField extends Field {
         return compareNumber(value1, value2);
     }
 
-    override pasteValue(
+    override toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }
     ): FieldValue | null {
-        if (targetField.type === AITableFieldType.createdAt || targetField.type === AITableFieldType.updatedAt) {
-            return null;
-        }
-
-        if (originData) {
-            const { field, cellValue } = originData;
-            switch (field.type) {
-                case AITableFieldType.date:
-                    return cellValue;
-                case AITableFieldType.text:
-                    const dateValue = transformDateValue(cellValue);
-                    if (dateValue) {
-                        return dateValue;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            const dateValue = transformDateValue(plainText);
-            if (dateValue) {
-                return dateValue;
-            }
-        }
-
-        return null;
+        return toDateFieldValue(plainText, targetField, originData);
     }
 
     getTimeRange(value: string | number | number[]) {
@@ -95,6 +70,39 @@ export class DateField extends Field {
                 ];
         }
     }
+}
+
+export function toDateFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue }
+): FieldValue | null {
+    if (targetField.type === AITableFieldType.createdAt || targetField.type === AITableFieldType.updatedAt) {
+        return null;
+    }
+
+    if (originData) {
+        const { field, cellValue } = originData;
+        switch (field.type) {
+            case AITableFieldType.date:
+                return cellValue;
+            case AITableFieldType.text:
+                const dateValue = transformDateValue(cellValue);
+                if (dateValue) {
+                    return dateValue;
+                }
+                break;
+            default:
+                break;
+        }
+    } else {
+        const dateValue = transformDateValue(plainText);
+        if (dateValue) {
+            return dateValue;
+        }
+    }
+
+    return null;
 }
 
 function cellValueToSortValue(cellValue: DateFieldValue): number {

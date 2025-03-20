@@ -49,49 +49,58 @@ export class MemberField extends Field {
         return fullText;
     }
 
-    override pasteValue(
+    override toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue },
         references?: AITableReferences
     ): FieldValue | null {
-        if (targetField.type == AITableFieldType.createdBy || targetField.type == AITableFieldType.updatedBy) {
-            return null;
-        }
+        return toMemberFieldValue(plainText, targetField, originData, references);
+    }
+}
 
-        const isMultiple = (targetField.settings as MemberSettings)?.is_multiple;
-        if (originData) {
-            const { field, cellValue } = originData;
-            switch (field.type) {
-                case AITableFieldType.member:
-                    if (Array.isArray(cellValue) && cellValue.length) {
-                        return isMultiple ? cellValue : [cellValue[0]];
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        plainText = plainText.trim();
-        const hasMemberInfo = references && references.members && Object.keys(references.members).length;
-        if (plainText && hasMemberInfo) {
-            const memberNames = plainText.split(',').map((id) => id.trim());
-            const memberInfos = Object.values(references.members);
-            let validMemberIds: MemberFieldValue = [];
-            memberNames.forEach((memberName) => {
-                const memberInfo = memberInfos.find((member) => member.display_name === memberName);
-                if (memberInfo) {
-                    validMemberIds.push(memberInfo.uid as Id);
-                }
-            });
-            if (validMemberIds.length) {
-                return isMultiple ? validMemberIds : [validMemberIds[0]];
-            }
-        }
-
+export function toMemberFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue },
+    references?: AITableReferences
+): FieldValue | null {
+    if (targetField.type == AITableFieldType.createdBy || targetField.type == AITableFieldType.updatedBy) {
         return null;
     }
+
+    const isMultiple = (targetField.settings as MemberSettings)?.is_multiple;
+    if (originData) {
+        const { field, cellValue } = originData;
+        switch (field.type) {
+            case AITableFieldType.member:
+                if (Array.isArray(cellValue) && cellValue.length) {
+                    return isMultiple ? cellValue : [cellValue[0]];
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    plainText = plainText.trim();
+    const hasMemberInfo = references && references.members && Object.keys(references.members).length;
+    if (plainText && hasMemberInfo) {
+        const memberNames = plainText.split(',').map((id) => id.trim());
+        const memberInfos = Object.values(references.members);
+        let validMemberIds: MemberFieldValue = [];
+        memberNames.forEach((memberName) => {
+            const memberInfo = memberInfos.find((member) => member.display_name === memberName);
+            if (memberInfo) {
+                validMemberIds.push(memberInfo.uid as Id);
+            }
+        });
+        if (validMemberIds.length) {
+            return isMultiple ? validMemberIds : [validMemberIds[0]];
+        }
+    }
+
+    return null;
 }
 
 function cellValueToSortValue(

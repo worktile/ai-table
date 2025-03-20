@@ -13,7 +13,7 @@ export abstract class Field {
     ): number;
 
     // 粘贴
-    abstract pasteValue(
+    abstract toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue } | null,

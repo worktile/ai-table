@@ -31,7 +31,7 @@ export class LinkField extends Field {
         return texts;
     }
 
-    override pasteValue(): FieldValue | null {
+    override toFieldValue(): FieldValue | null {
         return null;
     }
 }
