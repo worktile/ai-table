@@ -1,7 +1,7 @@
-import { AITable, AITableFieldType, AITableQueries } from '../../core';
+import { AITable, AITableFieldType, AITableQueries, AITableRecord, AITableField } from '../../core';
 import { ViewOperationMap } from '../field/model';
 import { transformCellValue } from '../cell';
-import { AITableCellContent, ClipboardData } from '../../types';
+import { AITableContent, ClipboardContent } from '../../types';
 
 export const aiTableSpecialAttribute = 'ai-table-fragment';
 
@@ -10,49 +10,55 @@ const encodeClipboardJsonData = (data: any) => {
     return window.btoa(encodeURIComponent(stringifiedData));
 };
 
-function formatClipboardData(data: ClipboardData[][], jsonData: string[][]): ClipboardData {
-    const encodeData = encodeClipboardJsonData(jsonData);
-    const formatClipboardData: ClipboardData = {
-        text: data.map((row) => row.map((column) => column.text).join('\t')).join('\r\n'),
-        html: `<table ${aiTableSpecialAttribute}="${encodeData}">${data.map((row) => `<tr>${row.map((column) => `<td>${column.html}</td>`).join('')}</tr>`).join('')}</table>`
+function formatClipboardData(clipboardContent: ClipboardContent[][], aiTableContent: AITableContent): ClipboardContent {
+    const encodeData = encodeClipboardJsonData(aiTableContent);
+    const formatedContent: ClipboardContent = {
+        text: clipboardContent.map((row) => row.map((column) => column.text).join('\t')).join('\r\n'),
+        html: `<table ${aiTableSpecialAttribute}="${encodeData}">${clipboardContent.map((row) => `<tr>${row.map((column) => `<td>${column.html}</td>`).join('')}</tr>`).join('')}</table>`
     };
-    return formatClipboardData;
+    return formatedContent;
 }
 
-export const buildClipboardData = (aiTable: AITable): ClipboardData | null => {
+export const buildClipboardData = (aiTable: AITable): ClipboardContent | null => {
     const copiedCells = Array.from(aiTable.selection().selectedCells);
-    const clipboardContentByRecordId = new Map<string, ClipboardData[]>();
-    const aiTableContentByRecordId = new Map<string, string[]>();
     if (!copiedCells.length) {
         return null;
     }
 
+    const clipboardContentMap = new Map<string, ClipboardContent[]>();
+    const copidRecordsMap = new Map<string, AITableRecord>();
+    const copidFieldsMap = new Map<string, AITableField>();
+
     copiedCells.forEach((cellPath: string) => {
         const [recordId, fieldId] = cellPath.split(':');
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
-        const field = aiTable.fieldsMap()[fieldId!];
+        const record: AITableRecord = aiTable.recordsMap()[recordId];
+        const field: AITableField = aiTable.fieldsMap()[fieldId!];
         const transformValue = transformCellValue(aiTable, field, cellValue);
         const references = aiTable.context!.references();
         const cellTexts: string[] = ViewOperationMap[field.type].cellFullText(transformValue, field, references);
 
-        let cellClipboardContent = {
+        let cellContent = {
             text: cellTexts.join(','),
             html: cellTexts.join(',')
         };
         if (field.type === AITableFieldType.link && cellValue && cellValue.url) {
-            cellClipboardContent.html = `<a href="${cellValue.url}" target="_blank">${cellValue.text}</a>`;
+            cellContent.html = `<a href="${cellValue.url}" target="_blank">${cellValue.text}</a>`;
         }
-        clipboardContentByRecordId.set(recordId, [...(clipboardContentByRecordId.get(recordId) || []), cellClipboardContent]);
+        clipboardContentMap.set(recordId, [...(clipboardContentMap.get(recordId) || []), cellContent]);
 
-        const cellAITableContent: AITableCellContent = {
-            field,
-            cellValue,
-            cellFullText: cellTexts.join(',')
-        };
-        aiTableContentByRecordId.set(recordId, [...(aiTableContentByRecordId.get(recordId) || []), JSON.stringify(cellAITableContent)]);
+        if (recordId && !copidRecordsMap.has(recordId)) {
+            copidRecordsMap.set(recordId, record);
+        }
+        if (fieldId && !copidFieldsMap.has(fieldId)) {
+            copidFieldsMap.set(fieldId, field);
+        }
     });
 
-    const clipboardData = Array.from(clipboardContentByRecordId.values());
-    const aiTableContentData = Array.from(aiTableContentByRecordId.values());
-    return formatClipboardData(clipboardData, aiTableContentData);
+    const clipboardContent = Array.from(clipboardContentMap.values());
+    const aiTableContent: AITableContent = {
+        records: Array.from(copidRecordsMap.values()),
+        fields: Array.from(copidFieldsMap.values())
+    };
+    return formatClipboardData(clipboardContent, aiTableContent);
 };

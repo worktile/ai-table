@@ -4,8 +4,9 @@ import {
     AIRecordFieldIdPath,
     AITable,
     AITableField,
+    AITableFields,
     AITableFieldType,
-    AITableRecord,
+    AITableRecords,
     Coordinate,
     FieldValue,
     UpdateFieldValueOptions
@@ -18,10 +19,13 @@ export interface AITableGridCellRenderSchema {
     transform?: (field: AITableField, value: FieldValue) => any;
 }
 
-export interface AITableGridData {
+export interface AITableContent {
+    records: AITableRecords;
+    fields: AITableFields;
+}
+
+export interface AITableGridData extends AITableContent {
     type: 'grid';
-    fields: AITableField[];
-    records: AITableRecord[];
 }
 
 export interface AITableSelection {

@@ -1,5 +1,5 @@
-import { AITableCellContent } from '../../types';
-import { AITable, FieldValue, UpdateFieldValueOptions } from '../../core';
+import { AITableContent, AITableReferences } from '../../types';
+import { AITable, AITableField, AITableRecord, getFieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableSpecialAttribute } from '../clipboard';
 import { ViewOperationMap } from '../field/model';
 
@@ -10,60 +10,73 @@ const decodeClipboardJsonData = (encoded: string) => {
     return JSON.parse(decoded);
 };
 
-const readClipboardData = async (): Promise<{ pasteData: string[][]; isJson: boolean }> => {
+const readClipboardData = async (): Promise<{ clipboardPlainTexts: string[][]; aiTableContent: AITableContent | null }> => {
     const clipboardData = await readFromClipboard();
-    let pasteData: string[][];
+    let clipboardPlainTexts: string[][] = [];
+    let aiTableContent: AITableContent | null = null;
 
     if (clipboardData && clipboardData.html) {
         const aiTableAttribute = clipboardData.html.match(aiTableAttributePattern);
         if (aiTableAttribute && aiTableAttribute[1]) {
-            pasteData = decodeClipboardJsonData(aiTableAttribute[1]);
-            return {
-                pasteData,
-                isJson: true
-            };
+            aiTableContent = decodeClipboardJsonData(aiTableAttribute[1]);
         }
     }
 
     if (clipboardData && clipboardData.text) {
-        pasteData = clipboardData.text
+        clipboardPlainTexts = clipboardData.text
             .split('\n')
             .map((row) => row.split('\t'))
             .filter((row) => row.length > 0 && row.some((cell) => cell.trim().length > 0));
-
-        return {
-            pasteData,
-            isJson: false
-        };
     }
 
     return {
-        pasteData: [],
-        isJson: false
+        clipboardPlainTexts,
+        aiTableContent
     };
 };
+
+function getPasteValue(
+    plainText: string,
+    aiTableContent: AITableContent | null,
+    record: AITableRecord,
+    field: AITableField,
+    targetField: AITableField,
+    references: AITableReferences
+) {
+    if (!!aiTableContent) {
+        const originData = {
+            field,
+            cellValue: getFieldValue(record, field)
+        };
+        return ViewOperationMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
+    } else {
+        return ViewOperationMap[targetField.type].toFieldValue(plainText, targetField, null, references);
+    }
+}
 
 export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: UpdateFieldValueOptions) => void) => {
     const selectedCells = Array.from(aiTable.selection().selectedCells);
     if (!selectedCells.length) {
         return;
     }
-    const { pasteData, isJson } = await readClipboardData();
-    if (!pasteData.length) {
+    const { clipboardPlainTexts, aiTableContent } = await readClipboardData();
+    if (!clipboardPlainTexts.length) {
         return;
     }
 
     const [firstCell] = selectedCells;
     const [startRecordId, startFieldId] = firstCell.split(':');
-
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const visibleFields = AITable.getVisibleFields(aiTable);
     const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
 
-    pasteData.forEach((row, i) => {
-        row.forEach((data, j) => {
+    const copiedFields = aiTableContent?.fields || [];
+    const copiedRecords = aiTableContent?.records || [];
+
+    clipboardPlainTexts.forEach((row, i) => {
+        row.forEach((plainText, j) => {
             const targetRowIndex = startRowIndex + i;
             const targetColIndex = startColIndex + j;
             if (targetRowIndex >= linearRows.length || targetColIndex >= visibleFields.length) {
@@ -72,19 +85,7 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
 
             const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
-
-            let value: FieldValue | null = null;
-            if (isJson) {
-                const cellContent: AITableCellContent = JSON.parse(data);
-                const { field, cellValue, cellFullText } = cellContent;
-                const originData = {
-                    field,
-                    cellValue
-                };
-                value = ViewOperationMap[targetField.type].toFieldValue(cellFullText, targetField, originData, references);
-            } else {
-                value = ViewOperationMap[targetField.type].toFieldValue(data, targetField, null, references);
-            }
+            const value = getPasteValue(plainText, aiTableContent, copiedRecords[i], copiedFields[j], targetField, references);
 
             if (value !== null) {
                 updateValueFn({

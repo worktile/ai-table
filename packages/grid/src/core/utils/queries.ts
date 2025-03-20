@@ -13,6 +13,13 @@ import {
 } from '../types';
 import { isSystemField } from './field';
 
+export function getFieldValue(record: AITableRecord, field: AITableField) {
+    if (isSystemField(field)) {
+        return AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes);
+    }
+    return record.values?.[field._id];
+}
+
 export const AITableQueries = {
     findRecordPath(aiTable: AITable, record: AITableRecord) {
         const recordIndex = record && aiTable.records().indexOf(record);
@@ -49,10 +56,7 @@ export const AITableQueries = {
         if (!field) {
             throw new Error(`can not find field at path [${path}]`);
         }
-        if (isSystemField(field)) {
-            return AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes);
-        }
-        return record.values[path[1]];
+        return getFieldValue(record, field);
     },
     getSystemFieldValue(record: AITableRecord, type: SystemFieldTypes) {
         const value = record[type];
