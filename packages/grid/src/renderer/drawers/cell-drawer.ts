@@ -779,8 +779,8 @@ export class CellDrawer extends Drawer {
                     this.rect({
                         x: x + currentX,
                         y: y + currentY,
-                        width: AITableAvatarSize.size24,
-                        height: AITableAvatarSize.size24,
+                        width: AI_TABLE_FILE_ICON_SIZE,
+                        height: AI_TABLE_FILE_ICON_SIZE,
                         radius: 24,
                         fill: this.colors.black
                     });
