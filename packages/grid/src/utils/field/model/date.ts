@@ -1,9 +1,10 @@
 import { fromUnixTime, subDays } from 'date-fns';
-import { isArray, isEmpty, TinyDate } from 'ngx-tethys/util';
+import { isArray, TinyDate } from 'ngx-tethys/util';
 import { Field } from './field';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { DateFieldValue } from '../../../core';
+import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '../../../core';
 import { compareNumber } from '../operate';
+import { isEmpty } from '../../common';
 
 export class DateField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
@@ -30,6 +31,14 @@ export class DateField extends Field {
         const value1 = cellValueToSortValue(cellValue1);
         const value2 = cellValueToSortValue(cellValue2);
         return compareNumber(value1, value2);
+    }
+
+    override toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue }
+    ): FieldValue | null {
+        return toDateFieldValue(plainText, targetField, originData);
     }
 
     getTimeRange(value: string | number | number[]) {
@@ -63,6 +72,52 @@ export class DateField extends Field {
     }
 }
 
+export function toDateFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue }
+): FieldValue | null {
+    if (targetField.type === AITableFieldType.createdAt || targetField.type === AITableFieldType.updatedAt) {
+        return null;
+    }
+
+    if (originData) {
+        const { field, cellValue } = originData;
+        switch (field.type) {
+            case AITableFieldType.date:
+                return cellValue;
+            case AITableFieldType.text:
+                const dateValue = transformDateValue(cellValue);
+                if (dateValue) {
+                    return dateValue;
+                }
+                break;
+            default:
+                break;
+        }
+    } else {
+        const dateValue = transformDateValue(plainText);
+        if (dateValue) {
+            return dateValue;
+        }
+    }
+
+    return null;
+}
+
 function cellValueToSortValue(cellValue: DateFieldValue): number {
     return cellValue?.timestamp;
+}
+
+function transformDateValue(text: string): FieldValue | null {
+    const value = text.trim();
+    const pattern = /^\d{4}-\d{1,2}-\d{1,2}$/;
+
+    if (value && !isEmpty(value) && pattern.test(value)) {
+        const dateValue = {
+            timestamp: new TinyDate(value).getUnixTime()
+        };
+        return dateValue;
+    }
+    return null;
 }

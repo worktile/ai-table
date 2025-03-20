@@ -12,6 +12,14 @@ export abstract class Field {
         sortKey?: string
     ): number;
 
+    // 粘贴
+    abstract toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue } | null,
+        references?: AITableReferences
+    ): FieldValue | null;
+
     // 筛选
     isMeetFilter(condition: AITableFilterCondition, cellValue: FieldValue) {
         switch (condition.operation) {

@@ -51,6 +51,7 @@ import {
     isWindows
 } from './utils';
 import { getMousePosition } from './utils/position';
+import { buildClipboardData, writeToClipboard, writeToAITable } from './utils/clipboard';
 
 @Component({
     selector: 'ai-table-grid',
@@ -150,6 +151,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
+            this.bindClipboardShortcuts();
         });
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
@@ -593,5 +595,27 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiTableGridEventService.closeCellEditor();
             }
         }
+    }
+
+    private bindClipboardShortcuts() {
+        fromEvent<KeyboardEvent>(document, 'keydown')
+            .pipe(
+                filter((event) => (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(async (event) => {
+                if (event.key === 'c') {
+                    const clipboardData = buildClipboardData(this.aiTable);
+                    if (clipboardData) {
+                        writeToClipboard(clipboardData);
+                    }
+                } else if (event.key === 'v') {
+                    event.preventDefault();
+                    const updateValueFn = (data: UpdateFieldValueOptions) => {
+                        this.aiUpdateFieldValue.emit(data);
+                    };
+                    writeToAITable(this.aiTable, updateValueFn);
+                }
+            });
     }
 }

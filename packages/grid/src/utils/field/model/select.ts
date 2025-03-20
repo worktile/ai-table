@@ -40,6 +40,23 @@ export class SelectField extends Field {
         }
         return fullText;
     }
+
+    override toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue }
+    ): FieldValue | null {
+        return toSelectFieldValue(plainText, targetField, originData);
+    }
+}
+
+export function toSelectFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue }
+): FieldValue | null {
+    // TODO 后面接着做
+    return null;
 }
 
 function cellValueToSortValue(cellValue: SelectFieldValue, field: AITableField): string | null {
