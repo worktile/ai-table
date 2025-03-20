@@ -1,3 +1,4 @@
+import { Id } from 'ngx-tethys/types';
 import { AITableField, AITableFieldType, AttachmentFieldValue, FieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
@@ -89,7 +90,7 @@ export function toAttachmentFieldValue(
         attachmentTitles.forEach((fileTitle) => {
             const attachmentInfo = attachmentInfos.find((attachment) => attachment.title === fileTitle);
             if (attachmentInfo) {
-                validAttachmentIds.push(attachmentInfo._id as Id);
+                validAttachmentIds.push(attachmentInfo._id as string);
             }
         });
         if (validAttachmentIds.length) {
