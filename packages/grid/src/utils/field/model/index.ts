@@ -1,4 +1,5 @@
 import { AITableFieldType } from '../../../core';
+import { AttachmentField } from './attachment';
 import { DateField } from './date';
 import { Field } from './field';
 
@@ -23,5 +24,6 @@ export const ViewOperationMap: Record<AITableFieldType, Field> = {
     [AITableFieldType.member]: new MemberField(),
     [AITableFieldType.progress]: new ProgressField(),
     [AITableFieldType.createdBy]: new MemberField(),
-    [AITableFieldType.updatedBy]: new MemberField()
+    [AITableFieldType.updatedBy]: new MemberField(),
+    [AITableFieldType.attachment]: new AttachmentField()
 };

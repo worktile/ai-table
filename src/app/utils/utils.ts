@@ -459,7 +459,13 @@ export function getCanvasDefaultValue() {
                     // 'column-12': { timestamp: 1720490727 },
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-24': [
+                        '67da7c119675bccb963cc524',
+                        '67da7c319675bccb963cc52b',
+                        '67da7c419675bccb963cc52d',
+                        '67da7c599675bccb963cc52f'
+                    ]
                 }
             },
             {
@@ -491,7 +497,18 @@ export function getCanvasDefaultValue() {
                     // 'column-12': { timestamp: 1720490727 },
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    // 'column-24': ['676e3e9b5660cd68d7f49e60']
+                    'column-24': [
+                        '676e3e9b5660cd68d7f49e60',
+                        '67da7c119675bccb963cc524',
+                        '67da7c319675bccb963cc52b',
+                        '67da7c419675bccb963cc52d',
+                        '67da7c599675bccb963cc52f',
+                        '67da80d89675bccb963cc588',
+                        '67da80f09675bccb963cc58a',
+                        '67da81429675bccb963cc596'
+                    ]
                 }
             },
             {
@@ -528,7 +545,8 @@ export function getCanvasDefaultValue() {
                     // 'column-12': { timestamp: 1720490727 },
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
-                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b']
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-24': ['676e3e9b5660cd68d7f49e60']
                 }
             }
         ],
@@ -978,6 +996,17 @@ export function getCanvasDefaultValue() {
                     view1: 19,
                     view2: -1
                 }
+            },
+            {
+                _id: 'column-24',
+                type: AITableFieldType.attachment,
+                icon: 'attachment',
+                name: '附件',
+                settings: {},
+                positions: {
+                    view1: 20,
+                    view2: 0
+                }
             }
         ]
     };
@@ -1077,6 +1106,81 @@ export function getReferences(): AITableReferences {
                 display_name: 'Angular',
                 display_name_pinyin: 'Angular',
                 avatar: ''
+            }
+        },
+        attachments: {
+            '676e3e9b5660cd68d7f49e60': {
+                _id: '676e3e9b5660cd68d7f49e60',
+                title: '2222.docx',
+                addition: {
+                    ext: 'docx',
+                    path: 'baa7652b-e2ad-447f-b086-d4a929ae079a',
+                    size: 9962
+                }
+            },
+            '67da7c119675bccb963cc524': {
+                _id: '67da7c119675bccb963cc524',
+                title: '1.xlsx',
+                addition: {
+                    ext: 'xlsx',
+                    path: '43ca5702-7608-4649-bb12-f0620e0f4895',
+                    size: 17634
+                }
+            },
+            '67da7c319675bccb963cc52b': {
+                _id: '67da7c319675bccb963cc52b',
+                title: '[FZai]-桌面86底盒（标准）.3mf',
+
+                addition: {
+                    ext: '3mf',
+                    path: 'a64eddaf-a70e-46b6-b2fa-3baaac19f6a8',
+                    size: 1356157
+                }
+            },
+            '67da7c419675bccb963cc52d': {
+                _id: '67da7c419675bccb963cc52d',
+                title: '【2023.2.16】版本比对UI设计 (1).zip',
+                addition: {
+                    ext: 'zip',
+                    path: 'fb4bf273-0d98-49ce-9dfa-53f197bdbd40',
+                    size: 1815883
+                }
+            },
+            '67da7c599675bccb963cc52f': {
+                _id: '67da7c599675bccb963cc52f',
+                title: '1 (1).pdf',
+                addition: {
+                    ext: 'pdf',
+                    path: '5ff9237d-45da-49fd-9f14-40102a0d7c2a',
+                    size: 798825
+                }
+            },
+            '67da80d89675bccb963cc588': {
+                _id: '67da80d89675bccb963cc588',
+                title: '1.png',
+                addition: {
+                    ext: 'png',
+                    path: '41b43419-3f06-44b0-852d-8d1d9200742b',
+                    size: 23511
+                }
+            },
+            '67da80f09675bccb963cc58a': {
+                _id: '67da80f09675bccb963cc58a',
+                title: '7f65ce5b1c.m3u',
+                addition: {
+                    ext: 'm3u',
+                    path: '23fc1590-0d8f-4e03-8bb2-3feb02f9ebaa',
+                    size: 2626981
+                }
+            },
+            '67da81429675bccb963cc596': {
+                _id: '67da81429675bccb963cc596',
+                title: '51683696422_.pic_hd.jpg',
+                addition: {
+                    ext: 'jpg',
+                    path: '8a5f7b97-d515-4d73-9c20-141c88e41828',
+                    size: 2474023
+                }
             }
         }
     };

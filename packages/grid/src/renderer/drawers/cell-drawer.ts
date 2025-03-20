@@ -16,6 +16,9 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
+    AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
+    AI_TABLE_FILE_ICON_ITEM_HEIGHT,
+    AI_TABLE_FILE_ICON_SIZE,
     AI_TABLE_MEMBER_AVATAR_SIZE,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
     AI_TABLE_MIN_TEXT_WIDTH,
@@ -50,6 +53,7 @@ import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField
 import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
+import { getFileCanvasPaths } from '../../utils/file';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -100,6 +104,8 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.createdBy:
             case AITableFieldType.updatedBy:
                 return this.renderCellMember(render, ctx);
+            case AITableFieldType.attachment:
+                return this.renderCellAttachment(render, ctx);
             default:
                 return null;
         }
@@ -678,6 +684,103 @@ export class CellDrawer extends Drawer {
                         y: y + currentY,
                         width: AITableAvatarSize.size24,
                         height: AITableAvatarSize.size24,
+                        radius: 24,
+                        fill: this.colors.black
+                    });
+                    ctx.restore();
+                    this.text({
+                        x: x + currentX + FONT_SIZE_SM / 2,
+                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
+                        fillStyle: this.colors.white,
+                        fontSize: FONT_SIZE_SM,
+                        text: `+${listCount - index - 1}`,
+                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                    });
+                }
+            }
+        }
+    }
+
+    private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+        const { references, x, y, field, transformValue: _cellValue, rowHeight, columnWidth, isActive } = render;
+        const cellValue = _cellValue;
+        if (!cellValue?.length || !references) {
+            return;
+        }
+
+        const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
+        const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
+        const isOperating = isActive;
+
+        let currentX = AI_TABLE_CELL_PADDING;
+        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - fileIconSize) / 2;
+        const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
+        const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
+        const maxTextWidth = isOperating
+            ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
+            : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
+
+        const listCount = cellValue.length;
+        let isOverflow = false;
+
+        for (let index = 0; index < listCount; index++) {
+            const attachmentInfo = references.attachments[cellValue[index]];
+            if (!attachmentInfo) continue;
+            const { title, addition } = attachmentInfo;
+            const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
+            currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
+            let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
+            if (index === 0 && isOperating) {
+                const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
+                // item No space to display, then perform a line feed
+                if (operatingMaxWidth <= 20) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                    currentY += AI_TABLE_OPTION_ITEM_HEIGHT + AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP;
+                } else {
+                    realMaxTextWidth = operatingMaxWidth;
+                }
+            }
+            let isMore = currentX + itemWidth > columnWidth - 2 * AI_TABLE_CELL_PADDING;
+            if (columnWidth != null) {
+                // 在非活动状态下，当超出列宽时，不会渲染后续内容
+                if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
+                    break;
+                }
+                // 如果不是非活动状态的最后一行，则换行渲染溢出内容
+                if (currentX > columnWidth - 2 * AI_TABLE_CELL_PADDING) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                }
+                if (currentX + itemWidth > columnWidth - AI_TABLE_CELL_PADDING) {
+                    currentX = AI_TABLE_CELL_PADDING;
+                    currentY += itemHeight;
+                }
+                if (currentY >= maxHeight) {
+                    isOverflow = true;
+                }
+            }
+
+            const filePaths = getFileCanvasPaths(addition?.ext);
+
+            if (ctx) {
+                ctx.translate(x + currentX, y + currentY);
+                filePaths.forEach((obj) => {
+                    const path = new Path2D(obj.d as string);
+                    ctx.globalAlpha = obj.opacity;
+                    ctx.fillStyle = obj.fill;
+                    ctx.strokeStyle = obj.stroke;
+                    ctx.lineWidth = Number(obj.strokeWidth);
+                    ctx.fill(path, obj.fillRule);
+                    ctx.stroke(path);
+                });
+                ctx.translate(-(x + currentX), -(y + currentY));
+                if (isMore) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.3;
+                    this.rect({
+                        x: x + currentX,
+                        y: y + currentY,
+                        width: AI_TABLE_FILE_ICON_SIZE,
+                        height: AI_TABLE_FILE_ICON_SIZE,
                         radius: 24,
                         fill: this.colors.black
                     });

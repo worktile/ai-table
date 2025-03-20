@@ -11,6 +11,7 @@ export enum AITableFieldType {
     progress = 'progress',
     rate = 'rate',
     link = 'link',
+    attachment = 'attachment',
     createdAt = 'created_at',
     updatedAt = 'updated_at',
     createdBy = 'created_by',
@@ -64,7 +65,7 @@ export interface AITableField {
     settings?: AITableFieldSettings;
 }
 
-export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings;
+export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings | AttachmentSettings;
 
 export interface TextSettings {}
 
@@ -74,6 +75,8 @@ export interface SelectSettings extends IsMultiple {
     option_style?: AITableSelectOptionStyle;
     options: AITableSelectOption[];
 }
+
+export interface AttachmentSettings {}
 
 export interface MemberSettings extends IsMultiple {}
 
@@ -108,6 +111,8 @@ export type DateFieldValue = { timestamp: number }; // 时间戳
 
 export type MemberFieldValue = Id[];
 
+export type AttachmentFieldValue = string[];
+
 export type ProgressFieldValue = number; // [0,1]
 
 export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
@@ -121,6 +126,7 @@ export type FieldValue =
     | MemberFieldValue
     | ProgressFieldValue
     | RateFieldValue
+    | AttachmentFieldValue
     | any;
 
 export interface TrackableEntity {
