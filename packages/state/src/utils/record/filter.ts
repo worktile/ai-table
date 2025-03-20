@@ -87,8 +87,8 @@ export function getDefaultRecordDataByFilter(
             if (conditionFieldCountMap.get(condition.field_id.toString()) === 1) {
                 const field = fieldMap.get(condition.field_id.toString())!;
                 const canMultipleOperationCondition =
-                    (!(field.settings as SelectSettings).is_multiple && condition.operation === AITableFilterOperation.eq) ||
-                    (field.settings as SelectSettings).is_multiple;
+                    (!(field.settings as SelectSettings)?.is_multiple && condition.operation === AITableFilterOperation.eq) ||
+                    (field?.settings as SelectSettings)?.is_multiple;
                 if (
                     [AITableFilterOperation.eq, AITableFilterOperation.in].includes(condition.operation) &&
                     [AITableFieldType.select, AITableFieldType.member].includes(field?.type) &&
