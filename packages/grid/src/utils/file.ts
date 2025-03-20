@@ -1,4 +1,4 @@
-import { FileIcons } from '../constants';
+import { FileIcons } from './icon';
 
 export function getFileThumbnailName(ext: string) {
     let result = 'defaultFile';

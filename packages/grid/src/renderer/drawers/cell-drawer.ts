@@ -16,6 +16,9 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
+    AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
+    AI_TABLE_FILE_ICON_ITEM_HEIGHT,
+    AI_TABLE_FILE_ICON_SIZE,
     AI_TABLE_MEMBER_AVATAR_SIZE,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
     AI_TABLE_MIN_TEXT_WIDTH,
@@ -705,13 +708,13 @@ export class CellDrawer extends Drawer {
             return;
         }
 
-        const avatarSize = AI_TABLE_MEMBER_AVATAR_SIZE;
-        const itemHeight = AI_TABLE_CELL_MEMBER_ITEM_HEIGHT;
+        const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
+        const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
         const isOperating = isActive;
 
         let currentX = AI_TABLE_CELL_PADDING;
-        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - avatarSize) / 2;
-        const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
+        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - fileIconSize) / 2;
+        const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
         const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
         const maxTextWidth = isOperating
             ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
@@ -724,7 +727,7 @@ export class CellDrawer extends Drawer {
             const attachmentInfo = references.attachments[cellValue[index]];
             if (!attachmentInfo) continue;
             const { title, addition } = attachmentInfo;
-            const itemWidth = AITableAvatarSize.size24 + AI_TABLE_CELL_MEMBER_ITEM_PADDING;
+            const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
             currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
             let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
             if (index === 0 && isOperating) {
@@ -762,10 +765,11 @@ export class CellDrawer extends Drawer {
                 ctx.translate(x + currentX, y + currentY);
                 filePaths.forEach((obj) => {
                     const path = new Path2D(obj.d as string);
+                    ctx.globalAlpha = obj.opacity;
                     ctx.fillStyle = obj.fill;
                     ctx.strokeStyle = obj.stroke;
                     ctx.lineWidth = Number(obj.strokeWidth);
-                    ctx.fill(path);
+                    ctx.fill(path, obj.fillRule);
                     ctx.stroke(path);
                 });
                 ctx.translate(-(x + currentX), -(y + currentY));
