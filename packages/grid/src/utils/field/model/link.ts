@@ -30,6 +30,10 @@ export class LinkField extends Field {
         }
         return texts;
     }
+
+    override pasteValue(): FieldValue | null {
+        return null;
+    }
 }
 
 function cellValueToSortValue(cellValue: LinkFieldValue): string | null {

@@ -23,6 +23,10 @@ export class TextField extends Field {
         const value2 = cellValueToSortValue(cellValue2);
         return compareString(value1, value2);
     }
+
+    override pasteValue(plainText: string): FieldValue | null {
+        return plainText.trim();
+    }
 }
 
 function cellValueToSortValue(cellValue: FieldValue): string | null {

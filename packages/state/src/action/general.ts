@@ -9,7 +9,7 @@ import {
     AIViewTable
 } from '../types';
 import { createDraft, finishDraft } from 'immer';
-import { AITableField, AITableFields, AITableSelectAllState, getDefaultFieldValue } from '@ai-table/grid';
+import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions, isPathEqual } from '../utils';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {

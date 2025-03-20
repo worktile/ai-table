@@ -38,6 +38,7 @@ export interface AITableContextMenuItem {
     type: string;
     name?: string;
     icon?: string;
+    shortcutKey?: string;
     exec?: (
         aiTable: AITable,
         targetName: string,

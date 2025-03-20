@@ -1,4 +1,5 @@
-import { FieldValue } from '../../../core';
+import { helpers } from 'ngx-tethys/util';
+import { AITableField, AITableFieldType, FieldValue, SelectSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareNumber } from '../operate';
@@ -30,5 +31,38 @@ export class NumberField extends Field {
 
     override compare(cellValue1: number, cellValue2: number): number {
         return compareNumber(cellValue1, cellValue2);
+    }
+
+    override pasteValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue }
+    ): FieldValue | null {
+        let text = plainText.trim();
+
+        if (originData) {
+            const { field, cellValue } = originData;
+            const fieldType = field.type;
+
+            switch (fieldType) {
+                case AITableFieldType.number:
+                case AITableFieldType.rate:
+                case AITableFieldType.progress:
+                    return cellValue;
+                case AITableFieldType.select:
+                    if (cellValue && Array.isArray(cellValue) && cellValue.length) {
+                        const optionsMap = helpers.keyBy((field.settings as SelectSettings).options || [], '_id');
+                        text = optionsMap[cellValue[0]]?.text;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (text && !isEmpty(text) && !Number.isNaN(Number(text))) {
+            return Number(text);
+        }
+        return null;
     }
 }

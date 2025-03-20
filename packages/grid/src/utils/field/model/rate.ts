@@ -1,4 +1,5 @@
-import { RateFieldValue } from '../../../core';
+import { helpers } from 'ngx-tethys/util';
+import { AITableField, AITableFieldType, FieldValue, RateFieldValue, SelectSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareNumber } from '../operate';
@@ -24,5 +25,43 @@ export class RateField extends Field {
 
     override compare(cellValue1: number, cellValue2: number): number {
         return compareNumber(cellValue1, cellValue2);
+    }
+
+    override pasteValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue }
+    ): FieldValue | null {
+        //  评分支持选中单元格后、验证、再提交
+
+        // let value: any = plainText.trim();
+        // if (originData) {
+        //     const { field, cellValue } = originData;
+        //     switch (field.type) {
+        //         case AITableFieldType.rate:
+        //         case AITableFieldType.number:
+        //         case AITableFieldType.progress:
+        //             value = cellValue;
+        //             break;
+        //         case AITableFieldType.select:
+        //             if (cellValue && Array.isArray(cellValue) && cellValue.length) {
+        //                 const optionsMap = helpers.keyBy((field.settings as SelectSettings).options || [], '_id');
+        //                 value = optionsMap[cellValue[0]]?.text;
+        //             }
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // }
+
+        // if (!isEmpty(value)) {
+        //     const rateValue = Number(value);
+        //     if (!Number.isNaN(rateValue) && rateValue > 0 && rateValue < 5) {
+        //         return Math.round(rateValue);
+        //     }
+        //     return 5;
+        // }
+
+        return null;
     }
 }
