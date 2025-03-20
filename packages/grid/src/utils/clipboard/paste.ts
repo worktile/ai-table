@@ -1,7 +1,7 @@
 import { AITableContent, AITableReferences } from '../../types';
 import { AITable, AITableField, AITableRecord, getFieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableSpecialAttribute } from '../clipboard';
-import { ViewOperationMap } from '../field/model';
+import { FieldModelMap } from '../field/model';
 
 const aiTableAttributePattern = new RegExp(`${aiTableSpecialAttribute}="(.+?)"`, 'm');
 
@@ -48,9 +48,9 @@ function getPasteValue(
             field,
             cellValue: getFieldValue(record, field)
         };
-        return ViewOperationMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
+        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
     } else {
-        return ViewOperationMap[targetField.type].toFieldValue(plainText, targetField, null, references);
+        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, null, references);
     }
 }
 

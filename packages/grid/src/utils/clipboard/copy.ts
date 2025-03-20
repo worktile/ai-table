@@ -1,5 +1,5 @@
 import { AITable, AITableFieldType, AITableQueries, AITableRecord, AITableField } from '../../core';
-import { ViewOperationMap } from '../field/model';
+import { FieldModelMap } from '../field/model';
 import { transformCellValue } from '../cell';
 import { AITableContent, ClipboardContent } from '../../types';
 
@@ -26,7 +26,7 @@ export const buildClipboardData = (aiTable: AITable): ClipboardContent | null =>
     }
 
     const clipboardContentMap = new Map<string, ClipboardContent[]>();
-    const copidRecordsMap = new Map<string, AITableRecord>();
+    const copiedRecordsMap = new Map<string, AITableRecord>();
     const copidFieldsMap = new Map<string, AITableField>();
 
     copiedCells.forEach((cellPath: string) => {
@@ -36,7 +36,7 @@ export const buildClipboardData = (aiTable: AITable): ClipboardContent | null =>
         const field: AITableField = aiTable.fieldsMap()[fieldId!];
         const transformValue = transformCellValue(aiTable, field, cellValue);
         const references = aiTable.context!.references();
-        const cellTexts: string[] = ViewOperationMap[field.type].cellFullText(transformValue, field, references);
+        const cellTexts: string[] = FieldModelMap[field.type].cellFullText(transformValue, field, references);
 
         let cellContent = {
             text: cellTexts.join(','),
@@ -47,8 +47,8 @@ export const buildClipboardData = (aiTable: AITable): ClipboardContent | null =>
         }
         clipboardContentMap.set(recordId, [...(clipboardContentMap.get(recordId) || []), cellContent]);
 
-        if (recordId && !copidRecordsMap.has(recordId)) {
-            copidRecordsMap.set(recordId, record);
+        if (recordId && !copiedRecordsMap.has(recordId)) {
+            copiedRecordsMap.set(recordId, record);
         }
         if (fieldId && !copidFieldsMap.has(fieldId)) {
             copidFieldsMap.set(fieldId, field);
@@ -57,7 +57,7 @@ export const buildClipboardData = (aiTable: AITable): ClipboardContent | null =>
 
     const clipboardContent = Array.from(clipboardContentMap.values());
     const aiTableContent: AITableContent = {
-        records: Array.from(copidRecordsMap.values()),
+        records: Array.from(copiedRecordsMap.values()),
         fields: Array.from(copidFieldsMap.values())
     };
     return formatClipboardData(clipboardContent, aiTableContent);
