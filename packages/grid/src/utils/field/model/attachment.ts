@@ -1,4 +1,4 @@
-import { AITableField, AttachmentFieldValue, FieldValue } from '../../../core';
+import { AITableField, AITableFieldType, AttachmentFieldValue, FieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect, stringInclude } from '../operate';
@@ -47,6 +47,57 @@ export class AttachmentField extends Field {
         }
         return fullText;
     }
+
+    override toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: AttachmentFieldValue },
+        references?: AITableReferences
+    ): AttachmentFieldValue | null {
+        return toAttachmentFieldValue(plainText, targetField, originData, references);
+    }
+}
+
+export function toAttachmentFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: AttachmentFieldValue },
+    references?: AITableReferences
+): FieldValue | null {
+    if (targetField.type == AITableFieldType.createdBy || targetField.type == AITableFieldType.updatedBy) {
+        return null;
+    }
+    if (originData) {
+        const { field, cellValue } = originData;
+        switch (field.type) {
+            case AITableFieldType.attachment:
+                if (Array.isArray(cellValue) && cellValue.length) {
+                    return cellValue;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    plainText = plainText.trim();
+    const hasAttachmentInfo = references && references.attachments && Object.keys(references.attachments).length;
+    if (plainText && hasAttachmentInfo) {
+        const attachmentTitles = plainText.split(',').map((id) => id.trim());
+        const attachmentInfos = Object.values(references.attachments);
+        let validAttachmentIds: AttachmentFieldValue = [];
+        attachmentTitles.forEach((fileTitle) => {
+            const attachmentInfo = attachmentInfos.find((attachment) => attachment.title === fileTitle);
+            if (attachmentInfo) {
+                validAttachmentIds.push(attachmentInfo._id as Id);
+            }
+        });
+        if (validAttachmentIds.length) {
+            return validAttachmentIds;
+        }
+    }
+
+    return null;
 }
 
 function cellValueToSortValue(
