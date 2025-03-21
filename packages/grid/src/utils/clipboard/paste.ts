@@ -10,27 +10,80 @@ const decodeClipboardJsonData = (encoded: string) => {
     return JSON.parse(decoded);
 };
 
-const readClipboardData = async (): Promise<{ clipboardPlainTexts: string[][]; aiTableContent: AITableContent | null }> => {
+function extractContentFromClipboardText(clipboardText: string): string[][] {
+    const contents = clipboardText
+        .split('\n')
+        .map((row) => row.split('\t'))
+        .filter((row) => row.length > 0 && row.some((cell) => cell.trim().length > 0));
+
+    return contents;
+}
+
+function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
+    const tablePattern = /<table[^>]*>([\s\S]*?)<\/table>/i;
+    const trPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+    const cellPattern = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
+    const contents: string[][] = [];
+
+    try {
+        const tableMatch = clipboardHtml.match(tablePattern);
+        const tableContent = tableMatch ? tableMatch[1] : clipboardHtml;
+        const rows = tableContent.match(trPattern) || [];
+
+        rows.forEach((row) => {
+            const rowContent: string[] = [];
+            const cells = row.match(cellPattern) || [];
+
+            cells.forEach((cell) => {
+                let content = cell
+                    .replace(/<[^>]+>/g, '')
+                    .replace(/&nbsp;/g, ' ')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"')
+                    .trim();
+                rowContent.push(content);
+            });
+
+            contents.push(rowContent);
+        });
+
+        return contents;
+    } catch (error) {
+        return [];
+    }
+}
+
+function extractAITableContentFromClipboardHtml(clipboardHtml: string): AITableContent | null {
+    const aiTableFragment = clipboardHtml.match(aiTableAttributePattern);
+    if (aiTableFragment && !!aiTableFragment.length) {
+        return decodeClipboardJsonData(aiTableFragment[1]);
+    }
+    return null;
+}
+
+const readClipboardData = async (): Promise<{ clipboardContent: string[][]; aiTableContent: AITableContent | null }> => {
     const clipboardData = await readFromClipboard();
-    let clipboardPlainTexts: string[][] = [];
+    let clipboardContent: string[][] = [];
     let aiTableContent: AITableContent | null = null;
 
-    if (clipboardData && clipboardData.html) {
-        const aiTableAttribute = clipboardData.html.match(aiTableAttributePattern);
-        if (aiTableAttribute && aiTableAttribute[1]) {
-            aiTableContent = decodeClipboardJsonData(aiTableAttribute[1]);
+    if (clipboardData) {
+        const clipboardHtml = clipboardData.html;
+        const clipboardText = clipboardData.text;
+
+        if (clipboardHtml) {
+            aiTableContent = extractAITableContentFromClipboardHtml(clipboardHtml);
+            clipboardContent = extractContentFromClipboardHtml(clipboardHtml);
+        }
+
+        if (!clipboardContent.length && clipboardText) {
+            clipboardContent = extractContentFromClipboardText(clipboardText);
         }
     }
 
-    if (clipboardData && clipboardData.text) {
-        clipboardPlainTexts = clipboardData.text
-            .split('\n')
-            .map((row) => row.split('\t'))
-            .filter((row) => row.length > 0 && row.some((cell) => cell.trim().length > 0));
-    }
-
     return {
-        clipboardPlainTexts,
+        clipboardContent,
         aiTableContent
     };
 };
@@ -59,8 +112,8 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
     if (!selectedCells.length) {
         return;
     }
-    const { clipboardPlainTexts, aiTableContent } = await readClipboardData();
-    if (!clipboardPlainTexts.length) {
+    const { clipboardContent, aiTableContent } = await readClipboardData();
+    if (!clipboardContent.length) {
         return;
     }
 
@@ -75,7 +128,7 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
     const copiedFields = aiTableContent?.fields || [];
     const copiedRecords = aiTableContent?.records || [];
 
-    clipboardPlainTexts.forEach((row, i) => {
+    clipboardContent.forEach((row, i) => {
         row.forEach((plainText, j) => {
             const targetRowIndex = startRowIndex + i;
             const targetColIndex = startColIndex + j;
