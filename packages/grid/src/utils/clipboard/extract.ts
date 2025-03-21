@@ -1,4 +1,4 @@
-export function extractTextFromATag(text: string) {
+export function extractTextFromATag(text: string): string {
     let plainText = text;
     if (text.includes('<a')) {
         const aTagMatch = text.match(/<a[^>]*>(.*?)<\/a>/i);
