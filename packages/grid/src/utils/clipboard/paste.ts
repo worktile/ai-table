@@ -1,5 +1,5 @@
 import { AITableContent, AITableReferences } from '../../types';
-import { AITable, AITableField, AITableFieldType, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
@@ -89,19 +89,26 @@ function getPasteValue(
     targetField: AITableField,
     references: AITableReferences
 ) {
+    let field: AITableField | null = null;
+    let record: Partial<AITableRecord> | null = null;
     let originData: { field: AITableField; cellValue: FieldValue } | null = null;
-    if (!!aiTableContent) {
-        const { fields, records } = aiTableContent;
-        const field = fields[fieldIndex];
-        const record = records[recordIndex];
 
+    if (aiTableContent) {
+        const { fields, records } = aiTableContent;
+        field = fields[fieldIndex];
+        record = records[recordIndex];
+    }
+
+    if (field && record) {
         originData = {
             field,
             cellValue: getFieldValue(record, field)
         };
     }
 
-    plainText = targetField.type === AITableFieldType.link ? plainText : extractText(plainText);
+    if (targetField.type !== AITableFieldType.link) {
+        plainText = extractText(plainText);
+    }
     return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 
