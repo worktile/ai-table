@@ -13,6 +13,24 @@ import {
 } from '../types';
 import { isSystemField } from './field';
 
+export function getFieldValue(record: Partial<AITableRecord>, field: AITableField) {
+    if (isSystemField(field)) {
+        return getSystemFieldValue(record, field.type as SystemFieldTypes);
+    }
+    return record.values?.[field._id];
+}
+
+export function getSystemFieldValue(record: Partial<AITableRecord>, type: SystemFieldTypes) {
+    const value = record[type];
+    if (type === AITableFieldType.createdAt || type === AITableFieldType.updatedAt) {
+        return { timestamp: value } as DateFieldValue;
+    }
+    if (type === AITableFieldType.createdBy || type === AITableFieldType.updatedBy) {
+        return [value] as MemberFieldValue;
+    }
+    throw new Error(`unexpected ${type}`);
+}
+
 export const AITableQueries = {
     findRecordPath(aiTable: AITable, record: AITableRecord) {
         const recordIndex = record && aiTable.records().indexOf(record);
@@ -49,20 +67,10 @@ export const AITableQueries = {
         if (!field) {
             throw new Error(`can not find field at path [${path}]`);
         }
-        if (isSystemField(field)) {
-            return AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes);
-        }
-        return record.values[path[1]];
+        return getFieldValue(record, field);
     },
-    getSystemFieldValue(record: AITableRecord, type: SystemFieldTypes) {
-        const value = record[type];
-        if (type === AITableFieldType.createdAt || type === AITableFieldType.updatedAt) {
-            return { timestamp: value } as DateFieldValue;
-        }
-        if (type === AITableFieldType.createdBy || type === AITableFieldType.updatedBy) {
-            return [value] as MemberFieldValue;
-        }
-        throw new Error(`unexpected ${type}`);
+    getSystemFieldValue(record: Partial<AITableRecord>, type: SystemFieldTypes) {
+        return getSystemFieldValue(record, type);
     },
     getField(aiTable: AITable, path: IdPath): AITableField | undefined {
         if (!aiTable) {

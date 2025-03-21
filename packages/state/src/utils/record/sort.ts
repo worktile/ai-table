@@ -1,4 +1,4 @@
-import { AITable, AITableFieldType, AITableQueries, ViewOperationMap } from '@ai-table/grid';
+import { AITable, AITableFieldType, AITableQueries, FieldModelMap } from '@ai-table/grid';
 import { AITableView, AITableViewRecords } from '../../types';
 import { sortByViewPosition } from '../common';
 
@@ -32,7 +32,7 @@ export function sortRecordsBySortInfo(
                 if (!field || acc !== 0) {
                     return acc;
                 }
-                const fieldMethod = ViewOperationMap[field.type];
+                const fieldMethod = FieldModelMap[field.type];
                 const sortKey = sortKeysMap?.[field.type];
 
                 const cellValue1 = AITableQueries.getFieldValue(aiTable, [prev._id, field._id]);

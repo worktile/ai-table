@@ -5,7 +5,7 @@ import {
     FieldValue,
     isSystemField,
     SystemFieldTypes,
-    ViewOperationMap,
+    FieldModelMap,
     isEmpty,
     AITableFilterOperation,
     SelectSettings
@@ -66,7 +66,7 @@ function doFilterOperations(fields: AITableViewFields, record: AITableRecord, co
 }
 
 export function doFilter(condition: AITableFilterCondition, field: AITableViewField, cellValue: FieldValue) {
-    return ViewOperationMap[field.type].isMeetFilter(condition, cellValue);
+    return FieldModelMap[field.type].isMeetFilter(condition, cellValue);
 }
 
 export function getDefaultRecordDataByFilter(
