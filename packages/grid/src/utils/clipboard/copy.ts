@@ -35,7 +35,7 @@ const encodeAITableContent = (aiTableContent: AITableContent) => {
 function mergeClipboardContent(clipboardContent: ClipboardContent[][], aiTableContent: AITableContent): ClipboardContent {
     const encodedAITableContent = encodeAITableContent(aiTableContent);
     const formattedContent: ClipboardContent = {
-        text: clipboardContent.map((row) => row.map((column) => column.text).join('\t')).join('\r\n'),
+        text: clipboardContent.map((row) => row.map((column) => column.text).join('\t')).join('\n'),
         html: `<table ${aiTableFragmentAttribute}="${encodedAITableContent}">${clipboardContent.map((row) => `<tr>${row.map((column) => `<td>${column.html}</td>`).join('')}</tr>`).join('')}</table>`
     };
     return formattedContent;
