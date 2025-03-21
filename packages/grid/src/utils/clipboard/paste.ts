@@ -1,6 +1,6 @@
 import { AITableContent, AITableReferences } from '../../types';
 import { AITable, AITableField, AITableFieldType, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
-import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
+import { readFromClipboard, aiTableFragmentAttribute, extractTextFromATag } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -101,7 +101,7 @@ function getPasteValue(
         };
     }
 
-    plainText = targetField.type === AITableFieldType.link ? plainText : extractText(plainText);
+    plainText = targetField.type === AITableFieldType.link ? plainText : extractTextFromATag(plainText);
     return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 

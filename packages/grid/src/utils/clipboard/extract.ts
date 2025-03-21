@@ -1,4 +1,4 @@
-export function extractText(text: string) {
+export function extractTextFromATag(text: string) {
     let plainText = text;
     if (text.includes('<a')) {
         const aTagMatch = text.match(/<a[^>]*>(.*?)<\/a>/i);
@@ -9,7 +9,7 @@ export function extractText(text: string) {
     return plainText;
 }
 
-export function extractLinkHref(text: string): string | null {
+export function extractUrlFromATag(text: string): string | null {
     let href: string | null = null;
     const hrefMatch = text.match(/href="([^"]+)"/);
     if (hrefMatch && hrefMatch[1] && hrefMatch[1].trim()) {
