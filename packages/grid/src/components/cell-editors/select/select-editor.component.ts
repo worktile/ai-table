@@ -1,19 +1,15 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ThyDot } from 'ngx-tethys/dot';
 import { ThyEmptyModule } from 'ngx-tethys/empty';
-import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
-import { ThyIcon } from 'ngx-tethys/icon';
-import { ThySelect } from 'ngx-tethys/select';
+import { ThySelect, ThySelectModule } from 'ngx-tethys/select';
 import { ThyOption } from 'ngx-tethys/shared';
-import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { AITableQueries, AITableSelectOptionStyle } from '../../../core';
-import { SelectOptionPipe } from '../../../pipes';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
+import { ThyFormModule } from 'ngx-tethys/form';
 
 @Component({
     selector: 'select-cell-editor',
@@ -24,18 +20,15 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
         class: 'd-block h-100 select-cell-editor'
     },
     imports: [
-        FormsModule,
-        NgTemplateOutlet,
         ThySelect,
         ThyOption,
-        ThyTag,
-        ThyIcon,
         ThyTooltipModule,
-        ThyDot,
-        ThyFlexibleText,
-        SelectOptionPipe,
         SelectOptionComponent,
-        ThyEmptyModule
+        CommonModule,
+        ThyEmptyModule,
+        ThyFormModule,
+        FormsModule,
+        ThySelectModule
     ]
 })
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> {
@@ -65,14 +58,24 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
         })();
     }
 
-    updateValue(value: boolean) {
+    onOpenChange(value: boolean) {
         if (!value) {
-            const value = this.isMultiple ? this.modelValue : (this.modelValue && ([this.modelValue] as string[])) || [];
+            this.closePopover();
+        }
+    }
+
+    onModelChange(event: any) {
+        this.updateValueFn();
+    }
+
+    updateValueFn() {
+        const value = (this.isMultiple ? this.modelValue : (this.modelValue && ([this.modelValue] as string[])) || []) as string[];
+        const originValue = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]) as string[];
+        if (!value.every((v, i) => v === originValue[i]) || value.length !== originValue.length) {
             this.updateFieldValue.emit({
                 value: value,
                 path: [this.record()._id, this.field()._id]
             });
-            this.closePopover();
         }
     }
 }

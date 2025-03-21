@@ -5,7 +5,8 @@
     [thyPlaceHolder]="''"
     [thyPreset]="preset()"
     [thyMode]="field().settings.is_multiple ? 'multiple' : ''"
-    (thyOnExpandStatusChange)="updateValue($event)"
+    (ngModelChange)="onModelChange($event)"
+    (thyOnExpandStatusChange)="onOpenChange($event)"
 >
     <ng-template #selectedDisplay let-option>
         <select-option [field]="field()" [displayOption]="option"></select-option>
