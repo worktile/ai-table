@@ -1,4 +1,4 @@
-import { FieldValue, LinkFieldValue } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareString, stringInclude } from '../operate';
@@ -31,7 +31,25 @@ export class LinkField extends Field {
         return texts;
     }
 
-    override toFieldValue(): FieldValue | null {
+    override toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue } | null
+    ): FieldValue | null {
+        if (originData) {
+            const { field, cellValue } = originData;
+            if (field.type === AITableFieldType.link) {
+                return cellValue;
+            }
+        } else {
+            const linkValue = JSON.parse(plainText);
+            if (linkValue.url) {
+                return {
+                    url: linkValue.url,
+                    text: linkValue.text
+                };
+            }
+        }
         return null;
     }
 }

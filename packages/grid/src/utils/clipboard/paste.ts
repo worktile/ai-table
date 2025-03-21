@@ -1,5 +1,5 @@
 import { AITableContent, AITableReferences } from '../../types';
-import { AITable, AITableField, AITableRecord, getFieldValue, UpdateFieldValueOptions } from '../../core';
+import { AITable, AITableField, AITableFieldType, AITableRecord, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
@@ -22,7 +22,7 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
 function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
     const tablePattern = /<table[^>]*>([\s\S]*?)<\/table>/i;
     const trPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-    const cellPattern = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
+    const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
     const contents: string[][] = [];
 
     try {
@@ -35,14 +35,7 @@ function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
             const cells = row.match(cellPattern) || [];
 
             cells.forEach((cell) => {
-                let content = cell
-                    .replace(/<[^>]+>/g, '')
-                    .replace(/&nbsp;/g, ' ')
-                    .replace(/&amp;/g, '&')
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&quot;/g, '"')
-                    .trim();
+                const content = cell.replace(/<td>|<\/td>/g, '').trim();
                 rowContent.push(content);
             });
 
@@ -88,6 +81,26 @@ const readClipboardData = async (): Promise<{ clipboardContent: string[][]; aiTa
     };
 };
 
+function extractText(text: string) {
+    let plainText = text;
+    if (text.includes('<a')) {
+        const aTagMatch = text.match(/<a[^>]*>(.*?)<\/a>/i);
+        if (aTagMatch && aTagMatch[1] && aTagMatch[1].trim()) {
+            plainText = aTagMatch[1];
+        }
+    }
+    return plainText;
+}
+
+function extractLinkHref(text: string): string | null {
+    let href: string | null = null;
+    const hrefMatch = text.match(/href="([^"]+)"/);
+    if (hrefMatch && hrefMatch[1] && hrefMatch[1].trim()) {
+        href = hrefMatch[1];
+    }
+    return href;
+}
+
 function getPasteValue(
     plainText: string,
     aiTableContent: AITableContent | null,
@@ -96,15 +109,24 @@ function getPasteValue(
     targetField: AITableField,
     references: AITableReferences
 ) {
+    let originData: { field: AITableField; cellValue: FieldValue } | null = null;
     if (!!aiTableContent) {
-        const originData = {
+        originData = {
             field,
             cellValue: getFieldValue(record, field)
         };
-        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
-    } else {
-        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, null, references);
     }
+
+    const href = extractLinkHref(plainText);
+    let text = extractText(plainText);
+    if (targetField.type === AITableFieldType.link && href) {
+        const linkValue = {
+            url: href,
+            text: text
+        };
+        text = JSON.stringify(linkValue);
+    }
+    return FieldModelMap[targetField.type].toFieldValue(text, targetField, originData, references);
 }
 
 export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: UpdateFieldValueOptions) => void) => {
