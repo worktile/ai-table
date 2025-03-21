@@ -91,7 +91,6 @@ function getPasteValue(
 ): FieldValue | null {
     let field: AITableField | null = null;
     let record: Partial<AITableRecord> | null = null;
-    let originData: { field: AITableField; cellValue: FieldValue } | null = null;
 
     if (aiTableContent) {
         const { fields, records } = aiTableContent;
@@ -99,16 +98,13 @@ function getPasteValue(
         record = records[recordIndex];
     }
 
-    if (field && record) {
-        originData = {
-            field,
-            cellValue: getFieldValue(record, field)
-        };
+    if (targetField.type === AITableFieldType.attachment || (field && field.type === AITableFieldType.attachment)) {
+        return null;
     }
-
     if (targetField.type !== AITableFieldType.link) {
         plainText = extractText(plainText);
     }
+    let originData = field && record ? { field, cellValue: getFieldValue(record, field) } : null;
     return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 
