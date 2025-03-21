@@ -88,7 +88,7 @@ function getPasteValue(
     fieldIndex: number,
     targetField: AITableField,
     references: AITableReferences
-) {
+): FieldValue | null {
     let field: AITableField | null = null;
     let record: Partial<AITableRecord> | null = null;
     let originData: { field: AITableField; cellValue: FieldValue } | null = null;
