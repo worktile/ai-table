@@ -36,22 +36,30 @@ export class LinkField extends Field {
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue } | null
     ): FieldValue | null {
-        if (originData) {
-            const { field, cellValue } = originData;
-            if (field.type === AITableFieldType.link) {
-                return cellValue;
-            }
-        } else {
-            const linkValue = JSON.parse(plainText);
-            if (linkValue.url) {
-                return {
-                    url: linkValue.url,
-                    text: linkValue.text
-                };
-            }
-        }
-        return null;
+        return toLinkFieldValue(plainText, targetField, originData);
     }
+}
+
+export function toLinkFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue } | null
+): FieldValue | null {
+    if (originData) {
+        const { field, cellValue } = originData;
+        if (field.type === AITableFieldType.link) {
+            return cellValue;
+        }
+    } else {
+        const linkValue = JSON.parse(plainText);
+        if (linkValue.url) {
+            return {
+                url: linkValue.url,
+                text: linkValue.text
+            };
+        }
+    }
+    return null;
 }
 
 function cellValueToSortValue(cellValue: LinkFieldValue): string | null {
