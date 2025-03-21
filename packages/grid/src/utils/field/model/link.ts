@@ -1,5 +1,6 @@
 import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { extractText, extractLinkHref } from '../../clipboard';
 import { isEmpty } from '../../common';
 import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
@@ -51,11 +52,12 @@ export function toLinkFieldValue(
             return cellValue;
         }
     } else {
-        const linkValue = JSON.parse(plainText);
-        if (linkValue.url) {
+        const url = extractLinkHref(plainText);
+        const text = extractText(plainText);
+        if (url && text) {
             return {
-                url: linkValue.url,
-                text: linkValue.text
+                url,
+                text
             };
         }
     }
