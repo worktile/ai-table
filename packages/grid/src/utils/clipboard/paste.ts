@@ -1,6 +1,6 @@
 import { AITableContent, AITableReferences } from '../../types';
-import { AITable, AITableField, AITableRecord, getFieldValue, UpdateFieldValueOptions } from '../../core';
-import { readFromClipboard, aiTableFragmentAttribute } from '../clipboard';
+import { AITable, AITableField, AITableFieldType, AITableRecord, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
+import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -22,7 +22,7 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
 function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
     const tablePattern = /<table[^>]*>([\s\S]*?)<\/table>/i;
     const trPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-    const cellPattern = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
+    const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
     const contents: string[][] = [];
 
     try {
@@ -35,14 +35,7 @@ function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
             const cells = row.match(cellPattern) || [];
 
             cells.forEach((cell) => {
-                let content = cell
-                    .replace(/<[^>]+>/g, '')
-                    .replace(/&nbsp;/g, ' ')
-                    .replace(/&amp;/g, '&')
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&quot;/g, '"')
-                    .trim();
+                const content = cell.replace(/<td>|<\/td>/g, '').trim();
                 rowContent.push(content);
             });
 
@@ -91,20 +84,32 @@ const readClipboardData = async (): Promise<{ clipboardContent: string[][]; aiTa
 function getPasteValue(
     plainText: string,
     aiTableContent: AITableContent | null,
-    record: Partial<AITableRecord>,
-    field: AITableField,
+    recordIndex: number,
+    fieldIndex: number,
     targetField: AITableField,
     references: AITableReferences
-) {
-    if (!!aiTableContent) {
-        const originData = {
+): FieldValue | null {
+    let field: AITableField | null = null;
+    let record: Partial<AITableRecord> | null = null;
+    let originData: { field: AITableField; cellValue: FieldValue } | null = null;
+
+    if (aiTableContent) {
+        const { fields, records } = aiTableContent;
+        field = fields[fieldIndex];
+        record = records[recordIndex];
+    }
+
+    if (field && record) {
+        originData = {
             field,
             cellValue: getFieldValue(record, field)
         };
-        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
-    } else {
-        return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, null, references);
     }
+
+    if (targetField.type !== AITableFieldType.link) {
+        plainText = extractText(plainText);
+    }
+    return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 
 export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: UpdateFieldValueOptions) => void) => {
@@ -125,9 +130,6 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
     const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
 
-    const copiedFields = aiTableContent?.fields || [];
-    const copiedRecords = aiTableContent?.records || [];
-
     clipboardContent.forEach((row, i) => {
         row.forEach((plainText, j) => {
             const targetRowIndex = startRowIndex + i;
@@ -138,7 +140,9 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
 
             const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
-            const value = getPasteValue(plainText, aiTableContent, copiedRecords[i], copiedFields[j], targetField, references);
+            const recordIndex = i;
+            const fieldIndex = j;
+            const value = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
 
             if (value !== null) {
                 updateValueFn({
