@@ -1,6 +1,6 @@
 import { AITableContent, AITableReferences } from '../../types';
 import { AITable, AITableField, AITableFieldType, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
-import { readFromClipboard, aiTableFragmentAttribute, extractTextFromATag } from '../clipboard';
+import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -101,7 +101,7 @@ function getPasteValue(
         };
     }
 
-    plainText = targetField.type === AITableFieldType.link ? plainText : extractTextFromATag(plainText);
+    plainText = targetField.type === AITableFieldType.link ? plainText : extractText(plainText);
     return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 
@@ -133,7 +133,9 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
 
             const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
-            const value = getPasteValue(plainText, aiTableContent, i, j, targetField, references);
+            const recordIndex = i;
+            const fieldIndex = j;
+            const value = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
 
             if (value !== null) {
                 updateValueFn({
