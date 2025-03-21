@@ -1,9 +1,9 @@
 import { AITableContent, AITableReferences } from '../../types';
 import { AITable, AITableField, AITableRecord, getFieldValue, UpdateFieldValueOptions } from '../../core';
-import { readFromClipboard, aiTableSpecialAttribute } from '../clipboard';
+import { readFromClipboard, aiTableFragmentAttribute } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 
-const aiTableAttributePattern = new RegExp(`${aiTableSpecialAttribute}="(.+?)"`, 'm');
+const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
 const decodeClipboardJsonData = (encoded: string) => {
     const decoded = decodeURIComponent(window.atob(encoded));
@@ -38,7 +38,7 @@ const readClipboardData = async (): Promise<{ clipboardPlainTexts: string[][]; a
 function getPasteValue(
     plainText: string,
     aiTableContent: AITableContent | null,
-    record: AITableRecord,
+    record: Partial<AITableRecord>,
     field: AITableField,
     targetField: AITableField,
     references: AITableReferences

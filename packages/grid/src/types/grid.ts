@@ -6,7 +6,7 @@ import {
     AITableField,
     AITableFields,
     AITableFieldType,
-    AITableRecords,
+    AITableRecord,
     Coordinate,
     FieldValue,
     UpdateFieldValueOptions
@@ -20,7 +20,7 @@ export interface AITableGridCellRenderSchema {
 }
 
 export interface AITableContent {
-    records: AITableRecords;
+    records: Partial<AITableRecord>[];
     fields: AITableFields;
 }
 
