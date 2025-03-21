@@ -1,4 +1,5 @@
 export const AI_TABLE_ACTION_COMMON_SIZE = 32; // 表格图标action背景的通用尺寸
+export const AI_TABLE_ACTION_COMMON_RADIUS = 4; // 表格图标action背景的通用尺寸
 export const AI_TABLE_DEFAULT_COLUMN_WIDTH = 200; // 默认列宽
 export const AI_TABLE_SCROLL_BAR_PADDING = 3; // 单元格滑动容器的滚动条宽度
 export const AI_TABLE_OFFSET = 0.5; // 边框线偏移值
@@ -15,6 +16,7 @@ export const AI_TABLE_FIELD_HEAD_HEIGHT = 44; // 表格字段列头的高度
 export const AI_TABLE_ROW_BLANK_HEIGHT = 43; // 减去边框后真实的行高
 export const AI_TABLE_ROW_HEIGHT = 44; // 默认行高基准
 export const AI_TABLE_CELL_ACTIVE_BORDER_WIDTH = 2; // 选中单元格的边框宽度
+export const AI_TABLE_CELL_ATTACHMENT_ADD = 'AI_TABLE_CELL_ATTACHMENT_ADD'; // 附件cell中新增图标名称
 export const AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH = 30; // 字段列头文本的最小宽度
 export const AI_TABLE_ROW_SELECT_CHECKBOX = 'AI_TABLE_ROW_SELECT_CHECKBOX'; // 行 checkbox
 export const AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX = 'AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX'; // 表头 checkbox 标识

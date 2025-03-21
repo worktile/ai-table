@@ -1,0 +1,124 @@
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { KoShape } from '../../../angular-konva/components/shape.component';
+import {
+    AddOutlinedPath,
+    AI_TABLE_ACTION_COMMON_RADIUS,
+    AI_TABLE_ACTION_COMMON_SIZE,
+    AI_TABLE_CELL_ATTACHMENT_ADD,
+    AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
+    AI_TABLE_FILE_ICON_SIZE,
+    AI_TABLE_OFFSET,
+    AI_TABLE_ROW_BLANK_HEIGHT,
+    Colors
+} from '../../../constants';
+import { KoContainer } from '../../../angular-konva/components/container.component';
+import { generateTargetName } from '../../../utils';
+import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfig } from '../../../types';
+import { KoEventObject } from '../../../angular-konva';
+import { AITableFieldType } from '../../../core';
+import { HoverCellComponent } from '../../interfaces';
+import { getFileCanvasPaths } from '../../../utils/file';
+import { AITableSvg } from '../svg.component';
+import { isNil } from 'lodash';
+import { AITableActionIcon } from '../action-icon.component';
+
+@Component({
+    selector: 'ai-table-attachments',
+    template: `
+        @for (attachment of attachments(); track attachment.attachmentInfo._id) {
+            <ai-table-svg [config]="attachment" (onClick)="attachmentClick($event)"></ai-table-svg>
+        }
+        <ai-table-action-icon [config]="iconConfig()" (onClick)="addClick($event)"></ai-table-action-icon>
+    `,
+    standalone: true,
+    imports: [KoContainer, KoShape, AITableSvg, AITableActionIcon],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class AITableCellAttachment implements HoverCellComponent {
+    static fieldType = AITableFieldType.attachment;
+
+    config = input<AITableHoverCellConfig>();
+
+    attachments = computed<AITableAttachmentConfig[]>(() => {
+        const { render, aiTable, coordinate } = this.config()!;
+
+        if (render) {
+            const {} = aiTable;
+            const { transformValue, references, field, columnWidth, rowHeight, style, zIndex } = render;
+            if (!transformValue?.length) {
+                return [];
+            }
+
+            const svgPaths = transformValue?.map((attachmentId: string, index: number) => {
+                const attachmentInfo = references!.attachments[attachmentId];
+                const fileCanvasPaths = getFileCanvasPaths(attachmentInfo.addition.ext);
+
+                const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
+                const currentX = AI_TABLE_CELL_PADDING + index * itemWidth + AI_TABLE_OFFSET;
+                let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_FILE_ICON_SIZE) / 2 + AI_TABLE_OFFSET;
+                if (columnWidth != null) {
+                    // 在非活动状态下，当超出列宽时，不会渲染后续内容
+                    if (currentX >= columnWidth - AI_TABLE_ACTION_COMMON_SIZE - 2 * AI_TABLE_CELL_PADDING) {
+                        return null;
+                    }
+                }
+
+                const result: AITableAttachmentConfig = {
+                    coordinate,
+                    attachmentInfo,
+                    x: currentX,
+                    y: currentY,
+                    listening: true,
+                    zIndex,
+                    data: fileCanvasPaths
+                };
+                return result;
+            });
+
+            return svgPaths.filter((item: any) => !!item);
+        }
+
+        return [];
+    });
+
+    iconConfig = computed<AITableActionIconConfig>(() => {
+        const { coordinate, render, readonly } = this.config()!;
+        const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
+        const offsetY = (coordinate.rowInitSize - AI_TABLE_ACTION_COMMON_SIZE) / 2;
+
+        return {
+            coordinate,
+            readonly,
+            name: generateTargetName({
+                targetName: AI_TABLE_CELL_ATTACHMENT_ADD,
+                fieldId: this.config()?.field._id,
+                mouseStyle: readonly ? 'default' : 'pointer'
+            }),
+            x: offsetX,
+            y: offsetY,
+            data: AddOutlinedPath,
+            fill: Colors.gray600,
+            hoverFill: Colors.primary,
+            backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
+            backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
+            background: Colors.white,
+            cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,
+            visible: isNil(readonly) ? true : !readonly,
+            listening: true
+        };
+    });
+
+    addClick(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
+        // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
+    }
+
+    attachmentClick(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
+        console.log('============ e =============');
+        console.log(e);
+        // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
+    }
+}

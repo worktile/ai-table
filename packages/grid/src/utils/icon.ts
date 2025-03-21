@@ -10,7 +10,7 @@ export function parseSVGToCanvasObjects(svgString: string) {
         stroke: string;
         strokeWidth: string | number;
         opacity: number;
-        fillRule: CanvasFillRule;
+        fillRule?: CanvasFillRule;
     }[] = [];
 
     elements.forEach((element) => {
@@ -30,18 +30,20 @@ export function parseSVGToCanvasObjects(svgString: string) {
         }
 
         const fill = element.getAttribute('fill') || 'black';
-        const stroke = 'none';
+        // const stroke = 'none';
+        // const fill = element.getAttribute('fill') || (null as any);
+        const stroke = element.getAttribute('stroke') || 'none';
         const strokeWidth = element.getAttribute('stroke-width') || 0;
         const opacity = parseFloat(element?.getAttribute('opacity') || '1');
-        const fillRule = element.getAttribute('fill-rule') || 'nonzero';
+        // const fillRule = element.getAttribute('fill-rule') || 'nonzero';
         if (d) {
             canvasObjects.push({
                 d,
                 fill,
                 stroke,
                 strokeWidth,
-                opacity,
-                fillRule: fillRule as CanvasFillRule
+                opacity
+                // fillRule: fillRule as CanvasFillRule
             });
         }
     });
@@ -56,11 +58,21 @@ export const FileIcons = (() => {
             stroke: string;
             strokeWidth: string | number;
             opacity: number;
-            fillRule: CanvasFillRule;
+            fillRule?: CanvasFillRule;
         }[];
     } = {};
     Object.entries(fileIcons).forEach((fileIcon) => {
         result[fileIcon[0]] = parseSVGToCanvasObjects(fileIcon[1]);
+    });
+    return result;
+})();
+
+export const FileIconSvgStrings = (() => {
+    const result: {
+        [T in string]: string;
+    } = {};
+    Object.entries(fileIcons).forEach((fileIcon) => {
+        result[fileIcon[0]] = fileIcon[1];
     });
     return result;
 })();

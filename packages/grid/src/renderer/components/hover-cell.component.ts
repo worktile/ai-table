@@ -47,7 +47,7 @@ export class AITableHoverCells {
     });
 
     hoverCellConfig = computed(() => {
-        const { aiTable, coordinate } = this.config();
+        const { aiTable, coordinate, references, readonly } = this.config();
         const pointPosition = aiTable.context!.pointPosition();
         const hoverCell = this.hoverCell();
         if (!hoverCell) {
@@ -89,6 +89,7 @@ export class AITableHoverCells {
             coordinate,
             x,
             y,
+            readonly,
             render: {
                 aiTable,
                 recordId,
@@ -100,7 +101,8 @@ export class AITableHoverCells {
                 rowHeight,
                 cellValue,
                 transformValue,
-                style
+                style,
+                references
             }
         };
 

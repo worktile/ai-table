@@ -713,7 +713,7 @@ export class CellDrawer extends Drawer {
         const isOperating = isActive;
 
         let currentX = AI_TABLE_CELL_PADDING;
-        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - fileIconSize) / 2;
+        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - itemHeight) / 2;
         const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
         const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
         const maxTextWidth = isOperating
@@ -763,6 +763,7 @@ export class CellDrawer extends Drawer {
 
             if (ctx) {
                 ctx.translate(x + currentX, y + currentY);
+                ctx.save();
                 filePaths.forEach((obj) => {
                     const path = new Path2D(obj.d as string);
                     ctx.globalAlpha = obj.opacity;
@@ -770,8 +771,10 @@ export class CellDrawer extends Drawer {
                     ctx.strokeStyle = obj.stroke;
                     ctx.lineWidth = Number(obj.strokeWidth);
                     ctx.fill(path, obj.fillRule);
-                    ctx.stroke(path);
+                    // ctx.fill(path);
+                    // ctx.stroke(path);
                 });
+                ctx.restore();
                 ctx.translate(-(x + currentX), -(y + currentY));
                 if (isMore) {
                     ctx.save();

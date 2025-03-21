@@ -1,10 +1,26 @@
 import Konva from 'konva';
 import { AITable, AITableField, Coordinate } from '../core';
-import { AITablePointPosition } from './grid';
+import { AITableAttachmentInfo, AITablePointPosition } from './grid';
 import { AITableRender } from './cell';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
+}
+
+export interface AITableActionIconConfig extends AITableIconConfig {
+    coordinate: Coordinate;
+    hoverBackground?: string;
+    hoverFill?: string;
+}
+
+export interface AITableAttachmentConfig extends Konva.ShapeConfig {
+    coordinate: Coordinate;
+    attachmentInfo: AITableAttachmentInfo;
+}
+
+export interface AITableSvgConfig extends Konva.ShapeConfig {
+    size?: number;
+    paths?: any[];
 }
 
 export interface AITableFieldTypeIconConfig {
