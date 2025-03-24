@@ -205,6 +205,6 @@ export function getFileThumbnailSvgString(ext: string) {
 }
 
 export function getFileCanvasPaths(ext: string) {
-    const fileThumbnailName = getFileThumbnailSvgString(ext);
+    const fileThumbnailName = getFileThumbnailName(ext);
     return FileIcons[fileThumbnailName];
 }
