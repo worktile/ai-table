@@ -53,7 +53,7 @@ import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField
 import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
-import { getFileCanvasPaths } from '../../utils/file';
+import { getFileThumbnailSvgString } from '../../utils/file';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -758,21 +758,18 @@ export class CellDrawer extends Drawer {
                     isOverflow = true;
                 }
             }
-
-            const filePaths = getFileCanvasPaths(addition?.ext);
-
+            const svgString = getFileThumbnailSvgString(addition?.ext);
+            const img = new Image();
+            img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
             if (ctx) {
-                ctx.translate(x + currentX, y + currentY);
-                filePaths.forEach((obj) => {
-                    const path = new Path2D(obj.d as string);
-                    ctx.globalAlpha = obj.opacity;
-                    ctx.fillStyle = obj.fill;
-                    ctx.strokeStyle = obj.stroke;
-                    ctx.lineWidth = Number(obj.strokeWidth);
-                    ctx.fill(path, obj.fillRule);
-                    ctx.stroke(path);
+                this.image({
+                    name: img.src,
+                    x: x + currentX,
+                    y: y + currentY,
+                    url: img.src,
+                    width: AI_TABLE_FILE_ICON_SIZE,
+                    height: AI_TABLE_FILE_ICON_SIZE
                 });
-                ctx.translate(-(x + currentX), -(y + currentY));
                 if (isMore) {
                     ctx.save();
                     ctx.globalAlpha = 0.3;
