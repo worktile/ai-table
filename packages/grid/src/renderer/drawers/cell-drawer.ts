@@ -740,7 +740,6 @@ export class CellDrawer extends Drawer {
                     realMaxTextWidth = operatingMaxWidth;
                 }
             }
-            let isMore = currentX + itemWidth > columnWidth - 2 * AI_TABLE_CELL_PADDING;
             if (columnWidth != null) {
                 // 在非活动状态下，当超出列宽时，不会渲染后续内容
                 if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
@@ -770,27 +769,6 @@ export class CellDrawer extends Drawer {
                     width: AI_TABLE_FILE_ICON_SIZE,
                     height: AI_TABLE_FILE_ICON_SIZE
                 });
-                if (isMore) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.3;
-                    this.rect({
-                        x: x + currentX,
-                        y: y + currentY,
-                        width: AI_TABLE_FILE_ICON_SIZE,
-                        height: AI_TABLE_FILE_ICON_SIZE,
-                        radius: 24,
-                        fill: this.colors.black
-                    });
-                    ctx.restore();
-                    this.text({
-                        x: x + currentX + FONT_SIZE_SM / 2,
-                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
-                        fillStyle: this.colors.white,
-                        fontSize: FONT_SIZE_SM,
-                        text: `+${listCount - index - 1}`,
-                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
-                    });
-                }
             }
         }
     }
