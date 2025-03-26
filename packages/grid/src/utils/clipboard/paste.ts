@@ -148,7 +148,7 @@ function getPasteValue(
 }
 
 export interface AITablePasteActions {
-    updateValue: (data: UpdateFieldValueOptions) => void;
+    updateFieldValue: (data: UpdateFieldValueOptions) => void;
     setField: (field: AITableField) => void;
 }
 
@@ -189,7 +189,7 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
             }
 
             if (value !== null) {
-                actions.updateValue({
+                actions.updateFieldValue({
                     value,
                     path: [targetRecord._id, targetField._id]
                 });

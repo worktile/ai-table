@@ -51,7 +51,7 @@ import {
     isWindows
 } from './utils';
 import { getMousePosition } from './utils/position';
-import { buildClipboardData, writeToClipboard, writeToAITable } from './utils/clipboard';
+import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
 
 @Component({
     selector: 'ai-table-grid',
@@ -612,8 +612,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 } else if (event.key === 'v') {
                     event.preventDefault();
 
-                    const actions = {
-                        updateValue: (data: UpdateFieldValueOptions) => {
+                    const actions: AITablePasteActions = {
+                        updateFieldValue: (data: UpdateFieldValueOptions) => {
                             this.aiUpdateFieldValue.emit(data);
                         },
                         setField: (field: AITableField) => {

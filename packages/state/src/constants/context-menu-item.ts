@@ -36,7 +36,7 @@ export const CopyCellsItem: AITableContextMenuItem = {
     }
 };
 
-export const PasteCellsItem: (actions: AITablePasteActions) => AITableContextMenuItem = (actions) => {
+export const PasteCellsItem: (actions: AITablePasteActions) => AITableContextMenuItem = (actions: AITablePasteActions) => {
     return {
         type: 'pasteCells',
         name: '粘贴',
