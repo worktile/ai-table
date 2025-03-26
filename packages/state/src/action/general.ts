@@ -11,6 +11,7 @@ import {
 import { createDraft, finishDraft } from 'immer';
 import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions, isPathEqual } from '../utils';
+import { updateFieldPositionInView } from '../utils/field/move-fields';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
     switch (action.type) {
@@ -89,17 +90,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
             const sourceField = fields[action.path[0]];
             const targetField = fields[action.newPath[0]];
-            if (action.path[0] > action.newPath[0]) {
-                const targetPrevField = fields[Math.max(0, action.newPath[0] - 1)];
-                const targetPosition = (targetField as AITableViewField).positions[activeView!._id];
-                const targetPrevPosition = (targetPrevField as AITableViewField).positions[activeView!._id];
-                (sourceField as AITableViewField).positions[activeView!._id] = (targetPosition + targetPrevPosition) / 2;
-            } else {
-                const targetNextField = fields[Math.min(fields.length - 1, action.newPath[0] + 1)];
-                const targetPosition = (targetField as AITableViewField).positions[activeView!._id];
-                const targetNextPosition = (targetNextField as AITableViewField).positions[activeView!._id];
-                (sourceField as AITableViewField).positions[activeView!._id] = (targetPosition + targetNextPosition) / 2;
-            }
+            updateFieldPositionInView(activeView!._id, fields, sourceField, targetField, action.path, action.newPath);
             fields.splice(action.path[0], 1);
             fields.splice(action.newPath[0], 0, sourceField);
             break;

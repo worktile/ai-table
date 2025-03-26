@@ -218,17 +218,19 @@ export enum DragType {
     none = 'none'
 }
 
-export interface AITableDrag {
+export interface AITableDragState {
     type: DragType;
     sourceIds: Set<string>;
     scroll?: Vector2d;
     coordinate?: Coordinate;
 }
 
-export interface AITableDragData {
-    targetIndex: number;
+export interface DragEndData {
+    type: DragType;
+    targetIndex?: number;
     fieldIds?: Set<string>;
     fieldsIndex?: number[];
     recordIds?: Set<string>;
     recordsIndex?: number[];
+    changeSize?: number;
 }

@@ -1,4 +1,4 @@
-import { AddFieldOptions, AITableField, AITableRecordUpdatedInfo, Direction, idsCreator, MoveFieldOptions } from '@ai-table/grid';
+import { AddFieldOptions, AITableField, AITableRecordUpdatedInfo, Direction, idsCreator } from '@ai-table/grid';
 import { getSortFields } from './sort-fields';
 import { AITableViewFields, AIViewTable } from '../../types';
 import { Actions } from '../../action';
@@ -17,11 +17,5 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
         const newField = { _id: id, ...defaultValue } as AITableField;
         Actions.addField(aiTable, newField, [addIndex + index], options.originId, options.isCopy);
     });
-    updateRecordsUpdatedInfo(aiTable, updatedInfo);
-}
-
-export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
-    const { path, newPath } = options;
-    Actions.moveField(aiTable, path, newPath);
     updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }

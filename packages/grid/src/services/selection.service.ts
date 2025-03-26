@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { AIRecordFieldIdPath, AITable, AITableDrag, DragType } from '../core';
+import { AIRecordFieldIdPath, AITable, AITableDragState, DragType } from '../core';
 import { AITableSelectAllState } from '../types';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class AITableGridSelectionService {
 
     initialize(aiTable: AITable) {
         this.aiTable = aiTable;
-        this.aiTable.drag = signal({
+        this.aiTable.dragState = signal({
             type: DragType.none,
             sourceIds: new Set()
         });
@@ -55,12 +55,12 @@ export class AITableGridSelectionService {
         return this.aiTable.selection().selectedRecords;
     }
 
-    drag(config: AITableDrag) {
-        this.aiTable.drag!.set(config);
+    drag(config: AITableDragState) {
+        this.aiTable.dragState!.set(config);
     }
 
     clearDrag() {
-        this.aiTable.drag!.set({
+        this.aiTable.dragState!.set({
             type: DragType.none,
             sourceIds: new Set()
         });

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestroy, OnInit, output, Renderer2 } from '@angular/core';
-import { AITableDrag, AITableDragData, DragType } from '../../core';
+import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { AITableGridSelectionService } from '../../services/selection.service';
     }
 })
 export class AITableDragComponent implements OnInit, OnDestroy {
-    onDragEnd = output<AITableDragData>();
+    dragEnd = output<DragEndData>();
 
     private aiTableGridSelectionService = inject(AITableGridSelectionService);
 
@@ -24,11 +24,11 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private line!: HTMLElement;
 
-    private draggedData: { targetIndex: number; fieldIds: Set<string>; fieldsIndex: number[] } | null = null;
+    private draggedData: DragEndData | null = null;
 
     private mouseStartPosition: { x: number; y: number } | null = null;
 
-    private aiTableDrag: AITableDrag | null = null;
+    private aiTableDrag: AITableDragState | null = null;
 
     private timer!: number | null;
 
@@ -38,7 +38,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     constructor() {
         effect(() => {
-            const drag = this.aiTableGridSelectionService.aiTable.drag?.();
+            const drag = this.aiTableGridSelectionService.aiTable.dragState?.();
             if (drag && drag.sourceIds.size > 0) {
                 if (!this.rect || !this.line) {
                     return;
@@ -73,7 +73,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
     }
 
-    private handleDrag(e: MouseEvent, drag: AITableDrag) {
+    private handleDrag(e: MouseEvent, drag: AITableDragState) {
         if (drag.type !== DragType.none) {
             this.render2.setStyle(this.elementRef.nativeElement, 'display', 'block');
         } else {
@@ -136,7 +136,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     if (targetColumnIndex > sourceColumnIndex) {
                         targetColumnIndex -= 1;
                     }
-                    this.draggedData = { targetIndex: targetColumnIndex, fieldIds: drag.sourceIds, fieldsIndex };
+                    this.draggedData = { type: DragType.field, targetIndex: targetColumnIndex, fieldIds: drag.sourceIds, fieldsIndex };
                 } else {
                     this.render2.setStyle(this.line, 'width', 0);
                     this.draggedData = null;
@@ -152,7 +152,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private handleDragEnd() {
         this.render2.setStyle(this.elementRef.nativeElement, 'display', 'none');
         if (this.draggedData) {
-            this.onDragEnd.emit({ ...this.draggedData });
+            this.dragEnd.emit({ ...this.draggedData });
             this.draggedData = null;
         }
     }

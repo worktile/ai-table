@@ -35,7 +35,7 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, Coordinate, AITableDragData, DragType, RendererContext, UpdateFieldValueOptions } from './core';
+import { AIRecordFieldIdPath, AITable, Coordinate, DragEndData, DragType, RendererContext, UpdateFieldValueOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -71,8 +71,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private isDragSelecting = false;
 
     private dragSelectionStart: AIRecordFieldIdPath | null = null;
-
-    private isDragStart: boolean = false;
 
     timer!: number | null;
 
@@ -269,18 +267,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 }
             }
-            if (this.isDragStart && this.aiTableGridSelectionService.selectedFields.size > 0) {
-                const horizontalBar = this.horizontalBarRef()?.nativeElement;
-                const verticalBar = this.verticalBarRef()?.nativeElement;
-                let scrollLeft = horizontalBar?.scrollLeft || 0;
-                let scrollTop = verticalBar?.scrollTop || 0;
-                this.aiTableGridSelectionService.drag({
-                    type: DragType.field,
-                    sourceIds: this.aiTableGridSelectionService.selectedFields,
-                    scroll: { x: scrollLeft, y: scrollTop },
-                    coordinate: this.coordinate()
-                });
-            }
         });
     }
 
@@ -303,7 +289,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 mouseEvent.preventDefault();
                 if (!fieldId) return;
                 this.aiTableGridSelectionService.selectField(fieldId);
-                this.isDragStart = true;
+                this.handleFieldDragStart();
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
@@ -323,7 +309,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
         this.updateDragSelectionState(false, null);
-        this.isDragStart = false;
     }
 
     stageContextmenu(e: KoEventObject<MouseEvent>) {
@@ -635,16 +620,42 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             });
     }
 
-    onDragEnd({ targetIndex, fieldsIndex }: AITableDragData) {
-        if (fieldsIndex) {
-            for (let i = 0; i < fieldsIndex.length; i++) {
-                this.aiMoveField.emit({
-                    path: [fieldsIndex[i]],
-                    newPath: [targetIndex + i]
-                });
-            }
+    private handleFieldDragStart() {
+        if (this.aiTableGridSelectionService.selectedFields.size > 0) {
+            this.aiTableGridSelectionService.drag({
+                type: DragType.field,
+                sourceIds: this.aiTableGridSelectionService.selectedFields,
+                scroll: this.getScrollPosition(),
+                coordinate: this.coordinate()
+            });
         }
-        this.isDragStart = false;
+    }
+
+    private getScrollPosition() {
+        const horizontalBar = this.horizontalBarRef()?.nativeElement;
+        const verticalBar = this.verticalBarRef()?.nativeElement;
+        let scrollLeft = horizontalBar?.scrollLeft || 0;
+        let scrollTop = verticalBar?.scrollTop || 0;
+        return { x: scrollLeft, y: scrollTop };
+    }
+
+    dragEnd(data: DragEndData) {
+        switch (data.type) {
+            case DragType.field:
+                if (data.fieldsIndex && data.targetIndex) {
+                    for (let i = 0; i < data.fieldsIndex.length; i++) {
+                        this.aiMoveField.emit({
+                            path: [data.fieldsIndex[i]],
+                            newPath: [data.targetIndex + i]
+                        });
+                    }
+                }
+                break;
+            case DragType.columnWidth:
+                break;
+            case DragType.record:
+                return;
+        }
         this.aiTableGridSelectionService.clearDrag();
     }
 }

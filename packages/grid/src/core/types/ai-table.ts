@@ -2,7 +2,7 @@ import { Signal, WritableSignal } from '@angular/core';
 import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { RendererContext } from '../context';
-import { AIRecordFieldIdPath, AITableDrag, AITableField, AITableFields, AITableRecord, AITableRecords } from './core';
+import { AIRecordFieldIdPath, AITableDragState, AITableField, AITableFields, AITableRecord, AITableRecords } from './core';
 
 export interface AITable {
     records: WritableSignal<AITableRecords>;
@@ -14,7 +14,7 @@ export interface AITable {
     fieldsMap: Signal<{ [key: string]: AITableField }>;
     recordsWillHidden: WritableSignal<string[]>;
     recordsWillMove: WritableSignal<string[]>;
-    drag?: WritableSignal<AITableDrag>;
+    dragState?: WritableSignal<AITableDragState>;
 }
 
 export type AIPlugin = (aiTable: AITable) => AITable;
