@@ -1,7 +1,7 @@
 import { helpers } from 'ngx-tethys/util';
 import { Field } from './field';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { AITableField, FieldValue, SelectFieldValue, SelectSettings } from '../../../core';
+import { AITableField, AITableFieldType, AITableSelectOption, FieldValue, SelectFieldValue, SelectSettings } from '../../../core';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect } from '../operate';
 
@@ -44,7 +44,7 @@ export class SelectField extends Field {
     override toFieldValue(
         plainText: string,
         targetField: AITableField,
-        originData?: { field: AITableField; cellValue: FieldValue }
+        originData?: { field: AITableField; cellValue: FieldValue } | null
     ): FieldValue | null {
         return toSelectFieldValue(plainText, targetField, originData);
     }
@@ -53,10 +53,66 @@ export class SelectField extends Field {
 export function toSelectFieldValue(
     plainText: string,
     targetField: AITableField,
-    originData?: { field: AITableField; cellValue: FieldValue }
+    originData?: { field: AITableField; cellValue: FieldValue } | null
 ): FieldValue | null {
-    // TODO 后面接着做
     return null;
+}
+
+export function parseSelectFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue } | null
+): { existOptionIds: string[]; newOptions: Partial<AITableSelectOption>[] } {
+    const targetFieldOptions = (targetField.settings as SelectSettings)?.options || [];
+    let existOptionIds: string[] = [];
+    let newOptions: Partial<AITableSelectOption>[] = [];
+    let cellFullTexts: string[] = plainText.split(',').map((text) => text.trim());
+
+    const { field, cellValue } = originData || {};
+    if (field && field.type === AITableFieldType.select) {
+        if (cellValue && Array.isArray(cellValue) && cellValue.length) {
+            const targetOptionIds = targetFieldOptions.map((option) => option._id);
+            const originOptionsMap = helpers.keyBy((field.settings as SelectSettings)?.options || [], '_id');
+            cellValue.forEach((id) => {
+                if (targetOptionIds.includes(id)) {
+                    existOptionIds.push(id);
+                } else if (targetFieldOptions.some((option) => option.text === originOptionsMap[id].text)) {
+                    const option = targetFieldOptions.find((option: AITableSelectOption) => option.text === originOptionsMap[id].text);
+                    existOptionIds.push(option!._id);
+                } else {
+                    const originOption = originOptionsMap[id];
+                    if (originOption) {
+                        newOptions.push({
+                            text: originOption.text,
+                            icon: originOption.icon,
+                            color: originOption.color,
+                            bg_color: originOption.bg_color
+                        });
+                    }
+                }
+            });
+        }
+    } else {
+        cellFullTexts.forEach((text) => {
+            const option = targetFieldOptions.find((option) => option.text === text);
+            option ? existOptionIds.push(option._id) : newOptions.push({ text });
+        });
+    }
+
+    const isMultiple = (targetField.settings as SelectSettings)?.is_multiple;
+    if (isMultiple) {
+        return { existOptionIds, newOptions };
+    } else {
+        if (existOptionIds.length) {
+            return { existOptionIds: [existOptionIds[0]], newOptions: [] };
+        } else {
+            if (newOptions.length) {
+                return { existOptionIds: [], newOptions: [newOptions[0]] };
+            } else {
+                return { existOptionIds: [], newOptions: [] };
+            }
+        }
+    }
 }
 
 function cellValueToSortValue(cellValue: SelectFieldValue, field: AITableField): string | null {
