@@ -8,6 +8,7 @@ import {
     AITableField,
     AITableFieldType,
     AITableGrid,
+    AITablePasteActions,
     AITableQueries,
     AITableRecord,
     DateFieldValue,
@@ -117,8 +118,8 @@ export class DemoTableContent {
         };
     });
 
-    pasteActions = {
-        updateValue: (data: UpdateFieldValueOptions) => {
+    pasteActions: AITablePasteActions = {
+        updateFieldValue: (data: UpdateFieldValueOptions) => {
             this.updateFieldValue(data);
         },
         setField: (field: AITableField) => {

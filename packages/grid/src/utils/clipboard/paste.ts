@@ -12,7 +12,7 @@ import {
 } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
-import { parseSelectFieldValue } from '../field/model/select';
+import { processPastedValueForSelect } from '../field/model/select';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
@@ -121,7 +121,7 @@ function getPasteValue(
 
     let originData = field && record ? { field, cellValue: getFieldValue(record, field) } : null;
     if (targetField.type === AITableFieldType.select) {
-        let { existOptionIds, newOptions } = parseSelectFieldValue(plainText, targetField, originData);
+        let { existOptionIds, newOptions } = processPastedValueForSelect(plainText, targetField, originData);
 
         newOptions = newOptions.map((option) => {
             return {

@@ -58,7 +58,7 @@ export function toSelectFieldValue(
     return null;
 }
 
-export function parseSelectFieldValue(
+export function processPastedValueForSelect(
     plainText: string,
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue } | null
