@@ -11,6 +11,7 @@ import {
     AITableQueries,
     AITableRecord,
     DateFieldValue,
+    MoveFieldOptions,
     NumberPath,
     UpdateFieldValueOptions
 } from '@ai-table/grid';
@@ -30,7 +31,8 @@ import {
     RemoveRecordsItem,
     updateFieldValue,
     withState,
-    YjsAITable
+    YjsAITable,
+    moveFields
 } from '@ai-table/state';
 import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -217,6 +219,12 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         addFields(this.aiTable, data, { updated_by: member, updated_at: time });
+    }
+
+    dragMoveField(data: MoveFieldOptions) {
+        const member = 'member_02';
+        const time = new Date().getTime();
+        moveFields(this.aiTable, data, { updated_by: member, updated_at: time });
     }
 
     prevent(event: Event) {

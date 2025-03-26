@@ -28,6 +28,7 @@ import {
     AITableValue,
     createAITable,
     createDefaultField,
+    MoveFieldOptions,
     UpdateFieldValueOptions
 } from './core';
 import { AITableGridEventService } from './services/event.service';
@@ -76,6 +77,8 @@ export class AITableGridBase implements OnInit {
     aiAddRecord = output<AddRecordOptions>();
 
     aiAddField = output<AddFieldOptions>();
+
+    aiMoveField = output<MoveFieldOptions>();
 
     aiUpdateFieldValue = output<UpdateFieldValueOptions>();
 
