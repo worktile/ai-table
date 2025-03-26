@@ -1,7 +1,21 @@
 import { AITableContent, AITableReferences } from '../../types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
+import {
+    AITable,
+    AITableField,
+    AITableFieldType,
+    AITableRecord,
+    AITableSelectOption,
+    FieldValue,
+    getFieldValue,
+    idCreator,
+    SelectSettings,
+    UpdateFieldValueOptions
+} from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
+import { parseSelectFieldValue } from '../field/model/select';
+import { AIViewTable } from '@ai-table/state';
+import { Actions } from '@ai-table/state';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
@@ -81,7 +95,27 @@ const readClipboardData = async (): Promise<{ clipboardContent: string[][]; aiTa
     };
 };
 
+function appendSelectOptions(aiTable: AITable, field: AITableField, newOptions: Partial<AITableSelectOption>[] = []): string[] {
+    newOptions = newOptions.map((option) => {
+        return {
+            ...option,
+            _id: idCreator()
+        };
+    });
+    const newField = {
+        ...field,
+        settings: {
+            ...field.settings,
+            options: [...((field.settings as SelectSettings)?.options || []), ...newOptions]
+        }
+    };
+    Actions.setField(aiTable as AIViewTable, newField, [newField._id]);
+    const newOptionIds = newOptions.map((option) => option._id).filter((id) => !!id) as string[];
+    return newOptionIds;
+}
+
 function getPasteValue(
+    aiTable: AITable,
     plainText: string,
     aiTableContent: AITableContent | null,
     recordIndex: number,
@@ -104,7 +138,15 @@ function getPasteValue(
     if (targetField.type !== AITableFieldType.link) {
         plainText = extractText(plainText);
     }
+
     let originData = field && record ? { field, cellValue: getFieldValue(record, field) } : null;
+    if (targetField.type === AITableFieldType.select) {
+        let { existOptionIds, newOptions } = parseSelectFieldValue(plainText, targetField, originData);
+        const newOptionIds = appendSelectOptions(aiTable, targetField, newOptions);
+        const selectFieldValue = [...existOptionIds, ...newOptionIds];
+        return selectFieldValue;
+    }
+
     return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
 }
 
@@ -138,7 +180,7 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
             const targetField = visibleFields[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;
-            const value = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
+            const value = getPasteValue(aiTable, plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
 
             if (value !== null) {
                 updateValueFn({
