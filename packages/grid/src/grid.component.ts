@@ -35,7 +35,7 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
+import { AIRecordFieldIdPath, AITable, AITableField, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -51,7 +51,7 @@ import {
     isWindows
 } from './utils';
 import { getMousePosition } from './utils/position';
-import { buildClipboardData, writeToClipboard, writeToAITable } from './utils/clipboard';
+import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
 
 @Component({
     selector: 'ai-table-grid',
@@ -611,10 +611,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 } else if (event.key === 'v') {
                     event.preventDefault();
-                    const updateValueFn = (data: UpdateFieldValueOptions) => {
-                        this.aiUpdateFieldValue.emit(data);
+
+                    const actions: AITablePasteActions = {
+                        updateFieldValue: (data: UpdateFieldValueOptions) => {
+                            this.aiUpdateFieldValue.emit(data);
+                        },
+                        setField: (field: AITableField) => {
+                            this.aiSetField.emit(field);
+                        }
                     };
-                    writeToAITable(this.aiTable, updateValueFn);
+                    writeToAITable(this.aiTable, actions);
                 }
             });
     }

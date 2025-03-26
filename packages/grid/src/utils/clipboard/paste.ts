@@ -1,7 +1,18 @@
 import { AITableContent, AITableReferences } from '../../types';
-import { AITable, AITableField, AITableFieldType, AITableRecord, FieldValue, getFieldValue, UpdateFieldValueOptions } from '../../core';
+import {
+    AITable,
+    AITableField,
+    AITableFieldType,
+    AITableRecord,
+    FieldValue,
+    getFieldValue,
+    idCreator,
+    SelectSettings,
+    UpdateFieldValueOptions
+} from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
+import { processPastedValueForSelect } from '../field/model/select';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
@@ -88,7 +99,10 @@ function getPasteValue(
     fieldIndex: number,
     targetField: AITableField,
     references: AITableReferences
-): FieldValue | null {
+): {
+    value: FieldValue | null;
+    newField: AITableField | null;
+} {
     let field: AITableField | null = null;
     let record: Partial<AITableRecord> | null = null;
 
@@ -99,16 +113,46 @@ function getPasteValue(
     }
 
     if (targetField.type === AITableFieldType.attachment || (field && field.type === AITableFieldType.attachment)) {
-        return null;
+        return { value: null, newField: null };
     }
     if (targetField.type !== AITableFieldType.link) {
         plainText = extractText(plainText);
     }
+
     let originData = field && record ? { field, cellValue: getFieldValue(record, field) } : null;
-    return FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references);
+    if (targetField.type === AITableFieldType.select) {
+        let { existOptionIds, newOptions } = processPastedValueForSelect(plainText, targetField, originData);
+
+        newOptions = newOptions.map((option) => {
+            return {
+                ...option,
+                _id: idCreator()
+            };
+        });
+        const newField = {
+            ...targetField,
+            settings: {
+                ...targetField.settings,
+                options: [...((targetField.settings as SelectSettings)?.options || []), ...newOptions]
+            }
+        };
+        const newOptionIds = newOptions.map((option) => option._id).filter((id) => !!id) as string[];
+        const selectFieldValue = [...existOptionIds, ...newOptionIds];
+        return {
+            value: selectFieldValue,
+            newField
+        };
+    }
+
+    return { value: FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references), newField: null };
 }
 
-export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: UpdateFieldValueOptions) => void) => {
+export interface AITablePasteActions {
+    updateFieldValue: (data: UpdateFieldValueOptions) => void;
+    setField: (field: AITableField) => void;
+}
+
+export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActions) => {
     const selectedCells = Array.from(aiTable.selection().selectedCells);
     if (!selectedCells.length) {
         return;
@@ -138,10 +182,14 @@ export const writeToAITable = async (aiTable: AITable, updateValueFn: (data: Upd
             const targetField = visibleFields[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;
-            const value = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
+            const { value, newField } = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
+
+            if (newField) {
+                actions.setField(newField);
+            }
 
             if (value !== null) {
-                updateValueFn({
+                actions.updateFieldValue({
                     value,
                     path: [targetRecord._id, targetField._id]
                 });

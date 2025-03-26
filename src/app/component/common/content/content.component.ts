@@ -8,6 +8,7 @@ import {
     AITableField,
     AITableFieldType,
     AITableGrid,
+    AITablePasteActions,
     AITableQueries,
     AITableRecord,
     DateFieldValue,
@@ -117,6 +118,15 @@ export class DemoTableContent {
         };
     });
 
+    pasteActions: AITablePasteActions = {
+        updateFieldValue: (data: UpdateFieldValueOptions) => {
+            this.updateFieldValue(data);
+        },
+        setField: (field: AITableField) => {
+            this.setField(field);
+        }
+    };
+
     contextMenuItems: AITableContextMenuItem[] = [
         {
             ...CopyCellsItem,
@@ -124,9 +134,7 @@ export class DemoTableContent {
             hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
         {
-            ...PasteCellsItem((data: UpdateFieldValueOptions) => {
-                this.updateFieldValue(data);
-            }),
+            ...PasteCellsItem(this.pasteActions),
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
             hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
@@ -211,6 +219,10 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         updateFieldValue(this.aiTable, value, { updated_by: member, updated_at: time });
+    }
+
+    setField(field: AITableField) {
+        Actions.setField(this.aiTable, field, [field._id]);
     }
 
     addField(data: AddFieldOptions) {

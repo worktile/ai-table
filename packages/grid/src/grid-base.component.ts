@@ -21,6 +21,7 @@ import {
     AddRecordOptions,
     AIPlugin,
     AITable,
+    AITableField,
     AITableFields,
     AITableFieldType,
     AITableRecords,
@@ -78,6 +79,8 @@ export class AITableGridBase implements OnInit {
     aiAddField = output<AddFieldOptions>();
 
     aiUpdateFieldValue = output<UpdateFieldValueOptions>();
+
+    aiSetField = output<AITableField>();
 
     fieldMenus: Signal<AITableFieldMenuItem[]> = computed(() => {
         return this.aiFieldConfig()?.fieldMenus || [];
