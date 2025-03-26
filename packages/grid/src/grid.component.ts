@@ -423,6 +423,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
         setTimeout(() => {
             this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                viewContainerRef: this.viewContainerRef,
                 container: this.containerElement(),
                 coordinate: this.coordinate(),
                 fieldId: fieldId!,
@@ -578,6 +579,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                    viewContainerRef: this.viewContainerRef,
                     container: this.containerElement(),
                     coordinate: this.coordinate(),
                     fieldId: fieldId!,

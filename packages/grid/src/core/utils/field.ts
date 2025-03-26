@@ -3,10 +3,13 @@ import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple
 import { idCreator } from './id-creator';
 
 export const isArrayField = (field: AITableField) => {
-    return (
-        [AITableFieldType.member, AITableFieldType.createdBy, AITableFieldType.updatedBy].includes(field.type) ||
-        AITableFieldType.select === field.type
-    );
+    return [
+        AITableFieldType.member,
+        AITableFieldType.createdBy,
+        AITableFieldType.updatedBy,
+        AITableFieldType.select,
+        AITableFieldType.attachment
+    ].includes(field.type);
 };
 
 export const isSystemField = (field: AITableField) => {
