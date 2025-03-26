@@ -148,7 +148,8 @@ export interface AITableOpenEditOptions {
     isHoverEdit?: boolean;
     viewContainerRef?: ViewContainerRef;
     updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
-    mousedownCell?: (isSelectCell: boolean) => void;
+    cellMousedown?: (isSelectCell: boolean) => void;
+    cellMouseup?: () => void;
 }
 
 export interface AITableContext {

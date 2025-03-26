@@ -38,7 +38,9 @@ export interface AITableProgressConfig {
     }
 })
 export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
-    mousedownCell = input<(isSelectCell: boolean) => void>();
+    cellMousedown = input<(isSelectCell: boolean) => void>();
+
+    cellMouseup = input<() => void>();
 
     config: Partial<AITableProgressConfig | undefined> = {
         max: 100,
@@ -51,20 +53,28 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
 
     @HostListener('mousedown', ['$event'])
     mousedownHandler(event: Event) {
-        this.handleMousedownCell(true);
+        this.handleCellMousedown(true);
         event.preventDefault();
     }
 
+    @HostListener('mouseup', ['$event'])
+    mouseupHandler(event: Event) {
+        const cellMouseupFn = this.cellMouseup && this.cellMouseup();
+        if (cellMouseupFn) {
+            cellMouseupFn();
+        }
+    }
+
     sliderMousedownHandler(event: Event) {
-        this.handleMousedownCell(false);
+        this.handleCellMousedown(false);
         event.preventDefault();
         event.stopPropagation();
     }
 
-    handleMousedownCell(isSelectCell: boolean) {
-        const mousedownCellFn = this.mousedownCell && this.mousedownCell();
-        if (mousedownCellFn) {
-            mousedownCellFn(isSelectCell);
+    handleCellMousedown(isSelectCell: boolean) {
+        const cellMousedownFn = this.cellMousedown && this.cellMousedown();
+        if (cellMousedownFn) {
+            cellMousedownFn(isSelectCell);
         }
     }
 }

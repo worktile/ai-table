@@ -14,22 +14,32 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     }
 })
 export class RatingCellEditorComponent extends AbstractEditCellEditor<number> {
-    mousedownCell = input<(isSelectCell: boolean) => void>();
+    cellMousedown = input<(isSelectCell: boolean) => void>();
+
+    cellMouseup = input<() => void>();
 
     @HostListener('mousedown', ['$event'])
     mousedownHandler(event: Event) {
-        this.handleMousedownCell(event);
+        this.handleCellMousedown(event);
         event.preventDefault();
     }
 
-    handleMousedownCell(event: Event) {
+    @HostListener('mouseup', ['$event'])
+    mouseupHandler(event: Event) {
+        const cellMouseupFn = this.cellMouseup && this.cellMouseup();
+        if (cellMouseupFn) {
+            cellMouseupFn();
+        }
+    }
+
+    handleCellMousedown(event: Event) {
         const rateItem = event.target as HTMLElement;
-        const mousedownCellFn = this.mousedownCell && this.mousedownCell();
-        if (mousedownCellFn) {
+        const cellMousedownFn = this.cellMousedown && this.cellMousedown();
+        if (cellMousedownFn) {
             if (rateItem?.classList?.contains('thy-icon')) {
-                mousedownCellFn(false);
+                cellMousedownFn(false);
             } else {
-                mousedownCellFn(true);
+                cellMousedownFn(true);
             }
         }
     }
