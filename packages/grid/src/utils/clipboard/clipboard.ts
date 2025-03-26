@@ -1,4 +1,4 @@
-import { ClipboardData } from '../../types';
+import { ClipboardContent } from '../../types';
 
 export const isClipboardWriteSupported = () => {
     return 'clipboard' in navigator && 'write' in navigator.clipboard;
@@ -16,7 +16,7 @@ export const isClipboardReadTextSupported = () => {
     return 'clipboard' in navigator && 'readText' in navigator.clipboard;
 };
 
-export const writeToClipboard = async (data: ClipboardData) => {
+export const writeToClipboard = async (data: ClipboardContent) => {
     try {
         const { text, html } = data;
         if (isClipboardWriteSupported()) {
@@ -42,7 +42,7 @@ export const writeToClipboard = async (data: ClipboardData) => {
 
 export const readFromClipboard = async () => {
     try {
-        let clipboardData: ClipboardData = {};
+        let clipboardData: ClipboardContent = {};
         if (isClipboardReadSupported()) {
             const clipboardItems = await navigator.clipboard.read();
             if (Array.isArray(clipboardItems) && clipboardItems[0] instanceof ClipboardItem) {

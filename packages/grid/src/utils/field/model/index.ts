@@ -11,7 +11,7 @@ import { RateField } from './rate';
 import { SelectField } from './select';
 import { TextField } from './text';
 
-export const ViewOperationMap: Record<AITableFieldType, Field> = {
+export const FieldModelMap: Record<AITableFieldType, Field> = {
     [AITableFieldType.text]: new TextField(),
     [AITableFieldType.richText]: new TextField(),
     [AITableFieldType.select]: new SelectField(),
