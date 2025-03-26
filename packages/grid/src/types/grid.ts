@@ -147,6 +147,7 @@ export interface AITableOpenEditOptions {
     container?: HTMLDivElement;
     isHoverEdit?: boolean;
     updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
+    mousedownCell?: (isSelectCell: boolean) => void;
 }
 
 export interface AITableContext {

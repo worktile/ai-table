@@ -171,7 +171,8 @@ export class AITableGridEventService {
                 fieldId: fieldId,
                 recordId: recordId,
                 references,
-                aiTable: aiTable
+                aiTable: aiTable,
+                mousedownCell: options.mousedownCell
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: false,

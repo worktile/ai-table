@@ -586,6 +586,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     isHoverEdit: true,
                     updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
                         this.aiUpdateFieldValue.emit(value);
+                    },
+                    mousedownCell: (isSelectCell: boolean) => {
+                        if (isSelectCell) {
+                            const startCell: AIRecordFieldIdPath = [recordId, fieldId];
+                            this.aiTableGridSelectionService.selectCells(startCell);
+                        } else {
+                            this.aiTableGridSelectionService.clearSelection();
+                        }
                     }
                 });
             });

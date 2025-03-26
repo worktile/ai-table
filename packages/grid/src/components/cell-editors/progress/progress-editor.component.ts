@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThySlider, ThySliderSize, ThySliderType } from 'ngx-tethys/slider';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -31,13 +31,15 @@ export interface AITableProgressConfig {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThySlider],
     host: {
-        class: 'grid-cell progress-editor',
+        class: 'grid-cell progress-editor ai-table-prevent-clear-selection',
         '[attr.type]': 'field().type',
         '[attr.fieldId]': 'field()._id',
         '[attr.recordId]': 'record()._id'
     }
 })
 export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
+    mousedownCell = input<(isSelectCell: boolean) => void>();
+
     config: Partial<AITableProgressConfig | undefined> = {
         max: 100,
         min: 0,
@@ -49,11 +51,20 @@ export class ProgressEditorComponent extends AbstractEditCellEditor<number> {
 
     @HostListener('mousedown', ['$event'])
     mousedownHandler(event: Event) {
+        this.handleMousedownCell(true);
         event.preventDefault();
     }
 
     sliderMousedownHandler(event: Event) {
+        this.handleMousedownCell(false);
         event.preventDefault();
         event.stopPropagation();
+    }
+
+    handleMousedownCell(isSelectCell: boolean) {
+        const mousedownCellFn = this.mousedownCell && this.mousedownCell();
+        if (mousedownCellFn) {
+            mousedownCellFn(isSelectCell);
+        }
     }
 }
