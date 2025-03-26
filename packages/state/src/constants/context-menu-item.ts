@@ -1,11 +1,4 @@
-import {
-    AITable,
-    AITableContextMenuItem,
-    AITableGridSelectionService,
-    isMac,
-    UpdateFieldValueOptions,
-    writeToAITable
-} from '@ai-table/grid';
+import { AITable, AITableContextMenuItem, AITableGridSelectionService, AITablePasteActions, isMac, writeToAITable } from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
@@ -43,9 +36,7 @@ export const CopyCellsItem: AITableContextMenuItem = {
     }
 };
 
-export const PasteCellsItem: (updateValueFn: (data: UpdateFieldValueOptions) => void) => AITableContextMenuItem = (
-    updateValueFn: (data: UpdateFieldValueOptions) => void
-) => {
+export const PasteCellsItem: (actions: AITablePasteActions) => AITableContextMenuItem = (actions) => {
     return {
         type: 'pasteCells',
         name: '粘贴',
@@ -57,7 +48,7 @@ export const PasteCellsItem: (updateValueFn: (data: UpdateFieldValueOptions) => 
             position: { x: number; y: number },
             aiTableGridSelectionService: AITableGridSelectionService
         ) => {
-            writeToAITable(aiTable, updateValueFn);
+            writeToAITable(aiTable, actions);
         }
     };
 };

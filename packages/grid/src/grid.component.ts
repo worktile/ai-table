@@ -35,7 +35,7 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
+import { AIRecordFieldIdPath, AITable, AITableField, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -611,10 +611,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 } else if (event.key === 'v') {
                     event.preventDefault();
-                    const updateValueFn = (data: UpdateFieldValueOptions) => {
-                        this.aiUpdateFieldValue.emit(data);
+
+                    const actions = {
+                        updateValue: (data: UpdateFieldValueOptions) => {
+                            this.aiUpdateFieldValue.emit(data);
+                        },
+                        setField: (field: AITableField) => {
+                            this.aiSetField.emit(field);
+                        }
                     };
-                    writeToAITable(this.aiTable, updateValueFn);
+                    writeToAITable(this.aiTable, actions);
                 }
             });
     }
