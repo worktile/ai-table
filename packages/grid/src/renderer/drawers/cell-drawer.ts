@@ -53,7 +53,7 @@ import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField
 import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
-import { getFileCanvasPaths } from '../../utils/file';
+import { getFileThumbnailSvgString } from '../../utils/file';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -740,7 +740,6 @@ export class CellDrawer extends Drawer {
                     realMaxTextWidth = operatingMaxWidth;
                 }
             }
-            let isMore = currentX + itemWidth > columnWidth - 2 * AI_TABLE_CELL_PADDING;
             if (columnWidth != null) {
                 // 在非活动状态下，当超出列宽时，不会渲染后续内容
                 if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
@@ -758,45 +757,18 @@ export class CellDrawer extends Drawer {
                     isOverflow = true;
                 }
             }
-
-            const filePaths = getFileCanvasPaths(addition?.ext);
-
+            const svgString = getFileThumbnailSvgString(addition?.ext);
+            const img = new Image();
+            img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
             if (ctx) {
-                ctx.translate(x + currentX, y + currentY);
-                ctx.save();
-                filePaths.forEach((obj) => {
-                    const path = new Path2D(obj.d as string);
-                    ctx.globalAlpha = obj.opacity;
-                    ctx.fillStyle = obj.fill;
-                    ctx.strokeStyle = obj.stroke;
-                    ctx.lineWidth = Number(obj.strokeWidth);
-                    ctx.fill(path, obj.fillRule);
-                    // ctx.fill(path);
-                    // ctx.stroke(path);
+                this.image({
+                    name: img.src,
+                    x: x + currentX,
+                    y: y + currentY,
+                    url: img.src,
+                    width: AI_TABLE_FILE_ICON_SIZE,
+                    height: AI_TABLE_FILE_ICON_SIZE
                 });
-                ctx.restore();
-                ctx.translate(-(x + currentX), -(y + currentY));
-                if (isMore) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.3;
-                    this.rect({
-                        x: x + currentX,
-                        y: y + currentY,
-                        width: AI_TABLE_FILE_ICON_SIZE,
-                        height: AI_TABLE_FILE_ICON_SIZE,
-                        radius: 24,
-                        fill: this.colors.black
-                    });
-                    ctx.restore();
-                    this.text({
-                        x: x + currentX + FONT_SIZE_SM / 2,
-                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
-                        fillStyle: this.colors.white,
-                        fontSize: FONT_SIZE_SM,
-                        text: `+${listCount - index - 1}`,
-                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
-                    });
-                }
             }
         }
     }

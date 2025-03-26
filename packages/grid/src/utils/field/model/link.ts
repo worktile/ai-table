@@ -1,5 +1,6 @@
-import { FieldValue, LinkFieldValue } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { extractText, extractLinkHref } from '../../clipboard';
 import { isEmpty } from '../../common';
 import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
@@ -31,9 +32,36 @@ export class LinkField extends Field {
         return texts;
     }
 
-    override toFieldValue(): FieldValue | null {
-        return null;
+    override toFieldValue(
+        plainText: string,
+        targetField: AITableField,
+        originData?: { field: AITableField; cellValue: FieldValue } | null
+    ): FieldValue | null {
+        return toLinkFieldValue(plainText, targetField, originData);
     }
+}
+
+export function toLinkFieldValue(
+    plainText: string,
+    targetField: AITableField,
+    originData?: { field: AITableField; cellValue: FieldValue } | null
+): FieldValue | null {
+    if (originData) {
+        const { field, cellValue } = originData;
+        if (field.type === AITableFieldType.link) {
+            return cellValue;
+        }
+    } else {
+        const url = extractLinkHref(plainText);
+        const text = extractText(plainText);
+        if (url && text) {
+            return {
+                url,
+                text
+            };
+        }
+    }
+    return null;
 }
 
 function cellValueToSortValue(cellValue: LinkFieldValue): string | null {
