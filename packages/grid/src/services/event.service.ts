@@ -73,16 +73,22 @@ export class AITableGridEventService {
     private getEditorComponent(type: AITableFieldType) {
         const filedRenderSchema = this.aiFieldRenderers && this.aiFieldRenderers[type];
         if (filedRenderSchema && filedRenderSchema.editor) {
-            return filedRenderSchema.editor;
+            return {
+                component: filedRenderSchema.editor,
+                isInternalComponent: false
+            };
         }
-        return GRID_CELL_EDITOR_MAP[type];
+        return {
+            component: GRID_CELL_EDITOR_MAP[type],
+            isInternalComponent: true
+        };
     }
 
     openEdit(cellDom: HTMLElement) {
         const { x, y, width, height } = cellDom.getBoundingClientRect();
         const fieldId = cellDom.getAttribute('fieldId')!;
         const recordId = cellDom.getAttribute('recordId')!;
-        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const { component } = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const ref = this.thyPopover.open(component, {
             origin: cellDom,
             originPosition: {
@@ -157,9 +163,10 @@ export class AITableGridEventService {
 
     openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
         const { container, recordId, fieldId, isHoverEdit, references } = options;
-        const component = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const { component, isInternalComponent } = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
+            viewContainerRef: isInternalComponent ? undefined : options?.viewContainerRef,
             origin: container!,
             originPosition: offsetOriginPosition,
             width: offsetOriginPosition.width + 'px',

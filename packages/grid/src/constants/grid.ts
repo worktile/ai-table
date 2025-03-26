@@ -10,6 +10,7 @@ export const DBL_CLICK_EDIT_TYPE = [
     AITableFieldType.select,
     AITableFieldType.date,
     AITableFieldType.member,
+    AITableFieldType.attachment,
     AITableFieldType.link
 ];
 

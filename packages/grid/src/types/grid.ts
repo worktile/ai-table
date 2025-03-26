@@ -1,4 +1,4 @@
-import { Signal, WritableSignal } from '@angular/core';
+import { Signal, ViewContainerRef, WritableSignal } from '@angular/core';
 import { Dictionary } from 'ngx-tethys/types';
 import {
     AIRecordFieldIdPath,
@@ -146,6 +146,7 @@ export interface AITableOpenEditOptions {
     references: AITableReferences;
     container?: HTMLDivElement;
     isHoverEdit?: boolean;
+    viewContainerRef?: ViewContainerRef;
     updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
     mousedownCell?: (isSelectCell: boolean) => void;
 }
