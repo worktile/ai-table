@@ -19,12 +19,27 @@ export function updateFieldPositionInView(
     const targetPosition = (targetField as AITableViewField).positions[viewId];
     let calculatePosition = 0;
     if (path[0] > newPath[0]) {
-        const targetPrevField = fields[Math.max(0, newPath[0] - 1)];
-        const targetPrevPosition = (targetPrevField as AITableViewField).positions[viewId];
-        calculatePosition = (targetPosition + targetPrevPosition) / 2;
+        const prevPath = newPath[0] - 1;
+        let targetPrevPosition = 0;
+        if (prevPath > 0) {
+            const targetPrevField = fields[prevPath];
+            targetPrevPosition = (targetPrevField as AITableViewField).positions[viewId];
+            calculatePosition = (targetPosition + targetPrevPosition) / 2;
+        } else {
+            const targetPrevField = fields[0];
+            calculatePosition = (targetPrevField as AITableViewField).positions[viewId] - 0.1;
+        }
     } else {
-        const targetNextField = fields[Math.min(fields.length - 1, newPath[0] + 1)];
-        const targetNextPosition = (targetNextField as AITableViewField).positions[viewId];
+        const nextPath = newPath[0] + 1;
+        let targetNextPosition = 0;
+        if (fields.length > nextPath) {
+            const targetNextField = fields[nextPath];
+            targetNextPosition = (targetNextField as AITableViewField).positions[viewId];
+        } else {
+            const targetNextField = fields[fields.length - 1];
+            targetNextPosition = (targetNextField as AITableViewField).positions[viewId] + 1;
+            calculatePosition = targetNextPosition;
+        }
         calculatePosition = (targetPosition + targetNextPosition) / 2;
     }
     (sourceField as AITableViewField).positions[viewId] = calculatePosition;
