@@ -65,6 +65,7 @@ import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
 import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
 import { ThyNotifyService } from 'ngx-tethys/notify';
+import { isNumber } from 'lodash';
 
 @Component({
     selector: 'ai-table-grid',
@@ -683,7 +684,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     dragEnd(data: DragEndData) {
         switch (data.type) {
             case DragType.field:
-                if (data.fieldsIndex && data.targetIndex) {
+                if (data.fieldsIndex && isNumber(data.targetIndex)) {
                     for (let i = 0; i < data.fieldsIndex.length; i++) {
                         this.aiMoveField.emit({
                             path: [data.fieldsIndex[i]],
