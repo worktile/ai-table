@@ -124,6 +124,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
         return {
             aiTable: this.aiTable,
+            gridData: this.gridData(),
             container: this.containerElement(),
             coordinate: coordinate,
             containerWidth: this.containerRect().width,

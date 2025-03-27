@@ -111,7 +111,7 @@ export class AITableGridBase implements OnInit {
     }
 
     initAITable() {
-        this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiTable = createAITable(this.aiRecords, this.aiFields, this.gridData);
         this.aiPlugins()?.forEach((plugin) => {
             this.aiTable = plugin(this.aiTable);
         });

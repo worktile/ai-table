@@ -69,7 +69,8 @@ export class TableService {
     });
 
     renderFields = computed(() => {
-        return buildFieldsByView(this.aiTable, this.fields(), this.activeView()) as AITableViewFields;
+        const result = buildFieldsByView(this.aiTable, this.fields(), this.activeView()) as AITableViewFields;
+        return result;
     });
 
     keywords = computed(() => {

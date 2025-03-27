@@ -91,8 +91,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             const sourceField = fields[action.path[0]];
             const targetField = fields[action.newPath[0]];
             updateFieldPositionInView(activeView!._id, fields, sourceField, targetField, action.path, action.newPath);
-            fields.splice(action.path[0], 1);
-            fields.splice(action.newPath[0], 0, sourceField);
             break;
         }
         case ActionName.RemoveField: {

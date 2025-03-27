@@ -6,7 +6,6 @@ import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
 export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const { path, newPath } = options;
     Actions.moveField(aiTable, path, newPath);
-    updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }
 
 export function updateFieldPositionInView(
