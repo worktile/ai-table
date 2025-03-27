@@ -12,6 +12,7 @@ import { ThyDivider } from 'ngx-tethys/divider';
 import { AITable } from '../../core';
 import { AITableContextMenuItem } from '../../types';
 import { AITableGridSelectionService } from '../../services/selection.service';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 
 @Component({
     selector: 'ai-table-context-menu',
@@ -32,7 +33,9 @@ import { AITableGridSelectionService } from '../../services/selection.service';
     ]
 })
 export class AITableContextMenu extends ThyDropdownAbstractMenu {
-    private aiTableGridSelectionService = inject(AITableGridSelectionService);
+    aiTableGridSelectionService = inject(AITableGridSelectionService);
+
+    notifyService = inject(ThyNotifyService);
 
     aiTable = input.required<AITable>();
 
@@ -44,7 +47,8 @@ export class AITableContextMenu extends ThyDropdownAbstractMenu {
 
     execute(menu: AITableContextMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable(), this.targetName(), this.position())) || !menu.disabled) {
-            menu.exec && menu.exec(this.aiTable(), this.targetName(), this.position(), this.aiTableGridSelectionService);
+            menu.exec &&
+                menu.exec(this.aiTable(), this.targetName(), this.position(), this.aiTableGridSelectionService, this.notifyService);
         }
     }
 }

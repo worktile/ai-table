@@ -35,7 +35,18 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, Coordinate, DragEndData, DragType, RendererContext, UpdateFieldValueOptions } from './core';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AITableField,
+    Coordinate,
+    RendererContext,
+    UpdateFieldValueOptions,
+    DragEndData,
+    DragType,
+    AIRecordFieldIdPath,
+    AITable
+} from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -51,8 +62,9 @@ import {
     isWindows
 } from './utils';
 import { getMousePosition } from './utils/position';
-import { buildClipboardData, writeToClipboard, writeToAITable } from './utils/clipboard';
 import { AITableDragComponent } from './components/drag/drag.component';
+import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 
 @Component({
     selector: 'ai-table-grid',
@@ -71,6 +83,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private isDragSelecting = false;
 
     private dragSelectionStart: AIRecordFieldIdPath | null = null;
+
+    private notifyService = inject(ThyNotifyService);
 
     timer!: number | null;
 
@@ -425,6 +439,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
         setTimeout(() => {
             this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                viewContainerRef: this.viewContainerRef,
                 container: this.containerElement(),
                 coordinate: this.coordinate(),
                 fieldId: fieldId!,
@@ -580,6 +595,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                    viewContainerRef: this.viewContainerRef,
                     container: this.containerElement(),
                     coordinate: this.coordinate(),
                     fieldId: fieldId!,
@@ -609,14 +625,38 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (event.key === 'c') {
                     const clipboardData = buildClipboardData(this.aiTable);
                     if (clipboardData) {
-                        writeToClipboard(clipboardData);
+                        writeToClipboard(clipboardData).then(() => {
+                            const copiedCellsCount = this.aiTable.selection().selectedCells.size;
+                            this.notifyService.success(`已复制 ${copiedCellsCount} 个单元格`, undefined, {
+                                placement: 'bottomLeft'
+                            });
+                        });
                     }
                 } else if (event.key === 'v') {
                     event.preventDefault();
-                    const updateValueFn = (data: UpdateFieldValueOptions) => {
-                        this.aiUpdateFieldValue.emit(data);
+
+                    const actions: AITablePasteActions = {
+                        updateFieldValue: (data: UpdateFieldValueOptions) => {
+                            this.aiUpdateFieldValue.emit(data);
+                        },
+                        setField: (field: AITableField) => {
+                            this.aiSetField.emit(field);
+                        },
+                        addField: (data: AddFieldOptions) => {
+                            this.aiAddField.emit(data);
+                        },
+                        addRecord: (data: AddRecordOptions) => {
+                            this.addRecord();
+                        }
                     };
-                    writeToAITable(this.aiTable, updateValueFn);
+
+                    writeToAITable(this.aiTable, actions).then((isPasteSuccess) => {
+                        if (!isPasteSuccess) {
+                            this.notifyService.error('粘贴内容不符合当前类型', undefined, {
+                                placement: 'bottomLeft'
+                            });
+                        }
+                    });
                 }
             });
     }

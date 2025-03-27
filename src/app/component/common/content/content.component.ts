@@ -8,6 +8,7 @@ import {
     AITableField,
     AITableFieldType,
     AITableGrid,
+    AITablePasteActions,
     AITableQueries,
     AITableRecord,
     DateFieldValue,
@@ -46,7 +47,6 @@ import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
-
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -119,6 +119,21 @@ export class DemoTableContent {
         };
     });
 
+    pasteActions: AITablePasteActions = {
+        updateFieldValue: (data: UpdateFieldValueOptions) => {
+            this.updateFieldValue(data);
+        },
+        setField: (field: AITableField) => {
+            this.setField(field);
+        },
+        addRecord: (data: AddRecordOptions) => {
+            this.addRecord(data);
+        },
+        addField: (data: AddFieldOptions) => {
+            this.addField(data);
+        }
+    };
+
     contextMenuItems: AITableContextMenuItem[] = [
         {
             ...CopyCellsItem,
@@ -126,9 +141,7 @@ export class DemoTableContent {
             hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
         {
-            ...PasteCellsItem((data: UpdateFieldValueOptions) => {
-                this.updateFieldValue(data);
-            }),
+            ...PasteCellsItem(this.pasteActions),
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
             hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
@@ -213,6 +226,10 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         updateFieldValue(this.aiTable, value, { updated_by: member, updated_at: time });
+    }
+
+    setField(field: AITableField) {
+        Actions.setField(this.aiTable, field, [field._id]);
     }
 
     addField(data: AddFieldOptions) {
