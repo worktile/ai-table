@@ -169,6 +169,7 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
     const visibleFields = AITable.getVisibleFields(aiTable);
     const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
+    let isPasteSuccess = false;
 
     clipboardContent.forEach((row, i) => {
         row.forEach((plainText, j) => {
@@ -189,11 +190,16 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
             }
 
             if (value !== null) {
-                actions.updateFieldValue({
-                    value,
-                    path: [targetRecord._id, targetField._id]
-                });
+                try {
+                    actions.updateFieldValue({
+                        value,
+                        path: [targetRecord._id, targetField._id]
+                    });
+                    isPasteSuccess = true;
+                } catch (error) {}
             }
         });
     });
+
+    return isPasteSuccess;
 };

@@ -1,6 +1,7 @@
 import { ElementRef, ViewContainerRef } from '@angular/core';
 import { AITable, Coordinate } from '../core';
 import { AITableGridSelectionService } from '../services/selection.service';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 
 export enum AITableRowType {
     add = 'add',
@@ -43,7 +44,8 @@ export interface AITableContextMenuItem {
         aiTable: AITable,
         targetName: string,
         position: { x: number; y: number },
-        aiTableGridSelectionService: AITableGridSelectionService
+        aiTableGridSelectionService: AITableGridSelectionService,
+        notifyService: ThyNotifyService
     ) => void;
     hidden?: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => boolean;
     disabled?: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => boolean;
