@@ -61,13 +61,26 @@ export const readFromClipboard = async () => {
             const clipboardText = await navigator.clipboard.readText();
             clipboardData.text = clipboardText;
         } else {
-            const textarea = document.createElement('textarea');
-            document.body.appendChild(textarea);
-            textarea.focus();
-            document.execCommand('paste');
-            const text = textarea.value;
-            document.body.removeChild(textarea);
-            clipboardData.text = text;
+            const pastePromise = new Promise<ClipboardContent>((resolve) => {
+                const textarea = document.createElement('textarea');
+                document.body.appendChild(textarea);
+                const handlePaste = (e: ClipboardEvent) => {
+                    const text = e.clipboardData?.getData('text') || '';
+                    const html = e.clipboardData?.getData('text/html') || '';
+
+                    resolve({
+                        text,
+                        html: html || undefined
+                    });
+
+                    textarea.removeEventListener('paste', handlePaste);
+                };
+                textarea.addEventListener('paste', handlePaste);
+                textarea.focus();
+                document.execCommand('paste');
+                document.body.removeChild(textarea);
+            });
+            clipboardData = await pastePromise;
         }
         return clipboardData;
     } catch (error) {
