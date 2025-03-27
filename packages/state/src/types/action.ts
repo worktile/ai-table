@@ -44,12 +44,6 @@ export type AddFieldAction = {
     isCopy?: boolean;
 };
 
-export type MoveFieldAction = {
-    type: ActionName.MoveField;
-    path: NumberPath;
-    newPath: NumberPath;
-};
-
 export type MoveRecordAction = {
     type: ActionName.MoveRecord;
     path: NumberPath;
@@ -114,7 +108,6 @@ export type AITableAction =
     | RemoveRecordAction
     | RemoveFieldAction
     | SetFieldAction
-    | MoveFieldAction
     | MoveRecordAction
     | AITableViewAction
     | AITableSystemFieldAction;
