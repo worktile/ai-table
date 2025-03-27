@@ -35,7 +35,16 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, AITableField, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AIRecordFieldIdPath,
+    AITable,
+    AITableField,
+    Coordinate,
+    RendererContext,
+    UpdateFieldValueOptions
+} from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -620,6 +629,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         },
                         setField: (field: AITableField) => {
                             this.aiSetField.emit(field);
+                        },
+                        addField: (data: AddFieldOptions) => {
+                            this.aiAddField.emit(data);
+                        },
+                        addRecord: (data: AddRecordOptions) => {
+                            this.addRecord();
                         }
                     };
                     writeToAITable(this.aiTable, actions);

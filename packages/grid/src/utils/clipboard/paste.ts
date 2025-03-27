@@ -4,6 +4,9 @@ import {
     AITableField,
     AITableFieldType,
     AITableRecord,
+    createDefaultField,
+    createDefaultFieldName,
+    FieldOptions,
     FieldValue,
     getFieldValue,
     idCreator,
@@ -13,6 +16,7 @@ import {
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { FieldModelMap } from '../field/model';
 import { processPastedValueForSelect } from '../field/model/select';
+import { AddRecordOptions, AddFieldOptions } from '../../core';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
@@ -150,6 +154,35 @@ function getPasteValue(
 export interface AITablePasteActions {
     updateFieldValue: (data: UpdateFieldValueOptions) => void;
     setField: (field: AITableField) => void;
+    addRecord: (data: AddRecordOptions) => void;
+    addField: (data: AddFieldOptions) => void;
+}
+
+function appendRecord(aiTable: AITable, actions: AITablePasteActions) {
+    const allRecords = aiTable.records();
+    const lastRecordId = allRecords.length > 0 ? allRecords[allRecords.length - 1]._id : '';
+    actions.addRecord({
+        originId: lastRecordId
+    });
+}
+
+function appendField(aiTable: AITable, originField: AITableField | null, actions: AITablePasteActions) {
+    const lastFieldId = aiTable.fields().length > 0 ? aiTable.fields()[aiTable.fields().length - 1]._id : '';
+    let defaultFieldValue: Partial<AITableField>;
+    if (originField) {
+        defaultFieldValue = {
+            ...originField,
+            name: createDefaultFieldName(aiTable, FieldOptions.find((item) => item.type === originField.type)!),
+            _id: idCreator()
+        };
+    } else {
+        defaultFieldValue = createDefaultField(aiTable, AITableFieldType.text);
+    }
+
+    actions.addField({
+        originId: lastFieldId,
+        defaultValue: defaultFieldValue
+    });
 }
 
 export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActions) => {
@@ -166,20 +199,23 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
     const [startRecordId, startFieldId] = firstCell.split(':');
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
-    const visibleFields = AITable.getVisibleFields(aiTable);
-    const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
 
     clipboardContent.forEach((row, i) => {
+        const targetRowIndex = startRowIndex + i;
+        if (targetRowIndex >= aiTable.context!.linearRows().length - 1) {
+            appendRecord(aiTable, actions);
+        }
+
         row.forEach((plainText, j) => {
-            const targetRowIndex = startRowIndex + i;
             const targetColIndex = startColIndex + j;
-            if (targetRowIndex >= linearRows.length || targetColIndex >= visibleFields.length) {
-                return;
+            if (targetColIndex >= AITable.getVisibleFields(aiTable).length) {
+                const originField = aiTableContent?.fields[j] || null;
+                appendField(aiTable, originField, actions);
             }
 
-            const targetRecord = linearRows[targetRowIndex];
-            const targetField = visibleFields[targetColIndex];
+            const targetRecord = aiTable.context!.linearRows()[targetRowIndex];
+            const targetField = AITable.getVisibleFields(aiTable)[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;
             const { value, newField } = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
