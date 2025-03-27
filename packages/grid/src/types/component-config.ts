@@ -65,6 +65,7 @@ export interface AITableHoverCellConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     field: AITableField;
+    recordId?: string;
     x: number;
     y: number;
     render: AITableRender;

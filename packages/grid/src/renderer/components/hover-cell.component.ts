@@ -85,6 +85,7 @@ export class AITableHoverCells {
 
         const result: AITableHoverCellConfig = {
             field,
+            recordId,
             aiTable,
             coordinate,
             x,

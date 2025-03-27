@@ -19,7 +19,7 @@ import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfi
 import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '../../../core';
 import { HoverCellComponent } from '../../interfaces';
-import { getFileCanvasPaths } from '../../../utils/file';
+import { getFileCanvasPaths, getFileThumbnailSvgString } from '../../../utils/file';
 import { AITableSvg } from '../svg.component';
 import { isNil } from 'lodash';
 import { AITableActionIcon } from '../action-icon.component';
@@ -28,7 +28,8 @@ import { AITableActionIcon } from '../action-icon.component';
     selector: 'ai-table-attachments',
     template: `
         @for (attachment of attachments(); track attachment.attachmentInfo._id) {
-            <ai-table-svg [config]="attachment" (onClick)="attachmentClick($event)"></ai-table-svg>
+            <!-- <ai-table-svg [config]="attachment" (onClick)="attachmentClick($event)"></ai-table-svg> -->
+            <ko-image [config]="attachment" (koClick)="attachmentClick($event)"></ko-image>
         }
         <ai-table-action-icon [config]="iconConfig()" (onClick)="addClick($event)"></ai-table-action-icon>
     `,
@@ -42,49 +43,57 @@ export class AITableCellAttachment implements HoverCellComponent {
     config = input<AITableHoverCellConfig>();
 
     attachments = computed<AITableAttachmentConfig[]>(() => {
-        const { render, aiTable, coordinate } = this.config()!;
+        const { render, aiTable, coordinate, field, recordId, readonly } = this.config()!;
 
         if (render) {
             const {} = aiTable;
-            const { transformValue, references, field, columnWidth, rowHeight, style, zIndex } = render;
+            const { transformValue, references, columnWidth, rowHeight, style, zIndex } = render;
             if (!transformValue?.length) {
                 return [];
             }
-
-            const svgPaths = transformValue?.map((attachmentId: string, index: number) => {
-                const attachmentInfo = references!.attachments[attachmentId];
-                const fileCanvasPaths = getFileCanvasPaths(attachmentInfo.addition.ext);
-
-                const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-                const currentX = AI_TABLE_CELL_PADDING + index * itemWidth + AI_TABLE_OFFSET;
-                let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_FILE_ICON_SIZE) / 2 + AI_TABLE_OFFSET;
-                if (columnWidth != null) {
-                    // 在非活动状态下，当超出列宽时，不会渲染后续内容
-                    if (currentX >= columnWidth - AI_TABLE_ACTION_COMMON_SIZE - 2 * AI_TABLE_CELL_PADDING) {
-                        return null;
+            const result =
+                transformValue?.map((attachmentId: string, index: number) => {
+                    const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
+                    const currentX = AI_TABLE_CELL_PADDING + index * itemWidth + AI_TABLE_OFFSET;
+                    let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_FILE_ICON_SIZE) / 2 + AI_TABLE_OFFSET;
+                    if (columnWidth != null) {
+                        // 当超出列宽时，不会渲染后续内容
+                        if (currentX >= columnWidth - AI_TABLE_ACTION_COMMON_SIZE - 2 * AI_TABLE_CELL_PADDING) {
+                            return null;
+                        }
                     }
-                }
 
-                const result: AITableAttachmentConfig = {
-                    coordinate,
-                    attachmentInfo,
-                    x: currentX,
-                    y: currentY,
-                    listening: true,
-                    zIndex,
-                    data: fileCanvasPaths
-                };
-                return result;
-            });
-
-            return svgPaths.filter((item: any) => !!item);
+                    const attachmentInfo = references!.attachments[attachmentId];
+                    // const fileCanvasPaths = getFileCanvasPaths(attachmentInfo.addition.ext);
+                    const svgString = getFileThumbnailSvgString(attachmentInfo.addition.ext);
+                    const image = new Image();
+                    image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+                    return {
+                        // coordinate,
+                        // readonly,
+                        attachmentInfo,
+                        name: generateTargetName({
+                            targetName: AI_TABLE_CELL_ATTACHMENT_ADD,
+                            fieldId: field._id,
+                            recordId,
+                            mouseStyle: readonly ? 'default' : 'pointer'
+                        }),
+                        x: currentX,
+                        y: currentY,
+                        width: AI_TABLE_FILE_ICON_SIZE,
+                        height: AI_TABLE_FILE_ICON_SIZE,
+                        image,
+                        listening: true
+                    };
+                }) || [];
+            return result.filter((item: AITableAttachmentConfig) => !!item);
         }
 
         return [];
     });
 
     iconConfig = computed<AITableActionIconConfig>(() => {
-        const { coordinate, render, readonly } = this.config()!;
+        const { coordinate, render, field, recordId, readonly } = this.config()!;
         const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
         const offsetY = (coordinate.rowInitSize - AI_TABLE_ACTION_COMMON_SIZE) / 2;
 
@@ -93,7 +102,8 @@ export class AITableCellAttachment implements HoverCellComponent {
             readonly,
             name: generateTargetName({
                 targetName: AI_TABLE_CELL_ATTACHMENT_ADD,
-                fieldId: this.config()?.field._id,
+                fieldId: field._id,
+                recordId,
                 mouseStyle: readonly ? 'default' : 'pointer'
             }),
             x: offsetX,
@@ -111,14 +121,12 @@ export class AITableCellAttachment implements HoverCellComponent {
     });
 
     addClick(e: KoEventObject<MouseEvent>) {
-        e.event.cancelBubble = true;
+        // e.event.cancelBubble = true;
         // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
     }
 
     attachmentClick(e: KoEventObject<MouseEvent>) {
-        e.event.cancelBubble = true;
-        console.log('============ e =============');
-        console.log(e);
+        // e.event.cancelBubble = true;
         // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
     }
 }
