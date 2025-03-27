@@ -85,7 +85,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const coordinate = drag.coordinate!;
         switch (drag.type) {
             case DragType.field:
-                const fields = aiTable.fields();
+                const fields = aiTable.gridData().fields;
                 let width = 0;
                 fields.forEach((field, index) => {
                     if (drag.sourceIds.has(field._id)) {

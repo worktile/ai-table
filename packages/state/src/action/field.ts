@@ -18,7 +18,7 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
     if (isPathEqual(path, newPath)) {
         return;
     }
-    const fields = aiTable.fields();
+    const fields = aiTable.gridData().fields;
     const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
     const sourceField = fields[path[0]] as AITableViewField;
     const position = getFieldPositionInView(activeView!._id, fields, path, newPath);

@@ -1,7 +1,6 @@
 import { AITableField, AITableFields, AITableRecordUpdatedInfo, MoveFieldOptions, NumberPath } from '@ai-table/grid';
 import { AITableViewField, AIViewTable } from '../../types';
 import { Actions } from '../../action';
-import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
 
 export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const { path, newPath } = options;
