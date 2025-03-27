@@ -6,12 +6,12 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
     const colors = Colors;
     const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
-    const { fields } = aiTable;
+    const fields = aiTable.gridData().fields;
 
     const getFieldHeadStatus = (fieldId: string) => {
         const iconVisible =
-            [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields()[pointColumnIndex]?._id === fieldId;
-        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields()[pointColumnIndex]?._id === fieldId;
+            [AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE].includes(pointTargetName) && fields[pointColumnIndex]?._id === fieldId;
+        const isHoverIcon = pointTargetName === AI_TABLE_FIELD_HEAD_MORE && fields[pointColumnIndex]?._id === fieldId;
         const isSelected = aiTable.selection().selectedFields.has(fieldId);
         return {
             iconVisible,
@@ -29,7 +29,7 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
         if (columnIndex > columnCount - 1) break;
         if (columnIndex < 0) continue;
-        const field = fields()[columnIndex];
+        const field = fields[columnIndex];
         if (field == null) continue;
         const x = coordinate.getColumnOffset(columnIndex);
         const columnWidth = coordinate.getColumnWidth(columnIndex);

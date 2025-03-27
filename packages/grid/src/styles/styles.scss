@@ -6,6 +6,7 @@
 @use '../components/field-menu/field-menu.scss';
 @use '../components/context-menu/context-menu.scss';
 @use '../components/field-setting/field-setting.component.scss';
+@use '../components/drag/drag.component.scss';
 
 .ai-table-dom-grid {
     display: table;
@@ -159,6 +160,7 @@
         display: block;
         width: 100%;
         height: 100%;
+        position: relative;
     }
     .ai-table-horizontal-scroll-bar-wrapper,
     .ai-table-vertical-scroll-bar-wrapper {

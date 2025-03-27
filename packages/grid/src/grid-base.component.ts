@@ -29,6 +29,7 @@ import {
     AITableValue,
     createAITable,
     createDefaultField,
+    MoveFieldOptions,
     UpdateFieldValueOptions
 } from './core';
 import { AITableGridEventService } from './services/event.service';
@@ -78,6 +79,8 @@ export class AITableGridBase implements OnInit {
 
     aiAddField = output<AddFieldOptions>();
 
+    aiMoveField = output<MoveFieldOptions>();
+
     aiUpdateFieldValue = output<UpdateFieldValueOptions>();
 
     aiSetField = output<AITableField>();
@@ -111,7 +114,7 @@ export class AITableGridBase implements OnInit {
     }
 
     initAITable() {
-        this.aiTable = createAITable(this.aiRecords, this.aiFields);
+        this.aiTable = createAITable(this.aiRecords, this.aiFields, this.gridData);
         this.aiPlugins()?.forEach((plugin) => {
             this.aiTable = plugin(this.aiTable);
         });

@@ -10,3 +10,4 @@ export * from './record/filter';
 export * from './record/update-field-value';
 export * from './record/update-system-field-value';
 export * from './weak-map';
+export * from './field/move-fields';
