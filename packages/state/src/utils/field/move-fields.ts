@@ -8,39 +8,29 @@ export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions, upda
     Actions.moveField(aiTable, path, newPath);
 }
 
-export function updateFieldPositionInView(
-    viewId: string,
-    fields: AITableFields,
-    sourceField: AITableField,
-    targetField: AITableField,
-    path: NumberPath,
-    newPath: NumberPath
-) {
-    const targetPosition = (targetField as AITableViewField).positions[viewId];
-    let calculatePosition = 0;
+export function getFieldPositionInView(viewId: string, fields: AITableFields, path: NumberPath, newPath: NumberPath) {
+    const targetPosition = (fields[newPath[0]] as AITableViewField).positions[viewId];
+    let newPosition = 0;
     if (path[0] > newPath[0]) {
         const prevPath = newPath[0] - 1;
-        let targetPrevPosition = 0;
         if (prevPath > 0) {
             const targetPrevField = fields[prevPath];
-            targetPrevPosition = (targetPrevField as AITableViewField).positions[viewId];
-            calculatePosition = (targetPosition + targetPrevPosition) / 2;
+            const targetPrevPosition = (targetPrevField as AITableViewField).positions[viewId];
+            newPosition = (targetPosition + targetPrevPosition) / 2;
         } else {
-            const targetPrevField = fields[0];
-            calculatePosition = (targetPrevField as AITableViewField).positions[viewId] - 0.1;
+            const firstField = fields[0];
+            newPosition = (firstField as AITableViewField).positions[viewId] - 0.1;
         }
     } else {
         const nextPath = newPath[0] + 1;
-        let targetNextPosition = 0;
         if (fields.length > nextPath) {
             const targetNextField = fields[nextPath];
-            targetNextPosition = (targetNextField as AITableViewField).positions[viewId];
+            const targetNextPosition = (targetNextField as AITableViewField).positions[viewId];
+            newPosition = (targetPosition + targetNextPosition) / 2;
         } else {
-            const targetNextField = fields[fields.length - 1];
-            targetNextPosition = (targetNextField as AITableViewField).positions[viewId] + 1;
-            calculatePosition = targetNextPosition;
+            const lastField = fields[fields.length - 1];
+            newPosition = (lastField as AITableViewField).positions[viewId] + 1;
         }
-        calculatePosition = (targetPosition + targetNextPosition) / 2;
     }
-    (sourceField as AITableViewField).positions[viewId] = calculatePosition;
+    return newPosition;
 }
