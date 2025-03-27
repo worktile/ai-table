@@ -200,6 +200,7 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const references = aiTable.context!.references();
+    let isPasteSuccess = false;
 
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
@@ -225,11 +226,16 @@ export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActi
             }
 
             if (value !== null) {
-                actions.updateFieldValue({
-                    value,
-                    path: [targetRecord._id, targetField._id]
-                });
+                try {
+                    actions.updateFieldValue({
+                        value,
+                        path: [targetRecord._id, targetField._id]
+                    });
+                    isPasteSuccess = true;
+                } catch (error) {}
             }
         });
     });
+
+    return isPasteSuccess;
 };

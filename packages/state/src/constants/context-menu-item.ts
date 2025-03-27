@@ -2,6 +2,7 @@ import { AITable, AITableContextMenuItem, AITableGridSelectionService, AITablePa
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 
 export const RemoveRecordsItem: AITableContextMenuItem = {
     type: 'removeRecords',
@@ -28,10 +29,21 @@ export const CopyCellsItem: AITableContextMenuItem = {
     name: '复制',
     shortcutKey: isMac() ? `⌘ + C` : `Ctrl + C`,
     icon: 'copy',
-    exec: (aiTable: AITable) => {
+    exec: (
+        aiTable: AITable,
+        targetName: string,
+        position: { x: number; y: number },
+        aiTableGridSelectionService: AITableGridSelectionService,
+        notifyService: ThyNotifyService
+    ) => {
         const clipboardData = buildClipboardData(aiTable);
         if (clipboardData) {
-            writeToClipboard(clipboardData);
+            writeToClipboard(clipboardData).then(() => {
+                const copiedCellsCount = aiTable.selection().selectedCells.size;
+                notifyService.success(`已复制 ${copiedCellsCount} 个单元格`, undefined, {
+                    placement: 'bottomLeft'
+                });
+            });
         }
     }
 };
@@ -46,9 +58,16 @@ export const PasteCellsItem: (actions: AITablePasteActions) => AITableContextMen
             aiTable: AITable,
             targetName: string,
             position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService
+            aiTableGridSelectionService: AITableGridSelectionService,
+            notifyService: ThyNotifyService
         ) => {
-            writeToAITable(aiTable, actions);
+            writeToAITable(aiTable, actions).then((isPasteSuccess) => {
+                if (!isPasteSuccess) {
+                    notifyService.error('粘贴内容不符合当前类型', undefined, {
+                        placement: 'bottomLeft'
+                    });
+                }
+            });
         }
     };
 };
