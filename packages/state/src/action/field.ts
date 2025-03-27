@@ -1,6 +1,8 @@
 import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
-import { ActionName, AddFieldAction, MoveFieldAction, RemoveFieldAction, SetFieldAction, AIViewTable } from '../types';
+import { ActionName, AddFieldAction, RemoveFieldAction, SetFieldAction, AIViewTable } from '../types';
 import { AITableViewField } from '../types/view';
+import { isPathEqual, updateFieldPositionInView } from '../utils';
+import { cloneDeep } from 'lodash';
 
 export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath, originId?: string, isCopy?: boolean) {
     const operation: AddFieldAction = {
@@ -14,12 +16,15 @@ export function addField(aiTable: AIViewTable, field: AITableField, path: Number
 }
 
 export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
-    const operation: MoveFieldAction = {
-        type: ActionName.MoveField,
-        path,
-        newPath
-    };
-    aiTable.apply(operation);
+    if (isPathEqual(path, newPath)) {
+        return;
+    }
+    const fields = aiTable.fields();
+    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
+    const sourceField = cloneDeep(fields[path[0]]);
+    const targetField = fields[newPath[0]];
+    updateFieldPositionInView(activeView!._id, fields, sourceField, targetField, path, newPath);
+    setField(aiTable, sourceField, [sourceField._id]);
 }
 
 export function removeField(aiTable: AIViewTable, path: IdPath) {
