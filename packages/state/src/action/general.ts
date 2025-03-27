@@ -199,7 +199,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
 export const GeneralActions = {
     transform(aiTable: AIViewTable, action: AITableAction): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
-        const fields = createDraft(aiTable.fields()) as AITableViewFields;
+        const fields = createDraft(aiTable.gridData().fields) as AITableViewFields;
         const views = createDraft(aiTable.views());
         apply(aiTable, records, fields, views, action);
         aiTable.fields.set(finishDraft(fields));

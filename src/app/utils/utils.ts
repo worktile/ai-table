@@ -598,7 +598,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 2,
+                    view1: 2.5,
                     view2: 16
                 },
                 type: AITableFieldType.select,
