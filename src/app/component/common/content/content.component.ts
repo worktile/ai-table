@@ -45,7 +45,6 @@ import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
-
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -124,6 +123,12 @@ export class DemoTableContent {
         },
         setField: (field: AITableField) => {
             this.setField(field);
+        },
+        addRecord: (data: AddRecordOptions) => {
+            this.addRecord(data);
+        },
+        addField: (data: AddFieldOptions) => {
+            this.addField(data);
         }
     };
 
