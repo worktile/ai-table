@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.42](https://github.com/worktile/ai-table/compare/0.0.41...0.0.42) (2025-03-28)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17515 fixed calculations that moved to the first and last column positions ([#290](https://github.com/worktile/ai-table/issues/290)) ([297b1e4](https://github.com/worktile/ai-table/commit/297b1e4baae4d5cd4d2a1e525e9e9ef403c380df))
+* **grid:** cellValue may be null when copy empty cell ([#293](https://github.com/worktile/ai-table/issues/293)) ([88a486e](https://github.com/worktile/ai-table/commit/88a486ef478b0932b95837e33ee76e1f7513927f))
+
+
+### Features
+
+* **grid:** support read from clipboard when visit http adress ([#292](https://github.com/worktile/ai-table/issues/292)) ([c2668f5](https://github.com/worktile/ai-table/commit/c2668f5565836a639b66ecef9b1886b9a59413a9))
+* **state:** #WIK-17516 drag fields support collaboration ([#291](https://github.com/worktile/ai-table/issues/291)) ([1481415](https://github.com/worktile/ai-table/commit/1481415ff376de1d5e764c17454fbe6856685c91)), closes [#WIK-17516](https://github.com/worktile/ai-table/issues/WIK-17516)
+
+
+
+## [0.0.41](https://github.com/worktile/ai-table/compare/0.0.40...0.0.41) (2025-03-27)
+
+
+### Bug Fixes
+
+* #WIK-17450 【aitable】增加筛选条件后，新增数据报错 ([#271](https://github.com/worktile/ai-table/issues/271)) ([6223b29](https://github.com/worktile/ai-table/commit/6223b29d79988b4d889c553dfdab2a82ba323513)), closes [#WIK-17450](https://github.com/worktile/ai-table/issues/WIK-17450)
+* **select-editor:** update select value by ngModelChange #WIK-17463 ([#278](https://github.com/worktile/ai-table/issues/278)) ([f4fa058](https://github.com/worktile/ai-table/commit/f4fa05836c9d361d44c2a23079d5d65b12ea3e2e)), closes [#WIK-17463](https://github.com/worktile/ai-table/issues/WIK-17463)
+
+
+### Features
+
+* #WIK-17458 定义附件数据结构，canvas 绘制 ([#273](https://github.com/worktile/ai-table/issues/273)) ([b290de6](https://github.com/worktile/ai-table/commit/b290de672240beba5d5bdf62863d14319f699398)), closes [#WIK-17458](https://github.com/worktile/ai-table/issues/WIK-17458)
+* #WIK-17491 【前端】附件canvas以image的方式绘制svg文件图标 ([#280](https://github.com/worktile/ai-table/issues/280)) ([8886e60](https://github.com/worktile/ai-table/commit/8886e60fd99047d2aeab36b96422ee7e98cf4b86)), closes [#WIK-17491](https://github.com/worktile/ai-table/issues/WIK-17491)
+* #WIK-17510 【aitable】附件dbclick进入编辑模式 ([59f103a](https://github.com/worktile/ai-table/commit/59f103a18f1203f0390a167b30f1374a94de1ab0)), closes [#WIK-17510](https://github.com/worktile/ai-table/issues/WIK-17510) [#WIK-17510](https://github.com/worktile/ai-table/issues/WIK-17510)
+* apply imageMapOnload ([#272](https://github.com/worktile/ai-table/issues/272)) ([f5b430f](https://github.com/worktile/ai-table/commit/f5b430fa590833539e93bff8c6ebb0292dd35023))
+* **drag:** #WIK-17443 support column drag and drop to adjust position ([#282](https://github.com/worktile/ai-table/issues/282)) ([48ecc4e](https://github.com/worktile/ai-table/commit/48ecc4e116c0d9763f0f5cfad24e78179d173819)), closes [#WIK-17443](https://github.com/worktile/ai-table/issues/WIK-17443)
+* **grid:** append records or fields if there are not enough rows or columns when pasting ([#287](https://github.com/worktile/ai-table/issues/287)) ([e482274](https://github.com/worktile/ai-table/commit/e48227422eb50dae25dfaa8308870075b94c60b3))
+* **grid:** encapsulate the toFieldValue function ([#274](https://github.com/worktile/ai-table/issues/274)) ([580b0ea](https://github.com/worktile/ai-table/commit/580b0ea62bddddae5f6e780c955c9ea52bfa837e))
+* **grid:** optimize copy and paste logic ([#275](https://github.com/worktile/ai-table/issues/275)) ([558b496](https://github.com/worktile/ai-table/commit/558b496272f8c35f6cb97a37da41e46052ebad52))
+* **grid:** show tips when copied success or pasted failure ([#288](https://github.com/worktile/ai-table/issues/288)) ([02e8892](https://github.com/worktile/ai-table/commit/02e88925c51b857353c92f59f4886e37506a9195))
+* **grid:** support copy to clipbpard and paste to ai-table #WIK-16631 ([#270](https://github.com/worktile/ai-table/issues/270)) ([9f79a85](https://github.com/worktile/ai-table/commit/9f79a8510f83bae797543c95356a263eb54445e7)), closes [#WIK-16631](https://github.com/worktile/ai-table/issues/WIK-16631) [#WIK-16631](https://github.com/worktile/ai-table/issues/WIK-16631) [#WIK-16631](https://github.com/worktile/ai-table/issues/WIK-16631)
+* **grid:** support paste link field and dont support paste attachment ([#279](https://github.com/worktile/ai-table/issues/279)) ([3ceb020](https://github.com/worktile/ai-table/commit/3ceb0209583cf149abc97e5b5afd22b6e936ba3e))
+* **grid:** support paste to rate and progress ([#284](https://github.com/worktile/ai-table/issues/284)) ([3e27787](https://github.com/worktile/ai-table/commit/3e27787412405b43d7ec605bbf13e45acf95e05f))
+* **grid:** support paste to select field ([#283](https://github.com/worktile/ai-table/issues/283)) ([ec07992](https://github.com/worktile/ai-table/commit/ec07992c22313dfe2b13ac31af2e2686c3120edf))
+
+
+
 ## [0.0.40](https://github.com/worktile/ai-table/compare/0.0.39...0.0.40) (2025-03-14)
 
 

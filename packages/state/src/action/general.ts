@@ -82,15 +82,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             records.splice(action.newPath[0], 0, record);
             break;
         }
-        case ActionName.MoveField: {
-            if (isPathEqual(action.path, action.newPath)) {
-                return;
-            }
-            const field = fields[action.path[0]];
-            fields.splice(action.path[0], 1);
-            fields.splice(action.newPath[0], 0, field);
-            break;
-        }
         case ActionName.RemoveField: {
             const [fieldId] = action.path;
             const fieldIndex = aiTable.fields().findIndex((item) => item._id === fieldId);
@@ -197,7 +188,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
 export const GeneralActions = {
     transform(aiTable: AIViewTable, action: AITableAction): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
-        const fields = createDraft(aiTable.fields()) as AITableViewFields;
+        const fields = createDraft(aiTable.gridData().fields) as AITableViewFields;
         const views = createDraft(aiTable.views());
         apply(aiTable, records, fields, views, action);
         aiTable.fields.set(finishDraft(fields));

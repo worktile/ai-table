@@ -12,6 +12,7 @@ import {
     AITableQueries,
     AITableRecord,
     DateFieldValue,
+    MoveFieldOptions,
     NumberPath,
     UpdateFieldValueOptions
 } from '@ai-table/grid';
@@ -31,7 +32,8 @@ import {
     RemoveRecordsItem,
     updateFieldValue,
     withState,
-    YjsAITable
+    YjsAITable,
+    moveFields
 } from '@ai-table/state';
 import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +47,6 @@ import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
-
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -124,6 +125,12 @@ export class DemoTableContent {
         },
         setField: (field: AITableField) => {
             this.setField(field);
+        },
+        addRecord: (data: AddRecordOptions) => {
+            this.addRecord(data);
+        },
+        addField: (data: AddFieldOptions) => {
+            this.addField(data);
         }
     };
 
@@ -229,6 +236,12 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         addFields(this.aiTable, data, { updated_by: member, updated_at: time });
+    }
+
+    dragMoveField(data: MoveFieldOptions) {
+        const member = 'member_02';
+        const time = new Date().getTime();
+        moveFields(this.aiTable, data, { updated_by: member, updated_at: time });
     }
 
     prevent(event: Event) {

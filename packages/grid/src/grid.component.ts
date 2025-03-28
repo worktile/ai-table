@@ -35,7 +35,18 @@ import {
     DEFAULT_SCROLL_STATE,
     MOUSEOVER_EDIT_TYPE
 } from './constants';
-import { AIRecordFieldIdPath, AITable, AITableField, Coordinate, RendererContext, UpdateFieldValueOptions } from './core';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AITableField,
+    Coordinate,
+    RendererContext,
+    UpdateFieldValueOptions,
+    DragEndData,
+    DragType,
+    AIRecordFieldIdPath,
+    AITable
+} from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -51,7 +62,10 @@ import {
     isWindows
 } from './utils';
 import { getMousePosition } from './utils/position';
+import { AITableDragComponent } from './components/drag/drag.component';
 import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
+import { ThyNotifyService } from 'ngx-tethys/notify';
+import { isNumber } from 'lodash';
 
 @Component({
     selector: 'ai-table-grid',
@@ -61,7 +75,7 @@ import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActio
     host: {
         class: 'ai-table-grid'
     },
-    imports: [AITableRenderer],
+    imports: [AITableRenderer, AITableDragComponent],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
@@ -70,6 +84,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private isDragSelecting = false;
 
     private dragSelectionStart: AIRecordFieldIdPath | null = null;
+
+    private notifyService = inject(ThyNotifyService);
 
     timer!: number | null;
 
@@ -123,6 +139,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
         return {
             aiTable: this.aiTable,
+            gridData: this.gridData(),
             container: this.containerElement(),
             coordinate: coordinate,
             containerWidth: this.containerRect().width,
@@ -256,7 +273,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
             context!.setPointPosition(curMousePosition);
             this.timer = null;
-
             if (this.isDragSelecting) {
                 const { fieldId, recordId } = getDetailByTargetName(curMousePosition.realTargetName);
                 if (fieldId && recordId) {
@@ -289,6 +305,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 mouseEvent.preventDefault();
                 if (!fieldId) return;
                 this.aiTableGridSelectionService.selectField(fieldId);
+                this.handleFieldDragStart();
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
@@ -609,7 +626,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (event.key === 'c') {
                     const clipboardData = buildClipboardData(this.aiTable);
                     if (clipboardData) {
-                        writeToClipboard(clipboardData);
+                        writeToClipboard(clipboardData).then(() => {
+                            const copiedCellsCount = this.aiTable.selection().selectedCells.size;
+                            this.notifyService.success(`已复制 ${copiedCellsCount} 个单元格`, undefined, {
+                                placement: 'bottomLeft'
+                            });
+                        });
                     }
                 } else if (event.key === 'v') {
                     event.preventDefault();
@@ -620,10 +642,62 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         },
                         setField: (field: AITableField) => {
                             this.aiSetField.emit(field);
+                        },
+                        addField: (data: AddFieldOptions) => {
+                            this.aiAddField.emit(data);
+                        },
+                        addRecord: (data: AddRecordOptions) => {
+                            this.addRecord();
                         }
                     };
-                    writeToAITable(this.aiTable, actions);
+
+                    writeToAITable(this.aiTable, actions).then((isPasteSuccess) => {
+                        if (!isPasteSuccess) {
+                            this.notifyService.error('粘贴内容不符合当前类型', undefined, {
+                                placement: 'bottomLeft'
+                            });
+                        }
+                    });
                 }
             });
+    }
+
+    private handleFieldDragStart() {
+        if (this.aiTableGridSelectionService.selectedFields.size > 0) {
+            this.aiTableGridSelectionService.drag({
+                type: DragType.field,
+                sourceIds: this.aiTableGridSelectionService.selectedFields,
+                scroll: this.getScrollPosition(),
+                coordinate: this.coordinate()
+            });
+        }
+    }
+
+    private getScrollPosition() {
+        const horizontalBar = this.horizontalBarRef()?.nativeElement;
+        const verticalBar = this.verticalBarRef()?.nativeElement;
+        let scrollLeft = horizontalBar?.scrollLeft || 0;
+        let scrollTop = verticalBar?.scrollTop || 0;
+        return { x: scrollLeft, y: scrollTop };
+    }
+
+    dragEnd(data: DragEndData) {
+        switch (data.type) {
+            case DragType.field:
+                if (data.fieldsIndex && isNumber(data.targetIndex)) {
+                    for (let i = 0; i < data.fieldsIndex.length; i++) {
+                        this.aiMoveField.emit({
+                            path: [data.fieldsIndex[i]],
+                            newPath: [data.targetIndex + i]
+                        });
+                    }
+                }
+                break;
+            case DragType.columnWidth:
+                break;
+            case DragType.record:
+                return;
+        }
+        this.aiTableGridSelectionService.clearDrag();
     }
 }

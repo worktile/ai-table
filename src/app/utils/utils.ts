@@ -553,7 +553,7 @@ export function getCanvasDefaultValue() {
         fields: [
             {
                 _id: 'column-13',
-                name: '单行文本2',
+                name: '单行文本 2',
                 positions: {
                     view1: 1,
                     view2: 17
@@ -587,7 +587,7 @@ export function getCanvasDefaultValue() {
             },
             {
                 _id: 'column-1',
-                name: '单行文本1',
+                name: '单行文本 1',
                 positions: {
                     view1: 0,
                     view2: 18
@@ -598,7 +598,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 2,
+                    view1: 2.5,
                     view2: 16
                 },
                 type: AITableFieldType.select,

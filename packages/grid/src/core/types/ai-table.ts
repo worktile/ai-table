@@ -2,11 +2,12 @@ import { Signal, WritableSignal } from '@angular/core';
 import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { RendererContext } from '../context';
-import { AIRecordFieldIdPath, AITableField, AITableFields, AITableRecord, AITableRecords } from './core';
+import { AIRecordFieldIdPath, AITableDragState, AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from './core';
 
 export interface AITable {
     records: WritableSignal<AITableRecords>;
     fields: WritableSignal<AITableFields>;
+    gridData: Signal<AITableValue>;
     context?: RendererContext;
     selection: WritableSignal<AITableSelection>;
     keywordsMatchedCells: WritableSignal<Set<string>>; // [`${recordId}:${fieldId}`]
@@ -14,6 +15,7 @@ export interface AITable {
     fieldsMap: Signal<{ [key: string]: AITableField }>;
     recordsWillHidden: WritableSignal<string[]>;
     recordsWillMove: WritableSignal<string[]>;
+    dragState?: WritableSignal<AITableDragState>;
 }
 
 export type AIPlugin = (aiTable: AITable) => AITable;
@@ -23,7 +25,7 @@ export const AITable = {
         return Colors;
     },
     getVisibleFields(aiTable: AITable): AITableFields {
-        return aiTable.fields().filter((field) => !field.hidden);
+        return aiTable.gridData().fields.filter((field) => !field.hidden);
     },
     getVisibleRows(aiTable: AITable): AITableRecords {
         return aiTable.records();

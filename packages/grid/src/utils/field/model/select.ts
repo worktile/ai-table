@@ -76,7 +76,7 @@ export function processPastedValueForSelect(
             cellValue.forEach((id) => {
                 if (targetOptionIds.includes(id)) {
                     existOptionIds.push(id);
-                } else if (targetFieldOptions.some((option) => option.text === originOptionsMap[id].text)) {
+                } else if (targetFieldOptions.some((option) => option.text === originOptionsMap[id]?.text)) {
                     const option = targetFieldOptions.find((option: AITableSelectOption) => option.text === originOptionsMap[id].text);
                     existOptionIds.push(option!._id);
                 } else {

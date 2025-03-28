@@ -1,4 +1,6 @@
+import { Vector2d } from 'konva/lib/types';
 import { Id } from 'ngx-tethys/types';
+import { Coordinate } from '../coordinate';
 
 export enum AITableFieldType {
     text = 'text', // 包含多行文本
@@ -196,6 +198,11 @@ export interface SetFieldOptions<T = unknown> {
     path: IdPath;
 }
 
+export interface MoveFieldOptions {
+    path: NumberPath;
+    newPath: NumberPath;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];
@@ -203,3 +210,27 @@ export type IdPath = [string];
 export type AIRecordFieldIdPath = [string, string];
 
 export type Path = NumberPath | IdPath | AIRecordFieldIdPath;
+
+export enum DragType {
+    record = 'record',
+    field = 'field',
+    columnWidth = 'columnWidth',
+    none = 'none'
+}
+
+export interface AITableDragState {
+    type: DragType;
+    sourceIds: Set<string>;
+    scroll?: Vector2d;
+    coordinate?: Coordinate;
+}
+
+export interface DragEndData {
+    type: DragType;
+    targetIndex?: number;
+    fieldIds?: Set<string>;
+    fieldsIndex?: number[];
+    recordIds?: Set<string>;
+    recordsIndex?: number[];
+    changeSize?: number;
+}
