@@ -85,7 +85,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
 
     updateValue() {
         if (!this.isValidLink({ text: this.text, url: this.url ?? '' })) {
-            this.notifyService.error(undefined, '链接格式不正确');
+            this.notifyService.error('链接格式不正确');
             return;
         }
         this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
