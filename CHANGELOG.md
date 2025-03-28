@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.42](https://github.com/worktile/ai-table/compare/0.0.41...0.0.42) (2025-03-28)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17515 fixed calculations that moved to the first and last column positions ([#290](https://github.com/worktile/ai-table/issues/290)) ([297b1e4](https://github.com/worktile/ai-table/commit/297b1e4baae4d5cd4d2a1e525e9e9ef403c380df))
+* **grid:** cellValue may be null when copy empty cell ([#293](https://github.com/worktile/ai-table/issues/293)) ([88a486e](https://github.com/worktile/ai-table/commit/88a486ef478b0932b95837e33ee76e1f7513927f))
+
+
+### Features
+
+* **grid:** support read from clipboard when visit http adress ([#292](https://github.com/worktile/ai-table/issues/292)) ([c2668f5](https://github.com/worktile/ai-table/commit/c2668f5565836a639b66ecef9b1886b9a59413a9))
+* **state:** #WIK-17516 drag fields support collaboration ([#291](https://github.com/worktile/ai-table/issues/291)) ([1481415](https://github.com/worktile/ai-table/commit/1481415ff376de1d5e764c17454fbe6856685c91)), closes [#WIK-17516](https://github.com/worktile/ai-table/issues/WIK-17516)
+
+
+
 ## [0.0.41](https://github.com/worktile/ai-table/compare/0.0.40...0.0.41) (2025-03-27)
 
 
