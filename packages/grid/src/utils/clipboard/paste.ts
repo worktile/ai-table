@@ -34,31 +34,62 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
     return contents;
 }
 
+interface TableCell {
+    content: string;
+    links: Array<{ href: string; text: string }>;
+}
+
+function extractLinksFromCell(cellHtml: string): TableCell {
+    const linkPattern = /<a[^>]*?href=["']([^"']+)["'][^>]*?>([^<]*?)<\/a>/gi;
+    const links: Array<{ href: string; text: string }> = [];
+    const content = cellHtml.replace(linkPattern, (_, href, text) => {
+        links.push({ href, text });
+        return `[LINK:${text}](${href})`;
+    });
+    return { content, links };
+}
+
+function cleanHtmlContent(content: string): string {
+    return content
+        .replace(/<[^>]+>/g, '') // 移除所有HTML标签
+        .replace(/&nbsp;/g, ' ') // 替换HTML实体
+        .replace(/\s+/g, ' ') // 合并多个空格
+        .trim();
+}
+
+function processTableCell(cellHtml: string): string {
+    const { content, links } = extractLinksFromCell(cellHtml);
+    const cleanContent = cleanHtmlContent(content);
+
+    return links.reduce((text, link) => {
+        return text.replace(`[LINK:${link.text}](${link.href})`, `<a href="${link.href}">${link.text}</a>`);
+    }, cleanContent);
+}
+
 function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
     const tablePattern = /<table[^>]*>([\s\S]*?)<\/table>/i;
     const trPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-    const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
-    const contents: string[][] = [];
+    const tdPattern = /<td[^>]*?>([\s\S]*?)<\/td>/gi;
 
     try {
         const tableMatch = clipboardHtml.match(tablePattern);
         const tableContent = tableMatch ? tableMatch[1] : clipboardHtml;
         const rows = tableContent.match(trPattern) || [];
 
-        rows.forEach((row) => {
-            const rowContent: string[] = [];
-            const cells = row.match(cellPattern) || [];
+        return rows
+            .map((row) => {
+                const contents: string[] = [];
+                let tdMatch;
 
-            cells.forEach((cell) => {
-                const content = cell.replace(/<td>|<\/td>/g, '').trim();
-                rowContent.push(content);
-            });
+                while ((tdMatch = tdPattern.exec(row)) !== null) {
+                    contents.push(processTableCell(tdMatch[1]));
+                }
 
-            contents.push(rowContent);
-        });
-
-        return contents;
+                return contents;
+            })
+            .filter((row) => row.length > 0);
     } catch (error) {
+        console.warn('Failed to extract content from HTML:', error);
         return [];
     }
 }
