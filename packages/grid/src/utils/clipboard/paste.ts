@@ -34,34 +34,19 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
     return contents;
 }
 
-function extractLinksFromCell(cellHtml: string): {
-    content: string;
-    links: Array<{ href: string; text: string }>;
-} {
-    const linkPattern = /<a[^>]*?href=["']([^"']+)["'][^>]*?>([^<]*?)<\/a>/gi;
-    const links: Array<{ href: string; text: string }> = [];
-    const content = cellHtml.replace(linkPattern, (_, href, text) => {
-        links.push({ href, text });
-        return `[LINK:${text}](${href})`;
-    });
-    return { content, links };
-}
-
-function cleanHtmlContent(content: string): string {
-    return content
-        .replace(/<[^>]+>/g, '') // 移除所有HTML标签
-        .replace(/&nbsp;/g, ' ') // 替换HTML实体
-        .replace(/\s+/g, ' ') // 合并多个空格
-        .trim();
-}
-
 function processTableCell(cellHtml: string): string {
-    const { content, links } = extractLinksFromCell(cellHtml);
-    const cleanContent = cleanHtmlContent(content);
+    const linkPattern = /<a[^>]*?href=["']([^"']+)["'][^>]*?>([^<]*?)<\/a>/i;
+    const match = cellHtml.match(linkPattern);
+    const link = match ? { href: match[1], text: match[2] } : null;
+    const content = link ? cellHtml.replace(linkPattern, `[LINK:${link.text}](${link.href})`) : cellHtml;
 
-    return links.reduce((text, link) => {
-        return text.replace(`[LINK:${link.text}](${link.href})`, `<a href="${link.href}">${link.text}</a>`);
-    }, cleanContent);
+    const cleanContent = content
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return link ? cleanContent.replace(`[LINK:${link.text}](${link.href})`, `<a href="${link.href}">${link.text}</a>`) : cleanContent;
 }
 
 function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
