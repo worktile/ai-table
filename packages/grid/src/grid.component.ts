@@ -663,7 +663,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private handleFieldDragStart() {
-        if (this.aiTableGridSelectionService.selectedFields.size > 0) {
+        if (!this.aiReadonly() && this.aiTableGridSelectionService.selectedFields.size > 0) {
             this.aiTableGridSelectionService.drag({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,

@@ -28,7 +28,8 @@ export function getFieldPositionInView(viewId: string, fields: AITableFields, pa
             newPosition = (targetPosition + targetNextPosition) / 2;
         } else {
             const lastField = fields[fields.length - 1];
-            newPosition = (lastField as AITableViewField).positions[viewId] + 1;
+            const lastPosition = (lastField as AITableViewField).positions[viewId] + 1;
+            newPosition = (targetPosition + lastPosition) / 2;
         }
     }
     return newPosition;
