@@ -126,22 +126,27 @@ function getPasteValue(
     let originData = field && record ? { field, cellValue: getFieldValue(record, field) } : null;
     if (targetField.type === AITableFieldType.select) {
         let { existOptionIds, newOptions } = processPastedValueForSelect(plainText, targetField, originData);
+        let newField: AITableField | null = null;
+        let newOptionIds: string[] = [];
 
-        newOptions = newOptions.map((option) => {
-            return {
-                ...option,
-                _id: idCreator()
+        if (newOptions.length) {
+            newOptions = newOptions.map((option) => {
+                return {
+                    ...option,
+                    _id: idCreator()
+                };
+            });
+            newField = {
+                ...targetField,
+                settings: {
+                    ...targetField.settings,
+                    options: [...((targetField.settings as SelectSettings)?.options || []), ...newOptions]
+                }
             };
-        });
-        const newField = {
-            ...targetField,
-            settings: {
-                ...targetField.settings,
-                options: [...((targetField.settings as SelectSettings)?.options || []), ...newOptions]
-            }
-        };
-        const newOptionIds = newOptions.map((option) => option._id).filter((id) => !!id) as string[];
-        const selectFieldValue = [...existOptionIds, ...newOptionIds];
+            newOptionIds = newOptions.map((option) => option._id).filter((id) => !!id) as string[];
+        }
+
+        const selectFieldValue = newOptionIds?.length ? [...existOptionIds, ...newOptionIds] : existOptionIds;
         return {
             value: selectFieldValue,
             newField
