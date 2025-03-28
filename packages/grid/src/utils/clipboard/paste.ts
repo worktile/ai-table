@@ -34,12 +34,10 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
     return contents;
 }
 
-interface TableCell {
+function extractLinksFromCell(cellHtml: string): {
     content: string;
     links: Array<{ href: string; text: string }>;
-}
-
-function extractLinksFromCell(cellHtml: string): TableCell {
+} {
     const linkPattern = /<a[^>]*?href=["']([^"']+)["'][^>]*?>([^<]*?)<\/a>/gi;
     const links: Array<{ href: string; text: string }> = [];
     const content = cellHtml.replace(linkPattern, (_, href, text) => {
