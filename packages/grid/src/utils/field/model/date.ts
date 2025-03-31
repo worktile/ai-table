@@ -86,20 +86,16 @@ export function toDateFieldValue(
         switch (field.type) {
             case AITableFieldType.date:
                 return cellValue;
-            case AITableFieldType.text:
-                const dateValue = transformDateValue(cellValue);
-                if (dateValue) {
-                    return dateValue;
-                }
-                break;
             default:
                 break;
         }
-    } else {
-        const dateValue = transformDateValue(plainText);
-        if (dateValue) {
-            return dateValue;
-        }
+    }
+
+    const texts = plainText.split(',');
+    const value = texts && texts.length ? texts[0].trim() : plainText.trim();
+    const dateValue = transformDateValue(value);
+    if (dateValue) {
+        return dateValue;
     }
 
     return null;
