@@ -62,7 +62,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
                 (newField as AITableViewField).positions = createDefaultPositions(
                     aiTable.views(),
                     aiTable.activeViewId(),
-                    aiTable.fields() as AITableViewFields,
+                    aiTable.gridData().fields as AITableViewFields,
                     action.path[0]
                 );
                 fields.splice(fieldIndex, 0, newField as AITableViewField);

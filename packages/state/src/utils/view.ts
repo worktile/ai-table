@@ -14,8 +14,11 @@ export function createDefaultPositions(
     const positions: Positions = {};
     const position = getPosition(data, activeId, index);
     views.forEach((element) => {
-        const lastPosition = data.length ? data[data.length - 1].positions[element._id] : -1;
-        positions[element._id] = element._id === activeId ? position : lastPosition + 1;
+        if (element._id === activeId) {
+            positions[element._id] = position;
+        } else {
+            positions[element._id] = getMaxPosition(data, element._id) + 1;
+        }
     });
     return positions;
 }
@@ -27,10 +30,19 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
         const nextViewPosition = data[index].positions[activeViewId!];
         position = (previousViewPosition + nextViewPosition) / 2;
     } else {
-        const lastPosition = data[data.length - 1].positions?.[activeViewId];
-        position = lastPosition ? lastPosition + 1 : index;
+        const maxPosition = getMaxPosition(data, activeViewId);
+        position = maxPosition + 1;
     }
     return position;
+}
+
+export function getMaxPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
+    return data.reduce((maxPosition, item) => {
+        if (item.positions[activeViewId] > maxPosition) {
+            maxPosition = item.positions[activeViewId];
+        }
+        return maxPosition;
+    }, 0);
 }
 
 export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: string) {

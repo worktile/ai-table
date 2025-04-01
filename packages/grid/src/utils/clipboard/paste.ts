@@ -186,7 +186,8 @@ function appendRecord(aiTable: AITable, actions: AITablePasteActions) {
 }
 
 function appendField(aiTable: AITable, originField: AITableField | null, actions: AITablePasteActions) {
-    const lastFieldId = aiTable.fields().length > 0 ? aiTable.fields()[aiTable.fields().length - 1]._id : '';
+    const fields = aiTable.gridData().fields;
+    const lastFieldId = fields.length > 0 ? fields[fields.length - 1]._id : '';
     let defaultFieldValue: Partial<AITableField>;
     if (originField) {
         defaultFieldValue = {
