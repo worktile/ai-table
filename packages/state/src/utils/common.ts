@@ -12,3 +12,13 @@ export function sortByViewPosition(data: AITableViewRecords | AITableViewFields,
     }
     return data;
 }
+
+export function generateCopyName(exsitNames: string[], name: string) {
+    let newName = `${name} 副本`;
+    let index = 2;
+    while (exsitNames.includes(newName)) {
+        newName = `${name} 副本 ${index}`;
+        index++;
+    }
+    return newName;
+}

@@ -3,6 +3,7 @@ import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
+import { generateCopyName } from '../utils';
 
 export const DividerMenuItem = {
     type: 'divider'
@@ -45,12 +46,8 @@ export const CopyFieldPropertyItem = (addFieldFn: (data: AddFieldOptions) => voi
         icon: 'copy',
         exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
             const allFieldNames = (aiTable.fields() || []).map((item) => item.name);
-            let newFieldName = `${field().name} 副本`;
-            let index = 2;
-            while (allFieldNames.includes(newFieldName)) {
-                newFieldName = `${field().name} 副本 ${index}`;
-                index++;
-            }
+            const copyName = field().name;
+            let newFieldName = generateCopyName(allFieldNames, copyName);
 
             const fieldOptions: AddFieldOptions = {
                 originId: field()._id,
