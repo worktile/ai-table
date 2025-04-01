@@ -14,3 +14,4 @@ export * from './field/model';
 export * from './field/operate';
 export * from './match-keywords';
 export * from './hover-cell';
+export * from './i18n';

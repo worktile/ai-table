@@ -21,7 +21,8 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
     };
 
     const fieldHeads: AITableFieldHeadConfig[] = [];
-    const fieldMenus = config.aiTable.context?.aiFieldConfig()?.fieldMenus || [];
+    const fieldMenuConfig = config.aiTable.context?.aiFieldConfig()?.fieldMenus;
+    const fieldMenus = fieldMenuConfig && typeof fieldMenuConfig === 'function' ? fieldMenuConfig(aiTable) : fieldMenuConfig || [];
     let noMoreIcon = false;
     if (fieldMenus.length === 0) {
         noMoreIcon = true;

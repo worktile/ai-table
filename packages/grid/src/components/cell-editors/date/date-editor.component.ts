@@ -4,6 +4,7 @@ import { ThyDatePicker } from 'ngx-tethys/date-picker';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTimePickerModule } from 'ngx-tethys/time-picker';
 import { AITableQueries, DateFieldValue } from '../../../core';
+import { AITableGridI18nKey } from '../../../utils/i18n';
 
 @Component({
     selector: 'date-cell-editor',
@@ -11,7 +12,7 @@ import { AITableQueries, DateFieldValue } from '../../../core';
         <thy-date-picker
             class="h-100"
             thyTimestampPrecision="seconds"
-            thyPlaceHolder="选择日期"
+            [thyPlaceHolder]="placeholder"
             [ngModel]="modelValue.timestamp"
             (ngModelChange)="updateValue($event)"
             (thyOpenChange)="thyOpenChange($event)"
@@ -32,6 +33,8 @@ import { AITableQueries, DateFieldValue } from '../../../core';
     }
 })
 export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldValue> {
+    placeholder = '';
+
     override ngOnInit(): void {
         this.modelValue = computed(() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
@@ -42,6 +45,8 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
             }
             return value;
         })();
+        this.placeholder =
+            (this.aiTable.getI18nTextByKey && this.aiTable.getI18nTextByKey(AITableGridI18nKey.dataPickerPlaceholder)) || '选择日期';
     }
 
     updateValue(value: number) {

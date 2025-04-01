@@ -47,6 +47,8 @@ import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
+import { AITableGridI18nKey } from '@ai-table/grid';
+import { AITableStateI18nKey } from '@ai-table/state';
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -89,71 +91,73 @@ export class DemoTableContent {
                     }
                 }
             },
-            fieldMenus: [
-                { ...EditFieldPropertyItem, hidden: () => readonly } as any,
-                {
-                    ...CopyFieldPropertyItem((data: AddFieldOptions) => {
-                        this.addField(data);
-                    }),
-                    hidden: () => readonly
-                } as any,
-                { ...DividerMenuItem, hidden: () => readonly },
-                {
-                    type: 'sortByAsc',
-                    name: (field: AITableField) => {
-                        const fieldType = field.type;
-                        switch (fieldType) {
-                            case AITableFieldType.progress:
-                            case AITableFieldType.rate:
-                            case AITableFieldType.number:
-                            case AITableFieldType.date:
-                                return '按 1 → 9 排序';
-                            case AITableFieldType.select:
-                                return '按选项正序排序';
-                            default:
-                                return '按 A → Z 排序';
-                        }
+            fieldMenus: (aiTable: AITable) => {
+                return [
+                    { ...EditFieldPropertyItem, hidden: () => readonly } as any,
+                    {
+                        ...CopyFieldPropertyItem(aiTable, (data: AddFieldOptions) => {
+                            this.addField(data);
+                        }),
+                        hidden: () => readonly
+                    } as any,
+                    { ...DividerMenuItem, hidden: () => readonly },
+                    {
+                        type: 'sortByAsc',
+                        name: (field: AITableField) => {
+                            const fieldType = field.type;
+                            switch (fieldType) {
+                                case AITableFieldType.progress:
+                                case AITableFieldType.rate:
+                                case AITableFieldType.number:
+                                case AITableFieldType.date:
+                                    return '按 1 → 9 排序';
+                                case AITableFieldType.select:
+                                    return '按选项正序排序';
+                                default:
+                                    return '按 A → Z 排序';
+                            }
+                        },
+                        icon: 'sort',
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
-                    icon: 'sort',
-                    exec: (aiTable: AITable, field: Signal<AITableField>) => {}
-                },
-                {
-                    type: 'sortByDesc',
-                    name: (field: AITableField) => {
-                        const fieldType = field.type;
-                        switch (fieldType) {
-                            case AITableFieldType.progress:
-                            case AITableFieldType.rate:
-                            case AITableFieldType.number:
-                            case AITableFieldType.date:
-                                return '按 9 → 1 排序';
-                            case AITableFieldType.select:
-                                return '按选项倒序排序';
-                            default:
-                                return '按 Z → A 排序';
-                        }
+                    {
+                        type: 'sortByDesc',
+                        name: (field: AITableField) => {
+                            const fieldType = field.type;
+                            switch (fieldType) {
+                                case AITableFieldType.progress:
+                                case AITableFieldType.rate:
+                                case AITableFieldType.number:
+                                case AITableFieldType.date:
+                                    return '按 9 → 1 排序';
+                                case AITableFieldType.select:
+                                    return '按选项倒序排序';
+                                default:
+                                    return '按 Z → A 排序';
+                            }
+                        },
+                        icon: 'sort-reverse',
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
-                    icon: 'sort-reverse',
-                    exec: (aiTable: AITable, field: Signal<AITableField>) => {}
-                },
-                {
-                    type: 'filterFields',
-                    name: '按本列筛选',
-                    icon: 'filter-line',
-                    exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                    hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
-                    disabled: (aiTable: AITable, field: Signal<AITableField>) => false
-                },
-                { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
-                {
-                    ...buildRemoveFieldItem(() => {
-                        const member = 'member_03';
-                        const time = new Date().getTime();
-                        return { updated_at: time, updated_by: member };
-                    }),
-                    hidden: () => readonly || onlyOneField
-                }
-            ]
+                    {
+                        type: 'filterFields',
+                        name: '按本列筛选',
+                        icon: 'filter-line',
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                        hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
+                        disabled: (aiTable: AITable, field: Signal<AITableField>) => false
+                    },
+                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
+                    {
+                        ...buildRemoveFieldItem(() => {
+                            const member = 'member_03';
+                            const time = new Date().getTime();
+                            return { updated_at: time, updated_by: member };
+                        }),
+                        hidden: () => readonly || onlyOneField
+                    }
+                ];
+            }
         };
     });
 
@@ -176,22 +180,22 @@ export class DemoTableContent {
         {
             ...CopyCellsItem,
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
         {
             ...PasteCellsItem(this.pasteActions),
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
         {
             ...DividerMenuItem,
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
         },
         {
             ...RemoveRecordsItem,
             disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetname: string, position: { x: number; y: number }) => this.tableService.readonly()
+            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
         }
     ];
 
@@ -210,6 +214,16 @@ export class DemoTableContent {
     renderModeActiveIndex = computed(() => (this.renderMode() === 'canvas' ? 0 : 1));
 
     dateModeActiveIndex = computed(() => (this.dateMode() === 'default' ? 0 : 1));
+
+    getI18nTextByKey = (key: string) => {
+        switch (key) {
+            case AITableGridI18nKey.dataPickerPlaceholder:
+                return 'Select Date';
+            case AITableStateI18nKey.copyFieldName:
+                return 'Copy Field Name';
+        }
+        return;
+    };
 
     constructor() {
         this.registryIcon();
