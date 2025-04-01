@@ -32,13 +32,13 @@ export const getDetailByTargetName = (_targetName: string | null): AITableTarget
     }
 
     const flag = '$';
-    const [targetName, fieldId, recordId, mouseStyle, id] = _targetName.split('.');
+    const [targetName, fieldId, recordId, mouseStyle, source] = _targetName.split('.');
     return {
         targetName,
         fieldId: fieldId === flag ? null : fieldId,
         recordId: recordId === flag ? null : recordId,
         mouseStyle: mouseStyle === flag ? null : mouseStyle,
-        source: id === flag ? null : id
+        source: source === flag ? null : source
     };
 };
 
