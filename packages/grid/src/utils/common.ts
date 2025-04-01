@@ -5,9 +5,9 @@ import { AITableTargetNameDetail, AITableTargetNameOptions } from '../types';
 /**
  * 生成目标名称
  */
-export const generateTargetName = ({ targetName, fieldId, recordId, mouseStyle }: AITableTargetNameOptions) => {
+export const generateTargetName = ({ targetName, fieldId, recordId, mouseStyle, source }: AITableTargetNameOptions) => {
     const flag = '$';
-    return `${targetName}.${fieldId || flag}.${recordId || flag}.${mouseStyle || flag}`;
+    return `${targetName}.${fieldId || flag}.${recordId || flag}.${mouseStyle || flag}.${source || flag}`;
 };
 
 /**
@@ -32,12 +32,13 @@ export const getDetailByTargetName = (_targetName: string | null): AITableTarget
     }
 
     const flag = '$';
-    const [targetName, fieldId, recordId, mouseStyle] = _targetName.split('.');
+    const [targetName, fieldId, recordId, mouseStyle, source] = _targetName.split('.');
     return {
         targetName,
         fieldId: fieldId === flag ? null : fieldId,
         recordId: recordId === flag ? null : recordId,
-        mouseStyle: mouseStyle === flag ? null : mouseStyle
+        mouseStyle: mouseStyle === flag ? null : mouseStyle,
+        source: source === flag ? null : source
     };
 };
 

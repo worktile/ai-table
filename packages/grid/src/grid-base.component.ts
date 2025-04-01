@@ -37,6 +37,7 @@ import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './serv
 import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences } from './types';
 import { AITableFieldSetting } from './components';
+import { KoEventObjectOutput } from './angular-konva';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -84,6 +85,10 @@ export class AITableGridBase implements OnInit {
     aiUpdateFieldValue = output<UpdateFieldValueOptions>();
 
     aiSetField = output<AITableField>();
+
+    aiClick = output<KoEventObjectOutput<MouseEvent>>();
+
+    aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
 
     fieldMenus: Signal<AITableFieldMenuItem[]> = computed(() => {
         return this.aiFieldConfig()?.fieldMenus || [];

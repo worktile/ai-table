@@ -11,6 +11,7 @@ export interface AITableCellsConfig {
     columnStartIndex: number;
     columnStopIndex: number;
     references?: AITableReferences;
+    readonly?: boolean;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {

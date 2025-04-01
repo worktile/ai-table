@@ -1,10 +1,21 @@
 import Konva from 'konva';
 import { AITable, AITableField, Coordinate } from '../core';
-import { AITablePointPosition } from './grid';
+import { AITableAttachmentInfo, AITablePointPosition } from './grid';
 import { AITableRender } from './cell';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
+}
+
+export interface AITableActionIconConfig extends AITableIconConfig {
+    coordinate: Coordinate;
+    hoverBackground?: string;
+    hoverFill?: string;
+}
+
+export interface AITableAttachmentConfig extends Konva.ShapeConfig {
+    coordinate: Coordinate;
+    attachmentInfo: AITableAttachmentInfo;
 }
 
 export interface AITableFieldTypeIconConfig {
@@ -49,6 +60,7 @@ export interface AITableHoverCellConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     field: AITableField;
+    recordId?: string;
     x: number;
     y: number;
     render: AITableRender;
@@ -60,6 +72,7 @@ export interface AITableTargetNameOptions {
     fieldId?: string;
     recordId?: string;
     mouseStyle?: string;
+    source?: string;
 }
 
 export interface AITableTargetNameDetail {
@@ -67,6 +80,7 @@ export interface AITableTargetNameDetail {
     fieldId?: string | null;
     recordId?: string | null;
     mouseStyle?: string | null;
+    source?: string | null;
 }
 
 export enum AITableMouseDownType {

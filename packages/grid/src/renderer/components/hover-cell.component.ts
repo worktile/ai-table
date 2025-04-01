@@ -47,7 +47,7 @@ export class AITableHoverCells {
     });
 
     hoverCellConfig = computed(() => {
-        const { aiTable, coordinate } = this.config();
+        const { aiTable, coordinate, references, readonly } = this.config();
         const pointPosition = aiTable.context!.pointPosition();
         const hoverCell = this.hoverCell();
         if (!hoverCell) {
@@ -55,10 +55,7 @@ export class AITableHoverCells {
         }
         const { field, recordId, fieldId, renderComponentDefinition } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
-        const transformValue = transformCellValue(aiTable, field, cellValue) || {};
-        if (Object.keys(transformValue).length === 0) {
-            return;
-        }
+        const transformValue = transformCellValue(aiTable, field, cellValue);
 
         const { rowHeight, columnCount, rowCount } = coordinate;
         const columnIndex = pointPosition.columnIndex;
@@ -85,10 +82,12 @@ export class AITableHoverCells {
 
         const result: AITableHoverCellConfig = {
             field,
+            recordId,
             aiTable,
             coordinate,
             x,
             y,
+            readonly,
             render: {
                 aiTable,
                 recordId,
@@ -100,7 +99,8 @@ export class AITableHoverCells {
                 rowHeight,
                 cellValue,
                 transformValue,
-                style
+                style,
+                references
             }
         };
 
