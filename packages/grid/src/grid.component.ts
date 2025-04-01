@@ -370,17 +370,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
                 this.addRecord();
-                return;
+                break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
                 const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
                 this.selectRecord(pointRecordId);
-                return;
+                break;
             }
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
                 const isChecked = this.aiTable.selection().selectAllState === AITableSelectAllState.all;
                 this.toggleSelectAll(!isChecked);
-                return;
+                break;
             }
             case AI_TABLE_FIELD_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
@@ -390,7 +390,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     x: fieldGroupRect.x + containerRect.x,
                     y: containerRect.y + fieldGroupRect.y + fieldGroupRect.height
                 });
-                return;
+                break;
             }
             case AI_TABLE_FIELD_HEAD_MORE:
                 mouseEvent.preventDefault();
@@ -420,37 +420,53 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         editFieldPosition
                     });
                 }
-                return;
+                break;
         }
+        const targetNameDetail = getDetailByTargetName(e.event.target.name());
+
+        this.aiClick.emit({
+            ...e,
+            targetNameDetail
+        });
+        return;
     }
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
+        const _targetName = e.event.target.name();
+        const targetNameDetail = getDetailByTargetName(_targetName);
         if (this.aiReadonly()) {
+            this.aiDbClick.emit({
+                ...e,
+                targetNameDetail
+            });
             return;
         }
-        const _targetName = e.event.target.name();
-        const { fieldId, recordId } = getDetailByTargetName(_targetName);
+        const { fieldId, recordId } = targetNameDetail;
         if (!recordId || !fieldId) {
             return;
         }
         const field = this.aiTable.fieldsMap()[fieldId];
         const fieldType = field.type;
-        if (!DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
-            return;
-        }
-        setTimeout(() => {
-            this.aiTableGridEventService.openCellEditor(this.aiTable, {
-                viewContainerRef: this.viewContainerRef,
-                container: this.containerElement(),
-                coordinate: this.coordinate(),
-                fieldId: fieldId!,
-                recordId: recordId!,
-                references: this.aiReferences(),
-                updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
-                    this.aiUpdateFieldValue.emit(value);
-                }
+        if (DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
+            setTimeout(() => {
+                this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                    viewContainerRef: this.viewContainerRef,
+                    container: this.containerElement(),
+                    coordinate: this.coordinate(),
+                    fieldId: fieldId!,
+                    recordId: recordId!,
+                    references: this.aiReferences(),
+                    updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                        this.aiUpdateFieldValue.emit(value);
+                    }
+                });
+            }, 0);
+        } else {
+            this.aiDbClick.emit({
+                ...e,
+                targetNameDetail
             });
-        }, 0);
+        }
     }
 
     private bindWheel() {

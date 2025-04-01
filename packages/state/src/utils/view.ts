@@ -3,6 +3,7 @@ import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, A
 import { Actions } from '../action';
 import { ViewActions } from '../action/view';
 import { PositionsActions } from '../action/position';
+import { generateCopyName } from './common';
 
 export function createDefaultPositions(
     views: AITableView[],
@@ -57,10 +58,13 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
     if (type === 'copy') {
         originViewId = viewId ?? aiTable.activeViewId();
         const copyView = aiTable.views().find((item) => item._id === originViewId)!;
+        const allViewNames = aiTable.views().map((item) => item.name);
+        const copyName = copyView.name;
+        const newViewName = generateCopyName(allViewNames, copyName);
         newView = {
             ...copyView,
             _id: newId,
-            name: copyView.name + '-副本'
+            name: newViewName
         };
         index = aiTable.views().indexOf(copyView) + 1;
     }

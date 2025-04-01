@@ -74,10 +74,18 @@ export function toProgressFieldValue(
         }
     }
 
+    const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;
+    if (progressRegex.test(value)) {
+        value = parseFloat(value);
+    }
+
     if (!isEmpty(value)) {
-        const progressValue = Number(value);
-        if (!Number.isNaN(progressValue) && progressValue >= 0 && progressValue <= 100) {
-            return progressValue;
+        let progressValue = Number(value);
+        if (!Number.isNaN(progressValue)) {
+            progressValue = Math.round(progressValue);
+            if (progressValue >= 0 && progressValue <= 100) {
+                return progressValue;
+            }
         }
     }
 
