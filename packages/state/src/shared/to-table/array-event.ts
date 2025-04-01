@@ -99,7 +99,6 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset + index;
                                 const record = (aiTable.records() as AITableViewRecords)[recordIndex];
-                                console.log('添加记录了', recordIndex, fieldIndex, item);
                                 if (isSystemFieldOperation(targetPath)) {
                                     if (isPositionsOperation(fieldIndex)) {
                                         const newPositions: Positions = {};
