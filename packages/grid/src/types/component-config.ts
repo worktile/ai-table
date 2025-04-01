@@ -18,11 +18,6 @@ export interface AITableAttachmentConfig extends Konva.ShapeConfig {
     attachmentInfo: AITableAttachmentInfo;
 }
 
-export interface AITableSvgConfig extends Konva.ShapeConfig {
-    size?: number;
-    paths?: any[];
-}
-
 export interface AITableFieldTypeIconConfig {
     field: AITableField;
     x?: number;
