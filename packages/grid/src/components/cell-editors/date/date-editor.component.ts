@@ -4,7 +4,7 @@ import { ThyDatePicker } from 'ngx-tethys/date-picker';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTimePickerModule } from 'ngx-tethys/time-picker';
 import { AITableQueries, DateFieldValue } from '../../../core';
-import { AITableGridI18nKey } from '../../../utils/i18n';
+import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
 
 @Component({
     selector: 'date-cell-editor',
@@ -45,8 +45,7 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
             }
             return value;
         })();
-        this.placeholder =
-            (this.aiTable.getI18nTextByKey && this.aiTable.getI18nTextByKey(AITableGridI18nKey.dataPickerPlaceholder)) || '选择日期';
+        this.placeholder = getI18nTextByKey(this.aiTable, AITableGridI18nKey.dataPickerPlaceholder);
     }
 
     updateValue(value: number) {
