@@ -99,6 +99,44 @@ export class DemoTableContent {
                 } as any,
                 { ...DividerMenuItem, hidden: () => readonly },
                 {
+                    type: 'sortByAsc',
+                    name: (field: AITableField) => {
+                        const fieldType = field.type;
+                        switch (fieldType) {
+                            case AITableFieldType.progress:
+                            case AITableFieldType.rate:
+                            case AITableFieldType.number:
+                            case AITableFieldType.date:
+                                return '按 1 → 9 排序';
+                            case AITableFieldType.select:
+                                return '按选项正序排序';
+                            default:
+                                return '按 A → Z 排序';
+                        }
+                    },
+                    icon: 'sort',
+                    exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                },
+                {
+                    type: 'sortByDesc',
+                    name: (field: AITableField) => {
+                        const fieldType = field.type;
+                        switch (fieldType) {
+                            case AITableFieldType.progress:
+                            case AITableFieldType.rate:
+                            case AITableFieldType.number:
+                            case AITableFieldType.date:
+                                return '按 9 → 1 排序';
+                            case AITableFieldType.select:
+                                return '按选项倒序排序';
+                            default:
+                                return '按 Z → A 排序';
+                        }
+                    },
+                    icon: 'sort-reverse',
+                    exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                },
+                {
                     type: 'filterFields',
                     name: '按本列筛选',
                     icon: 'filter-line',
