@@ -86,7 +86,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                     short_id: getShortIdBySystemFieldValues(systemFieldValues),
                                     ...getTrackableEntityBySystemFieldValues(systemFieldValues),
                                     positions: getPositionsBySystemFieldValues(systemFieldValues),
-                                    values: getValuesByCustomFieldValues(customFieldValues, aiTable.fields() as AITableViewFields)
+                                    values: getValuesByCustomFieldValues(customFieldValues, aiTable.gridData().fields as AITableViewFields)
                                 }
                             });
                         });
@@ -95,10 +95,11 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                             const sharedRecords = sharedType.get('records')! as Y.Array<SyncArrayElement>;
                             const sharedFields = sharedType.get('fields')! as Y.Array<SyncMapElement>;
                             let systemFieldOffset = 0;
-                            delta.insert?.map((item: any) => {
+                            delta.insert?.map((item: any, index: number) => {
                                 const recordIndex = targetPath[0] as number;
-                                const fieldIndex = offset;
+                                const fieldIndex = offset + index;
                                 const record = (aiTable.records() as AITableViewRecords)[recordIndex];
+                                console.log('添加记录了', recordIndex, fieldIndex, item);
                                 if (isSystemFieldOperation(targetPath)) {
                                     if (isPositionsOperation(fieldIndex)) {
                                         const newPositions: Positions = {};
@@ -141,12 +142,13 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     }
                 }
                 if (isFieldsTranslate) {
-                    delta.insert?.map((item: Y.Map<any>) => {
+                    delta.insert?.map((item: Y.Map<any>, index) => {
                         const data = item.toJSON();
                         const path = translatePositionToPath(
-                            aiTable.fields() as AITableViewFields,
+                            aiTable.gridData().fields as AITableViewFields,
                             data['positions'][activeViewId],
-                            activeViewId
+                            activeViewId,
+                            index
                         ) as NumberPath;
                         actions.push({
                             type: ActionName.AddField,

@@ -3,11 +3,7 @@ import * as Y from 'yjs';
 import { getShareTypeNumberPath } from '../utils';
 import { ActionName, AITableAction, AITableView, AIViewTable, SharedType, SyncMapElement } from '../../types';
 
-export default function translateMapEvent(
-    aiTable: AIViewTable,
-    sharedType: SharedType,
-    event: Y.YMapEvent<unknown>
-): AITableAction[] {
+export default function translateMapEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YMapEvent<unknown>): AITableAction[] {
     const isFieldsTranslate = event.path.includes('fields');
     const isViewTranslate = event.path.includes('views');
 
@@ -18,7 +14,7 @@ export default function translateMapEvent(
         if (isFieldsTranslate) {
             const field = sharedType.get('fields')?.get(targetPath) as SyncMapElement;
             const fieldId = field && field.get('_id');
-            targetElement = fieldId && aiTable.fields().find((item) => item._id === field.get('_id'));
+            targetElement = fieldId && aiTable.gridData().fields.find((item) => item._id === field.get('_id'));
         }
 
         if (isViewTranslate) {
