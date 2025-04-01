@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, computed } from 
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { AITable } from '../../core';
+import { AITable, AITableField } from '../../core';
 import { AITableFieldMenuItem } from '../../types/field';
 import { NgClass } from '@angular/common';
 
@@ -35,5 +35,12 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
             menu.exec && menu.exec(this.aiTable, this.field, this.origin, this.position);
         }
+    }
+
+    getMenuName(menu: AITableFieldMenuItem, field: AITableField): string {
+        if (typeof menu.name === 'function') {
+            return menu.name(field);
+        }
+        return menu.name || '';
     }
 }

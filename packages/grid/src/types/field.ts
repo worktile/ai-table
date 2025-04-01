@@ -3,7 +3,7 @@ import { AITable, AITableField, SelectSettings } from '../core';
 
 export interface AITableFieldMenuItem {
     type: string;
-    name?: string;
+    name?: string | ((field: AITableField) => string);
     icon?: string;
     exec?: (
         aiTable: AITable,
