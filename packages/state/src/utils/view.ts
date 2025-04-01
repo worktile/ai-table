@@ -12,9 +12,9 @@ export function createDefaultPositions(
 ) {
     const positions: Positions = {};
     const position = getPosition(data, activeId, index);
-    const maxPosition = data.length ? data[data.length - 1].positions[activeId] : -1;
     views.forEach((element) => {
-        positions[element._id] = element._id === activeId ? position : maxPosition + 1;
+        const lastPosition = data.length ? data[data.length - 1].positions[element._id] : -1;
+        positions[element._id] = element._id === activeId ? position : lastPosition + 1;
     });
     return positions;
 }
@@ -26,7 +26,8 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
         const nextViewPosition = data[index].positions[activeViewId!];
         position = (previousViewPosition + nextViewPosition) / 2;
     } else {
-        position = index;
+        const lastPosition = data[data.length - 1].positions?.[activeViewId];
+        position = lastPosition ? lastPosition + 1 : index;
     }
     return position;
 }

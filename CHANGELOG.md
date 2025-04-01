@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.43](https://github.com/worktile/ai-table/compare/0.0.42...0.0.43) (2025-03-28)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17508 Fixed new columns, copy columns, read-only mode drag ([#298](https://github.com/worktile/ai-table/issues/298)) ([642bfb7](https://github.com/worktile/ai-table/commit/642bfb74009804418eaebcaf6948cb569f9c68a5))
+* **grid:** support paste from excel ([#296](https://github.com/worktile/ai-table/issues/296)) ([223277b](https://github.com/worktile/ai-table/commit/223277bd0d45971957213f6fe23c37de72b7fbee))
+* **link:** correct notify format #WIK-17464 ([#297](https://github.com/worktile/ai-table/issues/297)) ([89ecf2a](https://github.com/worktile/ai-table/commit/89ecf2ae559be31660cf73079dbd2ca5c82e8332)), closes [#WIK-17464](https://github.com/worktile/ai-table/issues/WIK-17464)
+
+
+### Features
+
+* **grid:** support recognize multiple formats for date ([#295](https://github.com/worktile/ai-table/issues/295)) ([45d39ad](https://github.com/worktile/ai-table/commit/45d39ad9050ab3feaeb3c7dcbae2e0621d44ad6a))
+
+
+
 ## [0.0.42](https://github.com/worktile/ai-table/compare/0.0.41...0.0.42) (2025-03-28)
 
 

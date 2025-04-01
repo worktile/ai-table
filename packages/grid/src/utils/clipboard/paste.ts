@@ -34,31 +34,45 @@ function extractContentFromClipboardText(clipboardText: string): string[][] {
     return contents;
 }
 
+function processTableCell(cellHtml: string): string {
+    const linkPattern = /<a[^>]*?href=["']([^"']+)["'][^>]*?>([^<]*?)<\/a>/i;
+    const match = cellHtml.match(linkPattern);
+    const link = match ? { href: match[1], text: match[2] } : null;
+    const content = link ? cellHtml.replace(linkPattern, `[LINK:${link.text}](${link.href})`) : cellHtml;
+
+    const cleanContent = content
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return link ? cleanContent.replace(`[LINK:${link.text}](${link.href})`, `<a href="${link.href}">${link.text}</a>`) : cleanContent;
+}
+
 function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
     const tablePattern = /<table[^>]*>([\s\S]*?)<\/table>/i;
     const trPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-    const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
-    const contents: string[][] = [];
+    const tdPattern = /<td[^>]*?>([\s\S]*?)<\/td>/gi;
 
     try {
         const tableMatch = clipboardHtml.match(tablePattern);
         const tableContent = tableMatch ? tableMatch[1] : clipboardHtml;
         const rows = tableContent.match(trPattern) || [];
 
-        rows.forEach((row) => {
-            const rowContent: string[] = [];
-            const cells = row.match(cellPattern) || [];
+        return rows
+            .map((row) => {
+                const contents: string[] = [];
+                let tdMatch;
 
-            cells.forEach((cell) => {
-                const content = cell.replace(/<td>|<\/td>/g, '').trim();
-                rowContent.push(content);
-            });
+                while ((tdMatch = tdPattern.exec(row)) !== null) {
+                    contents.push(processTableCell(tdMatch[1]));
+                }
 
-            contents.push(rowContent);
-        });
-
-        return contents;
+                return contents;
+            })
+            .filter((row) => row.length > 0);
     } catch (error) {
+        console.warn('Failed to extract content from HTML:', error);
         return [];
     }
 }
