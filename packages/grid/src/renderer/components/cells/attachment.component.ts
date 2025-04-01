@@ -3,8 +3,11 @@ import { KoShape } from '../../../angular-konva/components/shape.component';
 import {
     AddOutlinedPath,
     AI_TABLE_ACTION_COMMON_RADIUS,
+    AI_TABLE_ACTION_COMMON_RIGHT_PADDING,
     AI_TABLE_ACTION_COMMON_SIZE,
+    AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
+    AI_TABLE_CELL_ATTACHMENT_FILE,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
@@ -19,8 +22,7 @@ import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfi
 import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '../../../core';
 import { HoverCellComponent } from '../../interfaces';
-import { getFileCanvasPaths, getFileThumbnailSvgString } from '../../../utils/file';
-import { AITableSvg } from '../svg.component';
+import { getFileThumbnailSvgString } from '../../../utils/file';
 import { isNil } from 'lodash';
 import { AITableActionIcon } from '../action-icon.component';
 
@@ -28,13 +30,12 @@ import { AITableActionIcon } from '../action-icon.component';
     selector: 'ai-table-attachments',
     template: `
         @for (attachment of attachments(); track attachment.attachmentInfo._id) {
-            <!-- <ai-table-svg [config]="attachment" (onClick)="attachmentClick($event)"></ai-table-svg> -->
             <ko-image [config]="attachment" (koClick)="attachmentClick($event)"></ko-image>
         }
         <ai-table-action-icon [config]="iconConfig()" (onClick)="addClick($event)"></ai-table-action-icon>
     `,
     standalone: true,
-    imports: [KoContainer, KoShape, AITableSvg, AITableActionIcon],
+    imports: [KoContainer, KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellAttachment implements HoverCellComponent {
@@ -64,27 +65,30 @@ export class AITableCellAttachment implements HoverCellComponent {
                     }
 
                     const attachmentInfo = references!.attachments[attachmentId];
-                    // const fileCanvasPaths = getFileCanvasPaths(attachmentInfo.addition.ext);
-                    const svgString = getFileThumbnailSvgString(attachmentInfo.addition.ext);
-                    const image = new Image();
-                    image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
-                    return {
-                        // coordinate,
-                        // readonly,
-                        attachmentInfo,
-                        name: generateTargetName({
-                            targetName: AI_TABLE_CELL_ATTACHMENT_ADD,
-                            fieldId: field._id,
-                            recordId,
-                            mouseStyle: readonly ? 'default' : 'pointer'
-                        }),
-                        x: currentX,
-                        y: currentY,
-                        width: AI_TABLE_FILE_ICON_SIZE,
-                        height: AI_TABLE_FILE_ICON_SIZE,
-                        image,
-                        listening: true
-                    };
+                    if (attachmentInfo) {
+                        const svgString = getFileThumbnailSvgString(attachmentInfo.addition.ext);
+                        const image = new Image();
+                        image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+                        return {
+                            // coordinate,
+                            // readonly,
+                            attachmentInfo,
+                            name: generateTargetName({
+                                targetName: AI_TABLE_CELL_ATTACHMENT_FILE,
+                                fieldId: field._id,
+                                recordId,
+                                mouseStyle: readonly ? 'default' : 'pointer',
+                                source: attachmentInfo._id
+                            }),
+                            x: currentX,
+                            y: currentY,
+                            width: AI_TABLE_FILE_ICON_SIZE,
+                            height: AI_TABLE_FILE_ICON_SIZE,
+                            image,
+                            listening: true
+                        };
+                    }
+                    return null;
                 }) || [];
             return result.filter((item: AITableAttachmentConfig) => !!item);
         }
@@ -94,16 +98,17 @@ export class AITableCellAttachment implements HoverCellComponent {
 
     iconConfig = computed<AITableActionIconConfig>(() => {
         const { coordinate, render, field, recordId, readonly } = this.config()!;
-        const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
+        const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_ACTION_COMMON_RIGHT_PADDING;
         const offsetY = (coordinate.rowInitSize - AI_TABLE_ACTION_COMMON_SIZE) / 2;
 
         return {
             coordinate,
             readonly,
             name: generateTargetName({
-                targetName: AI_TABLE_CELL_ATTACHMENT_ADD,
+                targetName: AI_TABLE_CELL,
                 fieldId: field._id,
                 recordId,
+                source: AI_TABLE_CELL_ATTACHMENT_ADD,
                 mouseStyle: readonly ? 'default' : 'pointer'
             }),
             x: offsetX,
@@ -113,20 +118,16 @@ export class AITableCellAttachment implements HoverCellComponent {
             hoverFill: Colors.primary,
             backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
             backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
-            background: Colors.white,
             cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,
-            visible: isNil(readonly) ? true : !readonly,
             listening: true
         };
     });
 
     addClick(e: KoEventObject<MouseEvent>) {
         // e.event.cancelBubble = true;
-        // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
     }
 
     attachmentClick(e: KoEventObject<MouseEvent>) {
         // e.event.cancelBubble = true;
-        // window.open(this.transformValue().url, '_blank', 'noopener,noreferrer');
     }
 }

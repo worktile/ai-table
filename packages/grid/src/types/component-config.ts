@@ -77,6 +77,7 @@ export interface AITableTargetNameOptions {
     fieldId?: string;
     recordId?: string;
     mouseStyle?: string;
+    source?: string;
 }
 
 export interface AITableTargetNameDetail {
@@ -84,6 +85,7 @@ export interface AITableTargetNameDetail {
     fieldId?: string | null;
     recordId?: string | null;
     mouseStyle?: string | null;
+    source?: string | null;
 }
 
 export enum AITableMouseDownType {

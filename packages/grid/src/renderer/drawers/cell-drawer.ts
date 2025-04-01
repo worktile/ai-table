@@ -703,10 +703,7 @@ export class CellDrawer extends Drawer {
 
     private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
         const { references, x, y, field, transformValue: _cellValue, rowHeight, columnWidth, isActive } = render;
-        const cellValue = _cellValue;
-        if (!cellValue?.length || !references) {
-            return;
-        }
+        const cellValue = _cellValue || [];
 
         const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
         const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
@@ -724,7 +721,7 @@ export class CellDrawer extends Drawer {
         let isOverflow = false;
 
         for (let index = 0; index < listCount; index++) {
-            const attachmentInfo = references.attachments[cellValue[index]];
+            const attachmentInfo = references?.attachments[cellValue[index]];
             if (!attachmentInfo) continue;
             const { title, addition } = attachmentInfo;
             const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;

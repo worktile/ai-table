@@ -55,10 +55,7 @@ export class AITableHoverCells {
         }
         const { field, recordId, fieldId, renderComponentDefinition } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
-        const transformValue = transformCellValue(aiTable, field, cellValue) || {};
-        if (Object.keys(transformValue).length === 0) {
-            return;
-        }
+        const transformValue = transformCellValue(aiTable, field, cellValue);
 
         const { rowHeight, columnCount, rowCount } = coordinate;
         const columnIndex = pointPosition.columnIndex;

@@ -50,16 +50,14 @@ export class AITableActionIcon {
             hoverFill,
             size = DEFAULT_ICON_SIZE,
             strokeWidth = 1,
-            background,
-            cornerRadius,
-            opacity
+            cornerRadius
         } = this.config();
         return {
             name,
             width: backgroundWidth || size,
             height: backgroundHeight || size,
             strokeWidth: strokeWidth,
-            fill: hoverFill && this.isHover() ? hoverFill : background || Colors.transparent,
+            fill: hoverFill && this.isHover() ? hoverFill : Colors.transparent,
             opacity: hoverFill && this.isHover() ? 0.1 : 1,
             cornerRadius
         };

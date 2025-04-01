@@ -15,11 +15,6 @@ export function getHoverCell(aiTable: AITable) {
     if (!record || !field || !recordId || !fieldId) {
         return;
     }
-    const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
-    const transformValue = transformCellValue(aiTable, field, cellValue) || {};
-    if (Object.keys(transformValue).length === 0) {
-        return;
-    }
 
     const renderComponentDefinition = componentMap[field?.type];
     if (!renderComponentDefinition) {
