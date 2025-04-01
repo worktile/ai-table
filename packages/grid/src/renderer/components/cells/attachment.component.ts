@@ -74,7 +74,7 @@ export class AITableCellAttachment implements HoverCellComponent {
                             // readonly,
                             attachmentInfo,
                             name: generateTargetName({
-                                targetName: AI_TABLE_CELL_ATTACHMENT_FILE,
+                                targetName: AI_TABLE_CELL,
                                 fieldId: field._id,
                                 recordId,
                                 mouseStyle: readonly ? 'default' : 'pointer',
