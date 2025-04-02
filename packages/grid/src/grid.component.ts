@@ -52,11 +52,13 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableMouseDownType, AITableRendererConfig, AITableSelectAllState, ScrollActionOptions } from './types';
+import { AITableContextMenuItem, AITableMouseDownType, AITableRendererConfig, AITableSelectAllState, ScrollActionOptions } from './types';
 import {
+    AITableGridI18nKey,
     buildGridLinearRows,
     getColumnIndicesSizeMap,
     getDetailByTargetName,
+    getI18nTextByKey,
     handleMouseStyle,
     isCellMatchKeywords,
     isWindows
@@ -134,7 +136,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
             columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
             rowIndicesSizeMap: {},
-            columnIndicesSizeMap: getColumnIndicesSizeMap(fields),
+            columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
             frozenColumnCount: this.frozenColumnCount()
         });
         return {
@@ -263,6 +265,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             const { context } = this.aiTable;
             const { x, y } = pos;
             const curMousePosition = getMousePosition(
+                this.aiTable,
                 x,
                 y,
                 this.coordinate(),
@@ -345,7 +348,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             x: mouseEvent.x,
             y: mouseEvent.y
         };
-        const menuItems = this.aiContextMenuItems();
+
+        const menuItems: AITableContextMenuItem[] = [];
+        if (this.aiContextMenuItems()) {
+            menuItems.push(...this.aiContextMenuItems()!(this.aiTable));
+        }
         if (!menuItems.length || menuItems.every((item) => !!(item.hidden && item.hidden(this.aiTable, targetName, position)))) {
             return;
         }
@@ -644,7 +651,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     if (clipboardData) {
                         writeToClipboard(clipboardData).then(() => {
                             const copiedCellsCount = this.aiTable.selection().selectedCells.size;
-                            this.notifyService.success(`已复制 ${copiedCellsCount} 个单元格`, undefined, {
+                            const message = getI18nTextByKey(this.aiTable, AITableGridI18nKey.copiedCells).replace(
+                                '{count}',
+                                copiedCellsCount.toString()
+                            );
+                            this.notifyService.success(message, undefined, {
                                 placement: 'bottomLeft'
                             });
                         });
@@ -669,7 +680,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
                     writeToAITable(this.aiTable, actions).then((isPasteSuccess) => {
                         if (!isPasteSuccess) {
-                            this.notifyService.error('粘贴内容不符合当前类型', undefined, {
+                            this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
                                 placement: 'bottomLeft'
                             });
                         }

@@ -5,6 +5,8 @@ import { ViewActions } from '../action/view';
 import { PositionsActions } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
+import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
+
 export function createDefaultPositions(
     views: AITableView[],
     activeId: string,
@@ -52,7 +54,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
 
     const allViewNames = aiTable.views().map((item) => item.name);
     const count = aiTable.views().length || 0;
-    const newViewName = generateNewName(allViewNames, count, '表格视图');
+    const newViewName = generateNewName(allViewNames, count, getStateI18nTextByKey(aiTable, AITableStateI18nKey.tableView));
     let newView: AITableView = {
         _id: newId,
         short_id: shortId,
@@ -65,7 +67,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
         const copyView = aiTable.views().find((item) => item._id === originViewId)!;
 
         const copyName = copyView.name;
-        const copyViewName = generateCopyName(allViewNames, copyName);
+        const copyViewName = generateCopyName(aiTable, allViewNames, copyName);
         newView = {
             ...copyView,
             _id: newId,

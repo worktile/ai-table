@@ -149,7 +149,7 @@ export class DemoTableContent {
                     },
                     { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
                     {
-                        ...buildRemoveFieldItem(() => {
+                        ...buildRemoveFieldItem(aiTable, () => {
                             const member = 'member_03';
                             const time = new Date().getTime();
                             return { updated_at: time, updated_by: member };
@@ -161,7 +161,7 @@ export class DemoTableContent {
         };
     });
 
-    pasteActions: AITablePasteActions = {
+    actions: AITablePasteActions = {
         updateFieldValue: (data: UpdateFieldValueOptions) => {
             this.updateFieldValue(data);
         },
@@ -176,28 +176,41 @@ export class DemoTableContent {
         }
     };
 
-    contextMenuItems: AITableContextMenuItem[] = [
-        {
-            ...CopyCellsItem,
-            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
-        },
-        {
-            ...PasteCellsItem(this.pasteActions),
-            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
-        },
-        {
-            ...DividerMenuItem,
-            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
-        },
-        {
-            ...RemoveRecordsItem,
-            disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-            hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+    contextMenuItems = (aiTable: AITable) => {
+        return [
+            {
+                ...CopyCellsItem(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...PasteCellsItem(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...DividerMenuItem,
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...RemoveRecordsItem(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            }
+        ];
+    };
+
+    ngOnInit(): void {
+        if (this.tableService.sharedType) {
+            this.tableService.buildRenderRecords();
+            this.tableService.buildRenderFields();
+        } else {
+            this.renderMode.set(this.getLocalRenderMode(LOCAL_STORAGE_RENDER_MODE) || 'canvas');
+            this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
+            this.setValue();
         }
-    ];
+    }
 
     iconRegistry = inject(ThyIconRegistry);
 
@@ -219,26 +232,14 @@ export class DemoTableContent {
         switch (key) {
             case AITableGridI18nKey.dataPickerPlaceholder:
                 return 'Select Date';
-            case AITableStateI18nKey.copyFieldName:
-                return 'Copy Field Name';
+            case AITableStateI18nKey.copyField:
+                return 'Copy Field';
         }
         return;
     };
 
     constructor() {
         this.registryIcon();
-    }
-
-    ngOnInit(): void {
-        if (this.tableService.sharedType) {
-            this.tableService.buildRenderRecords();
-            this.tableService.buildRenderFields();
-        } else {
-            this.renderMode.set(this.getLocalRenderMode(LOCAL_STORAGE_RENDER_MODE) || 'canvas');
-            this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
-            this.setValue();
-        }
-        console.time('render');
     }
 
     ngAfterViewInit() {

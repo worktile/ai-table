@@ -6,8 +6,8 @@ import {
     AITableRecord,
     createDefaultField,
     createDefaultFieldName,
-    FieldOptions,
     FieldValue,
+    getFieldOptions,
     getFieldValue,
     idCreator,
     SelectSettings,
@@ -190,9 +190,10 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
     const lastFieldId = fields.length > 0 ? fields[fields.length - 1]._id : '';
     let defaultFieldValue: Partial<AITableField>;
     if (originField) {
+        const fieldOptions = getFieldOptions(aiTable);
         defaultFieldValue = {
             ...originField,
-            name: createDefaultFieldName(aiTable, FieldOptions.find((item) => item.type === originField.type)!),
+            name: createDefaultFieldName(aiTable, fieldOptions.find((item) => item.type === originField.type)!),
             _id: idCreator()
         };
     } else {

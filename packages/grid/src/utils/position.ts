@@ -1,10 +1,11 @@
 import { AI_TABLE_BLANK, AI_TABLE_CELL_ACTIVE_BORDER_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITableField, Coordinate, RendererContext } from '../core';
+import { AITable, AITableField, Coordinate, RendererContext } from '../core';
 import { AITableAreaType } from '../types';
 import { getTargetName } from './common';
 import { scrollMax } from './visible-range';
 
 export const getMousePosition = (
+    aiTable: AITable,
     x: number,
     y: number,
     coordinate: Coordinate,
@@ -13,7 +14,7 @@ export const getMousePosition = (
     _targetName?: string
 ) => {
     const { scrollTop, scrollLeft } = context.scrollState();
-    const { scrollMaxWidth, scrollMaxHeight } = scrollMax(coordinate, fields);
+    const { scrollMaxWidth, scrollMaxHeight } = scrollMax(aiTable, coordinate, fields);
     const offsetTop = scrollTop + y;
     const rowIndex = coordinate.getRowStartIndex(offsetTop);
     const offsetLeft = isWithinFrozenColumnBoundary(x, coordinate.frozenColumnWidth) ? x : scrollLeft + x;

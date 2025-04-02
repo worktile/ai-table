@@ -3,20 +3,20 @@
     thyStopPropagation
     thyForm
     #linkForm="thyForm"
-    [thyFormValidatorConfig]="validatorConfig"
+    [thyFormValidatorConfig]="validatorConfig()"
     name="linkForm"
     class="p-5"
 >
-    <thy-form-group thyLabelText="文本">
-        <input thyInput placeholder="输入文本" name="text" [(ngModel)]="text" thyAutofocus type="text" />
+    <thy-form-group [thyLabelText]="i18nTexts().linkText">
+        <input thyInput [placeholder]="i18nTexts().textPlaceholder" />
     </thy-form-group>
-    <thy-form-group thyLabelText="链接">
-        <input name="url" thyInput placeholder="输入链接" [pattern]="URLRegex" type="text" [(ngModel)]="url" />
+    <thy-form-group [thyLabelText]="i18nTexts().urlLabel">
+        <input name="url" thyInput [placeholder]="i18nTexts().urlPlaceholder" [pattern]="URLRegex" type="text" [(ngModel)]="url" />
     </thy-form-group>
     <thy-form-group-footer thyAlign="right">
         <div class="btn-pair">
-            <button thyStopPropagation thyButton="link-secondary" thySize="sm" (click)="close()">取消</button>
-            <button thyStopPropagation thyButton="primary" thySize="sm" (thyFormSubmit)="apply(linkForm)">应用</button>
+            <button thyStopPropagation thyButton="link-secondary" thySize="sm" (click)="close()">{{i18nTexts().cancel}}</button>
+            <button thyStopPropagation thyButton="primary" thySize="sm" (thyFormSubmit)="apply(linkForm)">{{i18nTexts().apply}}</button>
         </div>
     </thy-form-group-footer>
 </form>
