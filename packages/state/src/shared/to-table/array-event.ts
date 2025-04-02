@@ -141,12 +141,13 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                     }
                 }
                 if (isFieldsTranslate) {
-                    delta.insert?.map((item: Y.Map<any>) => {
+                    delta.insert?.map((item: Y.Map<any>, index) => {
                         const data = item.toJSON();
                         const path = translatePositionToPath(
                             aiTable.gridData().fields as AITableViewFields,
                             data['positions'][activeViewId],
-                            activeViewId
+                            activeViewId,
+                            index
                         ) as NumberPath;
                         actions.push({
                             type: ActionName.AddField,
