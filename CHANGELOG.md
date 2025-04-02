@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.44](https://github.com/worktile/ai-table/compare/0.0.43...0.0.44) (2025-04-02)
+
+
+### Bug Fixes
+
+* **state:** #WIK-17560 collaborate to create multiple data scrambles at the same time ([#304](https://github.com/worktile/ai-table/issues/304)) ([fa6e125](https://github.com/worktile/ai-table/commit/fa6e125d18cf88df48ef397a6f0d5df32dacd4db)), closes [#WIK-17560](https://github.com/worktile/ai-table/issues/WIK-17560)
+
+
+### Features
+
+* #WIK-17459 附件hover 交互 ([#277](https://github.com/worktile/ai-table/issues/277)) ([8f79178](https://github.com/worktile/ai-table/commit/8f79178d67f4e067813e669cab37479ca66eb4b3)), closes [#WIK-17459](https://github.com/worktile/ai-table/issues/WIK-17459)
+* **grid:** if the value copied from other attributes such as text, select, link, member, etc. conforms to the date format, it can be pasted into the date cell ([#302](https://github.com/worktile/ai-table/issues/302)) ([25b80cc](https://github.com/worktile/ai-table/commit/25b80cc693a4d03dbe761fbad2a3c80728948d10))
+* **grid:** support customize field menu name based on field type ([#305](https://github.com/worktile/ai-table/issues/305)) ([c0cd93b](https://github.com/worktile/ai-table/commit/c0cd93b26c5c16444354061655e6987846dbfa67))
+* **grid:** support pasting text with % into progress cell ([#301](https://github.com/worktile/ai-table/issues/301)) ([6bba86e](https://github.com/worktile/ai-table/commit/6bba86e4c8e2f93d8b0862fd145ea55b8f9222c2))
+* **state:** unify the naming conventions for copied view and copied field ([#303](https://github.com/worktile/ai-table/issues/303)) ([f41eccb](https://github.com/worktile/ai-table/commit/f41eccb54357a779380664537a43a0ccfb15bd61))
+
+
+
 ## [0.0.43](https://github.com/worktile/ai-table/compare/0.0.42...0.0.43) (2025-03-28)
 
 
