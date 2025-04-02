@@ -1,9 +1,10 @@
-import { AddFieldOptions, AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableField, AITableFieldSetting, idCreator } from '@ai-table/grid';
+import { AddFieldOptions, AI_TABLE_GRID_FIELD_SERVICE_MAP, AITable, AITableField, AITableFieldSetting, idCreator } from '@ai-table/grid';
 import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { generateCopyName } from '../utils';
+import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
 
 export const DividerMenuItem = {
     type: 'divider'
@@ -39,10 +40,11 @@ export const EditFieldPropertyItem = {
     }
 };
 
-export const CopyFieldPropertyItem = (addFieldFn: (data: AddFieldOptions) => void) => {
+export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFieldOptions) => void) => {
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.copyFieldName);
     return {
         type: 'copyFieldProperty',
-        name: '复制列',
+        name,
         icon: 'copy',
         exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
             const allFieldNames = (aiTable.fields() || []).map((item) => item.name);

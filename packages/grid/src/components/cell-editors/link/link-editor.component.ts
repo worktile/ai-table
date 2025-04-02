@@ -10,6 +10,7 @@ import { ThyPopover } from 'ngx-tethys/popover';
 import { LINK_URL_REGEX, LinkEditComponent } from './edit-link/edit-link.component';
 import * as _ from 'lodash';
 import { ThyNotifyService } from 'ngx-tethys/notify';
+import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
 
 @Component({
     selector: 'link-cell-editor',
@@ -85,7 +86,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
 
     updateValue() {
         if (!this.isValidLink({ text: this.text, url: this.url ?? '' })) {
-            this.notifyService.error('链接格式不正确');
+            this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidLinkFormat));
             return;
         }
         this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });

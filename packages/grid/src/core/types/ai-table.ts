@@ -3,6 +3,7 @@ import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { RendererContext } from '../context';
 import { AIRecordFieldIdPath, AITableDragState, AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from './core';
+import { AITableGridI18nKey } from '../../utils/i18n';
 
 export interface AITable {
     records: WritableSignal<AITableRecords>;
@@ -16,6 +17,7 @@ export interface AITable {
     recordsWillHidden: WritableSignal<string[]>;
     recordsWillMove: WritableSignal<string[]>;
     dragState?: WritableSignal<AITableDragState>;
+    getI18nTextByKey?: (key: AITableGridI18nKey | string) => string;
 }
 
 export type AIPlugin = (aiTable: AITable) => AITable;

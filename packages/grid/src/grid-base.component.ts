@@ -38,6 +38,7 @@ import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
+import { AITableGridI18nKey } from './utils/i18n';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -61,6 +62,8 @@ export class AITableGridBase implements OnInit {
     aiReferences = input.required<AITableReferences>();
 
     aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
+
+    aiGetI18nTextByKey = input<(key: AITableGridI18nKey | string) => string | undefined>();
 
     aiKeywords = input<string>();
 
@@ -91,7 +94,11 @@ export class AITableGridBase implements OnInit {
     aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
 
     fieldMenus: Signal<AITableFieldMenuItem[]> = computed(() => {
-        return this.aiFieldConfig()?.fieldMenus || [];
+        const fieldMenusFn = this.aiFieldConfig()?.fieldMenus;
+        if (fieldMenusFn && this.aiTable) {
+            return fieldMenusFn(this.aiTable);
+        }
+        return [];
     });
 
     mouseoverRef!: ThyPopoverRef<any>;
@@ -120,6 +127,9 @@ export class AITableGridBase implements OnInit {
 
     initAITable() {
         this.aiTable = createAITable(this.aiRecords, this.aiFields, this.gridData);
+        if (this.aiGetI18nTextByKey()) {
+            this.aiTable.getI18nTextByKey = this.aiGetI18nTextByKey() as (key: AITableGridI18nKey | string) => string;
+        }
         this.aiPlugins()?.forEach((plugin) => {
             this.aiTable = plugin(this.aiTable);
         });

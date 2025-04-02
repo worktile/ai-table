@@ -43,6 +43,7 @@
                     (aiSetField)="setField($event)"
                     (aiTableInitialized)="aiTableInitialized($event)"
                     [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
+                    [aiGetI18nTextByKey]="getI18nTextByKey"
                 ></ai-table-grid>
             }
             @case ('dom') {
