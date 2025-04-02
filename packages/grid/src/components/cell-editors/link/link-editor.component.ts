@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    OnInit,
+    signal,
+    ViewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -76,14 +86,15 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         }
     }
 
-    linkTooltip = signal('');
+    linkTooltip = computed(() => {
+        return getI18nTextByKey(this.aiTable, AITableGridI18nKey.linkTooltip);
+    });
 
     override ngOnInit(): void {
         super.ngOnInit();
         this.originValue = this.modelValue;
         this.text = this.modelValue?.text ?? '';
         this.url = this.modelValue?.url ?? '';
-        this.linkTooltip.set(getI18nTextByKey(this.aiTable, AITableGridI18nKey.linkTooltip));
     }
 
     updateValue() {
