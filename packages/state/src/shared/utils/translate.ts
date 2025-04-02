@@ -52,12 +52,7 @@ export function toRecordSyncElement(record: AITableViewRecord, fields: AITableVi
     return element;
 }
 
-export function translatePositionToPath(
-    data: AITableViewRecords | AITableViewFields,
-    position: number,
-    activeViewId: string,
-    indexOffset: number = 0
-) {
+export function translatePositionToPath(data: AITableViewRecords | AITableViewFields, position: number, activeViewId: string) {
     let index = data.findIndex((value, index) => {
         if (index === 0) {
             return position < value.positions[activeViewId];
@@ -67,7 +62,7 @@ export function translatePositionToPath(
     if (index === -1) {
         index = data.length;
     }
-    return [index + indexOffset];
+    return [index];
 }
 
 export function getShareTypeNumberPath(path: (string | number)[]): number[] {

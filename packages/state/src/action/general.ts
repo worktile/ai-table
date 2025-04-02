@@ -59,12 +59,14 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             const [fieldIndex] = action.path;
             if (fieldIndex > -1) {
                 const newField = action.field;
-                (newField as AITableViewField).positions = createDefaultPositions(
-                    aiTable.views(),
-                    aiTable.activeViewId(),
-                    aiTable.gridData().fields as AITableViewFields,
-                    action.path[0]
-                );
+                if (!(newField as AITableViewField).positions) {
+                    (newField as AITableViewField).positions = createDefaultPositions(
+                        aiTable.views(),
+                        aiTable.activeViewId(),
+                        aiTable.gridData().fields as AITableViewFields,
+                        action.path[0]
+                    );
+                }
                 fields.splice(fieldIndex, 0, newField as AITableViewField);
                 records.forEach((item) => {
                     item.values[newField._id] =
