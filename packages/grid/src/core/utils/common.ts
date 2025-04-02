@@ -47,7 +47,7 @@ export function generateNewName(existNames: string[], count: number, name: strin
     let newName = name;
     let suffix = count;
 
-    if (count > 0) {
+    if (count > 1) {
         newName = `${name} ${suffix}`;
     }
 

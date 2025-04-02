@@ -18,7 +18,7 @@ const initViews: AITableView[] = [
         short_id: 'view-short-id-1',
         name: '表格视图'
     },
-    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 1' }
+    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2' }
 ];
 
 @Component({
