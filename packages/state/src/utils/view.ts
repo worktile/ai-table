@@ -4,7 +4,7 @@ import { Actions } from '../action';
 import { ViewActions } from '../action/view';
 import { PositionsActions } from '../action/position';
 import { generateCopyName } from './common';
-
+import { generateNewName } from '@ai-table/grid';
 export function createDefaultPositions(
     views: AITableView[],
     activeId: string,
@@ -49,22 +49,27 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
     let index = aiTable.views().length;
     const newId = idCreator();
     const shortId = shortIdCreator();
+
+    const allViewNames = aiTable.views().map((item) => item.name);
+    const count = aiTable.views().length || 0;
+    const newViewName = generateNewName(allViewNames, count, '表格视图');
     let newView: AITableView = {
         _id: newId,
         short_id: shortId,
-        name: '表格视图 ' + index
+        name: newViewName
     };
+
     let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
     if (type === 'copy') {
         originViewId = viewId ?? aiTable.activeViewId();
         const copyView = aiTable.views().find((item) => item._id === originViewId)!;
-        const allViewNames = aiTable.views().map((item) => item.name);
+
         const copyName = copyView.name;
-        const newViewName = generateCopyName(allViewNames, copyName);
+        const copyViewName = generateCopyName(allViewNames, copyName);
         newView = {
             ...copyView,
             _id: newId,
-            name: newViewName
+            name: copyViewName
         };
         index = aiTable.views().indexOf(copyView) + 1;
     }

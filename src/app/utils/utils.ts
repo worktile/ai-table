@@ -587,7 +587,7 @@ export function getCanvasDefaultValue() {
             },
             {
                 _id: 'column-1',
-                name: '单行文本 1',
+                name: '单行文本',
                 positions: {
                     view1: 0,
                     view2: 18

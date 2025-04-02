@@ -1,5 +1,6 @@
 import { FieldOptions, AI_TABLE_FIELD_MIDDLE_WIDTH } from '../constants/field';
 import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings } from '../types';
+import { generateNewName } from './common';
 import { idCreator } from './id-creator';
 
 export const isArrayField = (field: AITableField) => {
@@ -35,10 +36,11 @@ export function getDefaultFieldValue(field: AITableField) {
 export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOption) {
     const fieldOption = getFieldOptionByField(field);
     if (fieldOption) {
+        const allNames = aiTable.fields().map((item) => item.name);
         const count = aiTable.fields().filter((item) => {
             return isSameFieldOption(field, item);
         }).length;
-        return count === 0 ? fieldOption.name : fieldOption.name + ' ' + count;
+        return generateNewName(allNames, count, fieldOption.name);
     }
     return FieldOptions[0].name;
 }
