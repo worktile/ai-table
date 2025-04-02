@@ -94,11 +94,11 @@ export class AITableGridBase implements OnInit {
     aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
 
     fieldMenus: Signal<AITableFieldMenuItem[]> = computed(() => {
-        const fieldMenusConfig = this.aiFieldConfig()?.fieldMenus;
-        if (fieldMenusConfig && typeof fieldMenusConfig === 'function' && this.aiTable) {
-            return fieldMenusConfig(this.aiTable);
+        const fieldMenusFn = this.aiFieldConfig()?.fieldMenus;
+        if (fieldMenusFn && this.aiTable) {
+            return fieldMenusFn(this.aiTable);
         }
-        return Array.isArray(fieldMenusConfig) ? fieldMenusConfig : [];
+        return [];
     });
 
     mouseoverRef!: ThyPopoverRef<any>;
