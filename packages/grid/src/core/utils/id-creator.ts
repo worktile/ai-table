@@ -1,5 +1,5 @@
 import ObjectID from 'bson-objectid';
-import { shortId } from './shoft-id';
+import { shortId } from './short-id';
 
 export function idCreator() {
     return ObjectID().toHexString();
