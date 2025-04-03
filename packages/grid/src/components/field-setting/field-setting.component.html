@@ -57,7 +57,7 @@
 </form>
 
 <thy-dropdown-menu #menu>
-    @for (item of fieldOptions; track $index) {
+    @for (item of fieldOptions(); track $index) {
         <a
             thyDropdownMenuItem
             href="javascript:;"
