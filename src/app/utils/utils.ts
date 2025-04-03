@@ -465,7 +465,8 @@ export function getCanvasDefaultValue() {
                         '67da7c319675bccb963cc52b',
                         '67da7c419675bccb963cc52d',
                         '67da7c599675bccb963cc52f'
-                    ]
+                    ],
+                    'column-25': ''
                 }
             },
             {
@@ -508,7 +509,9 @@ export function getCanvasDefaultValue() {
                         '67da80d89675bccb963cc588',
                         '67da80f09675bccb963cc58a',
                         '67da81429675bccb963cc596'
-                    ]
+                    ],
+                    'column-25':
+                        '<p>文本 1-1 column-25 </p><p>多行文本 - 超级长的文本</p><p>用来测试文本省略或折行, 当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。</p><p></p><img src="https://atlas-test.alpha.pingcode.live/files/public/67ee3433207232ecfc6f5b29" originUrl="https://atlas-test.alpha.pingcode.live/files/public/67ee3433207232ecfc6f5b29/origin-url" alt="image.png" size="117787" style="text-align: center;" /><p></p>'
                 }
             },
             {
@@ -546,7 +549,8 @@ export function getCanvasDefaultValue() {
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
                     'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-24': ['676e3e9b5660cd68d7f49e60']
+                    'column-24': ['676e3e9b5660cd68d7f49e60'],
+                    'column-25': ''
                 }
             }
         ],
@@ -1005,6 +1009,17 @@ export function getCanvasDefaultValue() {
                 settings: {},
                 positions: {
                     view1: 20,
+                    view2: 0
+                }
+            },
+            {
+                _id: 'column-25',
+                type: AITableFieldType.richText,
+                icon: 'multiline-text',
+                name: '多行文本',
+                settings: {},
+                positions: {
+                    view1: 21,
                     view2: 0
                 }
             }
