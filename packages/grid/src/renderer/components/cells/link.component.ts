@@ -86,7 +86,7 @@ export class AITableCellLink implements HoverCellComponent {
         if (pos == null) return;
         const { context } = aiTable;
         const { x, y } = pos;
-        const curMousePosition = getMousePosition(x, y, coordinate, AITable.getVisibleFields(aiTable), context!, targetName);
+        const curMousePosition = getMousePosition(aiTable, x, y, coordinate, AITable.getVisibleFields(aiTable), context!, targetName);
         handleMouseStyle(AI_TABLE_FIELD_HEAD_MORE, curMousePosition.areaType, coordinate.container);
     }
 }

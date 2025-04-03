@@ -1,5 +1,7 @@
 import { Path } from '@ai-table/grid';
 import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
+import { AITable } from '@ai-table/grid';
+import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
 
 export function isPathEqual(path: Path, another: Path): boolean {
     return path.length === another.length && path.every((n, i) => n === another[i]);
@@ -13,11 +15,12 @@ export function sortByViewPosition(data: AITableViewRecords | AITableViewFields,
     return data;
 }
 
-export function generateCopyName(existNames: string[], name: string) {
-    let newName = `${name} 副本`;
+export function generateCopyName(aiTable: AITable, existNames: string[], name: string) {
+    const copyText = getStateI18nTextByKey(aiTable, AITableStateI18nKey.copySuffix);
+    let newName = `${name} ${copyText}`;
     let index = 2;
     while (existNames.includes(newName)) {
-        newName = `${name} 副本 ${index}`;
+        newName = `${name} ${copyText} ${index}`;
         index++;
     }
     return newName;

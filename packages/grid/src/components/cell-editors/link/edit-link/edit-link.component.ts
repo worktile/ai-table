@@ -1,14 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AITable } from '../../../../core/types/ai-table';
+import { AITableGridI18nKey, getI18nTextByKey } from '../../../../utils/i18n';
 import { ThyButton } from 'ngx-tethys/button';
-import {
-    ThyFormDirective,
-    ThyFormGroup,
-    ThyFormGroupFooter,
-    ThyFormModule,
-    ThyFormSubmitDirective,
-    ThyFormValidatorLoader
-} from 'ngx-tethys/form';
+import { ThyFormDirective, ThyFormModule, ThyFormSubmitDirective } from 'ngx-tethys/form';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective, ThyStopPropagationDirective } from 'ngx-tethys/shared';
@@ -38,21 +33,37 @@ export class LinkEditComponent implements OnInit {
 
     @Input() text = '';
 
+    aiTable = input<AITable>();
+
     @Output() confirm = new EventEmitter<{ url: string; text: string }>();
 
     public URLRegex = LINK_URL_REGEX;
 
-    validatorConfig = {
-        validationMessages: {
-            url: {
-                pattern: '链接格式不正确'
+    i18nTexts = computed(() => {
+        return {
+            linkText: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.linkText),
+            textPlaceholder: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.inputText),
+            urlLabel: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.linkUrl),
+            urlPlaceholder: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.inputUrl),
+            cancel: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.cancel),
+            apply: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.apply)
+        };
+    });
+
+    validatorConfig = computed(() => {
+        return {
+            validationMessages: {
+                url: {
+                    pattern: getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.invalidLinkFormat)
+                }
             }
-        }
-    };
+        };
+    });
 
     constructor(public thyPopoverRef: ThyPopoverRef<SafeAny>) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     close() {
         this.thyPopoverRef.close();
@@ -60,7 +71,7 @@ export class LinkEditComponent implements OnInit {
 
     apply(form: ThyFormDirective) {
         if (this.text && !this.url) {
-            form.validator.setElementErrorMessage('url', '链接不能为空');
+            form.validator.setElementErrorMessage('url', getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.linkRequired));
             return;
         }
 
