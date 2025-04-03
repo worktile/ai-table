@@ -198,7 +198,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private resetAuxiliaryLine(): void {
-        this.render2.setStyle(this.auxiliaryLine, 'width', '0');
+        this.setAuxiliaryLineStyles({ width: 0 });
     }
 
     ngOnDestroy() {
