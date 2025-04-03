@@ -1,11 +1,11 @@
-import { AITable, AITableContextMenuItem, AITableGridI18nKey, AITableGridSelectionService, AITablePasteActions, getI18nTextByKey, isMac, writeToAITable } from '@ai-table/grid';
+import { AITable, AITableContextMenuItem, AITableGridI18nKey, AITableGridSelectionService, AITableActions, getI18nTextByKey, isMac, writeToAITable } from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
 
-export const RemoveRecordsItem = (aiTable: AITable, actions: AITablePasteActions): AITableContextMenuItem => {
+export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
         type: 'removeRecords',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.removeRecords),
@@ -25,7 +25,7 @@ export const RemoveRecordsItem = (aiTable: AITable, actions: AITablePasteActions
     };
 };
 
-export const CopyCellsItem = (aiTable: AITable, actions: AITablePasteActions): AITableContextMenuItem => {
+export const CopyCellsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
         type: 'copyCells',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.copy),
@@ -55,9 +55,9 @@ export const CopyCellsItem = (aiTable: AITable, actions: AITablePasteActions): A
     };
 };
 
-export const PasteCellsItem: (aiTable: AITable, actions: AITablePasteActions) => AITableContextMenuItem = (
+export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITableContextMenuItem = (
     aiTable: AITable,
-    actions: AITablePasteActions
+    actions: AITableActions
 ) => {
     return {
         type: 'pasteCells',

@@ -65,7 +65,7 @@ import {
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
-import { buildClipboardData, writeToClipboard, writeToAITable, AITablePasteActions } from './utils/clipboard';
+import { buildClipboardData, writeToClipboard, writeToAITable, AITableActions } from './utils/clipboard';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { isNumber } from 'lodash';
 
@@ -663,7 +663,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 } else if (event.key === 'v') {
                     event.preventDefault();
 
-                    const actions: AITablePasteActions = {
+                    const actions: AITableActions = {
                         updateFieldValue: (data: UpdateFieldValueOptions) => {
                             this.aiUpdateFieldValue.emit(data);
                         },
