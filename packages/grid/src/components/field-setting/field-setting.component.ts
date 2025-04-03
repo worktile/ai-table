@@ -110,7 +110,9 @@ export class AITableFieldSetting implements OnInit {
         };
     });
 
-    fieldOptions = _.cloneDeep(getFieldOptions(this.aiTable()));
+    fieldOptions = computed(() => {
+        return getFieldOptions(this.aiTable());
+    });
 
     aITableFieldType = AITableFieldType;
 

@@ -1,7 +1,7 @@
 import { AITable } from '@ai-table/grid';
 
 export enum AITableStateI18nKey {
-    copyField = 'copyFieldName',
+    copyField = 'copyField',
     removeRecords = 'removeRecords',
     copy = 'copy',
     copySuffix = 'copySuffix',
