@@ -639,6 +639,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
+                const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
+                if (!hasSelectedCells) {
+                    return;
+                }
+
+                const hasEditingCell = !!this.aiTableGridEventService.getCurrentEditCell();
+
                 if (event.key === 'c') {
                     const clipboardData = buildClipboardData(this.aiTable);
                     if (clipboardData) {
@@ -649,7 +656,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             });
                         });
                     }
-                } else if (event.key === 'v') {
+                } else if (event.key === 'v' && !hasEditingCell) {
                     event.preventDefault();
 
                     const actions: AITablePasteActions = {
