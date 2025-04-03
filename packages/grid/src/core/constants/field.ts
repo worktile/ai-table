@@ -1,102 +1,102 @@
-import { AITableFieldOption, AITableFieldType } from '../types';
+import { AITable, AITableFieldOption, AITableFieldType } from '../types';
+import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
 
 export const AI_TABLE_FIELD_MINI_WIDTH = 140;
 export const AI_TABLE_FIELD_MIN_WIDTH = 160;
 export const AI_TABLE_FIELD_MIDDLE_WIDTH = 200;
 export const AI_TABLE_FIELD_MAX_WIDTH = 300;
 
-export const FieldOptions: AITableFieldOption[] = [
-    {
-        type: AITableFieldType.text,
-        name: '单行文本',
-        icon: 'font',
-        width: AI_TABLE_FIELD_MAX_WIDTH
-    },
-    // 多行文本
-    {
-        type: AITableFieldType.select,
-        name: '单选',
-        icon: 'check-circle',
-        width: AI_TABLE_FIELD_MIN_WIDTH
-    },
-    {
-        type: AITableFieldType.select,
-        name: '多选',
-        icon: 'list-check',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH,
-        settings: {
-            is_multiple: true
+export function getFieldOptions(aiTable: AITable): AITableFieldOption[] {
+    return [
+        {
+            type: AITableFieldType.text,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeText),
+            icon: 'font',
+            width: AI_TABLE_FIELD_MAX_WIDTH
+        },
+        {
+            type: AITableFieldType.select,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeSelect),
+            icon: 'check-circle',
+            width: AI_TABLE_FIELD_MIN_WIDTH
+        },
+        {
+            type: AITableFieldType.select,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeMultiSelect),
+            icon: 'list-check',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH,
+            settings: {
+                is_multiple: true
+            }
+        },
+        {
+            type: AITableFieldType.number,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeNumber),
+            icon: 'hashtag',
+            width: AI_TABLE_FIELD_MINI_WIDTH
+        },
+        {
+            type: AITableFieldType.date,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeDate),
+            icon: 'calendar',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
+        },
+        {
+            type: AITableFieldType.member,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeMember),
+            icon: 'user',
+            width: AI_TABLE_FIELD_MIN_WIDTH,
+            settings: {
+                is_multiple: false
+            }
+        },
+        {
+            type: AITableFieldType.progress,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeProgress),
+            icon: 'progress',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
+        },
+        {
+            type: AITableFieldType.rate,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeRate),
+            icon: 'star-circle',
+            width: AI_TABLE_FIELD_MIN_WIDTH
+        },
+        {
+            type: AITableFieldType.link,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeLink),
+            icon: 'link-insert',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
+        },
+        {
+            type: AITableFieldType.attachment,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeAttachment),
+            icon: 'attachment',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
+        },
+        {
+            type: AITableFieldType.createdBy,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeCreatedBy),
+            icon: 'user',
+            width: AI_TABLE_FIELD_MIN_WIDTH
+        },
+        {
+            type: AITableFieldType.createdAt,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeCreatedAt),
+            icon: 'calendar',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
+        },
+        {
+            type: AITableFieldType.updatedBy,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeUpdatedBy),
+            icon: 'user',
+            width: AI_TABLE_FIELD_MIN_WIDTH
+        },
+        {
+            type: AITableFieldType.updatedAt,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeUpdatedAt),
+            icon: 'calendar',
+            width: AI_TABLE_FIELD_MIDDLE_WIDTH
         }
-    },
-    {
-        type: AITableFieldType.number,
-        name: '数字',
-        icon: 'hashtag',
-        width: AI_TABLE_FIELD_MINI_WIDTH
-    },
-    {
-        type: AITableFieldType.date,
-        name: '日期',
-        icon: 'calendar',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    },
-    {
-        type: AITableFieldType.member,
-        name: '成员',
-        icon: 'user',
-        width: AI_TABLE_FIELD_MIN_WIDTH,
-        settings: {
-            is_multiple: false
-        }
-    },
-    // 级联单选
-    // 级联多选
-    {
-        type: AITableFieldType.progress,
-        name: '进度',
-        icon: 'progress',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    },
-    {
-        type: AITableFieldType.rate,
-        name: '评分',
-        icon: 'star-circle',
-        width: AI_TABLE_FIELD_MIN_WIDTH
-    },
-    {
-        type: AITableFieldType.link,
-        name: '链接',
-        icon: 'link-insert',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    },
-    {
-        type: AITableFieldType.attachment,
-        name: '附件',
-        icon: 'attachment',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    },
-    {
-        type: AITableFieldType.createdBy,
-        name: '创建人',
-        icon: 'user',
-        width: AI_TABLE_FIELD_MIN_WIDTH
-    },
-    {
-        type: AITableFieldType.createdAt,
-        name: '创建时间',
-        icon: 'calendar',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    },
-    {
-        type: AITableFieldType.updatedBy,
-        name: '更新人',
-        icon: 'user',
-        width: AI_TABLE_FIELD_MIN_WIDTH
-    },
-    {
-        type: AITableFieldType.updatedAt,
-        name: '更新时间',
-        icon: 'calendar',
-        width: AI_TABLE_FIELD_MIDDLE_WIDTH
-    }
-];
+    ];
+}

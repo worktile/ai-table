@@ -6,8 +6,8 @@ import {
     AITableRecord,
     createDefaultField,
     createDefaultFieldName,
-    FieldOptions,
     FieldValue,
+    getFieldOptions,
     getFieldValue,
     idCreator,
     SelectSettings,
@@ -170,14 +170,14 @@ function getPasteValue(
     return { value: FieldModelMap[targetField.type].toFieldValue(plainText, targetField, originData, references), newField: null };
 }
 
-export interface AITablePasteActions {
+export interface AITableActions {
     updateFieldValue: (data: UpdateFieldValueOptions) => void;
     setField: (field: AITableField) => void;
     addRecord: (data: AddRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
 }
 
-function appendRecord(aiTable: AITable, actions: AITablePasteActions) {
+function appendRecord(aiTable: AITable, actions: AITableActions) {
     const allRecords = aiTable.records();
     const lastRecordId = allRecords.length > 0 ? allRecords[allRecords.length - 1]._id : '';
     actions.addRecord({
@@ -185,14 +185,15 @@ function appendRecord(aiTable: AITable, actions: AITablePasteActions) {
     });
 }
 
-function appendField(aiTable: AITable, originField: AITableField | null, actions: AITablePasteActions) {
+function appendField(aiTable: AITable, originField: AITableField | null, actions: AITableActions) {
     const fields = aiTable.gridData().fields;
     const lastFieldId = fields.length > 0 ? fields[fields.length - 1]._id : '';
     let defaultFieldValue: Partial<AITableField>;
     if (originField) {
+        const fieldOptions = getFieldOptions(aiTable);
         defaultFieldValue = {
             ...originField,
-            name: createDefaultFieldName(aiTable, FieldOptions.find((item) => item.type === originField.type)!),
+            name: createDefaultFieldName(aiTable, fieldOptions.find((item) => item.type === originField.type)!),
             _id: idCreator()
         };
     } else {
@@ -205,7 +206,7 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
     });
 }
 
-export const writeToAITable = async (aiTable: AITable, actions: AITablePasteActions) => {
+export const writeToAITable = async (aiTable: AITable, actions: AITableActions) => {
     const selectedCells = Array.from(aiTable.selection().selectedCells);
     if (!selectedCells.length) {
         return;

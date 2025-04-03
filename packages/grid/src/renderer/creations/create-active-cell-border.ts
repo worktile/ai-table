@@ -55,7 +55,6 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                     columnIndex,
                     columnCount: totalColumnCount
                 });
-                // active 外边界和非 active 外边界 box 大小保持一致
                 const currentConfig = {
                     x: x + offset + AI_TABLE_OFFSET,
                     y: y + AI_TABLE_OFFSET,
