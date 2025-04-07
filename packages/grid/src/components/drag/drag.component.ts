@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestroy, OnInit, output, Renderer2 } from '@angular/core';
 import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
+import { MIN_COLUMN_WIDTH } from '@ai-table/grid';
 
 @Component({
     selector: 'ai-table-drag',
@@ -57,9 +58,11 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private setupEventListeners(): void {
         this.mousedownListener = this.render2.listen('window', 'mousedown', (e: MouseEvent) => {
             this.mouseStartPosition = { x: e.x, y: e.y };
+            e.preventDefault();
         });
 
         this.mousemoveListener = this.render2.listen('window', 'mousemove', (e: MouseEvent) => {
+            e.preventDefault();
             if (this.timer) {
                 cancelAnimationFrame(this.timer);
             }
@@ -101,7 +104,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         if (drag.type === DragType.none) {
             return;
         }
-
         this.setDisplayStyle('block');
         const moveX = e.x - (this.mouseStartPosition?.x || 0);
         switch (drag.type) {
@@ -193,7 +195,11 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             top: '0',
             left
         });
-        this.draggedData = { type: DragType.columnWidth, fieldIds: drag.sourceIds, changeSize: moveX };
+        this.draggedData = {
+            type: DragType.columnWidth,
+            fieldIds: drag.sourceIds,
+            width: Math.max(MIN_COLUMN_WIDTH, sourceColumnWidth + moveX)
+        };
     }
 
     private showColResize(drag: AITableDragState) {
@@ -218,11 +224,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             opacity: 0,
             height: '100%',
             width: `${opacityLineWidth}px`,
-            left: `${targetColumnStartX + sourceColumnWidth - opacityLineWidth / 2}px`
+            left: `${targetColumnStartX + sourceColumnWidth - opacityLineWidth / 2}px`,
+            zIndex: 10
         });
         this.lineMouseLeaveListener = this.render2.listen(this.colResizeLine, 'mouseleave', () => {
             this.setDisplayStyle('none');
-            this.lineMouseLeaveListener!();
+            this.lineMouseLeaveListener?.();
             this.lineMouseLeaveListener = undefined;
         });
     }
