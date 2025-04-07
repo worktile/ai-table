@@ -26,11 +26,10 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
     setField(aiTable, { positions: { ...sourceField.positions, [activeView!._id]: position } }, [sourceField._id]);
 }
 
-export function setFieldWidth(aiTable: AIViewTable, path: IdPath, changeSize: number) {
+export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number) {
     const field = AITableQueries.getField(aiTable, path) as AITableViewField;
     const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
-    const newWidth = (field.widths?.[activeView!._id] ?? field.width ?? 0) + changeSize;
-    setField(aiTable, { width: newWidth, widths: { ...field.widths, [activeView!._id]: newWidth } }, [field._id]);
+    setField(aiTable, { widths: { ...field.widths, [activeView!._id]: width } }, [field._id]);
 }
 
 export function removeField(aiTable: AIViewTable, path: IdPath) {

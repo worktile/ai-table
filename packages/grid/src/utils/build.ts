@@ -30,8 +30,7 @@ export const buildGridData = (aiTable: AITable, recordValue: AITableRecords, fie
         const fieldOption = fieldOptions.find((item) => item.type === value.type)!;
         return {
             ...value,
-            icon: value.icon || fieldOption.icon,
-            width: value.width || fieldOption.width
+            icon: value.icon || fieldOption.icon
         };
     });
     return {

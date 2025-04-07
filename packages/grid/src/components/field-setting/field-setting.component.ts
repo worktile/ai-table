@@ -135,8 +135,9 @@ export class AITableFieldSetting implements OnInit {
     };
 
     selectFieldType(field: AITableFieldOption) {
+        const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
-            const width = item.width ?? field.width;
+            const width = fieldsSizeMap[item._id] ?? field.width;
             const settings = field.settings || {};
             const name = createDefaultFieldName(this.aiTable(), field);
             return { ...item, ...field, width, name, settings };

@@ -299,7 +299,7 @@ export class DemoTableContent {
     }
 
     setFieldWidth(data: SetFieldWidthOptions) {
-        Actions.setFieldWidth(this.aiTable, data.path, data.changeSize);
+        Actions.setFieldWidth(this.aiTable, data.path, data.width);
     }
 
     prevent(event: Event) {

@@ -1,5 +1,5 @@
-import { AITable, AITableField, AITableFields, NumberPath } from '@ai-table/grid';
-import { AITableViewField, AIViewTable } from '../../types';
+import { AITableFields, AITableFieldsSizeMap, NumberPath } from '@ai-table/grid';
+import { AITableView, AITableViewField } from '../../types';
 
 export function getFieldPositionInView(viewId: string, fields: AITableFields, path: NumberPath, newPath: NumberPath) {
     const targetPosition = (fields[newPath[0]] as AITableViewField).positions[viewId];
@@ -29,7 +29,10 @@ export function getFieldPositionInView(viewId: string, fields: AITableFields, pa
     return newPosition;
 }
 
-export function getFieldWidthInView(aiTable: AITable, field: AITableField) {
-    const activeViewid = (aiTable as AIViewTable).activeViewId();
-    return (field as AITableViewField).widths?.[activeViewid];
+export function getFieldsSizeMap(fields: AITableViewField[], activeView: AITableView) {
+    const fieldsSizeMap: AITableFieldsSizeMap = {};
+    fields?.forEach((field) => {
+        fieldsSizeMap[field._id] = field.widths?.[activeView._id];
+    });
+    return fieldsSizeMap;
 }

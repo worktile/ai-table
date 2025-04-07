@@ -287,7 +287,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 }
             }
-
             const { targetName: _targetName, fieldId } = getDetailByTargetName(targetName);
             if (_targetName === AI_TABLE_FIELD_HEAD_OPACITY_LINE && fieldId) {
                 this.aiTableGridSelectionService.drag({
@@ -741,20 +740,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.columnWidth:
-                if (data.changeSize && data.fieldIds) {
-                    const fields = this.aiTable.gridData().fields;
+                if (data.fieldIds && isNumber(data.width)) {
                     const fieldId = data.fieldIds.values().next().value!;
-                    const field = fields.find((field) => field._id === fieldId);
-                    if (!field) {
-                        return;
-                    }
-                    const visibleColumnIndexMap = this.aiTable.context!.visibleColumnsIndexMap();
-                    const sourceColumnIndex = visibleColumnIndexMap.get(fieldId) || 0;
-                    const columnWidth = this.coordinate().getColumnWidth(sourceColumnIndex);
-                    // this.aiSetField.emit({ ...field, width: columnWidth + data.changeSize });
                     this.aiSetFieldWidth.emit({
                         path: [fieldId],
-                        changeSize: data.changeSize
+                        width: data.width
                     });
                 }
                 break;
