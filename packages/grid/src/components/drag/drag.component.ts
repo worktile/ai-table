@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestroy, OnInit, output, Renderer2 } from '@angular/core';
 import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
-import { MIN_COLUMN_WIDTH } from '@ai-table/grid';
+import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 
 @Component({
     selector: 'ai-table-drag',
