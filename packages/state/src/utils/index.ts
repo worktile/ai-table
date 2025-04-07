@@ -11,4 +11,5 @@ export * from './record/update-field-value';
 export * from './record/update-system-field-value';
 export * from './weak-map';
 export * from './field/move-fields';
+export * from './field/position-field';
 export * from './i18n';

@@ -79,7 +79,7 @@ export const AITableQueries = {
         if (!path) {
             throw new Error(`path does not exist as path [${path}]`);
         }
-        return aiTable.fields().find((item) => item._id === path[0]);
+        return aiTable.gridData().fields.find((item) => item._id === path[0]);
     },
 
     getRecord(aiTable: AITable, path: NumberPath): AITableRecord {

@@ -59,6 +59,10 @@ export class AITableGridSelectionService {
         this.aiTable.dragState!.set(config);
     }
 
+    getDragStateType() {
+        return this.aiTable.dragState?.()?.type;
+    }
+
     clearDrag() {
         this.aiTable.dragState!.set({
             type: DragType.none,

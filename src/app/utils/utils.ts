@@ -579,7 +579,10 @@ export function getCanvasDefaultValue() {
                     view1: 2,
                     view2: 9
                 },
-                width: 100,
+                widths: {
+                    view1: 100,
+                    view2: 100
+                },
                 settings: {
                     is_multiple: false
                 },

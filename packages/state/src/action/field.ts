@@ -1,7 +1,8 @@
 import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
 import { ActionName, AddFieldAction, RemoveFieldAction, SetFieldAction, AIViewTable } from '../types';
 import { AITableViewField } from '../types/view';
-import { isPathEqual, getFieldPositionInView } from '../utils';
+import { isPathEqual } from '../utils';
+import { getFieldPositionInView } from '../utils/field/position-field';
 
 export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath, originId?: string, isCopy?: boolean) {
     const operation: AddFieldAction = {
@@ -23,6 +24,12 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
     const sourceField = fields[path[0]] as AITableViewField;
     const position = getFieldPositionInView(activeView!._id, fields, path, newPath);
     setField(aiTable, { positions: { ...sourceField.positions, [activeView!._id]: position } }, [sourceField._id]);
+}
+
+export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number) {
+    const field = AITableQueries.getField(aiTable, path) as AITableViewField;
+    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
+    setField(aiTable, { widths: { ...field.widths, [activeView!._id]: width } }, [field._id]);
 }
 
 export function removeField(aiTable: AIViewTable, path: IdPath) {
@@ -65,5 +72,6 @@ export const FieldActions = {
     addField,
     moveField,
     removeField,
-    setField
+    setField,
+    setFieldWidth
 };

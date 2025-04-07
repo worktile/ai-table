@@ -25,6 +25,7 @@ import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
@@ -285,6 +286,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
                     }
                 }
+            }
+            const { targetName: _targetName, fieldId } = getDetailByTargetName(targetName);
+            if (_targetName === AI_TABLE_FIELD_HEAD_OPACITY_LINE && fieldId) {
+                this.aiTableGridSelectionService.drag({
+                    type: DragType.columnWidth,
+                    sourceIds: new Set([fieldId]),
+                    scroll: this.getScrollPosition(),
+                    coordinate: this.coordinate()
+                });
+            } else if (this.aiTableGridSelectionService.getDragStateType() === DragType.columnWidth) {
+                this.aiTableGridSelectionService.clearDrag();
             }
         });
     }
@@ -732,6 +744,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.columnWidth:
+                if (data.fieldIds && isNumber(data.width)) {
+                    const fieldId = data.fieldIds.values().next().value!;
+                    this.aiSetFieldWidth.emit({
+                        path: [fieldId],
+                        width: data.width
+                    });
+                }
                 break;
             case DragType.record:
                 return;

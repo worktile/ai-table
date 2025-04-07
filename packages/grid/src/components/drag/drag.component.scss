@@ -12,7 +12,7 @@
         background-color: variables.$primary;
         opacity: 0.1;
     }
-    .auxiliary-line {
+    .auxiliary-line,.col-resize-line {
         position: absolute;
         background-color: variables.$primary;
     }

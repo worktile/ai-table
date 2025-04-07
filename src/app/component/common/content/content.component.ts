@@ -14,7 +14,8 @@ import {
     DateFieldValue,
     MoveFieldOptions,
     NumberPath,
-    UpdateFieldValueOptions
+    UpdateFieldValueOptions,
+    SetFieldWidthOptions
 } from '@ai-table/grid';
 import {
     Actions,
@@ -295,6 +296,10 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         moveFields(this.aiTable, data, { updated_by: member, updated_at: time });
+    }
+
+    setFieldWidth(data: SetFieldWidthOptions) {
+        Actions.setFieldWidth(this.aiTable, data.path, data.width);
     }
 
     prevent(event: Event) {

@@ -1,6 +1,7 @@
 import { Vector2d } from 'konva/lib/types';
 import { Id } from 'ngx-tethys/types';
 import { Coordinate } from '../coordinate';
+import { AITableFieldsSizeMap } from '../../types/grid';
 
 export enum AITableFieldType {
     text = 'text',
@@ -59,7 +60,6 @@ export interface AITableField {
     name: string;
     type: AITableFieldType;
     icon?: string;
-    width?: number;
     hidden?: boolean;
     frozen?: boolean;
     stat_type?: AITableStatType;
@@ -164,6 +164,7 @@ export type AITableFields = AITableField[];
 export interface AITableValue {
     records: AITableRecords;
     fields: AITableFields;
+    fieldsSizeMap: AITableFieldsSizeMap;
 }
 
 export enum Direction {
@@ -202,6 +203,11 @@ export interface MoveFieldOptions {
     newPath: NumberPath;
 }
 
+export interface SetFieldWidthOptions {
+    path: IdPath;
+    width: number;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];
@@ -231,5 +237,5 @@ export interface DragEndData {
     fieldsIndex?: number[];
     recordIds?: Set<string>;
     recordsIndex?: number[];
-    changeSize?: number;
+    width?: number;
 }
