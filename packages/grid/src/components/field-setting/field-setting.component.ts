@@ -32,15 +32,16 @@ import {
     AITable,
     AITableField,
     AITableFieldOption,
-    FieldOptions,
     createDefaultFieldName,
     getFieldOptionByField,
     SetFieldOptions,
     AITableFieldType,
-    MemberSettings
+    MemberSettings,
+    getFieldOptions
 } from '../../core';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
+import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -93,21 +94,25 @@ export class AITableFieldSetting implements OnInit {
     setField = output<SetFieldOptions>();
 
     selectedFieldOption = computed(() => {
-        return getFieldOptionByField(this.aiEditField())!;
+        return getFieldOptionByField(this.aiTable(), this.aiEditField())!;
     });
 
     fieldMaxLength = 32;
 
-    validatorConfig: ThyFormValidatorConfig = {
-        validationMessages: {
-            fieldName: {
-                required: '列名不能为空',
-                thyUniqueCheck: '列名已存在'
+    validatorConfig = computed(() => {
+        return {
+            validationMessages: {
+                fieldName: {
+                    required: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldNameRequired),
+                    thyUniqueCheck: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldNameDuplicate)
+                }
             }
-        }
-    };
+        };
+    });
 
-    fieldOptions = _.cloneDeep(FieldOptions);
+    fieldOptions = computed(() => {
+        return getFieldOptions(this.aiTable());
+    });
 
     aITableFieldType = AITableFieldType;
 
@@ -130,8 +135,9 @@ export class AITableFieldSetting implements OnInit {
     };
 
     selectFieldType(field: AITableFieldOption) {
+        const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
-            const width = item.width ?? field.width;
+            const width = fieldsSizeMap[item._id] ?? field.width;
             const settings = field.settings || {};
             const name = createDefaultFieldName(this.aiTable(), field);
             return { ...item, ...field, width, name, settings };
@@ -171,4 +177,15 @@ export class AITableFieldSetting implements OnInit {
     cancel() {
         this.thyPopoverRef.close();
     }
+
+    i18nTexts = computed(() => {
+        return {
+            columnName: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldColumnName),
+            columnNamePlaceholder: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldColumnNamePlaceholder),
+            fieldType: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldType),
+            allowMultipleMembers: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.allowMultipleMembers),
+            cancel: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.cancel),
+            confirm: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.confirm)
+        };
+    });
 }

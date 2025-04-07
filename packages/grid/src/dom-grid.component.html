@@ -8,7 +8,7 @@
             #fieldAction
             [attr.fieldId]="field._id"
             [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field._id) }"
-            [ngStyle]="{ width: field.width + 'px' }"
+            [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }"
         >
             <span class="text-truncate">
                 <thy-icon [thyIconName]="field.icon!" class="mr-2 text-muted"></thy-icon>
@@ -54,7 +54,7 @@
                     [attr.type]="[field.type]"
                     [attr.fieldId]="[field._id]"
                     [attr.recordId]="[record._id]"
-                    [ngStyle]="{ width: field.width + 'px' }"
+                    [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }"
                 >
                     @switch (field.type) {
                         @case (AITableFieldType.select) {

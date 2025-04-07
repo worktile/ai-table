@@ -2,7 +2,11 @@ import { Signal, WritableSignal, computed, signal } from '@angular/core';
 import { AITable, AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from '../types';
 import { AITableSelectAllState } from '../../types';
 
-export function createAITable(records: WritableSignal<AITableRecords>, fields: WritableSignal<AITableFields>, gridData: Signal<AITableValue>): AITable {
+export function createAITable(
+    records: WritableSignal<AITableRecords>,
+    fields: WritableSignal<AITableFields>,
+    gridData: Signal<AITableValue>
+): AITable {
     const aiTable: AITable = {
         records,
         fields,
@@ -37,4 +41,19 @@ export function createAITable(records: WritableSignal<AITableRecords>, fields: W
         recordsWillMove: signal([])
     };
     return aiTable;
+}
+
+export function generateNewName(existNames: string[], count: number, name: string) {
+    let newName = name;
+    let suffix = count;
+
+    if (count > 1) {
+        newName = `${name} ${suffix}`;
+    }
+
+    while (existNames.includes(newName)) {
+        suffix++;
+        newName = `${name} ${suffix}`;
+    }
+    return newName;
 }

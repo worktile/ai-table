@@ -1,11 +1,27 @@
 import { AITable } from '@ai-table/grid';
 
 export enum AITableStateI18nKey {
-    copyFieldName = 'copyFieldName'
+    copyField = 'copyField',
+    removeRecords = 'removeRecords',
+    copy = 'copy',
+    copySuffix = 'copySuffix',
+    paste = 'paste',
+    invalidPasteContent = 'invalidPasteContent',
+    tableView = 'tableView',
+    editField = 'editField',
+    removeField = 'removeField'
 }
 
 const AITableI18nText = {
-    [AITableStateI18nKey.copyFieldName]: '复制列'
+    [AITableStateI18nKey.copyField]: '复制列',
+    [AITableStateI18nKey.removeRecords]: '删除行',
+    [AITableStateI18nKey.copy]: '复制',
+    [AITableStateI18nKey.copySuffix]: '副本',
+    [AITableStateI18nKey.paste]: '粘贴',
+    [AITableStateI18nKey.invalidPasteContent]: '粘贴内容不符合当前类型',
+    [AITableStateI18nKey.tableView]: '表格视图',
+    [AITableStateI18nKey.editField]: '编辑列',
+    [AITableStateI18nKey.removeField]: '删除列'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {

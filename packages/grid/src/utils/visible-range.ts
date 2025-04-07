@@ -1,5 +1,5 @@
 import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITableField, AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
+import { AITable, AITableField, AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
 import { AITableScrollState } from '../types';
 
 export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITableScrollState) => {
@@ -38,9 +38,9 @@ export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITable
     };
 };
 
-export const scrollMax = (coordinate: Coordinate, visibleColumns: AITableField[]) => {
+export const scrollMax = (aiTable: AITable, coordinate: Coordinate, visibleColumns: AITableField[]) => {
     const scrollMaxWidth = visibleColumns.reduce(
-        (pre, cur) => pre + (getFieldOptionByField(cur) as AITableFieldOption)?.width,
+        (pre, cur) => pre + (getFieldOptionByField(aiTable, cur) as AITableFieldOption)?.width,
         AI_TABLE_ROW_HEAD_WIDTH
     );
     const scrollMaxHeight = coordinate.getRowOffset(coordinate.rowCount - 1) + 32;

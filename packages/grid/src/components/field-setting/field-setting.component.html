@@ -1,5 +1,5 @@
-<form thyForm name="createPropertyForm" [thyFormValidatorConfig]="validatorConfig" thyLayout="vertical">
-    <thy-form-group thyLabelRequired thyLabelText="表格列名">
+<form thyForm name="createPropertyForm" [thyFormValidatorConfig]="validatorConfig()" thyLayout="vertical">
+    <thy-form-group thyLabelRequired [thyLabelText]="i18nTexts().columnName">
         <thy-input-group>
             <input
                 thyInput
@@ -8,7 +8,7 @@
                 [maxlength]="fieldMaxLength"
                 [(ngModel)]="aiEditField().name"
                 required
-                placeholder="输入列名称"
+                [placeholder]="i18nTexts().columnNamePlaceholder"
                 [thyUniqueCheck]="checkUniqueName"
             />
             <ng-template #suffix>
@@ -16,7 +16,7 @@
             </ng-template>
         </thy-input-group>
     </thy-form-group>
-    <thy-form-group thyLabelText="列类型">
+    <thy-form-group [thyLabelText]="i18nTexts().fieldType">
         <div class="thy-dropdown-menu py-0">
             <div class="ml-n5 mr-n5">
                 <span
@@ -36,7 +36,7 @@
 
         @if (selectedFieldOption().type === aITableFieldType.member) {
             <div class="d-flex justify-content-between mt-3">
-                允许选择多个成员
+                {{i18nTexts().allowMultipleMembers}}
                 <thy-switch
                     name="isMultipleMember"
                     [thyDisabled]="isUpdate()"
@@ -51,13 +51,13 @@
         <ng-container *ngTemplateOutlet="aiExternalTemplate()"></ng-container>
     }
     <thy-form-group-footer thyAlign="right">
-        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">取消</button>
-        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">确定</button>
+        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">{{i18nTexts().cancel}}</button>
+        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">{{i18nTexts().confirm}}</button>
     </thy-form-group-footer>
 </form>
 
 <thy-dropdown-menu #menu>
-    @for (item of fieldOptions; track $index) {
+    @for (item of fieldOptions(); track $index) {
         <a
             thyDropdownMenuItem
             href="javascript:;"

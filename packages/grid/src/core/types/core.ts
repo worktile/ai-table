@@ -1,15 +1,15 @@
 import { Vector2d } from 'konva/lib/types';
 import { Id } from 'ngx-tethys/types';
 import { Coordinate } from '../coordinate';
+import { AITableFieldsSizeMap } from '../../types/grid';
 
 export enum AITableFieldType {
-    text = 'text', // 包含多行文本
-    richText = 'rich_text', // 包含多行文本
-    select = 'select', // 包含单选和多选
+    text = 'text',
+    richText = 'rich_text',
+    select = 'select',
     number = 'number',
     date = 'date',
-    member = 'member', // 包含单个和多个
-    // cascadeSelect = 'cascade_select', // 包含单选和多选，参数复杂后续再进行设计
+    member = 'member',
     progress = 'progress',
     rate = 'rate',
     link = 'link',
@@ -60,7 +60,6 @@ export interface AITableField {
     name: string;
     type: AITableFieldType;
     icon?: string;
-    width?: number;
     hidden?: boolean;
     frozen?: boolean;
     stat_type?: AITableStatType;
@@ -105,11 +104,11 @@ export type TextFieldValue = string;
 
 export type LinkFieldValue = { url: string; text: string };
 
-export type SelectFieldValue = Id[]; // 数字
+export type SelectFieldValue = Id[];
 
 export type NumberFieldValue = number;
 
-export type DateFieldValue = { timestamp: number }; // 时间戳
+export type DateFieldValue = { timestamp: number };
 
 export type MemberFieldValue = Id[];
 
@@ -165,6 +164,7 @@ export type AITableFields = AITableField[];
 export interface AITableValue {
     records: AITableRecords;
     fields: AITableFields;
+    fieldsSizeMap: AITableFieldsSizeMap;
 }
 
 export enum Direction {
@@ -203,6 +203,11 @@ export interface MoveFieldOptions {
     newPath: NumberPath;
 }
 
+export interface SetFieldWidthOptions {
+    path: IdPath;
+    width: number;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];
@@ -232,5 +237,5 @@ export interface DragEndData {
     fieldsIndex?: number[];
     recordIds?: Set<string>;
     recordsIndex?: number[];
-    changeSize?: number;
+    width?: number;
 }

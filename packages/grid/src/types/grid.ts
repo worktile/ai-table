@@ -39,7 +39,7 @@ export interface AITableSelection {
 export interface AIFieldConfig {
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldSettingComponent?: any;
-    fieldMenus?: ((aiTable: AITable) => AITableFieldMenuItem[]);
+    fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
 }
 
 export interface AITableUserInfo {
@@ -84,6 +84,8 @@ export enum AITableRowColumnType {
 }
 
 export type AITableSizeMap = Record<number, number>;
+
+export type AITableFieldsSizeMap = Record<string, number | undefined>;
 
 export interface AITableCoordinate {
     rowCount: number;

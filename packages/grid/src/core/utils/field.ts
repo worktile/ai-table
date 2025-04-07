@@ -1,5 +1,6 @@
-import { FieldOptions, AI_TABLE_FIELD_MIDDLE_WIDTH } from '../constants/field';
+import { AI_TABLE_FIELD_MIDDLE_WIDTH, getFieldOptions } from '../constants/field';
 import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings } from '../types';
+import { generateNewName } from './common';
 import { idCreator } from './id-creator';
 
 export const isArrayField = (field: AITableField) => {
@@ -33,18 +34,21 @@ export function getDefaultFieldValue(field: AITableField) {
 }
 
 export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOption) {
-    const fieldOption = getFieldOptionByField(field);
+    const fieldOption = getFieldOptionByField(aiTable, field);
     if (fieldOption) {
+        const allNames = aiTable.fields().map((item) => item.name);
         const count = aiTable.fields().filter((item) => {
             return isSameFieldOption(field, item);
         }).length;
-        return count === 0 ? fieldOption.name : fieldOption.name + ' ' + count;
+        return generateNewName(allNames, count, fieldOption.name);
     }
-    return FieldOptions[0].name;
+    const fieldOptions = getFieldOptions(aiTable);
+    return fieldOptions[0].name;
 }
 
-export function getFieldOptionByField(field: Partial<AITableField>) {
-    let fieldOption = FieldOptions.find((item) => isSameFieldOption(item, field));
+export function getFieldOptionByField(aiTable: AITable, field: Partial<AITableField>) {
+    const fieldOptions = getFieldOptions(aiTable);
+    let fieldOption = fieldOptions.find((item) => isSameFieldOption(item, field));
     if (fieldOption && field.type === AITableFieldType.member && (field.settings as MemberSettings)?.is_multiple) {
         fieldOption.width = AI_TABLE_FIELD_MIDDLE_WIDTH;
     }
@@ -61,6 +65,7 @@ export function isSameFieldOption(fieldOption: AITableFieldOption, field: Partia
 }
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
-    const fieldOption = FieldOptions.find((item) => item.type === type)!;
+    const fieldOptions = getFieldOptions(aiTable);
+    const fieldOption = fieldOptions.find((item) => item.type === type)!;
     return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, fieldOption) };
 }

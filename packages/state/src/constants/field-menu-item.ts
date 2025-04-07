@@ -10,9 +10,9 @@ export const DividerMenuItem = {
     type: 'divider'
 };
 
-export const EditFieldPropertyItem = {
+export const EditFieldPropertyItem = (aiTable: AITable) => ({
     type: 'editFieldProperty',
-    name: '编辑列',
+    name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.editField),
     icon: 'edit',
     exec: (
         aiTable: AIViewTable,
@@ -38,10 +38,10 @@ export const EditFieldPropertyItem = {
         }
         return undefined;
     }
-};
+});
 
 export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFieldOptions) => void) => {
-    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.copyFieldName);
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.copyField);
     return {
         type: 'copyFieldProperty',
         name,
@@ -49,7 +49,7 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
         exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
             const allFieldNames = (aiTable.fields() || []).map((item) => item.name);
             const copyName = field().name;
-            let newFieldName = generateCopyName(allFieldNames, copyName);
+            let newFieldName = generateCopyName(aiTable, allFieldNames, copyName);
 
             const fieldOptions: AddFieldOptions = {
                 originId: field()._id,

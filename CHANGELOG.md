@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.46](https://github.com/worktile/ai-table/compare/0.0.45...0.0.46) (2025-04-07)
+
+
+### Bug Fixes
+
+* **grid:** append option when pasting, the correct bg_color should be set ([#319](https://github.com/worktile/ai-table/issues/319)) ([8b67bd7](https://github.com/worktile/ai-table/commit/8b67bd77669ba25a9a1a0c3d1957ef32696dd314))
+
+
+### Features
+
+* **drag:** #WIK-17534 support column drag and drop adjustment width ([#318](https://github.com/worktile/ai-table/issues/318)) ([c2aa429](https://github.com/worktile/ai-table/commit/c2aa4292a0c2ff3413fa4e1b784d96fd397397e3)), closes [#WIK-17534](https://github.com/worktile/ai-table/issues/WIK-17534)
+* **grid:** when readonly, copy or paste is prohibited ([#317](https://github.com/worktile/ai-table/issues/317)) ([d7b0494](https://github.com/worktile/ai-table/commit/d7b04949d7d82850a74bf714f7046fcb636c63f6))
+
+
+
+## [0.0.45](https://github.com/worktile/ai-table/compare/0.0.44...0.0.45) (2025-04-03)
+
+
+### Bug Fixes
+
+* fix i18n issues ([#314](https://github.com/worktile/ai-table/issues/314)) ([85472f1](https://github.com/worktile/ai-table/commit/85472f1e02cc3cc39fa7ed31248dbc339cf4dcef))
+* **grid:** resolve conflict between quick paste cell and quick paste editor ([#312](https://github.com/worktile/ai-table/issues/312)) ([70eb42b](https://github.com/worktile/ai-table/commit/70eb42b15dd43e05c02735ff98f96b589857e0d0))
+* **state:** optimized the location of the new field for collaboration ([#308](https://github.com/worktile/ai-table/issues/308)) ([d7f1da1](https://github.com/worktile/ai-table/commit/d7f1da1843043f91adddc343570e76a89bf5d797))
+
+
+### Features
+
+* **drag:** #WIK-17586 optimize the drag component ([#313](https://github.com/worktile/ai-table/issues/313)) ([8ba7c01](https://github.com/worktile/ai-table/commit/8ba7c015b05482380372e8d9b369795798f3c6fc)), closes [#WIK-17586](https://github.com/worktile/ai-table/issues/WIK-17586)
+* **grid:** unify the naming conventions for add view and add field ([#309](https://github.com/worktile/ai-table/issues/309)) ([8159531](https://github.com/worktile/ai-table/commit/815953199d8db31c4e00c0844e92a7fcded57718))
+* **i18n:**  support i18n #WIK-17582 ([#306](https://github.com/worktile/ai-table/issues/306)) ([465ffa5](https://github.com/worktile/ai-table/commit/465ffa5e54e4843d022da60bff0b3d5ba6f3ec1f)), closes [#WIK-17582](https://github.com/worktile/ai-table/issues/WIK-17582)
+* **i18n:** support i1n8 ([#311](https://github.com/worktile/ai-table/issues/311)) ([699e1a6](https://github.com/worktile/ai-table/commit/699e1a6e004d7b9b0e6c22c6524881711e4f3b5b))
+
+
+
 ## [0.0.44](https://github.com/worktile/ai-table/compare/0.0.43...0.0.44) (2025-04-02)
 
 
