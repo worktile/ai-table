@@ -1,9 +1,19 @@
 import { helpers } from 'ngx-tethys/util';
 import { Field } from './field';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { AITableField, AITableFieldType, AITableSelectOption, FieldValue, SelectFieldValue, SelectSettings } from '../../../core';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableSelectOption,
+    AITableSelectOptionStyle,
+    FieldValue,
+    SelectFieldValue,
+    SelectSettings
+} from '../../../core';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect } from '../operate';
+import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
+import { idCreator } from '../../../core';
 
 export class SelectField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
@@ -62,10 +72,12 @@ export function processPastedValueForSelect(
     plainText: string,
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue } | null
-): { existOptionIds: string[]; newOptions: Partial<AITableSelectOption>[] } {
+): { existOptionIds: string[]; newOptions: AITableSelectOption[] } {
     const targetFieldOptions = (targetField.settings as SelectSettings)?.options || [];
+    const targetOptionStyle = (targetField.settings as SelectSettings)?.option_style || AITableSelectOptionStyle.text;
+
     let existOptionIds: string[] = [];
-    let newOptions: Partial<AITableSelectOption>[] = [];
+    let newOptions: AITableSelectOption[] = [];
     let cellFullTexts: string[] = plainText.split(',').map((text) => text.trim());
 
     const { field, cellValue } = originData || {};
@@ -82,12 +94,8 @@ export function processPastedValueForSelect(
                 } else {
                     const originOption = originOptionsMap[id];
                     if (originOption) {
-                        newOptions.push({
-                            text: originOption.text,
-                            icon: originOption.icon,
-                            color: originOption.color,
-                            bg_color: originOption.bg_color
-                        });
+                        const newOption = copyOption(originOption, targetFieldOptions, targetOptionStyle);
+                        newOptions.push(newOption);
                     }
                 }
             });
@@ -95,7 +103,13 @@ export function processPastedValueForSelect(
     } else {
         cellFullTexts.forEach((text) => {
             const option = targetFieldOptions.find((option) => option.text === text);
-            option ? existOptionIds.push(option._id) : newOptions.push({ text });
+            if (option) {
+                existOptionIds.push(option._id);
+            } else {
+                const originOption = { text };
+                const newOption = copyOption(originOption, targetFieldOptions, targetOptionStyle);
+                newOptions.push(newOption);
+            }
         });
     }
 
@@ -113,6 +127,30 @@ export function processPastedValueForSelect(
             }
         }
     }
+}
+
+function copyOption(
+    originOption: Partial<AITableSelectOption>,
+    targetFieldOptions: AITableSelectOption[],
+    targetOptionStyle: AITableSelectOptionStyle
+): AITableSelectOption {
+    let newOption: AITableSelectOption = {
+        _id: idCreator(),
+        text: originOption.text!
+    };
+
+    if (targetOptionStyle !== AITableSelectOptionStyle.text) {
+        const originBgColor = originOption.bg_color;
+        const existBgColors = targetFieldOptions.map((option) => option.bg_color);
+        const defaultBgColor = DEFAULT_COLORS[10 + (targetFieldOptions?.length || 0)];
+
+        newOption = {
+            ...newOption,
+            bg_color: originBgColor && !existBgColors.includes(originBgColor) ? originBgColor : defaultBgColor
+        };
+    }
+
+    return newOption;
 }
 
 function cellValueToSortValue(cellValue: SelectFieldValue, field: AITableField): string | null {

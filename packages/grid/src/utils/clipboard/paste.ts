@@ -144,12 +144,6 @@ function getPasteValue(
         let newOptionIds: string[] = [];
 
         if (newOptions.length) {
-            newOptions = newOptions.map((option) => {
-                return {
-                    ...option,
-                    _id: idCreator()
-                };
-            });
             newField = {
                 ...targetField,
                 settings: {
