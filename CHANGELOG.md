@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.46](https://github.com/worktile/ai-table/compare/0.0.45...0.0.46) (2025-04-07)
+
+
+### Bug Fixes
+
+* **grid:** append option when pasting, the correct bg_color should be set ([#319](https://github.com/worktile/ai-table/issues/319)) ([8b67bd7](https://github.com/worktile/ai-table/commit/8b67bd77669ba25a9a1a0c3d1957ef32696dd314))
+
+
+### Features
+
+* **drag:** #WIK-17534 support column drag and drop adjustment width ([#318](https://github.com/worktile/ai-table/issues/318)) ([c2aa429](https://github.com/worktile/ai-table/commit/c2aa4292a0c2ff3413fa4e1b784d96fd397397e3)), closes [#WIK-17534](https://github.com/worktile/ai-table/issues/WIK-17534)
+* **grid:** when readonly, copy or paste is prohibited ([#317](https://github.com/worktile/ai-table/issues/317)) ([d7b0494](https://github.com/worktile/ai-table/commit/d7b04949d7d82850a74bf714f7046fcb636c63f6))
+
+
+
 ## [0.0.45](https://github.com/worktile/ai-table/compare/0.0.44...0.0.45) (2025-04-03)
 
 

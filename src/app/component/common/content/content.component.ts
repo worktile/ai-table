@@ -19,7 +19,8 @@ import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
-    KoEventObjectOutput
+    KoEventObjectOutput,
+    SetFieldWidthOptions
 } from '@ai-table/grid';
 import {
     Actions,
@@ -334,6 +335,10 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         moveFields(this.aiTable, data, { updated_by: member, updated_at: time });
+    }
+
+    setFieldWidth(data: SetFieldWidthOptions) {
+        Actions.setFieldWidth(this.aiTable, data.path, data.width);
     }
 
     prevent(event: Event) {

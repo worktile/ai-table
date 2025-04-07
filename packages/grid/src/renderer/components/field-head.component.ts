@@ -7,6 +7,7 @@ import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
@@ -32,6 +33,7 @@ import { AITableText } from './text.component';
                     <ai-table-icon [config]="moreIconConfig()"></ai-table-icon>
                 }
             </ko-group>
+            <ko-line [config]="fieldOpacityLineConfig()"></ko-line>
         </ko-group>
     `,
     standalone: true,
@@ -131,6 +133,21 @@ export class AITableFieldHead {
             backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
             backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
             cornerRadius: 4
+        };
+    });
+
+    fieldOpacityLineConfig = computed(() => {
+        const { field, width, height } = this.config();
+        return {
+            x: AI_TABLE_OFFSET + width,
+            y: AI_TABLE_OFFSET,
+            name: generateTargetName({
+                targetName: AI_TABLE_FIELD_HEAD_OPACITY_LINE,
+                fieldId: field._id
+            }),
+            points: [0, 0, 0, height],
+            stroke: Colors.transparent,
+            strokeWidth: 6
         };
     });
 }

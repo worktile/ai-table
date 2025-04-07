@@ -30,12 +30,13 @@ import {
     createAITable,
     createDefaultField,
     MoveFieldOptions,
+    SetFieldWidthOptions,
     UpdateFieldValueOptions
 } from './core';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences, AITableFieldsSizeMap } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
@@ -50,6 +51,8 @@ export class AITableGridBase implements OnInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
+
+    aiFieldsSizeMap = model.required<AITableFieldsSizeMap>();
 
     aiContextMenuItems = input<(aiTable: AITable) => AITableContextMenuItem[]>();
 
@@ -89,6 +92,8 @@ export class AITableGridBase implements OnInit {
 
     aiSetField = output<AITableField>();
 
+    aiSetFieldWidth = output<SetFieldWidthOptions>();
+
     aiClick = output<KoEventObjectOutput<MouseEvent>>();
 
     aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
@@ -109,7 +114,8 @@ export class AITableGridBase implements OnInit {
         }
         return {
             records: this.aiRecords(),
-            fields: this.aiFields()
+            fields: this.aiFields(),
+            fieldsSizeMap: this.aiFieldsSizeMap()
         };
     });
 
