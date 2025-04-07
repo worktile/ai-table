@@ -17,7 +17,7 @@ export function getFieldOptions(aiTable: AITable): AITableFieldOption[] {
         {
             type: AITableFieldType.richText,
             name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeRichtext),
-            icon: 'font',
+            icon: 'multiline-text',
             width: AI_TABLE_FIELD_MAX_WIDTH
         },
         {
