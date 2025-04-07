@@ -24,6 +24,8 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private auxiliaryLine!: HTMLElement;
 
+    private colResizeLine!: HTMLElement;
+
     private draggedData: DragEndData | null = null;
 
     private mouseStartPosition: { x: number; y: number } | null = null;
@@ -35,6 +37,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private mousedownListener?: () => void;
     private mousemoveListener?: () => void;
     private mouseupListener?: () => void;
+    private lineMouseLeaveListener?: () => void;
 
     constructor() {
         effect(() => this.handleDragStateChange());
@@ -48,6 +51,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private initElements(): void {
         this.rect = this.elementRef.nativeElement.querySelector('.rect')!;
         this.auxiliaryLine = this.elementRef.nativeElement.querySelector('.auxiliary-line')!;
+        this.colResizeLine = this.elementRef.nativeElement.querySelector('.col-resize-line')!;
     }
 
     private setupEventListeners(): void {
@@ -76,9 +80,18 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private handleDragStateChange(): void {
         const drag = this.aiTableGridSelectionService.aiTable.dragState?.();
 
-        if (!drag || drag.type === DragType.none || !this.rect || !this.auxiliaryLine) {
+        if (!drag) {
             this.aiTableDrag = null;
             return;
+        }
+
+        if (drag.type === DragType.none || !this.rect || !this.auxiliaryLine) {
+            return;
+        }
+
+        if (drag.type === DragType.columnWidth) {
+            this.setDisplayStyle('block');
+            this.showColResize(drag);
         }
 
         this.aiTableDrag = drag;
@@ -98,6 +111,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             case DragType.record:
                 break;
             case DragType.columnWidth:
+                this.movingColumnWidth(drag, moveX);
                 break;
         }
     }
@@ -144,7 +158,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             this.setAuxiliaryLineStyles({
                 width: '2px',
                 height: '100%',
-                top: 0,
+                top: '0',
                 left: `${targetColumnStartX - scroll.x}px`
             });
             const fieldsIndex: number[] = [];
@@ -161,6 +175,56 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             this.resetAuxiliaryLine();
             this.draggedData = null;
         }
+    }
+
+    private movingColumnWidth(drag: AITableDragState, moveX: number) {
+        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
+        const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
+        const sourceColumnStartX = drag.coordinate!.getColumnOffset(sourceColumnIndex);
+        const sourceColumnWidth = drag.coordinate!.getColumnWidth(sourceColumnIndex);
+        const scroll = drag.scroll || { x: 0, y: 0 };
+        const pointerX = moveX + sourceColumnStartX;
+        const colResizeX = pointerX - (sourceColumnIndex === 0 ? 0 : scroll.x);
+        const left = `${colResizeX + sourceColumnWidth}px`;
+        this.setAuxiliaryLineStyles({
+            width: '2px',
+            height: '100%',
+            top: '0',
+            left
+        });
+        this.draggedData = { type: DragType.columnWidth, fieldIds: drag.sourceIds, changeSize: moveX };
+    }
+
+    private showColResize(drag: AITableDragState) {
+        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
+        const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
+        const coordinate = drag.coordinate!;
+        const sourceColumnStartX = coordinate.getColumnOffset(sourceColumnIndex);
+        const scroll = drag.scroll || { x: 0, y: 0 };
+        let targetColumnIndex = coordinate.getColumnStartIndex(sourceColumnStartX + scroll.x);
+        let targetColumnStartX = coordinate.getColumnOffset(targetColumnIndex);
+        const sourceColumnWidth = drag.coordinate!.getColumnWidth(sourceColumnIndex);
+        const opacityLineWidth = 4;
+        // 重置样式
+        this.setRectStyles({ width: 0 });
+        this.resetAuxiliaryLine();
+
+        this.setDisplayStyle('block');
+        this.render2.setStyle(this.elementRef.nativeElement, 'cursor', 'col-resize');
+        // 隐藏列宽调整线，用于监听鼠标离开此区域后结束宽度调整
+        this.setColResizeLine({
+            opacity: 0,
+            height: '100%',
+            width: `${opacityLineWidth}px`,
+            left: `${targetColumnStartX + sourceColumnWidth - opacityLineWidth / 2}px`
+        });
+        this.lineMouseLeaveListener = this.render2.listen(this.colResizeLine, 'mouseleave', () => {
+            this.setDisplayStyle('none');
+            this.lineMouseLeaveListener!();
+            this.lineMouseLeaveListener = undefined;
+        });
     }
 
     private handleDragEnd() {
@@ -197,14 +261,21 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
     }
 
+    private setColResizeLine(styles: Record<string, any>) {
+        Object.entries(styles).forEach(([prop, value]) => {
+            this.render2.setStyle(this.colResizeLine, prop, value);
+        });
+    }
+
     private resetAuxiliaryLine(): void {
-        this.setAuxiliaryLineStyles({ width: 0 });
+        this.render2.setStyle(this.auxiliaryLine, 'width', '0');
     }
 
     ngOnDestroy() {
         if (this.mousedownListener) this.mousedownListener();
         if (this.mousemoveListener) this.mousemoveListener();
         if (this.mouseupListener) this.mouseupListener();
+        if (this.lineMouseLeaveListener) this.lineMouseLeaveListener();
 
         if (this.timer) {
             cancelAnimationFrame(this.timer);

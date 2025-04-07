@@ -25,6 +25,7 @@ import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
@@ -285,6 +286,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
                     }
                 }
+            }
+
+            const { targetName: _targetName, fieldId } = getDetailByTargetName(targetName);
+            if (_targetName === AI_TABLE_FIELD_HEAD_OPACITY_LINE && fieldId) {
+                this.aiTableGridSelectionService.drag({
+                    type: DragType.columnWidth,
+                    sourceIds: new Set([fieldId]),
+                    scroll: this.getScrollPosition(),
+                    coordinate: this.coordinate()
+                });
+            } else if (this.aiTableGridSelectionService.getCurrentDragType() === DragType.columnWidth) {
+                this.aiTableGridSelectionService.clearDrag();
             }
         });
     }
@@ -728,6 +741,22 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.columnWidth:
+                if (data.changeSize && data.fieldIds) {
+                    const fields = this.aiTable.gridData().fields;
+                    const fieldId = data.fieldIds.values().next().value!;
+                    const field = fields.find((field) => field._id === fieldId);
+                    if (!field) {
+                        return;
+                    }
+                    const visibleColumnIndexMap = this.aiTable.context!.visibleColumnsIndexMap();
+                    const sourceColumnIndex = visibleColumnIndexMap.get(fieldId) || 0;
+                    const columnWidth = this.coordinate().getColumnWidth(sourceColumnIndex);
+                    // this.aiSetField.emit({ ...field, width: columnWidth + data.changeSize });
+                    this.aiSetFieldWidth.emit({
+                        path: [fieldId],
+                        changeSize: data.changeSize
+                    });
+                }
                 break;
             case DragType.record:
                 return;

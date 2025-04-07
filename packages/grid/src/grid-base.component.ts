@@ -30,6 +30,7 @@ import {
     createAITable,
     createDefaultField,
     MoveFieldOptions,
+    SetFieldWidthOptions,
     UpdateFieldValueOptions
 } from './core';
 import { AITableGridEventService } from './services/event.service';
@@ -88,6 +89,8 @@ export class AITableGridBase implements OnInit {
     aiUpdateFieldValue = output<UpdateFieldValueOptions>();
 
     aiSetField = output<AITableField>();
+
+    aiSetFieldWidth = output<SetFieldWidthOptions>();
 
     aiClick = output<KoEventObjectOutput<MouseEvent>>();
 

@@ -202,6 +202,11 @@ export interface MoveFieldOptions {
     newPath: NumberPath;
 }
 
+export interface SetFieldWidthOptions {
+    path: IdPath;
+    changeSize: number;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];
