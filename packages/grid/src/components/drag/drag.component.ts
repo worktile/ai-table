@@ -160,7 +160,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             this.setAuxiliaryLineStyles({
                 width: '2px',
                 height: '100%',
-                top: '0',
+                top: 0,
                 left: `${targetColumnStartX - scroll.x}px`
             });
             const fieldsIndex: number[] = [];
@@ -275,7 +275,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private resetAuxiliaryLine(): void {
-        this.render2.setStyle(this.auxiliaryLine, 'width', '0');
+        this.setAuxiliaryLineStyles({ width: 0 });
     }
 
     ngOnDestroy() {
