@@ -658,6 +658,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
+                if (this.aiReadonly()) {
+                    return;
+                }
+
                 const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
                 if (!hasSelectedCells) {
                     return;
