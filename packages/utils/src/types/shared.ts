@@ -1,6 +1,6 @@
-import { FieldValue } from '@ai-table/grid';
 import * as Y from 'yjs';
 import { Positions } from './view';
+import { FieldValue } from './core';
 
 export type SyncMapElement = Y.Map<any>;
 
