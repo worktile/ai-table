@@ -8,6 +8,7 @@ import {
     ColumnNumberFilledPath,
     ColumnProgressFilledPath,
     ColumnRatingFilledPath,
+    ColumnRichTextFilledPath,
     ColumnSelectFilledPath,
     ColumnTextFilledPath
 } from '../../constants';
@@ -31,6 +32,9 @@ export class AITableFieldIcon {
         switch (field.type) {
             case AITableFieldType.text:
                 data = ColumnTextFilledPath;
+                break;
+            case AITableFieldType.richText:
+                data = ColumnRichTextFilledPath;
                 break;
             case AITableFieldType.select:
                 data = (field.settings as SelectSettings)?.is_multiple ? ColumnMultipleFillPath : ColumnSelectFilledPath;

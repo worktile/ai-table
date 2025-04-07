@@ -44,6 +44,7 @@
                     (aiTableInitialized)="aiTableInitialized($event)"
                     [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
                     [aiGetI18nTextByKey]="getI18nTextByKey"
+                    (aiClick)="onClick($event)"
                 ></ai-table-grid>
             }
             @case ('dom') {
