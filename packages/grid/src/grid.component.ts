@@ -295,7 +295,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     scroll: this.getScrollPosition(),
                     coordinate: this.coordinate()
                 });
-            } else if (this.aiTableGridSelectionService.getCurrentDragType() === DragType.columnWidth) {
+            } else if (this.aiTableGridSelectionService.getDragStateType() === DragType.columnWidth) {
                 this.aiTableGridSelectionService.clearDrag();
             }
         });

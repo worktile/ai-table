@@ -59,7 +59,7 @@ export class AITableGridSelectionService {
         this.aiTable.dragState!.set(config);
     }
 
-    getCurrentDragType() {
+    getDragStateType() {
         return this.aiTable.dragState?.()?.type;
     }
 
