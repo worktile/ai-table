@@ -87,6 +87,7 @@ export class CellDrawer extends Drawer {
 
         switch (fieldType) {
             case AITableFieldType.text:
+            case AITableFieldType.richText:
             case AITableFieldType.number:
             case AITableFieldType.link:
                 return this.renderCellText(render, ctx);
@@ -118,8 +119,9 @@ export class CellDrawer extends Drawer {
         if (renderText == null) {
             return;
         }
-        const isSingleLine = !columnWidth;
-        const isTextField = fieldType === AITableFieldType.text;
+        // const isSingleLine = !columnWidth;
+        const isSingleLine = true;
+        const isTextField = fieldType === AITableFieldType.text || fieldType === AITableFieldType.richText;
         const isNumberField = fieldType === AITableFieldType.number;
 
         if (isTextField && isSingleLine) {

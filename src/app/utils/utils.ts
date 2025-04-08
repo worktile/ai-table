@@ -465,7 +465,8 @@ export function getCanvasDefaultValue() {
                         '67da7c319675bccb963cc52b',
                         '67da7c419675bccb963cc52d',
                         '67da7c599675bccb963cc52f'
-                    ]
+                    ],
+                    'column-25': []
                 }
             },
             {
@@ -508,6 +509,53 @@ export function getCanvasDefaultValue() {
                         '67da80d89675bccb963cc588',
                         '67da80f09675bccb963cc58a',
                         '67da81429675bccb963cc596'
+                    ],
+                    'column-25': [
+                        {
+                            type: 'paragraph',
+                            key: 'YSzXW',
+                            children: [
+                                {
+                                    text: '多行文本实例'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'jtnfi',
+                            children: [
+                                {
+                                    text: '第一行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'NPdNb',
+                            children: [
+                                {
+                                    text: '第二行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'bGdar',
+                            children: [
+                                {
+                                    text: '第三行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'bPSBF',
+                            children: [
+                                {
+                                    text: ''
+                                }
+                            ]
+                        }
                     ]
                 }
             },
@@ -546,7 +594,8 @@ export function getCanvasDefaultValue() {
                     'column-21': ['66b31d0c8097a908f74bcd8a'],
                     'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
                     'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-24': ['676e3e9b5660cd68d7f49e60']
+                    'column-24': ['676e3e9b5660cd68d7f49e60'],
+                    'column-25': []
                 }
             }
         ],
@@ -1008,6 +1057,17 @@ export function getCanvasDefaultValue() {
                 settings: {},
                 positions: {
                     view1: 20,
+                    view2: 0
+                }
+            },
+            {
+                _id: 'column-25',
+                type: AITableFieldType.richText,
+                icon: 'multiline-text',
+                name: '多行文本',
+                settings: {},
+                positions: {
+                    view1: 21,
                     view2: 0
                 }
             }

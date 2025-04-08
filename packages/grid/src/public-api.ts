@@ -1,3 +1,4 @@
+export * from './angular-konva';
 export * from './components';
 export * from './constants';
 export * from './core/index';

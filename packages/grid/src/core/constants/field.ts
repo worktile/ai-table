@@ -15,6 +15,12 @@ export function getFieldOptions(aiTable: AITable): AITableFieldOption[] {
             width: AI_TABLE_FIELD_MAX_WIDTH
         },
         {
+            type: AITableFieldType.richText,
+            name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeRichtext),
+            icon: 'multiline-text',
+            width: AI_TABLE_FIELD_MAX_WIDTH
+        },
+        {
             type: AITableFieldType.select,
             name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeSelect),
             icon: 'check-circle',

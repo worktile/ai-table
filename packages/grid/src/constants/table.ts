@@ -19,6 +19,7 @@ export const AI_TABLE_ROW_HEIGHT = 44; // 默认行高基准
 export const AI_TABLE_CELL_ACTIVE_BORDER_WIDTH = 2; // 选中单元格的边框宽度
 export const AI_TABLE_CELL_ATTACHMENT_ADD = 'AI_TABLE_CELL_ATTACHMENT_ADD'; // 附件cell中新增图标名称
 export const AI_TABLE_CELL_ATTACHMENT_FILE = 'AI_TABLE_CELL_ATTACHMENT_FILE'; // 附件cell中文件
+export const AI_TABLE_CELL_EDIT = 'AI_TABLE_CELL_EDIT'; // 附件cell中编辑图标名称
 export const AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH = 30; // 字段列头文本的最小宽度
 export const AI_TABLE_ROW_SELECT_CHECKBOX = 'AI_TABLE_ROW_SELECT_CHECKBOX'; // 行 checkbox
 export const AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX = 'AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX'; // 表头 checkbox 标识

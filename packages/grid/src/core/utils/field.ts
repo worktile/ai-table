@@ -27,7 +27,7 @@ export function getDefaultFieldValue(field: AITableField) {
     if (isArrayField(field)) {
         return [];
     }
-    if (isNumberFiled(field)) {
+    if (isNumberFiled(field) || field.type === AITableFieldType.richText) {
         return null;
     }
     return '';

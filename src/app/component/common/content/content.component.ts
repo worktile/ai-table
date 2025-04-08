@@ -15,6 +15,11 @@ import {
     MoveFieldOptions,
     NumberPath,
     UpdateFieldValueOptions,
+    RichtextFieldValue,
+    AI_TABLE_CELL,
+    AI_TABLE_CELL_ATTACHMENT_ADD,
+    AI_TABLE_CELL_EDIT,
+    KoEventObjectOutput,
     SetFieldWidthOptions
 } from '@ai-table/grid';
 import {
@@ -50,6 +55,7 @@ import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } fro
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
+import _ from 'lodash';
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -89,6 +95,19 @@ export class DemoTableContent {
                 [AITableFieldType.updatedAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
+                    }
+                },
+                [AITableFieldType.richText]: {
+                    transform: (field: AITableField, value: RichtextFieldValue) => {
+                        return value
+                            .map((item) => {
+                                const texts = _.get(item, 'children', [])
+                                    .map((child: { text?: string }) => _.get(child, 'text', ''))
+                                    .filter((text: string) => text);
+                                return texts.join('');
+                            })
+                            .filter((text) => text)
+                            .join(' ');
                     }
                 }
             },
@@ -249,6 +268,26 @@ export class DemoTableContent {
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+    }
+
+    onClick(e: KoEventObjectOutput<MouseEvent>) {
+        if ((e.targetNameDetail.targetName = AI_TABLE_CELL)) {
+            const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
+            if (field?.type === AITableFieldType.attachment && e.targetNameDetail.source) {
+                if (e.targetNameDetail.source === AI_TABLE_CELL_ATTACHMENT_ADD) {
+                    alert('打开附件编辑窗口');
+                } else {
+                    const file = e.event.target.attrs.attachmentInfo;
+                    alert(`打开附件: ${file.title}`);
+                }
+            }
+
+            if (field?.type === AITableFieldType.richText && e.targetNameDetail.source) {
+                if (e.targetNameDetail.source === AI_TABLE_CELL_EDIT) {
+                    alert('打开多行文本编辑');
+                }
+            }
+        }
     }
 
     setValue() {
