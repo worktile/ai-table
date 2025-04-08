@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.47](https://github.com/worktile/ai-table/compare/0.0.46...0.0.47) (2025-04-08)
+
+
+### Features
+
+* **grid:** support paste pure link value to link cell ([#322](https://github.com/worktile/ai-table/issues/322)) ([2feab9c](https://github.com/worktile/ai-table/commit/2feab9cead1cf10f489542755ece7299483c0c33))
+
+
+
 ## [0.0.46](https://github.com/worktile/ai-table/compare/0.0.45...0.0.46) (2025-04-07)
 
 
