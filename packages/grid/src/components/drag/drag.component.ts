@@ -33,6 +33,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private timer!: number | null;
 
+    private mouseDownTimeout: any = null;
+
+    private isDraggingEnabled: boolean = false;
+
     private mousedownListener?: () => void;
     private mousemoveListener?: () => void;
     private mouseupListener?: () => void;
@@ -54,9 +58,20 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private setupEventListeners(): void {
         this.mousedownListener = this.render2.listen('window', 'mousedown', (e: MouseEvent) => {
             this.mouseStartPosition = { x: e.x, y: e.y };
+
+            if (this.mouseDownTimeout) {
+                clearTimeout(this.mouseDownTimeout);
+            }
+            this.isDraggingEnabled = false;
+            this.mouseDownTimeout = setTimeout(() => {
+                this.isDraggingEnabled = true;
+            }, 200);
         });
 
         this.mousemoveListener = this.render2.listen('window', 'mousemove', (e: MouseEvent) => {
+            if (!this.isDraggingEnabled) {
+                return;
+            }
             if (this.timer) {
                 cancelAnimationFrame(this.timer);
             }
@@ -68,6 +83,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
 
         this.mouseupListener = this.render2.listen('window', 'mouseup', () => {
+            if (this.mouseDownTimeout) {
+                clearTimeout(this.mouseDownTimeout);
+                this.mouseDownTimeout = null;
+            }
+
+            this.isDraggingEnabled = false;
             this.mouseStartPosition = null;
             this.aiTableDrag = null;
             this.handleDragEnd();
@@ -193,11 +214,27 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private handleDragEnd() {
-        this.setDisplayStyle('none');
         if (this.draggedData) {
             this.dragEnd.emit({ ...this.draggedData });
-            this.draggedData = null;
         }
+        this.clearDragState();
+    }
+
+    private clearDragState() {
+        this.setDisplayStyle('none');
+        this.setRectStyles({
+            width: '0',
+            height: '0',
+            top: '0',
+            left: '0'
+        });
+        this.setAuxiliaryLineStyles({
+            width: '0',
+            height: '0',
+            top: '0',
+            left: '0'
+        });
+        this.draggedData = null;
     }
 
     private calculateDragWidth(fields: any[], coordinate: any, drag: AITableDragState): number {
