@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.49](https://github.com/worktile/ai-table/compare/0.0.48...0.0.49) (2025-04-09)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17618 fixed the error of dragging columns and column widths ([#332](https://github.com/worktile/ai-table/issues/332)) ([b977744](https://github.com/worktile/ai-table/commit/b97774439b8f9af98e61f0d4788f2b411ac660a6))
+* **drag:** #WIK-17622 mouse should not be in col-resize style in read-only mode ([#330](https://github.com/worktile/ai-table/issues/330)) ([bb1929a](https://github.com/worktile/ai-table/commit/bb1929a33c19575c6e325eca5dda28b789096abd)), closes [#WIK-17622](https://github.com/worktile/ai-table/issues/WIK-17622)
+* **grid:** the page render is error when fields is [] ([#327](https://github.com/worktile/ai-table/issues/327)) ([006aeab](https://github.com/worktile/ai-table/commit/006aeabfeff8c12bf27d7e965fb36d2470b306f7))
+
+
+### Features
+
+* #WIK-17533 【aitable】支持 readonly 下也需要抛出事件 ([#329](https://github.com/worktile/ai-table/issues/329)) ([9f60d96](https://github.com/worktile/ai-table/commit/9f60d96ccf6f2056adb06d5594419778bbb4cd81)), closes [#WIK-17533](https://github.com/worktile/ai-table/issues/WIK-17533)
+* add type Id ([dbeb9f0](https://github.com/worktile/ai-table/commit/dbeb9f0d085c2545741f0b22e8cc839cebbc7b84))
+* add utils package ([17dbfe3](https://github.com/worktile/ai-table/commit/17dbfe3c3b3f01fa0cf608ebc8d3c13bbee62654))
+* add utils package ([b9df1fc](https://github.com/worktile/ai-table/commit/b9df1fc3f42f2bcd6a5ad5129aebfb21606633d9))
+
+
+
 ## [0.0.48](https://github.com/worktile/ai-table/compare/0.0.47...0.0.48) (2025-04-09)
 
 
