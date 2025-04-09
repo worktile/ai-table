@@ -25,6 +25,8 @@
             "@ai-table/grid/*": ["packages/grid/src/*"],
             "@ai-table/state": ["packages/state/src/public-api"],
             "@ai-table/state/*": ["packages/state/src/*"],
+            "@ai-table/utils": ["packages/utils/src/public-api"],
+            "@ai-table/utils/*": ["packages/utils/src/*"]
         }
     },
     "angularCompilerOptions": {
