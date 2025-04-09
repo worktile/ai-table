@@ -373,9 +373,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageClick(e: KoEventObject<MouseEvent>) {
+        const targetNameDetail = getDetailByTargetName(e.event.target.name());
+        this.aiClick.emit({
+            ...e,
+            targetNameDetail
+        });
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
         this.aiTableGridEventService.closeCellEditor();
+
         const { context } = this.aiTable;
         const { targetName, rowIndex: pointRowIndex } = context!.pointPosition();
         if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
@@ -435,25 +441,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
         }
-        const targetNameDetail = getDetailByTargetName(e.event.target.name());
-
-        this.aiClick.emit({
-            ...e,
-            targetNameDetail
-        });
         return;
     }
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
         const _targetName = e.event.target.name();
         const targetNameDetail = getDetailByTargetName(_targetName);
-        if (this.aiReadonly()) {
-            this.aiDbClick.emit({
-                ...e,
-                targetNameDetail
-            });
-            return;
-        }
+        this.aiDbClick.emit({
+            ...e,
+            targetNameDetail
+        });
+
         const { fieldId, recordId } = targetNameDetail;
         if (!recordId || !fieldId) {
             return;
@@ -474,11 +472,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 });
             }, 0);
-        } else {
-            this.aiDbClick.emit({
-                ...e,
-                targetNameDetail
-            });
         }
     }
 
