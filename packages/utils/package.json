@@ -1,6 +1,6 @@
 {
     "name": "@ai-table/utils",
-    "version": "0.0.44",
+    "version": "0.0.48",
     "dependencies": {
         "tslib": "^2.3.0"
     }
