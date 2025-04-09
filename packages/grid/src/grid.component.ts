@@ -274,7 +274,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 context!,
                 targetName
             );
-            handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement());
+            handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement(), this.aiReadonly());
             context!.setPointPosition(curMousePosition);
             this.timer = null;
             if (this.isDragSelecting) {
@@ -314,12 +314,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_FIELD_HEAD_OPACITY_LINE:
                 mouseEvent.preventDefault();
                 if (!fieldId) return;
-                this.aiTableGridSelectionService.drag({
-                    type: DragType.columnWidth,
-                    sourceIds: new Set([fieldId]),
-                    scroll: this.getScrollPosition(),
-                    coordinate: this.coordinate()
-                });
+                this.handleFieldWidthDragStart(fieldId);
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
@@ -716,6 +711,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.aiTableGridSelectionService.drag({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,
+                scroll: this.getScrollPosition(),
+                coordinate: this.coordinate()
+            });
+        }
+    }
+
+    private handleFieldWidthDragStart(fieldId: string) {
+        if (!this.aiReadonly() && fieldId) {
+            this.aiTableGridSelectionService.drag({
+                type: DragType.columnWidth,
+                sourceIds: new Set([fieldId]),
                 scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
