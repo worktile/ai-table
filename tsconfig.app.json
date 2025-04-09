@@ -8,7 +8,7 @@
         "paths": {
             "@ai-table/grid": ["./packages/grid/src/index"],
             "@ai-table/state": ["./packages/state/src/public-api"],
-            "@ai-table/utils": ["./packages/state/src/index"]
+            "@ai-table/utils": ["./packages/utils/src/public"]
         },
         "moduleResolution": "node",
         "importHelpers": true,
