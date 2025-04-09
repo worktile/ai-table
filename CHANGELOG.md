@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.49](https://github.com/worktile/ai-table/compare/0.0.48...0.0.49) (2025-04-09)
+
+
+### Bug Fixes
+
+* **grid:** the page render is error when fields is [] ([#327](https://github.com/worktile/ai-table/issues/327)) ([006aeab](https://github.com/worktile/ai-table/commit/006aeabfeff8c12bf27d7e965fb36d2470b306f7))
+
+
+### Features
+
+* add type Id ([dbeb9f0](https://github.com/worktile/ai-table/commit/dbeb9f0d085c2545741f0b22e8cc839cebbc7b84))
+* add utils package ([17dbfe3](https://github.com/worktile/ai-table/commit/17dbfe3c3b3f01fa0cf608ebc8d3c13bbee62654))
+* add utils package ([b9df1fc](https://github.com/worktile/ai-table/commit/b9df1fc3f42f2bcd6a5ad5129aebfb21606633d9))
+
+
+
 ## [0.0.48](https://github.com/worktile/ai-table/compare/0.0.47...0.0.48) (2025-04-09)
 
 
