@@ -1,5 +1,4 @@
-import { Id } from 'ngx-tethys/types';
-import { AITableField, AITableRecord, Direction } from './core';
+import { AITableField, AITableRecord, Direction, Id } from './core';
 
 export class Positions {
     [view_id: string]: number;

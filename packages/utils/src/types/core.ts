@@ -1,4 +1,3 @@
-import { Id } from 'ngx-tethys/types';
 
 export enum AITableFieldType {
     text = 'text', // 包含多行文本
@@ -64,6 +63,8 @@ export interface AITableField {
     stat_type?: AITableStatType;
     settings?: AITableFieldSettings;
 }
+
+export type Id = string | number;
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings | AttachmentSettings;
 

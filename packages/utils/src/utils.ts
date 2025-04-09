@@ -1,7 +1,6 @@
 import * as Y from "yjs";
-import { AITableField, AITableRecord, AITableView, AITableViewRecord, CustomFieldValues, FieldValue, Positions, SharedRecordJsonType, SyncArrayElement, SyncMapElement, SystemFieldValues, TrackableEntity, TransactionOriginInfo } from "./types";
+import { AITableField, AITableRecord, AITableView, AITableViewRecord, CustomFieldValues, FieldValue, Id, Positions, SharedRecordJsonType, SyncArrayElement, SyncMapElement, SystemFieldValues, TrackableEntity, TransactionOriginInfo } from "./types";
 import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from "./constants";
-import { Id } from "ngx-tethys/types";
 
 export function toAITableSharedType(
     sharedType: Y.Map<any>,
