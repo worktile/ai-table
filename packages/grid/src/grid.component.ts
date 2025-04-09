@@ -287,17 +287,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 }
             }
-            const { targetName: _targetName, fieldId } = getDetailByTargetName(targetName);
-            if (_targetName === AI_TABLE_FIELD_HEAD_OPACITY_LINE && fieldId) {
-                this.aiTableGridSelectionService.drag({
-                    type: DragType.columnWidth,
-                    sourceIds: new Set([fieldId]),
-                    scroll: this.getScrollPosition(),
-                    coordinate: this.coordinate()
-                });
-            } else if (this.aiTableGridSelectionService.getDragStateType() === DragType.columnWidth) {
-                this.aiTableGridSelectionService.clearDrag();
-            }
         });
     }
 
@@ -321,6 +310,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!fieldId) return;
                 this.aiTableGridSelectionService.selectField(fieldId);
                 this.handleFieldDragStart();
+                return;
+            case AI_TABLE_FIELD_HEAD_OPACITY_LINE:
+                mouseEvent.preventDefault();
+                if (!fieldId) return;
+                this.aiTableGridSelectionService.drag({
+                    type: DragType.columnWidth,
+                    sourceIds: new Set([fieldId]),
+                    scroll: this.getScrollPosition(),
+                    coordinate: this.coordinate()
+                });
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;

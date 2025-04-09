@@ -25,8 +25,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private auxiliaryLine!: HTMLElement;
 
-    private colResizeLine!: HTMLElement;
-
     private draggedData: DragEndData | null = null;
 
     private mouseStartPosition: { x: number; y: number } | null = null;
@@ -38,7 +36,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private mousedownListener?: () => void;
     private mousemoveListener?: () => void;
     private mouseupListener?: () => void;
-    private lineMouseLeaveListener?: () => void;
 
     constructor() {
         effect(() => this.handleDragStateChange());
@@ -52,17 +49,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     private initElements(): void {
         this.rect = this.elementRef.nativeElement.querySelector('.rect')!;
         this.auxiliaryLine = this.elementRef.nativeElement.querySelector('.auxiliary-line')!;
-        this.colResizeLine = this.elementRef.nativeElement.querySelector('.col-resize-line')!;
     }
 
     private setupEventListeners(): void {
         this.mousedownListener = this.render2.listen('window', 'mousedown', (e: MouseEvent) => {
             this.mouseStartPosition = { x: e.x, y: e.y };
-            e.preventDefault();
         });
 
         this.mousemoveListener = this.render2.listen('window', 'mousemove', (e: MouseEvent) => {
-            e.preventDefault();
             if (this.timer) {
                 cancelAnimationFrame(this.timer);
             }
@@ -90,11 +84,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
         if (drag.type === DragType.none || !this.rect || !this.auxiliaryLine) {
             return;
-        }
-
-        if (drag.type === DragType.columnWidth) {
-            this.setDisplayStyle('block');
-            this.showColResize(drag);
         }
 
         this.aiTableDrag = drag;
@@ -180,6 +169,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private movingColumnWidth(drag: AITableDragState, moveX: number) {
+        this.setCursorStyle('col-resize');
         const aiTable = this.aiTableGridSelectionService.aiTable;
         const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
         const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
@@ -200,38 +190,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             fieldIds: drag.sourceIds,
             width: Math.max(MIN_COLUMN_WIDTH, sourceColumnWidth + moveX)
         };
-    }
-
-    private showColResize(drag: AITableDragState) {
-        const aiTable = this.aiTableGridSelectionService.aiTable;
-        const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
-        const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
-        const coordinate = drag.coordinate!;
-        const sourceColumnStartX = coordinate.getColumnOffset(sourceColumnIndex);
-        const scroll = drag.scroll || { x: 0, y: 0 };
-        let targetColumnIndex = coordinate.getColumnStartIndex(sourceColumnStartX + scroll.x);
-        let targetColumnStartX = coordinate.getColumnOffset(targetColumnIndex);
-        const sourceColumnWidth = drag.coordinate!.getColumnWidth(sourceColumnIndex);
-        const opacityLineWidth = 4;
-        // 重置样式
-        this.setRectStyles({ width: 0 });
-        this.resetAuxiliaryLine();
-
-        this.setDisplayStyle('block');
-        this.render2.setStyle(this.elementRef.nativeElement, 'cursor', 'col-resize');
-        // 隐藏列宽调整线，用于监听鼠标离开此区域后结束宽度调整
-        this.setColResizeLine({
-            opacity: 0,
-            height: '100%',
-            width: `${opacityLineWidth}px`,
-            left: `${targetColumnStartX + sourceColumnWidth - opacityLineWidth / 2}px`,
-            zIndex: 10
-        });
-        this.lineMouseLeaveListener = this.render2.listen(this.colResizeLine, 'mouseleave', () => {
-            this.setDisplayStyle('none');
-            this.lineMouseLeaveListener?.();
-            this.lineMouseLeaveListener = undefined;
-        });
     }
 
     private handleDragEnd() {
@@ -256,6 +214,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         this.render2.setStyle(this.elementRef.nativeElement, 'display', display);
     }
 
+    private setCursorStyle(cursor: string) {
+        this.render2.setStyle(this.elementRef.nativeElement, 'cursor', cursor);
+    }
+
     private setRectStyles(styles: Record<string, any>) {
         Object.entries(styles).forEach(([prop, value]) => {
             this.render2.setStyle(this.rect, prop, value);
@@ -268,12 +230,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
     }
 
-    private setColResizeLine(styles: Record<string, any>) {
-        Object.entries(styles).forEach(([prop, value]) => {
-            this.render2.setStyle(this.colResizeLine, prop, value);
-        });
-    }
-
     private resetAuxiliaryLine(): void {
         this.setAuxiliaryLineStyles({ width: 0 });
     }
@@ -282,7 +238,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         if (this.mousedownListener) this.mousedownListener();
         if (this.mousemoveListener) this.mousemoveListener();
         if (this.mouseupListener) this.mouseupListener();
-        if (this.lineMouseLeaveListener) this.lineMouseLeaveListener();
 
         if (this.timer) {
             cancelAnimationFrame(this.timer);

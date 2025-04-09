@@ -1,6 +1,7 @@
 import {
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_SELECT_CHECKBOX
@@ -20,6 +21,10 @@ export const handleMouseStyle = (realTargetName: string, areaType: AITableAreaTy
         case AI_TABLE_FIELD_ADD_BUTTON: {
             return setMouseStyle('pointer', container);
         }
+        case AI_TABLE_FIELD_HEAD_OPACITY_LINE: {
+            return setMouseStyle('col-resize', container);
+        }
+
         default:
             return setMouseStyle('default', container);
     }
