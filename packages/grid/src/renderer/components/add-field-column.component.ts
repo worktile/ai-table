@@ -51,10 +51,14 @@ export class AITableAddField {
             readonly
         } = this.config();
         const fill = targetName === AI_TABLE_FIELD_ADD_BUTTON ? Colors.gray80 : Colors.white;
+        const fields = this.config().fields || [];
+        const index = this.config().columnStopIndex;
+        const fieldId = fields.length && index < fields.length ? fields[index]._id : '';
+
         return {
             name: generateTargetName({
                 targetName: AI_TABLE_FIELD_ADD_BUTTON,
-                fieldId: this.config().fields[this.config().columnStopIndex]._id,
+                fieldId,
                 mouseStyle: readonly ? 'default' : 'pointer'
             }),
             x: AI_TABLE_OFFSET,

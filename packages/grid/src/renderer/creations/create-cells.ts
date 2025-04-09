@@ -42,7 +42,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
         // 获取该列对应的宽度
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
-        const isLastColumn = columnIndex === aiTable.fields.length - 1;
+        const isLastColumn = columnIndex === aiTable.gridData().fields?.length - 1;
 
         if (columnIndex === 1) {
             cellDrawer.initStyle(field, { fontWeight: DEFAULT_FONT_STYLE });

@@ -84,8 +84,8 @@ export class Coordinate {
     /**
      * 根据 columnIndex 获取对应列宽
      */
-    public getColumnWidth(index: number) {
-        return this.columnIndicesSizeMap[index];
+    public getColumnWidth(index: number): number {
+        return this.columnIndicesSizeMap[index] ?? 0;
     }
 
     /**
@@ -110,7 +110,7 @@ export class Coordinate {
             }
 
             for (let i = lastMeasuredIndex + 1; i <= index; i++) {
-                const size = isColumnType ? this.columnIndicesSizeMap[i] : (this.rowIndicesSizeMap[i] ?? this.rowHeight);
+                const size = isColumnType ? (this.columnIndicesSizeMap[i] ?? 0) : (this.rowIndicesSizeMap[i] ?? this.rowHeight);
 
                 cellMetadataMap[i] = {
                     offset,

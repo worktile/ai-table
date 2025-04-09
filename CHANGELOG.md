@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.48](https://github.com/worktile/ai-table/compare/0.0.47...0.0.48) (2025-04-09)
+
+
+### Bug Fixes
+
+* #WIK-17613 【AiTable】链接 字段编辑后，文本渲染有问题 ([#325](https://github.com/worktile/ai-table/issues/325)) ([bc5a47c](https://github.com/worktile/ai-table/commit/bc5a47c6fcd094c3480067dfb1f31d0070af21a7)), closes [#WIK-17613](https://github.com/worktile/ai-table/issues/WIK-17613)
+* **drag:** #WIK-17601 fixed the width drag and the content cannot be selected ([#324](https://github.com/worktile/ai-table/issues/324)) ([aa67514](https://github.com/worktile/ai-table/commit/aa67514b77568fb07b61270bd6e14ccc57842cdd))
+
+
+### Features
+
+* #WIK-17568 ai-table 渲染：文字 + 编辑图标 ([#316](https://github.com/worktile/ai-table/issues/316)) ([ec2ff2f](https://github.com/worktile/ai-table/commit/ec2ff2fe2822ed3655f3c19430e586a4626d3c4e)), closes [#WIK-17568](https://github.com/worktile/ai-table/issues/WIK-17568)
+
+
+
 ## [0.0.47](https://github.com/worktile/ai-table/compare/0.0.46...0.0.47) (2025-04-08)
 
 
