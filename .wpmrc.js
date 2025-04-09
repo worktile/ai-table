@@ -1,6 +1,6 @@
 module.exports = {
     allowBranch: ['develop', 'release-auto-*'],
-    bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json', 'packages/state/package.json'],
+    bumpFiles: ['package.json', 'package-lock.json', 'packages/grid/package.json', 'packages/state/package.json', 'packages/utils/package.json'],
     skip: {
         confirm: true
     },
