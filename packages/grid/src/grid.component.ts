@@ -452,6 +452,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             targetNameDetail
         });
 
+        if (this.aiReadonly()) {
+            return;
+        }
+
         const { fieldId, recordId } = targetNameDetail;
         if (!recordId || !fieldId) {
             return;
