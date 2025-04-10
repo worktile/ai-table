@@ -8,12 +8,13 @@ import { MemberField } from './member';
 import { NumberField } from './number';
 import { ProgressField } from './progress';
 import { RateField } from './rate';
+import { RichTextField } from './rich-text';
 import { SelectField } from './select';
 import { TextField } from './text';
 
 export const FieldModelMap: Record<AITableFieldType, Field> = {
     [AITableFieldType.text]: new TextField(),
-    [AITableFieldType.richText]: new TextField(),
+    [AITableFieldType.richText]: new RichTextField(),
     [AITableFieldType.select]: new SelectField(),
     [AITableFieldType.date]: new DateField(),
     [AITableFieldType.createdAt]: new DateField(),

@@ -1,5 +1,6 @@
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { AITableField, FieldValue } from '../../../core';
+import { AITable } from '../../../core/types/ai-table';
 import { isEmpty } from '../../common';
 
 export abstract class Field {
@@ -7,9 +8,12 @@ export abstract class Field {
     abstract compare(
         cellValue1: FieldValue,
         cellValue2: FieldValue,
-        field: AITableField,
         references?: AITableReferences,
-        sortKey?: string
+        sortKey?: string,
+        options?: {
+            aiTable: AITable;
+            field: AITableField;
+        },
     ): number;
 
     // 粘贴
@@ -21,7 +25,10 @@ export abstract class Field {
     ): FieldValue | null;
 
     // 筛选
-    isMeetFilter(condition: AITableFilterCondition, cellValue: FieldValue) {
+    isMeetFilter(condition: AITableFilterCondition, cellValue: FieldValue, options?: {
+        aiTable: AITable;
+        field: AITableField;
+    },) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
             case AITableFilterOperation.exists: {

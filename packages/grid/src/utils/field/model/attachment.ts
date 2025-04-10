@@ -1,4 +1,4 @@
-import { AITableField, AttachmentFieldValue, FieldValue } from '../../../core';
+import { AITable, AITableField, AttachmentFieldValue, FieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect } from '../operate';
@@ -23,12 +23,15 @@ export class AttachmentField extends Field {
     override compare(
         cellValue1: AttachmentFieldValue,
         cellValue2: AttachmentFieldValue,
-        field: AITableField,
         references: AITableReferences,
-        sortKey: string
+        sortKey: string,
+        options: {
+            aiTable: AITable;
+            field: AITableField;
+        },
     ): number {
-        const value1 = cellValueToSortValue(cellValue1, field, references, sortKey);
-        const value2 = cellValueToSortValue(cellValue2, field, references, sortKey);
+        const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
+        const value2 = cellValueToSortValue(cellValue2, options.field, references, sortKey);
         return compareString(value1, value2);
     }
 
