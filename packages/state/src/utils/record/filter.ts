@@ -8,7 +8,9 @@ import {
     FieldModelMap,
     isEmpty,
     AITableFilterOperation,
-    SelectSettings
+    SelectSettings,
+    AITable,
+    AITableField,
 } from '@ai-table/grid';
 import {
     AITableFilterConditions,
@@ -34,11 +36,11 @@ export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRec
         if (recordsWillHidden && recordsWillHidden.length && recordsWillHidden.includes(record._id)) {
             return true;
         }
-        return checkConditions(fields, record, { conditions: illegalConditions, condition_logical });
+        return checkConditions(aiTable, fields, record, { conditions: illegalConditions, condition_logical });
     });
 }
 
-function checkConditions(fields: AITableViewFields, record: AITableRecord, filterConditions: AITableFilterConditions) {
+function checkConditions(aiTable: AIViewTable, fields: AITableViewFields, record: AITableRecord, filterConditions: AITableFilterConditions) {
     if (!record) {
         return false;
     }
@@ -47,26 +49,31 @@ function checkConditions(fields: AITableViewFields, record: AITableRecord, filte
     }
     const { condition_logical, conditions } = filterConditions;
     if (condition_logical === AITableFilterLogical.and) {
-        return conditions.every((condition) => doFilterOperations(fields, record, condition));
+        return conditions.every((condition) => doFilterOperations(aiTable, fields, record, condition));
     }
     if (!condition_logical || condition_logical === AITableFilterLogical.or) {
-        return conditions.some((condition) => doFilterOperations(fields, record, condition));
+        return conditions.some((condition) => doFilterOperations(aiTable, fields, record, condition));
     }
     return false;
 }
 
-function doFilterOperations(fields: AITableViewFields, record: AITableRecord, condition: AITableFilterCondition) {
+function doFilterOperations(aiTable: AIViewTable, fields: AITableViewFields, record: AITableRecord, condition: AITableFilterCondition) {
     const { field, cellValue } = getFilterValue(fields, record, condition);
 
     try {
-        return field && doFilter(condition, field, cellValue);
+        return field && doFilter(condition, cellValue, {
+            aiTable, field
+        });
     } catch (error) {
         return false;
     }
 }
 
-export function doFilter(condition: AITableFilterCondition, field: AITableViewField, cellValue: FieldValue) {
-    return FieldModelMap[field.type].isMeetFilter(condition, cellValue);
+export function doFilter(condition: AITableFilterCondition, cellValue: FieldValue, options: {
+    aiTable: AITable;
+    field: AITableField,
+}) {
+    return FieldModelMap[options.field.type].isMeetFilter(condition, cellValue, options);
 }
 
 export function getDefaultRecordDataByFilter(

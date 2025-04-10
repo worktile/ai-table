@@ -38,7 +38,10 @@ export function sortRecordsBySortInfo(
                 const cellValue1 = AITableQueries.getFieldValue(aiTable, [prev._id, field._id]);
                 const cellValue2 = AITableQueries.getFieldValue(aiTable, [current._id, field._id]);
                 const references = aiTable.context!.references();
-                const res = fieldMethod.compare(cellValue1, cellValue2, field, references, sortKey);
+                const res = fieldMethod.compare(cellValue1, cellValue2, field, references, sortKey, {
+                    aiTable,
+                    field
+                });
                 return res * rule.direction;
             }, 0);
         });
