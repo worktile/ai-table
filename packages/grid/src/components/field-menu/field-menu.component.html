@@ -1,20 +1,22 @@
-@for (menu of fieldMenus; track index; let index = $index) {
-    @if ((menu.hidden && !menu.hidden(aiTable, field)) || !menu.hidden) {
-        @if (menu.type === 'divider') {
-            <thy-divider [thyStyle]="'solid'"></thy-divider>
-        } @else {
-            @let disabled = !!(menu.disabled && menu.disabled(aiTable, field));
-            @let isRemoveField = menu.type === 'removeField';
-            <a
-                thyDropdownMenuItem
-                href="javascript:;"
-                [ngClass]="{ 'remove-field': isRemoveField && !disabled }"
-                (click)="execute(menu)"
-                [thyDisabled]="disabled"
-            >
-                <thy-icon [thyIconName]="menu.icon!"></thy-icon>
-                <span>{{ getMenuName(menu, field()) }}</span>
-            </a>
+@if (field()) {
+    @for (menu of fieldMenus; track index; let index = $index) {
+        @if ((menu.hidden && !menu.hidden(aiTable, field)) || !menu.hidden) {
+            @if (menu.type === 'divider') {
+                <thy-divider [thyStyle]="'solid'"></thy-divider>
+            } @else {
+                @let disabled = !!(menu.disabled && menu.disabled(aiTable, field));
+                @let isRemoveField = menu.type === 'removeField';
+                <a
+                    thyDropdownMenuItem
+                    href="javascript:;"
+                    [ngClass]="{ 'remove-field': isRemoveField && !disabled }"
+                    (click)="execute(menu)"
+                    [thyDisabled]="disabled"
+                >
+                    <thy-icon [thyIconName]="menu.icon!"></thy-icon>
+                    <span>{{ getMenuName(menu, field()) }}</span>
+                </a>
+            }
         }
     }
 }
