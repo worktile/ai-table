@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.50](https://github.com/worktile/ai-table/compare/0.0.49...0.0.50) (2025-04-10)
+
+
+### Bug Fixes
+
+* #WIK-17629 【AiTable】readonly时，禁止双击编辑 ([#335](https://github.com/worktile/ai-table/issues/335)) ([caf16a8](https://github.com/worktile/ai-table/commit/caf16a8f134f01054b0d66c7b7be809df0d2f9b7)), closes [#WIK-17629](https://github.com/worktile/ai-table/issues/WIK-17629)
+* **field-menu:** show field menu only field has value #WIK-17634 ([#336](https://github.com/worktile/ai-table/issues/336)) ([edb32d4](https://github.com/worktile/ai-table/commit/edb32d46ca80a9cafa0b6aca8ee75149202c9f7e)), closes [#WIK-17634](https://github.com/worktile/ai-table/issues/WIK-17634)
+
+
+### Features
+
+* #WIK-17567 aitable-多行文本筛选排序 ([#337](https://github.com/worktile/ai-table/issues/337)) ([6f0e9a6](https://github.com/worktile/ai-table/commit/6f0e9a66da4b5fea653df1138f14eda25b0d9e8a)), closes [#WIK-17567](https://github.com/worktile/ai-table/issues/WIK-17567)
+* **grid:** support copy and paste rich text ([#338](https://github.com/worktile/ai-table/issues/338)) ([1385f95](https://github.com/worktile/ai-table/commit/1385f95dd2afa55212a1367c77d0972c28223e8e))
+
+
+
 ## [0.0.49](https://github.com/worktile/ai-table/compare/0.0.48...0.0.49) (2025-04-09)
 
 
