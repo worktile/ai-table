@@ -1,7 +1,8 @@
 import { helpers } from 'ngx-tethys/util';
 import { Field } from './field';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import {
+    AITable,
     AITableField,
     AITableFieldType,
     AITableSelectOption,
@@ -31,9 +32,16 @@ export class SelectField extends Field {
         }
     }
 
-    override compare(cellValue1: FieldValue, cellValue2: FieldValue, field: AITableField): number {
-        const value1 = cellValueToSortValue(cellValue1, field);
-        const value2 = cellValueToSortValue(cellValue2, field);
+    override compare(cellValue1: FieldValue,
+        cellValue2: FieldValue,
+        references: AITableReferences,
+        sortKey: string,
+        options: {
+            aiTable: AITable;
+            field: AITableField;
+        },): number {
+        const value1 = cellValueToSortValue(cellValue1, options.field);
+        const value2 = cellValueToSortValue(cellValue2, options.field);
         return compareString(value1, value2);
     }
 

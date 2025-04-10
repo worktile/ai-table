@@ -1,5 +1,5 @@
 import { Id } from 'ngx-tethys/types';
-import { AITableField, AITableFieldType, FieldValue, MemberFieldValue, MemberSettings } from '../../../core';
+import { AITable, AITableField, AITableFieldType, FieldValue, MemberFieldValue, MemberSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect } from '../operate';
@@ -24,12 +24,15 @@ export class MemberField extends Field {
     override compare(
         cellValue1: FieldValue,
         cellValue2: FieldValue,
-        field: AITableField,
         references: AITableReferences,
-        sortKey: string
+        sortKey: string,
+        options: {
+            aiTable: AITable;
+            field: AITableField,
+        }
     ): number {
-        const value1 = cellValueToSortValue(cellValue1, field, references, sortKey);
-        const value2 = cellValueToSortValue(cellValue2, field, references, sortKey);
+        const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
+        const value2 = cellValueToSortValue(cellValue2, options.field, references, sortKey);
         return compareString(value1, value2);
     }
 

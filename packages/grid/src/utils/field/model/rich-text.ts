@@ -5,7 +5,7 @@ import { isEmpty } from '../../common';
 import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
 
-export class RichtextField extends Field {
+export class RichTextField extends Field {
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue, options: {
         aiTable: AITable;
         field: AITableField;
@@ -26,7 +26,6 @@ export class RichtextField extends Field {
     override compare(
         cellValue1: RichtextFieldValue,
         cellValue2: RichtextFieldValue,
-        field: AITableField,
         references: AITableReferences,
         sortKey: string,
         options: {

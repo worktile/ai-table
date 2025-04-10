@@ -8,7 +8,6 @@ export abstract class Field {
     abstract compare(
         cellValue1: FieldValue,
         cellValue2: FieldValue,
-        field: AITableField,
         references?: AITableReferences,
         sortKey?: string,
         options?: {
