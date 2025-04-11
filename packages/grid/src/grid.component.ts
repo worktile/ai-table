@@ -336,6 +336,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.updateDragSelectionState(false, null);
     }
 
+    stageMouseleave(e: KoEventObject<MouseEvent>) {
+        if (this.timer) {
+            cancelAnimationFrame(this.timer);
+        }
+        this.timer = requestAnimationFrame(() => {
+            const { context } = this.aiTable;
+            context!.setPointPosition(DEFAULT_POINT_POSITION);
+        });
+    }
+
     stageContextmenu(e: KoEventObject<MouseEvent>) {
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();

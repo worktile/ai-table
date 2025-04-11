@@ -8,6 +8,7 @@
             (koContextmenu)="stageContextmenu($event)"
             (koClick)="stageClick($event)"
             (koDblclick)="stageDblclick($event)"
+            (koMouseleave)="stageMouseleave($event)"
         >
             <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
                 <div class="ai-table-scroll-bar-inner" [style.width.px]="scrollbarWidth()"></div>

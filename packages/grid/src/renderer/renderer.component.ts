@@ -62,6 +62,8 @@ export class AITableRenderer {
 
     koDblclick = output<KoEventObject<MouseEvent>>();
 
+    koMouseleave = output<KoEventObject<MouseEvent>>();
+
     fields = computed(() => {
         return AITable.getVisibleFields(this.config().aiTable);
     });
@@ -229,5 +231,9 @@ export class AITableRenderer {
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
         this.koDblclick.emit(e as KoEventObject<MouseEvent>);
+    }
+
+    stageMouseleave(e: KoEventObject<MouseEvent>) {
+        this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
     }
 }
