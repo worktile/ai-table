@@ -15,7 +15,6 @@
                 <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
                 <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
                 <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
-                <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
             </ko-group>
 
             <ko-group>
@@ -48,6 +47,7 @@
                     @if (activeCellBorderConfig().frozenActiveCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
+                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
             </ko-group>
         </ko-group>
