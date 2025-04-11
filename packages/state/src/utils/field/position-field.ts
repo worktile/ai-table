@@ -6,7 +6,7 @@ export function getFieldPositionInView(viewId: string, fields: AITableFields, pa
     let newPosition = 0;
     if (path[0] > newPath[0]) {
         const prevPath = newPath[0] - 1;
-        if (prevPath > 0) {
+        if (prevPath >= 0) {
             const targetPrevField = fields[prevPath];
             const targetPrevPosition = (targetPrevField as AITableViewField).positions[viewId];
             newPosition = (targetPosition + targetPrevPosition) / 2;
