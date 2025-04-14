@@ -42,10 +42,15 @@ export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updat
 }
 
 export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: NumberPath) {
+    const invalidFieldValues: string[] = [];
     const isValid = Object.entries(record.values).every(([fieldId, value]) => {
         const field = AITableQueries.getField(aiTable, [fieldId]);
         const fieldModel = field && FieldModelMap[field.type];
-        return fieldModel ? fieldModel.isValid(value) : false;
+        const result = fieldModel ? fieldModel.isValid(value) : false;
+        if (!result) {
+            invalidFieldValues.push(`field_id: ${fieldId}, field_type: ${field?.type}, value: ${value}`);
+        }
+        return result;
     });
     if (isValid) {
         const operation: AddRecordAction = {
@@ -54,6 +59,8 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: Num
             path
         };
         aiTable.apply(operation);
+    } else {
+        console.error(`Invalid field values at add record. invalidFieldValues: ${invalidFieldValues}`);
     }
 }
 

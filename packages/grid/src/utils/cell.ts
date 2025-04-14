@@ -21,6 +21,10 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
 }
 
 export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T {
+    if (cellValue === undefined || cellValue === null) {
+        return cellValue;
+    }
+
     const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
 
     if (!fieldService) {

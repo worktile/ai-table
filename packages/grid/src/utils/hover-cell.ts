@@ -1,6 +1,5 @@
-import { AITable, AITableQueries } from '../core';
+import { AITable } from '../core';
 import { componentMap } from '../renderer/components/cells/cells';
-import { transformCellValue } from './cell';
 import { getDetailByTargetName } from './common';
 
 export function getHoverCell(aiTable: AITable) {

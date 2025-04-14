@@ -7,7 +7,7 @@ import { Field } from './field';
 
 export class LinkField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return (typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
+        return (cellValue && typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
     }
 
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue) {

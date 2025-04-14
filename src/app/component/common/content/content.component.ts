@@ -262,9 +262,7 @@ export class DemoTableContent {
         this.registryIcon();
     }
 
-    ngAfterViewInit() {
-        console.timeEnd('render');
-    }
+    ngAfterViewInit() {}
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));

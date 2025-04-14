@@ -8,7 +8,10 @@ import { isEmpty } from '../../common';
 
 export class DateField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return (typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') || cellValue === null;
+        return (
+            (cellValue && typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') ||
+            cellValue === null
+        );
     }
 
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
