@@ -62,6 +62,7 @@ export interface AITableField {
     frozen?: boolean;
     stat_type?: AITableStatType;
     settings?: AITableFieldSettings;
+    [key: string]: any;
 }
 
 export type Id = string | number;
@@ -150,6 +151,7 @@ export interface AITableRecord {
     updated_at: NumberFieldValue;
     updated_by: string;
     values: Record<string, FieldValue>;
+    [key: string]: any;
 }
 
 export interface AITableRecordUpdatedInfo {
