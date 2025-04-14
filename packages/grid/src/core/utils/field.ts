@@ -9,7 +9,8 @@ export const isArrayField = (field: AITableField) => {
         AITableFieldType.createdBy,
         AITableFieldType.updatedBy,
         AITableFieldType.select,
-        AITableFieldType.attachment
+        AITableFieldType.attachment,
+        AITableFieldType.richText
     ].includes(field.type);
 };
 
@@ -31,7 +32,7 @@ export function getDefaultFieldValue(field: AITableField) {
     if (isArrayField(field)) {
         return [];
     }
-    if (isNumberFiled(field) || isDateFiled(field) || field.type === AITableFieldType.link || field.type === AITableFieldType.richText) {
+    if (isNumberFiled(field) || isDateFiled(field) || field.type === AITableFieldType.link) {
         return null;
     }
     return '';
