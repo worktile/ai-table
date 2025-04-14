@@ -33,6 +33,7 @@ export interface AITableView {
     name: string;
     emoji_icon?: string;
     settings?: ViewSettings;
+    [key: string]: any;
 }
 
 export interface AITableFilterConditions<TValue = unknown> {
