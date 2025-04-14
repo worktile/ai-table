@@ -4,6 +4,8 @@ import { AITable } from '../../../core/types/ai-table';
 import { isEmpty } from '../../common';
 
 export abstract class Field {
+    abstract isValid(cellValue: FieldValue): boolean;
+
     // 排序
     abstract compare(
         cellValue1: FieldValue,

@@ -7,6 +7,10 @@ import { compareNumber } from '../operate';
 import { isEmpty } from '../../common';
 
 export class DateField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return (typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
         switch (condition.operation) {

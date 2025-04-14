@@ -5,6 +5,10 @@ import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
 
 export class TextField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return typeof cellValue === 'string' || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:

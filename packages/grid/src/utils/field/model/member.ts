@@ -6,6 +6,10 @@ import { compareString, hasIntersect } from '../operate';
 import { Field } from './field';
 
 export class MemberField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return Array.isArray(cellValue) || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:

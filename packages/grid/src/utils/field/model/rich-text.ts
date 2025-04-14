@@ -6,6 +6,10 @@ import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
 
 export class RichTextField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return Array.isArray(cellValue) || cellValue === null;
+    }
+    
     override isMeetFilter(
         condition: AITableFilterCondition<string>,
         cellValue: FieldValue,

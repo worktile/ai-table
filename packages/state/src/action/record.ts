@@ -1,4 +1,12 @@
-import { AIRecordFieldIdPath, AITableQueries, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/grid';
+import {
+    AIRecordFieldIdPath,
+    AITableQueries,
+    AITableRecord,
+    AITableRecordUpdatedInfo,
+    FieldModelMap,
+    IdPath,
+    NumberPath
+} from '@ai-table/grid';
 import {
     UpdateFieldValueAction,
     ActionName,
@@ -11,13 +19,17 @@ import {
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
     const oldValue = AITableQueries.getFieldValue(aiTable, path);
-    const operation: UpdateFieldValueAction = {
-        type: ActionName.UpdateFieldValue,
-        fieldValue: oldValue,
-        newFieldValue: value,
-        path
-    };
-    aiTable.apply(operation);
+    const field = AITableQueries.getField(aiTable, [path[1]]);
+    const fieldModel = field && FieldModelMap[field.type];
+    if (fieldModel && fieldModel.isValid(value)) {
+        const operation: UpdateFieldValueAction = {
+            type: ActionName.UpdateFieldValue,
+            fieldValue: oldValue,
+            newFieldValue: value,
+            path
+        };
+        aiTable.apply(operation);
+    }
 }
 
 export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updatedInfo: AITableRecordUpdatedInfo) {
@@ -30,6 +42,7 @@ export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updat
 }
 
 export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: NumberPath) {
+    // TODO: 对 record 的值进行验证
     const operation: AddRecordAction = {
         type: ActionName.AddRecord,
         record,
