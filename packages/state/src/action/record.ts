@@ -42,13 +42,19 @@ export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updat
 }
 
 export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: NumberPath) {
-    // TODO: 对 record 的值进行验证
-    const operation: AddRecordAction = {
-        type: ActionName.AddRecord,
-        record,
-        path
-    };
-    aiTable.apply(operation);
+    const isValid = Object.entries(record.values).every(([fieldId, value]) => {
+        const field = AITableQueries.getField(aiTable, [fieldId]);
+        const fieldModel = field && FieldModelMap[field.type];
+        return fieldModel ? fieldModel.isValid(value) : false;
+    });
+    if (isValid) {
+        const operation: AddRecordAction = {
+            type: ActionName.AddRecord,
+            record,
+            path
+        };
+        aiTable.apply(operation);
+    }
 }
 
 export function moveRecord(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
