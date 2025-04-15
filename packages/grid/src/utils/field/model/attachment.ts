@@ -5,6 +5,10 @@ import { compareString, hasIntersect } from '../operate';
 import { Field } from './field';
 
 export class AttachmentField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return Array.isArray(cellValue) || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
@@ -28,7 +32,7 @@ export class AttachmentField extends Field {
         options: {
             aiTable: AITable;
             field: AITableField;
-        },
+        }
     ): number {
         const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
         const value2 = cellValueToSortValue(cellValue2, options.field, references, sortKey);

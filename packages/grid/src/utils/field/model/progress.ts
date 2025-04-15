@@ -5,6 +5,10 @@ import { compareNumber, isEmpty } from '../../index';
 import { Field } from './field';
 
 export class ProgressField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return typeof cellValue === 'number' || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: FieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:

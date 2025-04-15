@@ -6,6 +6,10 @@ import { compareNumber } from '../operate';
 import { Field } from './field';
 
 export class NumberField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return typeof cellValue === 'number' || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: FieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:

@@ -6,6 +6,10 @@ import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
 
 export class LinkField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return (cellValue && typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue) {
         const cellTextValue = cellValue?.text;
         switch (condition.operation) {

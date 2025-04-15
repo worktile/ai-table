@@ -17,6 +17,10 @@ import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
 import { idCreator } from '../../../core';
 
 export class SelectField extends Field {
+    override isValid(cellValue: FieldValue): boolean {
+        return Array.isArray(cellValue) || cellValue === null;
+    }
+
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
