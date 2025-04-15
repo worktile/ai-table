@@ -50,7 +50,7 @@ import {
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
-import { getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
+import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
 import { getFileThumbnailSvgString } from '../../utils/file';
@@ -82,9 +82,12 @@ export class CellDrawer extends Drawer {
 
     // 单元格渲染
     public renderCell(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { field } = render;
+        const { field, cellValue } = render;
         const fieldType = field.type;
-
+        const fieldMethod = FieldModelMap[fieldType];
+        if (!fieldMethod.isValid(cellValue) || cellValue == null) {
+            return;
+        }
         switch (fieldType) {
             case AITableFieldType.text:
             case AITableFieldType.richText:
@@ -113,7 +116,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, field, columnWidth, style } = render;
+        const { x, y, transformValue, cellValue, field, columnWidth, style } = render;
         const fieldType = field.type;
         let renderText: string | null = fieldType === AITableFieldType.link ? transformValue?.text : transformValue;
         if (renderText == null) {
