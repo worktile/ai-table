@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.51](https://github.com/worktile/ai-table/compare/0.0.50...0.0.51) (2025-04-15)
+
+
+### Bug Fixes
+
+* #WIK-17644 选中单元格（附件或者多行文本），在触发滚动条时，hover渲染的元素没有跟着滚动 ([#343](https://github.com/worktile/ai-table/issues/343)) ([c37292f](https://github.com/worktile/ai-table/commit/c37292f16951b15f23d16c4afde51998795595ef)), closes [#WIK-17644](https://github.com/worktile/ai-table/issues/WIK-17644)
+* **grid:** #WIK-17643 mouse leaves canvas without clearing the point status ([#342](https://github.com/worktile/ai-table/issues/342)) ([2900b6f](https://github.com/worktile/ai-table/commit/2900b6f680680b94b15fd9f4ba5a83fac05fa7b2)), closes [#WIK-17643](https://github.com/worktile/ai-table/issues/WIK-17643)
+* **state:** #WIK-17637 calculated field location should contain the location of index 0 ([#341](https://github.com/worktile/ai-table/issues/341)) ([470ac96](https://github.com/worktile/ai-table/commit/470ac96dc741fa32887c9ad7679004a208898950)), closes [#WIK-17637](https://github.com/worktile/ai-table/issues/WIK-17637)
+
+
+### Features
+
+* #WIK-17679 所有可以为 null 字段，都设置一个 null 的值验证所有逻辑可以不报错 ([#346](https://github.com/worktile/ai-table/issues/346)) ([9eaf7c1](https://github.com/worktile/ai-table/commit/9eaf7c1c0613eca93a3312be361f054074333bee)), closes [#WIK-17679](https://github.com/worktile/ai-table/issues/WIK-17679)
+* ai table types add key ([#345](https://github.com/worktile/ai-table/issues/345)) ([6aa2e67](https://github.com/worktile/ai-table/commit/6aa2e67aa023b9467fee727c6c74921d0b0f0e83))
+* **field-model:** verify field value before update field or insert r… ([#344](https://github.com/worktile/ai-table/issues/344)) ([54b7c5e](https://github.com/worktile/ai-table/commit/54b7c5e775c20031acacbab6b2990cc9d495423d))
+
+
+
 ## [0.0.50](https://github.com/worktile/ai-table/compare/0.0.49...0.0.50) (2025-04-10)
 
 
