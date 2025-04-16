@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.52](https://github.com/worktile/ai-table/compare/0.0.51...0.0.52) (2025-04-16)
+
+
+### Features
+
+* utils build use tsc ([#348](https://github.com/worktile/ai-table/issues/348)) ([0cc19d5](https://github.com/worktile/ai-table/commit/0cc19d5cb4825fbabd083f35ee6078c00c830538))
+
+
+
 ## [0.0.51](https://github.com/worktile/ai-table/compare/0.0.50...0.0.51) (2025-04-15)
 
 
