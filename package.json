@@ -9,7 +9,7 @@
         "start": "ng serve demo",
         "start-ws": "npx ts-node ./backend/src/index",
         "build": "npm run build:packages && npm run sync-styles",
-        "build:packages": "ts-node --project ./scripts/tsconfig.json ./scripts/build-packages.ts",
+        "build:packages": "ts-node --project ./scripts/tsconfig.json ./scripts/build-packages.ts && cd packages/utils && npm run build",
         "build:demo": "ng build demo --configuration production",
         "build:ws": "tsc -p tsconfig.backend.json",
         "sync-styles": "ts-node --project ./scripts/tsconfig.json ./scripts/sync-styles.ts",
