@@ -176,7 +176,7 @@ export class TableService {
         }
         this.undoManager = new UndoManager(this.sharedType, {
             trackedOrigins: new Set([this.aiTable]),
-            captureTimeout: 0
+            captureTimeout: 200
         });
 
         this.undoManager.on('stack-item-added', () => {
