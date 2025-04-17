@@ -20,6 +20,8 @@
             <thy-segment-item thyValue="default" thyIcon="bars">默认</thy-segment-item>
             <thy-segment-item thyValue="big-data" thyIcon="trend">大数据量</thy-segment-item>
         </thy-segment>
+        <a thyAction class="mb-2" thyIcon="undo" href="javascript:;" (click)="undo()" [thyDisabled]="!canUndo()">撤销</a>
+        <a thyAction class="mb-2" thyIcon="redo" href="javascript:;" (click)="redo()" [thyDisabled]="!canRedo()">重做</a>
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
         <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveRecord()">移动选中行到第三行</a>
         <a thyAction class="mb-2" thyIcon="move" href="javascript:;" (click)="moveField()">移动选中列到第三列</a>

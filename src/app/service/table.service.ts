@@ -19,6 +19,7 @@ import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
 import { AITableFieldsSizeMap, AITableFieldType, AITableValue } from '@ai-table/grid';
+import { UndoManager } from 'yjs';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -28,6 +29,11 @@ export const TABLE_SERVICE_MAP = new WeakMap<AIViewTable, TableService>();
 @Injectable()
 export class TableService {
     views!: WritableSignal<AITableView[]>;
+    private undoManager: UndoManager | null = null;
+
+    canUndo: WritableSignal<boolean> = signal<boolean>(false);
+
+    canRedo: WritableSignal<boolean> = signal<boolean>(false);
 
     readonly: WritableSignal<boolean> = signal(false);
 
@@ -132,6 +138,7 @@ export class TableService {
         let isInitialized = false;
         if (!this.sharedType) {
             this.sharedType = createSharedType();
+            this.initializeUndoManager();
             this.sharedType.observeDeep((events: any) => {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
@@ -163,11 +170,43 @@ export class TableService {
         });
     }
 
+    initializeUndoManager() {
+        if (!this.sharedType || !this.aiTable) {
+            return;
+        }
+        this.undoManager = new UndoManager(this.sharedType, {
+            trackedOrigins: new Set([this.aiTable]),
+            captureTimeout: 0
+        });
+
+        this.undoManager.on('stack-item-added', () => {
+            this.canUndo.set(this.undoManager!.canUndo());
+            this.canRedo.set(this.undoManager!.canRedo());
+        });
+
+        this.undoManager.on('stack-item-popped', () => {
+            this.canUndo.set(this.undoManager!.canUndo());
+            this.canRedo.set(this.undoManager!.canRedo());
+        });
+    }
+
     disconnect() {
         if (this.provider) {
             this.provider.disconnect();
             this.provider = null;
             this.sharedType = null;
+        }
+    }
+
+    undo() {
+        if (this.undoManager?.canUndo()) {
+            this.undoManager.undo();
+        }
+    }
+
+    redo() {
+        if (this.undoManager?.canRedo()) {
+            this.undoManager.redo();
         }
     }
 }
