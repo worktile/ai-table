@@ -2,15 +2,19 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../../out-tsc/lib",
+        "outDir": "../../dist/utils",
         "target": "es2020",
+        "module": "CommonJS",
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "strict": true,
         "lib": ["dom", "ES2022"],
         "paths": {
             "@ai-table/utils": ["dist/utils"]
         }
     },
-    "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"]
+    "exclude": []
 }
