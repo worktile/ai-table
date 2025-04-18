@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate, FieldValue } from '../core';
+import { AITable, AITableField, Coordinate, FieldValue, UpdateFieldValueOptions } from '../core';
 import { AITableReferences } from './grid';
 import { AITableLinearRowRecord } from './row';
 
@@ -10,8 +10,11 @@ export interface AITableCellsConfig {
     rowStopIndex: number;
     columnStartIndex: number;
     columnStopIndex: number;
+    readonly: boolean;
+    actions: {
+        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+    };
     references?: AITableReferences;
-    readonly?: boolean;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {

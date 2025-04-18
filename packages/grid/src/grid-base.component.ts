@@ -58,7 +58,7 @@ export class AITableGridBase implements OnInit {
 
     aiFieldConfig = input<AIFieldConfig>();
 
-    aiReadonly = input<boolean>();
+    aiReadonly = input<boolean>(false);
 
     aiPlugins = input<AIPlugin[]>();
 
