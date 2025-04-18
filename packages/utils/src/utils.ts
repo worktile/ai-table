@@ -1,6 +1,7 @@
 import * as Y from "yjs";
 import { AITableField, AITableRecord, AITableView, AITableViewRecord, CustomFieldValues, FieldValue, Id, Positions, SharedRecordJsonType, SyncArrayElement, SyncMapElement, SystemFieldValues, TrackableEntity, TransactionOriginInfo } from "./types";
 import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from "./constants";
+import ObjectID from "bson-objectid";
 
 export function toAITableSharedType(
     sharedType: Y.Map<any>,
@@ -35,7 +36,7 @@ export function toAITableSharedType(
 export function toAITableSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
-        element.set(key, node[key]);
+        element.set(key, ObjectID.isValid(node[key]) ? node[key].toString() : node[key]);
     }
     return element;
 }
