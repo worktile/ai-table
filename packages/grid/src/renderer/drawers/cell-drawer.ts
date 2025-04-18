@@ -86,7 +86,7 @@ export class CellDrawer extends Drawer {
         const { field, cellValue } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
-        if (!fieldMethod.isValid(cellValue) || cellValue == null) {
+        if (!fieldMethod.isValid(cellValue) || (cellValue == null && fieldType !== AITableFieldType.rate)) {
             return;
         }
         switch (fieldType) {
@@ -518,14 +518,13 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { x, y, transformValue: _cellValue } = render;
+        const { x, y, cellValue } = render;
         const max = AI_TABLE_RATE_MAX;
-        const cellValue = _cellValue as RateFieldValue;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
 
         return [...Array(max).keys()].map((item, index) => {
             const value = index + 1;
-            const checked = value <= cellValue;
+            const checked = value <= (cellValue || 0);
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
             const iconY = (AI_TABLE_ROW_BLANK_HEIGHT - size) / 2;
 

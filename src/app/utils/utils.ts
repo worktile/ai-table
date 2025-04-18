@@ -585,7 +585,7 @@ export function getCanvasDefaultValue() {
                     'column-5': [],
                     'column-566': ['member_01'],
                     'column-6': 100,
-                    'column-7': 3,
+                    'column-7': null,
                     'column-8': {},
                     // 'column-9': [],
                     // 'column-10': { timestamp: 1727254598 },
