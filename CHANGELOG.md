@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.54](https://github.com/worktile/ai-table/compare/0.0.53...0.0.54) (2025-04-18)
+
+
+### Bug Fixes
+
+* fixed object id can not insert yjs ([#357](https://github.com/worktile/ai-table/issues/357)) ([b0bff93](https://github.com/worktile/ai-table/commit/b0bff93f608d019511b1a4f0ae035acf9c540062))
+
+
+
 ## [0.0.53](https://github.com/worktile/ai-table/compare/0.0.52...0.0.53) (2025-04-18)
 
 
