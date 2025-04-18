@@ -46,6 +46,7 @@ import {
     DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     FONT_SIZE_SM,
+    AI_TABLE_RATE_MAX,
     StarFill
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
@@ -518,23 +519,23 @@ export class CellDrawer extends Drawer {
 
     private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
         const { x, y, transformValue: _cellValue } = render;
-        const max = 5;
+        const max = AI_TABLE_RATE_MAX;
         const cellValue = _cellValue as RateFieldValue;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
-        const isEmpty = isNil(cellValue);
+
         return [...Array(max).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= cellValue;
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
             const iconY = (AI_TABLE_ROW_BLANK_HEIGHT - size) / 2;
 
-            if (ctx && (checked || isEmpty)) {
+            if (ctx) {
                 this.path({
                     x: x + iconX,
                     y: y + iconY,
                     size: 22,
                     data: StarFill,
-                    fill: isEmpty ? this.colors.gray100 : this.colors.waring,
+                    fill: checked ? this.colors.waring : this.colors.gray100,
                     scaleX: 1.14,
                     scaleY: 1.14
                 });
