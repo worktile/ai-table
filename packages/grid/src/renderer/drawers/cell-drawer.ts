@@ -86,7 +86,7 @@ export class CellDrawer extends Drawer {
         const { field, cellValue } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
-        if (!fieldMethod.isValid(cellValue) || (cellValue == null && fieldType !== AITableFieldType.rate)) {
+        if (!fieldMethod.isValid(cellValue)) {
             return;
         }
         switch (fieldType) {
