@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.53](https://github.com/worktile/ai-table/compare/0.0.52...0.0.53) (2025-04-18)
+
+
+### Bug Fixes
+
+* #WIK-17677 🔗字段赋值后，点击 ai-table 意外区域后面的 icon 无法取消（ai-table 区域可以） ([#351](https://github.com/worktile/ai-table/issues/351)) ([f65db5b](https://github.com/worktile/ai-table/commit/f65db5b8355fe34864ee3df9b6006284a0e560ad)), closes [#WIK-17677](https://github.com/worktile/ai-table/issues/WIK-17677)
+* #WIK-17701 附件图标修改 ([#352](https://github.com/worktile/ai-table/issues/352)) ([c89c0bd](https://github.com/worktile/ai-table/commit/c89c0bdb1262c974638191316809d0b62f9cdeb5)), closes [#WIK-17701](https://github.com/worktile/ai-table/issues/WIK-17701)
+* #WIK-17717 初始化的单选字段编辑列添加数据项后点击确定，实际数据项未被保存 ([#353](https://github.com/worktile/ai-table/issues/353)) ([4e533f6](https://github.com/worktile/ai-table/commit/4e533f6876fb6e6ebf61f7b524380fffbc0e6af3)), closes [#WIK-17717](https://github.com/worktile/ai-table/issues/WIK-17717)
+
+
+### Features
+
+* #WIK-17571 基于 yjs 方案实现撤销、重做 ([#350](https://github.com/worktile/ai-table/issues/350)) ([1f3d9ea](https://github.com/worktile/ai-table/commit/1f3d9ea0c7a5a72465cadb20a168bc6510e0186e)), closes [#WIK-17571](https://github.com/worktile/ai-table/issues/WIK-17571)
+
+
+
 ## [0.0.52](https://github.com/worktile/ai-table/compare/0.0.51...0.0.52) (2025-04-16)
 
 
