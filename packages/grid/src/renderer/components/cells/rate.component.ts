@@ -22,9 +22,11 @@ import {
 @Component({
     selector: 'ai-table-rate',
     template: `
-        <ko-rect [config]="whiteBgConfig()" (koMousemove)="koMousemove($event)"></ko-rect>
-        @for (config of starConfigs(); track $index) {
-            <ko-path [config]="config"></ko-path>
+        @if (!readonly()) {
+            <ko-rect [config]="whiteBgConfig()" (koMousemove)="koMousemove($event)"></ko-rect>
+        }
+        @for (config of starConfigs(); let index = $index; track $index) {
+            <ko-path [config]="config" (koClick)="koClick($event, index)"></ko-path>
         }
     `,
     standalone: true,
@@ -38,7 +40,13 @@ export class AITableCellRate implements HoverCellComponent {
 
     private pointerY = signal<number>(0);
 
+    private resetStatus = signal<boolean>(false);
+
     config = input<AITableHoverCellConfig>();
+
+    readonly = computed(() => {
+        return this.config()?.readonly;
+    });
 
     whiteBgConfig = computed(() => {
         const { aiTable, render, field, recordId, coordinate } = this.config()!;
@@ -92,10 +100,14 @@ export class AITableCellRate implements HoverCellComponent {
             const starX = x + index * (AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING);
 
             let fill = null;
-            if (isHoverStar) {
-                fill = columnLeftX + starX <= this.pointerX() ? Colors.waring : Colors.gray100;
+            if (this.resetStatus()) {
+                fill = Colors.gray100;
             } else {
-                fill = checked ? Colors.waring : Colors.gray100;
+                if (isHoverStar) {
+                    fill = columnLeftX + starX <= this.pointerX() ? Colors.waring : Colors.gray100;
+                } else {
+                    fill = checked ? Colors.waring : Colors.gray100;
+                }
             }
 
             return {
@@ -117,10 +129,38 @@ export class AITableCellRate implements HoverCellComponent {
     });
 
     koMousemove(e: KoEventObject<MouseEvent>) {
+        if (this.readonly()) {
+            return;
+        }
+
+        this.resetStatus.set(false);
         const pos = e.event.target.getStage()?.getPointerPosition();
         if (!pos) return;
         const { x, y } = pos;
         this.pointerX.set(x);
         this.pointerY.set(y);
+    }
+
+    koClick(e: KoEventObject<MouseEvent>, index: number) {
+        if (this.readonly()) {
+            return;
+        }
+
+        this.resetStatus.set(false);
+        const { render, readonly, field, recordId, actions } = this.config()!;
+        const { transformValue } = render;
+
+        let value = index + 1;
+        if (transformValue === value) {
+            value = 0;
+            this.resetStatus.set(true);
+        }
+
+        if (!readonly && actions && actions.updateFieldValue) {
+            actions.updateFieldValue({
+                value,
+                path: [recordId!, field._id]
+            });
+        }
     }
 }

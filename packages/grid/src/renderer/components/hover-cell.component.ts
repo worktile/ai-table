@@ -36,8 +36,8 @@ export class AITableHoverCells {
         };
     });
 
-    hoverCellConfig = computed(() => {
-        const { aiTable, coordinate, references, readonly } = this.config();
+    hoverCellConfig = computed<AITableHoverCellConfig | undefined>(() => {
+        const { aiTable, coordinate, references, readonly, actions } = this.config();
         const pointPosition = aiTable.context!.pointPosition();
         const hoverCell = this.hoverCell();
         if (!hoverCell) {
@@ -78,6 +78,7 @@ export class AITableHoverCells {
             x,
             y,
             readonly,
+            actions,
             render: {
                 aiTable,
                 recordId,

@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate } from '../core';
+import { AITable, AITableField, Coordinate, UpdateFieldValueOptions } from '../core';
 import { AITableAttachmentInfo, AITablePointPosition } from './grid';
 import { AITableRender } from './cell';
 
@@ -64,7 +64,10 @@ export interface AITableHoverCellConfig {
     x: number;
     y: number;
     render: AITableRender;
-    readonly?: boolean;
+    readonly: boolean;
+    actions: {
+        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+    };
 }
 
 export interface AITableTargetNameOptions {

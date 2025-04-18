@@ -4,7 +4,7 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITable } from '../core';
-import { AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -19,7 +19,6 @@ import {
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableHoverCells } from './components/hover-cell.component';
-import { AITableCellLink } from './components/cells/link.component';
 
 Konva.pixelRatio = 2;
 
@@ -40,8 +39,7 @@ Konva.pixelRatio = 2;
         AITablePlaceholderCells,
         AITableAddField,
         AITableHoverRowHeads,
-        AITableOtherRows,
-        AITableCellLink
+        AITableOtherRows
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -191,17 +189,19 @@ export class AITableRenderer {
         };
     });
 
-    cellsConfig = computed(() => {
-        const { aiTable, coordinate, references } = this.config();
+    cellsConfig = computed<AITableCellsConfig>(() => {
+        const { aiTable, readonly, coordinate, references, actions } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
+            readonly,
             coordinate,
             references,
             rowStartIndex,
             rowStopIndex,
             columnStartIndex,
-            columnStopIndex
+            columnStopIndex,
+            actions
         };
     });
 
