@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.55](https://github.com/worktile/ai-table/compare/0.0.54...0.0.55) (2025-04-18)
+
+
+### Features
+
+* **grid:** support edit rate field value on canvas when has editing permission ([fd8fc14](https://github.com/worktile/ai-table/commit/fd8fc149494fa9df21115079d1071535c9635fe4))
+* **grid:** use canvas technology to draw the rate component ([af38fda](https://github.com/worktile/ai-table/commit/af38fda676406a85c5132c17757caac11cc383e5))
+
+
+
 ## [0.0.54](https://github.com/worktile/ai-table/compare/0.0.53...0.0.54) (2025-04-18)
 
 
