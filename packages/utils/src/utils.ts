@@ -35,7 +35,7 @@ export function toAITableSharedType(
 export function toAITableSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
-        element.set(key, node[key].toString());
+        element.set(key, node[key]);
     }
     return element;
 }
