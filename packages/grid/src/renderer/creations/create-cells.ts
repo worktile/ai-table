@@ -171,7 +171,7 @@ const getCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetNa
     return background;
 };
 
-const isActiveCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
+export const isActiveCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
     const [recordId, fieldId] = cell;
     const [activeRecordId, activeFieldId] = AITable.getActiveCell(aiTable) || [];
     return recordId === activeRecordId && fieldId === activeFieldId;

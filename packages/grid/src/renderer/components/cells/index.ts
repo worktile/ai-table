@@ -2,3 +2,4 @@
 export * from './link.component';
 export * from './attachment.component';
 export * from './richtext.component';
+export * from './rate.component';
