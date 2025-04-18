@@ -33,8 +33,7 @@ import {
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
-    DEFAULT_SCROLL_STATE,
-    MOUSEOVER_EDIT_TYPE
+    DEFAULT_SCROLL_STATE
 } from './constants';
 import {
     AddFieldOptions,
@@ -181,11 +180,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
                 this.bindScrollBarScroll();
-            }
-        });
-        effect(() => {
-            if (!this.aiReadonly() && this.aiTable.context?.pointPosition()) {
-                this.toggleHoverCellEditor();
             }
         });
         effect(
@@ -603,58 +597,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
         });
         this.resizeObserver.observe(this.containerElement());
-    }
-
-    private toggleHoverCellEditor() {
-        const { realTargetName } = this.aiTable.context?.pointPosition()!;
-        const { targetName, fieldId, recordId } = getDetailByTargetName(realTargetName!);
-        const editingCell = this.aiTableGridEventService.getCurrentEditCell();
-
-        if (targetName === AI_TABLE_CELL && recordId && fieldId) {
-            const field = this.aiTable.fieldsMap()[fieldId];
-
-            if (!field) {
-                return;
-            }
-
-            const fieldType = field.type;
-            const editingFieldType = editingCell ? this.aiTable.fieldsMap()[editingCell.fieldId].type : null;
-            const isEditingFieldTypeHovered = editingFieldType ? MOUSEOVER_EDIT_TYPE.includes(editingFieldType) : false;
-            const isFieldTypeHovered = MOUSEOVER_EDIT_TYPE.includes(fieldType);
-
-            if (editingCell && isEditingFieldTypeHovered) {
-                this.aiTableGridEventService.closeCellEditor();
-            }
-
-            if (!editingCell && !isFieldTypeHovered) {
-                this.aiTableGridEventService.closeCellEditor();
-                return;
-            }
-
-            if (editingCell && ((!isEditingFieldTypeHovered && isFieldTypeHovered) || !isFieldTypeHovered)) {
-                return;
-            }
-
-            setTimeout(() => {
-                this.aiTableGridEventService.openCellEditor(this.aiTable, {
-                    viewContainerRef: this.viewContainerRef,
-                    container: this.containerElement(),
-                    coordinate: this.coordinate(),
-                    fieldId: fieldId!,
-                    recordId: recordId!,
-                    references: this.aiReferences(),
-                    isHoverEdit: true,
-                    updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
-                        this.aiUpdateFieldValue.emit(value);
-                    }
-                });
-            });
-        } else {
-            // 鼠标位于非单元格区域时，如果当前有 mouseover 编辑元素，则结束编辑
-            if (editingCell && MOUSEOVER_EDIT_TYPE.includes(this.aiTable.fieldsMap()[editingCell.fieldId].type)) {
-                this.aiTableGridEventService.closeCellEditor();
-            }
-        }
     }
 
     private bindClipboardShortcuts() {

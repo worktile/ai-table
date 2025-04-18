@@ -13,8 +13,6 @@ export const DBL_CLICK_EDIT_TYPE = [
     AITableFieldType.link
 ];
 
-export const MOUSEOVER_EDIT_TYPE = [AITableFieldType.progress];
-
 export const RowHeight = {
     Short: 32,
     Medium: 57,

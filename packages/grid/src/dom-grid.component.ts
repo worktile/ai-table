@@ -13,7 +13,7 @@ import { ThyProgress } from 'ngx-tethys/progress';
 import { ThyRate } from 'ngx-tethys/rate';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { ThyTag } from 'ngx-tethys/tag';
-import { ProgressEditorComponent, SelectOptionComponent } from './components';
+import { SelectOptionComponent } from './components';
 import { AITableFieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldSetting } from './components/field-setting/field-setting.component';
 import { AITableField } from './core';
@@ -52,11 +52,9 @@ import { AITableGridSelectionService } from './services/selection.service';
         ThyDropdownDirective,
         ThyDropdownMenuComponent,
         ThyCheckboxModule,
-        ProgressEditorComponent,
         ThyAvatarModule,
         NgTemplateOutlet,
         IsSelectRecordPipe,
-        ProgressEditorComponent,
         SelectOptionComponent,
         UserPipe,
         SelectSettingPipe,
