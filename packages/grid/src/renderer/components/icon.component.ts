@@ -3,7 +3,8 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import { Check, Colors, DEFAULT_ICON_SIZE, RowDragPath, Unchecked } from '../../constants';
-import { AITableCheckType, AITableIconConfig, AITableRowDragType } from '../../types';
+import { AITableCheckType, AITableIconConfig } from '../../types';
+import { DragType } from '../../core';
 
 @Component({
     selector: 'ai-table-icon',
@@ -74,7 +75,7 @@ export class AITableIcon {
             case AITableCheckType.unchecked:
                 pathData = Unchecked;
                 break;
-            case AITableRowDragType.drag:
+            case DragType.record:
                 pathData = RowDragPath;
                 break;
         }

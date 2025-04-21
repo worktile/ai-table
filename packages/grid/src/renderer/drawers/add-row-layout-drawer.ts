@@ -4,7 +4,7 @@ import {
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
-    AI_TABLE_ROW_DRAG_WIDTH,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD_SIZE,
     AI_TABLE_ROW_HEAD_WIDTH
 } from '../../constants';
@@ -55,21 +55,21 @@ export class AddRowLayout extends Layout {
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
 
         this.rect({
-            x: frozenOffset + AI_TABLE_ROW_DRAG_WIDTH,
+            x: frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: y + AI_TABLE_OFFSET,
             width: columnWidth + AI_TABLE_ROW_HEAD_WIDTH - frozenOffset + 1,
             height: rowHeight,
             fill
         });
         this.line({
-            x: frozenOffset + AI_TABLE_ROW_DRAG_WIDTH,
+            x: frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y,
             points: [0, rowHeight, columnWidth + AI_TABLE_ROW_HEAD_WIDTH - frozenOffset + 1, rowHeight],
             stroke: this.colors.gray200
         });
 
         this.path({
-            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_WIDTH,
+            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - AI_TABLE_OFFSET,
             data: AddOutlinedPath,
             size: AI_TABLE_ROW_HEAD_SIZE,

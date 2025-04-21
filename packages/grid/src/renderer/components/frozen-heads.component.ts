@@ -6,7 +6,7 @@ import {
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
-    AI_TABLE_ROW_DRAG_WIDTH,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../../constants';
@@ -62,7 +62,7 @@ export class AITableFrozenColumnHeads {
         return {
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
-            width: AI_TABLE_ROW_DRAG_WIDTH,
+            width: AI_TABLE_ROW_DRAG_ICON_WIDTH,
             height: this.fieldHeadHeight(),
             fill: Colors.white,
             listening: false
@@ -81,7 +81,7 @@ export class AITableFrozenColumnHeads {
     });
 
     topLineConfig = {
-        x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_WIDTH,
+        x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
         y: AI_TABLE_OFFSET,
         points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
         stroke: Colors.gray200,
@@ -91,7 +91,7 @@ export class AITableFrozenColumnHeads {
 
     bottomLineConfig = computed(() => {
         return {
-            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_WIDTH,
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: AI_TABLE_OFFSET,
             points: [AI_TABLE_ROW_HEAD_WIDTH, this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
             stroke: Colors.gray200,
@@ -103,7 +103,7 @@ export class AITableFrozenColumnHeads {
     iconConfig = computed(() => {
         return {
             name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_WIDTH,
+            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill:

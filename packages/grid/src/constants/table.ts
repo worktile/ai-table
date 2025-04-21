@@ -7,8 +7,8 @@ export const AI_TABLE_OFFSET = 0.5; // 边框线偏移值
 export const AI_TABLE_TEXT_GAP = 8; // 文本间距
 
 export const AI_TABLE_ROW_HEAD = 'AI_TABLE_ROW_HEAD'; // 行头
-export const AI_TABLE_ROW_DRAG_WIDTH = 18; // 行拖拽宽度
-export const AI_TABLE_ROW_HEAD_WIDTH = 44 + AI_TABLE_ROW_DRAG_WIDTH; // 表格行头 checkbox 列的宽度
+export const AI_TABLE_ROW_DRAG_ICON_WIDTH = 18; // 行拖拽宽度
+export const AI_TABLE_ROW_HEAD_WIDTH = 44 + AI_TABLE_ROW_DRAG_ICON_WIDTH; // 表格行头 checkbox 列的宽度
 export const AI_TABLE_ROW_HEAD_SIZE = 16; // 添加行按钮的尺寸
 export const AI_TABLE_ROW_ADD_BUTTON = 'AI_TABLE_ROW_ADD_BUTTON'; // 添加行名称
 export const AI_TABLE_BLANK = 'AI_TABLE_BLANK'; // 空白区域

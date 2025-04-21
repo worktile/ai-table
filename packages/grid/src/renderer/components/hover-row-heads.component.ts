@@ -5,21 +5,14 @@ import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_ROW_DRAG,
-    AI_TABLE_ROW_DRAG_WIDTH,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     Colors
 } from '../../constants';
-import { RendererContext } from '../../core';
-import {
-    AITableAreaType,
-    AITableCheckType,
-    AITablePointPosition,
-    AITableRowDragType,
-    AITableRowHeadsConfig,
-    AITableRowType
-} from '../../types';
+import { DragType, RendererContext } from '../../core';
+import { AITableAreaType, AITableCheckType, AITablePointPosition, AITableRowHeadsConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
 
@@ -108,7 +101,7 @@ export class AITableHoverRowHeads {
                         targetName: AI_TABLE_ROW_SELECT_CHECKBOX,
                         recordId
                     }),
-                    x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_WIDTH,
+                    x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
                     y: iconOffsetY,
                     type: isCheckedRow ? AITableCheckType.checked : AITableCheckType.unchecked,
                     fill: isCheckedRow || (targetName === AI_TABLE_ROW_SELECT_CHECKBOX && !isCheckedRow) ? Colors.primary : Colors.gray300
@@ -120,7 +113,7 @@ export class AITableHoverRowHeads {
                     }),
                     x: 0,
                     y: iconOffsetY,
-                    type: AITableRowDragType.drag,
+                    type: DragType.record,
                     fill: Colors.gray600
                 };
                 headConfigs.push(operationGroup);
