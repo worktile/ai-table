@@ -31,6 +31,7 @@
             @case ('canvas') {
                 <ai-table-grid
                     [aiReadonly]="tableService.readonly()"
+                    [aiRowDragDisabled]="tableService.rowDragDisabled()"
                     [aiContextMenuItems]="contextMenuItems"
                     [(aiRecords)]="tableService.records"
                     [(aiFields)]="tableService.fields"
@@ -55,6 +56,7 @@
             @case ('dom') {
                 <ai-table-dom-grid
                     [aiReadonly]="tableService.readonly()"
+                    [aiRowDragDisabled]="tableService.rowDragDisabled()"
                     [(aiRecords)]="tableService.records"
                     [(aiFields)]="tableService.fields"
                     [(aiFieldsSizeMap)]="tableService.fieldsSizeMap"

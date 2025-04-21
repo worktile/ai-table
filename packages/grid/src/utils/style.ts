@@ -14,7 +14,8 @@ export const handleMouseStyle = (
     realTargetName: string,
     areaType: AITableAreaType = AITableAreaType.grid,
     container: HTMLDivElement,
-    isReadOnly?: boolean
+    isReadOnly?: boolean,
+    isRowDragDisabled?: boolean
 ) => {
     const { targetName, mouseStyle } = getDetailByTargetName(realTargetName);
     if (mouseStyle) return setMouseStyle(mouseStyle, container);
@@ -34,6 +35,9 @@ export const handleMouseStyle = (
             return setMouseStyle('col-resize', container);
         }
         case AI_TABLE_ROW_DRAG: {
+            if (isReadOnly || isRowDragDisabled) {
+                return setMouseStyle('default', container);
+            }
             return setMouseStyle('pointer', container);
         }
 

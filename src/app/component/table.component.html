@@ -11,6 +11,9 @@
     <label class="mb-0 ml-2 d-flex align-items-center"
         ><input type="checkbox" [checked]="readonly" (change)="handleReadonlyChange($event)" /><span class="pl-1 pt-1">只读</span></label
     >
+    <label class="mb-0 ml-2 d-flex align-items-center"
+        ><input type="checkbox" [checked]="rowDragDisabled" (change)="handleRowDragDisabledChange($event)" /><span class="pl-1 pt-1">禁用行拖拽</span></label
+    >
 </div>
 <thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.views(); let index = $index; track $index) {

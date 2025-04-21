@@ -37,6 +37,8 @@ export class TableService {
 
     readonly: WritableSignal<boolean> = signal(false);
 
+    rowDragDisabled: WritableSignal<boolean> = signal(false);
+
     records!: WritableSignal<AITableViewRecords>;
 
     fields!: WritableSignal<AITableViewFields>;
@@ -106,6 +108,10 @@ export class TableService {
 
     setReadonly(readonly: boolean) {
         this.readonly.set(readonly);
+    }
+
+    setRowDragDisabled(rowDragDisabled: boolean) {
+        this.rowDragDisabled.set(rowDragDisabled);
     }
 
     setActiveView(activeViewId: string) {
