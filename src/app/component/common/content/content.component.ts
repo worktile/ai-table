@@ -41,7 +41,7 @@ import {
     YjsAITable,
     moveFields
 } from '@ai-table/state';
-import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyAction } from 'ngx-tethys/action';
@@ -56,6 +56,8 @@ import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
 import _ from 'lodash';
+import { filter, fromEvent } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -181,6 +183,14 @@ export class DemoTableContent {
         };
     });
 
+    canUndo = computed(() => {
+        return this.tableService.canUndo();
+    });
+
+    canRedo = computed(() => {
+        return this.tableService.canRedo();
+    });
+
     actions: AITableActions = {
         updateFieldValue: (data: UpdateFieldValueOptions) => {
             this.updateFieldValue(data);
@@ -238,6 +248,8 @@ export class DemoTableContent {
 
     tableService = inject(TableService);
 
+    destroyRef = inject(DestroyRef);
+
     references = signal(getReferences());
 
     renderMode = signal<'dom' | 'canvas'>('canvas');
@@ -260,12 +272,34 @@ export class DemoTableContent {
 
     constructor() {
         this.registryIcon();
+        afterNextRender(() => {
+            this.bindUndoShortcuts();
+        });
     }
 
     ngAfterViewInit() {}
 
     registryIcon() {
         this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+    }
+
+    private bindUndoShortcuts() {
+        fromEvent<KeyboardEvent>(document, 'keydown')
+            .pipe(
+                filter((event) => (event.ctrlKey || event.metaKey) && event.key === 'z'),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(async (event) => {
+                this.tableService.undo();
+            });
+        fromEvent<KeyboardEvent>(document, 'keydown')
+            .pipe(
+                filter((event) => (event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'z'),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(async (event) => {
+                this.tableService.redo();
+            });
     }
 
     onClick(e: KoEventObjectOutput<MouseEvent>) {
@@ -431,5 +465,13 @@ export class DemoTableContent {
 
     setLocalStorage(key: string, mode: string) {
         localStorage.setItem(key, mode);
+    }
+
+    undo() {
+        this.tableService.undo();
+    }
+
+    redo() {
+        this.tableService.redo();
     }
 }

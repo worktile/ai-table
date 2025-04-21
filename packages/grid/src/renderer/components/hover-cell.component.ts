@@ -1,22 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, SimpleChanges } from '@angular/core';
-import { KoContainer, KoShape } from '../../angular-konva';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { KoContainer } from '../../angular-konva';
 import { AITableCellsConfig, AITableHoverCellConfig } from '../../types';
-import { AITableField, AITableFieldType, AITableQueries } from '../../core';
-import { AITableCellLink } from './cells/link.component';
+import { AITableFieldType, AITableQueries } from '../../core';
 import { CommonModule } from '@angular/common';
-import {
-    AI_TABLE_CELL_BORDER,
-    AI_TABLE_CELL_PADDING,
-    AI_TABLE_OFFSET,
-    Colors,
-    DEFAULT_TEXT_ALIGN_LEFT,
-    DEFAULT_TEXT_ALIGN_RIGHT
-} from '../../constants';
+import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
 import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
-
-import * as cellComponents from './cells';
 import { HoverCellComponent } from '../interfaces';
 import { Constructor } from 'ngx-tethys/core';
 
@@ -31,7 +21,7 @@ import { Constructor } from 'ngx-tethys/core';
         }
     `,
     standalone: true,
-    imports: [KoShape, KoContainer, CommonModule],
+    imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableHoverCells {
@@ -46,14 +36,14 @@ export class AITableHoverCells {
         };
     });
 
-    hoverCellConfig = computed(() => {
-        const { aiTable, coordinate, references, readonly } = this.config();
+    hoverCellConfig = computed<AITableHoverCellConfig | undefined>(() => {
+        const { aiTable, coordinate, references, readonly, actions } = this.config();
         const pointPosition = aiTable.context!.pointPosition();
         const hoverCell = this.hoverCell();
         if (!hoverCell) {
             return;
         }
-        const { field, recordId, fieldId, renderComponentDefinition } = hoverCell;
+        const { field, recordId } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
         const transformValue = transformCellValue(aiTable, field, cellValue);
 
@@ -88,6 +78,7 @@ export class AITableHoverCells {
             x,
             y,
             readonly,
+            actions,
             render: {
                 aiTable,
                 recordId,

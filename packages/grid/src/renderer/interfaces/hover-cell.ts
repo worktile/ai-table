@@ -1,4 +1,4 @@
-import { Component, EventEmitter, InputSignal } from '@angular/core';
+import { Component, InputSignal } from '@angular/core';
 import { AITableHoverCellConfig } from '../../types';
 import { AITableFieldType } from '../../core';
 

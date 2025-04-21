@@ -75,7 +75,10 @@ export interface AITableRendererConfig {
     containerWidth: number;
     containerHeight: number;
     references: AITableReferences;
-    readonly?: boolean;
+    readonly: boolean;
+    actions: {
+        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+    };
 }
 
 export enum AITableRowColumnType {

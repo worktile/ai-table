@@ -1,6 +1,7 @@
 import { AITable, AITableField, AITableFieldOption, FieldValue, getFieldOptionByField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
 import { AITableSizeMap } from '../types';
+import { FieldModelMap } from './field/model';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
@@ -20,9 +21,10 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
     return { width: columnWidth, offset: 0 };
 }
 
-export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T {
-    if (cellValue === undefined || cellValue === null) {
-        return cellValue;
+export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T | null {
+    const richTextField = FieldModelMap[field.type];
+    if (!richTextField.isValid(cellValue)) {
+        return null;
     }
 
     const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);

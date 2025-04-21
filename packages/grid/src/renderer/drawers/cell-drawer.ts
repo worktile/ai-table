@@ -46,6 +46,7 @@ import {
     DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     FONT_SIZE_SM,
+    AI_TABLE_RATE_MAX,
     StarFill
 } from '../../constants';
 import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
@@ -85,7 +86,7 @@ export class CellDrawer extends Drawer {
         const { field, cellValue } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
-        if (!fieldMethod.isValid(cellValue) || cellValue == null) {
+        if (!fieldMethod.isValid(cellValue)) {
             return;
         }
         switch (fieldType) {
@@ -116,7 +117,10 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, cellValue, field, columnWidth, style } = render;
+        const { x, y, transformValue, field, columnWidth, style } = render;
+        if (isNil(transformValue)) {
+            return;
+        }
         const fieldType = field.type;
         let renderText: string | null = fieldType === AITableFieldType.link ? transformValue?.text : transformValue;
         if (renderText == null) {
@@ -495,14 +499,13 @@ export class CellDrawer extends Drawer {
     private renderCellDate(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
-        let cellText = transformValue;
 
-        if (cellText == null || !_.isString(cellText)) {
+        if (isNil(transformValue)) {
             return;
         }
 
         const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
-        const { text } = this.textEllipsis({ text: cellText, maxWidth: columnWidth && textMaxWidth });
+        const { text } = this.textEllipsis({ text: transformValue, maxWidth: columnWidth && textMaxWidth });
         if (ctx) {
             const color = style?.color || colors.gray800;
             this.text({
@@ -517,24 +520,23 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { x, y, transformValue: _cellValue } = render;
-        const max = 5;
-        const cellValue = _cellValue as RateFieldValue;
+        const { x, y, transformValue } = render;
+        const max = AI_TABLE_RATE_MAX;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
-        const isEmpty = isNil(cellValue);
+
         return [...Array(max).keys()].map((item, index) => {
             const value = index + 1;
-            const checked = value <= cellValue;
+            const checked = value <= (transformValue || 0);
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
             const iconY = (AI_TABLE_ROW_BLANK_HEIGHT - size) / 2;
 
-            if (ctx && (checked || isEmpty)) {
+            if (ctx) {
                 this.path({
                     x: x + iconX,
                     y: y + iconY,
                     size: 22,
                     data: StarFill,
-                    fill: isEmpty ? this.colors.gray100 : this.colors.waring,
+                    fill: checked ? this.colors.waring : this.colors.gray100,
                     scaleX: 1.14,
                     scaleY: 1.14
                 });
@@ -545,13 +547,11 @@ export class CellDrawer extends Drawer {
     private renderCellProgress(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
-        let cellValue = transformValue;
-        if (isNil(cellValue)) {
-            cellValue = 0;
+        let validateTransformValue = transformValue;
+        if (isNil(validateTransformValue)) {
+            validateTransformValue = 0;
         }
-        if (!_.isNumber(cellValue)) {
-            return;
-        }
+
         const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_Width;
         const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
         const textHeight = AI_TABLE_COMMON_FONT_SIZE;
@@ -570,7 +570,7 @@ export class CellDrawer extends Drawer {
         });
 
         // 计算并绘制进度
-        const progressWidth = (cellValue / 100) * width;
+        const progressWidth = (validateTransformValue / 100) * width;
         this.rect({
             x: x + offsetX,
             y: y + offsetY,
@@ -583,16 +583,14 @@ export class CellDrawer extends Drawer {
         this.text({
             x: x + offsetX + width + AI_TABLE_TEXT_GAP,
             y: y + textOffsetY,
-            text: `${cellValue}%`,
+            text: `${validateTransformValue}%`,
             fillStyle: colors.gray800
         });
     }
 
     private renderCellMember(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { references, x, y, field, transformValue: _cellValue, rowHeight, columnWidth, isActive } = render;
-        const cellValue = _cellValue;
-
-        if (!cellValue?.length || !references) {
+        const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive } = render;
+        if (!transformValue?.length || !references) {
             return;
         }
         const settings = field.settings as MemberSettings;
@@ -609,11 +607,11 @@ export class CellDrawer extends Drawer {
             ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
             : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
 
-        const listCount = cellValue.length;
+        const listCount = transformValue.length;
         let isOverflow = false;
 
         for (let index = 0; index < listCount; index++) {
-            const userInfo = references?.members[cellValue[index]];
+            const userInfo = references?.members[transformValue[index]];
             if (!userInfo) continue;
 
             const { uid, display_name, avatar } = userInfo;
@@ -707,8 +705,10 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { references, x, y, field, transformValue: _cellValue, rowHeight, columnWidth, isActive } = render;
-        const cellValue = _cellValue || [];
+        const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive } = render;
+        if (isNil(transformValue)) {
+            return;
+        }
 
         const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
         const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
@@ -722,11 +722,11 @@ export class CellDrawer extends Drawer {
             ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
             : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
 
-        const listCount = cellValue.length;
+        const listCount = transformValue.length;
         let isOverflow = false;
 
         for (let index = 0; index < listCount; index++) {
-            const attachmentInfo = references?.attachments[cellValue[index]];
+            const attachmentInfo = references?.attachments[transformValue[index]];
             if (!attachmentInfo) continue;
             const { title, addition } = attachmentInfo;
             const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;

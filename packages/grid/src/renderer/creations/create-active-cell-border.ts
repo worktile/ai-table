@@ -58,8 +58,8 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                 const currentConfig = {
                     x: x + offset + AI_TABLE_OFFSET,
                     y: y + AI_TABLE_OFFSET,
-                    width: width - AI_TABLE_CELL_BORDER / 2,
-                    height: rowHeight - AI_TABLE_CELL_BORDER / 2,
+                    width: width - AI_TABLE_OFFSET,
+                    height: rowHeight - AI_TABLE_OFFSET,
                     strokeWidth: AI_TABLE_CELL_BORDER,
                     stroke: colors.primary,
                     fillEnabled: false,
