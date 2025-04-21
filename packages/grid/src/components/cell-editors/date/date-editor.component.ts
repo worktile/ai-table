@@ -13,7 +13,7 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
             class="h-100"
             thyTimestampPrecision="seconds"
             [thyPlaceHolder]="placeholder"
-            [ngModel]="modelValue.timestamp"
+            [ngModel]="modelValue && modelValue.timestamp"
             (ngModelChange)="updateValue($event)"
             (thyOpenChange)="thyOpenChange($event)"
             [thyAllowClear]="true"
@@ -36,7 +36,7 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
     placeholder = '';
 
     override ngOnInit(): void {
-        this.modelValue = computed(() => {
+        this.modelValue = (() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
             if (!value) {
                 return {

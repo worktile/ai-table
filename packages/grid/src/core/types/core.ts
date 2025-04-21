@@ -110,7 +110,7 @@ export type SelectFieldValue = Id[];
 
 export type NumberFieldValue = number;
 
-export type DateFieldValue = { timestamp: number };
+export type DateFieldValue = { timestamp: number } | null;
 
 export type MemberFieldValue = Id[];
 
