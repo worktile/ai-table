@@ -1,6 +1,6 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { KoShape } from '../../../angular-konva';
+import { KoShape, KoEventObject } from '../../../angular-konva';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableHoverCellConfig } from '../../../types';
 import { AITableFieldType } from '../../../core';
@@ -31,9 +31,14 @@ import { isNil } from 'lodash';
         @if (!readonly()) {
             <ko-rect [config]="whiteBgConfig()"></ko-rect>
         }
-        <ko-rect [config]="railConfig()"></ko-rect>
-        <ko-rect [config]="trackConfig()"></ko-rect>
-        <ko-rect [config]="pointerConfig()"></ko-rect>
+        <ko-rect [config]="railConfig()" (koClick)="koClick($event)"></ko-rect>
+        <ko-rect [config]="trackConfig()" (koClick)="koClick($event)"></ko-rect>
+        <ko-rect
+            [config]="pointerConfig()"
+            (koDragstart)="pointerDragstart($event)"
+            (koDragmove)="pointerDragmove($event)"
+            (koDragend)="pointerDragend($event)"
+        ></ko-rect>
         <ko-text [config]="textConfig()"></ko-text>
     `,
     standalone: true,
@@ -49,30 +54,51 @@ export class AITableCellProgress implements HoverCellComponent {
         return this.config()?.readonly;
     });
 
-    progressValue = computed(() => {
-        const { render } = this.config()!;
-        const { cellValue } = render;
-        if (isNil(cellValue)) {
-            return 0;
-        }
-        return cellValue;
+    private dragPointerX = signal<number | null>(null);
+
+    private railWidth = computed(() => {
+        const { columnWidth } = this.config()!.render;
+        return columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
     });
+
+    private trackWidth = computed(() => {
+        return (this.progressValue() / 100) * this.railWidth();
+    });
+
+    private pointerWidth = AI_TABLE_PROGRESS_BAR_POINTER_WIDTH;
 
     private progressOffsetY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PROGRESS_BAR_HEIGHT) / 2 + AI_TABLE_OFFSET;
 
+    private dragProgressValue = signal<number | null>(null);
+
+    private progressValue = computed(() => {
+        const dragValue = this.dragProgressValue();
+        if (dragValue !== null) {
+            return dragValue;
+        }
+
+        const { render } = this.config()!;
+        const { transformValue } = render;
+        if (isNil(transformValue)) {
+            return 0;
+        }
+        return transformValue;
+    });
+
     whiteBgConfig = computed(() => {
-        const { aiTable, render, field, recordId } = this.config()!;
-        const { x, y, columnWidth } = render;
+        const { aiTable, render, field, recordId, coordinate } = this.config()!;
+        const pointPosition = aiTable.context!.pointPosition();
+        const { x, y } = render;
+        const { columnIndex } = pointPosition;
         const isActive = isActiveCell([recordId!, field._id], aiTable);
 
         return {
-            x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
-            y: y + AI_TABLE_OFFSET + AI_TABLE_CELL_BORDER,
-            width: columnWidth - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2,
+            x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
+            y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
+            width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2 + AI_TABLE_CELL_BORDER / 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
             fill: Colors.white,
             stroke: isActive ? null : Colors.white,
-            zIndex: 0,
             name: generateTargetName({
                 targetName: AI_TABLE_CELL,
                 fieldId: field._id,
@@ -83,12 +109,12 @@ export class AITableCellProgress implements HoverCellComponent {
 
     railConfig = computed(() => {
         const { render, field, recordId } = this.config()!;
-        const { x, columnWidth } = render;
+        const { x } = render;
 
         return {
             x,
             y: this.progressOffsetY,
-            width: columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH,
+            width: this.railWidth(),
             height: AI_TABLE_PROGRESS_BAR_HEIGHT,
             cornerRadius: AI_TABLE_PROGRESS_BAR_RADIUS,
             fill: Colors.gray200,
@@ -103,14 +129,12 @@ export class AITableCellProgress implements HoverCellComponent {
 
     trackConfig = computed(() => {
         const { render, field, recordId } = this.config()!;
-        const { x, columnWidth } = render;
-        const railWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
-        const trackWidth = (this.progressValue() / 100) * railWidth;
+        const { x } = render;
 
         return {
             x,
             y: this.progressOffsetY,
-            width: trackWidth,
+            width: this.trackWidth(),
             height: AI_TABLE_PROGRESS_BAR_HEIGHT,
             cornerRadius: AI_TABLE_PROGRESS_BAR_RADIUS,
             fill: Colors.success,
@@ -125,22 +149,37 @@ export class AITableCellProgress implements HoverCellComponent {
 
     pointerConfig = computed(() => {
         const { render, field, recordId } = this.config()!;
-        const { x, columnWidth } = render;
-        const trackWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
-        const progressWidth = (this.progressValue() / 100) * trackWidth;
-        const pointerWidth = AI_TABLE_PROGRESS_BAR_POINTER_WIDTH;
-        const pointerX = x + progressWidth - pointerWidth / 2;
+        const { x } = render;
+        const halfPointerWidth = this.pointerWidth / 2;
         const pointerY = this.progressOffsetY - (AI_TABLE_PROGRESS_BAR_POINTER_HEIGHT - AI_TABLE_PROGRESS_BAR_HEIGHT) / 2;
+
+        let pointerX: number;
+        if (this.dragPointerX() !== null) {
+            pointerX = this.dragPointerX()! - halfPointerWidth;
+        } else {
+            pointerX = x + this.trackWidth() - halfPointerWidth;
+        }
 
         return {
             x: pointerX,
             y: pointerY,
-            width: pointerWidth,
+            width: this.pointerWidth,
             height: AI_TABLE_PROGRESS_BAR_POINTER_HEIGHT,
             fill: Colors.white,
             stroke: Colors.success,
             strokeWidth: 1,
             cornerRadius: AI_TABLE_PROGRESS_BAR_RADIUS,
+            opacity: this.readonly() ? 0 : 1,
+            draggable: !this.readonly(),
+            dragBoundFunc: (pos: { x: number; y: number }) => {
+                const minX = x;
+                const maxX = x + this.railWidth() - this.pointerWidth;
+
+                return {
+                    x: Math.min(minX, Math.min(maxX, pos.x)),
+                    y: pointerY
+                };
+            },
             name: generateTargetName({
                 targetName: AI_TABLE_CELL,
                 fieldId: field._id,
@@ -152,9 +191,8 @@ export class AITableCellProgress implements HoverCellComponent {
 
     textConfig = computed(() => {
         const { render, field, recordId } = this.config()!;
-        const { x, columnWidth } = render;
-        const progressBarWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
-        const textX = x + progressBarWidth + AI_TABLE_TEXT_GAP;
+        const { x } = render;
+        const textX = x + this.railWidth() + AI_TABLE_TEXT_GAP;
         const textY = (AI_TABLE_ROW_BLANK_HEIGHT - DEFAULT_FONT_SIZE) / 2 + AI_TABLE_OFFSET;
 
         return {
@@ -171,4 +209,90 @@ export class AITableCellProgress implements HoverCellComponent {
             })
         };
     });
+
+    private calculatePercentage(clickX: number): number {
+        return Math.max(0, Math.min(100, Math.round((clickX / this.railWidth()) * 100)));
+    }
+
+    koClick(e: KoEventObject<MouseEvent>) {
+        if (this.readonly()) {
+            return;
+        }
+        this.updateProgressValue(e);
+    }
+
+    pointerDragstart(e: KoEventObject<MouseEvent>) {
+        if (this.readonly()) {
+            return;
+        }
+    }
+
+    pointerDragmove(e: KoEventObject<MouseEvent>) {
+        if (this.readonly()) {
+            return;
+        }
+
+        const { render, aiTable, coordinate } = this.config()!;
+        const { x } = render;
+        const { scrollLeft } = aiTable.context!.scrollState();
+        const pointPosition = aiTable.context!.pointPosition();
+        const { columnIndex } = pointPosition;
+        const columnLeftX = coordinate.getColumnOffset(columnIndex) - scrollLeft + AI_TABLE_OFFSET;
+
+        const stage = e.event.target.getStage();
+        if (!stage) return;
+
+        const point = stage.getPointerPosition();
+        if (!point) return;
+
+        const dragX = point.x - columnLeftX - x;
+        const minX = x;
+        const maxX = x + this.railWidth();
+
+        let dragPointerX = point.x - columnLeftX;
+        if (dragPointerX < minX) {
+            dragPointerX = minX;
+        } else if (dragPointerX > maxX) {
+            dragPointerX = maxX;
+        }
+
+        this.dragPointerX.set(dragPointerX);
+        const percentage = this.calculatePercentage(dragX);
+        this.dragProgressValue.set(percentage);
+    }
+
+    pointerDragend(e: KoEventObject<MouseEvent>) {
+        if (this.readonly()) {
+            return;
+        }
+
+        this.updateProgressValue(e);
+        this.dragPointerX.set(null);
+        this.dragProgressValue.set(null);
+    }
+
+    private updateProgressValue(e: KoEventObject<MouseEvent>): void {
+        const { render, aiTable, coordinate, actions, field, recordId } = this.config()!;
+        const { x } = render;
+        const { scrollLeft } = aiTable.context!.scrollState();
+        const pointPosition = aiTable.context!.pointPosition();
+        const { columnIndex } = pointPosition;
+        const columnLeftX = coordinate.getColumnOffset(columnIndex) - scrollLeft + AI_TABLE_OFFSET;
+
+        const stage = e.event.target.getStage();
+        if (!stage) return;
+
+        const point = stage.getPointerPosition();
+        if (!point) return;
+
+        const dragX = point.x - columnLeftX - x;
+        const percentage = this.calculatePercentage(dragX);
+
+        if (!this.readonly() && actions && actions.updateFieldValue) {
+            actions.updateFieldValue({
+                value: percentage,
+                path: [recordId!, field._id]
+            });
+        }
+    }
 }
