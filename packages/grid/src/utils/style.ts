@@ -4,6 +4,7 @@ import {
     AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ROW_ADD_BUTTON,
+    AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_SELECT_CHECKBOX
 } from '../constants';
 import { AITableAreaType } from '../types';
@@ -31,6 +32,9 @@ export const handleMouseStyle = (
                 return setMouseStyle('default', container);
             }
             return setMouseStyle('col-resize', container);
+        }
+        case AI_TABLE_ROW_DRAG: {
+            return setMouseStyle('pointer', container);
         }
 
         default:

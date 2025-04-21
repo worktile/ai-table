@@ -29,6 +29,7 @@ import {
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
+    AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
@@ -46,7 +47,8 @@ import {
     DragEndData,
     DragType,
     AIRecordFieldIdPath,
-    AITable
+    AITable,
+    IdPath
 } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
@@ -326,6 +328,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectionState(true, dragSelectionStart);
                 this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                return;
+            case AI_TABLE_ROW_DRAG:
+                if (!recordId) return;
+                mouseEvent.preventDefault();
+                const selectedRecords = this.aiTable.selection().selectedRecords;
+                let dragRecords: string[] = [];
+                if (selectedRecords.has(recordId)) {
+                    dragRecords = [recordId, ...selectedRecords.values()];
+                } else {
+                    // 当前拖拽行不在选中行中，只拖拽当前行
+                    dragRecords = [recordId];
+                }
+                this.handleRowDragStart(dragRecords);
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
@@ -740,6 +755,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
     }
 
+    private handleRowDragStart(recordIds: string[]) {
+        if (!this.aiReadonly() && recordIds.length > 0) {
+            this.aiTableGridSelectionService.drag({
+                type: DragType.record,
+                sourceIds: new Set(recordIds),
+                scroll: this.getScrollPosition(),
+                coordinate: this.coordinate()
+            });
+        }
+    }
+
     private getScrollPosition() {
         const horizontalBar = this.horizontalBarRef()?.nativeElement;
         const verticalBar = this.verticalBarRef()?.nativeElement;
@@ -770,6 +796,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.record:
+                if (data.recordIds && isNumber(data.targetIndex)) {
+                    this.aiMoveRecords.emit({
+                        recordIds: Array.from(data.recordIds).map((id) => [id] as IdPath),
+                        newPath: [data.targetIndex]
+                    });
+                }
                 return;
         }
         this.aiTableGridSelectionService.clearDrag();

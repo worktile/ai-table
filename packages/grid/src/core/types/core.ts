@@ -211,6 +211,11 @@ export interface SetFieldWidthOptions {
     width: number;
 }
 
+export interface MoveRecordOptions {
+    recordIds: IdPath[];
+    newPath: NumberPath;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];

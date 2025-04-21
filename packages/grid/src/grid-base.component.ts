@@ -30,6 +30,7 @@ import {
     createAITable,
     createDefaultField,
     MoveFieldOptions,
+    MoveRecordOptions,
     SetFieldWidthOptions,
     UpdateFieldValueOptions
 } from './core';
@@ -94,6 +95,8 @@ export class AITableGridBase implements OnInit {
 
     aiSetFieldWidth = output<SetFieldWidthOptions>();
 
+    aiMoveRecords = output<MoveRecordOptions>();
+
     aiClick = output<KoEventObjectOutput<MouseEvent>>();
 
     aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
@@ -151,7 +154,7 @@ export class AITableGridBase implements OnInit {
     }
 
     addRecord() {
-        const records = this.aiRecords();
+        const records = this.aiTable.gridData().records;
         const recordCount = records.length;
         this.aiAddRecord.emit({
             originId: recordCount > 0 ? records[records.length - 1]._id : ''
