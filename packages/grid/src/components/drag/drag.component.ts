@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestr
 import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
+import { AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
 
 @Component({
     selector: 'ai-table-drag',
@@ -116,11 +117,13 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         }
         this.setDisplayStyle('block');
         const moveX = e.x - (this.mouseStartPosition?.x || 0);
+        const moveY = e.y - (this.mouseStartPosition?.y || 0);
         switch (drag.type) {
             case DragType.field:
                 this.movingColumn(drag, moveX);
                 break;
             case DragType.record:
+                this.movingRecord(drag, moveY);
                 break;
             case DragType.columnWidth:
                 this.movingColumnWidth(drag, moveX);
@@ -213,6 +216,52 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         };
     }
 
+    private movingRecord(drag: AITableDragState, moveY: number) {
+        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const scroll = drag.scroll || { x: 0, y: 0 };
+        const coordinate = drag.coordinate!;
+
+        const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
+        const sourceRowId = drag.sourceIds.values().next().value!;
+        const sourceRowIndex = visibleRowIndexMap.get(sourceRowId) || 0;
+        const sourceRowStartY = coordinate.getRowOffset(sourceRowIndex);
+        const sourceRowHeight = coordinate.getRowHeight(sourceRowIndex);
+        this.setRectStyles({
+            width: '100%',
+            height: `${sourceRowHeight}px`,
+            top: `${sourceRowStartY + moveY}px`,
+            left: '0'
+        });
+
+        const pointerY = moveY + sourceRowStartY + sourceRowHeight / 2;
+        const targetRowIndex = coordinate.getRowStartIndex(pointerY + scroll.y);
+        const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
+        if (
+            (targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
+            (sourceRowIndex < targetRowIndex && targetRowIndex - sourceRowIndex > 1)
+        ) {
+            this.setAuxiliaryLineStyles({
+                width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
+                height: '2px',
+                top: `${targetRowStartY}px`,
+                left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
+            });
+            const recordsIndex: number[] = [];
+            drag.sourceIds.forEach((id) => {
+                recordsIndex.push(visibleRowIndexMap.get(id) || 0);
+            });
+            this.draggedData = {
+                type: DragType.record,
+                recordIds: drag.sourceIds,
+                recordsIndex,
+                targetIndex: targetRowIndex
+            };
+        } else {
+            this.resetAuxiliaryLine();
+            this.draggedData = null;
+        }
+    }
+
     private handleDragEnd() {
         if (this.draggedData) {
             this.dragEnd.emit({ ...this.draggedData });
@@ -268,7 +317,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private resetAuxiliaryLine(): void {
-        this.setAuxiliaryLineStyles({ width: 0 });
+        this.setAuxiliaryLineStyles({ width: 0, height: 0, top: '0', left: '0' });
     }
 
     ngOnDestroy() {

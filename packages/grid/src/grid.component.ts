@@ -29,6 +29,7 @@ import {
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
+    AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
@@ -326,6 +327,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectionState(true, dragSelectionStart);
                 this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                return;
+            case AI_TABLE_ROW_DRAG:
+                if (!recordId) return;
+                mouseEvent.preventDefault();
+                const selectedRecords = this.aiTable.selection().selectedRecords;
+                this.handleRowDragStart([recordId, ...selectedRecords.values()]);
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
@@ -740,6 +747,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
     }
 
+    private handleRowDragStart(recordIds: string[]) {
+        if (!this.aiReadonly() && recordIds.length > 0) {
+            this.aiTableGridSelectionService.drag({
+                type: DragType.record,
+                sourceIds: new Set(recordIds),
+                scroll: this.getScrollPosition(),
+                coordinate: this.coordinate()
+            });
+        }
+    }
+
     private getScrollPosition() {
         const horizontalBar = this.horizontalBarRef()?.nativeElement;
         const verticalBar = this.verticalBarRef()?.nativeElement;
@@ -770,6 +788,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.record:
+                if (data.recordsIndex?.length && isNumber(data.targetIndex)) {
+                    this.aiMoveRecords.emit({
+                        paths: data.recordsIndex.map((index) => [index]),
+                        newPath: [data.targetIndex]
+                    });
+                }
                 return;
         }
         this.aiTableGridSelectionService.clearDrag();

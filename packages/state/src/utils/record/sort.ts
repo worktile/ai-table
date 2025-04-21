@@ -9,7 +9,7 @@ export function getSortRecords(
     sortKeysMap?: Partial<Record<AITableFieldType, string>>
 ) {
     if (!activeView?.settings || !activeView.settings.sorts?.length) {
-        return records;
+        return sortByViewPosition(records, activeView);
     }
     const { is_keep_sort, sorts } = activeView.settings;
     if (is_keep_sort && sorts?.length) {

@@ -20,7 +20,8 @@ import {
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
     KoEventObjectOutput,
-    SetFieldWidthOptions
+    SetFieldWidthOptions,
+    MoveRecordOptions
 } from '@ai-table/grid';
 import {
     Actions,
@@ -39,7 +40,8 @@ import {
     updateFieldValue,
     withState,
     YjsAITable,
-    moveFields
+    moveFields,
+    moveRecords
 } from '@ai-table/state';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -373,6 +375,12 @@ export class DemoTableContent {
         Actions.setFieldWidth(this.aiTable, data.path, data.width);
     }
 
+    dragMoveRecords(data: MoveRecordOptions) {
+        const member = 'member_02';
+        const time = new Date().getTime();
+        moveRecords(this.aiTable, data, { updated_by: member, updated_at: time });
+    }
+
     prevent(event: Event) {
         event.stopPropagation();
         event.preventDefault();
@@ -445,7 +453,6 @@ export class DemoTableContent {
                 selectedRecordsAfterNewPath.push(item);
             }
         });
-
         selectedRecordsAfterNewPath.reverse().forEach((item) => {
             const newPath = [newIndex + offset] as NumberPath;
             const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
