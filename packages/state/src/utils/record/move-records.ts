@@ -1,5 +1,8 @@
 import { AITableRecordUpdatedInfo, MoveRecordOptions } from '@ai-table/grid';
-import { Actions, AITableView, AITableViewRecords, AIViewTable, getMaxPosition, sortByViewPosition } from '@ai-table/state';
+import { AITableView, AITableViewRecords, AIViewTable } from '../../types';
+import { getMaxPosition } from '../view';
+import { sortByViewPosition } from '../common';
+import { Actions } from '../../action';
 
 export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const records = aiTable.gridData().records as AITableViewRecords;
