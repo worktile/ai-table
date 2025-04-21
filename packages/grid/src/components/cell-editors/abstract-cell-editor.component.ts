@@ -35,9 +35,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
     protected thyPopoverRef = inject(ThyPopoverRef<AbstractEditCellEditor<TValue>>, { optional: true });
 
     ngOnInit(): void {
-        this.modelValue = computed(() => {
-            return AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
-        })();
+        this.modelValue = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
     }
 
     update() {
