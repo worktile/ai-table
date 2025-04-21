@@ -55,7 +55,7 @@ import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } fro
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
-import _ from 'lodash';
+import _, { isNil } from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
@@ -86,16 +86,25 @@ export class DemoTableContent {
             fieldRenderers: {
                 [AITableFieldType.date]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
+                        if (isNil(value)) {
+                            return value;
+                        }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
                     }
                 },
                 [AITableFieldType.createdAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
+                        if (isNil(value)) {
+                            return value;
+                        }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
                     }
                 },
                 [AITableFieldType.updatedAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
+                        if (isNil(value)) {
+                            return value;
+                        }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
                     }
                 },

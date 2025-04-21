@@ -5,17 +5,28 @@ import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '../../../core';
 import { compareNumber } from '../operate';
 import { isEmpty } from '../../common';
+import { isNil } from 'lodash';
+
+export const isDateValid = (cellValue: FieldValue): cellValue is DateFieldValue => {
+    return (
+        (cellValue && typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') ||
+        cellValue === null
+    );
+};
 
 export class DateField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return (
-            (cellValue && typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') ||
-            cellValue === null
-        );
+        return isDateValid(cellValue);
     }
 
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
+        if (isNil(cellValue)) {
+            return condition.operation === AITableFilterOperation.empty;
+        }
+        if (!isDateValid(cellValue)) {
+            return false;
+        }
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue.timestamp) || cellValue.timestamp === 0;
@@ -109,6 +120,9 @@ export function toDateFieldValue(
 }
 
 function cellValueToSortValue(cellValue: DateFieldValue): number {
+    if (isNil(cellValue)) {
+        return 0;
+    }
     return cellValue?.timestamp;
 }
 

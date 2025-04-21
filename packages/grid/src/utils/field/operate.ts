@@ -2,7 +2,7 @@ import { isEmpty } from '../common';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
 
-export function compareNumber(a: number, b: number): number {
+export function compareNumber(a: number | null, b: number | null): number {
     if (isEmpty(a) && isEmpty(b)) {
         return 0;
     }
@@ -12,7 +12,9 @@ export function compareNumber(a: number, b: number): number {
     if (isEmpty(b)) {
         return 1;
     }
-    return a === b ? 0 : a > b ? 1 : -1;
+    const a1 = a as number;
+    const b1 = b as number;
+    return a1 === b1 ? 0 : a1 > b1 ? 1 : -1;
 }
 
 export function compareString(a: string | null, b: string | null): number {

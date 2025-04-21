@@ -22,8 +22,8 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
 }
 
 export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T | null {
-    const richTextField = FieldModelMap[field.type];
-    if (!richTextField.isValid(cellValue)) {
+    const fieldModel = FieldModelMap[field.type];
+    if (!fieldModel.isValid(cellValue)) {
         return null;
     }
 
