@@ -1,4 +1,4 @@
-import { fromUnixTime, subDays } from 'date-fns';
+import { fromUnixTime, isValid, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
 import { Field } from './field';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
@@ -120,7 +120,7 @@ export function toDateFieldValue(
 }
 
 function cellValueToSortValue(cellValue: DateFieldValue): number {
-    if (isNil(cellValue)) {
+    if (isNil(cellValue) || !isDateValid(cellValue)) {
         return 0;
     }
     return cellValue?.timestamp;
