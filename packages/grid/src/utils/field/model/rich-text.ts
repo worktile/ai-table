@@ -1,4 +1,4 @@
-import { AITable, AITableField, AITableFieldType, FieldValue, RichtextFieldValue } from '../../../core';
+import { AITable, AITableField, AITableFieldType, FieldValue, RichTextFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { transformCellValue } from '../../cell';
 import { isEmpty } from '../../common';
@@ -9,7 +9,7 @@ export class RichTextField extends Field {
     override isValid(cellValue: FieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }
-    
+
     override isMeetFilter(
         condition: AITableFilterCondition<string>,
         cellValue: FieldValue,
@@ -32,8 +32,8 @@ export class RichTextField extends Field {
     }
 
     override compare(
-        cellValue1: RichtextFieldValue,
-        cellValue2: RichtextFieldValue,
+        cellValue1: RichTextFieldValue,
+        cellValue2: RichTextFieldValue,
         references: AITableReferences,
         sortKey: string,
         options: {

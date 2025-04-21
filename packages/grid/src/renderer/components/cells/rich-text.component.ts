@@ -19,7 +19,7 @@ import { drawer } from '../../drawers/drawer';
 import { AITableText } from '../text.component';
 
 @Component({
-    selector: 'ai-table-richtext',
+    selector: 'ai-table-rich-text',
     template: `
         <ai-table-text [config]="textConfig()!"></ai-table-text>
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
@@ -28,7 +28,7 @@ import { AITableText } from '../text.component';
     imports: [AITableText, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRichtext implements HoverCellComponent {
+export class AITableCellRichText implements HoverCellComponent {
     static fieldType = AITableFieldType.richText;
 
     config = input<AITableHoverCellConfig>();
