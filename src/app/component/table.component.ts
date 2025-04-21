@@ -60,6 +60,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     readonly = false;
 
+    rowDragDisabled = false;
+
     activeViewName!: string;
 
     ngOnInit(): void {
@@ -88,6 +90,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleReadonlyChange(e: any) {
         this.readonly = e.target.checked;
         this.tableService.setReadonly(e.target.checked);
+    }
+
+    handleRowDragDisabledChange(e: any) {
+        this.rowDragDisabled = e.target.checked;
+        this.tableService.setRowDragDisabled(e.target.checked);
     }
 
     updateValue() {

@@ -61,6 +61,8 @@ export class AITableGridBase implements OnInit {
 
     aiReadonly = input<boolean>(false);
 
+    aiRowDragDisabled = input<boolean>(false);
+
     aiPlugins = input<AIPlugin[]>();
 
     aiReferences = input.required<AITableReferences>();

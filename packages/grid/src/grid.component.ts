@@ -281,7 +281,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 context!,
                 targetName
             );
-            handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement(), this.aiReadonly());
+            handleMouseStyle(
+                curMousePosition.realTargetName,
+                curMousePosition.areaType,
+                this.containerElement(),
+                this.aiReadonly(),
+                this.aiRowDragDisabled()
+            );
             context!.setPointPosition(curMousePosition);
             this.timer = null;
             if (this.isDragSelecting) {
@@ -756,7 +762,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private handleRowDragStart(recordIds: string[]) {
-        if (!this.aiReadonly() && recordIds.length > 0) {
+        if (!this.aiReadonly() && !this.aiRowDragDisabled() && recordIds.length > 0) {
             this.aiTableGridSelectionService.drag({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),
