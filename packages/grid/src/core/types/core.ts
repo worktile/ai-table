@@ -212,7 +212,7 @@ export interface SetFieldWidthOptions {
 }
 
 export interface MoveRecordOptions {
-    paths: NumberPath[];
+    recordIds: IdPath[];
     newPath: NumberPath;
 }
 

@@ -246,14 +246,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 top: `${targetRowStartY}px`,
                 left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
             });
-            const recordsIndex: number[] = [];
-            drag.sourceIds.forEach((id) => {
-                recordsIndex.push(visibleRowIndexMap.get(id) || 0);
-            });
             this.draggedData = {
                 type: DragType.record,
                 recordIds: drag.sourceIds,
-                recordsIndex,
                 targetIndex: targetRowIndex
             };
         } else {

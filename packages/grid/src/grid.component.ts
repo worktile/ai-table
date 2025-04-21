@@ -47,7 +47,8 @@ import {
     DragEndData,
     DragType,
     AIRecordFieldIdPath,
-    AITable
+    AITable,
+    IdPath
 } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
@@ -332,7 +333,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId) return;
                 mouseEvent.preventDefault();
                 const selectedRecords = this.aiTable.selection().selectedRecords;
-                this.handleRowDragStart([recordId, ...selectedRecords.values()]);
+                let dragRecords: string[] = [];
+                if (selectedRecords.has(recordId)) {
+                    dragRecords = [recordId, ...selectedRecords.values()];
+                } else {
+                    // 当前拖拽行不在选中行中，只拖拽当前行
+                    dragRecords = [recordId];
+                }
+                this.handleRowDragStart(dragRecords);
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
@@ -788,9 +796,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.record:
-                if (data.recordsIndex?.length && isNumber(data.targetIndex)) {
+                if (data.recordIds && isNumber(data.targetIndex)) {
                     this.aiMoveRecords.emit({
-                        paths: data.recordsIndex.map((index) => [index]),
+                        recordIds: Array.from(data.recordIds).map((id) => [id] as IdPath),
                         newPath: [data.targetIndex]
                     });
                 }

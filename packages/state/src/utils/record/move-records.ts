@@ -8,7 +8,7 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, up
     const records = aiTable.gridData().records as AITableViewRecords;
     const activeViewId = aiTable.activeViewId();
     const activeView = aiTable.views().find((view) => view._id === activeViewId) as AITableView;
-    const { paths, newPath } = options;
+    const { recordIds, newPath } = options;
     let targetPosition = 0;
     let prevPosition = 0;
     if (newPath[0] === 0) {
@@ -21,7 +21,8 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, up
         targetPosition = records[newPath[0]].positions[activeViewId]!;
         prevPosition = records[newPath[0] - 1].positions[activeViewId]!;
     }
-    const sourceRecords = paths.map((path) => records[path[0]]);
+    const sourceRecords = recordIds.map((idPath) => records.find((record) => record._id === idPath[0])!);
+    // 勾选多行顺序可能不一致，需要排序
     const sortedSourceRecords = sortByViewPosition(sourceRecords, activeView);
     let nextPosition = (prevPosition + targetPosition) / 2;
     sortedSourceRecords.forEach((record) => {
