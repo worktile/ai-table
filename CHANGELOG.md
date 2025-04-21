@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.56](https://github.com/worktile/ai-table/compare/0.0.55...0.0.56) (2025-04-21)
+
+
+### Bug Fixes
+
+* **grid:** should render stars when rate cellValue is null ([#362](https://github.com/worktile/ai-table/issues/362)) ([a7d4aeb](https://github.com/worktile/ai-table/commit/a7d4aebad03d4aa5075d429412449869d8ccc10d))
+
+
+### Features
+
+* #WIK-17748 cell-drawer 时，各个字段类型的canvas渲染兼容 null ([#363](https://github.com/worktile/ai-table/issues/363)) ([f5d9f84](https://github.com/worktile/ai-table/commit/f5d9f84ea0edffcb2e4429d0444aa372cd4279ed)), closes [#WIK-17748](https://github.com/worktile/ai-table/issues/WIK-17748)
+* **drag:** #WIK-17630 support row drag sorting ([#365](https://github.com/worktile/ai-table/issues/365)) ([96d39a7](https://github.com/worktile/ai-table/commit/96d39a705a6deff8c86c70ac49d02311825fa616)), closes [#WIK-17630](https://github.com/worktile/ai-table/issues/WIK-17630)
+* **drag:** #WIK-17753 support parameter control to disable row drag ([#367](https://github.com/worktile/ai-table/issues/367)) ([8e90dce](https://github.com/worktile/ai-table/commit/8e90dcea1f2582a18323351be2a381aba84b3796)), closes [#WIK-17753](https://github.com/worktile/ai-table/issues/WIK-17753)
+* **grid:** #WIK-17752 adjust the width of the ordinal number column and add drag icon rendering ([#364](https://github.com/worktile/ai-table/issues/364)) ([fd68a9b](https://github.com/worktile/ai-table/commit/fd68a9b806a9bd3f7a8efe3f86d3f58396ca1e94)), closes [#WIK-17752](https://github.com/worktile/ai-table/issues/WIK-17752)
+
+
+
 ## [0.0.55](https://github.com/worktile/ai-table/compare/0.0.54...0.0.55) (2025-04-18)
 
 
