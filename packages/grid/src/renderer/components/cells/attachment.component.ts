@@ -7,35 +7,29 @@ import {
     AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
-    AI_TABLE_CELL_ATTACHMENT_FILE,
     AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
     AI_TABLE_FILE_ICON_SIZE,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_BLANK_HEIGHT,
     Colors
 } from '../../../constants';
-import { KoContainer } from '../../../angular-konva/components/container.component';
-import { generateTargetName } from '../../../utils';
+import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
 import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfig } from '../../../types';
-import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '../../../core';
 import { HoverCellComponent } from '../../interfaces';
-import { getFileThumbnailSvgString } from '../../../utils/file';
-import { isNil } from 'lodash';
 import { AITableActionIcon } from '../action-icon.component';
 
 @Component({
     selector: 'ai-table-attachments',
     template: `
         @for (attachment of attachments(); track attachment.attachmentInfo._id) {
-            <ko-image [config]="attachment" (koClick)="attachmentClick($event)"></ko-image>
+            <ko-image [config]="attachment"></ko-image>
         }
-        <ai-table-action-icon [config]="iconConfig()" (onClick)="addClick($event)"></ai-table-action-icon>
+        <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
     standalone: true,
-    imports: [KoContainer, KoShape, AITableActionIcon],
+    imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellAttachment implements HoverCellComponent {
@@ -44,11 +38,11 @@ export class AITableCellAttachment implements HoverCellComponent {
     config = input<AITableHoverCellConfig>();
 
     attachments = computed<AITableAttachmentConfig[]>(() => {
-        const { render, aiTable, coordinate, field, recordId, readonly } = this.config()!;
+        const { render, aiTable, field, recordId, readonly } = this.config()!;
 
         if (render) {
             const {} = aiTable;
-            const { transformValue, references, columnWidth, rowHeight, style, zIndex } = render;
+            const { transformValue, references, columnWidth } = render;
             if (!transformValue?.length) {
                 return [];
             }
@@ -70,8 +64,6 @@ export class AITableCellAttachment implements HoverCellComponent {
                         const image = new Image();
                         image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
                         return {
-                            // coordinate,
-                            // readonly,
                             attachmentInfo,
                             name: generateTargetName({
                                 targetName: AI_TABLE_CELL,
@@ -122,12 +114,4 @@ export class AITableCellAttachment implements HoverCellComponent {
             listening: true
         };
     });
-
-    addClick(e: KoEventObject<MouseEvent>) {
-        // e.event.cancelBubble = true;
-    }
-
-    attachmentClick(e: KoEventObject<MouseEvent>) {
-        // e.event.cancelBubble = true;
-    }
 }

@@ -21,7 +21,7 @@ export enum AITableGridI18nKey {
     copiedCells = 'copiedCells',
     invalidPasteContent = 'invalidPasteContent', // 新增
     fieldTypeText = 'fieldTypeText',
-    fieldTypeRichtext = 'fieldTypeRichtext',
+    fieldTypeRichText = 'fieldTypeRichText',
     fieldTypeSelect = 'fieldTypeSelect',
     fieldTypeMultiSelect = 'fieldTypeMultiSelect',
     fieldTypeNumber = 'fieldTypeNumber',
@@ -58,7 +58,7 @@ const AITableI18nText = {
     [AITableGridI18nKey.copiedCells]: '已复制 {count} 个单元格',
     [AITableGridI18nKey.invalidPasteContent]: '粘贴内容不符合当前类型', // 新增
     [AITableGridI18nKey.fieldTypeText]: '单行文本',
-    [AITableGridI18nKey.fieldTypeRichtext]: '多行文本',
+    [AITableGridI18nKey.fieldTypeRichText]: '多行文本',
     [AITableGridI18nKey.fieldTypeSelect]: '单选',
     [AITableGridI18nKey.fieldTypeMultiSelect]: '多选',
     [AITableGridI18nKey.fieldTypeNumber]: '数字',

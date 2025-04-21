@@ -3,7 +3,6 @@ import {
     AddRecordOptions,
     AIFieldConfig,
     AITable,
-    AITableContextMenuItem,
     AITableDomGrid,
     AITableField,
     AITableFieldType,
@@ -15,7 +14,7 @@ import {
     MoveFieldOptions,
     NumberPath,
     UpdateFieldValueOptions,
-    RichtextFieldValue,
+    RichTextFieldValue,
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
@@ -102,7 +101,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.richText]: {
-                    transform: (field: AITableField, value: RichtextFieldValue) => {
+                    transform: (field: AITableField, value: RichTextFieldValue) => {
                         return value
                             .map((item) => {
                                 const texts = _.get(item, 'children', [])

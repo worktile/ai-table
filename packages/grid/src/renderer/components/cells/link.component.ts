@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { KoShape } from '../../../angular-konva/components/shape.component';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
-import { KoContainer } from '../../../angular-konva/components/container.component';
-import { getMousePosition, getTextWidth, handleMouseStyle, TextMeasure } from '../../../utils';
+import { getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableText } from '../text.component';
 import { AITableHoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
@@ -19,7 +17,7 @@ import { HoverCellComponent } from '../../interfaces';
         }
     `,
     standalone: true,
-    imports: [KoContainer, KoShape, AITableText],
+    imports: [AITableText],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellLink implements HoverCellComponent {
@@ -38,7 +36,7 @@ export class AITableCellLink implements HoverCellComponent {
     textConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
         if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
+            const { x, y, transformValue, columnWidth, rowHeight, style, zIndex } = render;
             let textRender: string | null = transformValue.text;
             if (textRender == null) {
                 return;
