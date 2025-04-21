@@ -31,7 +31,7 @@ import {
     AI_TABLE_PIECE_WIDTH,
     AI_TABLE_PROGRESS_BAR_HEIGHT,
     AI_TABLE_PROGRESS_BAR_RADIUS,
-    AI_TABLE_PROGRESS_TEXT_Width,
+    AI_TABLE_PROGRESS_TEXT_WIDTH,
     AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
@@ -551,8 +551,7 @@ export class CellDrawer extends Drawer {
         if (isNil(validateTransformValue)) {
             validateTransformValue = 0;
         }
-
-        const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_Width;
+        const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
         const height = AI_TABLE_PROGRESS_BAR_HEIGHT;
         const textHeight = AI_TABLE_COMMON_FONT_SIZE;
         const offsetX = AI_TABLE_CELL_PADDING;

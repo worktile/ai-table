@@ -15,7 +15,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { mergeWith } from 'rxjs';
-import { DBL_CLICK_EDIT_TYPE, MOUSEOVER_EDIT_TYPE } from './constants';
+import { DBL_CLICK_EDIT_TYPE } from './constants';
 import {
     AddFieldOptions,
     AddRecordOptions,
@@ -201,13 +201,6 @@ export class AITableGridBase implements OnInit {
                 .subscribe((event) => {
                     this.aiTableGridSelectionService.updateSelect(event);
                 });
-
-            this.aiTableGridEventService.mouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                this.mouseoverHandle(event);
-            });
-            this.aiTableGridEventService.globalMouseoverEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-                this.closeHoverCellEditor(event);
-            });
         });
     }
 
@@ -216,27 +209,6 @@ export class AITableGridBase implements OnInit {
         const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
         if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {
             this.aiTableGridEventService.openEdit(cellDom);
-        }
-    }
-
-    private mouseoverHandle(event: MouseEvent) {
-        if (this.mouseoverRef) {
-            this.mouseoverRef?.close();
-        }
-        const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
-        const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
-        if (type && MOUSEOVER_EDIT_TYPE.includes(type)) {
-            this.mouseoverRef = this.aiTableGridEventService.openEdit(cellDom);
-        }
-    }
-
-    private closeHoverCellEditor(e: MouseEvent) {
-        if (this.mouseoverRef) {
-            const hasGrid = e.target && (e.target as HTMLElement).closest('.ai-table-grid');
-            const hasCellEditor = e.target && (e.target as HTMLElement).closest('.grid-cell-editor');
-            if (!hasGrid && !hasCellEditor) {
-                this.mouseoverRef.close();
-            }
         }
     }
 }
