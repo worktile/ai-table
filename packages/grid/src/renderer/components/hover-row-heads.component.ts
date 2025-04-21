@@ -4,12 +4,14 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_ROW_DRAG,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     Colors
 } from '../../constants';
-import { RendererContext } from '../../core';
+import { DragType, RendererContext } from '../../core';
 import { AITableAreaType, AITableCheckType, AITablePointPosition, AITableRowHeadsConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
@@ -24,6 +26,9 @@ import { AITableIcon } from './icon.component';
                 }
                 @if (config.iconConfig) {
                     <ai-table-icon [config]="config.iconConfig"></ai-table-icon>
+                }
+                @if (config.dragConfig) {
+                    <ai-table-icon [config]="config.dragConfig"></ai-table-icon>
                 }
             </ko-group>
         }
@@ -76,7 +81,7 @@ export class AITableHoverRowHeads {
                 isHoverRow = recordId === pointRecordId && pointRowType === AITableRowType.record && targetName !== AI_TABLE_FIELD_HEAD;
             }
 
-            let operationGroup: { recordId: string; y: number; bgConfig: any; iconConfig?: any };
+            let operationGroup: { recordId: string; y: number; bgConfig: any; iconConfig?: any; dragConfig?: any };
 
             operationGroup = {
                 recordId,
@@ -96,10 +101,20 @@ export class AITableHoverRowHeads {
                         targetName: AI_TABLE_ROW_SELECT_CHECKBOX,
                         recordId
                     }),
-                    x: AI_TABLE_CELL_PADDING,
+                    x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
                     y: iconOffsetY,
                     type: isCheckedRow ? AITableCheckType.checked : AITableCheckType.unchecked,
                     fill: isCheckedRow || (targetName === AI_TABLE_ROW_SELECT_CHECKBOX && !isCheckedRow) ? Colors.primary : Colors.gray300
+                };
+                operationGroup.dragConfig = {
+                    name: generateTargetName({
+                        targetName: AI_TABLE_ROW_DRAG,
+                        recordId
+                    }),
+                    x: 0,
+                    y: iconOffsetY,
+                    type: DragType.record,
+                    fill: Colors.gray600
                 };
                 headConfigs.push(operationGroup);
             }
