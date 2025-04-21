@@ -6,6 +6,7 @@ import {
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_ROW_DRAG_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../../constants';
@@ -17,6 +18,7 @@ import { AITableIcon } from './icon.component';
 @Component({
     selector: 'ai-table-frozen-column-heads',
     template: `
+        <ko-rect [config]="dragHeadBgConfig()"></ko-rect>
         <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
         <ko-line [config]="topLineConfig"></ko-line>
         <ko-line [config]="bottomLineConfig()"></ko-line>
@@ -56,6 +58,17 @@ export class AITableFrozenColumnHeads {
         });
     });
 
+    dragHeadBgConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            x: AI_TABLE_OFFSET,
+            y: AI_TABLE_OFFSET,
+            width: AI_TABLE_ROW_DRAG_WIDTH,
+            height: this.fieldHeadHeight(),
+            fill: Colors.white,
+            listening: false
+        };
+    });
+
     numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
         return {
             x: AI_TABLE_OFFSET,
@@ -68,7 +81,7 @@ export class AITableFrozenColumnHeads {
     });
 
     topLineConfig = {
-        x: AI_TABLE_OFFSET,
+        x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_WIDTH,
         y: AI_TABLE_OFFSET,
         points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
         stroke: Colors.gray200,
@@ -78,7 +91,7 @@ export class AITableFrozenColumnHeads {
 
     bottomLineConfig = computed(() => {
         return {
-            x: AI_TABLE_OFFSET,
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_WIDTH,
             y: AI_TABLE_OFFSET,
             points: [AI_TABLE_ROW_HEAD_WIDTH, this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
             stroke: Colors.gray200,
@@ -90,7 +103,7 @@ export class AITableFrozenColumnHeads {
     iconConfig = computed(() => {
         return {
             name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: AI_TABLE_CELL_PADDING,
+            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_WIDTH,
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill:

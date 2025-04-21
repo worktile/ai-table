@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
-import { Check, Colors, DEFAULT_ICON_SIZE, Unchecked } from '../../constants';
-import { AITableCheckType, AITableIconConfig } from '../../types';
+import { Check, Colors, DEFAULT_ICON_SIZE, RowDragPath, Unchecked } from '../../constants';
+import { AITableCheckType, AITableIconConfig, AITableRowDragType } from '../../types';
 
 @Component({
     selector: 'ai-table-icon',
@@ -73,6 +73,9 @@ export class AITableIcon {
                 break;
             case AITableCheckType.unchecked:
                 pathData = Unchecked;
+                break;
+            case AITableRowDragType.drag:
+                pathData = RowDragPath;
                 break;
         }
 

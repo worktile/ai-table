@@ -2,6 +2,7 @@ import {
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_OFFSET,
+    AI_TABLE_ROW_DRAG_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH,
     DEFAULT_FONT_SIZE
 } from '../../constants';
@@ -29,7 +30,6 @@ export class RecordRowLayout extends Layout {
         });
     }
 
-
     // 首列
     private renderFirstCell({ row, style, isHoverRow, isCheckedRow }: AITableCell) {
         if (!this.isFirst) return;
@@ -46,9 +46,9 @@ export class RecordRowLayout extends Layout {
             fillBg = colors.gray80;
         }
         this.customRect({
-            x: AI_TABLE_OFFSET,
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_WIDTH,
             y,
-            width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET,
+            width: AI_TABLE_ROW_HEAD_WIDTH - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_WIDTH,
             height: rowHeight,
             fill: fillBg,
             strokes: {
@@ -70,14 +70,14 @@ export class RecordRowLayout extends Layout {
             // 设置字体样式，居中绘制行号
             this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
             this.text({
-                x: AI_TABLE_ROW_HEAD_WIDTH / 2,
+                x: (AI_TABLE_ROW_HEAD_WIDTH + AI_TABLE_ROW_DRAG_WIDTH) / 2,
                 y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
                 text: String(row.displayIndex),
                 textAlign: DEFAULT_TEXT_ALIGN_CENTER,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
             });
         }
-        
+
         if (this.isLast) {
             this.renderAddFieldBlank({ isHoverRow, isCheckedRow });
         }

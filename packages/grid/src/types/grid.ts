@@ -104,6 +104,10 @@ export enum AITableCheckType {
     unchecked = 'unchecked'
 }
 
+export enum AITableRowDragType {
+    drag = 'drag'
+}
+
 export interface AITableScrollState {
     scrollTop: number;
     scrollLeft: number;
