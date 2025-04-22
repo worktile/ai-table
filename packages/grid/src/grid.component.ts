@@ -97,8 +97,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
 
-    addActiveStatus = false;
-
     containerRect = signal({ width: 0, height: 0 });
 
     frozenColumnCount = signal(1);
@@ -436,7 +434,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiTableGridSelectionService.clearSelection();
                 this.addRecord();
                 const { records, fields } = this.gridData();
-                this.addActiveStatus = true;
                 this.aiTableGridSelectionService.setActiveCell([records[records.length - 1]._id, fields[0]._id]);
                 break;
             }
