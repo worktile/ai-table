@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { extractText, extractLinkUrl } from '../../clipboard';
@@ -15,7 +16,7 @@ export class LinkField extends Field {
     }
 
     override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: LinkFieldValue) {
-        if (!isLinkValid(cellValue) || cellValue === null) {
+        if (cellValue === null) {
             if (condition.operation === AITableFilterOperation.empty) {
                 return true;
             } else {
@@ -29,7 +30,7 @@ export class LinkField extends Field {
             case AITableFilterOperation.exists:
                 return !isEmpty(cellTextValue);
             case AITableFilterOperation.contain:
-                return !isEmpty(cellTextValue) && stringInclude(cellTextValue, condition.value);
+                return !isNil(cellTextValue) && stringInclude(cellTextValue, condition.value);
             default:
                 return super.isMeetFilter(condition, cellTextValue);
         }
@@ -41,7 +42,7 @@ export class LinkField extends Field {
 
     override cellFullText(transformValue: LinkFieldValue): string[] {
         let texts: string[] = [];
-        if (isLinkValid(transformValue) && transformValue !== null) {
+        if (!isNil(transformValue)) {
             texts.push(transformValue.text);
         }
         return texts;

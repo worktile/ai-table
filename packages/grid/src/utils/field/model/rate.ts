@@ -4,13 +4,14 @@ import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareNumber } from '../operate';
 import { Field } from './field';
+import { isNumberValid } from './number';
 
 export class RateField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return typeof cellValue === 'number' || cellValue === null;
+        return isNumberValid(cellValue);
     }
 
-    override isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue | string) {
+    override isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -27,7 +28,7 @@ export class RateField extends Field {
         }
     }
 
-    override compare(cellValue1: number, cellValue2: number): number {
+    override compare(cellValue1: RateFieldValue, cellValue2: RateFieldValue): number {
         return compareNumber(cellValue1, cellValue2);
     }
 
