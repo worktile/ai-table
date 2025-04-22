@@ -74,7 +74,11 @@ export function toAttachmentFieldValue(
     if (originData) {
         const { field, cellValue } = originData;
         if (field.type === AITableFieldType.attachment) {
-            return cellValue;
+            const attachmentIds = Object.keys(references?.attachments || {});
+            const validAttachmentIds = (cellValue || []).filter((id) => attachmentIds.includes(id));
+            if (validAttachmentIds.length > 0) {
+                return validAttachmentIds;
+            }
         }
     }
     return null;
