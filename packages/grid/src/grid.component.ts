@@ -152,6 +152,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             containerHeight: this.containerRect().height,
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
+            rowDragDisabled: this.aiRowDragDisabled(),
             actions: {
                 updateFieldValue: (options: UpdateFieldValueOptions) => {
                     this.aiUpdateFieldValue.emit(options);
