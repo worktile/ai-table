@@ -7,7 +7,6 @@ import { createCells } from '../creations/create-cells';
 @Component({
     selector: 'ai-table-cells',
     template: ` <ko-shape [config]="cellsShapeConfig()"></ko-shape> `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

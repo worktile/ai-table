@@ -47,7 +47,6 @@ import { AITableGridI18nKey } from './utils/i18n';
 @Component({
     selector: 'ai-table-grid-base',
     template: '',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableGridBase implements OnInit {

@@ -21,7 +21,6 @@ import { Context } from 'konva/lib/Context';
 @Component({
     selector: 'ai-table-text',
     template: ` <ko-text [config]="textConfig()" (koClick)="onClick($event)" (koMousemove)="onMousemove($event)"></ko-text> `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

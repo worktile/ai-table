@@ -74,7 +74,6 @@ import { isNumber } from 'lodash';
 @Component({
     selector: 'ai-table-grid',
     templateUrl: './grid.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'ai-table-grid'

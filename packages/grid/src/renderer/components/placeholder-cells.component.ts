@@ -10,7 +10,6 @@ import { getPlaceHolderCellsConfigs } from '../../utils';
             <ko-rect [config]="item"></ko-rect>
         }
     `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

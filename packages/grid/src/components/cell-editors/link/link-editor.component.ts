@@ -25,7 +25,6 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
 @Component({
     selector: 'link-cell-editor',
     templateUrl: `./link-editor.component.html`,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,

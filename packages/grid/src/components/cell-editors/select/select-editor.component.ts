@@ -14,7 +14,6 @@ import { ThyFormModule } from 'ngx-tethys/form';
 @Component({
     selector: 'select-cell-editor',
     templateUrl: './select-editor.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block h-100 select-cell-editor'

@@ -11,8 +11,7 @@ import {
 import { AITableReferences, AITableSelection } from '../types';
 
 @Pipe({
-    name: 'selectOption',
-    standalone: true
+    name: 'selectOption'
 })
 export class SelectOptionPipe implements PipeTransform {
     transform(_id: string, options: AITableSelectOption[]) {
@@ -21,8 +20,7 @@ export class SelectOptionPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'selectOptions',
-    standalone: true
+    name: 'selectOptions'
 })
 export class SelectOptionsPipe implements PipeTransform {
     transform(ids: string[], options: AITableSelectOption[] = []) {
@@ -37,8 +35,7 @@ export class SelectOptionsPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'isSelectRecord',
-    standalone: true
+    name: 'isSelectRecord'
 })
 export class IsSelectRecordPipe implements PipeTransform {
     transform(recordId: string, selection: AITableSelection) {
@@ -47,8 +44,7 @@ export class IsSelectRecordPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'user',
-    standalone: true
+    name: 'user'
 })
 export class UserPipe implements PipeTransform {
     transform(values: string[], references: AITableReferences) {
@@ -63,8 +59,7 @@ export class UserPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'selectSetting',
-    standalone: true
+    name: 'selectSetting'
 })
 export class SelectSettingPipe implements PipeTransform {
     transform(settings: AITableFieldSettings) {
@@ -73,8 +68,7 @@ export class SelectSettingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'memberSetting',
-    standalone: true
+    name: 'memberSetting'
 })
 export class MemberSettingPipe implements PipeTransform {
     transform(settings: AITableFieldSettings) {
@@ -83,8 +77,7 @@ export class MemberSettingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'fieldIsSameOption',
-    standalone: true
+    name: 'fieldIsSameOption'
 })
 export class AITableFieldIsSameOptionPipe implements PipeTransform {
     transform(fieldOption: AITableFieldOption, field: Partial<AITableField>) {

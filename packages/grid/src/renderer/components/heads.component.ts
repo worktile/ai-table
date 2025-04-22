@@ -10,7 +10,6 @@ import { AITableFieldHead } from './field-head.component';
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
     `,
-    standalone: true,
     imports: [AITableFieldHead],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

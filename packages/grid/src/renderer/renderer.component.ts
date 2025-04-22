@@ -25,7 +25,6 @@ Konva.pixelRatio = 2;
 @Component({
     selector: 'ai-table-renderer',
     templateUrl: './renderer.component.html',
-    standalone: true,
     imports: [
         KoContainer,
         KoStage,

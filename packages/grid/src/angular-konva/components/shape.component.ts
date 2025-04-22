@@ -40,7 +40,6 @@ import { KO_CONTAINER_TOKEN } from './container.token';
 @Component({
     selector:
         'ko-shape, ko-circle, ko-label, ko-rect, ko-ellipse, ko-wedge, ko-line, ko-sprite, ko-image, ko-text, ko-text-path, ko-star, ko-ring, ko-arc, ko-tag, ko-path, ko-regular-polygon, ko-arrow, ko-transformer',
-    standalone: true,
     template: `<ng-content></ng-content>`,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

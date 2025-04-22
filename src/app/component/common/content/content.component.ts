@@ -65,7 +65,6 @@ const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
 
 @Component({
     selector: 'demo-table-content',
-    standalone: true,
     imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, AITableDomGrid],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -30,7 +30,6 @@ import { AITableIcon } from './icon.component';
         }
         <ko-rect [config]="headBgConfig()"></ko-rect>
     `,
-    standalone: true,
     imports: [KoShape, AITableFieldHead, AITableIcon, KoContainer],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -7,7 +7,6 @@ import { AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
 @Component({
     selector: 'ai-table-drag',
     templateUrl: './drag.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'drag-container'

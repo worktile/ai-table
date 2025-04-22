@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AITable } from '../../../../core/types/ai-table';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../../../utils/i18n';
@@ -6,7 +6,7 @@ import { ThyButton } from 'ngx-tethys/button';
 import { ThyFormDirective, ThyFormModule, ThyFormSubmitDirective } from 'ngx-tethys/form';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { ThyAutofocusDirective, ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { SafeAny } from 'ngx-tethys/types';
 
 export const LINK_URL_REGEX = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
@@ -17,16 +17,7 @@ export const LINK_URL_REGEX = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)
 @Component({
     selector: 'link-edit',
     templateUrl: './edit-link.component.html',
-    standalone: true,
-    imports: [
-        FormsModule,
-        ThyStopPropagationDirective,
-        ThyInputDirective,
-        ThyAutofocusDirective,
-        ThyButton,
-        ThyFormSubmitDirective,
-        ThyFormModule
-    ]
+    imports: [FormsModule, ThyStopPropagationDirective, ThyInputDirective, ThyButton, ThyFormSubmitDirective, ThyFormModule]
 })
 export class LinkEditComponent implements OnInit {
     @Input() url = '';
@@ -62,8 +53,7 @@ export class LinkEditComponent implements OnInit {
 
     constructor(public thyPopoverRef: ThyPopoverRef<SafeAny>) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     close() {
         this.thyPopoverRef.close();

@@ -14,7 +14,6 @@ import { DragType } from '../../core';
             <ko-path [config]="iconConfig()"></ko-path>
         </ko-group>
     `,
-    standalone: true,
     imports: [KoContainer, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -25,7 +25,6 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
         >
         </thy-date-picker>
     `,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyDatePicker, ThyTimePickerModule],
     host: {

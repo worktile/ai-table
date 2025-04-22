@@ -46,7 +46,6 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
 @Component({
     selector: 'ai-table-field-setting',
     templateUrl: './field-setting.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgClass,

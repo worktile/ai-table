@@ -16,7 +16,6 @@ import { HoverCellComponent } from '../../interfaces';
             <ai-table-text [config]="textConfig()!" (koClick)="linkClick($event)" (koMouseMove)="linkMouseMove($event)"></ai-table-text>
         }
     `,
-    standalone: true,
     imports: [AITableText],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

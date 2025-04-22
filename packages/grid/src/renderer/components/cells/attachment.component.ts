@@ -28,7 +28,6 @@ import { AITableActionIcon } from '../action-icon.component';
         }
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
-    standalone: true,
     imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

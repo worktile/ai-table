@@ -6,7 +6,6 @@ import { AITableReferences } from '../../types';
 @Component({
     selector: 'abstract-edit-cell',
     template: ``,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableField = AITableField> implements OnInit {
