@@ -11,8 +11,12 @@ export const isCellMatchKeywords = (
     references: AITableReferences
 ) => {
     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
-    const transformValue = transformCellValue(aiTable, field, cellValue);
     const fieldMethod = FieldModelMap[field.type];
-    let cellFullText: string[] = fieldMethod.cellFullText(transformValue, field, references);
-    return keywords && cellFullText.length && cellFullText.some((text) => text.toLowerCase().includes(keywords.toLowerCase()));
+    if (fieldMethod.isValid(cellValue)) {
+        const transformValue = transformCellValue(aiTable, field, cellValue);
+        let cellFullText: string[] = fieldMethod.cellFullText(transformValue, field, references);
+        return keywords && cellFullText.length && cellFullText.some((text) => text.toLowerCase().includes(keywords.toLowerCase()));
+    } else {
+        return false;
+    }
 };

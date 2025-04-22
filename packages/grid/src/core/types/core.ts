@@ -100,15 +100,15 @@ export enum AITableSelectOptionStyle {
     piece = 4
 }
 
-export type TextFieldValue = string;
+export type TextFieldValue = string | null;
 
 export type RichTextFieldValue = any[];
 
-export type LinkFieldValue = { url: string; text: string };
+export type LinkFieldValue = { url: string; text: string } | null;
 
 export type SelectFieldValue = Id[];
 
-export type NumberFieldValue = number;
+export type NumberFieldValue = number | null;
 
 export type DateFieldValue = { timestamp: number } | null;
 
@@ -116,9 +116,9 @@ export type MemberFieldValue = Id[];
 
 export type AttachmentFieldValue = string[];
 
-export type ProgressFieldValue = number; // [0,1]
+export type ProgressFieldValue = number | null; // [0,1]
 
-export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
+export type RateFieldValue = 1 | 2 | 3 | 4 | 5 | null;
 
 export type FieldValue =
     | TextFieldValue
@@ -134,23 +134,23 @@ export type FieldValue =
     | any;
 
 export interface TrackableEntity {
-    created_at: NumberFieldValue;
+    created_at: number;
     created_by: string;
-    updated_at: NumberFieldValue;
+    updated_at: number;
     updated_by: string;
 }
 
 export interface UpdateTrackableEntity {
-    updated_at: NumberFieldValue;
+    updated_at: number;
     updated_by: string;
 }
 
 export interface AITableRecord {
     _id: string;
     short_id: string;
-    created_at: NumberFieldValue;
+    created_at: number;
     created_by: string;
-    updated_at: NumberFieldValue;
+    updated_at: number;
     updated_by: string;
     values: Record<string, FieldValue>;
 }

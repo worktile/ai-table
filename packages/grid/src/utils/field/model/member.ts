@@ -26,8 +26,8 @@ export class MemberField extends Field {
     }
 
     override compare(
-        cellValue1: FieldValue,
-        cellValue2: FieldValue,
+        cellValue1: MemberFieldValue,
+        cellValue2: MemberFieldValue,
         references: AITableReferences,
         sortKey: string,
         options: {

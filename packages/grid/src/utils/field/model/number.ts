@@ -1,39 +1,43 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, SelectSettings } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, NumberFieldValue, SelectSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareNumber } from '../operate';
 import { Field } from './field';
 
+export const isNumberValid = (cellValue: FieldValue): cellValue is NumberFieldValue => {
+    return typeof cellValue === 'number' || cellValue === null;
+};
+
 export class NumberField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return typeof cellValue === 'number' || cellValue === null;
+        return isNumberValid(cellValue);
     }
 
-    override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: FieldValue) {
+    override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: NumberFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
             case AITableFilterOperation.exists:
                 return !isEmpty(cellValue);
             case AITableFilterOperation.eq:
-                return !Number.isNaN(condition.value) && cellValue != null && cellValue !== '' && condition.value === cellValue;
+                return !Number.isNaN(condition.value) && cellValue != null && condition.value === cellValue;
             case AITableFilterOperation.gte:
-                return cellValue != null && cellValue !== '' && cellValue >= condition.value;
+                return cellValue != null && cellValue >= condition.value;
             case AITableFilterOperation.lte:
-                return cellValue != null && cellValue !== '' && cellValue <= condition.value;
+                return cellValue != null && cellValue <= condition.value;
             case AITableFilterOperation.gt:
-                return cellValue != null && cellValue !== '' && cellValue > condition.value;
+                return cellValue != null && cellValue > condition.value;
             case AITableFilterOperation.lt:
-                return cellValue != null && cellValue !== '' && cellValue < condition.value;
+                return cellValue != null && cellValue < condition.value;
             case AITableFilterOperation.ne:
-                return cellValue == null || cellValue == '' || Number.isNaN(condition.value) || cellValue !== condition.value;
+                return cellValue == null || Number.isNaN(condition.value) || cellValue !== condition.value;
             default:
                 return super.isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: number, cellValue2: number): number {
+    override compare(cellValue1: NumberFieldValue, cellValue2: NumberFieldValue): number {
         return compareNumber(cellValue1, cellValue2);
     }
 
@@ -50,7 +54,7 @@ export function toNumberFieldValue(
     plainText: string,
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue }
-): FieldValue | null {
+): NumberFieldValue | null {
     let text = plainText.trim();
 
     if (originData) {

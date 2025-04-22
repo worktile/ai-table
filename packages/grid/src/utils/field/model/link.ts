@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { extractText, extractLinkUrl } from '../../clipboard';
@@ -5,12 +6,23 @@ import { isEmpty } from '../../common';
 import { compareString, stringInclude } from '../operate';
 import { Field } from './field';
 
+export const isLinkValid = (cellValue: FieldValue): cellValue is LinkFieldValue => {
+    return (cellValue && typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
+};
+
 export class LinkField extends Field {
     override isValid(cellValue: FieldValue): boolean {
-        return (cellValue && typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
+        return isLinkValid(cellValue);
     }
 
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: FieldValue) {
+    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: LinkFieldValue) {
+        if (cellValue === null) {
+            if (condition.operation === AITableFilterOperation.empty) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         const cellTextValue = cellValue?.text;
         switch (condition.operation) {
             case AITableFilterOperation.empty:
@@ -18,19 +30,19 @@ export class LinkField extends Field {
             case AITableFilterOperation.exists:
                 return !isEmpty(cellTextValue);
             case AITableFilterOperation.contain:
-                return !isEmpty(cellTextValue) && stringInclude(cellTextValue, condition.value);
+                return !isNil(cellTextValue) && stringInclude(cellTextValue, condition.value);
             default:
                 return super.isMeetFilter(condition, cellTextValue);
         }
     }
 
-    override compare(cellValue1: FieldValue, cellValue2: FieldValue): number {
+    override compare(cellValue1: LinkFieldValue, cellValue2: LinkFieldValue): number {
         return compareString(cellValueToSortValue(cellValue1), cellValueToSortValue(cellValue2));
     }
 
     override cellFullText(transformValue: LinkFieldValue): string[] {
         let texts: string[] = [];
-        if (!isEmpty(transformValue?.text)) {
+        if (!isNil(transformValue)) {
             texts.push(transformValue.text);
         }
         return texts;

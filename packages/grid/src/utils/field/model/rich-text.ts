@@ -12,7 +12,7 @@ export class RichTextField extends Field {
 
     override isMeetFilter(
         condition: AITableFilterCondition<string>,
-        cellValue: FieldValue,
+        cellValue: RichTextFieldValue,
         options: {
             aiTable: AITable;
             field: AITableField;
