@@ -104,7 +104,7 @@ export type TextFieldValue = string;
 
 export type RichTextFieldValue = any[];
 
-export type LinkFieldValue = { url: string; text: string };
+export type LinkFieldValue = { url: string; text: string } | null;
 
 export type SelectFieldValue = Id[];
 
