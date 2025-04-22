@@ -10,7 +10,7 @@ import {
     AITableFilterOperation,
     SelectSettings,
     AITable,
-    AITableField,
+    AITableField
 } from '@ai-table/grid';
 import {
     AITableFilterConditions,
@@ -40,7 +40,12 @@ export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRec
     });
 }
 
-function checkConditions(aiTable: AIViewTable, fields: AITableViewFields, record: AITableRecord, filterConditions: AITableFilterConditions) {
+function checkConditions(
+    aiTable: AIViewTable,
+    fields: AITableViewFields,
+    record: AITableRecord,
+    filterConditions: AITableFilterConditions
+) {
     if (!record) {
         return false;
     }
@@ -61,19 +66,36 @@ function doFilterOperations(aiTable: AIViewTable, fields: AITableViewFields, rec
     const { field, cellValue } = getFilterValue(fields, record, condition);
 
     try {
-        return field && doFilter(condition, cellValue, {
-            aiTable, field
-        });
+        return (
+            field &&
+            doFilter(condition, cellValue, {
+                aiTable,
+                field
+            })
+        );
     } catch (error) {
         return false;
     }
 }
 
-export function doFilter(condition: AITableFilterCondition, cellValue: FieldValue, options: {
-    aiTable: AITable;
-    field: AITableField,
-}) {
-    return FieldModelMap[options.field.type].isMeetFilter(condition, cellValue, options);
+export function doFilter(
+    condition: AITableFilterCondition,
+    cellValue: FieldValue,
+    options: {
+        aiTable: AITable;
+        field: AITableField;
+    }
+) {
+    const fieldModel = FieldModelMap[options.field.type];
+    if (fieldModel && fieldModel.isValid(cellValue)) {
+        return fieldModel.isMeetFilter(condition, cellValue, options);
+    } else {
+        if (condition.operation === AITableFilterOperation.empty) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 export function getDefaultRecordDataByFilter(

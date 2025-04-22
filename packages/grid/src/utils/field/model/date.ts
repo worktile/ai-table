@@ -24,9 +24,6 @@ export class DateField extends Field {
         if (isNil(cellValue)) {
             return condition.operation === AITableFilterOperation.empty;
         }
-        if (!isDateValid(cellValue)) {
-            return false;
-        }
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue.timestamp) || cellValue.timestamp === 0;

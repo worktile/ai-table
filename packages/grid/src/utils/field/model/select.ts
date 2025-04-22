@@ -36,14 +36,16 @@ export class SelectField extends Field {
         }
     }
 
-    override compare(cellValue1: FieldValue,
-        cellValue2: FieldValue,
+    override compare(
+        cellValue1: SelectFieldValue,
+        cellValue2: SelectFieldValue,
         references: AITableReferences,
         sortKey: string,
         options: {
             aiTable: AITable;
             field: AITableField;
-        },): number {
+        }
+    ): number {
         const value1 = cellValueToSortValue(cellValue1, options.field);
         const value2 = cellValueToSortValue(cellValue2, options.field);
         return compareString(value1, value2);
