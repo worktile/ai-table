@@ -75,8 +75,6 @@ export class AITableGridBase implements OnInit {
 
     aiKeywords = input<string>();
 
-    refreshRender: WritableSignal<number> = signal(0);
-
     AITableFieldType = AITableFieldType;
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;
@@ -118,7 +116,7 @@ export class AITableGridBase implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
-        this.refreshRender();
+        this.aiTable.recordsWillHidden();
         if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
             return this.aiBuildRenderDataFn()!(this.aiTable);
         }

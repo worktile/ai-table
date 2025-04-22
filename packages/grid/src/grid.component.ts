@@ -195,12 +195,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(
             () => {
                 // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
-                const activeCell = this.aiTable.selection().activeCell;
+                const activeCellPath = this.aiTable.selection().activeCell;
                 untracked(() => {
-                    if (this.addActiveStatus && (!activeCell || !this.aiTable.recordsWillHidden().includes(activeCell[0]))) {
-                        this.addActiveStatus = false;
-                        this.aiTable.recordsWillHidden.set([]);
-                        this.refreshRender.set(this.refreshRender() + 1);
+                    if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
+                        if (this.aiTable.recordsWillHidden().length > 0) {
+                            this.aiTable.recordsWillHidden.set([]);
+                        }
                     }
                 });
             },
