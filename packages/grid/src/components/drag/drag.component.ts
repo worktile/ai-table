@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestr
 import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
-import { AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
 
 @Component({
     selector: 'ai-table-drag',
@@ -226,15 +226,18 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const sourceRowIndex = visibleRowIndexMap.get(sourceRowId) || 0;
         const sourceRowStartY = coordinate.getRowOffset(sourceRowIndex);
         const sourceRowHeight = coordinate.getRowHeight(sourceRowIndex);
+        const pointerY = sourceRowStartY + moveY;
         this.setRectStyles({
             width: '100%',
             height: `${sourceRowHeight}px`,
-            top: `${sourceRowStartY + moveY}px`,
+            top: `${pointerY - scroll.y}px`,
             left: '0'
         });
-
-        const pointerY = moveY + sourceRowStartY + sourceRowHeight / 2;
-        const targetRowIndex = coordinate.getRowStartIndex(pointerY + scroll.y);
+        const dragCenter = sourceRowHeight / 2;
+        // 减去固定表头的高度
+        const targetRowIndex = coordinate.getRowStartIndex(
+            pointerY + dragCenter + scroll.y - (scroll.y > 0 ? Math.min(scroll.y, AI_TABLE_FIELD_HEAD_HEIGHT) : 0)
+        );
         const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
         if (
             (targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
@@ -243,7 +246,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             this.setAuxiliaryLineStyles({
                 width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
                 height: '2px',
-                top: `${targetRowStartY}px`,
+                top: `${targetRowStartY - scroll.y}px`,
                 left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
             });
             this.draggedData = {
