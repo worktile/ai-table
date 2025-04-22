@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.57](https://github.com/worktile/ai-table/compare/0.0.56...0.0.57) (2025-04-22)
+
+
+### Features
+
+* #WIK-17761 【AiTable】筛选条件下，新增数据交互 ([0658091](https://github.com/worktile/ai-table/commit/065809151f97d8ec567d62a57dfbfb2a6dd78ae2)), closes [#WIK-17761](https://github.com/worktile/ai-table/issues/WIK-17761)
+* #WIK-17761 【AiTable】筛选条件下，新增数据交互 ([9682ebc](https://github.com/worktile/ai-table/commit/9682ebce1fed85a08168ef1761f1b30a313ca359)), closes [#WIK-17761](https://github.com/worktile/ai-table/issues/WIK-17761)
+* **grid:** remove progerss editor dom, use canvas technology to draw progress and support edit ([#368](https://github.com/worktile/ai-table/issues/368)) ([b80eb9d](https://github.com/worktile/ai-table/commit/b80eb9d66da9edfd8873aaead78c469e9d8cf7f4))
+* **grid:** support copy attachment and paste to attachment cell ([#374](https://github.com/worktile/ai-table/issues/374)) ([9ca9521](https://github.com/worktile/ai-table/commit/9ca9521f3727e1405b314a77bd6285a8af4e1490))
+
+
+
 ## [0.0.56](https://github.com/worktile/ai-table/compare/0.0.55...0.0.56) (2025-04-21)
 
 
