@@ -1,4 +1,4 @@
-import { AITable, AITableField, AttachmentFieldValue, FieldValue } from '../../../core';
+import { AITable, AITableField, AttachmentFieldValue, FieldValue, AITableFieldType } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
 import { compareString, hasIntersect } from '../operate';
@@ -71,6 +71,12 @@ export function toAttachmentFieldValue(
     originData?: { field: AITableField; cellValue: AttachmentFieldValue },
     references?: AITableReferences
 ): FieldValue | null {
+    if (originData) {
+        const { field, cellValue } = originData;
+        if (field.type === AITableFieldType.attachment) {
+            return cellValue;
+        }
+    }
     return null;
 }
 

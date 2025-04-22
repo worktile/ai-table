@@ -130,9 +130,6 @@ function getPasteValue(
         record = records[recordIndex];
     }
 
-    if (targetField.type === AITableFieldType.attachment || (field && field.type === AITableFieldType.attachment)) {
-        return { value: null, newField: null };
-    }
     if (targetField.type !== AITableFieldType.link) {
         plainText = extractText(plainText);
     }
