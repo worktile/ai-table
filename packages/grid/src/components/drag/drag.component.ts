@@ -234,19 +234,20 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             left: '0'
         });
         const dragCenter = sourceRowHeight / 2;
-        // 减去固定表头的高度
-        const targetRowIndex = coordinate.getRowStartIndex(
-            pointerY + dragCenter + scroll.y - (scroll.y > 0 ? Math.min(scroll.y, AI_TABLE_FIELD_HEAD_HEIGHT) : 0)
-        );
+        const targetRowIndex = coordinate.getRowStartIndex(pointerY + dragCenter);
         const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
+        const lineTop = targetRowStartY - scroll.y;
+        const lineHeight = 2;
         if (
-            (targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
-            (sourceRowIndex < targetRowIndex && targetRowIndex - sourceRowIndex > 1)
+            ((targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
+                (sourceRowIndex < targetRowIndex && targetRowIndex - sourceRowIndex > 1)) &&
+            lineTop > AI_TABLE_FIELD_HEAD_HEIGHT - lineHeight && // 限制可视范围内
+            lineTop < coordinate.containerHeight - lineHeight
         ) {
             this.setAuxiliaryLineStyles({
                 width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
-                height: '2px',
-                top: `${targetRowStartY - scroll.y}px`,
+                height: `${lineHeight}px`,
+                top: `${lineTop}px`,
                 left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
             });
             this.draggedData = {
