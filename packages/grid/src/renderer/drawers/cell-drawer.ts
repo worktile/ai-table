@@ -82,7 +82,7 @@ export class CellDrawer extends Drawer {
     }
 
     // 单元格渲染
-    public renderCell(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+    public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
         const { field, cellValue } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
@@ -102,7 +102,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.updatedAt:
                 return this.renderCellDate(render, ctx);
             case AITableFieldType.rate:
-                return this.renderCellRate(render, ctx);
+                return this.renderCellRate(render, ctx, columnWidth);
             case AITableFieldType.progress:
                 return this.renderCellProgress(render, ctx);
             case AITableFieldType.member:
@@ -519,12 +519,16 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+    private renderCellRate(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
         const { x, y, transformValue } = render;
         const max = AI_TABLE_RATE_MAX;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
 
-        return [...Array(max).keys()].map((item, index) => {
+        const renderWidth = columnWidth - AI_TABLE_CELL_PADDING;
+        const starWidth = AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING;
+        const maxStar = Math.min(max, Math.floor(renderWidth / starWidth));
+
+        return [...Array(maxStar).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= (transformValue || 0);
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
