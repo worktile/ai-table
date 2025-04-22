@@ -85,12 +85,18 @@ function buildClipboardContent(aiTable: AITable, fieldIds: string[], recordIds: 
         fieldIds.forEach((fieldId) => {
             const field = aiTable.fieldsMap()[fieldId];
             const cellValue = getFieldValue(record, field);
-            const transformValue = transformCellValue(aiTable, field, cellValue);
-            const cellTexts: string[] = FieldModelMap[field.type].cellFullText(transformValue, field, references);
             let cellContent = {
-                text: cellTexts.join(','),
-                html: cellTexts.join(',')
+                text: '',
+                html: ''
             };
+            if (FieldModelMap[field.type].isValid(cellValue)) {
+                const transformValue = transformCellValue(aiTable, field, cellValue);
+                const cellTexts: string[] = FieldModelMap[field.type].cellFullText(transformValue, field, references);
+                cellContent = {
+                    text: cellTexts.join(','),
+                    html: cellTexts.join(',')
+                };
+            }
             if (field.type === AITableFieldType.link && cellValue && cellValue.url) {
                 cellContent.html = `<a href="${cellValue.url}" target="_blank">${cellValue.text}</a>`;
             }

@@ -42,7 +42,6 @@ export abstract class Field {
         }
     }
 
-    // 查找
     cellFullText(transformValue: any, field: AITableField, references?: AITableReferences): string[] {
         let fullText: string[] = [];
         if (!isEmpty(transformValue)) {
