@@ -17,7 +17,7 @@ import { getDefaultRecordDataByFilter } from './filter';
 export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trackableEntity: TrackableEntity) {
     const { originId, direction = Direction.after, isDuplicate, count = 1 } = options;
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-    const records = getSortRecords(aiTable, aiTable.records() as AITableViewRecords, activeView);
+    const records = getSortRecords(aiTable, aiTable.gridData().records as AITableViewRecords, activeView);
     let addIndex = records.findIndex((item) => item._id === originId);
     if (direction === Direction.after) {
         addIndex++;
