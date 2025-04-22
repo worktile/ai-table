@@ -98,6 +98,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
 
+    addActiveStatus = false;
+
     containerRect = signal({ width: 0, height: 0 });
 
     frozenColumnCount = signal(1);
@@ -193,6 +195,20 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(
             () => {
                 this.setKeywordsMatchedCells();
+            },
+            { allowSignalWrites: true }
+        );
+        effect(
+            () => {
+                // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
+                const activeCell = this.aiTable.selection().activeCell;
+                untracked(() => {
+                    if (!activeCell || !this.aiTable.recordsWillHidden().includes(activeCell[0])) {
+                        this.addActiveStatus = false;
+                        this.aiTable.recordsWillHidden.set([]);
+                        this.refreshRender.set(this.refreshRender() + 1);
+                    }
+                });
             },
             { allowSignalWrites: true }
         );
@@ -425,6 +441,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
                 this.addRecord();
+                const { records, fields } = this.gridData();
+                this.addActiveStatus = true;
+                this.aiTableGridSelectionService.setActiveCell([records[records.length - 1]._id, fields[0]._id]);
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {

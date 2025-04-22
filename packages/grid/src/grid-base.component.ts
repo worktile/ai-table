@@ -10,7 +10,9 @@ import {
     NgZone,
     OnInit,
     output,
-    Signal
+    signal,
+    Signal,
+    WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
@@ -73,6 +75,8 @@ export class AITableGridBase implements OnInit {
 
     aiKeywords = input<string>();
 
+    refreshRender: WritableSignal<number> = signal(0);
+
     AITableFieldType = AITableFieldType;
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;
@@ -114,6 +118,7 @@ export class AITableGridBase implements OnInit {
     mouseoverRef!: ThyPopoverRef<any>;
 
     gridData = computed(() => {
+        this.refreshRender();
         if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
             return this.aiBuildRenderDataFn()!(this.aiTable);
         }
