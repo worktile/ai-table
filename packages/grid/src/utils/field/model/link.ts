@@ -39,10 +39,10 @@ export class LinkField extends Field {
         return compareString(cellValueToSortValue(cellValue1), cellValueToSortValue(cellValue2));
     }
 
-    override cellFullText(cellValue: LinkFieldValue): string[] {
+    override cellFullText(transformValue: LinkFieldValue): string[] {
         let texts: string[] = [];
-        if (isLinkValid(cellValue) && cellValue !== null) {
-            texts.push(cellValue.text);
+        if (isLinkValid(transformValue) && transformValue !== null) {
+            texts.push(transformValue.text);
         }
         return texts;
     }
