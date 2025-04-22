@@ -15,6 +15,7 @@ export interface AITableCellsConfig {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };
     references?: AITableReferences;
+    rowDragDisabled: boolean;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {

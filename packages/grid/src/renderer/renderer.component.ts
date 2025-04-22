@@ -70,6 +70,10 @@ export class AITableRenderer {
         return this.config()?.readonly;
     });
 
+    rowDragDisabled = computed(() => {
+        return this.config()?.rowDragDisabled;
+    });
+
     coordinate = computed(() => {
         return this.config()?.coordinate;
     });
@@ -190,7 +194,7 @@ export class AITableRenderer {
     });
 
     cellsConfig = computed<AITableCellsConfig>(() => {
-        const { aiTable, readonly, coordinate, references, actions } = this.config();
+        const { aiTable, readonly, coordinate, references, actions, rowDragDisabled } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
@@ -201,7 +205,8 @@ export class AITableRenderer {
             rowStopIndex,
             columnStartIndex,
             columnStopIndex,
-            actions
+            actions,
+            rowDragDisabled
         };
     });
 

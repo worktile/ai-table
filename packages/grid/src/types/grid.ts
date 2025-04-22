@@ -76,6 +76,7 @@ export interface AITableRendererConfig {
     containerHeight: number;
     references: AITableReferences;
     readonly: boolean;
+    rowDragDisabled: boolean;
     actions: {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };
