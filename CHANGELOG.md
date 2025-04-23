@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.60](https://github.com/worktile/ai-table/compare/0.0.59...0.0.60) (2025-04-23)
+
+
+### Bug Fixes
+
+* #WIK-17804 附件很多的时候拉宽后，换行 ([#386](https://github.com/worktile/ai-table/issues/386)) ([7130f80](https://github.com/worktile/ai-table/commit/7130f80f73987970d55d515692a25ed1b190ef0a)), closes [#WIK-17804](https://github.com/worktile/ai-table/issues/WIK-17804)
+* **grid:** #WIK-17730 mouse movement of non-table areas should set the default point ([#385](https://github.com/worktile/ai-table/issues/385)) ([68ecefb](https://github.com/worktile/ai-table/commit/68ecefbd7f27030ea556be6111cce84093830d35)), closes [#WIK-17730](https://github.com/worktile/ai-table/issues/WIK-17730)
+* **grid:** #WIK-17775 fixed calculating the maximum width of the table ([#387](https://github.com/worktile/ai-table/issues/387)) ([dbf73e1](https://github.com/worktile/ai-table/commit/dbf73e12108c7a9a7e8dc17665851d6029121a51))
+
+
+
 ## [0.0.59](https://github.com/worktile/ai-table/compare/0.0.58...0.0.59) (2025-04-23)
 
 
