@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.59](https://github.com/worktile/ai-table/compare/0.0.58...0.0.59) (2025-04-23)
+
+
+### Bug Fixes
+
+* **grid:** render the number of stars according to the column width dynamically for rate ([#383](https://github.com/worktile/ai-table/issues/383)) ([a72daae](https://github.com/worktile/ai-table/commit/a72daaea4442ef3330aa3fcfaf63caf36c9c4fc0))
+
+
+
 ## [0.0.58](https://github.com/worktile/ai-table/compare/0.0.57...0.0.58) (2025-04-22)
 
 
