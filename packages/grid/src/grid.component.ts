@@ -54,7 +54,14 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableContextMenuItem, AITableMouseDownType, AITableRendererConfig, AITableSelectAllState, ScrollActionOptions } from './types';
+import {
+    AITableAreaType,
+    AITableContextMenuItem,
+    AITableMouseDownType,
+    AITableRendererConfig,
+    AITableSelectAllState,
+    ScrollActionOptions
+} from './types';
 import {
     AITableGridI18nKey,
     buildGridLinearRows,
@@ -297,7 +304,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiReadonly(),
                 this.aiRowDragDisabled()
             );
-            context!.setPointPosition(curMousePosition);
+            if (curMousePosition.areaType !== AITableAreaType.none) {
+                context!.setPointPosition(curMousePosition);
+            } else {
+                context!.setPointPosition(DEFAULT_POINT_POSITION);
+            }
             this.timer = null;
             if (this.isDragSelecting) {
                 const { fieldId, recordId } = getDetailByTargetName(curMousePosition.realTargetName);
