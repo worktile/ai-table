@@ -39,10 +39,11 @@ export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITable
 };
 
 export const scrollMax = (aiTable: AITable, coordinate: Coordinate, visibleColumns: AITableField[]) => {
-    const scrollMaxWidth = visibleColumns.reduce(
-        (pre, cur) => pre + (getFieldOptionByField(aiTable, cur) as AITableFieldOption)?.width,
-        AI_TABLE_ROW_HEAD_WIDTH
-    );
+    const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
+    const scrollMaxWidth = visibleColumns.reduce((pre, cur) => {
+        const index = visibleColumnIndexMap.get(cur._id) || 0;
+        return pre + coordinate.getColumnWidth(index);
+    }, AI_TABLE_ROW_HEAD_WIDTH);
     const scrollMaxHeight = coordinate.getRowOffset(coordinate.rowCount - 1) + 32;
     return { scrollMaxWidth, scrollMaxHeight };
 };
