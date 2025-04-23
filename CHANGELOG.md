@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.59](https://github.com/worktile/ai-table/compare/0.0.58...0.0.59) (2025-04-23)
+
+
+### Bug Fixes
+
+* **grid:** render the number of stars according to the column width dynamically for rate ([#383](https://github.com/worktile/ai-table/issues/383)) ([a72daae](https://github.com/worktile/ai-table/commit/a72daaea4442ef3330aa3fcfaf63caf36c9c4fc0))
+
+
+
+## [0.0.58](https://github.com/worktile/ai-table/compare/0.0.57...0.0.58) (2025-04-22)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17762 scrolling and drag position calculation problem ([#376](https://github.com/worktile/ai-table/issues/376)) ([5bdf70e](https://github.com/worktile/ai-table/commit/5bdf70e6707b40db6f2fc89da16d030e2e596e4b)), closes [#WIK-17762](https://github.com/worktile/ai-table/issues/WIK-17762)
+* **grid:** #WIK-17771 readonly and disable drag hides drag icons ([#380](https://github.com/worktile/ai-table/issues/380)) ([db80570](https://github.com/worktile/ai-table/commit/db8057062c58154a7775b5ba6b86c02a9cf33def)), closes [#WIK-17771](https://github.com/worktile/ai-table/issues/WIK-17771)
+* **grid:** filter out invalid attachment value when pasting ([#381](https://github.com/worktile/ai-table/issues/381)) ([884afde](https://github.com/worktile/ai-table/commit/884afde5a490fc5710b8209be837919f43d41b4d))
+* **state:** #WIK-17768 addRecords aiTable.gridData() records ([#377](https://github.com/worktile/ai-table/issues/377)) ([93a80d9](https://github.com/worktile/ai-table/commit/93a80d9122f53d9a4825cc192b9edff0edd59652)), closes [#WIK-17768](https://github.com/worktile/ai-table/issues/WIK-17768)
+
+
+
 ## [0.0.57](https://github.com/worktile/ai-table/compare/0.0.56...0.0.57) (2025-04-22)
 
 
