@@ -93,7 +93,11 @@ export class AITableCellRate implements HoverCellComponent {
             this.pointerY() >= startTopY &&
             this.pointerY() <= startBottomY;
 
-        return [...Array(max).keys()].map((item, index) => {
+        const renderWidth = coordinate.getColumnWidth(columnIndex) - AI_TABLE_CELL_PADDING;
+        const starWidth = AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING;
+        const maxStar = Math.min(max, Math.floor(renderWidth / starWidth));
+
+        return [...Array(maxStar).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= transformValue;
             const starX = x + index * (AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING);

@@ -82,7 +82,7 @@ export class CellDrawer extends Drawer {
     }
 
     // 单元格渲染
-    public renderCell(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+    public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
         const { field, cellValue } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
@@ -102,7 +102,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.updatedAt:
                 return this.renderCellDate(render, ctx);
             case AITableFieldType.rate:
-                return this.renderCellRate(render, ctx);
+                return this.renderCellRate(render, ctx, columnWidth);
             case AITableFieldType.progress:
                 return this.renderCellProgress(render, ctx);
             case AITableFieldType.member:
@@ -519,12 +519,16 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellRate(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
+    private renderCellRate(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
         const { x, y, transformValue } = render;
         const max = AI_TABLE_RATE_MAX;
         const size = AI_TABLE_CELL_EMOJI_SIZE;
 
-        return [...Array(max).keys()].map((item, index) => {
+        const renderWidth = columnWidth - AI_TABLE_CELL_PADDING;
+        const starWidth = AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING;
+        const maxStar = Math.min(max, Math.floor(renderWidth / starWidth));
+
+        return [...Array(maxStar).keys()].map((item, index) => {
             const value = index + 1;
             const checked = value <= (transformValue || 0);
             const iconX = index * size + AI_TABLE_CELL_PADDING + index * AI_TABLE_CELL_EMOJI_PADDING;
@@ -716,14 +720,11 @@ export class CellDrawer extends Drawer {
         let currentX = AI_TABLE_CELL_PADDING;
         let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - itemHeight) / 2;
         const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-        const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
         const maxTextWidth = isOperating
             ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
             : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
 
         const listCount = transformValue.length;
-        let isOverflow = false;
-
         for (let index = 0; index < listCount; index++) {
             const attachmentInfo = references?.attachments[transformValue[index]];
             if (!attachmentInfo) continue;
@@ -733,29 +734,12 @@ export class CellDrawer extends Drawer {
             let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
             if (index === 0 && isOperating) {
                 const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
-                // item No space to display, then perform a line feed
-                if (operatingMaxWidth <= 20) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                    currentY += AI_TABLE_OPTION_ITEM_HEIGHT + AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP;
-                } else {
-                    realMaxTextWidth = operatingMaxWidth;
-                }
+                realMaxTextWidth = operatingMaxWidth;
             }
             if (columnWidth != null) {
                 // 在非活动状态下，当超出列宽时，不会渲染后续内容
                 if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
                     break;
-                }
-                // 如果不是非活动状态的最后一行，则换行渲染溢出内容
-                if (currentX > columnWidth - 2 * AI_TABLE_CELL_PADDING) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                }
-                if (currentX + itemWidth > columnWidth - AI_TABLE_CELL_PADDING) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                    currentY += itemHeight;
-                }
-                if (currentY >= maxHeight) {
-                    isOverflow = true;
                 }
             }
             const svgString = getFileThumbnailSvgString(addition?.ext);

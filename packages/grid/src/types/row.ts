@@ -33,6 +33,8 @@ export interface AITableRowHeadsConfig {
     rowStartIndex: number;
     rowStopIndex: number;
     aiTable: AITable;
+    readonly: boolean;
+    rowDragDisabled: boolean;
 }
 
 export interface AITableContextMenuItem {

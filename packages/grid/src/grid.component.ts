@@ -54,7 +54,14 @@ import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AITableContextMenuItem, AITableMouseDownType, AITableRendererConfig, AITableSelectAllState, ScrollActionOptions } from './types';
+import {
+    AITableAreaType,
+    AITableContextMenuItem,
+    AITableMouseDownType,
+    AITableRendererConfig,
+    AITableSelectAllState,
+    ScrollActionOptions
+} from './types';
 import {
     AITableGridI18nKey,
     buildGridLinearRows,
@@ -95,8 +102,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     resizeObserver!: ResizeObserver;
 
     fieldHeadHeight = AI_TABLE_FIELD_HEAD_HEIGHT;
-
-    addActiveStatus = false;
 
     containerRect = signal({ width: 0, height: 0 });
 
@@ -151,6 +156,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             containerHeight: this.containerRect().height,
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
+            rowDragDisabled: this.aiRowDragDisabled(),
             actions: {
                 updateFieldValue: (options: UpdateFieldValueOptions) => {
                     this.aiUpdateFieldValue.emit(options);
@@ -194,12 +200,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(
             () => {
                 // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
-                const activeCell = this.aiTable.selection().activeCell;
+                const activeCellPath = this.aiTable.selection().activeCell;
                 untracked(() => {
-                    if (this.addActiveStatus && (!activeCell || !this.aiTable.recordsWillHidden().includes(activeCell[0]))) {
-                        this.addActiveStatus = false;
-                        this.aiTable.recordsWillHidden.set([]);
-                        this.refreshRender.set(this.refreshRender() + 1);
+                    if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
+                        if (this.aiTable.recordsWillHidden().length > 0) {
+                            this.aiTable.recordsWillHidden.set([]);
+                        }
                     }
                 });
             },
@@ -297,7 +303,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiReadonly(),
                 this.aiRowDragDisabled()
             );
-            context!.setPointPosition(curMousePosition);
+            if (curMousePosition.areaType !== AITableAreaType.none) {
+                context!.setPointPosition(curMousePosition);
+            } else {
+                context!.setPointPosition(DEFAULT_POINT_POSITION);
+            }
             this.timer = null;
             if (this.isDragSelecting) {
                 const { fieldId, recordId } = getDetailByTargetName(curMousePosition.realTargetName);
@@ -435,7 +445,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiTableGridSelectionService.clearSelection();
                 this.addRecord();
                 const { records, fields } = this.gridData();
-                this.addActiveStatus = true;
                 this.aiTableGridSelectionService.setActiveCell([records[records.length - 1]._id, fields[0]._id]);
                 break;
             }

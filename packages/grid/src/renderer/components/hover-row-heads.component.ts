@@ -47,6 +47,14 @@ export class AITableHoverRowHeads {
         return this.createHoverRowHeads(this.pointPosition());
     });
 
+    readonly = computed(() => {
+        return this.config().readonly;
+    });
+
+    rowDragDisabled = computed(() => {
+        return this.config().rowDragDisabled;
+    });
+
     createHoverRowHeads = (pointPosition: AITablePointPosition) => {
         const { coordinate, rowStartIndex, rowStopIndex, aiTable } = this.config();
         const context = aiTable.context as RendererContext;
@@ -105,16 +113,18 @@ export class AITableHoverRowHeads {
                     type: isCheckedRow ? AITableCheckType.checked : AITableCheckType.unchecked,
                     fill: isCheckedRow || (targetName === AI_TABLE_ROW_SELECT_CHECKBOX && !isCheckedRow) ? Colors.primary : Colors.gray300
                 };
-                operationGroup.dragConfig = {
-                    name: generateTargetName({
-                        targetName: AI_TABLE_ROW_DRAG,
-                        recordId
-                    }),
-                    x: 0,
-                    y: iconOffsetY,
-                    type: DragType.record,
-                    fill: Colors.gray600
-                };
+                if (!this.readonly() && !this.rowDragDisabled()) {
+                    operationGroup.dragConfig = {
+                        name: generateTargetName({
+                            targetName: AI_TABLE_ROW_DRAG,
+                            recordId
+                        }),
+                        x: 0,
+                        y: iconOffsetY,
+                        type: DragType.record,
+                        fill: Colors.gray600
+                    };
+                }
                 headConfigs.push(operationGroup);
             }
         }
