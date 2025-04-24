@@ -245,3 +245,5 @@ export interface TransactionOriginInfo {
     uid: string;
     [key: string]: any;
 }
+
+export { Id };
