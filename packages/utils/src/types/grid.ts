@@ -25,3 +25,24 @@ export interface AITableReferences {
     members: Dictionary<AITableUserInfo>;
     attachments: Dictionary<AITableAttachmentInfo>;
 }
+
+export type AITableFieldsSizeMap = Record<string, number | undefined>;
+
+export type AITableSizeMap = Record<number, number>;
+
+export enum AITableRowColumnType {
+    row = 'row',
+    column = 'column'
+}
+
+export interface AITableCoordinate {
+    rowCount: number;
+    columnCount: number;
+    container: HTMLDivElement;
+    rowHeight: number;
+    rowInitSize?: number;
+    rowIndicesSizeMap: AITableSizeMap;
+    columnIndicesSizeMap: AITableSizeMap;
+    columnInitSize?: number;
+    frozenColumnCount?: number;
+}
