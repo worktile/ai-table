@@ -13,7 +13,7 @@ import {
     TextFieldBase
 } from './model';
 
-export const FieldModelMap: Record<AITableFieldType, FieldBase> = {
+export const FieldModelBaseMap: Record<AITableFieldType, FieldBase> = {
     [AITableFieldType.text]: new TextFieldBase(),
     [AITableFieldType.richText]: new RichTextFieldBase(),
     [AITableFieldType.select]: new SelectFieldBase(),
