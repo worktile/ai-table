@@ -48,5 +48,5 @@ export const scrollMax = (aiTable: AITable, coordinate: Coordinate, visibleColum
             return pre + (isNumber(index) ? coordinate.getColumnWidth(index) : 0);
         }, AI_TABLE_ROW_HEAD_WIDTH) + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     const scrollMaxHeight = coordinate.getRowOffset(coordinate.rowCount - 1) + 32;
-    return { scrollMaxWidth, scrollMaxHeight };
+    return { scrollMaxWidth: Math.max(scrollMaxWidth, coordinate.containerWidth), scrollMaxHeight };
 };
