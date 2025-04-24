@@ -5,11 +5,10 @@
     "scripts": {
         "build": "rimraf ../../dist/utils && tsc -p tsconfig.lib.json && cpx package.json ../../dist/utils"
     },
-    "dependencies": {
-        "tslib": "^2.3.0",
+    "peerDependencies": {
         "lodash": "^4.17.21"
     },
-    "devDependencies": {
-        "@types/lodash": "^4.17.7"
+    "dependencies": {
+        "tslib": "^2.3.0"
     }
 }
