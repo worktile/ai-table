@@ -97,6 +97,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private notifyService = inject(ThyNotifyService);
 
+    private isPopoverOpen = false;
+
     timer!: number | null;
 
     resizeObserver!: ResizeObserver;
@@ -306,7 +308,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             if (curMousePosition.areaType !== AITableAreaType.none) {
                 context!.setPointPosition(curMousePosition);
             } else {
-                context!.setPointPosition(DEFAULT_POINT_POSITION);
+                this.setDefaultPointPosition();
             }
             this.timer = null;
             if (this.isDragSelecting) {
@@ -386,8 +388,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             cancelAnimationFrame(this.timer);
         }
         this.timer = requestAnimationFrame(() => {
-            const { context } = this.aiTable;
-            context!.setPointPosition(DEFAULT_POINT_POSITION);
+            if (this.isPopoverOpen) {
+                return;
+            }
+            this.setDefaultPointPosition();
         });
     }
 
@@ -487,7 +491,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     };
 
                     const editOrigin = this.containerElement().querySelector('.konvajs-content') as HTMLElement;
-                    this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
+                    const menuRef = this.aiTableGridFieldService.openFieldMenu(this.aiTable, {
                         fieldId: fieldId,
                         fieldMenus: this.fieldMenus(),
                         origin: this.containerElement(),
@@ -495,6 +499,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         editOrigin: editOrigin,
                         editFieldPosition
                     });
+                    menuRef.afterClosed().subscribe(() => {
+                        this.isPopoverOpen = false;
+                        this.setDefaultPointPosition();
+                    });
+                    this.isPopoverOpen = true;
                 }
                 break;
         }
@@ -566,6 +575,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.timer = null;
         });
     };
+
+    private setDefaultPointPosition() {
+        const { context } = this.aiTable;
+        context!.setPointPosition(DEFAULT_POINT_POSITION);
+    }
 
     private bindScrollBarScroll() {
         fromEvent<WheelEvent>(this.horizontalBarRef()!.nativeElement, 'scroll', { passive: true })
