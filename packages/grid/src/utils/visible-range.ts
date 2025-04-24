@@ -1,5 +1,5 @@
 import { isNumber } from 'lodash';
-import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
+import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITable, AITableField, AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
 import { AITableScrollState } from '../types';
 
@@ -41,10 +41,12 @@ export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITable
 
 export const scrollMax = (aiTable: AITable, coordinate: Coordinate, visibleColumns: AITableField[]) => {
     const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
-    const scrollMaxWidth = visibleColumns.reduce((pre, cur) => {
-        const index = visibleColumnIndexMap.get(cur._id);
-        return pre + (isNumber(index) ? coordinate.getColumnWidth(index) : 0);
-    }, AI_TABLE_ROW_HEAD_WIDTH);
+
+    const scrollMaxWidth =
+        visibleColumns.reduce((pre, cur) => {
+            const index = visibleColumnIndexMap.get(cur._id);
+            return pre + (isNumber(index) ? coordinate.getColumnWidth(index) : 0);
+        }, AI_TABLE_ROW_HEAD_WIDTH) + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     const scrollMaxHeight = coordinate.getRowOffset(coordinate.rowCount - 1) + 32;
     return { scrollMaxWidth, scrollMaxHeight };
 };
