@@ -181,7 +181,7 @@ export class AITableGridEventService {
                 aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
-            outsideClosable: true,
+            outsideClosable: false,
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,
