@@ -1,4 +1,3 @@
-
 export enum AITableFieldType {
     text = 'text', // 包含多行文本
     richText = 'rich_text', // 包含多行文本
@@ -119,6 +118,8 @@ export type ProgressFieldValue = number; // [0,1]
 
 export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
 
+export type RichTextFieldValue = any[];
+
 export type FieldValue =
     | TextFieldValue
     | LinkFieldValue
@@ -129,6 +130,7 @@ export type FieldValue =
     | ProgressFieldValue
     | RateFieldValue
     | AttachmentFieldValue
+    | RichTextFieldValue
     | any;
 
 export interface TrackableEntity {
@@ -223,4 +225,3 @@ export interface TransactionOriginInfo {
     uid: string;
     [key: string]: any;
 }
-
