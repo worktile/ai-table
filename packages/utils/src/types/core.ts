@@ -1,12 +1,13 @@
+import { Id } from 'ngx-tethys/types';
+import { AITableFieldsSizeMap } from './grid';
 
 export enum AITableFieldType {
-    text = 'text', // 包含多行文本
-    richText = 'rich_text', // 包含多行文本
+    text = 'text',
+    richText = 'rich_text',
     select = 'select', // 包含单选和多选
     number = 'number',
     date = 'date',
     member = 'member', // 包含单个和多个
-    // cascadeSelect = 'cascade_select', // 包含单选和多选，参数复杂后续再进行设计
     progress = 'progress',
     rate = 'rate',
     link = 'link',
@@ -62,10 +63,7 @@ export interface AITableField {
     frozen?: boolean;
     stat_type?: AITableStatType;
     settings?: AITableFieldSettings;
-    [key: string]: any;
 }
-
-export type Id = string | number;
 
 export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings | AttachmentSettings;
 
@@ -101,26 +99,29 @@ export enum AITableSelectOptionStyle {
     piece = 4
 }
 
-export type TextFieldValue = string;
+export type TextFieldValue = string | null;
 
-export type LinkFieldValue = { url: string; text: string };
+export type RichTextFieldValue = any[];
 
-export type SelectFieldValue = Id[]; // 数字
+export type LinkFieldValue = { url: string; text: string } | null;
 
-export type NumberFieldValue = number;
+export type SelectFieldValue = Id[];
 
-export type DateFieldValue = { timestamp: number }; // 时间戳
+export type NumberFieldValue = number | null;
+
+export type DateFieldValue = { timestamp: number } | null;
 
 export type MemberFieldValue = Id[];
 
 export type AttachmentFieldValue = string[];
 
-export type ProgressFieldValue = number; // [0,1]
+export type ProgressFieldValue = number | null; // [0,1]
 
-export type RateFieldValue = 1 | 2 | 3 | 4 | 5;
+export type RateFieldValue = 1 | 2 | 3 | 4 | 5 | null;
 
 export type FieldValue =
     | TextFieldValue
+    | RichTextFieldValue
     | LinkFieldValue
     | SelectFieldValue
     | NumberFieldValue
@@ -166,6 +167,7 @@ export type AITableFields = AITableField[];
 export interface AITableValue {
     records: AITableRecords;
     fields: AITableFields;
+    fieldsSizeMap: AITableFieldsSizeMap;
 }
 
 export enum Direction {
@@ -204,6 +206,16 @@ export interface MoveFieldOptions {
     newPath: NumberPath;
 }
 
+export interface SetFieldWidthOptions {
+    path: IdPath;
+    width: number;
+}
+
+export interface MoveRecordOptions {
+    recordIds: IdPath[];
+    newPath: NumberPath;
+}
+
 export type NumberPath = [number];
 
 export type IdPath = [string];
@@ -219,8 +231,19 @@ export enum DragType {
     none = 'none'
 }
 
+export interface DragEndData {
+    type: DragType;
+    targetIndex?: number;
+    fieldIds?: Set<string>;
+    fieldsIndex?: number[];
+    recordIds?: Set<string>;
+    recordsIndex?: number[];
+    width?: number;
+}
+
 export interface TransactionOriginInfo {
     uid: string;
     [key: string]: any;
 }
 
+export { Id };
