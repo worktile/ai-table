@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.61](https://github.com/worktile/ai-table/compare/0.0.60...0.0.61) (2025-04-24)
+
+
+### Bug Fixes
+
+* **demo:** #WIK-17817 fixed the edit column menu not being displayed ([#395](https://github.com/worktile/ai-table/issues/395)) ([30ad5de](https://github.com/worktile/ai-table/commit/30ad5de89568699d79e430e0e0d6dc8be2855a67))
+* **grid:** #WIK-17724 show more menus Keep column titles hovered ([#390](https://github.com/worktile/ai-table/issues/390)) ([a12129c](https://github.com/worktile/ai-table/commit/a12129c53a0e0f2cdc890f37af42ccbc84fc8acf)), closes [#WIK-17724](https://github.com/worktile/ai-table/issues/WIK-17724)
+* **grid:** calculate scrolling maxwidth Add field Add button width ([#391](https://github.com/worktile/ai-table/issues/391)) ([f3bebb3](https://github.com/worktile/ai-table/commit/f3bebb30837159eb3fd03919a7198661368c79f2))
+* **grid:** fix active cell border ([#393](https://github.com/worktile/ai-table/issues/393)) ([47f5660](https://github.com/worktile/ai-table/commit/47f56606f969b8ae06601f5ec6caafdc1f922503))
+* **grid:** fix scrollMaxWidth to make sure it's not less than the container width ([#394](https://github.com/worktile/ai-table/issues/394)) ([6c82d89](https://github.com/worktile/ai-table/commit/6c82d8927c07a710a96eeab0fe57c09ac5a3d8fd))
+* **state:** #WIK-17815 new field should remove position ([#392](https://github.com/worktile/ai-table/issues/392)) ([9788968](https://github.com/worktile/ai-table/commit/97889686808b5d9e16d18625bf9d8bbba0c81f2b)), closes [#WIK-17815](https://github.com/worktile/ai-table/issues/WIK-17815)
+
+
+
 ## [0.0.60](https://github.com/worktile/ai-table/compare/0.0.59...0.0.60) (2025-04-23)
 
 
