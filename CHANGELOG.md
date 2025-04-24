@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.62](https://github.com/worktile/ai-table/compare/0.0.61...0.0.62) (2025-04-24)
+
+
+### Bug Fixes
+
+* **grid:** should not close editor panel when click panel ([#397](https://github.com/worktile/ai-table/issues/397)) ([caa40f6](https://github.com/worktile/ai-table/commit/caa40f6f35c81e553eb5e2318f6ccc78638e073d))
+
+
+### Features
+
+* #WIK-17779 【Utils】确定 field-model 复用方案（isValid + cellFullText） ([#389](https://github.com/worktile/ai-table/issues/389)) ([d4b6f29](https://github.com/worktile/ai-table/commit/d4b6f29c0da1790a5548c60ea0e5d8ed036d8387)), closes [#WIK-17779](https://github.com/worktile/ai-table/issues/WIK-17779)
+
+
+
 ## [0.0.61](https://github.com/worktile/ai-table/compare/0.0.60...0.0.61) (2025-04-24)
 
 
