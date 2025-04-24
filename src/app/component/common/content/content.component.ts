@@ -125,7 +125,7 @@ export class DemoTableContent {
             },
             fieldMenus: (aiTable: AITable) => {
                 return [
-                    { ...EditFieldPropertyItem, hidden: () => readonly } as any,
+                    { ...EditFieldPropertyItem(aiTable), hidden: () => readonly } as any,
                     {
                         ...CopyFieldPropertyItem(aiTable, (data: AddFieldOptions) => {
                             this.addField(data);
