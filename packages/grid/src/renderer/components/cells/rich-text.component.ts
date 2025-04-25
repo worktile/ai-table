@@ -17,11 +17,14 @@ import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { AITableText } from '../text.component';
+import { isNil } from 'lodash';
 
 @Component({
     selector: 'ai-table-rich-text',
     template: `
-        <ai-table-text [config]="textConfig()!"></ai-table-text>
+        @if (textConfig()) {
+            <ai-table-text [config]="textConfig()!"></ai-table-text>
+        }
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
     standalone: true,
@@ -38,7 +41,7 @@ export class AITableCellRichText implements HoverCellComponent {
         if (render) {
             const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
             let textRender: string | null = transformValue;
-            if (textRender == null) {
+            if (isNil(textRender)) {
                 return;
             }
             textRender = textRender.replace(/\r|\n/g, ' ');
