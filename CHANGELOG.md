@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.63](https://github.com/worktile/ai-table/compare/0.0.62...0.0.63) (2025-04-25)
+
+
+### Bug Fixes
+
+* #WIK-17809 数据异常 AITableText ([#399](https://github.com/worktile/ai-table/issues/399)) ([4053b6c](https://github.com/worktile/ai-table/commit/4053b6c49063f3f5e0b79b55475d3a7dbf85de9f)), closes [#WIK-17809](https://github.com/worktile/ai-table/issues/WIK-17809)
+* **field:** add existence check for fields in addField function ([#400](https://github.com/worktile/ai-table/issues/400)) ([43c2972](https://github.com/worktile/ai-table/commit/43c29723ba992e0b9c432b38777e14fdbfa15c6d))
+
+
+
 ## [0.0.62](https://github.com/worktile/ai-table/compare/0.0.61...0.0.62) (2025-04-24)
 
 
