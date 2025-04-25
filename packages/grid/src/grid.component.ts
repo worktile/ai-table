@@ -30,6 +30,7 @@ import {
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
+    AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
@@ -372,6 +373,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
+            case AI_TABLE_ROW_HEAD:
             case AI_TABLE_ROW_SELECT_CHECKBOX:
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
                 return;
