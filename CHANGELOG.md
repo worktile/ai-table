@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.64](https://github.com/worktile/ai-table/compare/0.0.63...0.0.64) (2025-04-25)
+
+
+### Bug Fixes
+
+* **grid:** should not cancel user's selection rows when click table row head ([#402](https://github.com/worktile/ai-table/issues/402)) ([a6ccb3f](https://github.com/worktile/ai-table/commit/a6ccb3f99887da776c8c41405faa8e47b5fc02c0))
+
+
+
 ## [0.0.63](https://github.com/worktile/ai-table/compare/0.0.62...0.0.63) (2025-04-25)
 
 
