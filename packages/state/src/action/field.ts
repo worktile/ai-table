@@ -12,6 +12,13 @@ export function addField(aiTable: AIViewTable, field: AITableField, path: Number
         originId,
         isCopy
     };
+    const existField = aiTable.fields().some((item) => {
+        return item._id === field._id;
+    });
+    if (existField) {
+        console.error(`Field with id ${field._id} already exists.`, field);
+        throw new Error(`Field with id ${field._id} already exists.`);
+    }
     aiTable.apply(operation);
 }
 

@@ -31,7 +31,7 @@ export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecor
         aiTable.apply(operation);
     } else {
         console.error(
-            `Invalid field value at update field value. invalidFieldValue: ${field?.type}, value: ${value}, field_id: ${path[1]}`
+            `Invalid field value at update field value. invalidFieldType: ${field?.type}, value: ${value}, field_id: ${path[1]}`
         );
     }
 }
