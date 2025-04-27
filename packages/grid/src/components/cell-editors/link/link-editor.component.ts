@@ -7,6 +7,7 @@ import {
     inject,
     OnInit,
     signal,
+    OnDestroy,
     ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -41,7 +42,7 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
         class: 'ai-table-link-editor'
     }
 })
-export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> implements OnInit {
+export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> implements OnInit, OnDestroy {
     @ViewChild('inputElement', { static: false })
     inputElement!: ElementRef;
 
@@ -58,6 +59,24 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     notifyService = inject(ThyNotifyService);
 
     isOpened = false;
+
+    private documentClickHandler: (event: MouseEvent) => void;
+
+    constructor() {
+        super();
+        this.documentClickHandler = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            if (!this.elementRef.nativeElement.contains(target)) {
+                this.updateValue();
+                this.closePopover();
+            }
+        };
+        document.addEventListener('click', this.documentClickHandler);
+    }
+
+    ngOnDestroy() {
+        document.removeEventListener('click', this.documentClickHandler);
+    }
 
     isValidLink(link: { text: string; url: string }) {
         if (!link?.text?.trim()) {
@@ -83,6 +102,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         const action = this.elementRef.nativeElement.querySelector('.edit-icon');
         if (!(event.relatedTarget as HTMLElement)?.contains(action)) {
             this.updateValue();
+            this.closePopover();
         }
     }
 
