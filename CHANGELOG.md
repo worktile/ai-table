@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.66](https://github.com/worktile/ai-table/compare/0.0.65...0.0.66) (2025-04-27)
+
+
+### Bug Fixes
+
+* **drag:** add prefix for drag-container class #WIK-17855 ([99cae77](https://github.com/worktile/ai-table/commit/99cae772d6d81740a82fee10f1f2760a0c8f4cad)), closes [#WIK-17855](https://github.com/worktile/ai-table/issues/WIK-17855)
+
+
+
 ## [0.0.65](https://github.com/worktile/ai-table/compare/0.0.64...0.0.65) (2025-04-27)
 
 
