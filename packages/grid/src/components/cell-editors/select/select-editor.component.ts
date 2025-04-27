@@ -52,7 +52,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
         this.modelValue = computed(() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
             if (!this.isMultiple) {
-                return value[0];
+                return value?.length > 0 ? value[0] : null;
             }
             return value || [];
         })();
