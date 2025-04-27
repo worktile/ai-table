@@ -10,7 +10,7 @@ import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH, AI_TABLE_ROW_
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'drag-container'
+        class: 'ai-table-drag-container'
     }
 })
 export class AITableDragComponent implements OnInit, OnDestroy {
