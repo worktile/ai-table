@@ -502,11 +502,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         editOrigin: editOrigin,
                         editFieldPosition
                     });
-                    menuRef.afterClosed().subscribe(() => {
-                        this.isPopoverOpen = false;
-                        this.setDefaultPointPosition();
-                    });
-                    this.isPopoverOpen = true;
+                    if (menuRef) {
+                        menuRef.afterClosed().subscribe(() => {
+                            this.isPopoverOpen = false;
+                            this.setDefaultPointPosition();
+                        });
+                        this.isPopoverOpen = true;
+                    }
                 }
                 break;
         }

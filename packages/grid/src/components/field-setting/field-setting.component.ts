@@ -9,7 +9,8 @@ import {
     inject,
     input,
     model,
-    output
+    output,
+    signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyButton } from 'ngx-tethys/button';
@@ -21,7 +22,7 @@ import {
     ThyDropdownMenuItemIconDirective,
     ThyDropdownMenuItemNameDirective
 } from 'ngx-tethys/dropdown';
-import { ThyFormModule, ThyFormValidatorConfig, ThyUniqueCheckValidator } from 'ngx-tethys/form';
+import { ThyFormModule, ThyUniqueCheckValidator } from 'ngx-tethys/form';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyInputCount, ThyInputDirective, ThyInputGroup } from 'ngx-tethys/input';
 import { ThySwitch } from 'ngx-tethys/switch';
@@ -118,6 +119,8 @@ export class AITableFieldSetting implements OnInit {
 
     isMultipleMember = false;
 
+    private isManualInputName = signal(false);
+
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
 
     ngOnInit(): void {
@@ -139,7 +142,7 @@ export class AITableFieldSetting implements OnInit {
         this.aiEditField.update((item) => {
             const width = fieldsSizeMap[item._id] ?? field.width;
             const settings = field.settings || {};
-            const name = createDefaultFieldName(this.aiTable(), field);
+            const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
             return { ...item, ...field, width, name, settings };
         });
         setTimeout(() => {
@@ -172,6 +175,10 @@ export class AITableFieldSetting implements OnInit {
     fieldTypeClick(e: Event) {
         e.preventDefault();
         e.stopPropagation();
+    }
+
+    nameChange(event: Event) {
+        this.isManualInputName.set(true);
     }
 
     cancel() {
