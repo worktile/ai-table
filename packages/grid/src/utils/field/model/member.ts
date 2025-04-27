@@ -32,7 +32,7 @@ export class MemberField extends Field {
         sortKey: string,
         options: {
             aiTable: AITable;
-            field: AITableField,
+            field: AITableField;
         }
     ): number {
         const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
@@ -93,7 +93,10 @@ export function toMemberFieldValue(
     plainText = plainText.trim();
     const hasMemberInfo = references && references.members && Object.keys(references.members).length;
     if (plainText && hasMemberInfo) {
-        const memberNames = plainText.split(',').map((id) => id.trim());
+        const memberNames = plainText
+            .split(',')
+            .map((id) => id.trim())
+            .filter((id) => !!id);
         const memberInfos = Object.values(references.members);
         let validMemberIds: MemberFieldValue = [];
         memberNames.forEach((memberName) => {
