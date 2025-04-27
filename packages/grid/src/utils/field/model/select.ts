@@ -92,7 +92,11 @@ export function processPastedValueForSelect(
 
     let existOptionIds: string[] = [];
     let newOptions: AITableSelectOption[] = [];
-    let cellFullTexts: string[] = plainText.split(',').map((text) => text.trim());
+
+    let cellFullTexts: string[] = plainText
+        .split(',')
+        .map((text) => text.trim())
+        .filter((text) => !!text);
 
     const { field, cellValue } = originData || {};
     if (field && field.type === AITableFieldType.select) {

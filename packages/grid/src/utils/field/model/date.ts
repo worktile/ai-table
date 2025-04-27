@@ -106,7 +106,10 @@ export function toDateFieldValue(
         }
     }
 
-    const texts = plainText.split(',');
+    const texts = plainText
+        .split(',')
+        .map((text) => text.trim())
+        .filter((text) => !!text);
     const value = texts && texts.length ? texts[0].trim() : plainText.trim();
     const dateValue = transformDateValue(value);
     if (dateValue) {
