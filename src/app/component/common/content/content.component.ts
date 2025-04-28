@@ -193,12 +193,20 @@ export class DemoTableContent {
         };
     });
 
+    canUndoCount = computed(() => {
+        return this.tableService.canUndoCount();
+    });
+
+    canRedoCount = computed(() => {
+        return this.tableService.canRedoCount();
+    });
+
     canUndo = computed(() => {
-        return this.tableService.canUndo();
+        return this.canUndoCount() > 0;
     });
 
     canRedo = computed(() => {
-        return this.tableService.canRedo();
+        return this.canRedoCount() > 0;
     });
 
     actions: AITableActions = {
@@ -300,15 +308,13 @@ export class DemoTableContent {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
-                this.tableService.undo();
-            });
-        fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'z'),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(async (event) => {
-                this.tableService.redo();
+                if (event.shiftKey) {
+                    // 重做操作
+                    this.tableService.redo();
+                } else {
+                    // 撤销操作
+                    this.tableService.undo();
+                }
             });
     }
 
