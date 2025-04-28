@@ -5,8 +5,6 @@ export enum ActionName {
     UpdateFieldValue = 'update_field_value',
     AddRecord = 'add_record',
     AddField = 'add_field',
-    MoveField = 'move_field',
-    MoveRecord = 'move_record',
     RemoveField = 'remove_field',
     RemoveRecord = 'remove_record',
     SetField = 'set_field',
@@ -42,12 +40,6 @@ export type AddFieldAction = {
     field: AITableField;
     originId?: string;
     isCopy?: boolean;
-};
-
-export type MoveRecordAction = {
-    type: ActionName.MoveRecord;
-    path: NumberPath;
-    newPath: NumberPath;
 };
 
 export type RemoveFieldAction = {
@@ -108,6 +100,5 @@ export type AITableAction =
     | RemoveRecordAction
     | RemoveFieldAction
     | SetFieldAction
-    | MoveRecordAction
     | AITableViewAction
     | AITableSystemFieldAction;

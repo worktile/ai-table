@@ -442,38 +442,6 @@ export class DemoTableContent {
         });
     }
 
-    moveField() {
-        const newIndex = 2;
-        const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
-        selectedFields.forEach((item) => {
-            const path = AITableQueries.findFieldPath(this.aiTable, item) as NumberPath;
-            Actions.moveField(this.aiTable, path, [newIndex]);
-        });
-    }
-
-    moveRecord() {
-        const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
-        const selectedRecordsAfterNewPath: AITableRecord[] = [];
-        let offset = 0;
-        const newIndex = 2;
-        selectedRecords.forEach((item) => {
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            if (path[0] < newIndex) {
-                Actions.moveRecord(this.aiTable, path, [newIndex]);
-                offset = 1;
-            } else {
-                selectedRecordsAfterNewPath.push(item);
-            }
-        });
-        selectedRecordsAfterNewPath.reverse().forEach((item) => {
-            const newPath = [newIndex + offset] as NumberPath;
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            Actions.moveRecord(this.aiTable, path, newPath);
-        });
-    }
-
     getLocalRenderMode(key: string) {
         const value = localStorage.getItem(key) as 'dom' | 'canvas';
         return value ? value : null;

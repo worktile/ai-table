@@ -11,7 +11,6 @@ import {
     UpdateFieldValueAction,
     ActionName,
     AddRecordAction,
-    MoveRecordAction,
     RemoveRecordAction,
     AIViewTable,
     UpdateSystemFieldValue
@@ -68,15 +67,6 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: Num
     }
 }
 
-export function moveRecord(aiTable: AIViewTable, path: NumberPath, newPath: NumberPath) {
-    const operation: MoveRecordAction = {
-        type: ActionName.MoveRecord,
-        path,
-        newPath
-    };
-    aiTable.apply(operation);
-}
-
 export function removeRecord(aiTable: AIViewTable, path: IdPath) {
     const operation: RemoveRecordAction = {
         type: ActionName.RemoveRecord,
@@ -88,7 +78,6 @@ export function removeRecord(aiTable: AIViewTable, path: IdPath) {
 export const RecordActions = {
     addRecord,
     updateFieldValue,
-    moveRecord,
     removeRecord,
     updateSystemFieldValue
 };
