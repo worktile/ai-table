@@ -70,11 +70,14 @@ export default function addNode(
                 const fieldSyncElement = toSyncElement(field);
                 fields.insert(insertIndex, [fieldSyncElement]);
                 for (let value of records) {
-                    const customFieldValues = value.get(1);
+                    const customFieldValues = value.get(1) as Y.Array<any>;
                     const systemFieldValues = value.get(0);
                     const recordEntity = aiTable.recordsMap()[getIdBySystemFieldValuesType(systemFieldValues)];
                     const newFieldValue = recordEntity.values[action.field._id];
-                    customFieldValues.insert(insertIndex, [newFieldValue]);
+                    // 幽灵单元格，暂不处理交给后端统一处理
+                    if (insertIndex <= customFieldValues.length) {
+                        customFieldValues.push([newFieldValue]);
+                    }
                 }
             }
             break;
