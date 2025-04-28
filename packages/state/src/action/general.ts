@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions, isPathEqual } from '../utils';
+import { createDefaultPositions } from '../utils';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
     switch (action.type) {
@@ -67,21 +67,12 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
                         action.path[0]
                     );
                 }
-                fields.splice(fieldIndex, 0, newField as AITableViewField);
+                fields.push(newField as AITableViewField);
                 records.forEach((item) => {
                     item.values[newField._id] =
                         action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
                 });
             }
-            break;
-        }
-        case ActionName.MoveRecord: {
-            if (isPathEqual(action.path, action.newPath)) {
-                return;
-            }
-            const record = records[action.path[0]];
-            records.splice(action.path[0], 1);
-            records.splice(action.newPath[0], 0, record);
             break;
         }
         case ActionName.RemoveField: {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestr
 import { AITableDragState, DragEndData, DragType } from '../../core';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants/table';
 
 @Component({
     selector: 'ai-table-drag',
@@ -10,7 +10,7 @@ import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'drag-container'
+        class: 'ai-table-drag-container'
     }
 })
 export class AITableDragComponent implements OnInit, OnDestroy {
@@ -143,6 +143,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const sourceColumnWidth = coordinate.getColumnWidth(sourceColumnIndex);
         // TODO: 目前默认第一列为冻结列，后期支持设置冻结列需要处理
         const isSourceColumnFrozen = sourceColumnIndex === 0;
+        const frozenColumnWidth = coordinate.getColumnWidth(0);
         const pointerX = moveX + sourceColumnStartX;
         // 拖拽中心点
         const dragCenter = sourceColumnWidth / 2;
@@ -170,22 +171,28 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             (targetColumnIndex >= 0 && (targetColumnIndex - sourceColumnIndex > 1 || targetColumnIndex - sourceColumnIndex < 0)) ||
             isLastColumn
         ) {
+            let lineLeft = targetColumnStartX - scroll.x;
+            const lineForFrozenX = lineLeft - frozenColumnWidth - AI_TABLE_ROW_HEAD_WIDTH;
+            if (lineForFrozenX < 0) {
+                lineLeft = coordinate.getColumnOffset(0);
+                targetColumnIndex = 0;
+            }
             this.setAuxiliaryLineStyles({
                 width: '2px',
                 height: '100%',
                 top: 0,
-                left: `${targetColumnStartX - scroll.x}px`
-            });
-            const fieldsIndex: number[] = [];
-            drag.sourceIds.forEach((id) => {
-                const index = visibleColumnIndexMap.get(id) || 0;
-                fieldsIndex.push(index);
+                left: `${lineLeft}px`
             });
             // 向右移动目标在目标列的前一列
             if (targetColumnIndex > sourceColumnIndex) {
                 targetColumnIndex -= 1;
             }
-            this.draggedData = { type: DragType.field, targetIndex: targetColumnIndex, fieldIds: drag.sourceIds, fieldsIndex };
+            this.draggedData = {
+                type: DragType.field,
+                targetIndex: targetColumnIndex,
+                fieldIds: drag.sourceIds,
+                fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
+            };
         } else {
             this.resetAuxiliaryLine();
             this.draggedData = null;

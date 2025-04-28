@@ -193,12 +193,20 @@ export class DemoTableContent {
         };
     });
 
+    canUndoCount = computed(() => {
+        return this.tableService.canUndoCount();
+    });
+
+    canRedoCount = computed(() => {
+        return this.tableService.canRedoCount();
+    });
+
     canUndo = computed(() => {
-        return this.tableService.canUndo();
+        return this.canUndoCount() > 0;
     });
 
     canRedo = computed(() => {
-        return this.tableService.canRedo();
+        return this.canRedoCount() > 0;
     });
 
     actions: AITableActions = {
@@ -300,15 +308,13 @@ export class DemoTableContent {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
-                this.tableService.undo();
-            });
-        fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'z'),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(async (event) => {
-                this.tableService.redo();
+                if (event.shiftKey) {
+                    // 重做操作
+                    this.tableService.redo();
+                } else {
+                    // 撤销操作
+                    this.tableService.undo();
+                }
             });
     }
 
@@ -433,38 +439,6 @@ export class DemoTableContent {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
         recordIds.forEach((id) => {
             Actions.removeRecord(this.aiTable, [id]);
-        });
-    }
-
-    moveField() {
-        const newIndex = 2;
-        const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
-        selectedFields.forEach((item) => {
-            const path = AITableQueries.findFieldPath(this.aiTable, item) as NumberPath;
-            Actions.moveField(this.aiTable, path, [newIndex]);
-        });
-    }
-
-    moveRecord() {
-        const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
-        const selectedRecordsAfterNewPath: AITableRecord[] = [];
-        let offset = 0;
-        const newIndex = 2;
-        selectedRecords.forEach((item) => {
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            if (path[0] < newIndex) {
-                Actions.moveRecord(this.aiTable, path, [newIndex]);
-                offset = 1;
-            } else {
-                selectedRecordsAfterNewPath.push(item);
-            }
-        });
-        selectedRecordsAfterNewPath.reverse().forEach((item) => {
-            const newPath = [newIndex + offset] as NumberPath;
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            Actions.moveRecord(this.aiTable, path, newPath);
         });
     }
 

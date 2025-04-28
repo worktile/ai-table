@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.66](https://github.com/worktile/ai-table/compare/0.0.65...0.0.66) (2025-04-27)
+
+
+### Bug Fixes
+
+* **drag:** add prefix for drag-container class #WIK-17855 ([99cae77](https://github.com/worktile/ai-table/commit/99cae772d6d81740a82fee10f1f2760a0c8f4cad)), closes [#WIK-17855](https://github.com/worktile/ai-table/issues/WIK-17855)
+
+
+
+## [0.0.65](https://github.com/worktile/ai-table/compare/0.0.64...0.0.65) (2025-04-27)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17847 fix column drag line position when dragging to frozen column area ([#407](https://github.com/worktile/ai-table/issues/407)) ([a44ffb6](https://github.com/worktile/ai-table/commit/a44ffb6cb8d0d9cdbb4271c7325c448344d531a9))
+* **grid:** #WIK-17850 fix potential null references ([3ebfc3e](https://github.com/worktile/ai-table/commit/3ebfc3e4c620e933c33802881a04cbc54f1850da))
+* **grid:** should not paste empty option and  fix array access out of bounds error ([#405](https://github.com/worktile/ai-table/issues/405)) ([d8f9eb2](https://github.com/worktile/ai-table/commit/d8f9eb205e7df801feb4bc2a5c9ed77417f61703))
+* **grid:** show blank when first create table ([#409](https://github.com/worktile/ai-table/issues/409)) ([b394418](https://github.com/worktile/ai-table/commit/b3944189d765a45d572a5a534d4817e36be09e18))
+
+
+### Features
+
+* **grid:** the field name manually entered by the user should not be overwritten after modifying the field type ([#406](https://github.com/worktile/ai-table/issues/406)) ([9d9e868](https://github.com/worktile/ai-table/commit/9d9e868dc14ae456593d13fb08849c0fe0f492f5))
+
+
+
 ## [0.0.64](https://github.com/worktile/ai-table/compare/0.0.63...0.0.64) (2025-04-25)
 
 

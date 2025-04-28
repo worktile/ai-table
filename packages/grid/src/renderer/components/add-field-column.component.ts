@@ -6,7 +6,6 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
-    AI_TABLE_FIELD_HEAD,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
     Colors
@@ -14,7 +13,6 @@ import {
 import { AITableAddFieldConfig, AITableIconConfig } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
-import { isNil } from 'lodash';
 
 @Component({
     selector: 'ai-table-add-field',
@@ -84,7 +82,7 @@ export class AITableAddField {
             data: AddOutlinedPath,
             fill: Colors.gray600,
             listening: false,
-            visible: isNil(readonly) ? true : !readonly
+            visible: !readonly
         };
     });
 }
