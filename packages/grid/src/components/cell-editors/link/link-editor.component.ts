@@ -1,15 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    computed,
-    ElementRef,
-    inject,
-    OnInit,
-    signal,
-    OnDestroy,
-    ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -42,7 +31,7 @@ import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
         class: 'ai-table-link-editor'
     }
 })
-export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> implements OnInit, OnDestroy {
+export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: string; url: string }> implements OnInit {
     @ViewChild('inputElement', { static: false })
     inputElement!: ElementRef;
 
@@ -60,22 +49,8 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
 
     isOpened = false;
 
-    private documentClickHandler: (event: MouseEvent) => void;
-
     constructor() {
         super();
-        this.documentClickHandler = (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
-            if (!this.elementRef.nativeElement.contains(target)) {
-                this.updateValue();
-                this.closePopover();
-            }
-        };
-        document.addEventListener('click', this.documentClickHandler);
-    }
-
-    ngOnDestroy() {
-        document.removeEventListener('click', this.documentClickHandler);
     }
 
     isValidLink(link: { text: string; url: string }) {

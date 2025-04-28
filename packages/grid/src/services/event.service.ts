@@ -163,7 +163,8 @@ export class AITableGridEventService {
 
     openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
         const { container, recordId, fieldId, isHoverEdit, references } = options;
-        const { component, isInternalComponent } = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const fieldType = this.aiTable.fieldsMap()[fieldId].type;
+        const { component, isInternalComponent } = this.getEditorComponent(fieldType);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             viewContainerRef: isInternalComponent ? undefined : options?.viewContainerRef,
@@ -181,7 +182,7 @@ export class AITableGridEventService {
                 aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
-            outsideClosable: false,
+            outsideClosable: fieldType === AITableFieldType.link ? true : false,
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,
