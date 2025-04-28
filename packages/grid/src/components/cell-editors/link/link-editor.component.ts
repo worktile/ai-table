@@ -49,10 +49,6 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
 
     isOpened = false;
 
-    constructor() {
-        super();
-    }
-
     isValidLink(link: { text: string; url: string }) {
         if (!link?.text?.trim()) {
             return true;
