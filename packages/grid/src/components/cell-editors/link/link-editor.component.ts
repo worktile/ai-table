@@ -1,14 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    computed,
-    ElementRef,
-    inject,
-    OnInit,
-    signal,
-    ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
@@ -83,6 +73,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         const action = this.elementRef.nativeElement.querySelector('.edit-icon');
         if (!(event.relatedTarget as HTMLElement)?.contains(action)) {
             this.updateValue();
+            this.closePopover();
         }
     }
 
