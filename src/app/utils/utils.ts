@@ -210,7 +210,7 @@ export function getCanvasDefaultValue() {
                 name: '单行文本',
                 positions: {
                     view1: 0,
-                    view2: 18
+                    view2: 30
                 },
                 type: AITableFieldType.text
             },
@@ -219,7 +219,7 @@ export function getCanvasDefaultValue() {
                 name: '单行文本 2',
                 positions: {
                     view1: 1,
-                    view2: 17
+                    view2: 28
                 },
                 type: AITableFieldType.text
             },
@@ -228,7 +228,7 @@ export function getCanvasDefaultValue() {
                 name: '成员',
                 positions: {
                     view1: 2,
-                    view2: 9
+                    view2: 26
                 },
                 settings: {
                     is_multiple: true
@@ -240,7 +240,7 @@ export function getCanvasDefaultValue() {
                 name: '单成员',
                 positions: {
                     view1: 3,
-                    view2: 9
+                    view2: 24
                 },
                 widths: {
                     view1: 100,
@@ -256,7 +256,7 @@ export function getCanvasDefaultValue() {
                 name: '单选',
                 positions: {
                     view1: 4,
-                    view2: 16
+                    view2: 22
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -285,7 +285,7 @@ export function getCanvasDefaultValue() {
                 name: 'dot单选',
                 positions: {
                     view1: 5,
-                    view2: 15
+                    view2: 20
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -315,7 +315,7 @@ export function getCanvasDefaultValue() {
                 name: 'piece单选',
                 positions: {
                     view1: 6,
-                    view2: 14
+                    view2: 18
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -345,7 +345,7 @@ export function getCanvasDefaultValue() {
                 name: 'tag单选',
                 positions: {
                     view1: 7,
-                    view2: 13
+                    view2: 16
                 },
                 type: AITableFieldType.select,
                 icon: 'check-circle',
@@ -418,7 +418,7 @@ export function getCanvasDefaultValue() {
                 },
                 positions: {
                     view1: 8,
-                    view2: 12
+                    view2: 15
                 }
             },
             {
@@ -426,7 +426,7 @@ export function getCanvasDefaultValue() {
                 name: '数字',
                 positions: {
                     view1: 9,
-                    view2: 11
+                    view2: 14
                 },
                 type: AITableFieldType.number
             },
@@ -435,7 +435,7 @@ export function getCanvasDefaultValue() {
                 name: '日期',
                 positions: {
                     view1: 10,
-                    view2: 10
+                    view2: 13
                 },
                 type: AITableFieldType.date
             },
@@ -444,7 +444,7 @@ export function getCanvasDefaultValue() {
                 name: '进度',
                 positions: {
                     view1: 11,
-                    view2: 8
+                    view2: 12
                 },
                 type: AITableFieldType.progress
             },
@@ -453,7 +453,7 @@ export function getCanvasDefaultValue() {
                 name: '评分',
                 positions: {
                     view1: 12,
-                    view2: 7
+                    view2: 11
                 },
                 type: AITableFieldType.rate
             },
@@ -462,7 +462,7 @@ export function getCanvasDefaultValue() {
                 name: '链接',
                 positions: {
                     view1: 13,
-                    view2: 6
+                    view2: 10
                 },
                 type: AITableFieldType.link
             },
@@ -471,7 +471,7 @@ export function getCanvasDefaultValue() {
                 name: '创建人',
                 positions: {
                     view1: 14,
-                    view2: 5
+                    view2: 9
                 },
                 type: AITableFieldType.createdBy
             },
@@ -480,7 +480,7 @@ export function getCanvasDefaultValue() {
                 name: '创建时间',
                 positions: {
                     view1: 15,
-                    view2: 4
+                    view2: 8
                 },
                 type: AITableFieldType.createdAt
             },
@@ -489,7 +489,7 @@ export function getCanvasDefaultValue() {
                 name: '更新人',
                 positions: {
                     view1: 16,
-                    view2: 3
+                    view2: 7
                 },
                 type: AITableFieldType.updatedBy
             },
@@ -498,7 +498,7 @@ export function getCanvasDefaultValue() {
                 name: '更新时间',
                 positions: {
                     view1: 17,
-                    view2: 2
+                    view2: 6
                 },
                 type: AITableFieldType.updatedAt
             },
@@ -550,7 +550,7 @@ export function getCanvasDefaultValue() {
                 },
                 positions: {
                     view1: 18,
-                    view2: 1
+                    view2: 5
                 }
             },
             {
@@ -601,7 +601,7 @@ export function getCanvasDefaultValue() {
                 },
                 positions: {
                     view1: 19,
-                    view2: 0
+                    view2: 4
                 }
             },
             {
@@ -651,7 +651,7 @@ export function getCanvasDefaultValue() {
                 },
                 positions: {
                     view1: 20,
-                    view2: -1
+                    view2: 3
                 }
             },
             {
@@ -662,7 +662,7 @@ export function getCanvasDefaultValue() {
                 settings: {},
                 positions: {
                     view1: 21,
-                    view2: 0
+                    view2: 2
                 }
             },
             {
@@ -673,7 +673,7 @@ export function getCanvasDefaultValue() {
                 settings: {},
                 positions: {
                     view1: 22,
-                    view2: 0
+                    view2: 1
                 }
             }
         ]
