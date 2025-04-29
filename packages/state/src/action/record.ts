@@ -10,13 +10,11 @@ import {
 import { UpdateFieldValueAction, ActionName, AddRecordAction, RemoveRecordAction, AIViewTable, UpdateSystemFieldValue } from '../types';
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
-    const oldValue = AITableQueries.getFieldValue(aiTable, path);
     const field = AITableQueries.getField(aiTable, [path[1]]);
     const fieldModel = field && FieldModelMap[field.type];
     if (fieldModel && fieldModel.isValid(value)) {
         const operation: UpdateFieldValueAction = {
             type: ActionName.UpdateFieldValue,
-            fieldValue: oldValue,
             newFieldValue: value,
             path
         };

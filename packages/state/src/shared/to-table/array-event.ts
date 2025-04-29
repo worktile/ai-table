@@ -15,6 +15,7 @@ import {
 import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
 import {
     getPositionsBySystemFieldValues,
+    getSharedMapId,
     getSharedMapValueId,
     getSharedRecord,
     getSharedRecordId,
@@ -22,16 +23,15 @@ import {
     getValuesByCustomFieldValues,
     SystemFieldIndex
 } from '../utils/translate';
-import { AIRecordFieldIdPath, AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
+import { AIRecordFieldIdPath, AITableField, IdPath, NumberPath } from '@ai-table/grid';
 
-export default function translateArrayEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
+export default function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');
     const isFieldsTranslate = event.path.includes('fields');
     const isViewsTranslate = event.path.includes('views');
     const actions: AITableAction[] = [];
-    const activeViewId = aiTable.activeViewId();
 
     event.changes.delta.forEach((delta) => {
         if ('retain' in delta) {
@@ -41,11 +41,13 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
         if ('delete' in delta) {
             if (isAddOrRemove(targetPath)) {
                 if (isViewsTranslate) {
-                    const removeView = aiTable.views()[offset];
-                    if (removeView) {
-                        actions.push({
-                            type: ActionName.RemoveView,
-                            path: [removeView._id]
+                    const removeIds = getRemoveIds(event, ActionName.RemoveView);
+                    if (removeIds.length > 0) {
+                        removeIds.forEach((path) => {
+                            actions.push({
+                                type: ActionName.RemoveView,
+                                path
+                            });
                         });
                     }
                 } else {
@@ -67,10 +69,13 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
             if (isArray(delta.insert)) {
                 if (isRecordsTranslate) {
                     if (isAddOrRemove(targetPath)) {
-                        delta.insert?.map((item: Y.Array<any>) => {
+                        delta.insert?.map((item: Y.Array<any>, index) => {
                             const data = item.toJSON();
                             const [systemFieldValues, customFieldValues] = data;
-
+                            const sharedFields = sharedType.get('fields')! as Y.Array<SyncMapElement>;
+                            const fields = sharedFields.map((fieldElement: SyncMapElement) => {
+                                return { _id: getSharedMapId(fieldElement) };
+                            });
                             actions.push({
                                 type: ActionName.AddRecord,
                                 record: {
@@ -78,7 +83,7 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                     short_id: getShortIdBySystemFieldValues(systemFieldValues),
                                     ...getTrackableEntityBySystemFieldValues(systemFieldValues),
                                     positions: getPositionsBySystemFieldValues(systemFieldValues),
-                                    values: getValuesByCustomFieldValues(customFieldValues, aiTable.gridData().fields as AITableViewFields)
+                                    values: getValuesByCustomFieldValues(customFieldValues, fields)
                                 }
                             });
                         });
@@ -90,7 +95,8 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                             delta.insert?.map((item: any, index: number) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset + index;
-                                const record = (aiTable.records() as AITableViewRecords)[recordIndex];
+                                const recordId = getSharedRecordId(sharedRecords, recordIndex);
+                                const fieldId = getSharedMapValueId(sharedFields, fieldIndex);
                                 if (isSystemFieldOperation(targetPath)) {
                                     if (isPositionsOperation(fieldIndex)) {
                                         const newPositions: Positions = {};
@@ -99,34 +105,27 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                                         }
                                         actions.push({
                                             type: ActionName.SetRecordPositions,
-                                            path: [record._id],
+                                            path: [recordId],
                                             positions: newPositions
                                         });
-                                        // 此处的循环会包含 updated_at 和 updated_by 各一次，这里只处理 updated_by 同时包含两个字段的修改
                                     } else if (isUpdatedByOperation(fieldIndex + systemFieldOffset)) {
+                                        // 此处的循环会包含 updated_at 和 updated_by 各一次，这里只处理 updated_by 同时包含两个字段的修改
                                         const systemFieldValues = getSharedRecord(sharedRecords, recordIndex).get(0).toJSON();
                                         const { updated_at, updated_by } = getTrackableEntityBySystemFieldValues(systemFieldValues);
                                         actions.push({
                                             type: ActionName.UpdateSystemFieldValue,
-                                            path: [record._id],
+                                            path: [recordId],
                                             updatedInfo: { updated_at, updated_by }
                                         });
                                     }
                                     systemFieldOffset++;
                                 } else {
-                                    const recordId = getSharedRecordId(sharedRecords, recordIndex);
-                                    const fieldId = getSharedMapValueId(sharedFields, fieldIndex);
                                     const path = [recordId, fieldId] as AIRecordFieldIdPath;
-                                    const fieldValue = AITableQueries.getFieldValue(aiTable, path);
-                                    // To exclude insert triggered by field inserts.
-                                    if (fieldValue !== item) {
-                                        actions.push({
-                                            type: ActionName.UpdateFieldValue,
-                                            path,
-                                            fieldValue,
-                                            newFieldValue: item
-                                        });
-                                    }
+                                    actions.push({
+                                        type: ActionName.UpdateFieldValue,
+                                        path,
+                                        newFieldValue: item
+                                    });
                                 }
                             });
                         } catch (error) {}
@@ -183,7 +182,7 @@ export function isUpdatedByOperation(fieldIndex: number): boolean {
     return fieldIndex === SystemFieldIndex.UpdatedBy;
 }
 
-export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord) {
+export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField | ActionName.RemoveRecord | ActionName.RemoveView) {
     const ids: [string][] = [];
     if (!type) {
         return ids;
@@ -195,7 +194,7 @@ export function getRemoveIds(event: Y.YEvent<any>, type: ActionName.RemoveField 
         // @param {Item|GC} item
         (item) => {
             if (item instanceof Y.Item && item.deleted) {
-                if (type === ActionName.RemoveField && item.parentSub === '_id') {
+                if ((type === ActionName.RemoveField || type === ActionName.RemoveView) && item.parentSub === '_id') {
                     ids.push(item.content.getContent() as IdPath);
                 }
                 if (type === ActionName.RemoveRecord) {
