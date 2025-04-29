@@ -34,7 +34,6 @@ export enum ExecuteType {
 export type UpdateFieldValueAction = {
     type: ActionName.UpdateFieldValue;
     path: AIRecordFieldIdPath;
-    fieldValue: any;
     newFieldValue: any;
 };
 

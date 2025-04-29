@@ -89,6 +89,10 @@ export function getSharedMapValueId(values: Y.Array<SyncMapElement>, index: numb
     return values && values.get(index).get('_id');
 }
 
+export function getSharedMapId(value: SyncMapElement) {
+    return value.get('_id') as string;
+}
+
 export function getSharedRecordIndex(sharedRecords: Y.Array<SyncArrayElement>, recordId: string) {
     let recordIndex = -1;
     for (let index = 0; index < sharedRecords.length; index++) {
@@ -129,7 +133,7 @@ export const getCustomFieldValues = (record: AITableViewRecord): CustomFieldValu
     throw new Error('No implement');
 };
 
-export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: AITableViewFields) => {
+export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: Pick<AITableViewField, '_id'>[]) => {
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
