@@ -6,7 +6,7 @@ import translateMapEvent from './map-event';
 
 export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     if (event instanceof Y.YArrayEvent) {
-        return translateArrayEvent(aiTable, sharedType, event);
+        return translateArrayEvent(sharedType, event);
     }
     if (event instanceof Y.YMapEvent) {
         return translateMapEvent(aiTable, sharedType, event);
