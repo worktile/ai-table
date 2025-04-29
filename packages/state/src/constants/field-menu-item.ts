@@ -53,7 +53,7 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
 
             const fieldOptions: AddFieldOptions = {
                 originId: field()._id,
-                isCopy: true,
+                isDuplicate: true,
                 defaultValue: {
                     ...field(),
                     _id: idCreator(),

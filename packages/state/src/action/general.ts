@@ -36,43 +36,24 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddRecord: {
-            const [recordIndex] = action.path;
-            if (recordIndex > -1) {
-                if (!(action.record as AITableViewRecord).positions) {
-                    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
-                    let index = recordIndex;
-                    if (activeView?.settings?.conditions) {
-                        index = records.length;
-                    }
-                    (action.record as AITableViewRecord).positions = createDefaultPositions(
-                        aiTable.views(),
-                        aiTable.activeViewId(),
-                        aiTable.records() as AITableViewRecords,
-                        index
-                    );
-                }
-                records.splice(recordIndex, 0, action.record as AITableViewRecord);
+            if (!(action.record as AITableViewRecord).positions) {
+                (action.record as AITableViewRecord).positions = createDefaultPositions(
+                    aiTable.views(),
+                    aiTable.activeViewId(),
+                    aiTable.records() as AITableViewRecords,
+                    records.length
+                );
             }
+            records.push(action.record as AITableViewRecord);
             break;
         }
         case ActionName.AddField: {
-            const [fieldIndex] = action.path;
-            if (fieldIndex > -1) {
-                const newField = action.field;
-                if (!(newField as AITableViewField).positions) {
-                    (newField as AITableViewField).positions = createDefaultPositions(
-                        aiTable.views(),
-                        aiTable.activeViewId(),
-                        aiTable.gridData().fields as AITableViewFields,
-                        action.path[0]
-                    );
-                }
-                fields.splice(fieldIndex, 0, newField as AITableViewField);
-                records.forEach((item) => {
-                    item.values[newField._id] =
-                        action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
-                });
-            }
+            const newField = action.field;
+            fields.push(newField as AITableViewField);
+            records.forEach((item) => {
+                item.values[newField._id] =
+                    action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
+            });
             break;
         }
         case ActionName.RemoveField: {

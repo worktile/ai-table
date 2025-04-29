@@ -65,8 +65,8 @@ export default function addNode(
             break;
         case ActionName.AddField:
             if (fields && records) {
-                const { field, path } = action;
-                const [insertIndex] = path;
+                const { field } = action;
+                const insertIndex = fields.length;
                 const fieldSyncElement = toSyncElement(field);
                 fields.insert(insertIndex, [fieldSyncElement]);
                 for (let value of records) {
