@@ -2,18 +2,35 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "rootDir": "src",
         "outDir": "../../out-tsc/lib",
         "target": "es2020",
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
         "types": [],
-        "lib": ["dom", "es2022"]
+        "lib": [
+            "dom",
+            "es2022"
+        ],
+        "baseUrl": "../../",
+        "paths": {
+            "@ai-table/utils": [
+                "dist/utils"
+            ],
+            "@ai-table/utils/*": [
+                "dist/utils/*"
+            ]
+        }
     },
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
         "strictMetadataEmit": true,
         "enableResourceInlining": true
     },
-    "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"]
+    "exclude": [
+        "test.ts",
+        "core/**/**",
+        "**/*.spec.ts"
+    ]
 }

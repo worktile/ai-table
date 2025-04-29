@@ -1,6 +1,6 @@
-import { isEmpty } from '../common';
 import { AITableFilterCondition, AITableFilterOperation, AITableField, AITableReferences, FieldValue } from '@ai-table/utils';
 import { AITable } from '../../core';
+import { isEmpty } from 'lodash';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
 
@@ -72,14 +72,6 @@ export function isMeetFilter(
             return true;
         }
     }
-}
-
-export function cellFullText(transformValue: any, field: AITableField, references?: AITableReferences): string[] {
-    let fullText: string[] = [];
-    if (!isEmpty(transformValue)) {
-        fullText.push(String(transformValue));
-    }
-    return fullText;
 }
 
 export function isEmptyOrNot(operation: AITableFilterOperation.empty | AITableFilterOperation.exists, cellValue: FieldValue) {
