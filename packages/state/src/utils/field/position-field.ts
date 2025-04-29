@@ -1,5 +1,6 @@
 import { AITableFields, AITableFieldsSizeMap, NumberPath } from '@ai-table/grid';
-import { AITableView, AITableViewField } from '../../types';
+import { AITableView, AITableViewField, AITableViewFields, AIViewTable } from '../../types';
+import { getPosition } from '../view';
 
 export function getFieldPositionInView(viewId: string, fields: AITableFields, path: NumberPath, newPath: NumberPath) {
     const targetPosition = (fields[newPath[0]] as AITableViewField).positions[viewId];
@@ -35,4 +36,12 @@ export function getFieldsSizeMap(fields: AITableViewField[], activeView: AITable
         fieldsSizeMap[field._id] = field.widths?.[activeView._id];
     });
     return fieldsSizeMap;
+}
+
+export function getFieldNextPosition(aiTable: AIViewTable, fieldId: string) {
+    const fields = aiTable.gridData().fields as AITableViewFields;
+    const activeView = aiTable.activeViewId();
+    const currentFieldIndex = fields.findIndex((item) => item._id === fieldId);
+    const nextPosition = getPosition(fields, activeView, currentFieldIndex + 1);
+    return nextPosition;
 }
