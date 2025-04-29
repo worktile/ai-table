@@ -24,401 +24,6 @@ export const getDefaultTrackableEntity = (options?: {
     };
 };
 
-export function getDefaultValue() {
-    const initValue: {
-        records: AITableViewRecords;
-        fields: AITableViewFields;
-    } = {
-        records: [
-            {
-                _id: 'row-1',
-                short_id: `row-short-id-${1}`,
-                ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
-                positions: {
-                    view1: 0,
-                    view2: 1
-                },
-                values: {
-                    'column-1': '文本 1-1',
-                    'column-2': ['_id_1'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a'],
-                    'column-3': 0,
-                    'column-4': { timestamp: 1734636127 },
-                    'column-5': ['member_01'],
-                    'column-6': 10,
-                    'column-7': 3,
-                    'column-8': {
-                        url: 'https://www.baidu.com',
-                        text: '百度链接'
-                    }
-                    // 'column-9': ['member_01'],
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
-                }
-            },
-            {
-                _id: 'row-2',
-                short_id: `row-short-id-${2}`,
-                ...getDefaultTrackableEntity(),
-                positions: {
-                    view1: 1,
-                    view2: 2
-                },
-                values: {
-                    'column-1': '文本 2-1',
-                    'column-2': ['_id_2'],
-                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-21': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-22': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
-                    'column-3': 10,
-                    'column-4': { timestamp: 1682235946 },
-                    'column-5': ['member_01', 'member_02'],
-                    'column-6': 50,
-                    'column-7': 1,
-                    'column-8': {}
-                    // 'column-9': ['member_01'],
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
-                }
-            },
-            {
-                _id: 'row-3',
-                short_id: `row-short-id-${3}`,
-                ...getDefaultTrackableEntity(),
-                positions: {
-                    view1: 2,
-                    view2: 0
-                },
-                values: {
-                    'column-1': '文本 3-1',
-                    'column-2': ['_id_3'],
-                    'column-20': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-21': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-22': [
-                        '66b31d0c8097a908f74bcd8a',
-                        '66b31d0c8097a908f74bcd8b',
-                        '66b31d0c8097a908f74bcd8c',
-                        '66b31d0c8097a908f74bcd8d'
-                    ],
-                    'column-3': 100,
-                    'column-4': { timestamp: 1682235946 },
-                    'column-5': [],
-                    'column-6': 100,
-                    'column-7': 1,
-                    'column-8': {}
-                    // 'column-9': [],
-                    // 'column-10': 1682235946,
-                    // 'column-11': ['member_02'],
-                    // 'column-12': 1720490727
-                }
-            }
-        ],
-        fields: [
-            {
-                _id: 'column-1',
-                name: '单行文本',
-                positions: {
-                    view1: 0,
-                    view2: 16
-                },
-                type: AITableFieldType.text
-            },
-            {
-                _id: 'column-2',
-                name: '单选',
-                positions: {
-                    view1: 1,
-                    view2: 15
-                },
-                type: AITableFieldType.select,
-                icon: 'check-circle',
-                settings: {
-                    options: [
-                        {
-                            _id: '1',
-                            text: '开始',
-                            color: '#5dcfff'
-                        },
-                        {
-                            _id: '2',
-                            text: '进行中',
-                            color: '#ffcd5d'
-                        },
-                        {
-                            _id: '3',
-                            text: '已完成',
-                            color: '#73d897'
-                        }
-                    ]
-                }
-            },
-            {
-                _id: 'column-20',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.dot,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-                positions: {
-                    view1: 2,
-                    view2: 14
-                }
-            },
-            {
-                _id: 'column-21',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.dot,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-                positions: {
-                    view1: 3,
-                    view2: 13
-                }
-            },
-            {
-                _id: 'column-22',
-                type: AITableFieldType.select,
-                icon: 'list-check',
-                name: '多选',
-                settings: {
-                    is_multiple: true,
-                    option_style: AITableSelectOptionStyle.piece,
-                    options: [
-                        {
-                            text: '111',
-                            bg_color: '#E48483',
-                            _id: '66b31d0c8097a908f74bcd8a'
-                        },
-                        {
-                            text: '222',
-                            bg_color: '#E0B75D',
-                            _id: '66b31d0c8097a908f74bcd8b'
-                        },
-                        {
-                            text: '333',
-                            bg_color: '#69B1E4',
-                            _id: '66b31d0c8097a908f74bcd8c'
-                        },
-                        {
-                            text: '444',
-                            bg_color: '#77C386',
-                            _id: '66b31d0c8097a908f74bcd8d'
-                        },
-                        {
-                            text: '555',
-                            bg_color: '#6EC4C4',
-                            _id: '66b31d0c8097a908f74bcd8e'
-                        },
-                        {
-                            text: '666',
-                            bg_color: '#E581D4',
-                            _id: '66b31d0c8097a908f74bcd8f'
-                        },
-                        {
-                            text: '777',
-                            bg_color: '#B0C774',
-                            _id: '66b31d0c8097a908f74bcd90'
-                        }
-                    ]
-                },
-
-                positions: {
-                    view1: 4,
-                    view2: 12
-                }
-            },
-            {
-                _id: 'column-3',
-                name: '数字',
-                positions: {
-                    view1: 5,
-                    view2: 11
-                },
-                type: AITableFieldType.number
-            },
-            {
-                _id: 'column-4',
-                name: '日期',
-                positions: {
-                    view1: 6,
-                    view2: 10
-                },
-                type: AITableFieldType.date
-            },
-            {
-                _id: 'column-5',
-                name: '成员(📌)',
-                positions: {
-                    view1: 7,
-                    view2: 9
-                },
-                settings: {
-                    is_multiple: true
-                },
-                type: AITableFieldType.member
-            },
-            {
-                _id: 'column-6',
-                name: '进度',
-                positions: {
-                    view1: 8,
-                    view2: 8
-                },
-                type: AITableFieldType.progress
-            },
-            {
-                _id: 'column-7',
-                name: '评分(📌)',
-                positions: {
-                    view1: 9,
-                    view2: 7
-                },
-                type: AITableFieldType.rate
-            },
-            {
-                _id: 'column-8',
-                name: '链接(📌)',
-                positions: {
-                    view1: 10,
-                    view2: 6
-                },
-                type: AITableFieldType.link
-            },
-
-            {
-                _id: 'column-9',
-                name: '创建人',
-                positions: {
-                    view1: 11,
-                    view2: 5
-                },
-                type: AITableFieldType.createdBy
-            },
-            {
-                _id: 'column-10',
-                name: '创建时间',
-                positions: {
-                    view1: 12,
-                    view2: 4
-                },
-                type: AITableFieldType.createdAt
-            },
-            {
-                _id: 'column-11',
-                name: '更新人',
-                positions: {
-                    view1: 13,
-                    view2: 3
-                },
-                type: AITableFieldType.updatedBy
-            },
-            {
-                _id: 'column-12',
-                name: '更新时间',
-                positions: {
-                    view1: 14,
-                    view2: 2
-                },
-                type: AITableFieldType.updatedAt
-            }
-        ]
-    };
-    return initValue;
-}
-
 export function getCanvasDefaultValue() {
     const initValue: {
         records: AITableViewRecords;
@@ -601,6 +206,15 @@ export function getCanvasDefaultValue() {
         ],
         fields: [
             {
+                _id: 'column-1',
+                name: '单行文本',
+                positions: {
+                    view1: 0,
+                    view2: 18
+                },
+                type: AITableFieldType.text
+            },
+            {
                 _id: 'column-13',
                 name: '单行文本 2',
                 positions: {
@@ -613,7 +227,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-5',
                 name: '成员',
                 positions: {
-                    view1: 1,
+                    view1: 2,
                     view2: 9
                 },
                 settings: {
@@ -625,7 +239,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-566',
                 name: '单成员',
                 positions: {
-                    view1: 2,
+                    view1: 3,
                     view2: 9
                 },
                 widths: {
@@ -638,19 +252,10 @@ export function getCanvasDefaultValue() {
                 type: AITableFieldType.member
             },
             {
-                _id: 'column-1',
-                name: '单行文本',
-                positions: {
-                    view1: 0,
-                    view2: 18
-                },
-                type: AITableFieldType.text
-            },
-            {
                 _id: 'column-2',
                 name: '单选',
                 positions: {
-                    view1: 2.5,
+                    view1: 4,
                     view2: 16
                 },
                 type: AITableFieldType.select,
@@ -679,7 +284,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-110',
                 name: 'dot单选',
                 positions: {
-                    view1: 3,
+                    view1: 5,
                     view2: 15
                 },
                 type: AITableFieldType.select,
@@ -709,7 +314,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-111',
                 name: 'piece单选',
                 positions: {
-                    view1: 4,
+                    view1: 6,
                     view2: 14
                 },
                 type: AITableFieldType.select,
@@ -739,7 +344,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-112',
                 name: 'tag单选',
                 positions: {
-                    view1: 5,
+                    view1: 7,
                     view2: 13
                 },
                 type: AITableFieldType.select,
@@ -812,7 +417,7 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 6,
+                    view1: 8,
                     view2: 12
                 }
             },
@@ -820,7 +425,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-3',
                 name: '数字',
                 positions: {
-                    view1: 7,
+                    view1: 9,
                     view2: 11
                 },
                 type: AITableFieldType.number
@@ -829,7 +434,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-4',
                 name: '日期',
                 positions: {
-                    view1: 8,
+                    view1: 10,
                     view2: 10
                 },
                 type: AITableFieldType.date
@@ -838,7 +443,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-6',
                 name: '进度',
                 positions: {
-                    view1: 10,
+                    view1: 11,
                     view2: 8
                 },
                 type: AITableFieldType.progress
@@ -847,7 +452,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-7',
                 name: '评分',
                 positions: {
-                    view1: 11,
+                    view1: 12,
                     view2: 7
                 },
                 type: AITableFieldType.rate
@@ -856,7 +461,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-8',
                 name: '链接',
                 positions: {
-                    view1: 12,
+                    view1: 13,
                     view2: 6
                 },
                 type: AITableFieldType.link
@@ -865,7 +470,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-9',
                 name: '创建人',
                 positions: {
-                    view1: 13,
+                    view1: 14,
                     view2: 5
                 },
                 type: AITableFieldType.createdBy
@@ -874,7 +479,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-10',
                 name: '创建时间',
                 positions: {
-                    view1: 14,
+                    view1: 15,
                     view2: 4
                 },
                 type: AITableFieldType.createdAt
@@ -883,7 +488,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-11',
                 name: '更新人',
                 positions: {
-                    view1: 15,
+                    view1: 16,
                     view2: 3
                 },
                 type: AITableFieldType.updatedBy
@@ -892,7 +497,7 @@ export function getCanvasDefaultValue() {
                 _id: 'column-12',
                 name: '更新时间',
                 positions: {
-                    view1: 16,
+                    view1: 17,
                     view2: 2
                 },
                 type: AITableFieldType.updatedAt
@@ -944,7 +549,7 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 17,
+                    view1: 18,
                     view2: 1
                 }
             },
@@ -995,7 +600,7 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 18,
+                    view1: 19,
                     view2: 0
                 }
             },
@@ -1045,7 +650,7 @@ export function getCanvasDefaultValue() {
                     ]
                 },
                 positions: {
-                    view1: 19,
+                    view1: 20,
                     view2: -1
                 }
             },
@@ -1056,7 +661,7 @@ export function getCanvasDefaultValue() {
                 name: '附件',
                 settings: {},
                 positions: {
-                    view1: 20,
+                    view1: 21,
                     view2: 0
                 }
             },
@@ -1067,7 +672,7 @@ export function getCanvasDefaultValue() {
                 name: '多行文本',
                 settings: {},
                 positions: {
-                    view1: 21,
+                    view1: 22,
                     view2: 0
                 }
             }
