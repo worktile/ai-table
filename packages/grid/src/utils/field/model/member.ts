@@ -2,15 +2,12 @@ import { Id } from 'ngx-tethys/types';
 import { AITable, AITableField, AITableFieldType, FieldValue, MemberFieldValue, MemberSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
-import { compareString, hasIntersect } from '../operate';
-import { Field } from './field';
+import { compareString, hasIntersect, isMeetFilter } from '../operate';
+import { MemberFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 
-export class MemberField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return Array.isArray(cellValue) || cellValue === null;
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {
+export class MemberField extends MemberFieldBase implements FieldOperable<string, MemberFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -21,11 +18,11 @@ export class MemberField extends Field {
             case AITableFilterOperation.nin:
                 return Array.isArray(condition.value) && !hasIntersect(cellValue, condition.value);
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(
+    compare(
         cellValue1: MemberFieldValue,
         cellValue2: MemberFieldValue,
         references: AITableReferences,
@@ -40,23 +37,7 @@ export class MemberField extends Field {
         return compareString(value1, value2);
     }
 
-    override cellFullText(transformValue: string[], field: AITableField, references?: AITableReferences): string[] {
-        let fullText: string[] = [];
-        if (transformValue?.length && references) {
-            for (let index = 0; index < transformValue.length; index++) {
-                const userInfo = references?.members[transformValue[index]];
-                if (!userInfo) {
-                    continue;
-                }
-                if (userInfo.display_name) {
-                    fullText.push(userInfo.display_name);
-                }
-            }
-        }
-        return fullText;
-    }
-
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue },

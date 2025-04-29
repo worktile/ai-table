@@ -7,7 +7,8 @@
         "bson-objectid": "^2.0.4",
         "lru-cache": "^11.0.0",
         "konva": "^9.3.14",
-        "grapheme-splitter": "^1.0.4"
+        "grapheme-splitter": "^1.0.4",
+        "@ai-table/utils": "0.0.66"
     },
     "dependencies": {
         "tslib": "^2.3.0"

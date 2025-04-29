@@ -14,9 +14,9 @@ import {
     UpdateFieldValueOptions
 } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
-import { FieldModelMap } from '../field/model';
 import { processPastedValueForSelect } from '../field/model/select';
 import { AddRecordOptions, AddFieldOptions } from '../../core';
+import { FieldModelMap } from '../field';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 

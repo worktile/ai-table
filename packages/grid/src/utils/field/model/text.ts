@@ -2,15 +2,12 @@ import { isNil } from 'lodash';
 import { FieldValue, TextFieldValue } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
-import { compareString, stringInclude } from '../operate';
-import { Field } from './field';
+import { compareString, isMeetFilter, stringInclude } from '../operate';
+import { TextFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 
-export class TextField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return typeof cellValue === 'string' || cellValue === null;
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: TextFieldValue) {
+export class TextField extends TextFieldBase implements FieldOperable<string, TextFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: TextFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -19,17 +16,17 @@ export class TextField extends Field {
             case AITableFilterOperation.contain:
                 return !isNil(cellValue) && stringInclude(cellValue, condition.value);
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: TextFieldValue, cellValue2: TextFieldValue): number {
+    compare(cellValue1: TextFieldValue, cellValue2: TextFieldValue): number {
         const value1 = cellValueToSortValue(cellValue1);
         const value2 = cellValueToSortValue(cellValue2);
         return compareString(value1, value2);
     }
 
-    override toFieldValue(plainText: string): FieldValue | null {
+    toFieldValue(plainText: string): FieldValue | null {
         return toTextFieldValue(plainText);
     }
 }

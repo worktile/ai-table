@@ -1,15 +1,12 @@
+import { AttachmentFieldBase } from '@ai-table/utils';
 import { AITable, AITableField, AttachmentFieldValue, FieldValue, AITableFieldType } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { isEmpty } from '../../common';
-import { compareString, hasIntersect } from '../operate';
-import { Field } from './field';
+import { compareString, hasIntersect, isMeetFilter } from '../operate';
+import { FieldOperable } from '../field-operable';
 
-export class AttachmentField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return Array.isArray(cellValue) || cellValue === null;
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {
+export class AttachmentField extends AttachmentFieldBase implements FieldOperable<string, AttachmentFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -20,11 +17,11 @@ export class AttachmentField extends Field {
             case AITableFilterOperation.nin:
                 return Array.isArray(condition.value) && !hasIntersect(cellValue, condition.value);
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(
+    compare(
         cellValue1: AttachmentFieldValue,
         cellValue2: AttachmentFieldValue,
         references: AITableReferences,
@@ -39,23 +36,7 @@ export class AttachmentField extends Field {
         return compareString(value1, value2);
     }
 
-    override cellFullText(transformValue: string[], field: AITableField, references?: AITableReferences): string[] {
-        let fullText: string[] = [];
-        if (transformValue?.length && references) {
-            for (let index = 0; index < transformValue.length; index++) {
-                const attachmentInfo = references?.attachments[transformValue[index]];
-                if (!attachmentInfo) {
-                    continue;
-                }
-                if (attachmentInfo.title) {
-                    fullText.push(attachmentInfo.title);
-                }
-            }
-        }
-        return fullText;
-    }
-
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: AttachmentFieldValue },

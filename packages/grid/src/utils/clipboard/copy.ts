@@ -1,5 +1,5 @@
 import { AITable, AITableFieldType, AITableRecord, getFieldValue, getSystemFieldValue, isSystemField, SystemFieldTypes } from '../../core';
-import { FieldModelMap } from '../field/model';
+import { FieldModelMap } from '../field';
 import { transformCellValue } from '../cell';
 import { AITableContent, ClipboardContent } from '../../types';
 

@@ -2,16 +2,12 @@ import { helpers } from 'ngx-tethys/util';
 import { AITableField, AITableFieldType, FieldValue, RateFieldValue, SelectSettings } from '../../../core';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { isEmpty } from '../../common';
-import { compareNumber } from '../operate';
-import { Field } from './field';
-import { isNumberValid } from './number';
+import { compareNumber, isMeetFilter } from '../operate';
+import { RateFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 
-export class RateField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return isNumberValid(cellValue);
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue) {
+export class RateField extends RateFieldBase implements FieldOperable<string[], RateFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -24,15 +20,15 @@ export class RateField extends Field {
                 const noContain = condition.value.every((item) => String(item) !== String(cellValue));
                 return isEmpty(cellValue) || noContain;
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: RateFieldValue, cellValue2: RateFieldValue): number {
+    compare(cellValue1: RateFieldValue, cellValue2: RateFieldValue): number {
         return compareNumber(cellValue1, cellValue2);
     }
 
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }
