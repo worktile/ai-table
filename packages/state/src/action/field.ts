@@ -4,11 +4,10 @@ import { AITableViewField, AITableField, IdPath, NumberPath } from '@ai-table/ut
 import { isPathEqual } from '../utils';
 import { getFieldPositionInView } from '../utils/field/position-field';
 
-export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath, originId?: string, isCopy?: boolean) {
+export function addField(aiTable: AIViewTable, field: AITableField, originId?: string, isCopy?: boolean) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
-        path,
         originId,
         isCopy
     };

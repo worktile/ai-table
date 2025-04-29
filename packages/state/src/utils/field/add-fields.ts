@@ -1,22 +1,33 @@
-import { AddFieldOptions, AITableField, AITableRecordUpdatedInfo, AITableViewFields, Direction } from '@ai-table/utils';
-import { getSortFields } from './sort-fields';
+import { AddFieldOptions, AITableRecordUpdatedInfo, AITableViewField, AITableViewFields } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
-import { idsCreator } from '@ai-table/grid';
+import { idCreator } from '@ai-table/grid';
+import { createDefaultPositions, getPosition } from '../view';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
-    const { originId, direction = Direction.after, defaultValue, isDuplicate, count = 1 } = options;
-    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-    const fields = getSortFields(aiTable, aiTable.gridData().fields as AITableViewFields, activeView);
-    let addIndex = fields.findIndex((item) => item._id === originId);
-    if (direction === Direction.after) {
-        addIndex++;
+    const { defaultValue, isDuplicate, isCopy } = options;
+    const fields = aiTable.gridData().fields as AITableViewFields;
+    const fieldsMap = aiTable.fieldsMap();
+    const activeViewId = aiTable.activeViewId();
+    const newField = { ...defaultValue } as AITableViewField;
+    if (fieldsMap[newField._id]) {
+        newField._id = idCreator();
     }
-    const newFieldIds = idsCreator(count);
-    newFieldIds.forEach((id, index) => {
-        const newField = { _id: id, ...defaultValue, positions: null } as AITableField;
-        Actions.addField(aiTable, newField, [addIndex + index], options.originId, options.isCopy);
-    });
+    if (isDuplicate) {
+        const currentFieldIndex = fields.findIndex((item) => item._id === options.originId);
+        newField.positions = {
+            ...newField.positions,
+            [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex + 1)
+        };
+    } else {
+        newField.positions = createDefaultPositions(
+            aiTable.views(),
+            aiTable.activeViewId(),
+            aiTable.gridData().fields as AITableViewFields,
+            fields.length
+        );
+    }
+    Actions.addField(aiTable, newField, options.originId, isCopy || isDuplicate);
     updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }
