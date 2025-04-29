@@ -5,17 +5,11 @@ import { Actions } from '../../action';
 import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
-    const { originId, direction = Direction.after, defaultValue, isDuplicate, count = 1 } = options;
-    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-    const fields = getSortFields(aiTable, aiTable.gridData().fields as AITableViewFields, activeView);
-    let addIndex = fields.findIndex((item) => item._id === originId);
-    if (direction === Direction.after) {
-        addIndex++;
-    }
+    const { defaultValue, count = 1 } = options;
     const newFieldIds = idsCreator(count);
-    newFieldIds.forEach((id, index) => {
+    newFieldIds.forEach((id) => {
         const newField = { _id: id, ...defaultValue, positions: null } as AITableField;
-        Actions.addField(aiTable, newField, [addIndex + index], options.originId, options.isCopy);
+        Actions.addField(aiTable, newField, options.originId, options.isCopy);
     });
     updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }

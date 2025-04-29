@@ -35,7 +35,7 @@ export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trac
     }
     newRecordIds.forEach((id, index) => {
         const newRecord: AITableRecord = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        Actions.addRecord(aiTable, newRecord, [addIndex + index]);
+        Actions.addRecord(aiTable, newRecord);
     });
 }
 
