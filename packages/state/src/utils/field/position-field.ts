@@ -37,11 +37,3 @@ export function getFieldsSizeMap(fields: AITableViewField[], activeView: AITable
     });
     return fieldsSizeMap;
 }
-
-export function getFieldNextPosition(aiTable: AIViewTable, fieldId: string) {
-    const fields = aiTable.gridData().fields as AITableViewFields;
-    const activeView = aiTable.activeViewId();
-    const currentFieldIndex = fields.findIndex((item) => item._id === fieldId);
-    const nextPosition = getPosition(fields, activeView, currentFieldIndex + 1);
-    return nextPosition;
-}

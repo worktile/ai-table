@@ -49,14 +49,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.AddField: {
             const newField = action.field;
-            if (!(newField as AITableViewField).positions) {
-                (newField as AITableViewField).positions = createDefaultPositions(
-                    aiTable.views(),
-                    aiTable.activeViewId(),
-                    aiTable.gridData().fields as AITableViewFields,
-                    fields.length
-                );
-            }
             fields.push(newField as AITableViewField);
             records.forEach((item) => {
                 item.values[newField._id] =

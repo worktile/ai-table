@@ -40,8 +40,7 @@ import {
     withState,
     YjsAITable,
     moveFields,
-    moveRecords,
-    addCopyFields
+    moveRecords
 } from '@ai-table/state';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -129,7 +128,7 @@ export class DemoTableContent {
                     { ...EditFieldPropertyItem(aiTable), hidden: () => readonly } as any,
                     {
                         ...CopyFieldPropertyItem(aiTable, (data: AddFieldOptions) => {
-                            this.addCopyField(data);
+                            this.addField(data);
                         }),
                         hidden: () => readonly
                     } as any,
@@ -366,12 +365,6 @@ export class DemoTableContent {
         const member = 'member_02';
         const time = new Date().getTime();
         addFields(this.aiTable, data, { updated_by: member, updated_at: time });
-    }
-
-    addCopyField(data: AddFieldOptions) {
-        const member = 'member_02';
-        const time = new Date().getTime();
-        addCopyFields(this.aiTable, data, { updated_by: member, updated_at: time });
     }
 
     dragMoveField(data: MoveFieldOptions) {
