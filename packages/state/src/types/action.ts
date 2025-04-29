@@ -40,13 +40,11 @@ export type UpdateFieldValueAction = {
 
 export type AddRecordAction = {
     type: ActionName.AddRecord;
-    path: NumberPath;
     record: AITableRecord | AITableViewRecord;
 };
 
 export type AddFieldAction = {
     type: ActionName.AddField;
-    path: NumberPath;
     field: AITableField;
     originId?: string;
     isCopy?: boolean;

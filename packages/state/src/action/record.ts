@@ -1,6 +1,7 @@
 import { AITableQueries, FieldModelMap } from '@ai-table/grid';
 import { UpdateFieldValueAction, ActionName, AddRecordAction, RemoveRecordAction, AIViewTable, UpdateSystemFieldValue } from '../types';
 import { AIRecordFieldIdPath, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/utils';
+
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
     const oldValue = AITableQueries.getFieldValue(aiTable, path);
     const field = AITableQueries.getField(aiTable, [path[1]]);
@@ -27,7 +28,7 @@ export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updat
     aiTable.apply(operation);
 }
 
-export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: NumberPath) {
+export function addRecord(aiTable: AIViewTable, record: AITableRecord) {
     const invalidFieldValues: string[] = [];
     const isValid = Object.entries(record.values).every(([fieldId, value]) => {
         const field = AITableQueries.getField(aiTable, [fieldId]);
@@ -41,8 +42,7 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord, path: Num
     if (isValid) {
         const operation: AddRecordAction = {
             type: ActionName.AddRecord,
-            record,
-            path
+            record
         };
         aiTable.apply(operation);
     } else {
