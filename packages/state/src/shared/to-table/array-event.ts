@@ -72,17 +72,9 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                         delta.insert?.map((item: Y.Array<any>) => {
                             const data = item.toJSON();
                             const [systemFieldValues, customFieldValues] = data;
-                            const positions = getPositionsBySystemFieldValues(systemFieldValues);
-                            const position = positions[activeViewId];
-                            const path = translatePositionToPath(
-                                aiTable.records() as AITableViewRecords,
-                                position,
-                                activeViewId
-                            ) as NumberPath;
 
                             actions.push({
                                 type: ActionName.AddRecord,
-                                path: path,
                                 record: {
                                     _id: getIdBySystemFieldValues(systemFieldValues),
                                     short_id: getShortIdBySystemFieldValues(systemFieldValues),
@@ -145,15 +137,8 @@ export default function translateArrayEvent(aiTable: AIViewTable, sharedType: Sh
                 if (isFieldsTranslate) {
                     delta.insert?.map((item: Y.Map<any>, index) => {
                         const data = item.toJSON();
-                        const path = translatePositionToPath(
-                            aiTable.gridData().fields as AITableViewFields,
-                            data['positions'][activeViewId],
-                            activeViewId,
-                            index
-                        ) as NumberPath;
                         actions.push({
                             type: ActionName.AddField,
-                            path,
                             field: data as AITableField
                         });
                     });
