@@ -76,7 +76,7 @@ export default function addNode(
                     const newFieldValue = recordEntity.values[action.field._id];
                     // 幽灵单元格，暂不处理交给后端统一处理
                     if (insertIndex <= customFieldValues.length) {
-                        customFieldValues.push([newFieldValue]);
+                        customFieldValues.insert(insertIndex, [newFieldValue]);
                     } else {
                         console.error('Field index out of bounds, cannot initialize record value for new field');
                     }

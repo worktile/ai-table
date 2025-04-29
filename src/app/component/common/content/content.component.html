@@ -2,16 +2,6 @@
     <div (mousedown)="prevent($event)">
         <thy-segment
             class="mb-2 mr-2"
-            thySize="md"
-            thyMode="inline"
-            [thyActiveIndex]="renderModeActiveIndex()"
-            (thySelectChange)="changeRenderMode($event)"
-        >
-            <thy-segment-item thyValue="canvas" thyIcon="list">Canvas</thy-segment-item>
-            <thy-segment-item thyValue="dom" thyIcon="paperclip">DOM</thy-segment-item>
-        </thy-segment>
-        <thy-segment
-            class="mb-2 mr-2"
             thyMode="inline"
             thySize="md"
             [thyActiveIndex]="dateModeActiveIndex()"
@@ -29,49 +19,28 @@
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
     </div>
     <div class="table-content">
-        @switch (renderMode()) {
-            @case ('canvas') {
-                <ai-table-grid
-                    [aiReadonly]="tableService.readonly()"
-                    [aiRowDragDisabled]="tableService.rowDragDisabled()"
-                    [aiContextMenuItems]="contextMenuItems"
-                    [(aiRecords)]="tableService.records"
-                    [(aiFields)]="tableService.fields"
-                    [(aiFieldsSizeMap)]="tableService.fieldsSizeMap"
-                    [aiFieldConfig]="aiFieldConfig()"
-                    [aiKeywords]="tableService.keywords()"
-                    [aiPlugins]="plugins"
-                    [aiReferences]="references()"
-                    (aiAddRecord)="addRecord($event)"
-                    (aiAddField)="addField($event)"
-                    (aiMoveField)="dragMoveField($event)"
-                    (aiUpdateFieldValue)="updateFieldValue($event)"
-                    (aiSetField)="setField($event)"
-                    (aiSetFieldWidth)="setFieldWidth($event)"
-                    (aiMoveRecords)="dragMoveRecords($event)"
-                    (aiTableInitialized)="aiTableInitialized($event)"
-                    [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
-                    [aiGetI18nTextByKey]="getI18nTextByKey"
-                    (aiClick)="onClick($event)"
-                ></ai-table-grid>
-            }
-            @case ('dom') {
-                <ai-table-dom-grid
-                    [aiReadonly]="tableService.readonly()"
-                    [aiRowDragDisabled]="tableService.rowDragDisabled()"
-                    [(aiRecords)]="tableService.records"
-                    [(aiFields)]="tableService.fields"
-                    [(aiFieldsSizeMap)]="tableService.fieldsSizeMap"
-                    [aiFieldConfig]="aiFieldConfig()"
-                    [aiPlugins]="plugins"
-                    [aiReferences]="references()"
-                    (aiAddRecord)="addRecord($event)"
-                    (aiAddField)="addField($event)"
-                    (aiUpdateFieldValue)="updateFieldValue($event)"
-                    (aiTableInitialized)="aiTableInitialized($event)"
-                    [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
-                ></ai-table-dom-grid>
-            }
-        }
+        <ai-table-grid
+            [aiReadonly]="tableService.readonly()"
+            [aiRowDragDisabled]="tableService.rowDragDisabled()"
+            [aiContextMenuItems]="contextMenuItems"
+            [(aiRecords)]="tableService.records"
+            [(aiFields)]="tableService.fields"
+            [(aiFieldsSizeMap)]="tableService.fieldsSizeMap"
+            [aiFieldConfig]="aiFieldConfig()"
+            [aiKeywords]="tableService.keywords()"
+            [aiPlugins]="plugins"
+            [aiReferences]="references()"
+            (aiAddRecord)="addRecord($event)"
+            (aiAddField)="addField($event)"
+            (aiMoveField)="dragMoveField($event)"
+            (aiUpdateFieldValue)="updateFieldValue($event)"
+            (aiSetField)="setField($event)"
+            (aiSetFieldWidth)="setFieldWidth($event)"
+            (aiMoveRecords)="dragMoveRecords($event)"
+            (aiTableInitialized)="aiTableInitialized($event)"
+            [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
+            [aiGetI18nTextByKey]="getI18nTextByKey"
+            (aiClick)="onClick($event)"
+        ></ai-table-grid>
     </div>
 }

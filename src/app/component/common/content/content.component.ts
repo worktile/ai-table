@@ -53,11 +53,11 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
+import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
-import _, { isNil } from 'lodash';
+import _, { get, isNil } from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
@@ -255,8 +255,7 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            this.renderMode.set(this.getLocalRenderMode(LOCAL_STORAGE_RENDER_MODE) || 'canvas');
-            this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
+            this.dataMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
             this.setValue();
         }
     }
@@ -271,13 +270,9 @@ export class DemoTableContent {
 
     references = signal(getReferences());
 
-    renderMode = signal<'dom' | 'canvas'>('canvas');
+    dataMode = signal<'default' | 'big-data'>('default');
 
-    dateMode = signal<'default' | 'big-data'>('default');
-
-    renderModeActiveIndex = computed(() => (this.renderMode() === 'canvas' ? 0 : 1));
-
-    dateModeActiveIndex = computed(() => (this.dateMode() === 'default' ? 0 : 1));
+    dateModeActiveIndex = computed(() => (this.dataMode() === 'default' ? 0 : 1));
 
     getI18nTextByKey = (key: string) => {
         switch (key) {
@@ -340,20 +335,13 @@ export class DemoTableContent {
     }
 
     setValue() {
-        const value =
-            this.dateMode() === 'default' ? (this.renderMode() === 'canvas' ? getCanvasDefaultValue() : getDefaultValue()) : getBigData();
+        const value = this.dataMode() === 'default' ? getCanvasDefaultValue() : getBigData();
         this.tableService.buildRenderRecords(value.records);
         this.tableService.buildRenderFields(value.fields);
     }
 
-    changeRenderMode(e: ThySegmentEvent<any>) {
-        this.renderMode.set(e.value);
-        this.setLocalStorage(LOCAL_STORAGE_RENDER_MODE, e.value);
-        this.setValue();
-    }
-
     changeDataMode(e: ThySegmentEvent<any>) {
-        this.dateMode.set(e.value);
+        this.dataMode.set(e.value);
         this.setLocalStorage(LOCAL_STORAGE_DATA_MODE, e.value);
         this.setValue();
     }
