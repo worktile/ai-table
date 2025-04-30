@@ -1,6 +1,6 @@
 import { isArray } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import { ActionName, AITableAction, AIViewTable } from '../../types';
+import { ActionName, AITableAction } from '../../types';
 import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
 import {
     getPositionsBySystemFieldValues,
