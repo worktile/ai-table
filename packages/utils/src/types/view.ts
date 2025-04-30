@@ -35,6 +35,7 @@ export interface AITableView {
     name: string;
     emoji_icon?: string;
     settings?: ViewSettings;
+    position?: number;
     [key: string]: any;
 }
 
