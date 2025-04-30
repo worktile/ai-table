@@ -1,6 +1,5 @@
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import {
-    AITable,
     AITableField,
     AITableRecord,
     AIRecordFieldIdPath,
@@ -10,8 +9,9 @@ import {
     SystemFieldTypes,
     DateFieldValue,
     MemberFieldValue
-} from '../types';
+} from '@ai-table/utils';
 import { isSystemField } from './field';
+import { AITable } from '../types';
 
 export function getFieldValue(record: Partial<AITableRecord>, field: AITableField) {
     if (isSystemField(field)) {

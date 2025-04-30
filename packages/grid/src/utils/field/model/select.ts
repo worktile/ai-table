@@ -1,8 +1,11 @@
 import { helpers } from 'ngx-tethys/util';
-import { Field } from './field';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { compareString, hasIntersect, isMeetFilter } from '../operate';
+import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
+import { AITable, idCreator } from '../../../core';
+import { AITableReferences, SelectFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 import {
-    AITable,
     AITableField,
     AITableFieldType,
     AITableSelectOption,
@@ -10,18 +13,15 @@ import {
     FieldValue,
     SelectFieldValue,
     SelectSettings
-} from '../../../core';
-import { isEmpty } from '../../common';
-import { compareString, hasIntersect } from '../operate';
-import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
-import { idCreator } from '../../../core';
+} from '@ai-table/utils';
+import { isEmpty } from 'lodash';
 
-export class SelectField extends Field {
+export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }
 
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -32,11 +32,11 @@ export class SelectField extends Field {
             case AITableFilterOperation.nin:
                 return Array.isArray(condition.value) && !hasIntersect(cellValue, condition.value);
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(
+    compare(
         cellValue1: SelectFieldValue,
         cellValue2: SelectFieldValue,
         references: AITableReferences,
@@ -51,21 +51,7 @@ export class SelectField extends Field {
         return compareString(value1, value2);
     }
 
-    override cellFullText(transformValue: string[], field: AITableField): string[] {
-        let fullText: string[] = [];
-        const optionsMap = helpers.keyBy((field.settings as SelectSettings).options || [], '_id');
-        if (transformValue && Array.isArray(transformValue) && transformValue.length) {
-            transformValue.forEach((optionId) => {
-                const option = optionsMap[optionId];
-                if (option && option.text) {
-                    fullText.push(option.text);
-                }
-            });
-        }
-        return fullText;
-    }
-
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue } | null

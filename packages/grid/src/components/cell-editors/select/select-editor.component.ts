@@ -5,12 +5,12 @@ import { ThyEmptyModule } from 'ngx-tethys/empty';
 import { ThySelect, ThySelectModule } from 'ngx-tethys/select';
 import { ThyOption } from 'ngx-tethys/shared';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
-import { AITableQueries, AITableSelectOptionStyle } from '../../../core';
+import { AITableSelectOptionStyle } from '@ai-table/utils';
 import { AITableSelectField } from '../../../types';
 import { SelectOptionComponent } from '../../cell-views/select/option.component';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyFormModule } from 'ngx-tethys/form';
-
+import { AITableQueries } from '../../../utils';
 @Component({
     selector: 'select-cell-editor',
     templateUrl: './select-editor.component.html',

@@ -1,7 +1,4 @@
 import {
-    AITableView,
-    AITableViewFields,
-    AITableViewRecords,
     AIViewTable,
     applyYjsEvents,
     buildFieldsByView,
@@ -9,7 +6,6 @@ import {
     createSharedType,
     getSharedTypeByData,
     getDataBySharedType,
-    SharedType,
     YjsAITable,
     getFieldsSizeMap,
     UndoManagerService,
@@ -20,7 +16,15 @@ import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
-import { AITableFieldsSizeMap, AITableFieldType, AITableValue } from '@ai-table/grid';
+import {
+    AITableFieldsSizeMap,
+    AITableFieldType,
+    AITableValue,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    SharedType
+} from '@ai-table/utils';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';

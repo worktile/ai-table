@@ -1,13 +1,6 @@
-import {
-    AIRecordFieldIdPath,
-    AITableQueries,
-    AITableRecord,
-    AITableRecordUpdatedInfo,
-    FieldModelMap,
-    IdPath,
-    NumberPath
-} from '@ai-table/grid';
+import { AITableQueries, FieldModelMap } from '@ai-table/grid';
 import { UpdateFieldValueAction, ActionName, AddRecordAction, RemoveRecordAction, AIViewTable, UpdateSystemFieldValue } from '../types';
+import { AIRecordFieldIdPath, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/utils';
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
     const field = AITableQueries.getField(aiTable, [path[1]]);

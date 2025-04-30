@@ -1,18 +1,6 @@
 import { AITable } from '@ai-table/grid';
 import * as Y from 'yjs';
-import {
-    ActionName,
-    AddFieldAction,
-    AddRecordAction,
-    SetRecordPositionAction,
-    AddViewAction,
-    AITableViewRecord,
-    SharedType,
-    SyncArrayElement,
-    SyncMapElement,
-    AITableViewFields,
-    UpdateSystemFieldValue
-} from '../../types';
+import { ActionName, AddFieldAction, AddRecordAction, SetRecordPositionAction, AddViewAction, UpdateSystemFieldValue } from '../../types';
 import {
     getPositionsByRecordSyncElement,
     getSharedRecordIndex,
@@ -22,6 +10,7 @@ import {
     getIdBySystemFieldValuesType,
     setRecordUpdatedInfo
 } from '../utils';
+import { AITableViewFields, AITableViewRecord, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 
 export default function addNode(
     aiTable: AITable,

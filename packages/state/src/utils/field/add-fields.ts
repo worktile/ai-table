@@ -1,7 +1,8 @@
-import { AddFieldOptions, AITableRecordUpdatedInfo, idCreator } from '@ai-table/grid';
-import { AITableViewField, AITableViewFields, AIViewTable } from '../../types';
+import { AddFieldOptions, AITableRecordUpdatedInfo, AITableViewField, AITableViewFields } from '@ai-table/utils';
+import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
+import { idCreator } from '@ai-table/grid';
 import { createDefaultPositions, getPosition } from '../view';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {

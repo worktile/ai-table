@@ -1,15 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { AITableReferences } from '@ai-table/utils';
 import {
     AITableField,
     AITableFieldOption,
     AITableFieldSettings,
     AITableSelectOption,
-    isSameFieldOption,
     MemberSettings,
     SelectSettings
-} from '../core';
-import { AITableReferences, AITableSelection } from '../types';
-
+} from '@ai-table/utils';
+import { isSameFieldOption } from '../core';
+import { AITableSelection } from '../types';
 @Pipe({
     name: 'selectOption',
     standalone: true

@@ -1,32 +1,18 @@
 import {
-    AddFieldOptions,
-    AddRecordOptions,
     AIFieldConfig,
     AITable,
     AITableDomGrid,
-    AITableField,
-    AITableFieldType,
     AITableGrid,
     AITableActions,
-    AITableQueries,
-    AITableRecord,
-    DateFieldValue,
-    MoveFieldOptions,
-    NumberPath,
-    UpdateFieldValueOptions,
-    RichTextFieldValue,
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
-    KoEventObjectOutput,
-    SetFieldWidthOptions,
-    MoveRecordOptions
+    KoEventObjectOutput
 } from '@ai-table/grid';
 import {
     Actions,
     addFields,
     addRecords,
-    AITableView,
     AIViewTable,
     applyActionOps,
     buildRemoveFieldItem,
@@ -59,6 +45,20 @@ import { AITableStateI18nKey } from '@ai-table/state';
 import _, { get, isNil } from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AITableField,
+    AITableFieldType,
+    AITableView,
+    DateFieldValue,
+    MoveFieldOptions,
+    MoveRecordOptions,
+    RichTextFieldValue,
+    SetFieldWidthOptions,
+    UpdateFieldValueOptions
+} from '@ai-table/utils';
+
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';

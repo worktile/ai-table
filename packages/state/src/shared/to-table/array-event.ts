@@ -1,15 +1,7 @@
 import { isArray } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import {
-    ActionName,
-    AITableAction,
-    AITableView,
-    Positions,
-    SharedType,
-    SyncArrayElement,
-    SyncMapElement
-} from '../../types';
-import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues } from '../utils';
+import { ActionName, AITableAction } from '../../types';
+import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
 import {
     getPositionsBySystemFieldValues,
     getSharedMapId,
@@ -20,7 +12,16 @@ import {
     getValuesByCustomFieldValues,
     SystemFieldIndex
 } from '../utils/translate';
-import { AIRecordFieldIdPath, AITableField, IdPath } from '@ai-table/grid';
+import {
+    AIRecordFieldIdPath,
+    AITableField,
+    AITableView,
+    IdPath,
+    Positions,
+    SharedType,
+    SyncArrayElement,
+    SyncMapElement
+} from '@ai-table/utils';
 
 export default function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
@@ -112,7 +113,7 @@ export default function translateArrayEvent(sharedType: SharedType, event: Y.YEv
                                         actions.push({
                                             type: ActionName.UpdateSystemFieldValue,
                                             path: [recordId],
-                                            updatedInfo: { updated_at, updated_by }
+                                            updatedInfo: { updated_at: updated_at as number, updated_by }
                                         });
                                     }
                                     systemFieldOffset++;

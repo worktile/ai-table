@@ -1,4 +1,4 @@
-import { AITableRecordUpdatedInfo, MoveFieldOptions, NumberPath } from '@ai-table/grid';
+import { AITableRecordUpdatedInfo, MoveFieldOptions } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 

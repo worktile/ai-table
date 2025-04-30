@@ -1,16 +1,16 @@
+import { ActionName, AITableAction, AIViewTable } from '../types';
+import { createDraft, finishDraft } from 'immer';
+import { getDefaultFieldValue } from '@ai-table/grid';
+import { createDefaultPositions, sortViews } from '../utils';
 import {
-    ActionName,
-    AITableAction,
+    AITableField,
+    AITableFields,
     AITableView,
     AITableViewField,
     AITableViewFields,
     AITableViewRecord,
-    AITableViewRecords,
-    AIViewTable
-} from '../types';
-import { createDraft, finishDraft } from 'immer';
-import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions, sortViews } from '../utils';
+    AITableViewRecords
+} from '@ai-table/utils';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
     switch (action.type) {

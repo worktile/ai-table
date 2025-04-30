@@ -1,6 +1,4 @@
-import { AITableFields, AITableFieldsSizeMap, NumberPath } from '@ai-table/grid';
-import { AITableView, AITableViewField, AITableViewFields, AIViewTable } from '../../types';
-import { getPosition } from '../view';
+import { AITableFields, AITableFieldsSizeMap, AITableView, AITableViewField, NumberPath } from '@ai-table/utils';
 
 export function getFieldPositionInView(viewId: string, fields: AITableFields, path: NumberPath, newPath: NumberPath) {
     const targetPosition = (fields[newPath[0]] as AITableViewField).positions[viewId];

@@ -1,4 +1,5 @@
-import { AITableCellMetaData, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '../types';
+import { AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
+import { AITableCellMetaData } from '../types';
 
 /**
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础

@@ -6,10 +6,11 @@ import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../constants';
-import { AIRecordFieldIdPath, AITable, AITableFieldType } from '../core';
+import { AITable } from '../core';
 import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, getHoverEditorBoxOffset, getHoverEditorSpace } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
+import { AITableFieldType, AIRecordFieldIdPath } from '@ai-table/utils';
 
 @Injectable()
 export class AITableGridEventService {

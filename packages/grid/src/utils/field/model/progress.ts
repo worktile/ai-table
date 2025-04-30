@@ -1,15 +1,12 @@
-import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, ProgressFieldValue, SelectSettings } from '../../../core';
+import { helpers, isEmpty } from 'ngx-tethys/util';
+import { AITableField, AITableFieldType, FieldValue, ProgressFieldValue, SelectSettings } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { compareNumber, isEmpty } from '../../index';
-import { Field } from './field';
+import { compareNumber, isMeetFilter } from '../operate';
+import { ProgressFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 
-export class ProgressField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return typeof cellValue === 'number' || cellValue === null;
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<number>, cellValue: ProgressFieldValue) {
+export class ProgressField extends ProgressFieldBase implements FieldOperable<number, ProgressFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<number>, cellValue: ProgressFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:
                 return isEmpty(cellValue);
@@ -24,27 +21,19 @@ export class ProgressField extends Field {
             case AITableFilterOperation.gt:
                 return cellValue != null && cellValue > condition.value;
             case AITableFilterOperation.lt:
-                return cellValue != null &&  cellValue < condition.value;
+                return cellValue != null && cellValue < condition.value;
             case AITableFilterOperation.ne:
                 return cellValue == null || Number.isNaN(condition.value) || cellValue !== condition.value;
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: ProgressFieldValue, cellValue2: ProgressFieldValue): number {
+    compare(cellValue1: ProgressFieldValue, cellValue2: ProgressFieldValue): number {
         return compareNumber(cellValue1, cellValue2);
     }
 
-    override cellFullText(transformValue: ProgressFieldValue): string[] {
-        let fullText: string[] = [];
-        if (!isEmpty(transformValue)) {
-            fullText.push(`${transformValue}%`);
-        }
-        return fullText;
-    }
-
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }

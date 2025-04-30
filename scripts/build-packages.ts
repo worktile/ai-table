@@ -1,26 +1,48 @@
 #!/usr/bin/env node
 
 import * as path from 'path';
-import * as fs from 'fs';
 import * as ngPackage from 'ng-packagr';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
-const packagesPath = path.resolve(__dirname, '../packages');
-const packages = fs.readdirSync(packagesPath).filter((name) => fs.statSync(path.resolve(packagesPath, name)).isDirectory());
+const execAsync = promisify(exec);
+
+async function buildUtils() {
+    const utilsPath = path.resolve(__dirname, '../packages/utils');
+    try {
+        console.log('------------------------------------------------------------------------------');
+        console.log("Building entry point '@ai-table/grid'");
+        console.log('------------------------------------------------------------------------------');
+        await execAsync('npm run build', { cwd: utilsPath });
+
+        console.log('✅ Utils package built successfully');
+    } catch (error) {
+        console.error('❌ Error building utils package:', error);
+        process.exit(1);
+    }
+}
+
+const packages = ['grid', 'state'];
 
 async function buildNgPackages() {
-    for (const pkg of packages) {
+    for (const pkg of packages.filter((p) => p !== 'utils')) {
         const target = path.resolve(__dirname, `../packages/${pkg}`);
         await ngPackage
             .ngPackagr()
             .forProject(path.resolve(target, 'ng-package.json'))
             .withTsConfig(path.resolve(target, 'tsconfig.lib.json'))
             .build()
-            .then()
+            .then(() => console.log(`✅ ${pkg} package built successfully`))
             .catch((error) => {
-                console.error(error);
+                console.error(`❌ Error building ${pkg} package:`, error);
                 process.exit(1);
             });
     }
 }
 
-buildNgPackages();
+async function buildAll() {
+    await buildUtils();
+    await buildNgPackages();
+}
+
+buildAll();

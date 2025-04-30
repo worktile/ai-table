@@ -1,11 +1,12 @@
 import { idCreator, shortIdCreator } from '@ai-table/grid';
-import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, AIViewTable, Positions } from '../types';
+import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
 import { Actions } from '../action';
 import { ViewActions } from '../action/view';
 import { PositionsActions } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
+import { AIViewTable } from '../types';
 
 export function createDefaultPositions(
     views: AITableView[],

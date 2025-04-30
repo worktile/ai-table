@@ -1,4 +1,5 @@
-import { Actions, addView, AITableView, AITableViewFields, AITableViewRecords, removeView } from '@ai-table/state';
+import { Actions, addView, removeView } from '@ai-table/state';
+import { AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';

@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType } from '../../types';
+import { AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType } from '@ai-table/utils';
 import {
     getIdBySystemFieldValues,
     getPositionsBySystemFieldValues,

@@ -1,5 +1,6 @@
 import { ElementRef, Signal } from '@angular/core';
-import { AITable, AITableField, SelectSettings } from '../core';
+import { AITable } from '../core';
+import { AITableField, SelectSettings } from '@ai-table/utils';
 
 export interface AITableFieldMenuItem {
     type: string;

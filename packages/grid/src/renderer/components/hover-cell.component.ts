@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoContainer } from '../../angular-konva';
 import { AITableCellsConfig, AITableHoverCellConfig } from '../../types';
-import { AITableFieldType, AITableQueries } from '../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
-import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { AITableQueries, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 import { HoverCellComponent } from '../interfaces';

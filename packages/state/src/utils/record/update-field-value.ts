@@ -1,7 +1,8 @@
-import { AITableQueries, AITableRecordUpdatedInfo, UpdateFieldValueOptions } from '@ai-table/grid';
+import { AITableQueries } from '@ai-table/grid';
 import * as _ from 'lodash';
 import { Actions } from '../../action';
 import { AIViewTable } from '../../types';
+import { UpdateFieldValueOptions, AITableRecordUpdatedInfo } from '@ai-table/utils';
 
 export function updateFieldValue(aiTable: AIViewTable, options: UpdateFieldValueOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const oldValue = AITableQueries.getFieldValue(aiTable, options.path);

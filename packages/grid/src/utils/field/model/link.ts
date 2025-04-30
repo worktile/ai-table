@@ -1,21 +1,12 @@
-import { isNil } from 'lodash';
-import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
+import { isEmpty, isNil } from 'lodash';
+import { AITableField, AITableFieldType, FieldValue, LinkFieldValue, LinkFieldBase } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { extractText, extractLinkUrl } from '../../clipboard';
-import { isEmpty } from '../../common';
-import { compareString, stringInclude } from '../operate';
-import { Field } from './field';
+import { compareString, isMeetFilter, stringInclude } from '../operate';
+import { FieldOperable } from '../field-operable';
 
-export const isLinkValid = (cellValue: FieldValue): cellValue is LinkFieldValue => {
-    return (cellValue && typeof cellValue === 'object' && 'url' in cellValue && 'text' in cellValue) || cellValue === null;
-};
-
-export class LinkField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return isLinkValid(cellValue);
-    }
-
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: LinkFieldValue) {
+export class LinkField extends LinkFieldBase implements FieldOperable<string, LinkFieldValue> {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: LinkFieldValue) {
         if (cellValue === null) {
             if (condition.operation === AITableFilterOperation.empty) {
                 return true;
@@ -32,23 +23,15 @@ export class LinkField extends Field {
             case AITableFilterOperation.contain:
                 return !isNil(cellTextValue) && stringInclude(cellTextValue, condition.value);
             default:
-                return super.isMeetFilter(condition, cellTextValue);
+                return isMeetFilter(condition, cellTextValue);
         }
     }
 
-    override compare(cellValue1: LinkFieldValue, cellValue2: LinkFieldValue): number {
+    compare(cellValue1: LinkFieldValue, cellValue2: LinkFieldValue): number {
         return compareString(cellValueToSortValue(cellValue1), cellValueToSortValue(cellValue2));
     }
 
-    override cellFullText(transformValue: LinkFieldValue): string[] {
-        let texts: string[] = [];
-        if (!isNil(transformValue)) {
-            texts.push(transformValue.text);
-        }
-        return texts;
-    }
-
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue } | null

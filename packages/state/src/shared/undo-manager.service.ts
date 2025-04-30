@@ -1,9 +1,8 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { UndoManager } from 'yjs';
-import { SharedType } from '../types';
 import { AIViewTable } from '../types';
 import { YjsAITable } from './yjs-table';
-
+import { SharedType } from '@ai-table/utils';
 @Injectable()
 export class UndoManagerService {
     private _undoManager: UndoManager | null = null;

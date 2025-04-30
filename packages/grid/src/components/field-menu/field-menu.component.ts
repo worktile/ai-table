@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, computed } from 
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { AITable, AITableField } from '../../core';
+import { AITableField } from '@ai-table/utils';
 import { AITableFieldMenuItem } from '../../types/field';
 import { NgClass } from '@angular/common';
+import { AITable } from '../../core';
 
 @Component({
     selector: 'ai-table-field-menu',

@@ -1,5 +1,4 @@
-import { Path } from '@ai-table/grid';
-import { AITableView, AITableViewFields, AITableViewRecords } from '../types';
+import { AITableView, AITableViewFields, AITableViewRecords, Path } from '@ai-table/utils';
 import { AITable } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
 

@@ -1,22 +1,19 @@
-import { AITableContent, AITableReferences } from '../../types';
+import { AITableContent } from '../../types';
+import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue, idCreator } from '../../core';
+import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
+import { processPastedValueForSelect } from '../field/model/select';
+import { FieldModelMap } from '../field';
 import {
-    AITable,
     AITableField,
     AITableFieldType,
-    AITableRecord,
-    createDefaultField,
-    createDefaultFieldName,
     FieldValue,
-    getFieldOptions,
-    getFieldValue,
-    idCreator,
     SelectSettings,
-    UpdateFieldValueOptions
-} from '../../core';
-import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
-import { FieldModelMap } from '../field/model';
-import { processPastedValueForSelect } from '../field/model/select';
-import { AddRecordOptions, AddFieldOptions } from '../../core';
+    AITableRecord,
+    UpdateFieldValueOptions,
+    AddRecordOptions,
+    AddFieldOptions,
+    AITableReferences
+} from '@ai-table/utils';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 

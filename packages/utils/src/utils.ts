@@ -103,7 +103,7 @@ export const getSystemFieldValues = (record: AITableViewRecord): SystemFieldValu
     ];
 };
 
-export function flushUpdates(updates: Buffer[]): Uint8Array {
+export function flushUpdates(updates: Uint8Array[]): Uint8Array {
     const newDoc = new Y.Doc();
     updates.forEach((buffer) => {
         Y.applyUpdate(newDoc, new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength));

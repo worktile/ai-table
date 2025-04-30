@@ -11,10 +11,19 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "strict": true,
-        "lib": ["dom", "ES2022"],
+        "baseUrl": ".",
         "paths": {
-            "@ai-table/utils": ["dist/utils"]
-        }
+            "@ai-table/utils": [
+                "src/public-api"
+            ],
+            "@ai-table/utils/*": [
+                "src/*"
+            ]
+        },
+        "lib": [
+            "dom",
+            "ES2022"
+        ]
     },
     "exclude": []
 }
