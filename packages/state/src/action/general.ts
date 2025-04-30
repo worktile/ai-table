@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions } from '../utils';
+import { createDefaultPositions, sortViews } from '../utils';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
     switch (action.type) {
@@ -121,10 +121,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddView: {
-            const [viewIndex] = action.path;
-            if (viewIndex > -1) {
-                views.splice(viewIndex, 0, action.view);
-            }
+            views.push(action.view);
             break;
         }
         case ActionName.RemoveView: {
@@ -175,7 +172,7 @@ export const GeneralActions = {
             aiTable.records.set(newRecords);
         }
         if (newViews !== aiTable.views()) {
-            aiTable.views.set(newViews);
+            aiTable.views.set(sortViews(newViews));
         }
     }
 };

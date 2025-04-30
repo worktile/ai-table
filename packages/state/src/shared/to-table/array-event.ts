@@ -145,7 +145,6 @@ export default function translateArrayEvent(sharedType: SharedType, event: Y.YEv
                         const data = item.toJSON();
                         actions.push({
                             type: ActionName.AddView,
-                            path: [offset + index],
                             view: data as AITableView
                         });
                     });
