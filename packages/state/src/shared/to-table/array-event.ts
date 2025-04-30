@@ -4,15 +4,12 @@ import {
     ActionName,
     AITableAction,
     AITableView,
-    AITableViewFields,
-    AITableViewRecords,
-    AIViewTable,
     Positions,
     SharedType,
     SyncArrayElement,
     SyncMapElement
 } from '../../types';
-import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
+import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues } from '../utils';
 import {
     getPositionsBySystemFieldValues,
     getSharedMapId,
@@ -23,7 +20,7 @@ import {
     getValuesByCustomFieldValues,
     SystemFieldIndex
 } from '../utils/translate';
-import { AIRecordFieldIdPath, AITableField, IdPath, NumberPath } from '@ai-table/grid';
+import { AIRecordFieldIdPath, AITableField, IdPath } from '@ai-table/grid';
 
 export default function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
