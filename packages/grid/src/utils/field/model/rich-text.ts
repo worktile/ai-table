@@ -1,5 +1,4 @@
-import { AITableField, AITableFieldType, AITableReferences, FieldValue, RichTextFieldValue } from '@ai-table/utils';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { AITableField, AITableFieldType, AITableFilterCondition, AITableFilterOperation, AITableReferences, FieldValue, RichTextFieldValue } from '@ai-table/utils';
 import { transformCellValue } from '../../cell';
 import { isEmpty } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';

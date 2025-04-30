@@ -1,6 +1,5 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, NumberFieldValue, SelectSettings } from '@ai-table/utils';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { AITableField, AITableFieldType, AITableFilterCondition, AITableFilterOperation, FieldValue, NumberFieldValue, SelectSettings } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { isEmpty } from 'lodash';
 import { NumberFieldBase } from '@ai-table/utils';

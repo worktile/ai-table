@@ -1,8 +1,8 @@
 import * as Y from 'yjs';
 import { ActionName, RemoveFieldAction, RemoveRecordAction, RemoveViewAction } from '../../types';
-import { getSharedMapValueIndex, getSharedRecordIndex } from '../utils';
 import { AITable } from '@ai-table/grid';
-import { SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
+import { getSharedMapValueIndex, getSharedRecordIndex, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
+
 export default function removeNode(
     aiTable: AITable,
     sharedType: SharedType,

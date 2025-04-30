@@ -1,9 +1,8 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
 import { AITable, idCreator } from '../../../core';
-import { AITableReferences, SelectFieldBase } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, AITableReferences, SelectFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import {
     AITableField,

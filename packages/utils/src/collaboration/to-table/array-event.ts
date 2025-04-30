@@ -1,19 +1,8 @@
-import { isArray } from 'ngx-tethys/util';
 import * as Y from 'yjs';
-import { ActionName, AITableAction } from '../../types';
-import { getIdBySystemFieldValues, getShareTypeNumberPath, getTrackableEntityBySystemFieldValues, translatePositionToPath } from '../utils';
 import {
-    getPositionsBySystemFieldValues,
-    getSharedMapId,
-    getSharedMapValueId,
-    getSharedRecord,
-    getSharedRecordId,
-    getShortIdBySystemFieldValues,
-    getValuesByCustomFieldValues,
-    SystemFieldIndex
-} from '../utils/translate';
-import {
+    ActionName,
     AIRecordFieldIdPath,
+    AITableAction,
     AITableField,
     AITableView,
     IdPath,
@@ -21,9 +10,23 @@ import {
     SharedType,
     SyncArrayElement,
     SyncMapElement
-} from '@ai-table/utils';
+} from '../../types';
+import {
+    getIdBySystemFieldValues,
+    getPositionsBySystemFieldValues,
+    getSharedMapId,
+    getSharedMapValueId,
+    getSharedRecord,
+    getSharedRecordId,
+    getShareTypeNumberPath,
+    getShortIdBySystemFieldValues,
+    getTrackableEntityBySystemFieldValues,
+    getValuesByCustomFieldValues
+} from '../utils';
+import { isArray } from 'lodash';
+import { SystemFieldIndex } from '../../constants';
 
-export default function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
+export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     let offset = 0;
     let targetPath = getShareTypeNumberPath(event.path);
     const isRecordsTranslate = event.path.includes('records');

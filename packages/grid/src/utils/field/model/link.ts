@@ -1,6 +1,5 @@
 import { isEmpty, isNil } from 'lodash';
-import { AITableField, AITableFieldType, FieldValue, LinkFieldValue, LinkFieldBase } from '@ai-table/utils';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { AITableField, AITableFieldType, FieldValue, LinkFieldValue, LinkFieldBase, AITableFilterCondition, AITableFilterOperation } from '@ai-table/utils';
 import { extractText, extractLinkUrl } from '../../clipboard';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
 import { FieldOperable } from '../field-operable';
