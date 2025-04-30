@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
 import * as path from 'path';
-import * as fs from 'fs';
 import * as ngPackage from 'ng-packagr';
 
-const packagesPath = path.resolve(__dirname, '../packages');
-const packages = fs.readdirSync(packagesPath).filter((name) => fs.statSync(path.resolve(packagesPath, name)).isDirectory());
+const packages = ['utils', 'grid', 'state'];
 
 async function buildNgPackages() {
     for (const pkg of packages) {

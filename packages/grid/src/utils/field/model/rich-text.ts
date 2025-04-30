@@ -2,15 +2,12 @@ import { AITable, AITableField, AITableFieldType, FieldValue, RichTextFieldValue
 import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
 import { transformCellValue } from '../../cell';
 import { isEmpty } from '../../common';
-import { compareString, stringInclude } from '../operate';
-import { Field } from './field';
+import { compareString, isMeetFilter, stringInclude } from '../operate';
+import { RichTextFieldBase } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 
-export class RichTextField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return Array.isArray(cellValue) || cellValue === null;
-    }
-
-    override isMeetFilter(
+export class RichTextField extends RichTextFieldBase implements FieldOperable<string, RichTextFieldValue> {
+    isMeetFilter(
         condition: AITableFilterCondition<string>,
         cellValue: RichTextFieldValue,
         options: {
@@ -27,11 +24,11 @@ export class RichTextField extends Field {
             case AITableFilterOperation.contain:
                 return !isEmpty(textValue) && stringInclude(textValue, condition.value);
             default:
-                return super.isMeetFilter(condition, textValue);
+                return isMeetFilter(condition, textValue);
         }
     }
 
-    override compare(
+    compare(
         cellValue1: RichTextFieldValue,
         cellValue2: RichTextFieldValue,
         references: AITableReferences,
@@ -46,7 +43,7 @@ export class RichTextField extends Field {
         return compareString(value1, value2);
     }
 
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }

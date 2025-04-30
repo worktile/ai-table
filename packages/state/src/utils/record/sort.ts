@@ -1,6 +1,7 @@
 import { AITable, AITableFieldType, AITableQueries, FieldModelMap } from '@ai-table/grid';
 import { AITableView, AITableViewRecords } from '../../types';
 import { sortByViewPosition } from '../common';
+// import { FieldModelMap } from '../../../../grid/src/utils/field/field';
 
 export function getSortRecords(
     aiTable: AITable,
