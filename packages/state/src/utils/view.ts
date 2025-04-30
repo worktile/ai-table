@@ -48,8 +48,7 @@ export function getMaxPosition(data: AITableViewRecords | AITableViewFields, act
     }, 0);
 }
 
-export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: string) {
-    let index = aiTable.views().length;
+export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?: string) {
     const newId = idCreator();
     const shortId = shortIdCreator();
 
@@ -63,7 +62,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
     };
 
     let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
-    if (type === 'copy') {
+    if (type === 'duplicate') {
         originViewId = viewId ?? aiTable.activeViewId();
         const copyView = aiTable.views().find((item) => item._id === originViewId)!;
 
@@ -74,9 +73,8 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'copy', viewId?: str
             _id: newId,
             name: copyViewName
         };
-        index = aiTable.views().indexOf(copyView) + 1;
     }
-    ViewActions.addView(aiTable, newView, [index]);
+    ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
     (aiTable.records() as AITableViewRecords).forEach((record) => {
         PositionsActions.setRecordPositions(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
     });
@@ -111,4 +109,8 @@ export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fi
         );
     });
     ViewActions.removeView(aiTable, [activeViewId]);
+}
+
+export function sortViews(data: AITableView[]) {
+    return [...data].sort((a, b) => (a.position ?? data.indexOf(a)) - (b.position ?? data.indexOf(b)));
 }

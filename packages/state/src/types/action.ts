@@ -76,7 +76,7 @@ export interface SetViewAction {
 export interface AddViewAction {
     type: ActionName.AddView;
     view: AITableView;
-    path: [number];
+    isDuplicate?: boolean;
 }
 
 export interface RemoveViewAction {

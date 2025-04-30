@@ -113,7 +113,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.activeViewName = value;
     }
 
-    addView(type: 'add' | 'copy') {
+    addView(type: 'add' | 'duplicate') {
         const newView = addView(this.tableService.aiTable, type);
         if (newView) {
             this.tableService.setActiveView(newView._id);

@@ -8,7 +8,8 @@ import {
     getDataBySharedType,
     YjsAITable,
     getFieldsSizeMap,
-    UndoManagerService
+    UndoManagerService,
+    sortViews
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -111,7 +112,7 @@ export class TableService {
     });
 
     initData(views: AITableView[]) {
-        this.views = signal(views);
+        this.views = signal(sortViews(views));
     }
 
     setReadonly(readonly: boolean) {
@@ -157,7 +158,7 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = getDataBySharedType(this.sharedType!);
-                        this.views.set(data.views);
+                        this.views.set(sortViews(data.views));
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
                         this.buildRenderFieldsSizeMap(this.fields());
