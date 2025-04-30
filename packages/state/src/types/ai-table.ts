@@ -1,7 +1,6 @@
 import { AITable } from '@ai-table/grid';
 import { WritableSignal, Signal } from '@angular/core';
-import { AITableAction } from './action';
-import { AITableView } from '@ai-table/utils';
+import { AITableAction, AITableView } from '@ai-table/utils';
 
 export interface AIViewTable extends AITable {
     views: WritableSignal<AITableView[]>;

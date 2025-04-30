@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { ActionName, RemoveFieldAction, RemoveRecordAction, RemoveViewAction } from '../../types';
+import { ActionName, RemoveFieldAction, RemoveRecordAction, RemoveViewAction } from '@ai-table/utils';
 import { AITable } from '@ai-table/grid';
 import { getSharedMapValueIndex, getSharedRecordIndex, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 

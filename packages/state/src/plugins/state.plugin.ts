@@ -1,7 +1,8 @@
 import { AITable } from '@ai-table/grid';
-import { AITableAction, AIViewTable } from '../types';
+import { AIViewTable } from '../types';
 import { Actions } from '../action';
 import { FLUSHING } from '../utils';
+import { AITableAction } from '@ai-table/utils';
 
 export const withState = (aiTable: AITable) => {
     const viewTable = aiTable as AIViewTable;

@@ -1,4 +1,4 @@
-import { ActionName, SetFieldAction, SetViewAction } from '../../types';
+import { ActionName, SetFieldAction, SetViewAction } from '@ai-table/utils';
 import * as Y from 'yjs';
 import { AITable } from '@ai-table/grid';
 import { getSharedMapValueIndex, SharedType, SyncMapElement } from '@ai-table/utils';

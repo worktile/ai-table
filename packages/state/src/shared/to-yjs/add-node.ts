@@ -1,6 +1,13 @@
 import { AITable } from '@ai-table/grid';
 import * as Y from 'yjs';
-import { ActionName, AddFieldAction, AddRecordAction, SetRecordPositionAction, AddViewAction, UpdateSystemFieldValue } from '../../types';
+import {
+    ActionName,
+    AddFieldAction,
+    AddRecordAction,
+    SetRecordPositionAction,
+    AddViewAction,
+    UpdateSystemFieldValue
+} from '@ai-table/utils';
 import {
     getPositionsByRecordSyncElement,
     getSharedRecordIndex,

@@ -1,5 +1,5 @@
 import { AITable } from '@ai-table/grid';
-import { UpdateFieldValueAction } from '../../types';
+import { UpdateFieldValueAction } from '@ai-table/utils';
 import * as Y from 'yjs';
 import { getSharedMapValueIndex, getSharedRecordIndex, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 
