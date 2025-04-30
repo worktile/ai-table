@@ -29,20 +29,11 @@ import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import {
-    AITable,
-    AITableField,
-    AITableFieldOption,
-    createDefaultFieldName,
-    getFieldOptionByField,
-    SetFieldOptions,
-    AITableFieldType,
-    MemberSettings,
-    getFieldOptions
-} from '../../core';
+import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings } from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
+import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
 
 @Component({
     selector: 'ai-table-field-setting',

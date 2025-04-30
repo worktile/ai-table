@@ -2,8 +2,9 @@ import { Signal, WritableSignal } from '@angular/core';
 import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { RendererContext } from '../context';
-import { AIRecordFieldIdPath, AITableDragState, AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from './core';
 import { AITableGridI18nKey } from '../../utils/i18n';
+import { AITableRecords, AITableFields, AITableField, AITableValue, AITableRecord, AIRecordFieldIdPath } from '@ai-table/utils';
+import { AITableDragState } from './core';
 
 export interface AITable {
     records: WritableSignal<AITableRecords>;

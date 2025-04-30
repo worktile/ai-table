@@ -1,7 +1,8 @@
-import { AITable, AITableField, AITableFieldOption, FieldValue, getFieldOptionByField } from '../core';
+import { AITableField, AITableFieldOption, AITableSizeMap, FieldValue } from '@ai-table/utils';
+import { AITable, getFieldOptionByField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
-import { AITableSizeMap } from '../types';
 import { FieldModelMap } from './field';
+
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
     const columnIndicesSizeMap: AITableSizeMap = {};

@@ -1,4 +1,4 @@
-import { AITableRecordUpdatedInfo } from '@ai-table/grid';
+import { AITableRecordUpdatedInfo } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 

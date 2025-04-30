@@ -1,3 +1,4 @@
+import { AITableFieldType } from '@ai-table/utils';
 import {
     DateCellEditorComponent,
     LinkCellEditorComponent,
@@ -5,7 +6,6 @@ import {
     SelectCellEditorComponent,
     TextCellEditorComponent
 } from '../components';
-import { AITableFieldType } from '../core';
 
 export const GRID_CELL_EDITOR_MAP: Partial<Record<AITableFieldType, any>> = {
     [AITableFieldType.text]: TextCellEditorComponent,

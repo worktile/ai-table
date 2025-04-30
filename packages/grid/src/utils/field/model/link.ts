@@ -1,10 +1,8 @@
-import { isNil } from 'lodash';
-import { AITableField, AITableFieldType, FieldValue, LinkFieldValue } from '../../../core';
+import { isEmpty, isNil } from 'lodash';
+import { AITableField, AITableFieldType, FieldValue, LinkFieldValue, LinkFieldBase } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { extractText, extractLinkUrl } from '../../clipboard';
-import { isEmpty } from '../../common';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
-import { LinkFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 
 export class LinkField extends LinkFieldBase implements FieldOperable<string, LinkFieldValue> {

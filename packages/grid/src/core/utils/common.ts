@@ -1,6 +1,7 @@
 import { Signal, WritableSignal, computed, signal } from '@angular/core';
-import { AITable, AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from '../types';
+import { AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from '@ai-table/utils';
 import { AITableSelectAllState } from '../../types';
+import { AITable } from '../types';
 
 export function createAITable(
     records: WritableSignal<AITableRecords>,

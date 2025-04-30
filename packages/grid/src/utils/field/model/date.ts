@@ -1,12 +1,11 @@
-import { fromUnixTime, isValid, subDays } from 'date-fns';
+import { fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '../../../core';
-import { compareNumber, isMeetFilter } from '../operate';
-import { isEmpty } from '../../common';
-import { isNil } from 'lodash';
 import { DateFieldBase, isDateValid } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
+import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '@ai-table/utils';
+import { compareNumber, isMeetFilter } from '../operate';
+import { isEmpty, isNil } from 'lodash';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
@@ -113,7 +112,7 @@ function cellValueToSortValue(cellValue: DateFieldValue): number {
     if (isNil(cellValue) || !isDateValid(cellValue)) {
         return 0;
     }
-    return cellValue?.timestamp;
+    return cellValue?.timestamp ?? 0;
 }
 
 function transformDateValue(text: string): FieldValue | null {

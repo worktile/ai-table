@@ -3,8 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { ThyDatePicker } from 'ngx-tethys/date-picker';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyTimePickerModule } from 'ngx-tethys/time-picker';
-import { AITableQueries, DateFieldValue } from '../../../core';
+import { AITableQueries } from '../../../core';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
+import { DateFieldValue } from '@ai-table/utils';
 
 @Component({
     selector: 'date-cell-editor',

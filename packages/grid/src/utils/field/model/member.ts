@@ -1,10 +1,19 @@
 import { Id } from 'ngx-tethys/types';
-import { AITable, AITableField, AITableFieldType, FieldValue, MemberFieldValue, MemberSettings } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
-import { isEmpty } from '../../common';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
-import { MemberFieldBase } from '@ai-table/utils';
+import {
+    AITableFilterCondition,
+    MemberFieldBase,
+    AITableField,
+    AITableFieldType,
+    AITableReferences,
+    FieldValue,
+    MemberFieldValue,
+    MemberSettings
+} from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
+import { AITableFilterOperation } from '../../../types';
+import { isEmpty } from 'lodash';
+import { AITable } from '../../../core';
 
 export class MemberField extends MemberFieldBase implements FieldOperable<string, MemberFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {

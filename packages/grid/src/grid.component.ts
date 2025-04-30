@@ -37,19 +37,7 @@ import {
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE
 } from './constants';
-import {
-    AddFieldOptions,
-    AddRecordOptions,
-    AITableField,
-    Coordinate,
-    RendererContext,
-    UpdateFieldValueOptions,
-    DragEndData,
-    DragType,
-    AIRecordFieldIdPath,
-    AITable,
-    IdPath
-} from './core';
+import { Coordinate, RendererContext, AITable } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -78,6 +66,16 @@ import { AITableDragComponent } from './components/drag/drag.component';
 import { buildClipboardData, writeToClipboard, writeToAITable, AITableActions } from './utils/clipboard';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { isNumber } from 'lodash';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AIRecordFieldIdPath,
+    AITableField,
+    DragEndData,
+    DragType,
+    IdPath,
+    UpdateFieldValueOptions
+} from '@ai-table/utils';
 
 @Component({
     selector: 'ai-table-grid',

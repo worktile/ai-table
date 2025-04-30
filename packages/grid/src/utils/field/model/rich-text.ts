@@ -1,10 +1,11 @@
-import { AITable, AITableField, AITableFieldType, FieldValue, RichTextFieldValue } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
+import { AITableField, AITableFieldType, AITableReferences, FieldValue, RichTextFieldValue } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { transformCellValue } from '../../cell';
-import { isEmpty } from '../../common';
+import { isEmpty } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
 import { RichTextFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
+import { AITable } from '../../../core';
 
 export class RichTextField extends RichTextFieldBase implements FieldOperable<string, RichTextFieldValue> {
     isMeetFilter(

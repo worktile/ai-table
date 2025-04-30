@@ -1,11 +1,10 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, NumberFieldValue, SelectSettings } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, NumberFieldValue, SelectSettings } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { isEmpty } from '../../common';
 import { compareNumber, isMeetFilter } from '../operate';
+import { isEmpty } from 'lodash';
 import { NumberFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
-
 export class NumberField extends NumberFieldBase implements FieldOperable<number, NumberFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<number>, cellValue: NumberFieldValue) {
         switch (condition.operation) {

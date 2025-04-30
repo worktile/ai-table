@@ -1,7 +1,8 @@
 import { AITable } from '@ai-table/grid';
-import { SharedType, SyncArrayElement, SyncMapElement, UpdateFieldValueAction } from '../../types';
+import { UpdateFieldValueAction } from '../../types';
 import { getSharedMapValueIndex, getSharedRecordIndex } from '../utils';
 import * as Y from 'yjs';
+import { SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 
 export default function updateFieldValue(aiTable: AITable, sharedType: SharedType, action: UpdateFieldValueAction): SharedType {
     const sharedRecords = sharedType.get('records');

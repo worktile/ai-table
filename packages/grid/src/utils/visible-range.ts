@@ -1,7 +1,8 @@
 import { isNumber } from 'lodash';
 import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITable, AITableField, AITableFieldOption, Coordinate, getFieldOptionByField } from '../core';
+import { AITable, Coordinate } from '../core';
 import { AITableScrollState } from '../types';
+import { AITableField } from '@ai-table/utils';
 
 export const getVisibleRangeInfo = (coordinate: Coordinate, scrollState: AITableScrollState) => {
     const { scrollTop, scrollLeft } = scrollState;

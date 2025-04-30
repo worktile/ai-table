@@ -1,5 +1,12 @@
-import { AITableFieldType, AITableReferences, AITableSelectOptionStyle } from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords } from '@ai-table/state';
+import {
+    AITableFields,
+    AITableFieldType,
+    AITableRecords,
+    AITableReferences,
+    AITableSelectOptionStyle,
+    AITableViewFields,
+    AITableViewRecords
+} from '@ai-table/utils';
 import { getUnixTime } from 'date-fns';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {

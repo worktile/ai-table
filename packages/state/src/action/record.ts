@@ -1,21 +1,6 @@
-import {
-    AIRecordFieldIdPath,
-    AITableQueries,
-    AITableRecord,
-    AITableRecordUpdatedInfo,
-    FieldModelMap,
-    IdPath,
-    NumberPath
-} from '@ai-table/grid';
-import {
-    UpdateFieldValueAction,
-    ActionName,
-    AddRecordAction,
-    RemoveRecordAction,
-    AIViewTable,
-    UpdateSystemFieldValue
-} from '../types';
-
+import { AITableQueries, FieldModelMap } from '@ai-table/grid';
+import { UpdateFieldValueAction, ActionName, AddRecordAction, RemoveRecordAction, AIViewTable, UpdateSystemFieldValue } from '../types';
+import { AIRecordFieldIdPath, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/utils';
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
     const oldValue = AITableQueries.getFieldValue(aiTable, path);
     const field = AITableQueries.getField(aiTable, [path[1]]);
@@ -29,9 +14,7 @@ export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecor
         };
         aiTable.apply(operation);
     } else {
-        console.error(
-            `Invalid field value at update field value. invalidFieldType: ${field?.type}, value: ${value}, field_id: ${path[1]}`
-        );
+        console.error(`Invalid field value at update field value. invalidFieldType: ${field?.type}, value: ${value}, field_id: ${path[1]}`);
     }
 }
 

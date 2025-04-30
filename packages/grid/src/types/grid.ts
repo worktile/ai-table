@@ -1,18 +1,18 @@
 import { Signal, ViewContainerRef, WritableSignal } from '@angular/core';
-import { Dictionary } from 'ngx-tethys/types';
-import {
-    AIRecordFieldIdPath,
-    AITable,
-    AITableField,
-    AITableFields,
-    AITableFieldType,
-    AITableRecord,
-    Coordinate,
-    FieldValue,
-    UpdateFieldValueOptions
-} from '../core';
+
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
+import {
+    AITableField,
+    AITableRecord,
+    FieldValue,
+    AITableFields,
+    AIRecordFieldIdPath,
+    AITableFieldType,
+    UpdateFieldValueOptions,
+    AITableReferences
+} from '@ai-table/utils';
+import { AITable, Coordinate } from '../core';
 
 export interface AITableGridCellRenderSchema {
     editor?: any;
@@ -42,32 +42,6 @@ export interface AIFieldConfig {
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
 }
 
-export interface AITableUserInfo {
-    uid?: string;
-    display_name?: string;
-    avatar?: string;
-    [key: string]: any;
-}
-
-export interface AITableAttachmentInfo {
-    _id: string;
-    title: string;
-    addition: {
-        ext: string;
-        summary?: string;
-        size?: number;
-        path?: string;
-        [key: string]: any;
-    };
-    token?: string;
-    [key: string]: any;
-}
-
-export interface AITableReferences {
-    members: Dictionary<AITableUserInfo>;
-    attachments: Dictionary<AITableAttachmentInfo>;
-}
-
 export interface AITableRendererConfig {
     aiTable: AITable;
     container: HTMLDivElement;
@@ -80,27 +54,6 @@ export interface AITableRendererConfig {
     actions: {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };
-}
-
-export enum AITableRowColumnType {
-    row = 'row',
-    column = 'column'
-}
-
-export type AITableSizeMap = Record<number, number>;
-
-export type AITableFieldsSizeMap = Record<string, number | undefined>;
-
-export interface AITableCoordinate {
-    rowCount: number;
-    columnCount: number;
-    container: HTMLDivElement;
-    rowHeight: number;
-    rowInitSize?: number;
-    rowIndicesSizeMap: AITableSizeMap;
-    columnIndicesSizeMap: AITableSizeMap;
-    columnInitSize?: number;
-    frozenColumnCount?: number;
 }
 
 export enum AITableCheckType {

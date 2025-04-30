@@ -1,5 +1,15 @@
-import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/grid';
-import { AITableView, AITableViewRecord, Positions, RemovePositions } from './view';
+import {
+    AIRecordFieldIdPath,
+    AITableField,
+    AITableRecord,
+    AITableRecordUpdatedInfo,
+    IdPath,
+    NumberPath,
+    AITableView,
+    AITableViewRecord,
+    Positions,
+    RemovePositions
+} from '@ai-table/utils';
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',

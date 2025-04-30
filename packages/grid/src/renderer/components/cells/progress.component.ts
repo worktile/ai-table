@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableHoverCellConfig } from '../../../types';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
 import { isActiveCell } from '../../../renderer';
 import {
