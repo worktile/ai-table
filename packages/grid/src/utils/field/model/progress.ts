@@ -1,5 +1,5 @@
 import { helpers, isEmpty } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, ProgressFieldValue, SelectSettings } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, ProgressFieldValue, SelectSettings } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
 import { compareNumber, isMeetFilter } from '../operate';
 import { ProgressFieldBase } from '@ai-table/utils';

@@ -49,7 +49,8 @@ import {
     AI_TABLE_RATE_MAX,
     StarFill
 } from '../../constants';
-import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
+import { AITable } from '../../core';
+import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings } from '@ai-table/utils';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
 import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';

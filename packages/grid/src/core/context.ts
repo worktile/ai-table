@@ -1,13 +1,6 @@
 import { Signal, WritableSignal } from '@angular/core';
-import {
-    AIFieldConfig,
-    AITableContext,
-    AITableLinearRow,
-    AITablePointPosition,
-    AITableReferences,
-    AITableScrollState,
-    ScrollActionOptions
-} from '../types';
+import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
+import { AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
     linearRows: Signal<AITableLinearRow[]>;

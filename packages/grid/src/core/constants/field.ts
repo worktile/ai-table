@@ -1,5 +1,6 @@
-import { AITable, AITableFieldOption, AITableFieldType } from '../types';
+import { AITable } from '../types';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
+import { AITableFieldOption, AITableFieldType } from '@ai-table/utils';
 
 export const AI_TABLE_FIELD_MINI_WIDTH = 140;
 export const AI_TABLE_FIELD_MIN_WIDTH = 160;

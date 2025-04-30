@@ -11,7 +11,7 @@ import {
 } from '../../../constants';
 import { generateTargetName } from '../../../utils';
 import { AITableActionIconConfig, AITableHoverCellConfig } from '../../../types';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';

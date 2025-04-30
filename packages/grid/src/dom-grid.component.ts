@@ -16,7 +16,7 @@ import { ThyTag } from 'ngx-tethys/tag';
 import { SelectOptionComponent } from './components';
 import { AITableFieldMenu } from './components/field-menu/field-menu.component';
 import { AITableFieldSetting } from './components/field-setting/field-setting.component';
-import { AITableField } from './core';
+import { AITableField } from '@ai-table/utils';
 import { AITableGridBase } from './grid-base.component';
 import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';

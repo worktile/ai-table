@@ -1,8 +1,9 @@
 import { AI_TABLE_BLANK, AI_TABLE_CELL_ACTIVE_BORDER_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITable, AITableField, Coordinate, RendererContext } from '../core';
+import { AITable, Coordinate, RendererContext } from '../core';
 import { AITableAreaType } from '../types';
 import { getTargetName } from './common';
 import { scrollMax } from './visible-range';
+import { AITableField } from '@ai-table/utils';
 
 export const getMousePosition = (
     aiTable: AITable,

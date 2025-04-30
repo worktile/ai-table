@@ -16,7 +16,7 @@ import {
 } from '../../../constants';
 import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
 import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfig } from '../../../types';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
 

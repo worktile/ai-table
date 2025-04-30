@@ -12,7 +12,7 @@ import {
     ColumnSelectFilledPath,
     ColumnTextFilledPath
 } from '../../constants';
-import { AITableFieldType, SelectSettings } from '../../core';
+import { AITableFieldType, SelectSettings } from '@ai-table/utils';
 import { AITableFieldTypeIconConfig } from '../../types';
 import { AITableIcon } from './icon.component';
 

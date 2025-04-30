@@ -1,5 +1,5 @@
-import { AITable, AITableField, AITableQueries } from '../core';
-import { AITableReferences } from '../types';
+import { AITableField, AITableReferences } from '@ai-table/utils';
+import { AITable, AITableQueries } from '../core';
 import { transformCellValue } from './cell';
 import { FieldModelMap } from './field';
 

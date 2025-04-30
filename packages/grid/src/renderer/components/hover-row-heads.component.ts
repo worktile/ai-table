@@ -11,10 +11,11 @@ import {
     AI_TABLE_ROW_SELECT_CHECKBOX,
     Colors
 } from '../../constants';
-import { DragType, RendererContext } from '../../core';
+import { RendererContext } from '../../core';
 import { AITableAreaType, AITableCheckType, AITablePointPosition, AITableRowHeadsConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AITableIcon } from './icon.component';
+import { DragType } from '@ai-table/utils';
 
 @Component({
     selector: 'ai-table-hover-row-heads',

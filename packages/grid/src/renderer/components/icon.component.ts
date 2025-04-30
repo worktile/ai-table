@@ -4,7 +4,7 @@ import { KoContainer } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import { Check, Colors, DEFAULT_ICON_SIZE, RowDragPath, Unchecked } from '../../constants';
 import { AITableCheckType, AITableIconConfig } from '../../types';
-import { DragType } from '../../core';
+import { DragType } from '@ai-table/utils';
 
 @Component({
     selector: 'ai-table-icon',

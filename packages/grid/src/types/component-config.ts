@@ -1,7 +1,9 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate, UpdateFieldValueOptions } from '../core';
-import { AITableAttachmentInfo, AITablePointPosition } from './grid';
+import { AITable, Coordinate } from '../core';
+import { AITableAttachmentInfo } from '@ai-table/utils';
 import { AITableRender } from './cell';
+import { AITableField, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AITablePointPosition } from './grid';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;

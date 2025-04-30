@@ -1,17 +1,20 @@
-import { AITableRecordUpdatedInfo, FieldValue, isSystemField, TrackableEntity } from '@ai-table/grid';
+import * as Y from 'yjs';
 import {
-    AITableViewField,
-    AITableViewFields,
+    SyncMapElement,
+    SyncArrayElement,
     AITableViewRecord,
-    AITableViewRecords,
+    AITableViewFields,
+    AITableViewField,
+    AITableRecordUpdatedInfo,
+    FieldValue,
+    SystemFieldValues,
     CustomFieldValues,
     Positions,
     RecordSyncElement,
-    SyncArrayElement,
-    SyncMapElement,
-    SystemFieldValues
-} from '../../types';
-import * as Y from 'yjs';
+    TrackableEntity,
+    AITableViewRecords,
+    NumberFieldValue
+} from '@ai-table/utils';
 
 export enum SystemFieldIndex {
     Id = 0,
@@ -114,10 +117,10 @@ export const getSystemFieldValues = (record: AITableViewRecord): SystemFieldValu
     return [
         { _id: record['_id'] },
         record.short_id,
-        record.created_at,
+        record.created_at as number,
         record.created_by,
         record['positions'],
-        record.updated_at,
+        record.updated_at as number,
         record.updated_by
     ];
 };

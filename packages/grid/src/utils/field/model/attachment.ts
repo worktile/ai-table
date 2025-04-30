@@ -1,7 +1,8 @@
-import { AttachmentFieldBase } from '@ai-table/utils';
-import { AITable, AITableField, AttachmentFieldValue, FieldValue, AITableFieldType } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
-import { isEmpty } from '../../common';
+import { AITableReferences, AttachmentFieldBase } from '@ai-table/utils';
+import { AITable } from '../../../core';
+import { AITableField, AttachmentFieldValue, FieldValue, AITableFieldType } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import { isEmpty } from 'lodash';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
 

@@ -1,3 +1,4 @@
+import { AIRecordFieldIdPath } from '@ai-table/utils';
 import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
@@ -5,7 +6,7 @@ import {
     AI_TABLE_ROW_ADD_BUTTON,
     DEFAULT_FONT_STYLE
 } from '../../constants';
-import { AIRecordFieldIdPath, AITable, AITableQueries, RendererContext } from '../../core';
+import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
 import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';

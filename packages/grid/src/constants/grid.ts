@@ -1,4 +1,4 @@
-import { AITableFieldType } from '../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { AITableAreaType } from '../types';
 import { AI_TABLE_BLANK } from './table';
 

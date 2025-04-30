@@ -1,8 +1,9 @@
-import { AddFieldOptions, AITableField, AITableRecordUpdatedInfo, Direction, idsCreator } from '@ai-table/grid';
+import { AddFieldOptions, AITableField, AITableRecordUpdatedInfo, AITableViewFields, Direction } from '@ai-table/utils';
 import { getSortFields } from './sort-fields';
-import { AITableViewFields, AIViewTable } from '../../types';
+import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { updateRecordsUpdatedInfo } from '../record/update-system-field-value';
+import { idsCreator } from '@ai-table/grid';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const { originId, direction = Direction.after, defaultValue, isDuplicate, count = 1 } = options;

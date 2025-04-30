@@ -21,28 +21,27 @@ import { DBL_CLICK_EDIT_TYPE } from './constants';
 import {
     AddFieldOptions,
     AddRecordOptions,
-    AIPlugin,
-    AITable,
     AITableField,
     AITableFields,
+    AITableFieldsSizeMap,
     AITableFieldType,
     AITableRecords,
+    AITableReferences,
     AITableSelectOptionStyle,
     AITableValue,
-    createAITable,
-    createDefaultField,
     MoveFieldOptions,
     MoveRecordOptions,
     SetFieldWidthOptions,
     UpdateFieldValueOptions
-} from './core';
+} from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences, AITableFieldsSizeMap } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
+import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
 
 @Component({
     selector: 'ai-table-grid-base',

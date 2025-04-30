@@ -1,10 +1,10 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, RateFieldValue, SelectSettings } from '../../../core';
+import { AITableField, AITableFieldType, FieldValue, RateFieldValue, SelectSettings } from '@ai-table/utils';
 import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { isEmpty } from '../../common';
 import { compareNumber, isMeetFilter } from '../operate';
 import { RateFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
+import { isEmpty } from 'lodash';
 
 export class RateField extends RateFieldBase implements FieldOperable<string[], RateFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue) {

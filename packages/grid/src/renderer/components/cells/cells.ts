@@ -1,5 +1,5 @@
 import { Constructor } from 'ngx-tethys/core';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { HoverCellComponent } from '../../interfaces';
 
 import * as cellComponents from '.';

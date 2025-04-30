@@ -1,18 +1,18 @@
-import {
-    AddRecordOptions,
-    AITableRecord,
-    Direction,
-    FieldValue,
-    getDefaultFieldValue,
-    idsCreator,
-    shortIdsCreator,
-    TrackableEntity
-} from '@ai-table/grid';
-import { AITableViewFields, AITableViewRecords, AIViewTable } from '../../types';
+import { getDefaultFieldValue, idsCreator, shortIdsCreator } from '@ai-table/grid';
+import { AIViewTable } from '../../types';
 import { getSortRecords } from './sort';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { getDefaultRecordDataByFilter } from './filter';
+import {
+    AddRecordOptions,
+    AITableRecord,
+    AITableViewFields,
+    AITableViewRecords,
+    Direction,
+    FieldValue,
+    TrackableEntity
+} from '@ai-table/utils';
 
 export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trackableEntity: TrackableEntity) {
     const { originId, direction = Direction.after, isDuplicate, count = 1 } = options;

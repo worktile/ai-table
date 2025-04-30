@@ -1,8 +1,8 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate, FieldValue, UpdateFieldValueOptions } from '../core';
-import { AITableReferences } from './grid';
+import { AITableReferences } from '@ai-table/utils';
 import { AITableLinearRowRecord } from './row';
-
+import { AITable, Coordinate } from '../core';
+import { AITableField, FieldValue, UpdateFieldValueOptions } from '@ai-table/utils';
 export interface AITableCellsConfig {
     aiTable: AITable;
     coordinate: Coordinate;
