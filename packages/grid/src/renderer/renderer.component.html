@@ -13,7 +13,9 @@
             <ko-group [config]="offsetYConfig()">
                 <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
                 <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
-                <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
+                @if (!hiddenIndexColumn()) {
+                    <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
+                }
                 <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
             </ko-group>
 

@@ -70,7 +70,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
                         columnCount,
-                        containerWidth: coordinate.containerWidth
+                        containerWidth: coordinate.containerWidth,
+                        rowHeadWidth: context.rowHeadWidth(),
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
                     });
                     addRowLayout.render({
                         isHoverRow,
@@ -91,7 +93,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         rowHeight,
                         columnCount,
-                        containerWidth: coordinate.containerWidth
+                        containerWidth: coordinate.containerWidth,
+                        rowHeadWidth: context.rowHeadWidth(),
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
                     });
                     recordRowLayout.render({
                         row,

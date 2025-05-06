@@ -1,4 +1,4 @@
-import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_OFFSET } from '../../constants/table';
+import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants/table';
 import { AITableCell, AITableLayout } from '../../types';
 import { Drawer } from './drawer';
 
@@ -24,8 +24,23 @@ export class Layout extends Drawer {
 
     protected containerWidth = 0;
 
+    protected rowHeadWidth = AI_TABLE_ROW_HEAD_WIDTH;
+
+    protected hiddenIndexColumn = false;
+
     // 用于初始化或重置布局的基本属性。这个方法通常在每次渲染新的一行或单元格时调用，确保布局信息是最新的
-    init({ x, y, rowIndex, columnIndex, rowHeight, columnWidth, columnCount, containerWidth }: AITableLayout) {
+    init({
+        x,
+        y,
+        rowIndex,
+        columnIndex,
+        rowHeight,
+        columnWidth,
+        columnCount,
+        containerWidth,
+        rowHeadWidth,
+        hiddenIndexColumn
+    }: AITableLayout) {
         this.x = x;
         this.y = y;
         this.rowIndex = rowIndex;
@@ -34,6 +49,8 @@ export class Layout extends Drawer {
         this.columnWidth = columnWidth;
         this.columnCount = columnCount;
         this.containerWidth = containerWidth;
+        this.rowHeadWidth = rowHeadWidth;
+        this.hiddenIndexColumn = hiddenIndexColumn;
     }
 
     // 当前单元格是否是行的第一列

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
-import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITable } from '../core';
 import { AITableCellsConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
@@ -70,6 +69,10 @@ export class AITableRenderer {
         return this.config()?.readonly;
     });
 
+    hiddenIndexColumn = computed(() => {
+        return this.config()?.aiTable.context?.aiFieldConfig()?.hiddenIndexColumn;
+    });
+
     rowDragDisabled = computed(() => {
         return this.config()?.rowDragDisabled;
     });
@@ -95,7 +98,7 @@ export class AITableRenderer {
     });
 
     frozenAreaWidth = computed(() => {
-        return AI_TABLE_ROW_HEAD_WIDTH + this.coordinate()!.frozenColumnWidth!;
+        return this.config().aiTable!.context!.rowHeadWidth() + this.coordinate()!.frozenColumnWidth!;
     });
 
     lastColumnWidth = computed(() => {

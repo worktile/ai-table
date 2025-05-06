@@ -7,7 +7,6 @@ import {
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
-    AI_TABLE_ROW_HEAD_WIDTH,
     Colors
 } from '../../constants';
 import { AITableCheckType, AITableColumnHeadsConfig, AITableSelectAllState } from '../../types';
@@ -18,17 +17,23 @@ import { AITableIcon } from './icon.component';
 @Component({
     selector: 'ai-table-frozen-column-heads',
     template: `
-        <ko-rect [config]="dragHeadBgConfig()"></ko-rect>
-        <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
-        <ko-line [config]="topLineConfig"></ko-line>
-        <ko-line [config]="bottomLineConfig()"></ko-line>
-        <ko-group>
-            <ai-table-icon [config]="iconConfig()"></ai-table-icon>
-        </ko-group>
+        <ko-rect [config]="headBgConfig()"></ko-rect>
+        @if (!hiddenIndexColumn()) {
+            <ko-rect [config]="dragHeadBgConfig()"></ko-rect>
+            <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
+            <ko-line [config]="topLineConfig()"></ko-line>
+            <ko-line [config]="bottomLineConfig()"></ko-line>
+            <ko-group>
+                <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+            </ko-group>
+        } @else {
+            @for (lineConfig of cellLinesConfig(); track $index) {
+                <ko-line [config]="lineConfig"></ko-line>
+            }
+        }
         @for (config of headConfigs(); track $index) {
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
-        <ko-rect [config]="headBgConfig()"></ko-rect>
     `,
     standalone: true,
     imports: [KoShape, AITableFieldHead, AITableIcon, KoContainer],
@@ -38,23 +43,42 @@ export class AITableFrozenColumnHeads {
     config = input.required<AITableColumnHeadsConfig>();
 
     coordinate = computed(() => {
-        return this.config().coordinate;
+        const config = this.config();
+        if (!config) return null;
+        return config.coordinate;
+    });
+
+    hiddenIndexColumn = computed(() => {
+        const context = this.context();
+        if (!context) return false;
+        return context?.aiFieldConfig()?.hiddenIndexColumn;
+    });
+
+    context = computed(() => {
+        const config = this.config();
+        if (!config) return null;
+        return config?.aiTable.context;
     });
 
     isChecked = computed(() => {
-        // 目前只需要展示全部选中和空的状态
-        return this.config().aiTable.selection().selectAllState === AITableSelectAllState.all;
+        const config = this.config();
+        if (!config) return false;
+        return config.aiTable.selection().selectAllState === AITableSelectAllState.all;
     });
 
     fieldHeadHeight = computed(() => {
-        return this.coordinate().rowInitSize;
+        const coord = this.coordinate();
+        if (!coord) return 0;
+        return coord.rowInitSize;
     });
 
     headConfigs = computed(() => {
+        const coord = this.coordinate();
+        if (!coord) return [];
         return createColumnHeads({
             ...this.config(),
             columnStartIndex: 0,
-            columnStopIndex: this.coordinate().frozenColumnCount - 1
+            columnStopIndex: coord.frozenColumnCount - 1
         });
     });
 
@@ -70,30 +94,38 @@ export class AITableFrozenColumnHeads {
     });
 
     numberHeadBgConfig = computed<Partial<StageConfig>>(() => {
+        const ctx = this.context();
+        if (!ctx) return { width: 0, height: 0 };
         return {
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
-            width: AI_TABLE_ROW_HEAD_WIDTH,
+            width: ctx.rowHeadWidth() || 0,
             height: this.fieldHeadHeight(),
             fill: Colors.white,
             listening: false
         };
     });
 
-    topLineConfig = {
-        x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
-        y: AI_TABLE_OFFSET,
-        points: [0, 0, AI_TABLE_ROW_HEAD_WIDTH, 0],
-        stroke: Colors.gray200,
-        strokeWidth: 1,
-        listening: false
-    };
-
-    bottomLineConfig = computed(() => {
+    topLineConfig = computed(() => {
+        const ctx = this.context();
+        if (!ctx) return { points: [0, 0, 0, 0] };
         return {
             x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: AI_TABLE_OFFSET,
-            points: [AI_TABLE_ROW_HEAD_WIDTH, this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
+            points: [0, 0, ctx.rowHeadWidth(), 0],
+            stroke: Colors.gray200,
+            strokeWidth: 1,
+            listening: false
+        };
+    });
+
+    bottomLineConfig = computed(() => {
+        const ctx = this.context();
+        if (!ctx) return { points: [0, 0, 0, 0] };
+        return {
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            y: AI_TABLE_OFFSET,
+            points: [ctx.rowHeadWidth(), this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
             stroke: Colors.gray200,
             strokeWidth: 1,
             listening: false
@@ -114,16 +146,54 @@ export class AITableFrozenColumnHeads {
     });
 
     headBgConfig = computed(() => {
-        const { frozenColumnWidth } = this.coordinate();
+        const coord = this.coordinate();
+        const ctx = this.context();
+        if (!coord || !ctx) return { width: 0, height: 0 };
         return {
-            x: AI_TABLE_ROW_HEAD_WIDTH,
+            x: ctx.rowHeadWidth(),
             y: AI_TABLE_OFFSET,
-            width: frozenColumnWidth + AI_TABLE_OFFSET,
+            width: coord.frozenColumnWidth + AI_TABLE_OFFSET,
             height: this.fieldHeadHeight(),
             stroke: Colors.gray200,
-            strokeWidth: 1,
+            strokeWidth: this.hiddenIndexColumn() ? 0 : 1,
             fill: Colors.transparent,
-            listening: false
+            listening: false,
+            zIndex: 10
         };
+    });
+
+    cellLinesConfig = computed(() => {
+        const coord = this.coordinate();
+        const ctx = this.context();
+        if (!coord || !ctx) return [];
+        return [
+            {
+                x: ctx.rowHeadWidth(),
+                y: AI_TABLE_OFFSET,
+                points: [0, 0, coord.frozenColumnWidth + AI_TABLE_OFFSET, 0],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            },
+            {
+                x: ctx.rowHeadWidth(),
+                y: AI_TABLE_OFFSET,
+                points: [coord.frozenColumnWidth + AI_TABLE_OFFSET, 0, coord.frozenColumnWidth + AI_TABLE_OFFSET, this.fieldHeadHeight()],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            },
+            {
+                x: ctx.rowHeadWidth(),
+                y: AI_TABLE_OFFSET,
+                points: [0, this.fieldHeadHeight(), coord.frozenColumnWidth + AI_TABLE_OFFSET, this.fieldHeadHeight()],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            }
+        ];
     });
 }
