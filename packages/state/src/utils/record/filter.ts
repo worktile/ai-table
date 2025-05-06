@@ -1,4 +1,4 @@
-import { AITableFilterCondition, isSystemField, FieldModelMap, AITableFilterOperation, AITable } from '@ai-table/grid';
+import { isSystemField, FieldModelMap, AITable } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import {
     AITableRecord,
@@ -12,7 +12,9 @@ import {
     AITableView,
     AITableFilterConditions,
     AITableFilterLogical,
-    AITableViewField
+    AITableViewField,
+    AITableFilterCondition,
+    AITableFilterOperation
 } from '@ai-table/utils';
 import { isEmpty } from 'lodash';
 

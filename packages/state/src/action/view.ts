@@ -1,5 +1,6 @@
 import { AITableView } from '@ai-table/utils';
-import { ActionName, AddViewAction, AIViewTable, RemoveViewAction, SetViewAction } from '../types';
+import { ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
+import { AIViewTable } from '../types/ai-table';
 
 function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);

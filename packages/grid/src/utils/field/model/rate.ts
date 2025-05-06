@@ -1,6 +1,13 @@
 import { helpers } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, FieldValue, RateFieldValue, SelectSettings } from '@ai-table/utils';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableFilterCondition,
+    AITableFilterOperation,
+    FieldValue,
+    RateFieldValue,
+    SelectSettings
+} from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { RateFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';

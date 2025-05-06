@@ -1,15 +1,22 @@
 import { AITable } from '@ai-table/grid';
 import * as Y from 'yjs';
-import { ActionName, AddFieldAction, AddRecordAction, SetRecordPositionAction, AddViewAction, UpdateSystemFieldValue } from '../../types';
+import {
+    ActionName,
+    AddFieldAction,
+    AddRecordAction,
+    SetRecordPositionAction,
+    AddViewAction,
+    UpdateSystemFieldValue
+} from '@ai-table/utils';
 import {
     getPositionsByRecordSyncElement,
     getSharedRecordIndex,
-    toRecordSyncElement,
-    toSyncElement,
     setRecordPositions,
     getIdBySystemFieldValuesType,
-    setRecordUpdatedInfo
-} from '../utils';
+    setRecordUpdatedInfo,
+    toRecordSyncElement,
+    toMapSyncElement
+} from '@ai-table/utils';
 import { AITableViewFields, AITableViewRecord, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 
 export default function addNode(
@@ -25,7 +32,7 @@ export default function addNode(
             records && records.push([toRecordSyncElement(action.record as AITableViewRecord, aiTable.fields() as AITableViewFields)]);
             break;
         case ActionName.AddView:
-            views && views.push([toSyncElement(action.view)]);
+            views && views.push([toMapSyncElement(action.view)]);
             break;
         case ActionName.SetRecordPositions:
             if (records) {
@@ -56,7 +63,7 @@ export default function addNode(
             if (fields && records) {
                 const { field } = action;
                 const insertIndex = fields.length;
-                const fieldSyncElement = toSyncElement(field);
+                const fieldSyncElement = toMapSyncElement(field);
                 fields.insert(insertIndex, [fieldSyncElement]);
                 for (let value of records) {
                     const customFieldValues = value.get(1) as Y.Array<any>;
