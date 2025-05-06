@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType, toMapSyncElement } from '@ai-table/utils';
+import { AI_TABLE_CONTENT_FIELD_NAME, AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType, toMapSyncElement } from '@ai-table/utils';
 import {
     getIdBySystemFieldValues,
     getPositionsBySystemFieldValues,
@@ -8,7 +8,6 @@ import {
     getValuesByCustomFieldValues,
     toRecordSyncElement
 } from '@ai-table/utils';
-import { AI_TABLE_CONTENT_FIELD_NAME } from '../../constants/default';
 
 export const createSharedType = (fieldName: string = AI_TABLE_CONTENT_FIELD_NAME) => {
     const doc = new Y.Doc();
