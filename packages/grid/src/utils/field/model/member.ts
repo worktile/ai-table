@@ -1,4 +1,3 @@
-import { Id } from 'ngx-tethys/types';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import {
     AITableFilterCondition,
@@ -8,10 +7,11 @@ import {
     AITableReferences,
     FieldValue,
     MemberFieldValue,
-    MemberSettings
+    MemberSettings,
+    AITableFilterOperation,
+    Id
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
-import { AITableFilterOperation } from '../../../types';
 import { isEmpty } from 'lodash';
 import { AITable } from '../../../core';
 

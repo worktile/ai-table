@@ -1,7 +1,6 @@
 import { fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { DateFieldBase, isDateValid } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, DateFieldBase, isDateValid } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';

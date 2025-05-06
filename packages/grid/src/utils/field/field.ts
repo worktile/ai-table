@@ -12,6 +12,7 @@ import {
     SelectField,
     TextField
 } from './model';
+
 export const FieldModelMap: Record<AITableFieldType, FieldOperable<unknown, unknown>> = {
     ...FieldModelBaseMap,
     [AITableFieldType.text]: new TextField(),

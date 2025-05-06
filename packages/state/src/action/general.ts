@@ -1,4 +1,5 @@
-import { ActionName, AITableAction, AIViewTable } from '../types';
+import { AIViewTable } from '../types';
+import { ActionName, AITableAction } from '@ai-table/utils';
 import { createDraft, finishDraft } from 'immer';
 import { getDefaultFieldValue } from '@ai-table/grid';
 import { createDefaultPositions } from '../utils';

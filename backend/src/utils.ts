@@ -128,6 +128,11 @@ export const getYDoc = (docname: string, gc: boolean = true): WSSharedDoc => {
     if (persistence !== null) {
       persistence.bindState(docname, doc);
     }
+    // TODO: 幽灵单元格处理
+    const sharedType = doc.getMap('content');
+    sharedType.observeDeep((event: Array<Y.YEvent<any>>) => {
+      
+    })
     docs.set(docname, doc);
     return doc;
   });

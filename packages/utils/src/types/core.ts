@@ -1,5 +1,6 @@
-import { Id } from 'ngx-tethys/types';
 import { AITableFieldsSizeMap } from './grid';
+
+export type Id = string;
 
 export enum AITableFieldType {
     text = 'text',
@@ -245,5 +246,3 @@ export interface TransactionOriginInfo {
     uid: string;
     [key: string]: any;
 }
-
-export { Id };

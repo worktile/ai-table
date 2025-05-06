@@ -2,21 +2,72 @@ import * as Y from 'yjs';
 import {
     AITableField,
     AITableRecord,
+    AITableRecordUpdatedInfo,
     AITableView,
+    AITableViewField,
+    AITableViewFields,
     AITableViewRecord,
+    AITableViewRecords,
     CustomFieldValues,
     FieldValue,
     Id,
     Positions,
+    RecordSyncElement,
     SharedRecordJsonType,
     SyncArrayElement,
     SyncMapElement,
     SystemFieldValues,
     TrackableEntity,
     TransactionOriginInfo
-} from './types';
-import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from './constants';
+} from '../types';
+import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from '../constants';
 import ObjectID from 'bson-objectid';
+
+export const getIdBySystemFieldValuesType = (systemFieldValuesType: Y.Array<any>): string => {
+    return systemFieldValuesType.get(SystemFieldIndex.Id)['_id'];
+};
+
+export function getSharedMapValueIndex(sharedNodes: Y.Array<SyncMapElement>, id: string) {
+    let nodeIndex = -1;
+    for (let index = 0; index < sharedNodes.length; index++) {
+        const sharedId = getSharedMapValueId(sharedNodes, index);
+        if (sharedId === id) {
+            nodeIndex = index;
+            break;
+        }
+    }
+    return nodeIndex;
+}
+
+export function getSharedRecordIndex(sharedRecords: Y.Array<SyncArrayElement>, recordId: string) {
+    let recordIndex = -1;
+    for (let index = 0; index < sharedRecords.length; index++) {
+        const sharedRecordId = getSharedRecordId(sharedRecords, index);
+        if (sharedRecordId === recordId) {
+            recordIndex = index;
+            break;
+        }
+    }
+    return recordIndex;
+}
+
+export function translatePositionToPath(
+    data: AITableViewRecords | AITableViewFields,
+    position: number,
+    activeViewId: string,
+    indexOffset: number = 0
+) {
+    let index = data.findIndex((value, index) => {
+        if (index === 0) {
+            return position < value.positions[activeViewId];
+        }
+        return position > data[index - 1].positions[activeViewId] && position < value.positions[activeViewId];
+    });
+    if (index === -1) {
+        index = data.length;
+    }
+    return [index + indexOffset];
+}
 
 export function toAITableSharedType(
     sharedType: Y.Map<any>,
@@ -30,25 +81,25 @@ export function toAITableSharedType(
     sharedType.doc!.transact(
         () => {
             const fieldSharedType = new Y.Array();
-            fieldSharedType.insert(0, data.fields.map(toAITableSyncElement));
+            fieldSharedType.insert(0, data.fields.map(toMapSyncElement));
             sharedType.set('fields', fieldSharedType);
 
             const recordSharedType = new Y.Array<Y.Array<any>>();
             sharedType.set('records', recordSharedType);
             recordSharedType.insert(
                 0,
-                data.records.map((record) => toAITableRecordSyncElement(record, data.fields))
+                data.records.map((record) => toRecordSyncElement(record, data.fields))
             );
 
             const viewsSharedType = new Y.Array();
             sharedType.set('views', viewsSharedType);
-            viewsSharedType.insert(0, data.views.map(toAITableSyncElement));
+            viewsSharedType.insert(0, data.views.map(toMapSyncElement));
         },
         operationContext ? ({ uid: operationContext.uid } as TransactionOriginInfo) : null
     );
 }
 
-export function toAITableSyncElement(node: any): SyncMapElement {
+export function toMapSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
         element.set(key, ObjectID.isValid(node[key]) ? node[key].toString() : node[key]);
@@ -56,26 +107,33 @@ export function toAITableSyncElement(node: any): SyncMapElement {
     return element;
 }
 
-export function toAITableRecordSyncElement(record: AITableViewRecord, fields: AITableField[]): Y.Array<Y.Array<any>> {
+export function toRecordSyncElement(record: AITableViewRecord, fields: AITableField[]): Y.Array<Y.Array<any>> {
     const systemFieldValues = new Y.Array();
+    // 临时方案：为了解决删除时协同操作无法精准获取删除的 id 的问题，将原来的[idValue] 改为[{'_id': idValue}]
     systemFieldValues.insert(0, getSystemFieldValues(record));
     const customFieldValues = new Y.Array();
     const valuesArray: FieldValue[] = [];
     fields.forEach((field: AITableField) => {
-        valuesArray.push(record['values'][field._id.toString()]);
+        let value = record['values'][field._id.toString()];
+        // yjs will throw an error if the value is undefined.
+        if (value === undefined) {
+            value = null;
+        }
+        valuesArray.push(value);
     });
+    // To save memory, convert map to array.
     customFieldValues.insert(0, valuesArray);
     const element = new Y.Array<Y.Array<any>>();
     element.insert(0, [systemFieldValues, customFieldValues]);
     return element;
 }
 
-export function isAddOrRemove(targetPath: number[]): boolean {
-    return targetPath.length === 0;
-}
-
 export function getShareTypeNumberPath(path: (string | number)[]): number[] {
     return path.filter((node) => typeof node === 'number') as number[];
+}
+
+export function getSharedRecord(records: Y.Array<SyncArrayElement>, recordIndex: number) {
+    return records && (records as Y.Array<SyncArrayElement>).get(recordIndex);
 }
 
 export function getSharedRecordId(records: Y.Array<SyncArrayElement>, recordIndex: number) {
@@ -84,6 +142,10 @@ export function getSharedRecordId(records: Y.Array<SyncArrayElement>, recordInde
 
 export function getSharedMapValueId(values: Y.Array<SyncMapElement>, index: number) {
     return values && values.get(index).get('_id');
+}
+
+export function getSharedMapId(value: SyncMapElement) {
+    return value.get('_id') as string;
 }
 
 export function getSharedFields(doc: Y.Doc) {
@@ -128,11 +190,17 @@ export const getTrackableEntityBySystemFieldValues = (systemFieldValues: SystemF
     };
 };
 
+export const getPositionsByRecordSyncElement = (recordSyncElement: RecordSyncElement) => {
+    const systemFieldType = recordSyncElement.get(0) as Y.Array<any>;
+    const positions = systemFieldType.get(SystemFieldIndex.Positions);
+    return positions;
+};
+
 export const getPositionsBySystemFieldValues = (systemFieldValues: SystemFieldValues): Positions => {
     return systemFieldValues[SystemFieldIndex.Positions];
 };
 
-export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: AITableField[]) => {
+export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: Pick<AITableViewField, '_id'>[]) => {
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
@@ -153,4 +221,16 @@ export const getRecordsBySharedJson = (pageId: Id, recordJsonArray: SharedRecord
             values: getValuesByCustomFieldValues(customFieldValues, fields)
         };
     });
+};
+
+export const setRecordPositions = (recordSyncElement: RecordSyncElement, newPositions: Positions) => {
+    const systemFieldType = recordSyncElement.get(0) as Y.Array<any>;
+    systemFieldType.delete(SystemFieldIndex.Positions);
+    systemFieldType.insert(SystemFieldIndex.Positions, [newPositions]);
+};
+
+export const setRecordUpdatedInfo = (recordSyncElement: RecordSyncElement, info: AITableRecordUpdatedInfo) => {
+    const systemFieldType = recordSyncElement.get(0) as Y.Array<any>;
+    systemFieldType.delete(SystemFieldIndex.UpdatedAt, 2);
+    systemFieldType.insert(SystemFieldIndex.UpdatedAt, [info.updated_at, info.updated_by]);
 };
