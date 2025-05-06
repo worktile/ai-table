@@ -63,6 +63,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     rowDragDisabled = false;
 
+    hiddenIndexColumn = false;
+
     activeViewName!: string;
 
     ngOnInit(): void {
@@ -96,6 +98,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleRowDragDisabledChange(e: any) {
         this.rowDragDisabled = e.target.checked;
         this.tableService.setRowDragDisabled(e.target.checked);
+    }
+
+    handleHiddenIndexColumnChange(e: any) {
+        this.hiddenIndexColumn = e.target.checked;
+        this.tableService.setHiddenIndexColumn(e.target.checked);
     }
 
     updateValue() {

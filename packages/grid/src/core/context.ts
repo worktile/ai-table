@@ -3,6 +3,7 @@ import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, 
 import { AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
+    rowHeadWidth: Signal<number>;
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
@@ -15,6 +16,7 @@ export class RendererContext {
 
     constructor(options: AITableContext) {
         const {
+            rowHeadWidth,
             linearRows,
             pointPosition,
             scrollState,
@@ -25,6 +27,7 @@ export class RendererContext {
             aiFieldConfig,
             scrollAction
         } = options;
+        this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;
         this.scrollState = scrollState;

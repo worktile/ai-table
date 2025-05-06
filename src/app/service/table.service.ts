@@ -47,6 +47,8 @@ export class TableService {
 
     rowDragDisabled: WritableSignal<boolean> = signal(false);
 
+    hiddenIndexColumn: WritableSignal<boolean> = signal(false);
+
     records!: WritableSignal<AITableViewRecords>;
 
     fields!: WritableSignal<AITableViewFields>;
@@ -120,6 +122,10 @@ export class TableService {
 
     setRowDragDisabled(rowDragDisabled: boolean) {
         this.rowDragDisabled.set(rowDragDisabled);
+    }
+
+    setHiddenIndexColumn(hiddenIndexColumn: boolean) {
+        this.hiddenIndexColumn.set(hiddenIndexColumn);
     }
 
     setActiveView(activeViewId: string) {

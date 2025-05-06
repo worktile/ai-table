@@ -84,6 +84,7 @@ export class DemoTableContent {
         const readonly = this.tableService.readonly();
         const onlyOneField = this.tableService.fields().length === 1;
         return {
+            hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             fieldRenderers: {
                 [AITableFieldType.date]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
