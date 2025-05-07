@@ -11,6 +11,7 @@ export class DateField extends DateFieldBase implements FieldOperable<string, Da
     override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
         return transformCellValue(options.aiTable, options.field!, cellValue);
     }
+
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
         if (isNil(cellValue)) {
