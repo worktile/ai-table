@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.68](https://github.com/worktile/ai-table/compare/0.0.67...0.0.68) (2025-05-07)
+
+
+### Features
+
+* #WIK-17884 【AiTable】支持隐藏序号列 ([0df7272](https://github.com/worktile/ai-table/commit/0df7272f0e104f88e9758d5467ab6b37c7fba82d)), closes [#WIK-17884](https://github.com/worktile/ai-table/issues/WIK-17884)
+
+
+
 ## [0.0.67](https://github.com/worktile/ai-table/compare/0.0.66...0.0.67) (2025-05-06)
 
 
