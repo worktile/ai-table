@@ -1,4 +1,13 @@
-import { AITableField, AITableFieldType, AITableFilterCondition, AITableFilterOperation, AITableReferences, FieldValue, RichTextFieldValue } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableFilterCondition,
+    AITableFilterOperation,
+    AITableReferences,
+    FieldOptions,
+    FieldValue,
+    RichTextFieldValue
+} from '@ai-table/utils';
 import { transformCellValue } from '../../cell';
 import { isEmpty } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
@@ -7,6 +16,10 @@ import { FieldOperable } from '../field-operable';
 import { AITable } from '../../../core';
 
 export class RichTextField extends RichTextFieldBase implements FieldOperable<string, RichTextFieldValue> {
+    override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
+        return transformCellValue(options.aiTable, options.field!, cellValue);
+    }
+
     isMeetFilter(
         condition: AITableFilterCondition<string>,
         cellValue: RichTextFieldValue,
@@ -38,8 +51,8 @@ export class RichTextField extends RichTextFieldBase implements FieldOperable<st
             field: AITableField;
         }
     ): number {
-        const value1 = transformCellValue(options.aiTable, options.field, cellValue1 || []);
-        const value2 = transformCellValue(options.aiTable, options.field, cellValue2 || []);
+        const value1 = this.transformCellValue(cellValue1 || [], options);
+        const value2 = this.transformCellValue(cellValue2 || [], options);
         return compareString(value1, value2);
     }
 

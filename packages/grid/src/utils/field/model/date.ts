@@ -1,12 +1,17 @@
 import { fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
-import { AITableFilterCondition, AITableFilterOperation, DateFieldBase, isDateValid } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, DateFieldBase, FieldOptions, isDateValid } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { isEmpty, isNil } from 'lodash';
+import { transformCellValue } from '../../cell';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
+    override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
+        return transformCellValue(options.aiTable, options.field!, cellValue);
+    }
+
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
         if (isNil(cellValue)) {

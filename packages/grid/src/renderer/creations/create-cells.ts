@@ -8,7 +8,7 @@ import {
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { FieldModelMap, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
@@ -112,7 +112,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
-                    const transformValue = transformCellValue(aiTable, field, cellValue);
+                    const fieldModel = FieldModelMap[field.type];
+                    const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
                     const render = {
                         aiTable,
                         x: realX,
