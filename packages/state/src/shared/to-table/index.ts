@@ -2,8 +2,7 @@ import * as Y from 'yjs';
 import { AIViewTable } from '../../types';
 import { YjsAITable } from '../yjs-table';
 import translateMapEvent from './map-event';
-import { AITableAction, SharedType } from '@ai-table/utils';
-import { translateArrayEvent } from '@ai-table/utils';
+import { AITableAction, SharedType, translateArrayEvent } from '@ai-table/utils';
 
 export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YEvent<any>): AITableAction[] {
     if (event instanceof Y.YArrayEvent) {

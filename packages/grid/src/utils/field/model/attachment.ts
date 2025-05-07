@@ -1,6 +1,14 @@
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences, AttachmentFieldBase } from '@ai-table/utils';
+import {
+    AITableFilterCondition,
+    AITableFilterOperation,
+    AITableReferences,
+    AttachmentFieldBase,
+    AITableField,
+    AttachmentFieldValue,
+    FieldValue,
+    AITableFieldType
+} from '@ai-table/utils';
 import { AITable } from '../../../core';
-import { AITableField, AttachmentFieldValue, FieldValue, AITableFieldType } from '@ai-table/utils';
 import { isEmpty } from 'lodash';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';

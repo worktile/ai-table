@@ -1,4 +1,13 @@
-import { AITable, AITableContextMenuItem, AITableGridI18nKey, AITableGridSelectionService, AITableActions, getI18nTextByKey, isMac, writeToAITable } from '@ai-table/grid';
+import {
+    AITable,
+    AITableContextMenuItem,
+    AITableGridI18nKey,
+    AITableGridSelectionService,
+    AITableActions,
+    getI18nTextByKey,
+    isMac,
+    writeToAITable
+} from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';

@@ -1,5 +1,4 @@
 import { AITable, getDefaultFieldValue, isSystemField } from '../core';
-import { UpdateFieldValueOptions } from '@ai-table/utils';
 import { AITableActions } from './clipboard/paste';
 
 export function clearCells(aiTable: AITable, actions: AITableActions): void {
@@ -10,7 +9,6 @@ export function clearCells(aiTable: AITable, actions: AITableActions): void {
 
     const fieldsMap = aiTable.fieldsMap();
     const defaultValues = new Map<string, any>();
-    const updates: UpdateFieldValueOptions[] = [];
 
     for (const cellId of selectedCells) {
         const [recordId, fieldId] = cellId.split(':');
@@ -29,15 +27,9 @@ export function clearCells(aiTable: AITable, actions: AITableActions): void {
             defaultValues.set(fieldId, defaultValue);
         }
 
-        updates.push({
+        actions.updateFieldValue({
             path: [recordId, fieldId],
             value: defaultValue
-        });
-    }
-
-    if (updates.length > 0) {
-        updates.forEach((update) => {
-            actions.updateFieldValue(update);
         });
     }
 }
