@@ -144,7 +144,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             rowCount: this.linearRows().length,
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
-            columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
+            columnInitSize: this.aiTable.context!.rowHeadWidth(),
             rowIndicesSizeMap: {},
             columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
             frozenColumnCount: this.frozenColumnCount()
@@ -248,6 +248,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private initContext() {
         this.aiTable.context = new RendererContext({
+            rowHeadWidth: computed(() => (this.aiFieldConfig()?.hiddenIndexColumn ? 0 : AI_TABLE_ROW_HEAD_WIDTH)),
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,

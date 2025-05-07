@@ -37,6 +37,7 @@ export interface AITableSelection {
 }
 
 export interface AIFieldConfig {
+    hiddenIndexColumn?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
@@ -110,6 +111,7 @@ export interface AITableOpenEditOptions {
 }
 
 export interface AITableContext {
+    rowHeadWidth: Signal<number>;
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;

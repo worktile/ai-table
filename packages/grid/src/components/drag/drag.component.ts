@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, OnDestr
 import { DragEndData, DragType } from '@ai-table/utils';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH, AI_TABLE_ROW_HEAD_WIDTH } from '../../constants/table';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
 import { AITableDragState } from '../../core';
 
 @Component({
@@ -173,7 +173,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             isLastColumn
         ) {
             let lineLeft = targetColumnStartX - scroll.x;
-            const lineForFrozenX = lineLeft - frozenColumnWidth - AI_TABLE_ROW_HEAD_WIDTH;
+            const lineForFrozenX = lineLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
             if (lineForFrozenX < 0) {
                 lineLeft = coordinate.getColumnOffset(0);
                 targetColumnIndex = 0;

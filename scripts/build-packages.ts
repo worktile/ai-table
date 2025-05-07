@@ -11,7 +11,7 @@ async function buildUtils() {
     const utilsPath = path.resolve(__dirname, '../packages/utils');
     try {
         console.log('------------------------------------------------------------------------------');
-        console.log("Building entry point '@ai-table/grid'");
+        console.log("Building entry point '@ai-table/utils'");
         console.log('------------------------------------------------------------------------------');
         await execAsync('npm run build', { cwd: utilsPath });
 

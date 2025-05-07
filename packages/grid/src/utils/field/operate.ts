@@ -1,4 +1,4 @@
-import { AITableFilterCondition, AITableFilterOperation, AITableField, AITableReferences, FieldValue } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, AITableField, FieldValue } from '@ai-table/utils';
 import { AITable } from '../../core';
 import { isEmpty } from 'lodash';
 

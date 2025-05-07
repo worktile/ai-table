@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.67](https://github.com/worktile/ai-table/compare/0.0.66...0.0.67) (2025-05-06)
+
+
+### Bug Fixes
+
+* #WIK-17677 🔗字段赋值后，点击 ai-table 意外区域后面的 icon 无法取消（ai-table 区域可以） ([#408](https://github.com/worktile/ai-table/issues/408)) ([8d95034](https://github.com/worktile/ai-table/commit/8d95034919ced2c9eba1132fae524c0c8629befb)), closes [#WIK-17677](https://github.com/worktile/ai-table/issues/WIK-17677)
+* #WIK-17881 文本、选择字段双击编辑报错 ([#427](https://github.com/worktile/ai-table/issues/427)) ([e72f1c2](https://github.com/worktile/ai-table/commit/e72f1c2f9a7b1c31684e1835c98c9028d2da8bfd)), closes [#WIK-17881](https://github.com/worktile/ai-table/issues/WIK-17881)
+* **action:** add field error #WIK-17859 ([6d74c80](https://github.com/worktile/ai-table/commit/6d74c80857ac9f6921728f29cb1c094bf515df99)), closes [#WIK-17859](https://github.com/worktile/ai-table/issues/WIK-17859)
+
+
+### Features
+
+* #WIK-17780 前端改造接入 utils 库 ([#415](https://github.com/worktile/ai-table/issues/415)) ([30a0716](https://github.com/worktile/ai-table/commit/30a07169552d704b1be90b1c78d2541c5591bbf6)), closes [#WIK-17780](https://github.com/worktile/ai-table/issues/WIK-17780)
+* #WIK-17858 撤销重做 重构 ([#412](https://github.com/worktile/ai-table/issues/412)) ([8a20330](https://github.com/worktile/ai-table/commit/8a2033028fd9cbc1401f47684dc6689a0f3bb43b)), closes [#WIK-17858](https://github.com/worktile/ai-table/issues/WIK-17858)
+* #WIK-17869 前端-type类型接入utils库中的type ([#423](https://github.com/worktile/ai-table/issues/423)) ([2617a9a](https://github.com/worktile/ai-table/commit/2617a9a57d1f36c57b74b4df3d99cea8e60b25d6)), closes [#WIK-17869](https://github.com/worktile/ai-table/issues/WIK-17869)
+* improve demo ([#419](https://github.com/worktile/ai-table/issues/419)) ([4dcb03b](https://github.com/worktile/ai-table/commit/4dcb03b9869a4b3068f0f3d04527d3dec942c241))
+* remove AI_TABLE_CONTENT_FIELD_NAME from state ([711af17](https://github.com/worktile/ai-table/commit/711af1725988648c9206a53822bc5759555ef776))
+* **utils:** move array-event(to-table) to utils package #WIK-17878 ([#426](https://github.com/worktile/ai-table/issues/426)) ([9e34720](https://github.com/worktile/ai-table/commit/9e34720b169b5079f9dc1eadb7bec54180b5aa96)), closes [#WIK-17878](https://github.com/worktile/ai-table/issues/WIK-17878)
+
+
+
 ## [0.0.66](https://github.com/worktile/ai-table/compare/0.0.65...0.0.66) (2025-04-27)
 
 

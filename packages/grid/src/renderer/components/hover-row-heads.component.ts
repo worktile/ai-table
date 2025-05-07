@@ -7,7 +7,6 @@ import {
     AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD,
-    AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     Colors
 } from '../../constants';
@@ -97,7 +96,7 @@ export class AITableHoverRowHeads {
                 y: coordinate.getRowOffset(rowIndex),
                 bgConfig: {
                     name: generateTargetName({ targetName: AI_TABLE_ROW_HEAD, recordId }),
-                    width: AI_TABLE_ROW_HEAD_WIDTH + 1,
+                    width: context.rowHeadWidth() + 1,
                     height: coordinate.rowHeight,
                     fill: Colors.transparent
                 }

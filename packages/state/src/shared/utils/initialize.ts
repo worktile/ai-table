@@ -1,15 +1,13 @@
 import * as Y from 'yjs';
-import { AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType } from '@ai-table/utils';
+import { AI_TABLE_CONTENT_FIELD_NAME, AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType, toMapSyncElement } from '@ai-table/utils';
 import {
     getIdBySystemFieldValues,
     getPositionsBySystemFieldValues,
     getShortIdBySystemFieldValues,
     getTrackableEntityBySystemFieldValues,
     getValuesByCustomFieldValues,
-    toRecordSyncElement,
-    toSyncElement
-} from './translate';
-import { AI_TABLE_CONTENT_FIELD_NAME } from '../../constants/default';
+    toRecordSyncElement
+} from '@ai-table/utils';
 
 export const createSharedType = (fieldName: string = AI_TABLE_CONTENT_FIELD_NAME) => {
     const doc = new Y.Doc();
@@ -52,7 +50,7 @@ export function toSharedType(
 ): void {
     sharedType.doc!.transact(() => {
         const fieldSharedType = new Y.Array();
-        fieldSharedType.insert(0, data.fields.map(toSyncElement));
+        fieldSharedType.insert(0, data.fields.map(toMapSyncElement));
         sharedType.set('fields', fieldSharedType);
         const recordSharedType = new Y.Array<Y.Array<any>>();
         sharedType.set('records', recordSharedType);
@@ -64,7 +62,7 @@ export function toSharedType(
         );
         const viewsSharedType = new Y.Array();
         sharedType.set('views', viewsSharedType);
-        viewsSharedType.insert(0, data.views.map(toSyncElement));
+        viewsSharedType.insert(0, data.views.map(toMapSyncElement));
     });
 }
 
