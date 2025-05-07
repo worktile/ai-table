@@ -99,6 +99,10 @@ export class TableService {
         return getFieldsSizeMap(this.renderFields(), this.activeView());
     });
 
+    sortedViews = computed(() => {
+        return sortViews(this.views());
+    });
+
     keywords = computed(() => {
         return this.activeView().settings?.keywords;
     });
@@ -114,7 +118,7 @@ export class TableService {
     });
 
     initData(views: AITableView[]) {
-        this.views = signal(sortViews(views));
+        this.views = signal(views);
     }
 
     setReadonly(readonly: boolean) {
@@ -164,7 +168,7 @@ export class TableService {
                 if (!YjsAITable.isLocal(this.aiTable)) {
                     if (!isInitialized) {
                         const data = getDataBySharedType(this.sharedType!);
-                        this.views.set(sortViews(data.views));
+                        this.views.set(data.views);
                         this.buildRenderFields(data.fields);
                         this.buildRenderRecords(data.records);
                         this.buildRenderFieldsSizeMap(this.fields());

@@ -1,6 +1,7 @@
 import { AITableView } from '@ai-table/utils';
 import { ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
+import { sortViews } from '../utils';
 
 function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
@@ -30,7 +31,7 @@ function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [strin
 }
 
 function addView(aiTable: AIViewTable, originId: string, newView: AITableView, isDuplicate?: boolean) {
-    const views = aiTable.views();
+    const views = sortViews(aiTable.views());
     const currentIndex = views.findIndex((item) => item._id === originId);
     if (isDuplicate) {
         const nextIndex = currentIndex + 1;

@@ -2,7 +2,7 @@ import { AIViewTable } from '../types';
 import { ActionName, AITableAction } from '@ai-table/utils';
 import { createDraft, finishDraft } from 'immer';
 import { getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions, sortViews } from '../utils';
+import { createDefaultPositions } from '../utils';
 import {
     AITableField,
     AITableFields,
@@ -173,7 +173,7 @@ export const GeneralActions = {
             aiTable.records.set(newRecords);
         }
         if (newViews !== aiTable.views()) {
-            aiTable.views.set(sortViews(newViews));
+            aiTable.views.set(newViews);
         }
     }
 };

@@ -51,9 +51,9 @@ export function getMaxPosition(data: AITableViewRecords | AITableViewFields, act
 export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?: string) {
     const newId = idCreator();
     const shortId = shortIdCreator();
-
-    const allViewNames = aiTable.views().map((item) => item.name);
-    const count = aiTable.views().length || 0;
+    const views = aiTable.views();
+    const allViewNames = views.map((item) => item.name);
+    const count = views.length || 0;
     const newViewName = generateNewName(allViewNames, count, getStateI18nTextByKey(aiTable, AITableStateI18nKey.tableView));
     let newView: AITableView = {
         _id: newId,
@@ -61,10 +61,10 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
         name: newViewName
     };
 
-    let originViewId = aiTable.views()[aiTable.views().length - 1]._id;
+    let originViewId = views[views.length - 1]._id;
     if (type === 'duplicate') {
         originViewId = viewId ?? aiTable.activeViewId();
-        const copyView = aiTable.views().find((item) => item._id === originViewId)!;
+        const copyView = views.find((item) => item._id === originViewId)!;
 
         const copyName = copyView.name;
         const copyViewName = generateCopyName(aiTable, allViewNames, copyName);
