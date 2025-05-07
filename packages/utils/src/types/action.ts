@@ -36,7 +36,7 @@ export type AddFieldAction = {
     type: ActionName.AddField;
     field: AITableField;
     originId?: string;
-    isCopy?: boolean;
+    isDuplicate?: boolean;
 };
 
 export type RemoveFieldAction = {
