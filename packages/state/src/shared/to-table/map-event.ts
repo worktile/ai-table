@@ -1,6 +1,7 @@
 import * as Y from 'yjs';
 import { AIViewTable } from '../../types';
 import { AITableView, AITableField, SharedType, SyncMapElement, getShareTypeNumberPath, AITableAction, ActionName } from '@ai-table/utils';
+
 export default function translateMapEvent(aiTable: AIViewTable, sharedType: SharedType, event: Y.YMapEvent<unknown>): AITableAction[] {
     const isFieldsTranslate = event.path.includes('fields');
     const isViewTranslate = event.path.includes('views');

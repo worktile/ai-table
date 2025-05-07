@@ -21,12 +21,7 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
             [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex + 1)
         };
     } else {
-        newField.positions = createDefaultPositions(
-            aiTable.views(),
-            aiTable.activeViewId(),
-            aiTable.gridData().fields as AITableViewFields,
-            fields.length
-        );
+        newField.positions = createDefaultPositions(aiTable.views(), aiTable.activeViewId(), fields, fields.length);
     }
     Actions.addField(aiTable, newField, options.originId, isCopy || isDuplicate);
     updateRecordsUpdatedInfo(aiTable, updatedInfo);

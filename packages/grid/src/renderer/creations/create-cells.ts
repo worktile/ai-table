@@ -31,6 +31,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
 
     const hoverCell = getHoverCell(aiTable);
+    const fieldsLen = aiTable.gridData().fields?.length || 0;
 
     // 遍历列, 确定在哪些列上绘制单元格
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
@@ -43,7 +44,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
         // 获取该列对应的宽度
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
-        const isLastColumn = columnIndex === aiTable.gridData().fields?.length - 1;
+        const isLastColumn = fieldsLen && columnIndex === fieldsLen - 1;
 
         if (columnIndex === 1) {
             cellDrawer.initStyle(field, { fontWeight: DEFAULT_FONT_STYLE });
