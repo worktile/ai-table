@@ -21,6 +21,9 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
     return { width: columnWidth, offset: 0 };
 }
 
+// @deprecated 请使用 FieldModelMap 的 transformCellValue 方法
+// const fieldModel = FieldModelMap[field.type];
+// const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
 export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T | null {
     const fieldModel = FieldModelMap[field.type];
     if (!fieldModel.isValid(cellValue)) {

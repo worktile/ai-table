@@ -4,7 +4,7 @@ import { AITableCellsConfig, AITableHoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
-import { AITableQueries, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 import { HoverCellComponent } from '../interfaces';
@@ -45,7 +45,8 @@ export class AITableHoverCells {
         }
         const { field, recordId } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
-        const transformValue = transformCellValue(aiTable, field, cellValue);
+        const fieldModel = FieldModelMap[field.type];
+        const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
 
         const { rowHeight, columnCount, rowCount } = coordinate;
         const columnIndex = pointPosition.columnIndex;

@@ -91,8 +91,9 @@ function buildClipboardContent(aiTable: AITable, fieldIds: string[], recordIds: 
                 html: ''
             };
             if (FieldModelMap[field.type].isValid(cellValue)) {
-                const transformValue = transformCellValue(aiTable, field, cellValue);
-                const cellTexts: string[] = FieldModelMap[field.type].cellFullText(transformValue, field, references);
+                const fieldModel = FieldModelMap[field.type];
+                const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
+                const cellTexts: string[] = fieldModel.cellFullText(transformValue, field, references);
                 cellContent = {
                     text: cellTexts.join(','),
                     html: cellTexts.join(',')
