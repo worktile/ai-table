@@ -76,6 +76,7 @@ import {
     IdPath,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
+import { clearCells } from './utils/clear-cells';
 
 @Component({
     selector: 'ai-table-grid',
@@ -159,11 +160,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
             rowDragDisabled: this.aiRowDragDisabled(),
-            actions: {
-                updateFieldValue: (options: UpdateFieldValueOptions) => {
-                    this.aiUpdateFieldValue.emit(options);
-                }
-            }
+            actions: this.actions
         };
     });
 
@@ -178,6 +175,21 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     scrollbarWidth = computed(() => {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
+
+    private actions: AITableActions = {
+        updateFieldValue: (data: UpdateFieldValueOptions) => {
+            this.aiUpdateFieldValue.emit(data);
+        },
+        setField: (field: AITableField) => {
+            this.aiSetField.emit(field);
+        },
+        addField: (data: AddFieldOptions) => {
+            this.aiAddField.emit(data);
+        },
+        addRecord: (data: AddRecordOptions) => {
+            this.addRecord();
+        }
+    };
 
     constructor() {
         super();
@@ -668,10 +680,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private bindClipboardShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')),
+                filter(
+                    (event) =>
+                        ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) ||
+                        event.key === 'Backspace' ||
+                        event.key === 'Delete'
+                ),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(async (event) => {
+            .subscribe(async (event: KeyboardEvent) => {
                 if (this.aiReadonly()) {
                     return;
                 }
@@ -682,48 +699,45 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
 
                 const hasEditingCell = !!this.aiTableGridEventService.getCurrentEditCell();
+                if (hasEditingCell) {
+                    return;
+                }
 
+                event.preventDefault();
                 if (event.key === 'c') {
-                    const clipboardData = buildClipboardData(this.aiTable);
-                    if (clipboardData) {
-                        writeToClipboard(clipboardData).then(() => {
-                            const copiedCellsCount = this.aiTable.selection().selectedCells.size;
-                            const message = getI18nTextByKey(this.aiTable, AITableGridI18nKey.copiedCells).replace(
-                                '{count}',
-                                copiedCellsCount.toString()
-                            );
-                            this.notifyService.success(message, undefined, {
-                                placement: 'bottomLeft'
-                            });
-                        });
-                    }
-                } else if (event.key === 'v' && !hasEditingCell) {
-                    event.preventDefault();
-
-                    const actions: AITableActions = {
-                        updateFieldValue: (data: UpdateFieldValueOptions) => {
-                            this.aiUpdateFieldValue.emit(data);
-                        },
-                        setField: (field: AITableField) => {
-                            this.aiSetField.emit(field);
-                        },
-                        addField: (data: AddFieldOptions) => {
-                            this.aiAddField.emit(data);
-                        },
-                        addRecord: (data: AddRecordOptions) => {
-                            this.addRecord();
-                        }
-                    };
-
-                    writeToAITable(this.aiTable, actions).then((isPasteSuccess) => {
-                        if (!isPasteSuccess) {
-                            this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
-                                placement: 'bottomLeft'
-                            });
-                        }
-                    });
+                    this.copyCells();
+                } else if (event.key === 'v') {
+                    this.pasteCells();
+                } else if (event.key === 'Backspace' || event.key === 'Delete') {
+                    clearCells(this.aiTable, this.actions);
                 }
             });
+    }
+
+    private copyCells() {
+        const clipboardData = buildClipboardData(this.aiTable);
+        if (clipboardData) {
+            writeToClipboard(clipboardData).then(() => {
+                const copiedCellsCount = this.aiTable.selection().selectedCells.size;
+                const message = getI18nTextByKey(this.aiTable, AITableGridI18nKey.copiedCells).replace(
+                    '{count}',
+                    copiedCellsCount.toString()
+                );
+                this.notifyService.success(message, undefined, {
+                    placement: 'bottomLeft'
+                });
+            });
+        }
+    }
+
+    private pasteCells() {
+        writeToAITable(this.aiTable, this.actions).then((isPasteSuccess) => {
+            if (!isPasteSuccess) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
+                    placement: 'bottomLeft'
+                });
+            }
+        });
     }
 
     private handleFieldDragStart() {
