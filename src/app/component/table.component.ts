@@ -17,9 +17,10 @@ const initViews: AITableView[] = [
     {
         _id: 'view1',
         short_id: 'view-short-id-1',
-        name: '表格视图'
+        name: '表格视图',
+        position: 0
     },
-    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2' }
+    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2', position: 1 }
 ];
 
 @Component({
@@ -79,7 +80,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    ngAfterViewInit(): void {}
+    ngAfterViewInit(): void { }
 
     activeTabChange(data: any) {
         this.tableService.setActiveView(data);
@@ -120,7 +121,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.activeViewName = value;
     }
 
-    addView(type: 'add' | 'copy') {
+    addView(type: 'add' | 'duplicate') {
         const newView = addView(this.tableService.aiTable, type);
         if (newView) {
             this.tableService.setActiveView(newView._id);
