@@ -122,10 +122,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddView: {
-            const [viewIndex] = action.path;
-            if (viewIndex > -1) {
-                views.splice(viewIndex, 0, action.view);
-            }
+            views.push(action.view);
             break;
         }
         case ActionName.RemoveView: {

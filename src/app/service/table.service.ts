@@ -8,7 +8,8 @@ import {
     getDataBySharedType,
     YjsAITable,
     getFieldsSizeMap,
-    UndoManagerService
+    UndoManagerService,
+    sortViews
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -96,6 +97,10 @@ export class TableService {
 
     renderFieldsSizeMap = computed(() => {
         return getFieldsSizeMap(this.renderFields(), this.activeView());
+    });
+
+    sortedViews = computed(() => {
+        return sortViews(this.views());
     });
 
     keywords = computed(() => {
