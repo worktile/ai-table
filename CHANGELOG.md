@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.69](https://github.com/worktile/ai-table/compare/0.0.68...0.0.69) (2025-05-07)
+
+
+### Features
+
+* #WIK-17886 utils-transformValue处理 ([#433](https://github.com/worktile/ai-table/issues/433)) ([f2c59a2](https://github.com/worktile/ai-table/commit/f2c59a27b63f0008e66cf721d2c8c81a3c389014)), closes [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886) [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886) [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886)
+
+
+
 ## [0.0.68](https://github.com/worktile/ai-table/compare/0.0.67...0.0.68) (2025-05-07)
 
 
