@@ -1,6 +1,14 @@
 import { AITableQueries } from '@ai-table/grid';
-import { ActionName, AddFieldAction, RemoveFieldAction, SetFieldAction } from '@ai-table/utils';
-import { AITableViewField, AITableField, IdPath, NumberPath } from '@ai-table/utils';
+import {
+    ActionName,
+    AddFieldAction,
+    RemoveFieldAction,
+    SetFieldAction,
+    AITableViewField,
+    AITableField,
+    IdPath,
+    NumberPath
+} from '@ai-table/utils';
 import { isPathEqual } from '../utils';
 import { getFieldPositionInView } from '../utils/field/position-field';
 import { AIViewTable } from '../types/ai-table';

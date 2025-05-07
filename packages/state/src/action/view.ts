@@ -1,5 +1,4 @@
-import { AITableView } from '@ai-table/utils';
-import { ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
+import { AITableView, ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { sortViews } from '../utils';
 

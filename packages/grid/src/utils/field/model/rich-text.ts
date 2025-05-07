@@ -6,12 +6,12 @@ import {
     AITableReferences,
     FieldOptions,
     FieldValue,
-    RichTextFieldValue
+    RichTextFieldValue,
+    RichTextFieldBase
 } from '@ai-table/utils';
 import { transformCellValue } from '../../cell';
 import { isEmpty } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
-import { RichTextFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { AITable } from '../../../core';
 

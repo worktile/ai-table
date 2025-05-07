@@ -6,18 +6,20 @@ import {
     AddRecordAction,
     SetRecordPositionAction,
     AddViewAction,
-    UpdateSystemFieldValue
-} from '@ai-table/utils';
-import {
+    UpdateSystemFieldValue,
     getPositionsByRecordSyncElement,
     getSharedRecordIndex,
     setRecordPositions,
     getIdBySystemFieldValuesType,
     setRecordUpdatedInfo,
     toRecordSyncElement,
-    toMapSyncElement
+    toMapSyncElement,
+    AITableViewFields,
+    AITableViewRecord,
+    SharedType,
+    SyncArrayElement,
+    SyncMapElement
 } from '@ai-table/utils';
-import { AITableViewFields, AITableViewRecord, SharedType, SyncArrayElement, SyncMapElement } from '@ai-table/utils';
 
 export default function addNode(
     aiTable: AITable,

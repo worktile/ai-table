@@ -6,6 +6,7 @@ import { ThyTag } from 'ngx-tethys/tag';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { AITableField, AITableSelectOption, AITableSelectOptionStyle } from '@ai-table/utils';
 import { AITableSelectField } from '../../../types';
+
 @Component({
     selector: 'select-option',
     templateUrl: './option.component.html',

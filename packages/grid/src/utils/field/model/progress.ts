@@ -1,7 +1,15 @@
 import { helpers, isEmpty } from 'ngx-tethys/util';
-import { AITableField, AITableFieldType, AITableFilterCondition, AITableFilterOperation, FieldValue, ProgressFieldValue, SelectSettings } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableFilterCondition,
+    AITableFilterOperation,
+    FieldValue,
+    ProgressFieldValue,
+    SelectSettings,
+    ProgressFieldBase
+} from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
-import { ProgressFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 
 export class ProgressField extends ProgressFieldBase implements FieldOperable<number, ProgressFieldValue> {
