@@ -6,10 +6,10 @@ import {
     AITableFilterOperation,
     FieldValue,
     RateFieldValue,
-    SelectSettings
+    SelectSettings,
+    RateFieldBase
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
-import { RateFieldBase } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { isEmpty } from 'lodash';
 

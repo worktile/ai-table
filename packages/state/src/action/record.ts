@@ -1,6 +1,15 @@
 import { AITableQueries, FieldModelMap } from '@ai-table/grid';
-import { UpdateFieldValueAction, ActionName, AddRecordAction, RemoveRecordAction, UpdateSystemFieldValue } from '@ai-table/utils';
-import { AIRecordFieldIdPath, AITableRecord, AITableRecordUpdatedInfo, IdPath } from '@ai-table/utils';
+import {
+    UpdateFieldValueAction,
+    ActionName,
+    AddRecordAction,
+    RemoveRecordAction,
+    UpdateSystemFieldValue,
+    AIRecordFieldIdPath,
+    AITableRecord,
+    AITableRecordUpdatedInfo,
+    IdPath
+} from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {

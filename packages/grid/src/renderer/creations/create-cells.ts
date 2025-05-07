@@ -8,7 +8,7 @@ import {
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { FieldModelMap, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { FieldModelMap, getCellHorizontalPosition, getHoverCell } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';

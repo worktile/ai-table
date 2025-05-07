@@ -1,6 +1,12 @@
 import * as Y from 'yjs';
-import { AI_TABLE_CONTENT_FIELD_NAME, AITableViewFields, AITableViewRecords, AITableViews, SharedRecordJsonType, SharedType, toMapSyncElement } from '@ai-table/utils';
 import {
+    AI_TABLE_CONTENT_FIELD_NAME,
+    AITableViewFields,
+    AITableViewRecords,
+    AITableViews,
+    SharedRecordJsonType,
+    SharedType,
+    toMapSyncElement,
     getIdBySystemFieldValues,
     getPositionsBySystemFieldValues,
     getShortIdBySystemFieldValues,

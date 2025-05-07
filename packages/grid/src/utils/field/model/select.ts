@@ -2,9 +2,11 @@ import { helpers } from 'ngx-tethys/util';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
 import { AITable, idCreator } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences, SelectFieldBase } from '@ai-table/utils';
-import { FieldOperable } from '../field-operable';
 import {
+    AITableFilterCondition,
+    AITableFilterOperation,
+    AITableReferences,
+    SelectFieldBase,
     AITableField,
     AITableFieldType,
     AITableSelectOption,
@@ -13,6 +15,7 @@ import {
     SelectFieldValue,
     SelectSettings
 } from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
 import { isEmpty } from 'lodash';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
