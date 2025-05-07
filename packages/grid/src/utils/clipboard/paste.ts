@@ -14,7 +14,7 @@ import {
     AddFieldOptions,
     AITableReferences
 } from '@ai-table/utils';
-
+import * as _ from 'lodash';
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
 const decodeClipboardJsonData = (encoded: string) => {
@@ -179,9 +179,10 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
     let defaultFieldValue: Partial<AITableField>;
     if (originField) {
         const fieldOptions = getFieldOptions(aiTable);
+        const fieldOptionTypesMap = _.keyBy(fieldOptions, 'type');
         defaultFieldValue = {
             ...originField,
-            name: createDefaultFieldName(aiTable, fieldOptions.find((item) => item.type === originField.type)!),
+            name: createDefaultFieldName(aiTable, fieldOptionTypesMap[originField.type]!),
             _id: idCreator()
         };
     } else {

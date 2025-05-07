@@ -29,7 +29,7 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     @Input() position!: { x: number; y: number };
 
     field = computed(() => {
-        return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
+        return this.aiTable.fieldsMap()[this.fieldId];
     });
 
     execute(menu: AITableFieldMenuItem) {

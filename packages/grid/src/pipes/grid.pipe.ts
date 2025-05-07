@@ -10,6 +10,7 @@ import {
 } from '@ai-table/utils';
 import { isSameFieldOption } from '../core';
 import { AITableSelection } from '../types';
+import * as _ from 'lodash';
 
 @Pipe({
     name: 'selectOption',
@@ -17,7 +18,8 @@ import { AITableSelection } from '../types';
 })
 export class SelectOptionPipe implements PipeTransform {
     transform(_id: string, options: AITableSelectOption[]) {
-        return options?.length && options.find((item) => item._id === _id);
+        const optionsMap = _.keyBy(options || [], '_id');
+        return optionsMap[_id];
     }
 }
 
@@ -27,10 +29,11 @@ export class SelectOptionPipe implements PipeTransform {
 })
 export class SelectOptionsPipe implements PipeTransform {
     transform(ids: string[], options: AITableSelectOption[] = []) {
+        const optionsMap = _.keyBy(options || [], '_id');
         return (
             (ids?.length &&
                 ids.map((id: string) => {
-                    return options.find((item) => item._id === id);
+                    return optionsMap[id];
                 })) ||
             []
         );

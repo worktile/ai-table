@@ -1,14 +1,16 @@
 import { getMaxPosition } from '../view';
 import { sortByViewPosition } from '../common';
 import { Actions } from '../../action';
-import { AITableRecordUpdatedInfo, AITableView, AITableViewRecords, MoveRecordOptions } from '@ai-table/utils';
+import { AITableRecordUpdatedInfo, AITableViewRecords, MoveRecordOptions } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 
 export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const records = aiTable.gridData().records as AITableViewRecords;
     const activeViewId = aiTable.activeViewId();
-    const activeView = aiTable.views().find((view) => view._id === activeViewId) as AITableView;
+    const viewsMap = aiTable.viewsMap();
+    const activeView = viewsMap[activeViewId]!;
     const { recordIds, newPath } = options;
+
     let targetPosition = 0;
     let prevPosition = 0;
     if (newPath[0] === 0) {
@@ -21,7 +23,12 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, up
         targetPosition = records[newPath[0]].positions[activeViewId]!;
         prevPosition = records[newPath[0] - 1].positions[activeViewId]!;
     }
-    const sourceRecords = recordIds.map((idPath) => records.find((record) => record._id === idPath[0])!);
+
+    const recoredsMap = aiTable.recordsMap();
+    const sourceRecords = recordIds.map((idPath) => {
+        return recoredsMap[idPath[0]]!;
+    }) as AITableViewRecords;
+
     // 勾选多行顺序可能不一致，需要排序
     const sortedSourceRecords = sortByViewPosition(sourceRecords, activeView);
     let nextPosition = (prevPosition + targetPosition) / 2;

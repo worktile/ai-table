@@ -64,7 +64,8 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
     let originViewId = views[views.length - 1]._id;
     if (type === 'duplicate') {
         originViewId = viewId ?? aiTable.activeViewId();
-        const copyView = views.find((item) => item._id === originViewId)!;
+        const viewsMap = aiTable.viewsMap();
+        const copyView = viewsMap[originViewId]!;
 
         const copyName = copyView.name;
         const copyViewName = generateCopyName(aiTable, allViewNames, copyName);

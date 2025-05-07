@@ -13,8 +13,13 @@ import {
     AITableViewRecord,
     AITableViewRecords
 } from '@ai-table/utils';
+import * as _ from 'lodash';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
+    const viewsMap = _.keyBy(views, '_id');
+    const fieldsMap = _.keyBy(fields, '_id');
+    const recordsMap = _.keyBy(records, '_id');
+
     switch (action.type) {
         case ActionName.UpdateFieldValue: {
             const [recordId, fieldId] = action.path;
@@ -79,7 +84,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
 
         case ActionName.SetField: {
-            const field = fields.find((item) => item._id === action.path[0]) as AITableField;
+            const field = fieldsMap[action.path[0]]!;
             if (field) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableField;
@@ -101,7 +106,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.SetView: {
-            const view = views.find((item) => item._id === action.path[0]) as AITableView;
+            const view = viewsMap[action.path[0]]!;
             if (view) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableView;
@@ -136,7 +141,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.SetRecordPositions: {
             const { positions, path } = action;
-            const record = records.find((item) => item._id === path[0]);
+            const record = recordsMap[path[0]]!;
             if (record) {
                 const newPositions = { ...record.positions };
                 for (const key in positions) {

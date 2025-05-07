@@ -17,6 +17,7 @@ import {
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {
@@ -91,11 +92,13 @@ export function processPastedValueForSelect(
         if (cellValue && Array.isArray(cellValue) && cellValue.length) {
             const targetOptionIds = targetFieldOptions.map((option) => option._id);
             const originOptionsMap = helpers.keyBy((field.settings as SelectSettings)?.options || [], '_id');
+            const originOptionTextsMap = _.keyBy(targetFieldOptions, 'text');
+
             cellValue.forEach((id) => {
                 if (targetOptionIds.includes(id)) {
                     existOptionIds.push(id);
-                } else if (targetFieldOptions.some((option) => option.text === originOptionsMap[id]?.text)) {
-                    const option = targetFieldOptions.find((option: AITableSelectOption) => option.text === originOptionsMap[id].text);
+                } else if (originOptionTextsMap[originOptionsMap[id]?.text]) {
+                    const option = originOptionTextsMap[originOptionsMap[id].text];
                     existOptionIds.push(option!._id);
                 } else {
                     const originOption = originOptionsMap[id];
@@ -107,8 +110,9 @@ export function processPastedValueForSelect(
             });
         }
     } else {
+        const targetFieldOptionTextsMap = _.keyBy(targetFieldOptions, 'text');
         cellFullTexts.forEach((text) => {
-            const option = targetFieldOptions.find((option) => option.text === text);
+            const option = targetFieldOptionTextsMap[text];
             if (option) {
                 existOptionIds.push(option._id);
             } else {

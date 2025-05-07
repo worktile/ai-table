@@ -16,6 +16,7 @@ import {
     AITableFilterCondition,
     AITableFilterOperation
 } from '@ai-table/utils';
+import * as _ from 'lodash';
 import { isEmpty } from 'lodash';
 
 export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
@@ -145,7 +146,8 @@ export function getDefaultRecordDataByFilter(
 }
 
 function getFilterValue(fields: AITableViewFields, record: AITableRecord, condition: AITableFilterCondition) {
-    const field = fields.find((item) => item._id === condition.field_id);
+    const fieldsMap = _.keyBy(fields || [], '_id');
+    const field = fieldsMap[condition.field_id];
     let cellValue = null;
     if (field && isSystemField(field)) {
         if ([AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type)) {

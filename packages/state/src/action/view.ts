@@ -3,7 +3,8 @@ import { AIViewTable } from '../types/ai-table';
 import { sortViews } from '../utils';
 
 function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
-    const view = aiTable.views().find((item) => item._id === path[0]);
+    const viewsMap = aiTable.viewsMap();
+    const view = viewsMap[path[0]]!;
     if (view) {
         const properties: Partial<AITableView> = {};
         const newProperties: Partial<AITableView> = {};

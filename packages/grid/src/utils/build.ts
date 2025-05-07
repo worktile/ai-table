@@ -2,7 +2,7 @@ import { AITable, getFieldOptions } from '../core';
 import { AITableGridData, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/row';
 import { AITableFields, AITableRecords } from '@ai-table/utils';
-
+import * as _ from 'lodash';
 export const buildGridLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
     const linearRows: AITableLinearRow[] = [];
     let displayRowIndex = 0;
@@ -27,8 +27,9 @@ export const buildGridLinearRows = (visibleRecords: AITableRecords, isAddingVisi
 
 export const buildGridData = (aiTable: AITable, recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
     const fieldOptions = getFieldOptions(aiTable);
+    const fieldOptionTypesMap = _.keyBy(fieldOptions, 'type');
     const fields = fieldsValue.map((value) => {
-        const fieldOption = fieldOptions.find((item) => item.type === value.type)!;
+        const fieldOption = fieldOptionTypesMap[value.type];
         return {
             ...value,
             icon: value.icon || fieldOption.icon

@@ -12,7 +12,8 @@ export default function translateMapEvent(aiTable: AIViewTable, sharedType: Shar
         if (isFieldsTranslate) {
             const field = sharedType.get('fields')?.get(targetPath) as SyncMapElement;
             const fieldId = field && field.get('_id');
-            targetElement = fieldId && aiTable.gridData().fields.find((item) => item._id === field.get('_id'));
+            const fieldsMap = aiTable.fieldsMap();
+            targetElement = fieldId && fieldsMap[fieldId];
         }
 
         if (isViewTranslate) {

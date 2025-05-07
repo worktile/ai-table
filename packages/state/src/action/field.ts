@@ -35,7 +35,8 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
         return;
     }
     const fields = aiTable.gridData().fields;
-    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
+    const viewsMap = aiTable.viewsMap();
+    const activeView = viewsMap[aiTable.activeViewId()];
     const sourceField = fields[path[0]] as AITableViewField;
     const position = getFieldPositionInView(activeView!._id, fields, path, newPath);
     setField(aiTable, { positions: { ...sourceField.positions, [activeView!._id]: position } }, [sourceField._id]);
@@ -43,7 +44,8 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
 
 export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number) {
     const field = AITableQueries.getField(aiTable, path) as AITableViewField;
-    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
+    const viewsMap = aiTable.viewsMap();
+    const activeView = viewsMap[aiTable.activeViewId()];
     setField(aiTable, { widths: { ...field.widths, [activeView!._id]: width } }, [field._id]);
 }
 

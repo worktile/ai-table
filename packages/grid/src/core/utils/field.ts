@@ -3,6 +3,7 @@ import { AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberS
 import { generateNewName } from './common';
 import { idCreator } from './id-creator';
 import { AITable } from '../types';
+import * as _ from 'lodash';
 
 export const isArrayField = (field: AITableField) => {
     return [
@@ -72,6 +73,7 @@ export function isSameFieldOption(fieldOption: AITableFieldOption, field: Partia
 
 export function createDefaultField(aiTable: AITable, type: AITableFieldType = AITableFieldType.text) {
     const fieldOptions = getFieldOptions(aiTable);
-    const fieldOption = fieldOptions.find((item) => item.type === type)!;
+    const fieldOptionTypesMap = _.keyBy(fieldOptions, 'type');
+    const fieldOption = fieldOptionTypesMap[type]!;
     return { _id: idCreator(), type, name: createDefaultFieldName(aiTable, fieldOption) };
 }

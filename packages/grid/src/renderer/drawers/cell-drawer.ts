@@ -213,8 +213,10 @@ export class CellDrawer extends Drawer {
         let totalWidth = 0;
         const cellItemInfoMap = new Map();
         let drawableIndex = 0;
+        const optionsMap = helpers.keyBy((field as AITableSelectField).settings.options || [], '_id');
+
         transformValue.forEach((optionId, index) => {
-            const item = (field as AITableSelectField).settings.options?.find((option) => option._id === optionId);
+            const item = optionsMap[optionId];
             const textWidth = getTextWidth(ctx, item?.text as string, fontStyle);
             totalWidth += textWidth + 2 * AI_TABLE_CELL_PADDING;
             if (index < transformValue.length - 1) {
@@ -413,7 +415,8 @@ export class CellDrawer extends Drawer {
             console.warn(`single select field unexpected value: ${transformValue[0]}`);
         }
         const isOperating = isActive;
-        const item = (field as AITableSelectField).settings.options?.find((option) => option._id === transformValue[0]);
+        const optionsMap = helpers.keyBy((field as AITableSelectField).settings.options || [], '_id');
+        const item = optionsMap[transformValue[0]];
         const itemName = item?.text || '';
         const getTextEllipsis = (maxTextWidth: number, fontSize: number = AI_TABLE_COMMON_FONT_SIZE) => {
             maxTextWidth -= isOperating ? AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET : 0;

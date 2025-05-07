@@ -14,6 +14,7 @@ import {
 import { FieldOperable } from '../field-operable';
 import { isEmpty } from 'lodash';
 import { AITable } from '../../../core';
+import * as _ from 'lodash';
 
 export class MemberField extends MemberFieldBase implements FieldOperable<string, MemberFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {
@@ -89,8 +90,10 @@ export function toMemberFieldValue(
             .filter((id) => !!id);
         const memberInfos = Object.values(references.members);
         let validMemberIds: MemberFieldValue = [];
+        const memberNamesMap = _.keyBy(memberInfos, 'display_name');
+
         memberNames.forEach((memberName) => {
-            const memberInfo = memberInfos.find((member) => member.display_name === memberName);
+            const memberInfo = memberNamesMap[memberName];
             if (memberInfo) {
                 validMemberIds.push(memberInfo.uid as Id);
             }

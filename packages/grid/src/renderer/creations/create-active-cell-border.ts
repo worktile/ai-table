@@ -38,7 +38,8 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
             const { type } = linearRows()[rowIndex];
 
             if (type === AITableRowType.record) {
-                const activeField = visibleColumns.find((field) => field._id === fieldId);
+                const fieldsMap = aiTable.fieldsMap();
+                const activeField = fieldsMap[fieldId];
                 if (activeField == null) {
                     return {
                         activeCellBorder,
