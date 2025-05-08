@@ -13,26 +13,35 @@ import {
     AITableViewRecord,
     AITableViewRecords
 } from '@ai-table/utils';
+import * as _ from 'lodash';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
+    const viewsMap = _.keyBy(views || [], '_id');
+    const fieldsMap = _.keyBy(fields || [], '_id');
+    const recordsMap = _.keyBy(records || [], '_id');
+
     switch (action.type) {
         case ActionName.UpdateFieldValue: {
             const [recordId, fieldId] = action.path;
             if (recordId && fieldId) {
-                const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
-                records[recordIndex].values[fieldId] = action.newFieldValue;
+                const record = recordsMap[recordId];
+                if (record) {
+                    record.values[fieldId] = action.newFieldValue;
+                }
             }
             break;
         }
         case ActionName.UpdateSystemFieldValue: {
             const [recordId] = action.path;
             if (recordId && action.updatedInfo) {
-                const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
-                if (action.updatedInfo.updated_at) {
-                    records[recordIndex].updated_at = action.updatedInfo.updated_at;
-                }
-                if (action.updatedInfo.updated_by) {
-                    records[recordIndex].updated_by = action.updatedInfo.updated_by;
+                const record = recordsMap[recordId];
+                if (record) {
+                    if (action.updatedInfo.updated_at) {
+                        record.updated_at = action.updatedInfo.updated_at;
+                    }
+                    if (action.updatedInfo.updated_by) {
+                        record.updated_by = action.updatedInfo.updated_by;
+                    }
                 }
             }
             break;
@@ -52,10 +61,18 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         case ActionName.AddField: {
             const newField = action.field;
             fields.push(newField as AITableViewField);
-            records.forEach((item) => {
-                item.values[newField._id] =
-                    action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
-            });
+
+            if (action.isCopy && action.originId) {
+                const originId = action.originId as string;
+                records.forEach((item) => {
+                    item.values[newField._id] = item.values[originId];
+                });
+            } else {
+                const defaultValue = getDefaultFieldValue(action.field);
+                records.forEach((item) => {
+                    item.values[newField._id] = defaultValue;
+                });
+            }
             break;
         }
         case ActionName.RemoveField: {
@@ -79,7 +96,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
 
         case ActionName.SetField: {
-            const field = fields.find((item) => item._id === action.path[0]) as AITableField;
+            const field = fieldsMap[action.path[0]];
             if (field) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableField;
@@ -101,7 +118,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.SetView: {
-            const view = views.find((item) => item._id === action.path[0]) as AITableView;
+            const view = viewsMap[action.path[0]];
             if (view) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableView;
@@ -136,7 +153,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.SetRecordPositions: {
             const { positions, path } = action;
-            const record = records.find((item) => item._id === path[0]);
+            const record = recordsMap[path[0]];
             if (record) {
                 const newPositions = { ...record.positions };
                 for (const key in positions) {
