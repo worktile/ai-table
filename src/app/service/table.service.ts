@@ -50,6 +50,10 @@ export class TableService {
 
     hiddenIndexColumn: WritableSignal<boolean> = signal(false);
 
+    maxRecords: WritableSignal<number> = signal(500);
+
+    maxFields: WritableSignal<number> = signal(500);
+
     records!: WritableSignal<AITableViewRecords>;
 
     fields!: WritableSignal<AITableViewFields>;
@@ -131,6 +135,14 @@ export class TableService {
 
     setHiddenIndexColumn(hiddenIndexColumn: boolean) {
         this.hiddenIndexColumn.set(hiddenIndexColumn);
+    }
+
+    setMaxRecords(maxRecords: number) {
+        this.maxRecords.set(maxRecords);
+    }
+
+    setMaxFields(maxFields: number) {
+        this.maxFields.set(maxFields);
     }
 
     setActiveView(activeViewId: string) {

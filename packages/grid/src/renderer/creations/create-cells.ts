@@ -19,7 +19,7 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
  * @param config
  */
 export const createCells = (config: AITableCellsDrawerConfig) => {
-    const { aiTable, coordinate, references, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { aiTable, coordinate, references, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, maxRecords } = config;
     const context = aiTable.context as RendererContext;
     const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();
@@ -76,7 +76,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     });
                     addRowLayout.render({
                         isHoverRow,
-                        isCheckedRow
+                        isCheckedRow,
+                        disabled: maxRecords ? rowIndex >= maxRecords : false
                     });
                     break;
                 }

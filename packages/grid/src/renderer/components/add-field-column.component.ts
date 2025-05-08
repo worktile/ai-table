@@ -46,18 +46,20 @@ export class AITableAddField {
     rectConfig = computed<Partial<StageConfig>>(() => {
         const {
             pointPosition: { targetName },
-            readonly
+            readonly,
+            maxFields,
+            aiTable
         } = this.config();
         const fill = targetName === AI_TABLE_FIELD_ADD_BUTTON ? Colors.gray80 : Colors.white;
         const fields = this.config().fields || [];
         const index = this.config().columnStopIndex;
         const fieldId = fields.length && index < fields.length ? fields[index]._id : '';
-
+        const disabled = maxFields && aiTable.gridData().fields.length >= maxFields;
         return {
             name: generateTargetName({
                 targetName: AI_TABLE_FIELD_ADD_BUTTON,
                 fieldId,
-                mouseStyle: readonly ? 'default' : 'pointer'
+                mouseStyle: readonly || disabled ? 'default' : 'pointer'
             }),
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
@@ -74,7 +76,7 @@ export class AITableAddField {
     });
 
     addIconConfig = computed<AITableIconConfig>(() => {
-        const { readonly } = this.config();
+        const { readonly, maxFields, aiTable } = this.config();
         const offsetY = (this.config().coordinate.rowInitSize - AI_TABLE_ICON_COMMON_SIZE) / 2;
         return {
             x: AI_TABLE_CELL_PADDING,
@@ -82,7 +84,8 @@ export class AITableAddField {
             data: AddOutlinedPath,
             fill: Colors.gray600,
             listening: false,
-            visible: !readonly
+            visible: !readonly,
+            disabled: maxFields ? aiTable.gridData().fields.length >= maxFields : false
         };
     });
 }

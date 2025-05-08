@@ -160,7 +160,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
             rowDragDisabled: this.aiRowDragDisabled(),
-            actions: this.actions
+            actions: this.actions,
+            maxFields: this.aiMaxFields(),
+            maxRecords: this.aiMaxRecords()
         };
     });
 
@@ -269,7 +271,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             frozenColumnCount: this.frozenColumnCount,
             references: this.aiReferences,
             aiFieldConfig: this.aiFieldConfig,
-            scrollAction: this.scrollAction
+            scrollAction: this.scrollAction,
+            maxFields: this.aiMaxFields,
+            maxRecords: this.aiMaxRecords
         });
     }
 
@@ -731,9 +735,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private pasteCells() {
-        writeToAITable(this.aiTable, this.actions).then((isPasteSuccess) => {
-            if (!isPasteSuccess) {
+        writeToAITable(this.aiTable, this.actions).then((result) => {
+            if (!result.isPasteSuccess) {
                 this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
+                    placement: 'bottomLeft'
+                });
+            }
+            if (result.isPasteOverMaxRecords) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxRecords), undefined, {
+                    placement: 'bottomLeft'
+                });
+            }
+            if (result.isPasteOverMaxFields) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxFields), undefined, {
                     placement: 'bottomLeft'
                 });
             }

@@ -13,6 +13,8 @@ export class RendererContext {
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     scrollAction: (options: ScrollActionOptions) => void;
+    maxFields: Signal<number>;
+    maxRecords: Signal<number>;
 
     constructor(options: AITableContext) {
         const {
@@ -25,7 +27,9 @@ export class RendererContext {
             frozenColumnCount,
             references,
             aiFieldConfig,
-            scrollAction
+            scrollAction,
+            maxFields,
+            maxRecords
         } = options;
         this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
@@ -37,6 +41,8 @@ export class RendererContext {
         this.frozenColumnCount = frozenColumnCount;
         this.references = references;
         this.aiFieldConfig = aiFieldConfig;
+        this.maxFields = maxFields;
+        this.maxRecords = maxRecords;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

@@ -45,7 +45,7 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    private renderFirstCell({ isHoverRow }: Pick<AITableCell, 'isHoverRow'>) {
+    private renderFirstCell({ isHoverRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'disabled'>) {
         if (!this.isFirst) return;
         const y = this.y;
         const rowHeight = this.rowHeight;
@@ -72,7 +72,7 @@ export class AddRowLayout extends Layout {
             y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - AI_TABLE_OFFSET,
             data: AddOutlinedPath,
             size: AI_TABLE_ROW_HEAD_SIZE,
-            fill: this.colors.gray600
+            fill: disabled ? this.colors.gray300 : this.colors.gray600
         });
     }
 
@@ -96,9 +96,10 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    render({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>) {
+    render({ isHoverRow, isCheckedRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow' | 'disabled'>) {
         this.renderFirstCell({
-            isHoverRow
+            isHoverRow,
+            disabled
         });
         this.renderCommonCell({
             isHoverRow

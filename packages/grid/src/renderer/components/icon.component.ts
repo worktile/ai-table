@@ -63,7 +63,8 @@ export class AITableIcon {
             offsetY,
             rotation,
             fill = Colors.gray600,
-            transformsEnabled = 'position'
+            transformsEnabled = 'position',
+            disabled
         } = this.config();
 
         let pathData = data;
@@ -79,14 +80,13 @@ export class AITableIcon {
                 pathData = RowDragPath;
                 break;
         }
-
         return {
             x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
             y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
             data: pathData,
             width: size,
             height: size,
-            fill,
+            fill: disabled ? Colors.gray300 : fill,
             offsetX,
             offsetY,
             scaleX,

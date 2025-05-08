@@ -194,14 +194,22 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
     });
 }
 
-export const writeToAITable = async (aiTable: AITable, actions: AITableActions) => {
+export const writeToAITable = async (
+    aiTable: AITable,
+    actions: AITableActions
+): Promise<{ isPasteSuccess: boolean; isPasteOverMaxRecords: boolean; isPasteOverMaxFields: boolean }> => {
     const selectedCells = Array.from(aiTable.selection().selectedCells);
+    const result = {
+        isPasteSuccess: false,
+        isPasteOverMaxRecords: false,
+        isPasteOverMaxFields: false
+    };
     if (!selectedCells.length) {
-        return;
+        return result;
     }
     const { clipboardContent, aiTableContent } = await readClipboardData();
     if (!clipboardContent.length) {
-        return;
+        return result;
     }
 
     const [firstCell] = selectedCells;
@@ -209,16 +217,25 @@ export const writeToAITable = async (aiTable: AITable, actions: AITableActions) 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const references = aiTable.context!.references();
-    let isPasteSuccess = false;
 
+    const maxFields = aiTable.context!.maxFields();
+    const maxRecords = aiTable.context!.maxRecords();
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
+        if (maxRecords && targetRowIndex >= maxRecords) {
+            result.isPasteOverMaxRecords = true;
+            return;
+        }
         if (targetRowIndex >= aiTable.context!.linearRows().length - 1) {
             appendRecord(aiTable, actions);
         }
 
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
+            if (maxFields && targetColIndex >= maxFields) {
+                result.isPasteOverMaxFields = true;
+                return;
+            }
             if (targetColIndex >= AITable.getVisibleFields(aiTable).length) {
                 const originField = aiTableContent?.fields[j] || null;
                 appendField(aiTable, originField, actions);
@@ -240,11 +257,11 @@ export const writeToAITable = async (aiTable: AITable, actions: AITableActions) 
                         value,
                         path: [targetRecord._id, targetField._id]
                     });
-                    isPasteSuccess = true;
+                    result.isPasteSuccess = true;
                 } catch (error) {}
             }
         });
     });
 
-    return isPasteSuccess;
+    return result;
 };

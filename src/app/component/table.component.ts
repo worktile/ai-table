@@ -68,6 +68,10 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     activeViewName!: string;
 
+    maxRecords = 500;
+
+    maxFields = 500;
+
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         if (!activeViewId || (activeViewId && initViews.findIndex((item) => item._id === activeViewId) < 0)) {
@@ -80,7 +84,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    ngAfterViewInit(): void { }
+    ngAfterViewInit(): void {}
 
     activeTabChange(data: any) {
         this.tableService.setActiveView(data);
@@ -104,6 +108,14 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleHiddenIndexColumnChange(e: any) {
         this.hiddenIndexColumn = e.target.checked;
         this.tableService.setHiddenIndexColumn(e.target.checked);
+    }
+
+    handleMaxRecordsChange() {
+        this.tableService.setMaxRecords(this.maxRecords);
+    }
+
+    handleMaxFieldsChange() {
+        this.tableService.setMaxFields(this.maxFields);
     }
 
     updateValue() {

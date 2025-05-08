@@ -15,6 +15,7 @@ export interface AITableCellsConfig {
     };
     references?: AITableReferences;
     rowDragDisabled: boolean;
+    maxRecords: number;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
@@ -49,4 +50,5 @@ export interface AITableCell {
     isHoverRow: boolean;
     isCheckedRow: boolean;
     width?: number;
+    disabled?: boolean;
 }
