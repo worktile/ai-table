@@ -177,18 +177,16 @@ export enum Direction {
 }
 
 export interface AddRecordOptions {
-    originId: string;
-    direction?: Direction;
+    originId?: string;
     isDuplicate?: boolean;
     count?: number;
 }
 
 export interface AddFieldOptions {
-    originId: string;
     defaultValue: Partial<AITableField>;
     direction?: Direction;
     isDuplicate?: boolean;
-    isCopy?: boolean;
+    originId?: string;
     count?: number;
 }
 

@@ -187,7 +187,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.aiAddField.emit(data);
         },
         addRecord: (data: AddRecordOptions) => {
-            this.addRecord();
+            this.addRecord(data);
         }
     };
 

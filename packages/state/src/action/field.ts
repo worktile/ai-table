@@ -13,12 +13,12 @@ import { isPathEqual } from '../utils';
 import { getFieldPositionInView } from '../utils/field/position-field';
 import { AIViewTable } from '../types/ai-table';
 
-export function addField(aiTable: AIViewTable, field: AITableField, originId?: string, isCopy?: boolean) {
+export function addField(aiTable: AIViewTable, field: AITableField, originId?: string, isDuplicate?: boolean) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
         originId,
-        isCopy
+        isDuplicate
     };
     const existField = aiTable.fields().some((item) => {
         return item._id === field._id;

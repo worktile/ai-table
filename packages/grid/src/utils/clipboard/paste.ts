@@ -165,18 +165,9 @@ export interface AITableActions {
     addField: (data: AddFieldOptions) => void;
 }
 
-function appendRecord(aiTable: AITable, actions: AITableActions) {
-    const allRecords = aiTable.records();
-    const lastRecordId = allRecords.length > 0 ? allRecords[allRecords.length - 1]._id : '';
-    actions.addRecord({
-        originId: lastRecordId
-    });
-}
-
 function appendField(aiTable: AITable, originField: AITableField | null, actions: AITableActions) {
-    const fields = aiTable.gridData().fields;
-    const lastFieldId = fields.length > 0 ? fields[fields.length - 1]._id : '';
     let defaultFieldValue: Partial<AITableField>;
+
     if (originField) {
         const fieldOptions = getFieldOptions(aiTable);
         defaultFieldValue = {
@@ -189,7 +180,6 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
     }
 
     actions.addField({
-        originId: lastFieldId,
         defaultValue: defaultFieldValue
     });
 }
@@ -206,26 +196,34 @@ export const writeToAITable = async (aiTable: AITable, actions: AITableActions) 
 
     const [firstCell] = selectedCells;
     const [startRecordId, startFieldId] = firstCell.split(':');
+
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
+    const lastRowIndex = aiTable.context!.linearRows().length - 1;
+    const appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
+    actions.addRecord({ count: appendRowCount });
+
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
+    const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
+    const copiedFieldLength = clipboardContent[0].length;
+    const appendColCount = copiedFieldLength - (lastColIndex - startColIndex) - 1;
+    const appendOffeset = copiedFieldLength - appendColCount;
+
+    for (let i = 0; i < appendColCount; i++) {
+        const originField = aiTableContent?.fields[appendOffeset + i] || null;
+        appendField(aiTable, originField, actions);
+    }
+
+    const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
     let isPasteSuccess = false;
+    let visibleFields = AITable.getVisibleFields(aiTable);
 
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
-        if (targetRowIndex >= aiTable.context!.linearRows().length - 1) {
-            appendRecord(aiTable, actions);
-        }
-
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
-            if (targetColIndex >= AITable.getVisibleFields(aiTable).length) {
-                const originField = aiTableContent?.fields[j] || null;
-                appendField(aiTable, originField, actions);
-            }
-
-            const targetRecord = aiTable.context!.linearRows()[targetRowIndex];
-            const targetField = AITable.getVisibleFields(aiTable)[targetColIndex];
+            const targetRecord = linearRows[targetRowIndex];
+            const targetField = visibleFields[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;
             const { value, newField } = getPasteValue(plainText, aiTableContent, recordIndex, fieldIndex, targetField, references);
@@ -241,7 +239,9 @@ export const writeToAITable = async (aiTable: AITable, actions: AITableActions) 
                         path: [targetRecord._id, targetField._id]
                     });
                     isPasteSuccess = true;
-                } catch (error) {}
+                } catch (error) {
+                    console.error('Failed to paste value:', error);
+                }
             }
         });
     });

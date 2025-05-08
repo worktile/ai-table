@@ -57,7 +57,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             const newField = action.field;
             fields.push(newField as AITableViewField);
 
-            if (action.isCopy && action.originId) {
+            if (action.isDuplicate && action.originId) {
                 const originId = action.originId as string;
                 records.forEach((item) => {
                     item.values[newField._id] = item.values[originId];
