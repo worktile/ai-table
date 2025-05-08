@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.70](https://github.com/worktile/ai-table/compare/0.0.69...0.0.70) (2025-05-08)
+
+
+### Features
+
+* **utils:** support to handle ghost cells ([#429](https://github.com/worktile/ai-table/issues/429)) ([7830980](https://github.com/worktile/ai-table/commit/7830980d47f3c2f2bc74eb871190733713408d73))
+
+
+
 ## [0.0.69](https://github.com/worktile/ai-table/compare/0.0.68...0.0.69) (2025-05-07)
 
 

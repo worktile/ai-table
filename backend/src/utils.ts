@@ -7,6 +7,7 @@ import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as map from 'lib0/map';
 import { callbackHandler, isCallbackSet } from './callback';
+import { AI_TABLE_CONTENT_FIELD_NAME, applyEvents, correctSharedType, SharedType, translateArrayEvent } from '@ai-table/utils';
 const debounce = require('lodash.debounce');
 
 const CALLBACK_DEBOUNCE_WAIT = parseInt(process.env['CALLBACK_DEBOUNCE_WAIT'] || '2000');
@@ -128,11 +129,12 @@ export const getYDoc = (docname: string, gc: boolean = true): WSSharedDoc => {
     if (persistence !== null) {
       persistence.bindState(docname, doc);
     }
-    // TODO: 幽灵单元格处理
-    const sharedType = doc.getMap('content');
-    sharedType.observeDeep((event: Array<Y.YEvent<any>>) => {
-      
-    })
+    // 幽灵单元格处理，暂时注释，因为 backend 接入 utils 库有些打包的问题
+    // const sharedType = doc.getMap(AI_TABLE_CONTENT_FIELD_NAME) as SharedType;
+    // sharedType.observeDeep((events: Array<Y.YEvent<any>>) => {
+    //   const actions = applyEvents(sharedType, events);
+    //   correctSharedType(sharedType, actions);
+    // })
     docs.set(docname, doc);
     return doc;
   });

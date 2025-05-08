@@ -161,15 +161,13 @@ export class AITableGridBase implements OnInit {
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
     }
 
-    addRecord() {
+    addRecord(options?: AddRecordOptions) {
         const records = this.aiTable.gridData().records;
         const recordCount = records.length;
         if (recordCount >= this.aiMaxRecords()) {
             return;
         }
-        this.aiAddRecord.emit({
-            originId: recordCount > 0 ? records[records.length - 1]._id : ''
-        });
+        this.aiAddRecord.emit(options || {});
     }
 
     selectRecord(recordId: string) {

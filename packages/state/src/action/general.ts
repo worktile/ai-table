@@ -54,7 +54,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             fields.push(newField as AITableViewField);
             records.forEach((item) => {
                 item.values[newField._id] =
-                    action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
+                    action.isDuplicate && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
             });
             break;
         }
