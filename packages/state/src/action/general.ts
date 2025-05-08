@@ -13,18 +13,13 @@ import {
     AITableViewRecord,
     AITableViewRecords
 } from '@ai-table/utils';
-import * as _ from 'lodash';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
-    const viewsMap = _.keyBy(views || [], '_id');
-    const fieldsMap = _.keyBy(fields || [], '_id');
-    const recordsMap = _.keyBy(records || [], '_id');
-
     switch (action.type) {
         case ActionName.UpdateFieldValue: {
             const [recordId, fieldId] = action.path;
             if (recordId && fieldId) {
-                const record = recordsMap[recordId];
+                const record = aiTable.recordsMap()[recordId];
                 if (record) {
                     record.values[fieldId] = action.newFieldValue;
                 }
@@ -34,7 +29,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         case ActionName.UpdateSystemFieldValue: {
             const [recordId] = action.path;
             if (recordId && action.updatedInfo) {
-                const record = recordsMap[recordId];
+                const record = aiTable.recordsMap()[recordId];
                 if (record) {
                     if (action.updatedInfo.updated_at) {
                         record.updated_at = action.updatedInfo.updated_at;
@@ -96,7 +91,8 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
 
         case ActionName.SetField: {
-            const field = fieldsMap[action.path[0]];
+            const fieldId = action.path[0];
+            const field = aiTable.fieldsMap()[fieldId];
             if (field) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableField;
@@ -118,7 +114,8 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.SetView: {
-            const view = viewsMap[action.path[0]];
+            const viewId = action.path[0];
+            const view = aiTable.viewsMap()[viewId];
             if (view) {
                 for (const key in action.newProperties) {
                     const k = key as keyof AITableView;
@@ -153,9 +150,10 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.SetRecordPositions: {
             const { positions, path } = action;
-            const record = recordsMap[path[0]];
+            const recordId = path[0];
+            const record = aiTable.recordsMap()[recordId];
             if (record) {
-                const newPositions = { ...record.positions };
+                const newPositions = { ...record['positions'] };
                 for (const key in positions) {
                     if (positions[key] === null || positions[key] === undefined) {
                         delete newPositions[key];
@@ -163,7 +161,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
                         newPositions[key] = positions[key] as number;
                     }
                 }
-                record.positions = newPositions;
+                record['positions'] = newPositions;
             }
             break;
         }

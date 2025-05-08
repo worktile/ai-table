@@ -13,5 +13,6 @@ export * from './visible-range';
 export * from './field';
 export * from './match-keywords';
 export * from './hover-cell';
+export * from './clear-cells';
 export * from './i18n';
 export * from './file';
