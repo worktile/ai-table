@@ -6,16 +6,17 @@ import { idCreator } from '@ai-table/grid';
 import { createDefaultPositions, getPosition } from '../view';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
-    const { defaultValue, isDuplicate, isCopy } = options;
+    const { defaultValue, isDuplicate, originId } = options;
     const fields = aiTable.gridData().fields as AITableViewFields;
     const fieldsMap = aiTable.fieldsMap();
     const activeViewId = aiTable.activeViewId();
     const newField = { ...defaultValue } as AITableViewField;
+
     if (fieldsMap[newField._id]) {
         newField._id = idCreator();
     }
     if (isDuplicate) {
-        const currentFieldIndex = fields.findIndex((item) => item._id === options.originId);
+        const currentFieldIndex = fields.findIndex((item) => item._id === originId);
         newField.positions = {
             ...newField.positions,
             [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex + 1)
@@ -28,6 +29,6 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
             fields.length
         );
     }
-    Actions.addField(aiTable, newField, options.originId, isCopy || isDuplicate);
+    Actions.addField(aiTable, newField, originId, isDuplicate);
     updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }
