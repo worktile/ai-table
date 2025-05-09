@@ -92,7 +92,6 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                         try {
                             const sharedRecords = sharedType.get('records')! as Y.Array<SyncArrayElement>;
                             const sharedFields = sharedType.get('fields')! as Y.Array<SyncMapElement>;
-                            let systemFieldOffset = 0;
                             delta.insert?.map((item: any, index: number) => {
                                 const recordIndex = targetPath[0] as number;
                                 const fieldIndex = offset + index;
@@ -109,7 +108,7 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                                             path: [recordId],
                                             positions: newPositions
                                         });
-                                    } else if (isUpdatedByOperation(fieldIndex + systemFieldOffset)) {
+                                    } else if (isUpdatedByOperation(fieldIndex)) {
                                         // 此处的循环会包含 updated_at 和 updated_by 各一次，这里只处理 updated_by 同时包含两个字段的修改
                                         const systemFieldValues = getSharedRecord(sharedRecords, recordIndex).get(0).toJSON();
                                         const { updated_at, updated_by } = getTrackableEntityBySystemFieldValues(systemFieldValues);
@@ -119,7 +118,6 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                                             updatedInfo: { updated_at: updated_at as number, updated_by }
                                         });
                                     }
-                                    systemFieldOffset++;
                                 } else {
                                     const path = [recordId, fieldId] as AIRecordFieldIdPath;
                                     actions.push({
