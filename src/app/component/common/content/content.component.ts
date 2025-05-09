@@ -42,7 +42,7 @@ import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
-import _, { get, isNil } from 'lodash';
+import _, { isNil } from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {

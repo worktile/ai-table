@@ -1,6 +1,5 @@
-import { AITableFilterCondition, AITableFilterOperation, AITableField, FieldValue } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, AITableField, FieldValue, isEmpty } from '@ai-table/utils';
 import { AITable } from '../../core';
-import { isEmpty } from 'lodash';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
 

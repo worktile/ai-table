@@ -14,9 +14,9 @@ import {
     AITableFilterLogical,
     AITableViewField,
     AITableFilterCondition,
-    AITableFilterOperation
+    AITableFilterOperation,
+    isEmpty
 } from '@ai-table/utils';
-import { isEmpty } from 'lodash';
 
 export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};

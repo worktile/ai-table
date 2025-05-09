@@ -1,6 +1,6 @@
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
-import { AITableFilterCondition, AITableFilterOperation, FieldValue, TextFieldBase, TextFieldValue } from '@ai-table/utils';
+import { AITableFilterCondition, AITableFilterOperation, FieldValue, TextFieldBase, TextFieldValue, isEmpty } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 
 export class TextField extends TextFieldBase implements FieldOperable<string, TextFieldValue> {
