@@ -13,7 +13,6 @@ export const buildRemoveFieldItem = (aiTable: AITable, getUpdatedInfo: () => AIT
         icon: 'trash',
         exec: (aiTable: AITable, field: Signal<AITableField>) => {
             Actions.removeField(aiTable as AIViewTable, [field()._id]);
-            updateRecordsUpdatedInfo(aiTable as AIViewTable, getUpdatedInfo());
         }
     };
 };
