@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.72](https://github.com/worktile/ai-table/compare/0.0.71...0.0.72) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** #WIK-17722 coordinate changes to the updater ([#451](https://github.com/worktile/ai-table/issues/451)) ([67c84f2](https://github.com/worktile/ai-table/commit/67c84f2e210c3f0afdc2411b2cea769720a88c6a)), closes [#WIK-17722](https://github.com/worktile/ai-table/issues/WIK-17722)
+
+
+
 ## [0.0.71](https://github.com/worktile/ai-table/compare/0.0.70...0.0.71) (2025-05-09)
 
 
