@@ -97,6 +97,8 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                                 const fieldIndex = offset + index;
                                 const recordId = getSharedRecordId(sharedRecords, recordIndex);
                                 const fieldId = getSharedMapValueId(sharedFields, fieldIndex);
+                                // targetPath[0] 是记录的索引，targetPath[1] 表达式系统字段还是自定义字段（0代表系统字段，1代表自定义字段）
+                                // yjs 中 record 的存储结构是 [systemFieldValues, customFieldValues]
                                 if (isSystemFieldOperation(targetPath)) {
                                     if (isPositionsOperation(fieldIndex)) {
                                         const newPositions: Positions = {};
