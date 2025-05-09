@@ -9,11 +9,12 @@ import {
     AITableField,
     AITableFieldType,
     DateFieldValue,
-    FieldValue
+    FieldValue,
+    isEmpty
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
 import { transformCellValue } from '../../cell';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {

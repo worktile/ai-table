@@ -7,11 +7,12 @@ import {
     FieldValue,
     NumberFieldValue,
     SelectSettings,
-    NumberFieldBase
+    NumberFieldBase,
+    isEmpty
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
-import { isEmpty } from 'lodash';
 import { FieldOperable } from '../field-operable';
+
 export class NumberField extends NumberFieldBase implements FieldOperable<number, NumberFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<number>, cellValue: NumberFieldValue) {
         switch (condition.operation) {

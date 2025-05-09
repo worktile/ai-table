@@ -7,11 +7,12 @@ import {
     FieldValue,
     RateFieldValue,
     SelectSettings,
-    RateFieldBase
+    RateFieldBase,
+    isEmpty
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
-import { isEmpty } from 'lodash';
+import { isNumber } from 'lodash';
 
 export class RateField extends RateFieldBase implements FieldOperable<string[], RateFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string[]>, cellValue: RateFieldValue) {
@@ -69,7 +70,7 @@ export function toRateFieldValue(
         }
     }
 
-    if (!isEmpty(value)) {
+    if (!isEmpty(value) || isNumber(value)) {
         const rateValue = Number(value);
         if (!Number.isNaN(rateValue) && rateValue > 0 && rateValue < 5) {
             return Math.round(rateValue);
