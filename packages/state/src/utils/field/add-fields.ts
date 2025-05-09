@@ -30,5 +30,4 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
         );
     }
     Actions.addField(aiTable, newField, originId, isDuplicate);
-    updateRecordsUpdatedInfo(aiTable, updatedInfo);
 }
