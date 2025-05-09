@@ -1,4 +1,4 @@
-import { helpers, isEmpty } from 'ngx-tethys/util';
+import { helpers } from 'ngx-tethys/util';
 import {
     AITableField,
     AITableFieldType,
@@ -7,7 +7,8 @@ import {
     FieldValue,
     ProgressFieldValue,
     SelectSettings,
-    ProgressFieldBase
+    ProgressFieldBase,
+    isEmpty
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
