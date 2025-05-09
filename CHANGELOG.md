@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.73](https://github.com/worktile/ai-table/compare/0.0.72...0.0.73) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** correct getValuesByCustomFieldValues logic #WIK-17912 ([#453](https://github.com/worktile/ai-table/issues/453)) ([ebe2f21](https://github.com/worktile/ai-table/commit/ebe2f214d9f7e5ed7620e03484a5034350e49297)), closes [#WIK-17912](https://github.com/worktile/ai-table/issues/WIK-17912)
+
+
+
 ## [0.0.72](https://github.com/worktile/ai-table/compare/0.0.71...0.0.72) (2025-05-09)
 
 
