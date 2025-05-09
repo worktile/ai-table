@@ -204,7 +204,8 @@ export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValue
     const fieldIds = fields.map((item) => item._id);
     const recordValue: Record<string, any> = {};
     fieldIds.forEach((item, index) => {
-        recordValue[item.toString()] = customFieldValues[index] || '';
+        const value = customFieldValues[index];
+        recordValue[item.toString()] = value === undefined ? null : value;
     });
     return recordValue;
 };
