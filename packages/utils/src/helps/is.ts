@@ -7,6 +7,10 @@ export function isEmpty(value: unknown): boolean {
         return true;
     }
 
+    if (value === '') {
+        return true;
+    }
+
     if (Array.isArray(value)) {
         return value.length === 0;
     }
