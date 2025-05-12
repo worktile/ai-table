@@ -13,10 +13,10 @@ import {
     AITableSelectOptionStyle,
     FieldValue,
     SelectFieldValue,
-    SelectSettings
+    SelectSettings,
+    isEmpty
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
-import { isEmpty } from 'lodash';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {

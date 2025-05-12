@@ -7,10 +7,10 @@ import {
     FieldOptions,
     FieldValue,
     RichTextFieldValue,
-    RichTextFieldBase
+    RichTextFieldBase,
+    isEmpty
 } from '@ai-table/utils';
 import { transformCellValue } from '../../cell';
-import { isEmpty } from 'lodash';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
 import { FieldOperable } from '../field-operable';
 import { AITable } from '../../../core';

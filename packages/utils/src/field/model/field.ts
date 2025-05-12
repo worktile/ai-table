@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty } from '../../helps';
 import { AITableField, AITableReferences, FieldOptions, FieldValue } from '../../types';
 
 export abstract class FieldBase {

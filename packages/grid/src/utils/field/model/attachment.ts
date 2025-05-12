@@ -6,10 +6,10 @@ import {
     AITableField,
     AttachmentFieldValue,
     FieldValue,
-    AITableFieldType
+    AITableFieldType,
+    isEmpty
 } from '@ai-table/utils';
 import { AITable } from '../../../core';
-import { isEmpty } from 'lodash';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
 

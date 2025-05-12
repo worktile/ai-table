@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty } from '../../helps';
 import { ProgressFieldValue } from '../../types';
 import { FieldBase } from './field';
 

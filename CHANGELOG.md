@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.73](https://github.com/worktile/ai-table/compare/0.0.72...0.0.73) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** correct getValuesByCustomFieldValues logic #WIK-17912 ([#453](https://github.com/worktile/ai-table/issues/453)) ([ebe2f21](https://github.com/worktile/ai-table/commit/ebe2f214d9f7e5ed7620e03484a5034350e49297)), closes [#WIK-17912](https://github.com/worktile/ai-table/issues/WIK-17912)
+
+
+
+## [0.0.72](https://github.com/worktile/ai-table/compare/0.0.71...0.0.72) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** #WIK-17722 coordinate changes to the updater ([#451](https://github.com/worktile/ai-table/issues/451)) ([67c84f2](https://github.com/worktile/ai-table/commit/67c84f2e210c3f0afdc2411b2cea769720a88c6a)), closes [#WIK-17722](https://github.com/worktile/ai-table/issues/WIK-17722)
+
+
+
+## [0.0.71](https://github.com/worktile/ai-table/compare/0.0.70...0.0.71) (2025-05-09)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17900 drag columns do not cross the freezing border ([#448](https://github.com/worktile/ai-table/issues/448)) ([7750c70](https://github.com/worktile/ai-table/commit/7750c702c235bb4b466cfb0686d9174d1aebf623)), closes [#WIK-17900](https://github.com/worktile/ai-table/issues/WIK-17900)
+* fix isEmpty because  lodash treating number as empty ([#447](https://github.com/worktile/ai-table/issues/447)) ([62bb8f3](https://github.com/worktile/ai-table/commit/62bb8f38b048eef007563214518355608d1e60ed))
+
+
+### Features
+
+* should not update updated_at and updated_by when add field or remove field #WIK-17903 ([#449](https://github.com/worktile/ai-table/issues/449)) ([7fad1da](https://github.com/worktile/ai-table/commit/7fad1da70222978dd75d646cc3d5f42b16d0dab4)), closes [#WIK-17903](https://github.com/worktile/ai-table/issues/WIK-17903)
+
+
+
 ## [0.0.70](https://github.com/worktile/ai-table/compare/0.0.69...0.0.70) (2025-05-08)
 
 

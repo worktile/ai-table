@@ -9,10 +9,10 @@ import {
     MemberFieldValue,
     MemberSettings,
     AITableFilterOperation,
-    Id
+    Id,
+    isEmpty
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
-import { isEmpty } from 'lodash';
 import { AITable } from '../../../core';
 
 export class MemberField extends MemberFieldBase implements FieldOperable<string, MemberFieldValue> {

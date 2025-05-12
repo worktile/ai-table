@@ -148,12 +148,13 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const pointerX = moveX + sourceColumnStartX;
         // 拖拽中心点
         const dragCenter = sourceColumnWidth / 2;
+        const rectLeft = pointerX - (isSourceColumnFrozen ? 0 : scroll.x);
         this.setRectStyles({
             cursor: 'move',
             width: `${width}px`,
             height: '100%',
             top: '0',
-            left: `${pointerX - (isSourceColumnFrozen ? 0 : scroll.x)}px`
+            left: `${rectLeft}px`
         });
 
         const lastColumnOffset = coordinate.getColumnOffset(coordinate.columnCount - 1);
@@ -174,9 +175,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         ) {
             let lineLeft = targetColumnStartX - scroll.x;
             const lineForFrozenX = lineLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
+            const rectDistanceFrozenX = rectLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
             if (lineForFrozenX < 0) {
-                lineLeft = coordinate.getColumnOffset(0);
-                targetColumnIndex = 0;
+                if (Math.abs(rectDistanceFrozenX) > dragCenter) {
+                    lineLeft = coordinate.getColumnOffset(0);
+                    targetColumnIndex = 0;
+                } else {
+                    return;
+                }
             }
             this.setAuxiliaryLineStyles({
                 width: '2px',
