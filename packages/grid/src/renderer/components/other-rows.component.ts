@@ -29,10 +29,11 @@ export class AITableOtherRows {
     });
 
     createOtherRows = (config: AITableRowHeadsConfig) => {
-        const { coordinate, rowStartIndex, rowStopIndex, aiTable } = config;
+        const { coordinate, rowStartIndex, rowStopIndex, aiTable, maxRecords } = config;
         const otherRowConfigs = [];
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > coordinate.rowCount - 1) break;
+            if (maxRecords && rowIndex >= maxRecords) break;
             const { _id, type } = (aiTable.context as RendererContext).linearRows()[rowIndex];
             if (type === AITableRowType.record) continue;
             const y = coordinate.getRowOffset(rowIndex);

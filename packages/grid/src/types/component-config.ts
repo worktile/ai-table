@@ -6,6 +6,7 @@ import { AITablePointPosition } from './grid';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
+    disabled?: boolean;
 }
 
 export interface AITableActionIconConfig extends AITableIconConfig {
@@ -55,6 +56,7 @@ export interface AITableAddFieldConfig {
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
     readonly?: boolean;
+    maxFields?: number;
 }
 
 export interface AITableHoverCellConfig {

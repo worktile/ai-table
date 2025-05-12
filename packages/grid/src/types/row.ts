@@ -35,6 +35,7 @@ export interface AITableRowHeadsConfig {
     aiTable: AITable;
     readonly: boolean;
     rowDragDisabled: boolean;
+    maxRecords: number;
 }
 
 export interface AITableContextMenuItem {

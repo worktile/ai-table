@@ -182,7 +182,7 @@ export class AITableRenderer {
 
     columnHeadOrAddFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
-        const { aiTable, coordinate, readonly } = this.config();
+        const { aiTable, coordinate, readonly, maxFields } = this.config();
         const { pointPosition } = aiTable.context!;
         const fields = this.fields();
         return {
@@ -192,12 +192,13 @@ export class AITableRenderer {
             columnStartIndex,
             columnStopIndex,
             pointPosition: pointPosition(),
-            readonly
+            readonly,
+            maxFields
         };
     });
 
     cellsConfig = computed<AITableCellsConfig>(() => {
-        const { aiTable, readonly, coordinate, references, actions, rowDragDisabled } = this.config();
+        const { aiTable, readonly, coordinate, references, actions, rowDragDisabled, maxRecords } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
@@ -209,7 +210,8 @@ export class AITableRenderer {
             columnStartIndex,
             columnStopIndex,
             actions,
-            rowDragDisabled
+            rowDragDisabled,
+            maxRecords
         };
     });
 
