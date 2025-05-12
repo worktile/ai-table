@@ -1,4 +1,3 @@
-import { isUndefinedOrNull } from 'ngx-tethys/util';
 import {
     AITableField,
     AITableRecord,
@@ -8,7 +7,8 @@ import {
     AITableFieldType,
     SystemFieldTypes,
     DateFieldValue,
-    MemberFieldValue
+    MemberFieldValue,
+    isUndefinedOrNull
 } from '@ai-table/utils';
 import { isSystemField } from './field';
 import { AITable } from '../types';
