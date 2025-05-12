@@ -10,11 +10,11 @@ import {
     AITableFieldType,
     DateFieldValue,
     FieldValue,
-    isEmpty
+    isEmpty,
+    isUndefinedOrNull
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
-import { isNil } from 'lodash';
 import { transformCellValue } from '../../cell';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
@@ -24,7 +24,7 @@ export class DateField extends DateFieldBase implements FieldOperable<string, Da
 
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
-        if (isNil(cellValue)) {
+        if (isUndefinedOrNull(cellValue)) {
             return condition.operation === AITableFilterOperation.empty;
         }
         switch (condition.operation) {
@@ -123,7 +123,7 @@ export function toDateFieldValue(
 }
 
 function cellValueToSortValue(cellValue: DateFieldValue): number {
-    if (isNil(cellValue) || !isDateValid(cellValue)) {
+    if (isUndefinedOrNull(cellValue) || !isDateValid(cellValue)) {
         return 0;
     }
     return cellValue?.timestamp ?? 0;

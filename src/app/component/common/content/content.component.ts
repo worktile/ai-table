@@ -42,7 +42,7 @@ import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
-import _, { isNil } from 'lodash';
+import _ from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -56,7 +56,8 @@ import {
     MoveRecordOptions,
     RichTextFieldValue,
     SetFieldWidthOptions,
-    UpdateFieldValueOptions
+    UpdateFieldValueOptions,
+    isUndefinedOrNull
 } from '@ai-table/utils';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
@@ -88,7 +89,7 @@ export class DemoTableContent {
             fieldRenderers: {
                 [AITableFieldType.date]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
@@ -96,7 +97,7 @@ export class DemoTableContent {
                 },
                 [AITableFieldType.createdAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
@@ -104,7 +105,7 @@ export class DemoTableContent {
                 },
                 [AITableFieldType.updatedAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);

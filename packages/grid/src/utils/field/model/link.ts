@@ -1,4 +1,3 @@
-import { isNil } from 'lodash';
 import {
     AITableField,
     AITableFieldType,
@@ -7,7 +6,8 @@ import {
     LinkFieldBase,
     AITableFilterCondition,
     AITableFilterOperation,
-    isEmpty
+    isEmpty,
+    isUndefinedOrNull
 } from '@ai-table/utils';
 import { extractText, extractLinkUrl } from '../../clipboard';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
@@ -29,7 +29,7 @@ export class LinkField extends LinkFieldBase implements FieldOperable<string, Li
             case AITableFilterOperation.exists:
                 return !isEmpty(cellTextValue);
             case AITableFilterOperation.contain:
-                return !isNil(cellTextValue) && stringInclude(cellTextValue, condition.value);
+                return !isUndefinedOrNull(cellTextValue) && stringInclude(cellTextValue, condition.value);
             default:
                 return isMeetFilter(condition, cellTextValue);
         }

@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isUndefinedOrNull } from '../../helps';
 import { FieldBase } from './field';
 import { LinkFieldValue } from '../../types';
 
@@ -13,7 +13,7 @@ export class LinkFieldBase extends FieldBase {
 
     override cellFullText(transformValue: LinkFieldValue): string[] {
         let texts: string[] = [];
-        if (!isNil(transformValue)) {
+        if (!isUndefinedOrNull(transformValue)) {
             texts.push(transformValue.text);
         }
         return texts;

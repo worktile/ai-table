@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid';
-import { isNil, isNumber, isString, includes, values } from 'lodash';
+import { isNumber, isString, includes, values } from 'lodash';
+import { isUndefinedOrNull } from '@ai-table/utils';
 
 export enum AlphabetType {
     url = 1,
@@ -55,7 +56,7 @@ export function shortId(alphabet: AlphabetType | string = AlphabetType.url, size
     } else {
         throw new Error(`Invalid alphabet "${alphabet}", alphabet type must be AlphabetType or string`);
     }
-    if (!isNil(quantity)) {
+    if (!isUndefinedOrNull(quantity)) {
         if (!isNumber(quantity)) {
             throw new Error(`Invalid quantity "${quantity}", quantity type must be number`);
         }
