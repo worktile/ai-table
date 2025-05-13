@@ -316,7 +316,7 @@ export class DemoTableContent {
     }
 
     onClick(e: KoEventObjectOutput<MouseEvent>) {
-        if ((e.targetNameDetail.targetName = AI_TABLE_CELL)) {
+        if (e.targetNameDetail.targetName === AI_TABLE_CELL) {
             const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
             if (field?.type === AITableFieldType.attachment && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_ATTACHMENT_ADD) {

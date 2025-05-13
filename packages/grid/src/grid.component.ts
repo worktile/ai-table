@@ -460,7 +460,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.aiTableGridEventService.closeCellEditor();
 
         const { context } = this.aiTable;
-        const { targetName, rowIndex: pointRowIndex } = context!.pointPosition();
+        const targetName = targetNameDetail.targetName;
         if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
@@ -471,6 +471,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
+                const { rowIndex: pointRowIndex } = context!.pointPosition();
                 const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
                 this.selectRecord(pointRecordId);
                 break;
