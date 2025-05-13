@@ -273,7 +273,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             aiFieldConfig: this.aiFieldConfig,
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
-            maxRecords: this.aiMaxRecords
+            maxRecords: this.aiMaxRecords,
+            maxPasteCellsCount: this.aiMaxPasteCellsCount
         });
     }
 

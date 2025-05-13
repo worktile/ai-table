@@ -15,6 +15,7 @@ export class RendererContext {
     scrollAction: (options: ScrollActionOptions) => void;
     maxFields: Signal<number>;
     maxRecords: Signal<number>;
+    maxPasteCellsCount: Signal<number>;
 
     constructor(options: AITableContext) {
         const {
@@ -29,7 +30,8 @@ export class RendererContext {
             aiFieldConfig,
             scrollAction,
             maxFields,
-            maxRecords
+            maxRecords,
+            maxPasteCellsCount
         } = options;
         this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
@@ -43,6 +45,7 @@ export class RendererContext {
         this.aiFieldConfig = aiFieldConfig;
         this.maxFields = maxFields;
         this.maxRecords = maxRecords;
+        this.maxPasteCellsCount = maxPasteCellsCount;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

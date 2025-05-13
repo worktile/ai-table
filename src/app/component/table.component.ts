@@ -72,6 +72,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     maxFields = 500;
 
+    maxPasteCellsCount = 100;
+
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         if (!activeViewId || (activeViewId && initViews.findIndex((item) => item._id === activeViewId) < 0)) {
@@ -116,6 +118,10 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     handleMaxFieldsChange() {
         this.tableService.setMaxFields(this.maxFields);
+    }
+
+    handleMaxPasteCellsCountChange() {
+        this.tableService.setMaxPasteCellsCount(this.maxPasteCellsCount);
     }
 
     updateValue() {

@@ -70,6 +70,8 @@ export class AITableGridBase implements OnInit {
 
     aiMaxRecords = input<number>(500);
 
+    aiMaxPasteCellsCount = input<number>(100);
+
     aiReferences = input.required<AITableReferences>();
 
     aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();

@@ -201,12 +201,13 @@ export const writeToAITable = async (
     if (!clipboardContent.length) {
         return result;
     }
-
+    const clipboardCellsCount = clipboardContent.length * clipboardContent[0].length;
     const [firstCell] = selectedCells;
     const [startRecordId, startFieldId] = firstCell.split(':');
 
     const maxFields = aiTable.context!.maxFields();
     const maxRecords = aiTable.context!.maxRecords();
+    const maxPasteCellsCount = aiTable.context!.maxPasteCellsCount();
 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const lastRowIndex = aiTable.context!.linearRows().length - 1;
@@ -215,17 +216,25 @@ export const writeToAITable = async (
         appendRowCount = maxRecords - lastRowIndex;
         result.isPasteOverMaxRecords = true;
     }
+    if (maxPasteCellsCount && clipboardCellsCount > maxPasteCellsCount) {
+        const pasteMaxRecordCount = Math.ceil(maxPasteCellsCount / clipboardContent[0].length);
+        appendRowCount = pasteMaxRecordCount - (lastRowIndex - startRowIndex);
+    }
     actions.addRecord({ count: appendRowCount });
 
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
     const copiedFieldLength = clipboardContent[0].length;
-    const appendColCount = copiedFieldLength - (lastColIndex - startColIndex) - 1;
-    const appendOffeset = copiedFieldLength - appendColCount;
+    let appendColCount = copiedFieldLength - (lastColIndex - startColIndex) - 1;
+    let appendOffset = copiedFieldLength - appendColCount;
+    if (maxPasteCellsCount && clipboardCellsCount > maxPasteCellsCount) {
+        appendColCount = copiedFieldLength > maxPasteCellsCount ? maxPasteCellsCount - 1 : appendColCount;
+        appendOffset = maxPasteCellsCount - appendColCount;
+    }
 
     for (let i = 0; i < appendColCount; i++) {
         if (maxFields && lastColIndex + i + 1 < maxFields) {
-            const originField = aiTableContent?.fields[appendOffeset + i] || null;
+            const originField = aiTableContent?.fields[appendOffset + i] || null;
             appendField(aiTable, originField, actions);
         } else {
             result.isPasteOverMaxFields = true;
@@ -235,6 +244,7 @@ export const writeToAITable = async (
     const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
     let visibleFields = AITable.getVisibleFields(aiTable);
+    let pasteCellsCount = 0;
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
         if (maxRecords && targetRowIndex >= maxRecords) {
@@ -242,6 +252,10 @@ export const writeToAITable = async (
             return;
         }
         row.forEach((plainText, j) => {
+            if (maxPasteCellsCount && pasteCellsCount >= maxPasteCellsCount) {
+                // 超过最大粘贴单元格数不做处理
+                return;
+            }
             const targetColIndex = startColIndex + j;
             if (maxFields && targetColIndex >= maxFields) {
                 result.isPasteOverMaxFields = true;
@@ -268,6 +282,7 @@ export const writeToAITable = async (
                     console.error('Failed to paste value:', error);
                 }
             }
+            pasteCellsCount++;
         });
     });
 

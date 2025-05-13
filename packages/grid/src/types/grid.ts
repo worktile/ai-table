@@ -125,6 +125,7 @@ export interface AITableContext {
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     maxFields: Signal<number>;
     maxRecords: Signal<number>;
+    maxPasteCellsCount: Signal<number>;
 }
 
 export enum AITableSelectAllState {

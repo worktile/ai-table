@@ -54,6 +54,8 @@ export class TableService {
 
     maxFields: WritableSignal<number> = signal(500);
 
+    maxPasteCellsCount: WritableSignal<number> = signal(100);
+
     records!: WritableSignal<AITableViewRecords>;
 
     fields!: WritableSignal<AITableViewFields>;
@@ -143,6 +145,10 @@ export class TableService {
 
     setMaxFields(maxFields: number) {
         this.maxFields.set(maxFields);
+    }
+
+    setMaxPasteCellsCount(maxPasteCellsCount: number) {
+        this.maxPasteCellsCount.set(maxPasteCellsCount);
     }
 
     setActiveView(activeViewId: string) {
