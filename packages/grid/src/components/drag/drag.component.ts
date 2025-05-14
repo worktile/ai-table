@@ -8,7 +8,6 @@ import { AITableDragState } from '../../core';
 @Component({
     selector: 'ai-table-drag',
     templateUrl: './drag.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'ai-table-drag-container'

@@ -33,7 +33,6 @@ import { DragType } from '@ai-table/utils';
             </ko-group>
         }
     `,
-    standalone: true,
     imports: [KoContainer, KoShape, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

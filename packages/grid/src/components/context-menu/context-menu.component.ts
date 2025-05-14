@@ -17,7 +17,6 @@ import { ThyNotifyService } from 'ngx-tethys/notify';
 @Component({
     selector: 'ai-table-context-menu',
     templateUrl: './context-menu.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'context-menu'

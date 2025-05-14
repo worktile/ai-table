@@ -25,7 +25,6 @@ const initViews: AITableView[] = [
 
 @Component({
     selector: 'demo-ai-table',
-    standalone: true,
     imports: [
         RouterOutlet,
         ThyAction,

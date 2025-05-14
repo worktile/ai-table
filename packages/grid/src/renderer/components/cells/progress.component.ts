@@ -40,7 +40,6 @@ import {
         ></ko-rect>
         <ko-text [config]="textConfig()"></ko-text>
     `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

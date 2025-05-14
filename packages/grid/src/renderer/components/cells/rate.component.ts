@@ -29,7 +29,6 @@ import {
             <ko-path [config]="config" (koClick)="koClick($event, index)"></ko-path>
         }
     `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

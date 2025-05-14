@@ -7,7 +7,6 @@ import { createCells } from '../creations/create-cells';
 @Component({
     selector: 'ai-table-frozen-cells',
     template: `<ko-shape [config]="frozenCellsConfig()"></ko-shape>`,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

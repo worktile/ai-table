@@ -26,7 +26,6 @@ import { AITableText } from '../text.component';
         }
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
-    standalone: true,
     imports: [AITableText, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

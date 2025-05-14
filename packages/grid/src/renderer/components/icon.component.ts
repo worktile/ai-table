@@ -14,7 +14,6 @@ import { DragType } from '@ai-table/utils';
             <ko-path [config]="iconConfig()"></ko-path>
         </ko-group>
     `,
-    standalone: true,
     imports: [KoContainer, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -36,7 +36,6 @@ import { AITableText } from './text.component';
             <ko-line [config]="fieldOpacityLineConfig()"></ko-line>
         </ko-group>
     `,
-    standalone: true,
     imports: [KoContainer, KoShape, AITableFieldIcon, AITableText, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

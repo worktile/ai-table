@@ -35,7 +35,6 @@ import { AITableIcon } from './icon.component';
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
     `,
-    standalone: true,
     imports: [KoShape, AITableFieldHead, AITableIcon, KoContainer],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
