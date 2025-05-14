@@ -194,6 +194,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     constructor() {
         super();
+
         afterNextRender(() => {
             this.setContainerRect();
             this.bindGlobalMousedown();
@@ -201,14 +202,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindWheel();
             this.bindClipboardShortcuts();
         });
+
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
                 this.bindScrollBarScroll();
             }
         });
+
         effect(() => {
             this.setKeywordsMatchedCells();
         });
+
         effect(() => {
             // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
             const activeCellPath = this.aiTable.selection().activeCell;
