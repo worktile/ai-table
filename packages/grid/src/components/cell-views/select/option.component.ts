@@ -10,7 +10,6 @@ import { AITableSelectField } from '../../../types';
 @Component({
     selector: 'select-option',
     templateUrl: './option.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'select-option thy-text',

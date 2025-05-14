@@ -28,7 +28,6 @@ import { AITableIcon } from './icon.component';
             </ko-group>
         </ko-group>
     `,
-    standalone: true,
     imports: [KoContainer, KoShape, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

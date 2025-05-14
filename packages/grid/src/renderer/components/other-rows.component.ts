@@ -15,7 +15,6 @@ import { AITableRowHeadsConfig, AITableRowType } from '../../types';
             }
         }
     `,
-    standalone: true,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

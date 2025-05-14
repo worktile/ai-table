@@ -10,7 +10,6 @@ import { AITable } from '../../core';
 @Component({
     selector: 'ai-table-field-menu',
     templateUrl: './field-menu.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'field-menu'

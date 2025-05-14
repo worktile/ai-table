@@ -46,7 +46,6 @@ import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
 @Component({
     selector: 'ai-table-grid-base',
     template: '',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableGridBase implements OnInit {

@@ -19,7 +19,6 @@ import { KO_CONTAINER_TOKEN } from './container.token';
 
 @Component({
     selector: 'ko-stage',
-    standalone: true,
     template: `<ng-content></ng-content>`,
     providers: [
         {

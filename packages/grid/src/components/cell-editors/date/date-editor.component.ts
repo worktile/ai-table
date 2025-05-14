@@ -26,7 +26,6 @@ import { DateFieldValue } from '@ai-table/utils';
         >
         </thy-date-picker>
     `,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyDatePicker, ThyTimePickerModule],
     host: {

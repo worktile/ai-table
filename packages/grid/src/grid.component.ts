@@ -81,7 +81,6 @@ import {
 @Component({
     selector: 'ai-table-grid',
     templateUrl: './grid.component.html',
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'ai-table-grid'
@@ -195,6 +194,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     constructor() {
         super();
+
         afterNextRender(() => {
             this.setContainerRect();
             this.bindGlobalMousedown();
@@ -202,53 +202,47 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindWheel();
             this.bindClipboardShortcuts();
         });
+
         effect(() => {
             if (this.hasContainerRect() && this.horizontalBarRef() && this.verticalBarRef()) {
                 this.bindScrollBarScroll();
             }
         });
-        effect(
-            () => {
-                this.setKeywordsMatchedCells();
-            },
-            { allowSignalWrites: true }
-        );
-        effect(
-            () => {
-                // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
-                const activeCellPath = this.aiTable.selection().activeCell;
-                untracked(() => {
-                    if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
-                        if (this.aiTable.recordsWillHidden().length > 0) {
-                            this.aiTable.recordsWillHidden.set([]);
-                        }
-                    }
-                });
-            },
-            { allowSignalWrites: true }
-        );
 
-        effect(
-            () => {
-                const recordIdSet = new Set<string>(this.aiTable.records().map((item) => item._id));
-                untracked(() => {
-                    const selectedRecords = this.aiTable.selection().selectedRecords;
-                    for (const selectedRecordId of selectedRecords.values()) {
-                        if (!recordIdSet.has(selectedRecordId)) {
-                            selectedRecords.delete(selectedRecordId);
-                        }
+        effect(() => {
+            this.setKeywordsMatchedCells();
+        });
+
+        effect(() => {
+            // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
+            const activeCellPath = this.aiTable.selection().activeCell;
+            untracked(() => {
+                if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
+                    if (this.aiTable.recordsWillHidden().length > 0) {
+                        this.aiTable.recordsWillHidden.set([]);
                     }
-                    this.aiTable.selection.update((item) => {
-                        return {
-                            ...item,
-                            selectedRecords,
-                            selectAllState: this.aiTableGridSelectionService.selectAllState()
-                        };
-                    });
+                }
+            });
+        });
+
+        effect(() => {
+            const recordIdSet = new Set<string>(this.aiTable.records().map((item) => item._id));
+            untracked(() => {
+                const selectedRecords = this.aiTable.selection().selectedRecords;
+                for (const selectedRecordId of selectedRecords.values()) {
+                    if (!recordIdSet.has(selectedRecordId)) {
+                        selectedRecords.delete(selectedRecordId);
+                    }
+                }
+                this.aiTable.selection.update((item) => {
+                    return {
+                        ...item,
+                        selectedRecords,
+                        selectAllState: this.aiTableGridSelectionService.selectAllState()
+                    };
                 });
-            },
-            { allowSignalWrites: true }
-        );
+            });
+        });
     }
 
     override ngOnInit(): void {

@@ -18,7 +18,6 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
             (blur)="updateValue()"
         ></textarea>
     `,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective],
     host: {

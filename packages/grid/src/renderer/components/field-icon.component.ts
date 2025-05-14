@@ -19,7 +19,6 @@ import { AITableIcon } from './icon.component';
 @Component({
     selector: 'ai-table-field-icon',
     template: ` <ai-table-icon [config]="iconConfig()"></ai-table-icon> `,
-    standalone: true,
     imports: [AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

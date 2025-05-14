@@ -20,7 +20,6 @@ import { Constructor } from 'ngx-tethys/core';
             </ko-group>
         }
     `,
-    standalone: true,
     imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
