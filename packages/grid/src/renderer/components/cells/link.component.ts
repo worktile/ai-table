@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
-import { getMousePosition, handleMouseStyle } from '../../../utils';
+import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableText } from '../text.component';
 import { AITableHoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
-import { AITable, AITableFieldType } from '../../../core';
+import { AITableFieldType } from '@ai-table/utils';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { HoverCellComponent } from '../../interfaces';

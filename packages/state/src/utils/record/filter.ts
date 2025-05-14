@@ -1,26 +1,22 @@
+import { isSystemField, FieldModelMap, AITable } from '@ai-table/grid';
+import { AIViewTable } from '../../types';
 import {
-    AITableFieldType,
-    AITableFilterCondition,
     AITableRecord,
+    AITableField,
+    AITableFieldType,
     FieldValue,
-    isSystemField,
-    SystemFieldTypes,
-    FieldModelMap,
-    isEmpty,
-    AITableFilterOperation,
     SelectSettings,
-    AITable,
-    AITableField
-} from '@ai-table/grid';
-import {
+    SystemFieldTypes,
+    AITableViewRecords,
+    AITableViewFields,
+    AITableView,
     AITableFilterConditions,
     AITableFilterLogical,
-    AITableView,
     AITableViewField,
-    AITableViewFields,
-    AITableViewRecords,
-    AIViewTable
-} from '../../types';
+    AITableFilterCondition,
+    AITableFilterOperation,
+    isEmpty
+} from '@ai-table/utils';
 
 export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const { conditions, condition_logical } = activeView.settings || {};

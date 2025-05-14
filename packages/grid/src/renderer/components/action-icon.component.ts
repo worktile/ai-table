@@ -3,7 +3,7 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import { Check, Colors, DEFAULT_ICON_SIZE, Unchecked } from '../../constants';
-import { AITableActionIconConfig, AITableCheckType, AITableIconConfig } from '../../types';
+import { AITableActionIconConfig, AITableCheckType } from '../../types';
 import { setMouseStyle } from '../../utils';
 
 @Component({

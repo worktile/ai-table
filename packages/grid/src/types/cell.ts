@@ -1,8 +1,7 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate, FieldValue, UpdateFieldValueOptions } from '../core';
-import { AITableReferences } from './grid';
 import { AITableLinearRowRecord } from './row';
-
+import { AITable, Coordinate } from '../core';
+import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions } from '@ai-table/utils';
 export interface AITableCellsConfig {
     aiTable: AITable;
     coordinate: Coordinate;
@@ -16,6 +15,7 @@ export interface AITableCellsConfig {
     };
     references?: AITableReferences;
     rowDragDisabled: boolean;
+    maxRecords: number;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
@@ -50,4 +50,5 @@ export interface AITableCell {
     isHoverRow: boolean;
     isCheckedRow: boolean;
     width?: number;
+    disabled?: boolean;
 }

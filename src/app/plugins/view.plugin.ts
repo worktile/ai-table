@@ -1,6 +1,7 @@
 import { AITable } from '@ai-table/grid';
 import { TABLE_SERVICE_MAP } from '../service/table.service';
-import { AIViewTable, AITableAction, VIEW_ACTIONS, ActionName, RemoveViewAction } from '@ai-table/state';
+import { AIViewTable, VIEW_ACTIONS } from '@ai-table/state';
+import { ActionName, AITableAction, RemoveViewAction } from '@ai-table/utils';
 
 export const withRemoveView = (aiTable: AITable) => {
     const viewTable = aiTable as AIViewTable;

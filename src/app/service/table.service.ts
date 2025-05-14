@@ -1,7 +1,4 @@
 import {
-    AITableView,
-    AITableViewFields,
-    AITableViewRecords,
     AIViewTable,
     applyYjsEvents,
     buildFieldsByView,
@@ -9,17 +6,25 @@ import {
     createSharedType,
     getSharedTypeByData,
     getDataBySharedType,
-    SharedType,
     YjsAITable,
-    getFieldsSizeMap
+    getFieldsSizeMap,
+    UndoManagerService,
+    sortViews
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
-import { AITableFieldsSizeMap, AITableFieldType, AITableValue } from '@ai-table/grid';
-import { UndoManager } from 'yjs';
+import {
+    AITableFieldsSizeMap,
+    AITableFieldType,
+    AITableValue,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    SharedType
+} from '@ai-table/utils';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -29,15 +34,25 @@ export const TABLE_SERVICE_MAP = new WeakMap<AIViewTable, TableService>();
 @Injectable()
 export class TableService {
     views!: WritableSignal<AITableView[]>;
-    private undoManager: UndoManager | null = null;
+    private undoManagerService = inject(UndoManagerService);
 
-    canUndo: WritableSignal<boolean> = signal<boolean>(false);
+    get canUndoCount() {
+        return this.undoManagerService.canUndoCount;
+    }
 
-    canRedo: WritableSignal<boolean> = signal<boolean>(false);
+    get canRedoCount() {
+        return this.undoManagerService.canRedoCount;
+    }
 
     readonly: WritableSignal<boolean> = signal(false);
 
     rowDragDisabled: WritableSignal<boolean> = signal(false);
+
+    hiddenIndexColumn: WritableSignal<boolean> = signal(false);
+
+    maxRecords: WritableSignal<number> = signal(500);
+
+    maxFields: WritableSignal<number> = signal(500);
 
     records!: WritableSignal<AITableViewRecords>;
 
@@ -88,6 +103,10 @@ export class TableService {
         return getFieldsSizeMap(this.renderFields(), this.activeView());
     });
 
+    sortedViews = computed(() => {
+        return sortViews(this.views());
+    });
+
     keywords = computed(() => {
         return this.activeView().settings?.keywords;
     });
@@ -112,6 +131,18 @@ export class TableService {
 
     setRowDragDisabled(rowDragDisabled: boolean) {
         this.rowDragDisabled.set(rowDragDisabled);
+    }
+
+    setHiddenIndexColumn(hiddenIndexColumn: boolean) {
+        this.hiddenIndexColumn.set(hiddenIndexColumn);
+    }
+
+    setMaxRecords(maxRecords: number) {
+        this.maxRecords.set(maxRecords);
+    }
+
+    setMaxFields(maxFields: number) {
+        this.maxFields.set(maxFields);
     }
 
     setActiveView(activeViewId: string) {
@@ -180,20 +211,7 @@ export class TableService {
         if (!this.sharedType || !this.aiTable) {
             return;
         }
-        this.undoManager = new UndoManager(this.sharedType, {
-            trackedOrigins: new Set([this.aiTable]),
-            captureTimeout: 200
-        });
-
-        this.undoManager.on('stack-item-added', () => {
-            this.canUndo.set(this.undoManager!.canUndo());
-            this.canRedo.set(this.undoManager!.canRedo());
-        });
-
-        this.undoManager.on('stack-item-popped', () => {
-            this.canUndo.set(this.undoManager!.canUndo());
-            this.canRedo.set(this.undoManager!.canRedo());
-        });
+        this.undoManagerService.initialize(this.sharedType, this.aiTable);
     }
 
     disconnect() {
@@ -201,18 +219,15 @@ export class TableService {
             this.provider.disconnect();
             this.provider = null;
             this.sharedType = null;
+            this.undoManagerService.destroy();
         }
     }
 
     undo() {
-        if (this.undoManager?.canUndo()) {
-            this.undoManager.undo();
-        }
+        this.undoManagerService.undo();
     }
 
     redo() {
-        if (this.undoManager?.canRedo()) {
-            this.undoManager.redo();
-        }
+        this.undoManagerService.redo();
     }
 }

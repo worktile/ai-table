@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { routes } from './app.routes';
 import { THY_NOTIFY_DEFAULT_CONFIG_PROVIDER } from 'ngx-tethys/notify';
+import { UndoManagerService } from '@ai-table/state';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(),
         provideAnimations(),
         provideRouter(routes),
-        THY_NOTIFY_DEFAULT_CONFIG_PROVIDER
+        THY_NOTIFY_DEFAULT_CONFIG_PROVIDER,
+        UndoManagerService
     ]
 };

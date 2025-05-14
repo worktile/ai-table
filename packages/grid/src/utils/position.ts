@@ -1,8 +1,9 @@
-import { AI_TABLE_BLANK, AI_TABLE_CELL_ACTIVE_BORDER_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
-import { AITable, AITableField, Coordinate, RendererContext } from '../core';
+import { AI_TABLE_BLANK, AI_TABLE_CELL_ACTIVE_BORDER_WIDTH, AI_TABLE_OFFSET } from '../constants';
+import { AITable, Coordinate, RendererContext } from '../core';
 import { AITableAreaType } from '../types';
 import { getTargetName } from './common';
 import { scrollMax } from './visible-range';
+import { AITableField } from '@ai-table/utils';
 
 export const getMousePosition = (
     aiTable: AITable,
@@ -17,7 +18,7 @@ export const getMousePosition = (
     const { scrollMaxWidth, scrollMaxHeight } = scrollMax(aiTable, coordinate, fields);
     const offsetTop = scrollTop + y;
     const rowIndex = coordinate.getRowStartIndex(offsetTop);
-    const offsetLeft = isWithinFrozenColumnBoundary(x, coordinate.frozenColumnWidth) ? x : scrollLeft + x;
+    const offsetLeft = isWithinFrozenColumnBoundary(x, coordinate.frozenColumnWidth, context.rowHeadWidth()) ? x : scrollLeft + x;
     const columnIndex = coordinate.getColumnStartIndex(offsetLeft);
     const areaType = offsetLeft <= scrollMaxWidth && offsetTop <= scrollMaxHeight ? AITableAreaType.grid : AITableAreaType.none;
     const targetName = getTargetName(_targetName);
@@ -34,9 +35,9 @@ export const getMousePosition = (
     };
 };
 
-export const isWithinFrozenColumnBoundary = (x: number, frozenColumnWidth: number) => {
-    const max = AI_TABLE_ROW_HEAD_WIDTH + frozenColumnWidth;
-    const min = AI_TABLE_ROW_HEAD_WIDTH;
+export const isWithinFrozenColumnBoundary = (x: number, frozenColumnWidth: number, rowHeadWidth: number) => {
+    const max = rowHeadWidth + frozenColumnWidth;
+    const min = rowHeadWidth;
     return x > min && x < max;
 };
 

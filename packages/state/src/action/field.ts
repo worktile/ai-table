@@ -1,17 +1,32 @@
-import { AITableField, AITableQueries, IdPath, NumberPath } from '@ai-table/grid';
-import { ActionName, AddFieldAction, RemoveFieldAction, SetFieldAction, AIViewTable } from '../types';
-import { AITableViewField } from '../types/view';
+import { AITableQueries } from '@ai-table/grid';
+import {
+    ActionName,
+    AddFieldAction,
+    RemoveFieldAction,
+    SetFieldAction,
+    AITableViewField,
+    AITableField,
+    IdPath,
+    NumberPath
+} from '@ai-table/utils';
 import { isPathEqual } from '../utils';
 import { getFieldPositionInView } from '../utils/field/position-field';
+import { AIViewTable } from '../types/ai-table';
 
-export function addField(aiTable: AIViewTable, field: AITableField, path: NumberPath, originId?: string, isCopy?: boolean) {
+export function addField(aiTable: AIViewTable, field: AITableField, originId?: string, isDuplicate?: boolean) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,
         field,
-        path,
         originId,
-        isCopy
+        isDuplicate
     };
+    const existField = aiTable.fields().some((item) => {
+        return item._id === field._id;
+    });
+    if (existField) {
+        console.error(`Field with id ${field._id} already exists.`, field);
+        throw new Error(`Field with id ${field._id} already exists.`);
+    }
     aiTable.apply(operation);
 }
 

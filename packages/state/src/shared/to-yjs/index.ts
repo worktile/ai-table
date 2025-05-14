@@ -1,9 +1,9 @@
 import { AITable } from '@ai-table/grid';
 import updateFieldValue from './update-field-value';
-import { ActionName, AITableAction, SharedType } from '../../types';
 import setNode from './set-node';
 import addNode from './add-node';
 import removeNode from './remove-node';
+import { ActionName, AITableAction, SharedType } from '@ai-table/utils';
 
 export type ActionMapper<O extends AITableAction = AITableAction> = {
     [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;

@@ -2,15 +2,32 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "rootDir": "src",
         "outDir": "../../out-tsc/lib",
         "target": "es2020",
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
-        "lib": ["dom", "ES2022"],
+        "lib": [
+            "dom",
+            "ES2022"
+        ],
+        "baseUrl": "../../",
         "paths": {
-            "@ai-table/grid": ["dist/grid"]
+            "@ai-table/grid": [
+                "dist/grid"
+            ],
+            "@ai-table/utils": [
+                "dist/utils"
+            ],
+            "@ai-table/utils/*": [
+                "dist/utils/*"
+            ]
         }
     },
-    "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"]
+    "exclude": [
+        "test.ts",
+        "core/**/**",
+        "**/*.spec.ts"
+    ]
 }

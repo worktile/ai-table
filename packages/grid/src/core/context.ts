@@ -1,15 +1,9 @@
 import { Signal, WritableSignal } from '@angular/core';
-import {
-    AIFieldConfig,
-    AITableContext,
-    AITableLinearRow,
-    AITablePointPosition,
-    AITableReferences,
-    AITableScrollState,
-    ScrollActionOptions
-} from '../types';
+import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
+import { AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
+    rowHeadWidth: Signal<number>;
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
     scrollState: WritableSignal<AITableScrollState>;
@@ -19,9 +13,12 @@ export class RendererContext {
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     scrollAction: (options: ScrollActionOptions) => void;
+    maxFields: Signal<number>;
+    maxRecords: Signal<number>;
 
     constructor(options: AITableContext) {
         const {
+            rowHeadWidth,
             linearRows,
             pointPosition,
             scrollState,
@@ -30,8 +27,11 @@ export class RendererContext {
             frozenColumnCount,
             references,
             aiFieldConfig,
-            scrollAction
+            scrollAction,
+            maxFields,
+            maxRecords
         } = options;
+        this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;
         this.scrollState = scrollState;
@@ -41,6 +41,8 @@ export class RendererContext {
         this.frozenColumnCount = frozenColumnCount;
         this.references = references;
         this.aiFieldConfig = aiFieldConfig;
+        this.maxFields = maxFields;
+        this.maxRecords = maxRecords;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

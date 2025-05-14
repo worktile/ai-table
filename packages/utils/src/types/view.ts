@@ -1,4 +1,4 @@
-import { AITableField, AITableRecord, Direction, Id } from './core';
+import { AITableField, AITableRecord, Id } from './core';
 
 export class Positions {
     [view_id: string]: number;
@@ -10,10 +10,12 @@ export class RemovePositions {
 
 export interface AITableViewRecord extends AITableRecord {
     positions: Positions;
+    widths?: Record<Id, number>;
 }
 
 export interface AITableViewField extends AITableField {
     positions: Positions;
+    widths?: Record<Id, number>;
 }
 
 export type AITableViewRecords = AITableViewRecord[];
@@ -33,6 +35,7 @@ export interface AITableView {
     name: string;
     emoji_icon?: string;
     settings?: ViewSettings;
+    position?: number;
     [key: string]: any;
 }
 
@@ -45,7 +48,7 @@ export interface AITableSortOptions {
     is_keep_sort?: boolean;
     sorts?: {
         sort_by: Id;
-        direction: Direction;
+        direction: SortDirection;
     }[];
 }
 
@@ -78,3 +81,8 @@ export interface AITableFilterCondition<TValue = unknown> {
     value: TValue;
 }
 
+export enum SortDirection {
+    default = 0,
+    ascending = 1,
+    descending = -1
+}

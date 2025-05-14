@@ -1,4 +1,13 @@
-import { AITable, AITableContextMenuItem, AITableGridI18nKey, AITableGridSelectionService, AITableActions, getI18nTextByKey, isMac, writeToAITable } from '@ai-table/grid';
+import {
+    AITable,
+    AITableContextMenuItem,
+    AITableGridI18nKey,
+    AITableGridSelectionService,
+    AITableActions,
+    getI18nTextByKey,
+    isMac,
+    writeToAITable
+} from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
@@ -71,11 +80,23 @@ export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITa
             aiTableGridSelectionService: AITableGridSelectionService,
             notifyService: ThyNotifyService
         ) => {
-            writeToAITable(aiTable, actions).then((isPasteSuccess) => {
-                if (!isPasteSuccess) {
+            writeToAITable(aiTable, actions).then((result) => {
+                if (!result.isPasteSuccess) {
                     notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.invalidPasteContent), undefined, {
                         placement: 'bottomLeft'
                     });
+                }
+                if (result.isPasteOverMaxRecords) {
+                    notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.pasteOverMaxRecords), undefined, {
+                        placement: 'bottomLeft'
+                    });
+                    console.warn('Pasting exceeds maximum records limit');
+                }
+                if (result.isPasteOverMaxFields) {
+                    notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.pasteOverMaxFields), undefined, {
+                        placement: 'bottomLeft'
+                    });
+                    console.warn('Pasting exceeds maximum fields limit');
                 }
             });
         }

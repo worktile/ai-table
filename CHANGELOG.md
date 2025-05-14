@@ -2,6 +2,132 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.73](https://github.com/worktile/ai-table/compare/0.0.72...0.0.73) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** correct getValuesByCustomFieldValues logic #WIK-17912 ([#453](https://github.com/worktile/ai-table/issues/453)) ([ebe2f21](https://github.com/worktile/ai-table/commit/ebe2f214d9f7e5ed7620e03484a5034350e49297)), closes [#WIK-17912](https://github.com/worktile/ai-table/issues/WIK-17912)
+
+
+
+## [0.0.72](https://github.com/worktile/ai-table/compare/0.0.71...0.0.72) (2025-05-09)
+
+
+### Bug Fixes
+
+* **utils:** #WIK-17722 coordinate changes to the updater ([#451](https://github.com/worktile/ai-table/issues/451)) ([67c84f2](https://github.com/worktile/ai-table/commit/67c84f2e210c3f0afdc2411b2cea769720a88c6a)), closes [#WIK-17722](https://github.com/worktile/ai-table/issues/WIK-17722)
+
+
+
+## [0.0.71](https://github.com/worktile/ai-table/compare/0.0.70...0.0.71) (2025-05-09)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17900 drag columns do not cross the freezing border ([#448](https://github.com/worktile/ai-table/issues/448)) ([7750c70](https://github.com/worktile/ai-table/commit/7750c702c235bb4b466cfb0686d9174d1aebf623)), closes [#WIK-17900](https://github.com/worktile/ai-table/issues/WIK-17900)
+* fix isEmpty because  lodash treating number as empty ([#447](https://github.com/worktile/ai-table/issues/447)) ([62bb8f3](https://github.com/worktile/ai-table/commit/62bb8f38b048eef007563214518355608d1e60ed))
+
+
+### Features
+
+* should not update updated_at and updated_by when add field or remove field #WIK-17903 ([#449](https://github.com/worktile/ai-table/issues/449)) ([7fad1da](https://github.com/worktile/ai-table/commit/7fad1da70222978dd75d646cc3d5f42b16d0dab4)), closes [#WIK-17903](https://github.com/worktile/ai-table/issues/WIK-17903)
+
+
+
+## [0.0.70](https://github.com/worktile/ai-table/compare/0.0.69...0.0.70) (2025-05-08)
+
+
+### Features
+
+* **utils:** support to handle ghost cells ([#429](https://github.com/worktile/ai-table/issues/429)) ([7830980](https://github.com/worktile/ai-table/commit/7830980d47f3c2f2bc74eb871190733713408d73))
+
+
+
+## [0.0.69](https://github.com/worktile/ai-table/compare/0.0.68...0.0.69) (2025-05-07)
+
+
+### Features
+
+* #WIK-17886 utils-transformValue处理 ([#433](https://github.com/worktile/ai-table/issues/433)) ([f2c59a2](https://github.com/worktile/ai-table/commit/f2c59a27b63f0008e66cf721d2c8c81a3c389014)), closes [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886) [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886) [#WIK-17886](https://github.com/worktile/ai-table/issues/WIK-17886)
+
+
+
+## [0.0.68](https://github.com/worktile/ai-table/compare/0.0.67...0.0.68) (2025-05-07)
+
+
+### Features
+
+* #WIK-17884 【AiTable】支持隐藏序号列 ([0df7272](https://github.com/worktile/ai-table/commit/0df7272f0e104f88e9758d5467ab6b37c7fba82d)), closes [#WIK-17884](https://github.com/worktile/ai-table/issues/WIK-17884)
+
+
+
+## [0.0.67](https://github.com/worktile/ai-table/compare/0.0.66...0.0.67) (2025-05-06)
+
+
+### Bug Fixes
+
+* #WIK-17677 🔗字段赋值后，点击 ai-table 意外区域后面的 icon 无法取消（ai-table 区域可以） ([#408](https://github.com/worktile/ai-table/issues/408)) ([8d95034](https://github.com/worktile/ai-table/commit/8d95034919ced2c9eba1132fae524c0c8629befb)), closes [#WIK-17677](https://github.com/worktile/ai-table/issues/WIK-17677)
+* #WIK-17881 文本、选择字段双击编辑报错 ([#427](https://github.com/worktile/ai-table/issues/427)) ([e72f1c2](https://github.com/worktile/ai-table/commit/e72f1c2f9a7b1c31684e1835c98c9028d2da8bfd)), closes [#WIK-17881](https://github.com/worktile/ai-table/issues/WIK-17881)
+* **action:** add field error #WIK-17859 ([6d74c80](https://github.com/worktile/ai-table/commit/6d74c80857ac9f6921728f29cb1c094bf515df99)), closes [#WIK-17859](https://github.com/worktile/ai-table/issues/WIK-17859)
+
+
+### Features
+
+* #WIK-17780 前端改造接入 utils 库 ([#415](https://github.com/worktile/ai-table/issues/415)) ([30a0716](https://github.com/worktile/ai-table/commit/30a07169552d704b1be90b1c78d2541c5591bbf6)), closes [#WIK-17780](https://github.com/worktile/ai-table/issues/WIK-17780)
+* #WIK-17858 撤销重做 重构 ([#412](https://github.com/worktile/ai-table/issues/412)) ([8a20330](https://github.com/worktile/ai-table/commit/8a2033028fd9cbc1401f47684dc6689a0f3bb43b)), closes [#WIK-17858](https://github.com/worktile/ai-table/issues/WIK-17858)
+* #WIK-17869 前端-type类型接入utils库中的type ([#423](https://github.com/worktile/ai-table/issues/423)) ([2617a9a](https://github.com/worktile/ai-table/commit/2617a9a57d1f36c57b74b4df3d99cea8e60b25d6)), closes [#WIK-17869](https://github.com/worktile/ai-table/issues/WIK-17869)
+* improve demo ([#419](https://github.com/worktile/ai-table/issues/419)) ([4dcb03b](https://github.com/worktile/ai-table/commit/4dcb03b9869a4b3068f0f3d04527d3dec942c241))
+* remove AI_TABLE_CONTENT_FIELD_NAME from state ([711af17](https://github.com/worktile/ai-table/commit/711af1725988648c9206a53822bc5759555ef776))
+* **utils:** move array-event(to-table) to utils package #WIK-17878 ([#426](https://github.com/worktile/ai-table/issues/426)) ([9e34720](https://github.com/worktile/ai-table/commit/9e34720b169b5079f9dc1eadb7bec54180b5aa96)), closes [#WIK-17878](https://github.com/worktile/ai-table/issues/WIK-17878)
+
+
+
+## [0.0.66](https://github.com/worktile/ai-table/compare/0.0.65...0.0.66) (2025-04-27)
+
+
+### Bug Fixes
+
+* **drag:** add prefix for drag-container class #WIK-17855 ([99cae77](https://github.com/worktile/ai-table/commit/99cae772d6d81740a82fee10f1f2760a0c8f4cad)), closes [#WIK-17855](https://github.com/worktile/ai-table/issues/WIK-17855)
+
+
+
+## [0.0.65](https://github.com/worktile/ai-table/compare/0.0.64...0.0.65) (2025-04-27)
+
+
+### Bug Fixes
+
+* **drag:** #WIK-17847 fix column drag line position when dragging to frozen column area ([#407](https://github.com/worktile/ai-table/issues/407)) ([a44ffb6](https://github.com/worktile/ai-table/commit/a44ffb6cb8d0d9cdbb4271c7325c448344d531a9))
+* **grid:** #WIK-17850 fix potential null references ([3ebfc3e](https://github.com/worktile/ai-table/commit/3ebfc3e4c620e933c33802881a04cbc54f1850da))
+* **grid:** should not paste empty option and  fix array access out of bounds error ([#405](https://github.com/worktile/ai-table/issues/405)) ([d8f9eb2](https://github.com/worktile/ai-table/commit/d8f9eb205e7df801feb4bc2a5c9ed77417f61703))
+* **grid:** show blank when first create table ([#409](https://github.com/worktile/ai-table/issues/409)) ([b394418](https://github.com/worktile/ai-table/commit/b3944189d765a45d572a5a534d4817e36be09e18))
+
+
+### Features
+
+* **grid:** the field name manually entered by the user should not be overwritten after modifying the field type ([#406](https://github.com/worktile/ai-table/issues/406)) ([9d9e868](https://github.com/worktile/ai-table/commit/9d9e868dc14ae456593d13fb08849c0fe0f492f5))
+
+
+
+## [0.0.64](https://github.com/worktile/ai-table/compare/0.0.63...0.0.64) (2025-04-25)
+
+
+### Bug Fixes
+
+* **grid:** should not cancel user's selection rows when click table row head ([#402](https://github.com/worktile/ai-table/issues/402)) ([a6ccb3f](https://github.com/worktile/ai-table/commit/a6ccb3f99887da776c8c41405faa8e47b5fc02c0))
+
+
+
+## [0.0.63](https://github.com/worktile/ai-table/compare/0.0.62...0.0.63) (2025-04-25)
+
+
+### Bug Fixes
+
+* #WIK-17809 数据异常 AITableText ([#399](https://github.com/worktile/ai-table/issues/399)) ([4053b6c](https://github.com/worktile/ai-table/commit/4053b6c49063f3f5e0b79b55475d3a7dbf85de9f)), closes [#WIK-17809](https://github.com/worktile/ai-table/issues/WIK-17809)
+* **field:** add existence check for fields in addField function ([#400](https://github.com/worktile/ai-table/issues/400)) ([43c2972](https://github.com/worktile/ai-table/commit/43c29723ba992e0b9c432b38777e14fdbfa15c6d))
+
+
+
 ## [0.0.62](https://github.com/worktile/ai-table/compare/0.0.61...0.0.62) (2025-04-24)
 
 

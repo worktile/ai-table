@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
-import { AI_TABLE_ROW_HEAD_WIDTH } from '../constants';
 import { AITable } from '../core';
 import { AITableCellsConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
@@ -69,6 +68,10 @@ export class AITableRenderer {
         return this.config()?.readonly;
     });
 
+    hiddenIndexColumn = computed(() => {
+        return this.config()?.aiTable.context?.aiFieldConfig()?.hiddenIndexColumn;
+    });
+
     rowDragDisabled = computed(() => {
         return this.config()?.rowDragDisabled;
     });
@@ -94,7 +97,7 @@ export class AITableRenderer {
     });
 
     frozenAreaWidth = computed(() => {
-        return AI_TABLE_ROW_HEAD_WIDTH + this.coordinate()!.frozenColumnWidth!;
+        return this.config().aiTable!.context!.rowHeadWidth() + this.coordinate()!.frozenColumnWidth!;
     });
 
     lastColumnWidth = computed(() => {
@@ -138,8 +141,8 @@ export class AITableRenderer {
 
     attachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
-            clipX: this.frozenAreaWidth() - 1,
-            clipY: this.coordinate()!.rowInitSize - 1,
+            clipX: this.frozenAreaWidth() + 1,
+            clipY: this.coordinate()!.rowInitSize + 1,
             clipWidth: this.containerWidth() - this.frozenAreaWidth(),
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
@@ -178,7 +181,7 @@ export class AITableRenderer {
 
     columnHeadOrAddFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
-        const { aiTable, coordinate, readonly } = this.config();
+        const { aiTable, coordinate, readonly, maxFields } = this.config();
         const { pointPosition } = aiTable.context!;
         const fields = this.fields();
         return {
@@ -188,12 +191,13 @@ export class AITableRenderer {
             columnStartIndex,
             columnStopIndex,
             pointPosition: pointPosition(),
-            readonly
+            readonly,
+            maxFields
         };
     });
 
     cellsConfig = computed<AITableCellsConfig>(() => {
-        const { aiTable, readonly, coordinate, references, actions, rowDragDisabled } = this.config();
+        const { aiTable, readonly, coordinate, references, actions, rowDragDisabled, maxRecords } = this.config();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
@@ -205,7 +209,8 @@ export class AITableRenderer {
             columnStartIndex,
             columnStopIndex,
             actions,
-            rowDragDisabled
+            rowDragDisabled,
+            maxRecords
         };
     });
 

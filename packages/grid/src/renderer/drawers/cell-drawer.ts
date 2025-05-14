@@ -1,4 +1,4 @@
-import _, { isNil } from 'lodash';
+import _ from 'lodash';
 import {
     AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
@@ -49,7 +49,8 @@ import {
     AI_TABLE_RATE_MAX,
     StarFill
 } from '../../constants';
-import { AITable, AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, RateFieldValue } from '../../core';
+import { AITable } from '../../core';
+import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isUndefinedOrNull } from '@ai-table/utils';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
 import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
@@ -118,7 +119,7 @@ export class CellDrawer extends Drawer {
 
     private renderCellText(render: AITableRender, ctx?: any) {
         const { x, y, transformValue, field, columnWidth, style } = render;
-        if (isNil(transformValue)) {
+        if (isUndefinedOrNull(transformValue)) {
             return;
         }
         const fieldType = field.type;
@@ -500,7 +501,7 @@ export class CellDrawer extends Drawer {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
 
-        if (isNil(transformValue)) {
+        if (isUndefinedOrNull(transformValue)) {
             return;
         }
 
@@ -552,7 +553,7 @@ export class CellDrawer extends Drawer {
         const { x, y, transformValue, columnWidth, style } = render;
         const colors = AITable.getColors();
         let validateTransformValue = transformValue;
-        if (isNil(validateTransformValue)) {
+        if (isUndefinedOrNull(validateTransformValue)) {
             validateTransformValue = 0;
         }
         const width = columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_PROGRESS_TEXT_WIDTH;
@@ -709,7 +710,7 @@ export class CellDrawer extends Drawer {
 
     private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
         const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive } = render;
-        if (isNil(transformValue)) {
+        if (isUndefinedOrNull(transformValue)) {
             return;
         }
 

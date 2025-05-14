@@ -1,6 +1,7 @@
-import { AITable, AITableFields, AITableRecords, getFieldOptions } from '../core';
+import { AITable, getFieldOptions } from '../core';
 import { AITableGridData, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/row';
+import { AITableFields, AITableRecords } from '@ai-table/utils';
 
 export const buildGridLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
     const linearRows: AITableLinearRow[] = [];

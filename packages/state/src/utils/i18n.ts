@@ -9,7 +9,9 @@ export enum AITableStateI18nKey {
     invalidPasteContent = 'invalidPasteContent',
     tableView = 'tableView',
     editField = 'editField',
-    removeField = 'removeField'
+    removeField = 'removeField',
+    pasteOverMaxRecords = 'pasteOverMaxRecords',
+    pasteOverMaxFields = 'pasteOverMaxFields'
 }
 
 const AITableI18nText = {
@@ -21,7 +23,9 @@ const AITableI18nText = {
     [AITableStateI18nKey.invalidPasteContent]: '粘贴内容不符合当前类型',
     [AITableStateI18nKey.tableView]: '表格视图',
     [AITableStateI18nKey.editField]: '编辑列',
-    [AITableStateI18nKey.removeField]: '删除列'
+    [AITableStateI18nKey.removeField]: '删除列',
+    [AITableStateI18nKey.pasteOverMaxRecords]: '粘贴数据超过最大行数',
+    [AITableStateI18nKey.pasteOverMaxFields]: '粘贴数据超过最大列数'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {

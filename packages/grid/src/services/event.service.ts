@@ -6,10 +6,11 @@ import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../constants';
-import { AIRecordFieldIdPath, AITable, AITableFieldType } from '../core';
+import { AITable } from '../core';
 import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
 import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, getHoverEditorBoxOffset, getHoverEditorSpace } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
+import { AITableFieldType, AIRecordFieldIdPath } from '@ai-table/utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -163,7 +164,8 @@ export class AITableGridEventService {
 
     openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
         const { container, recordId, fieldId, isHoverEdit, references } = options;
-        const { component, isInternalComponent } = this.getEditorComponent(this.aiTable.fieldsMap()[fieldId].type);
+        const fieldType = this.aiTable.fieldsMap()[fieldId].type;
+        const { component, isInternalComponent } = this.getEditorComponent(fieldType);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             viewContainerRef: isInternalComponent ? undefined : options?.viewContainerRef,
@@ -181,7 +183,7 @@ export class AITableGridEventService {
                 aiTable: aiTable
             },
             panelClass: 'grid-cell-editor',
-            outsideClosable: false,
+            outsideClosable: fieldType === AITableFieldType.link ? true : false,
             hasBackdrop: false,
             manualClosure: true,
             animationDisabled: true,

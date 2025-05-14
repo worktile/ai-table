@@ -1,4 +1,5 @@
-import { isEmpty } from '../common';
+import { AITableFilterCondition, AITableFilterOperation, AITableField, FieldValue, isEmpty } from '@ai-table/utils';
+import { AITable } from '../../core';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
 
@@ -51,4 +52,37 @@ export function hasIntersect<T extends number | string>(array1: T[], array2: T[]
         }
     }
     return false;
+}
+
+export function isMeetFilter(
+    condition: AITableFilterCondition,
+    cellValue: FieldValue,
+    options?: {
+        aiTable: AITable;
+        field: AITableField;
+    }
+) {
+    switch (condition.operation) {
+        case AITableFilterOperation.empty:
+        case AITableFilterOperation.exists: {
+            return isEmptyOrNot(condition.operation, cellValue);
+        }
+        default: {
+            return true;
+        }
+    }
+}
+
+export function isEmptyOrNot(operation: AITableFilterOperation.empty | AITableFilterOperation.exists, cellValue: FieldValue) {
+    switch (operation) {
+        case AITableFilterOperation.empty: {
+            return isEmpty(cellValue);
+        }
+        case AITableFilterOperation.exists: {
+            return !isEmpty(cellValue);
+        }
+        default: {
+            throw new Error('compare operator type error');
+        }
+    }
 }

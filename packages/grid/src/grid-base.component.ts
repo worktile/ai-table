@@ -21,28 +21,27 @@ import { DBL_CLICK_EDIT_TYPE } from './constants';
 import {
     AddFieldOptions,
     AddRecordOptions,
-    AIPlugin,
-    AITable,
     AITableField,
     AITableFields,
+    AITableFieldsSizeMap,
     AITableFieldType,
     AITableRecords,
+    AITableReferences,
     AITableSelectOptionStyle,
     AITableValue,
-    createAITable,
-    createDefaultField,
     MoveFieldOptions,
     MoveRecordOptions,
     SetFieldWidthOptions,
     UpdateFieldValueOptions
-} from './core';
+} from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
 import { AITableGridSelectionService } from './services/selection.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableReferences, AITableFieldsSizeMap } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
+import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -65,6 +64,10 @@ export class AITableGridBase implements OnInit {
     aiRowDragDisabled = input<boolean>(false);
 
     aiPlugins = input<AIPlugin[]>();
+
+    aiMaxFields = input<number>(500);
+
+    aiMaxRecords = input<number>(500);
 
     aiReferences = input.required<AITableReferences>();
 
@@ -157,12 +160,13 @@ export class AITableGridBase implements OnInit {
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
     }
 
-    addRecord() {
+    addRecord(options?: AddRecordOptions) {
         const records = this.aiTable.gridData().records;
         const recordCount = records.length;
-        this.aiAddRecord.emit({
-            originId: recordCount > 0 ? records[records.length - 1]._id : ''
-        });
+        if (recordCount >= this.aiMaxRecords()) {
+            return;
+        }
+        this.aiAddRecord.emit(options || {});
     }
 
     selectRecord(recordId: string) {
@@ -174,6 +178,9 @@ export class AITableGridBase implements OnInit {
     }
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
+        if (this.aiTable.gridData().fields.length >= this.aiMaxFields()) {
+            return;
+        }
         const field = createDefaultField(this.aiTable, AITableFieldType.text);
         const popoverRef = this.aiTableGridFieldService.editFieldProperty(this.aiTable, {
             field,

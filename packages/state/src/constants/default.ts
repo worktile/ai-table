@@ -1,1 +1,0 @@
-export const AI_TABLE_CONTENT_FIELD_NAME = 'content';

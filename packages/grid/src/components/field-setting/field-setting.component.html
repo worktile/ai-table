@@ -7,6 +7,7 @@
                 name="fieldName"
                 [maxlength]="fieldMaxLength"
                 [(ngModel)]="aiEditField().name"
+                (ngModelChange)="nameChange($event)"
                 required
                 [placeholder]="i18nTexts().columnNamePlaceholder"
                 [thyUniqueCheck]="checkUniqueName"
@@ -36,7 +37,7 @@
 
         @if (selectedFieldOption().type === aITableFieldType.member) {
             <div class="d-flex justify-content-between mt-3">
-                {{i18nTexts().allowMultipleMembers}}
+                {{ i18nTexts().allowMultipleMembers }}
                 <thy-switch
                     name="isMultipleMember"
                     [thyDisabled]="isUpdate()"
@@ -51,8 +52,8 @@
         <ng-container *ngTemplateOutlet="aiExternalTemplate()"></ng-container>
     }
     <thy-form-group-footer thyAlign="right">
-        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">{{i18nTexts().cancel}}</button>
-        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">{{i18nTexts().confirm}}</button>
+        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">{{ i18nTexts().cancel }}</button>
+        <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">{{ i18nTexts().confirm }}</button>
     </thy-form-group-footer>
 </form>
 

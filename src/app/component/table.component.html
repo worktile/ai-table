@@ -12,11 +12,26 @@
         ><input type="checkbox" [checked]="readonly" (change)="handleReadonlyChange($event)" /><span class="pl-1 pt-1">只读</span></label
     >
     <label class="mb-0 ml-2 d-flex align-items-center"
-        ><input type="checkbox" [checked]="rowDragDisabled" (change)="handleRowDragDisabledChange($event)" /><span class="pl-1 pt-1">禁用行拖拽</span></label
+        ><input type="checkbox" [checked]="rowDragDisabled" (change)="handleRowDragDisabledChange($event)" /><span class="pl-1 pt-1"
+            >禁用行拖拽</span
+        ></label
     >
+    <label class="mb-0 ml-2 d-flex align-items-center"
+        ><input type="checkbox" [checked]="hiddenIndexColumn" (change)="handleHiddenIndexColumnChange($event)" /><span class="pl-1 pt-1"
+            >隐藏索引列</span
+        ></label
+    >
+    <label class="mb-0 ml-2 d-flex align-items-center"
+        ><span class="pr-1 pt-1">最大列数</span
+        ><input type="number" style="width: 50px" [(ngModel)]="maxFields" (change)="handleMaxFieldsChange()"
+    /></label>
+    <label class="mb-0 ml-2 d-flex align-items-center"
+        ><span class="pr-1 pt-1">最大行数</span
+        ><input type="number" style="width: 50px" [(ngModel)]="maxRecords" (change)="handleMaxRecordsChange()"
+    /></label>
 </div>
 <thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeViewId()">
-    @for (item of tableService.views(); let index = $index; track $index) {
+    @for (item of tableService.sortedViews(); let index = $index; track $index) {
         <thy-tab [thyTitle]="item.name" [id]="item._id">
             @if (item._id === tableService.activeViewId()) {
                 <ng-template #title>
@@ -52,7 +67,7 @@
     <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
         <span>重命名</span>
     </a>
-    <a thyDropdownMenuItem href="javascript:;" (click)="addView('copy')">
+    <a thyDropdownMenuItem href="javascript:;" (click)="addView('duplicate')">
         <span>复制</span>
     </a>
     <a thyDropdownMenuItem class="remove-icon" href="javascript:;" (click)="removeView()">

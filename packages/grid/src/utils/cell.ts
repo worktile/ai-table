@@ -1,7 +1,7 @@
-import { AITable, AITableField, AITableFieldOption, FieldValue, getFieldOptionByField } from '../core';
+import { AITableField, AITableFieldOption, AITableSizeMap, FieldValue } from '@ai-table/utils';
+import { AITable, getFieldOptionByField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
-import { AITableSizeMap } from '../types';
-import { FieldModelMap } from './field/model';
+import { FieldModelMap } from './field';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
@@ -21,6 +21,9 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
     return { width: columnWidth, offset: 0 };
 }
 
+// @deprecated 请使用 FieldModelMap 的 transformCellValue 方法
+// const fieldModel = FieldModelMap[field.type];
+// const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
 export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T | null {
     const fieldModel = FieldModelMap[field.type];
     if (!fieldModel.isValid(cellValue)) {

@@ -1,16 +1,26 @@
-import { AITable, AITableField, AITableFieldType, FieldValue, RichTextFieldValue } from '../../../core';
-import { AITableFilterCondition, AITableFilterOperation, AITableReferences } from '../../../types';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableFilterCondition,
+    AITableFilterOperation,
+    AITableReferences,
+    FieldOptions,
+    FieldValue,
+    RichTextFieldValue,
+    RichTextFieldBase,
+    isEmpty
+} from '@ai-table/utils';
 import { transformCellValue } from '../../cell';
-import { isEmpty } from '../../common';
-import { compareString, stringInclude } from '../operate';
-import { Field } from './field';
+import { compareString, isMeetFilter, stringInclude } from '../operate';
+import { FieldOperable } from '../field-operable';
+import { AITable } from '../../../core';
 
-export class RichTextField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return Array.isArray(cellValue) || cellValue === null;
+export class RichTextField extends RichTextFieldBase implements FieldOperable<string, RichTextFieldValue> {
+    override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
+        return transformCellValue(options.aiTable, options.field!, cellValue);
     }
 
-    override isMeetFilter(
+    isMeetFilter(
         condition: AITableFilterCondition<string>,
         cellValue: RichTextFieldValue,
         options: {
@@ -27,11 +37,11 @@ export class RichTextField extends Field {
             case AITableFilterOperation.contain:
                 return !isEmpty(textValue) && stringInclude(textValue, condition.value);
             default:
-                return super.isMeetFilter(condition, textValue);
+                return isMeetFilter(condition, textValue);
         }
     }
 
-    override compare(
+    compare(
         cellValue1: RichTextFieldValue,
         cellValue2: RichTextFieldValue,
         references: AITableReferences,
@@ -41,12 +51,12 @@ export class RichTextField extends Field {
             field: AITableField;
         }
     ): number {
-        const value1 = transformCellValue(options.aiTable, options.field, cellValue1 || []);
-        const value2 = transformCellValue(options.aiTable, options.field, cellValue2 || []);
+        const value1 = this.transformCellValue(cellValue1 || [], options);
+        const value2 = this.transformCellValue(cellValue2 || [], options);
         return compareString(value1, value2);
     }
 
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }

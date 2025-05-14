@@ -5,8 +5,7 @@ import {
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
-    AI_TABLE_ROW_HEAD_SIZE,
-    AI_TABLE_ROW_HEAD_WIDTH
+    AI_TABLE_ROW_HEAD_SIZE
 } from '../../constants';
 import { AITableCell } from '../../types';
 import { Layout } from './layout-drawer';
@@ -46,7 +45,7 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    private renderFirstCell({ isHoverRow }: Pick<AITableCell, 'isHoverRow'>) {
+    private renderFirstCell({ isHoverRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'disabled'>) {
         if (!this.isFirst) return;
         const y = this.y;
         const rowHeight = this.rowHeight;
@@ -55,25 +54,25 @@ export class AddRowLayout extends Layout {
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
 
         this.rect({
-            x: frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: this.hiddenIndexColumn ? frozenOffset : frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: y + AI_TABLE_OFFSET,
-            width: columnWidth + AI_TABLE_ROW_HEAD_WIDTH - frozenOffset + 1,
+            width: columnWidth + this.rowHeadWidth - frozenOffset + 1,
             height: rowHeight,
             fill
         });
         this.line({
-            x: frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: this.hiddenIndexColumn ? frozenOffset : frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y,
-            points: [0, rowHeight, columnWidth + AI_TABLE_ROW_HEAD_WIDTH - frozenOffset + 1, rowHeight],
+            points: [0, rowHeight, columnWidth + this.rowHeadWidth - frozenOffset + 1, rowHeight],
             stroke: this.colors.gray200
         });
 
         this.path({
-            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: this.hiddenIndexColumn ? AI_TABLE_CELL_PADDING : AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - AI_TABLE_OFFSET,
             data: AddOutlinedPath,
             size: AI_TABLE_ROW_HEAD_SIZE,
-            fill: this.colors.gray600
+            fill: disabled ? this.colors.gray300 : this.colors.gray600
         });
     }
 
@@ -97,9 +96,10 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    render({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>) {
+    render({ isHoverRow, isCheckedRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow' | 'disabled'>) {
         this.renderFirstCell({
-            isHoverRow
+            isHoverRow,
+            disabled
         });
         this.renderCommonCell({
             isHoverRow

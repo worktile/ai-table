@@ -1,12 +1,10 @@
-import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from '@ai-table/grid';
+import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from './core';
 import { AITableView, AITableViewRecord, Positions, RemovePositions } from './view';
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',
     AddRecord = 'add_record',
     AddField = 'add_field',
-    MoveField = 'move_field',
-    MoveRecord = 'move_record',
     RemoveField = 'remove_field',
     RemoveRecord = 'remove_record',
     SetField = 'set_field',
@@ -26,28 +24,19 @@ export enum ExecuteType {
 export type UpdateFieldValueAction = {
     type: ActionName.UpdateFieldValue;
     path: AIRecordFieldIdPath;
-    fieldValue: any;
     newFieldValue: any;
 };
 
 export type AddRecordAction = {
     type: ActionName.AddRecord;
-    path: NumberPath;
     record: AITableRecord | AITableViewRecord;
 };
 
 export type AddFieldAction = {
     type: ActionName.AddField;
-    path: NumberPath;
     field: AITableField;
     originId?: string;
-    isCopy?: boolean;
-};
-
-export type MoveRecordAction = {
-    type: ActionName.MoveRecord;
-    path: NumberPath;
-    newPath: NumberPath;
+    isDuplicate?: boolean;
 };
 
 export type RemoveFieldAction = {
@@ -77,7 +66,7 @@ export interface SetViewAction {
 export interface AddViewAction {
     type: ActionName.AddView;
     view: AITableView;
-    path: [number];
+    isDuplicate?: boolean;
 }
 
 export interface RemoveViewAction {
@@ -88,7 +77,7 @@ export interface RemoveViewAction {
 export interface SetRecordPositionAction {
     type: ActionName.SetRecordPositions;
     positions: Positions | RemovePositions;
-    path: IdPath;
+    path: NumberPath;
 }
 
 export interface UpdateSystemFieldValue {
@@ -108,6 +97,5 @@ export type AITableAction =
     | RemoveRecordAction
     | RemoveFieldAction
     | SetFieldAction
-    | MoveRecordAction
     | AITableViewAction
     | AITableSystemFieldAction;

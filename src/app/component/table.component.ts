@@ -1,4 +1,5 @@
-import { Actions, addView, AITableView, AITableViewFields, AITableViewRecords, removeView } from '@ai-table/state';
+import { Actions, addView, removeView } from '@ai-table/state';
+import { AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -16,9 +17,10 @@ const initViews: AITableView[] = [
     {
         _id: 'view1',
         short_id: 'view-short-id-1',
-        name: '表格视图'
+        name: '表格视图',
+        position: 0
     },
-    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2' }
+    { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2', position: 1 }
 ];
 
 @Component({
@@ -61,7 +63,13 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     rowDragDisabled = false;
 
+    hiddenIndexColumn = false;
+
     activeViewName!: string;
+
+    maxRecords = 500;
+
+    maxFields = 500;
 
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
@@ -96,6 +104,19 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setRowDragDisabled(e.target.checked);
     }
 
+    handleHiddenIndexColumnChange(e: any) {
+        this.hiddenIndexColumn = e.target.checked;
+        this.tableService.setHiddenIndexColumn(e.target.checked);
+    }
+
+    handleMaxRecordsChange() {
+        this.tableService.setMaxRecords(this.maxRecords);
+    }
+
+    handleMaxFieldsChange() {
+        this.tableService.setMaxFields(this.maxFields);
+    }
+
     updateValue() {
         this.isEdit = false;
         if (this.activeViewName !== this.tableService.activeView().name) {
@@ -111,7 +132,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.activeViewName = value;
     }
 
-    addView(type: 'add' | 'copy') {
+    addView(type: 'add' | 'duplicate') {
         const newView = addView(this.tableService.aiTable, type);
         if (newView) {
             this.tableService.setActiveView(newView._id);

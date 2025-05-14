@@ -1,10 +1,11 @@
-import { AddFieldOptions, AI_TABLE_GRID_FIELD_SERVICE_MAP, AITable, AITableField, AITableFieldSetting, idCreator } from '@ai-table/grid';
+import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITable, AITableFieldSetting, idCreator } from '@ai-table/grid';
 import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { generateCopyName } from '../utils';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
+import { AddFieldOptions, AITableField } from '@ai-table/utils';
 
 export const DividerMenuItem = {
     type: 'divider'
@@ -53,7 +54,7 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
 
             const fieldOptions: AddFieldOptions = {
                 originId: field()._id,
-                isCopy: true,
+                isDuplicate: true,
                 defaultValue: {
                     ...field(),
                     _id: idCreator(),

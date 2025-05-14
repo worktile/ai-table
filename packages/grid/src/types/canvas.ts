@@ -1,4 +1,4 @@
-import { AITableFieldType } from '../core';
+import { AITableFieldType } from '@ai-table/utils';
 
 export type AITableFontWeight = 'normal' | 'bold' | 'bolder' | 'lighter';
 

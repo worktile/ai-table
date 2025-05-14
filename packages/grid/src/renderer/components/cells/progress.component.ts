@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableHoverCellConfig } from '../../../types';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
 import { isActiveCell } from '../../../renderer';
 import {
@@ -23,7 +23,6 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_TEXT_FILL
 } from '../../../constants';
-import { isNil } from 'lodash';
 
 @Component({
     selector: 'ai-table-progress',
@@ -78,7 +77,7 @@ export class AITableCellProgress implements HoverCellComponent {
 
         const { render } = this.config()!;
         const { transformValue } = render;
-        if (isNil(transformValue)) {
+        if (isUndefinedOrNull(transformValue)) {
             return 0;
         }
         return transformValue;

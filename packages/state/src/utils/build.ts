@@ -1,8 +1,8 @@
-import { AITableView, AITableViewFields, AITableViewRecords, AIViewTable } from '../types';
 import { getSortRecords } from './record/sort';
 import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
-import { AITableFieldType } from '@ai-table/grid';
+import { AITableFieldType, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AIViewTable } from '../types';
 
 export function buildRecordsByView(
     aiTable: AIViewTable,

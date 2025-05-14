@@ -1,5 +1,4 @@
-import { getSharedMapValueIndex } from '../utils';
-import { ActionName, SetFieldAction, SetViewAction, SharedType, SyncMapElement } from '../../types';
+import { ActionName, SetFieldAction, SetViewAction, getSharedMapValueIndex, SharedType, SyncMapElement } from '@ai-table/utils';
 import * as Y from 'yjs';
 import { AITable } from '@ai-table/grid';
 

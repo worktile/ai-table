@@ -9,7 +9,8 @@ import {
     inject,
     input,
     model,
-    output
+    output,
+    signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyButton } from 'ngx-tethys/button';
@@ -21,27 +22,18 @@ import {
     ThyDropdownMenuItemIconDirective,
     ThyDropdownMenuItemNameDirective
 } from 'ngx-tethys/dropdown';
-import { ThyFormModule, ThyFormValidatorConfig, ThyUniqueCheckValidator } from 'ngx-tethys/form';
+import { ThyFormModule, ThyUniqueCheckValidator } from 'ngx-tethys/form';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyInputCount, ThyInputDirective, ThyInputGroup } from 'ngx-tethys/input';
 import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import {
-    AITable,
-    AITableField,
-    AITableFieldOption,
-    createDefaultFieldName,
-    getFieldOptionByField,
-    SetFieldOptions,
-    AITableFieldType,
-    MemberSettings,
-    getFieldOptions
-} from '../../core';
+import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings } from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
+import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -117,6 +109,8 @@ export class AITableFieldSetting implements OnInit {
 
     isMultipleMember = false;
 
+    private isManualInputName = signal(false);
+
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
 
     ngOnInit(): void {
@@ -138,7 +132,7 @@ export class AITableFieldSetting implements OnInit {
         this.aiEditField.update((item) => {
             const width = fieldsSizeMap[item._id] ?? field.width;
             const settings = field.settings || {};
-            const name = createDefaultFieldName(this.aiTable(), field);
+            const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
             return { ...item, ...field, width, name, settings };
         });
         setTimeout(() => {
@@ -171,6 +165,10 @@ export class AITableFieldSetting implements OnInit {
     fieldTypeClick(e: Event) {
         e.preventDefault();
         e.stopPropagation();
+    }
+
+    nameChange(event: Event) {
+        this.isManualInputName.set(true);
     }
 
     cancel() {

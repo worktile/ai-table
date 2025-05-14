@@ -1,6 +1,7 @@
-import { AITable, AITableFieldType, AITableRecord, getFieldValue, getSystemFieldValue, isSystemField, SystemFieldTypes } from '../../core';
-import { FieldModelMap } from '../field/model';
+import { AITable, getFieldValue, getSystemFieldValue, isSystemField } from '../../core';
+import { FieldModelMap } from '../field';
 import { transformCellValue } from '../cell';
+import { AITableFieldType, AITableRecord, SystemFieldTypes } from '@ai-table/utils';
 import { AITableContent, ClipboardContent } from '../../types';
 
 export const aiTableFragmentAttribute = 'ai-table-fragment';
@@ -90,8 +91,9 @@ function buildClipboardContent(aiTable: AITable, fieldIds: string[], recordIds: 
                 html: ''
             };
             if (FieldModelMap[field.type].isValid(cellValue)) {
-                const transformValue = transformCellValue(aiTable, field, cellValue);
-                const cellTexts: string[] = FieldModelMap[field.type].cellFullText(transformValue, field, references);
+                const fieldModel = FieldModelMap[field.type];
+                const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
+                const cellTexts: string[] = fieldModel.cellFullText(transformValue, field, references);
                 cellContent = {
                     text: cellTexts.join(','),
                     html: cellTexts.join(',')

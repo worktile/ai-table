@@ -30,25 +30,14 @@ import {
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
+    AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE
 } from './constants';
-import {
-    AddFieldOptions,
-    AddRecordOptions,
-    AITableField,
-    Coordinate,
-    RendererContext,
-    UpdateFieldValueOptions,
-    DragEndData,
-    DragType,
-    AIRecordFieldIdPath,
-    AITable,
-    IdPath
-} from './core';
+import { Coordinate, RendererContext, AITable } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -70,13 +59,24 @@ import {
     getI18nTextByKey,
     handleMouseStyle,
     isCellMatchKeywords,
-    isWindows
+    isWindows,
+    clearCells
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
 import { buildClipboardData, writeToClipboard, writeToAITable, AITableActions } from './utils/clipboard';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { isNumber } from 'lodash';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AIRecordFieldIdPath,
+    AITableField,
+    DragEndData,
+    DragType,
+    IdPath,
+    UpdateFieldValueOptions
+} from '@ai-table/utils';
 
 @Component({
     selector: 'ai-table-grid',
@@ -144,7 +144,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             rowCount: this.linearRows().length,
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
-            columnInitSize: AI_TABLE_ROW_HEAD_WIDTH,
+            columnInitSize: this.aiTable.context!.rowHeadWidth(),
             rowIndicesSizeMap: {},
             columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
             frozenColumnCount: this.frozenColumnCount()
@@ -159,11 +159,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
             rowDragDisabled: this.aiRowDragDisabled(),
-            actions: {
-                updateFieldValue: (options: UpdateFieldValueOptions) => {
-                    this.aiUpdateFieldValue.emit(options);
-                }
-            }
+            actions: this.actions,
+            maxFields: this.aiMaxFields(),
+            maxRecords: this.aiMaxRecords()
         };
     });
 
@@ -178,6 +176,21 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     scrollbarWidth = computed(() => {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
+
+    private actions: AITableActions = {
+        updateFieldValue: (data: UpdateFieldValueOptions) => {
+            this.aiUpdateFieldValue.emit(data);
+        },
+        setField: (field: AITableField) => {
+            this.aiSetField.emit(field);
+        },
+        addField: (data: AddFieldOptions) => {
+            this.aiAddField.emit(data);
+        },
+        addRecord: (data: AddRecordOptions) => {
+            this.addRecord(data);
+        }
+    };
 
     constructor() {
         super();
@@ -248,6 +261,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private initContext() {
         this.aiTable.context = new RendererContext({
+            rowHeadWidth: computed(() => (this.aiFieldConfig()?.hiddenIndexColumn ? 0 : AI_TABLE_ROW_HEAD_WIDTH)),
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
@@ -256,7 +270,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             frozenColumnCount: this.frozenColumnCount,
             references: this.aiReferences,
             aiFieldConfig: this.aiFieldConfig,
-            scrollAction: this.scrollAction
+            scrollAction: this.scrollAction,
+            maxFields: this.aiMaxFields,
+            maxRecords: this.aiMaxRecords
         });
     }
 
@@ -371,6 +387,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             case AI_TABLE_ROW_ADD_BUTTON:
             case AI_TABLE_FIELD_ADD_BUTTON:
+            case AI_TABLE_ROW_HEAD:
             case AI_TABLE_ROW_SELECT_CHECKBOX:
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
                 return;
@@ -442,7 +459,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.aiTableGridEventService.closeCellEditor();
 
         const { context } = this.aiTable;
-        const { targetName, rowIndex: pointRowIndex } = context!.pointPosition();
+        const targetName = targetNameDetail.targetName;
         if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
@@ -453,6 +470,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
+                const { rowIndex: pointRowIndex } = context!.pointPosition();
                 const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
                 this.selectRecord(pointRecordId);
                 break;
@@ -499,11 +517,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         editOrigin: editOrigin,
                         editFieldPosition
                     });
-                    menuRef.afterClosed().subscribe(() => {
-                        this.isPopoverOpen = false;
-                        this.setDefaultPointPosition();
-                    });
-                    this.isPopoverOpen = true;
+                    if (menuRef) {
+                        menuRef.afterClosed().subscribe(() => {
+                            this.isPopoverOpen = false;
+                            this.setDefaultPointPosition();
+                        });
+                        this.isPopoverOpen = true;
+                    }
                 }
                 break;
         }
@@ -664,10 +684,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private bindClipboardShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')),
+                filter(
+                    (event) =>
+                        ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) ||
+                        event.key === 'Backspace' ||
+                        event.key === 'Delete'
+                ),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(async (event) => {
+            .subscribe(async (event: KeyboardEvent) => {
                 if (this.aiReadonly()) {
                     return;
                 }
@@ -678,48 +703,57 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
 
                 const hasEditingCell = !!this.aiTableGridEventService.getCurrentEditCell();
+                if (hasEditingCell) {
+                    return;
+                }
 
+                event.preventDefault();
                 if (event.key === 'c') {
-                    const clipboardData = buildClipboardData(this.aiTable);
-                    if (clipboardData) {
-                        writeToClipboard(clipboardData).then(() => {
-                            const copiedCellsCount = this.aiTable.selection().selectedCells.size;
-                            const message = getI18nTextByKey(this.aiTable, AITableGridI18nKey.copiedCells).replace(
-                                '{count}',
-                                copiedCellsCount.toString()
-                            );
-                            this.notifyService.success(message, undefined, {
-                                placement: 'bottomLeft'
-                            });
-                        });
-                    }
-                } else if (event.key === 'v' && !hasEditingCell) {
-                    event.preventDefault();
-
-                    const actions: AITableActions = {
-                        updateFieldValue: (data: UpdateFieldValueOptions) => {
-                            this.aiUpdateFieldValue.emit(data);
-                        },
-                        setField: (field: AITableField) => {
-                            this.aiSetField.emit(field);
-                        },
-                        addField: (data: AddFieldOptions) => {
-                            this.aiAddField.emit(data);
-                        },
-                        addRecord: (data: AddRecordOptions) => {
-                            this.addRecord();
-                        }
-                    };
-
-                    writeToAITable(this.aiTable, actions).then((isPasteSuccess) => {
-                        if (!isPasteSuccess) {
-                            this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
-                                placement: 'bottomLeft'
-                            });
-                        }
-                    });
+                    this.copyCells();
+                } else if (event.key === 'v') {
+                    this.pasteCells();
+                } else if (event.key === 'Backspace' || event.key === 'Delete') {
+                    clearCells(this.aiTable, this.actions);
                 }
             });
+    }
+
+    private copyCells() {
+        const clipboardData = buildClipboardData(this.aiTable);
+        if (clipboardData) {
+            writeToClipboard(clipboardData).then(() => {
+                const copiedCellsCount = this.aiTable.selection().selectedCells.size;
+                const message = getI18nTextByKey(this.aiTable, AITableGridI18nKey.copiedCells).replace(
+                    '{count}',
+                    copiedCellsCount.toString()
+                );
+                this.notifyService.success(message, undefined, {
+                    placement: 'bottomLeft'
+                });
+            });
+        }
+    }
+
+    private pasteCells() {
+        writeToAITable(this.aiTable, this.actions).then((result) => {
+            if (!result.isPasteSuccess) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
+                    placement: 'bottomLeft'
+                });
+            }
+            if (result.isPasteOverMaxRecords) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxRecords), undefined, {
+                    placement: 'bottomLeft'
+                });
+                console.warn('Pasting exceeds maximum records limit');
+            }
+            if (result.isPasteOverMaxFields) {
+                this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxFields), undefined, {
+                    placement: 'bottomLeft'
+                });
+                console.warn('Pasting exceeds maximum fields limit');
+            }
+        });
     }
 
     private handleFieldDragStart() {

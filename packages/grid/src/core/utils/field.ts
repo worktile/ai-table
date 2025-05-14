@@ -1,7 +1,8 @@
 import { AI_TABLE_FIELD_MIDDLE_WIDTH, getFieldOptions } from '../constants/field';
-import { AITable, AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings } from '../types';
+import { AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings } from '@ai-table/utils';
 import { generateNewName } from './common';
 import { idCreator } from './id-creator';
+import { AITable } from '../types';
 
 export const isArrayField = (field: AITableField) => {
     return [

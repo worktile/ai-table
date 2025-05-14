@@ -1,3 +1,4 @@
+import { AIRecordFieldIdPath } from '@ai-table/utils';
 import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
@@ -5,9 +6,9 @@ import {
     AI_TABLE_ROW_ADD_BUTTON,
     DEFAULT_FONT_STYLE
 } from '../../constants';
-import { AIRecordFieldIdPath, AITable, AITableQueries, RendererContext } from '../../core';
+import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
-import { getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { FieldModelMap, getCellHorizontalPosition, getHoverCell } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
@@ -18,7 +19,7 @@ import { recordRowLayout } from '../drawers/record-row-layout-drawer';
  * @param config
  */
 export const createCells = (config: AITableCellsDrawerConfig) => {
-    const { aiTable, coordinate, references, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = config;
+    const { aiTable, coordinate, references, ctx, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, maxRecords } = config;
     const context = aiTable.context as RendererContext;
     const { rowHeight, columnCount, rowCount } = coordinate;
     const colors = AITable.getColors();
@@ -69,11 +70,14 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
                         columnCount,
-                        containerWidth: coordinate.containerWidth
+                        containerWidth: coordinate.containerWidth,
+                        rowHeadWidth: context.rowHeadWidth(),
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
                     });
                     addRowLayout.render({
                         isHoverRow,
-                        isCheckedRow
+                        isCheckedRow,
+                        disabled: maxRecords ? rowIndex >= maxRecords : false
                     });
                     break;
                 }
@@ -90,7 +94,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnWidth,
                         rowHeight,
                         columnCount,
-                        containerWidth: coordinate.containerWidth
+                        containerWidth: coordinate.containerWidth,
+                        rowHeadWidth: context.rowHeadWidth(),
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
                     });
                     recordRowLayout.render({
                         row,
@@ -107,7 +113,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
-                    const transformValue = transformCellValue(aiTable, field, cellValue);
+                    const fieldModel = FieldModelMap[field.type];
+                    const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
                     const render = {
                         aiTable,
                         x: realX,

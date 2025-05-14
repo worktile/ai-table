@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, Input, OnInit, output } from '@angular/core';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { AITable, AITableField, AITableQueries, UpdateFieldValueOptions } from '../../core';
-import { AITableReferences } from '../../types';
+import { AITable, AITableQueries } from '../../core';
+import { AITableField, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
 
 @Component({
     selector: 'abstract-edit-cell',

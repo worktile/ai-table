@@ -11,7 +11,7 @@ import {
 } from '../../../constants';
 import { generateTargetName } from '../../../utils';
 import { AITableActionIconConfig, AITableHoverCellConfig } from '../../../types';
-import { AITableFieldType } from '../../../core';
+import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
@@ -21,7 +21,9 @@ import { AITableText } from '../text.component';
 @Component({
     selector: 'ai-table-rich-text',
     template: `
-        <ai-table-text [config]="textConfig()!"></ai-table-text>
+        @if (textConfig()) {
+            <ai-table-text [config]="textConfig()!"></ai-table-text>
+        }
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
     imports: [AITableText, AITableActionIcon],
@@ -37,7 +39,7 @@ export class AITableCellRichText implements HoverCellComponent {
         if (render) {
             const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
             let textRender: string | null = transformValue;
-            if (textRender == null) {
+            if (isUndefinedOrNull(textRender)) {
                 return;
             }
             textRender = textRender.replace(/\r|\n/g, ' ');

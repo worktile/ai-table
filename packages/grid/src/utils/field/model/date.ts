@@ -1,27 +1,30 @@
-import { fromUnixTime, isValid, subDays } from 'date-fns';
+import { fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
-import { Field } from './field';
-import { AITableFilterCondition, AITableFilterOperation } from '../../../types';
-import { AITableField, AITableFieldType, DateFieldValue, FieldValue } from '../../../core';
-import { compareNumber } from '../operate';
-import { isEmpty } from '../../common';
-import { isNil } from 'lodash';
+import {
+    AITableFilterCondition,
+    AITableFilterOperation,
+    DateFieldBase,
+    FieldOptions,
+    isDateValid,
+    AITableField,
+    AITableFieldType,
+    DateFieldValue,
+    FieldValue,
+    isEmpty,
+    isUndefinedOrNull
+} from '@ai-table/utils';
+import { FieldOperable } from '../field-operable';
+import { compareNumber, isMeetFilter } from '../operate';
+import { transformCellValue } from '../../cell';
 
-export const isDateValid = (cellValue: FieldValue): cellValue is DateFieldValue => {
-    return (
-        (cellValue && typeof cellValue === 'object' && 'timestamp' in cellValue && typeof cellValue.timestamp === 'number') ||
-        cellValue === null
-    );
-};
-
-export class DateField extends Field {
-    override isValid(cellValue: FieldValue): boolean {
-        return isDateValid(cellValue);
+export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
+    override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
+        return transformCellValue(options.aiTable, options.field!, cellValue);
     }
 
-    override isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
         const [left, right] = this.getTimeRange(condition.value);
-        if (isNil(cellValue)) {
+        if (isUndefinedOrNull(cellValue)) {
             return condition.operation === AITableFilterOperation.empty;
         }
         switch (condition.operation) {
@@ -38,17 +41,17 @@ export class DateField extends Field {
             case AITableFilterOperation.between:
                 return left <= cellValue.timestamp && cellValue.timestamp < right;
             default:
-                return super.isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, cellValue);
         }
     }
 
-    override compare(cellValue1: DateFieldValue, cellValue2: DateFieldValue): number {
+    compare(cellValue1: DateFieldValue, cellValue2: DateFieldValue): number {
         const value1 = cellValueToSortValue(cellValue1);
         const value2 = cellValueToSortValue(cellValue2);
         return compareNumber(value1, value2);
     }
 
-    override toFieldValue(
+    toFieldValue(
         plainText: string,
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }
@@ -106,7 +109,10 @@ export function toDateFieldValue(
         }
     }
 
-    const texts = plainText.split(',');
+    const texts = plainText
+        .split(',')
+        .map((text) => text.trim())
+        .filter((text) => !!text);
     const value = texts && texts.length ? texts[0].trim() : plainText.trim();
     const dateValue = transformDateValue(value);
     if (dateValue) {
@@ -117,10 +123,10 @@ export function toDateFieldValue(
 }
 
 function cellValueToSortValue(cellValue: DateFieldValue): number {
-    if (isNil(cellValue) || !isDateValid(cellValue)) {
+    if (isUndefinedOrNull(cellValue) || !isDateValid(cellValue)) {
         return 0;
     }
-    return cellValue?.timestamp;
+    return cellValue?.timestamp ?? 0;
 }
 
 function transformDateValue(text: string): FieldValue | null {

@@ -1,10 +1,12 @@
 import Konva from 'konva';
-import { AITable, AITableField, Coordinate, UpdateFieldValueOptions } from '../core';
-import { AITableAttachmentInfo, AITablePointPosition } from './grid';
+import { AITable, Coordinate } from '../core';
+import { AITableAttachmentInfo, AITableField, UpdateFieldValueOptions } from '@ai-table/utils';
 import { AITableRender } from './cell';
+import { AITablePointPosition } from './grid';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
+    disabled?: boolean;
 }
 
 export interface AITableActionIconConfig extends AITableIconConfig {
@@ -54,6 +56,7 @@ export interface AITableAddFieldConfig {
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
     readonly?: boolean;
+    maxFields?: number;
 }
 
 export interface AITableHoverCellConfig {

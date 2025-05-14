@@ -1,7 +1,7 @@
-import { AITable, AITableField, AITableQueries } from '../core';
-import { AITableReferences } from '../types';
+import { AITableField, AITableReferences } from '@ai-table/utils';
+import { AITable, AITableQueries } from '../core';
 import { transformCellValue } from './cell';
-import { FieldModelMap } from './field/model';
+import { FieldModelMap } from './field';
 
 export const isCellMatchKeywords = (
     aiTable: AITable,
@@ -13,7 +13,7 @@ export const isCellMatchKeywords = (
     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
     const fieldMethod = FieldModelMap[field.type];
     if (fieldMethod.isValid(cellValue)) {
-        const transformValue = transformCellValue(aiTable, field, cellValue);
+        const transformValue = fieldMethod.transformCellValue(cellValue, { aiTable, field });
         let cellFullText: string[] = fieldMethod.cellFullText(transformValue, field, references);
         return keywords && cellFullText.length && cellFullText.some((text) => text.toLowerCase().includes(keywords.toLowerCase()));
     } else {

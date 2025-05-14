@@ -1,16 +1,18 @@
+import { AIViewTable } from '../types';
+import { createDraft, finishDraft } from 'immer';
+import { getDefaultFieldValue } from '@ai-table/grid';
+import { createDefaultPositions } from '../utils';
 import {
     ActionName,
     AITableAction,
+    AITableField,
+    AITableFields,
     AITableView,
     AITableViewField,
     AITableViewFields,
     AITableViewRecord,
-    AITableViewRecords,
-    AIViewTable
-} from '../types';
-import { createDraft, finishDraft } from 'immer';
-import { AITableField, AITableFields, getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions, isPathEqual } from '../utils';
+    AITableViewRecords
+} from '@ai-table/utils';
 
 const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITableFields, views: AITableView[], action: AITableAction) => {
     switch (action.type) {
@@ -36,52 +38,24 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddRecord: {
-            const [recordIndex] = action.path;
-            if (recordIndex > -1) {
-                if (!(action.record as AITableViewRecord).positions) {
-                    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
-                    let index = recordIndex;
-                    if (activeView?.settings?.conditions) {
-                        index = records.length;
-                    }
-                    (action.record as AITableViewRecord).positions = createDefaultPositions(
-                        aiTable.views(),
-                        aiTable.activeViewId(),
-                        aiTable.records() as AITableViewRecords,
-                        index
-                    );
-                }
-                records.splice(recordIndex, 0, action.record as AITableViewRecord);
+            if (!(action.record as AITableViewRecord).positions) {
+                (action.record as AITableViewRecord).positions = createDefaultPositions(
+                    aiTable.views(),
+                    aiTable.activeViewId(),
+                    aiTable.records() as AITableViewRecords,
+                    records.length
+                );
             }
+            records.push(action.record as AITableViewRecord);
             break;
         }
         case ActionName.AddField: {
-            const [fieldIndex] = action.path;
-            if (fieldIndex > -1) {
-                const newField = action.field;
-                if (!(newField as AITableViewField).positions) {
-                    (newField as AITableViewField).positions = createDefaultPositions(
-                        aiTable.views(),
-                        aiTable.activeViewId(),
-                        aiTable.gridData().fields as AITableViewFields,
-                        action.path[0]
-                    );
-                }
-                fields.splice(fieldIndex, 0, newField as AITableViewField);
-                records.forEach((item) => {
-                    item.values[newField._id] =
-                        action.isCopy && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
-                });
-            }
-            break;
-        }
-        case ActionName.MoveRecord: {
-            if (isPathEqual(action.path, action.newPath)) {
-                return;
-            }
-            const record = records[action.path[0]];
-            records.splice(action.path[0], 1);
-            records.splice(action.newPath[0], 0, record);
+            const newField = action.field;
+            fields.push(newField as AITableViewField);
+            records.forEach((item) => {
+                item.values[newField._id] =
+                    action.isDuplicate && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
+            });
             break;
         }
         case ActionName.RemoveField: {
@@ -149,10 +123,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddView: {
-            const [viewIndex] = action.path;
-            if (viewIndex > -1) {
-                views.splice(viewIndex, 0, action.view);
-            }
+            views.push(action.view);
             break;
         }
         case ActionName.RemoveView: {
@@ -165,7 +136,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.SetRecordPositions: {
             const { positions, path } = action;
-            const record = records.find((item) => item._id === path[0]);
+            const record = records[path[0]];
             if (record) {
                 const newPositions = { ...record.positions };
                 for (const key in positions) {

@@ -6,22 +6,20 @@ import {
     AddRecordAction,
     SetRecordPositionAction,
     AddViewAction,
+    UpdateSystemFieldValue,
+    getPositionsByRecordSyncElement,
+    getSharedRecordIndex,
+    setRecordPositions,
+    getIdBySystemFieldValuesType,
+    setRecordUpdatedInfo,
+    toRecordSyncElement,
+    toMapSyncElement,
+    AITableViewFields,
     AITableViewRecord,
     SharedType,
     SyncArrayElement,
-    SyncMapElement,
-    AITableViewFields,
-    UpdateSystemFieldValue
-} from '../../types';
-import {
-    getPositionsByRecordSyncElement,
-    getSharedRecordIndex,
-    toRecordSyncElement,
-    toSyncElement,
-    setRecordPositions,
-    getIdBySystemFieldValuesType,
-    setRecordUpdatedInfo
-} from '../utils';
+    SyncMapElement
+} from '@ai-table/utils';
 
 export default function addNode(
     aiTable: AITable,
@@ -36,11 +34,11 @@ export default function addNode(
             records && records.push([toRecordSyncElement(action.record as AITableViewRecord, aiTable.fields() as AITableViewFields)]);
             break;
         case ActionName.AddView:
-            views && views.push([toSyncElement(action.view)]);
+            views && views.push([toMapSyncElement(action.view)]);
             break;
         case ActionName.SetRecordPositions:
             if (records) {
-                const recordIndex = getSharedRecordIndex(records, action.path[0]);
+                const recordIndex = action.path[0];
                 const record = records.get(recordIndex);
                 const positions = getPositionsByRecordSyncElement(record);
                 const newPositions = { ...positions };
@@ -65,16 +63,21 @@ export default function addNode(
             break;
         case ActionName.AddField:
             if (fields && records) {
-                const { field, path } = action;
-                const [insertIndex] = path;
-                const fieldSyncElement = toSyncElement(field);
+                const { field } = action;
+                const insertIndex = fields.length;
+                const fieldSyncElement = toMapSyncElement(field);
                 fields.insert(insertIndex, [fieldSyncElement]);
                 for (let value of records) {
-                    const customFieldValues = value.get(1);
+                    const customFieldValues = value.get(1) as Y.Array<any>;
                     const systemFieldValues = value.get(0);
                     const recordEntity = aiTable.recordsMap()[getIdBySystemFieldValuesType(systemFieldValues)];
                     const newFieldValue = recordEntity.values[action.field._id];
-                    customFieldValues.insert(insertIndex, [newFieldValue]);
+                    // 幽灵单元格，暂不处理交给后端统一处理
+                    if (insertIndex <= customFieldValues.length) {
+                        customFieldValues.insert(insertIndex, [newFieldValue]);
+                    } else {
+                        console.error('Field index out of bounds, cannot initialize record value for new field');
+                    }
                 }
             }
             break;

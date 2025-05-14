@@ -1,32 +1,18 @@
 import {
-    AddFieldOptions,
-    AddRecordOptions,
     AIFieldConfig,
     AITable,
     AITableDomGrid,
-    AITableField,
-    AITableFieldType,
     AITableGrid,
     AITableActions,
-    AITableQueries,
-    AITableRecord,
-    DateFieldValue,
-    MoveFieldOptions,
-    NumberPath,
-    UpdateFieldValueOptions,
-    RichTextFieldValue,
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
-    KoEventObjectOutput,
-    SetFieldWidthOptions,
-    MoveRecordOptions
+    KoEventObjectOutput
 } from '@ai-table/grid';
 import {
     Actions,
     addFields,
     addRecords,
-    AITableView,
     AIViewTable,
     applyActionOps,
     buildRemoveFieldItem,
@@ -52,13 +38,28 @@ import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { getBigData, getCanvasDefaultValue, getDefaultValue, getReferences } from '../../../utils/utils';
+import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
-import _, { isNil } from 'lodash';
+import _ from 'lodash';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    AddFieldOptions,
+    AddRecordOptions,
+    AITableField,
+    AITableFieldType,
+    AITableView,
+    DateFieldValue,
+    MoveFieldOptions,
+    MoveRecordOptions,
+    RichTextFieldValue,
+    SetFieldWidthOptions,
+    UpdateFieldValueOptions,
+    isUndefinedOrNull
+} from '@ai-table/utils';
+
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -83,10 +84,11 @@ export class DemoTableContent {
         const readonly = this.tableService.readonly();
         const onlyOneField = this.tableService.fields().length === 1;
         return {
+            hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             fieldRenderers: {
                 [AITableFieldType.date]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
@@ -94,7 +96,7 @@ export class DemoTableContent {
                 },
                 [AITableFieldType.createdAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
@@ -102,7 +104,7 @@ export class DemoTableContent {
                 },
                 [AITableFieldType.updatedAt]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
-                        if (isNil(value)) {
+                        if (isUndefinedOrNull(value)) {
                             return value;
                         }
                         return this.datePickerFormatPipe.transform(value.timestamp as any);
@@ -192,12 +194,20 @@ export class DemoTableContent {
         };
     });
 
+    canUndoCount = computed(() => {
+        return this.tableService.canUndoCount();
+    });
+
+    canRedoCount = computed(() => {
+        return this.tableService.canRedoCount();
+    });
+
     canUndo = computed(() => {
-        return this.tableService.canUndo();
+        return this.canUndoCount() > 0;
     });
 
     canRedo = computed(() => {
-        return this.tableService.canRedo();
+        return this.canRedoCount() > 0;
     });
 
     actions: AITableActions = {
@@ -245,8 +255,7 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords();
             this.tableService.buildRenderFields();
         } else {
-            this.renderMode.set(this.getLocalRenderMode(LOCAL_STORAGE_RENDER_MODE) || 'canvas');
-            this.dateMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
+            this.dataMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
             this.setValue();
         }
     }
@@ -261,13 +270,9 @@ export class DemoTableContent {
 
     references = signal(getReferences());
 
-    renderMode = signal<'dom' | 'canvas'>('canvas');
+    dataMode = signal<'default' | 'big-data'>('default');
 
-    dateMode = signal<'default' | 'big-data'>('default');
-
-    renderModeActiveIndex = computed(() => (this.renderMode() === 'canvas' ? 0 : 1));
-
-    dateModeActiveIndex = computed(() => (this.dateMode() === 'default' ? 0 : 1));
+    dateModeActiveIndex = computed(() => (this.dataMode() === 'default' ? 0 : 1));
 
     getI18nTextByKey = (key: string) => {
         switch (key) {
@@ -299,20 +304,18 @@ export class DemoTableContent {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
-                this.tableService.undo();
-            });
-        fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'z'),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(async (event) => {
-                this.tableService.redo();
+                if (event.shiftKey) {
+                    // 重做操作
+                    this.tableService.redo();
+                } else {
+                    // 撤销操作
+                    this.tableService.undo();
+                }
             });
     }
 
     onClick(e: KoEventObjectOutput<MouseEvent>) {
-        if ((e.targetNameDetail.targetName = AI_TABLE_CELL)) {
+        if (e.targetNameDetail.targetName === AI_TABLE_CELL) {
             const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
             if (field?.type === AITableFieldType.attachment && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_ATTACHMENT_ADD) {
@@ -332,28 +335,22 @@ export class DemoTableContent {
     }
 
     setValue() {
-        const value =
-            this.dateMode() === 'default' ? (this.renderMode() === 'canvas' ? getCanvasDefaultValue() : getDefaultValue()) : getBigData();
+        const value = this.dataMode() === 'default' ? getCanvasDefaultValue() : getBigData();
         this.tableService.buildRenderRecords(value.records);
         this.tableService.buildRenderFields(value.fields);
     }
 
-    changeRenderMode(e: ThySegmentEvent<any>) {
-        this.renderMode.set(e.value);
-        this.setLocalStorage(LOCAL_STORAGE_RENDER_MODE, e.value);
-        this.setValue();
-    }
-
     changeDataMode(e: ThySegmentEvent<any>) {
-        this.dateMode.set(e.value);
+        this.dataMode.set(e.value);
         this.setLocalStorage(LOCAL_STORAGE_DATA_MODE, e.value);
         this.setValue();
     }
 
-    addRecord(data: AddRecordOptions) {
+    addRecord(options?: AddRecordOptions) {
         const member = 'member_01';
         const time = getUnixTime(new Date());
-        addRecords(this.aiTable, data, { created_by: member, created_at: time, updated_by: member, updated_at: time });
+        const trackableEntity = { created_by: member, created_at: time, updated_by: member, updated_at: time };
+        addRecords(this.aiTable, trackableEntity, options);
     }
 
     updateFieldValue(value: UpdateFieldValueOptions) {
@@ -432,38 +429,6 @@ export class DemoTableContent {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
         recordIds.forEach((id) => {
             Actions.removeRecord(this.aiTable, [id]);
-        });
-    }
-
-    moveField() {
-        const newIndex = 2;
-        const selectedFieldIds = [...this.aiTable.selection().selectedFields.keys()];
-        const selectedFields = this.aiTable.fields().filter((item) => selectedFieldIds.includes(item._id));
-        selectedFields.forEach((item) => {
-            const path = AITableQueries.findFieldPath(this.aiTable, item) as NumberPath;
-            Actions.moveField(this.aiTable, path, [newIndex]);
-        });
-    }
-
-    moveRecord() {
-        const selectedRecordIds = [...this.aiTable.selection().selectedRecords.keys()];
-        const selectedRecords = this.aiTable.records().filter((item) => selectedRecordIds.includes(item._id));
-        const selectedRecordsAfterNewPath: AITableRecord[] = [];
-        let offset = 0;
-        const newIndex = 2;
-        selectedRecords.forEach((item) => {
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            if (path[0] < newIndex) {
-                Actions.moveRecord(this.aiTable, path, [newIndex]);
-                offset = 1;
-            } else {
-                selectedRecordsAfterNewPath.push(item);
-            }
-        });
-        selectedRecordsAfterNewPath.reverse().forEach((item) => {
-            const newPath = [newIndex + offset] as NumberPath;
-            const path = AITableQueries.findRecordPath(this.aiTable, item) as NumberPath;
-            Actions.moveRecord(this.aiTable, path, newPath);
         });
     }
 

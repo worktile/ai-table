@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { AIRecordFieldIdPath, AITable, AITableDragState, DragType } from '../core';
+import { AITable, AITableDragState } from '../core';
 import { AITableSelectAllState } from '../types';
-
+import { AIRecordFieldIdPath, DragType } from '@ai-table/utils';
 @Injectable()
 export class AITableGridSelectionService {
     aiTable!: AITable;
