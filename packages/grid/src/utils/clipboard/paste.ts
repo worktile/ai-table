@@ -214,6 +214,7 @@ export const writeToAITable = async (
     if (maxRecords && lastRowIndex + appendRowCount > maxRecords) {
         appendRowCount = maxRecords - lastRowIndex;
         result.isPasteOverMaxRecords = true;
+        console.warn('Pasting exceeds maximum records limit');
     }
     actions.addRecord({ count: appendRowCount });
 
@@ -229,6 +230,7 @@ export const writeToAITable = async (
             appendField(aiTable, originField, actions);
         } else {
             result.isPasteOverMaxFields = true;
+            console.warn('Pasting exceeds maximum fields limit');
         }
     }
 
@@ -238,13 +240,11 @@ export const writeToAITable = async (
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
         if (maxRecords && targetRowIndex >= maxRecords) {
-            result.isPasteOverMaxRecords = true;
             return;
         }
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
             if (maxFields && targetColIndex >= maxFields) {
-                result.isPasteOverMaxFields = true;
                 return;
             }
             const targetRecord = linearRows[targetRowIndex];
