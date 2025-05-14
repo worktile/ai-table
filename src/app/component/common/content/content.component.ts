@@ -1,7 +1,6 @@
 import {
     AIFieldConfig,
     AITable,
-    AITableDomGrid,
     AITableGrid,
     AITableActions,
     AI_TABLE_CELL,
@@ -66,7 +65,7 @@ const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, AITableDomGrid],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
