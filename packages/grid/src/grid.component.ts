@@ -206,48 +206,39 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.bindScrollBarScroll();
             }
         });
-        effect(
-            () => {
-                this.setKeywordsMatchedCells();
-            },
-            { allowSignalWrites: true }
-        );
-        effect(
-            () => {
-                // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
-                const activeCellPath = this.aiTable.selection().activeCell;
-                untracked(() => {
-                    if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
-                        if (this.aiTable.recordsWillHidden().length > 0) {
-                            this.aiTable.recordsWillHidden.set([]);
-                        }
+        effect(() => {
+            this.setKeywordsMatchedCells();
+        });
+        effect(() => {
+            // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
+            const activeCellPath = this.aiTable.selection().activeCell;
+            untracked(() => {
+                if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
+                    if (this.aiTable.recordsWillHidden().length > 0) {
+                        this.aiTable.recordsWillHidden.set([]);
                     }
-                });
-            },
-            { allowSignalWrites: true }
-        );
+                }
+            });
+        });
 
-        effect(
-            () => {
-                const recordIdSet = new Set<string>(this.aiTable.records().map((item) => item._id));
-                untracked(() => {
-                    const selectedRecords = this.aiTable.selection().selectedRecords;
-                    for (const selectedRecordId of selectedRecords.values()) {
-                        if (!recordIdSet.has(selectedRecordId)) {
-                            selectedRecords.delete(selectedRecordId);
-                        }
+        effect(() => {
+            const recordIdSet = new Set<string>(this.aiTable.records().map((item) => item._id));
+            untracked(() => {
+                const selectedRecords = this.aiTable.selection().selectedRecords;
+                for (const selectedRecordId of selectedRecords.values()) {
+                    if (!recordIdSet.has(selectedRecordId)) {
+                        selectedRecords.delete(selectedRecordId);
                     }
-                    this.aiTable.selection.update((item) => {
-                        return {
-                            ...item,
-                            selectedRecords,
-                            selectAllState: this.aiTableGridSelectionService.selectAllState()
-                        };
-                    });
+                }
+                this.aiTable.selection.update((item) => {
+                    return {
+                        ...item,
+                        selectedRecords,
+                        selectAllState: this.aiTableGridSelectionService.selectAllState()
+                    };
                 });
-            },
-            { allowSignalWrites: true }
-        );
+            });
+        });
     }
 
     override ngOnInit(): void {
