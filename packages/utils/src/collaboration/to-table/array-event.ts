@@ -7,6 +7,7 @@ import {
     AITableView,
     IdPath,
     Positions,
+    SetRecordPositionAction,
     SharedType,
     SyncArrayElement,
     SyncMapElement
@@ -105,11 +106,12 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                                         for (const key in item) {
                                             newPositions[key] = item[key];
                                         }
-                                        actions.push({
+                                        const action: SetRecordPositionAction = {
                                             type: ActionName.SetRecordPositions,
-                                            path: [recordId],
+                                            path: [recordIndex],
                                             positions: newPositions
-                                        });
+                                        };
+                                        actions.push(action);
                                     } else if (isUpdatedByOperation(fieldIndex)) {
                                         // 此处的循环会包含 updated_at 和 updated_by 各一次，这里只处理 updated_by 同时包含两个字段的修改
                                         const systemFieldValues = getSharedRecord(sharedRecords, recordIndex).get(0).toJSON();

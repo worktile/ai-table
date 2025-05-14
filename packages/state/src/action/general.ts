@@ -136,7 +136,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.SetRecordPositions: {
             const { positions, path } = action;
-            const record = records.find((item) => item._id === path[0]);
+            const record = records[path[0]];
             if (record) {
                 const newPositions = { ...record.positions };
                 for (const key in positions) {
