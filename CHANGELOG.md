@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.1.0](https://github.com/worktile/ai-table/compare/0.0.73...0.1.0) (2025-05-14)
+
+
+### Bug Fixes
+
+* #WIK-17916 【AITable】点击表格底部新增记录后，继续点击相同位置，不应该继续新增 ([#459](https://github.com/worktile/ai-table/issues/459)) ([16dbb3c](https://github.com/worktile/ai-table/commit/16dbb3cb211165ec22c69221e83ab57738769e26)), closes [#WIK-17916](https://github.com/worktile/ai-table/issues/WIK-17916)
+* **grid:** import isEmpty from @ai-table/utils ([#455](https://github.com/worktile/ai-table/issues/455)) ([77f462b](https://github.com/worktile/ai-table/commit/77f462b701b919b647830c4d626113ebc7c00712))
+* **grid:** import isUndefinedOrNull from @ai-table/utils to replace isNil #WIK-17849 ([#456](https://github.com/worktile/ai-table/issues/456)) ([b66f8bb](https://github.com/worktile/ai-table/commit/b66f8bbfaf03c6f501c29174626b92659994e9de)), closes [#WIK-17849](https://github.com/worktile/ai-table/issues/WIK-17849)
+* **grid:** optimize past limit ([#460](https://github.com/worktile/ai-table/issues/460)) ([790deda](https://github.com/worktile/ai-table/commit/790deda4f68a51eacd1f6a214ea27f5f176d59bb))
+
+
+### Features
+
+* #WIK-17811 附件icon 压到标题栏 ([#458](https://github.com/worktile/ai-table/issues/458)) ([15cad62](https://github.com/worktile/ai-table/commit/15cad62525d2e25bfb7c28bde9c7d83c40f50bd1)), closes [#WIK-17811](https://github.com/worktile/ai-table/issues/WIK-17811)
+* **grid:** #WIK-17905 support records limits and columns limits ([#445](https://github.com/worktile/ai-table/issues/445)) ([0206317](https://github.com/worktile/ai-table/commit/0206317e355b1e93e7f4035c624aaeb5913d1590)), closes [#WIK-17905](https://github.com/worktile/ai-table/issues/WIK-17905)
+
+
+### Reverts
+
+* Revert "feat: #WIK-17811 附件icon 压到标题栏 (#458)" (#462) ([2a177b7](https://github.com/worktile/ai-table/commit/2a177b7a8f64997a7e9ea998bc3ccbcb6deab64c)), closes [#WIK-17811](https://github.com/worktile/ai-table/issues/WIK-17811) [#458](https://github.com/worktile/ai-table/issues/458) [#462](https://github.com/worktile/ai-table/issues/462)
+
+
+
 ## [0.0.73](https://github.com/worktile/ai-table/compare/0.0.72...0.0.73) (2025-05-09)
 
 
