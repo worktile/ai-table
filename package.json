@@ -45,7 +45,7 @@
         "date-fns": "^4.1.0",
         "grapheme-splitter": "^1.0.4",
         "immer": "^10.0.3",
-        "ngx-tethys": "^19.0.7",
+        "ngx-tethys": "^19.0.12",
         "konva": "^9.3.14",
         "lodash": "^4.17.21",
         "lru-cache": "^11.0.0",
