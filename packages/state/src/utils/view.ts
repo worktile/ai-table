@@ -75,8 +75,8 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
         };
     }
     ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
-    (aiTable.records() as AITableViewRecords).forEach((record) => {
-        PositionsActions.setRecordPositions(aiTable, { [newId]: record.positions[originViewId] }, [record._id]);
+    (aiTable.records() as AITableViewRecords).forEach((record, index) => {
+        PositionsActions.setRecordPositions(aiTable, { [newId]: record.positions[originViewId] }, [index]);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
         Actions.setField<AITableViewField>(
@@ -94,8 +94,8 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
 }
 
 export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeViewId: string) {
-    records.forEach((record) => {
-        PositionsActions.setRecordPositions(aiTable, { [activeViewId]: undefined }, [record._id]);
+    records.forEach((record, index) => {
+        PositionsActions.setRecordPositions(aiTable, { [activeViewId]: undefined }, [index]);
     });
     fields.forEach((field) => {
         const positions = { ...field.positions };

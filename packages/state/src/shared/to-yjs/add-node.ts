@@ -38,7 +38,7 @@ export default function addNode(
             break;
         case ActionName.SetRecordPositions:
             if (records) {
-                const recordIndex = getSharedRecordIndex(records, action.path[0]);
+                const recordIndex = action.path[0];
                 const record = records.get(recordIndex);
                 const positions = getPositionsByRecordSyncElement(record);
                 const newPositions = { ...positions };

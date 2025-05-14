@@ -1,4 +1,4 @@
-import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath } from './core';
+import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from './core';
 import { AITableView, AITableViewRecord, Positions, RemovePositions } from './view';
 
 export enum ActionName {
@@ -77,7 +77,7 @@ export interface RemoveViewAction {
 export interface SetRecordPositionAction {
     type: ActionName.SetRecordPositions;
     positions: Positions | RemovePositions;
-    path: IdPath;
+    path: NumberPath;
 }
 
 export interface UpdateSystemFieldValue {
