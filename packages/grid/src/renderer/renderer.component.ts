@@ -142,8 +142,8 @@ export class AITableRenderer {
 
     attachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
-            clipX: this.frozenAreaWidth() + 1,
-            clipY: this.coordinate()!.rowInitSize + 1,
+            clipX: this.frozenAreaWidth() - 1,
+            clipY: this.coordinate()!.rowInitSize - 1,
             clipWidth: this.containerWidth() - this.frozenAreaWidth(),
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
