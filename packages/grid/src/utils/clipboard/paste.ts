@@ -238,13 +238,11 @@ export const writeToAITable = async (
     clipboardContent.forEach((row, i) => {
         const targetRowIndex = startRowIndex + i;
         if (maxRecords && targetRowIndex >= maxRecords) {
-            result.isPasteOverMaxRecords = true;
             return;
         }
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
             if (maxFields && targetColIndex >= maxFields) {
-                result.isPasteOverMaxFields = true;
                 return;
             }
             const targetRecord = linearRows[targetRowIndex];

@@ -746,11 +746,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxRecords), undefined, {
                     placement: 'bottomLeft'
                 });
+                console.warn('Pasting exceeds maximum records limit');
             }
             if (result.isPasteOverMaxFields) {
                 this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.pasteOverMaxFields), undefined, {
                     placement: 'bottomLeft'
                 });
+                console.warn('Pasting exceeds maximum fields limit');
             }
         });
     }
