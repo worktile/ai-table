@@ -23,18 +23,28 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
         return Array.isArray(cellValue) || cellValue === null;
     }
 
-    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue) {
+    isMeetFilter(
+        condition: AITableFilterCondition<string>,
+        cellValue: SelectFieldValue,
+        options: {
+            aiTable: AITable;
+            field: AITableField;
+        }
+    ) {
+        const optionsMap = helpers.keyBy((options?.field?.settings as SelectSettings)?.options || [], '_id');
+        const validCellValue = cellValue.filter((optionId) => !!optionsMap[optionId]);
+
         switch (condition.operation) {
             case AITableFilterOperation.empty:
-                return isEmpty(cellValue);
+                return isEmpty(validCellValue);
             case AITableFilterOperation.exists:
-                return !isEmpty(cellValue);
+                return !isEmpty(validCellValue);
             case AITableFilterOperation.in:
-                return Array.isArray(condition.value) && hasIntersect(cellValue, condition.value);
+                return Array.isArray(condition.value) && hasIntersect(validCellValue, condition.value);
             case AITableFilterOperation.nin:
-                return Array.isArray(condition.value) && !hasIntersect(cellValue, condition.value);
+                return Array.isArray(condition.value) && !hasIntersect(validCellValue, condition.value);
             default:
-                return isMeetFilter(condition, cellValue);
+                return isMeetFilter(condition, validCellValue);
         }
     }
 
