@@ -148,10 +148,28 @@ export class AITableRenderer {
         };
     });
 
+    hoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            clipX: this.frozenAreaWidth() + 1,
+            clipY: this.coordinate()!.rowInitSize + 1,
+            clipWidth: this.containerWidth() - this.frozenAreaWidth(),
+            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
+        };
+    });
+
     frozenAttachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize - 1,
+            clipWidth: this.frozenAreaWidth() + 4,
+            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
+        };
+    });
+
+    frozenHoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            clipX: 0,
+            clipY: this.coordinate()!.rowInitSize + 1,
             clipWidth: this.frozenAreaWidth() + 4,
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };

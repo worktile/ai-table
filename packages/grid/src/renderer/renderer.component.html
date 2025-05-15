@@ -40,6 +40,11 @@
                     @if (activeCellBorderConfig().activeCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
                     }
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="hoverAttachGroupConfig()">
+                <ko-group [config]="offsetConfig()">
                     <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
             </ko-group>
@@ -49,6 +54,11 @@
                     @if (activeCellBorderConfig().frozenActiveCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="frozenHoverAttachGroupConfig()">
+                <ko-group [config]="offsetYConfig()">
                     <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
             </ko-group>
