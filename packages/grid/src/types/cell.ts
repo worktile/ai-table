@@ -15,7 +15,7 @@ export interface AITableCellsConfig {
     };
     references?: AITableReferences;
     rowDragDisabled: boolean;
-    maxRecords: number;
+    maxRecords?: number;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {

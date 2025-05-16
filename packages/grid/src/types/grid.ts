@@ -52,8 +52,8 @@ export interface AITableRendererConfig {
     references: AITableReferences;
     readonly: boolean;
     rowDragDisabled: boolean;
-    maxFields: number;
-    maxRecords: number;
+    maxFields?: number;
+    maxRecords?: number;
     actions: {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };
@@ -123,8 +123,8 @@ export interface AITableContext {
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
-    maxFields: Signal<number>;
-    maxRecords: Signal<number>;
+    maxFields: Signal<number | undefined>;
+    maxRecords: Signal<number | undefined>;
 }
 
 export enum AITableSelectAllState {
