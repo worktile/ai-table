@@ -13,8 +13,8 @@ export class RendererContext {
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     scrollAction: (options: ScrollActionOptions) => void;
-    maxFields: Signal<number>;
-    maxRecords: Signal<number>;
+    maxFields: Signal<number | undefined>;
+    maxRecords: Signal<number | undefined>;
 
     constructor(options: AITableContext) {
         const {
