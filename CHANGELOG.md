@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.1](https://github.com/worktile/ai-table/compare/0.1.0...0.1.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* #WIK-17811 附件icon 压到标题栏 ([#463](https://github.com/worktile/ai-table/issues/463)) ([8e55d30](https://github.com/worktile/ai-table/commit/8e55d3054e09487c581839f01ed4893d26ae9ec9)), closes [#WIK-17811](https://github.com/worktile/ai-table/issues/WIK-17811)
+* **grid:** #WIK-17959 cancel the default value of maximum row and column limit ([#466](https://github.com/worktile/ai-table/issues/466)) ([281e968](https://github.com/worktile/ai-table/commit/281e9686ce23ef2a8669ecc25314aa7549d0d493)), closes [#WIK-17959](https://github.com/worktile/ai-table/issues/WIK-17959)
+* **grid:** filter invalid value before comparing with the  conditions ([#465](https://github.com/worktile/ai-table/issues/465)) ([bd2cc20](https://github.com/worktile/ai-table/commit/bd2cc20a629a748b7d36c8a60dc3cdb5a98d80ba))
+
+
+
 # [0.1.0](https://github.com/worktile/ai-table/compare/0.0.73...0.1.0) (2025-05-14)
 
 
