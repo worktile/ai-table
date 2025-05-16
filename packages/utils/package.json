@@ -1,6 +1,6 @@
 {
     "name": "@ai-table/utils",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "main": "index.js",
     "scripts": {
         "build": "rimraf ../../dist/utils && tsc -p tsconfig.lib.json && cpx package.json ../../dist/utils"
