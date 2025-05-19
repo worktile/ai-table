@@ -1,5 +1,5 @@
 import { AIRecordFieldIdPath, AITableField, AITableRecord, AITableRecordUpdatedInfo, IdPath, NumberPath } from './core';
-import { AITableView, AITableViewRecord, Positions, RemovePositions } from './view';
+import { AITableView, AITableViewRecord, AITableViewRecords, Positions, RemovePositions } from './view';
 
 export enum ActionName {
     UpdateFieldValue = 'update_field_value',

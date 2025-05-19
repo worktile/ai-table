@@ -38,14 +38,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddRecord: {
-            if (!(action.record as AITableViewRecord).positions) {
-                (action.record as AITableViewRecord).positions = createDefaultPositions(
-                    aiTable.views(),
-                    aiTable.activeViewId(),
-                    aiTable.records() as AITableViewRecords,
-                    records.length
-                );
-            }
             records.push(action.record as AITableViewRecord);
             break;
         }

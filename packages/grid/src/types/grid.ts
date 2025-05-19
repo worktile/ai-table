@@ -10,7 +10,8 @@ import {
     AIRecordFieldIdPath,
     AITableFieldType,
     UpdateFieldValueOptions,
-    AITableReferences
+    AITableReferences,
+    AddRecordOptions
 } from '@ai-table/utils';
 import { AITable, Coordinate } from '../core';
 
@@ -56,6 +57,7 @@ export interface AITableRendererConfig {
     maxRecords?: number;
     actions: {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
+        addRecord: (options: AddRecordOptions) => void;
     };
 }
 

@@ -6,7 +6,9 @@ import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
-    KoEventObjectOutput
+    KoEventObjectOutput,
+    AITableContextMenuItem,
+    AITableGridSelectionService
 } from '@ai-table/grid';
 import {
     Actions,
@@ -25,9 +27,12 @@ import {
     withState,
     YjsAITable,
     moveFields,
-    moveRecords
+    moveRecords,
+    getStateI18nTextByKey,
+    InsertUpwardRecords,
+    InsertDownwardRecords
 } from '@ai-table/state';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, Signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThyAction } from 'ngx-tethys/action';
@@ -58,10 +63,24 @@ import {
     UpdateFieldValueOptions,
     isUndefinedOrNull
 } from '@ai-table/utils';
+import { ThyInputNumber } from 'ngx-tethys/input-number';
+import { CommonModule } from '@angular/common';
+import { ThyNotifyService } from 'ngx-tethys/notify';
+import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
+
+@Component({
+    selector: 'ai-table-add-input',
+    template: ` <thy-input-number [(ngModel)]="modelValue().value" thyStopPropagation></thy-input-number> `,
+    imports: [ThyInputNumber, CommonModule, FormsModule, ThyStopPropagationDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class MenuAddRecordsComponent {
+    modelValue = input.required<{ value: number }>();
+}
 
 @Component({
     selector: 'demo-table-content',
@@ -243,6 +262,16 @@ export class DemoTableContent {
             },
             {
                 ...RemoveRecordsItem(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...InsertUpwardRecords(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...InsertDownwardRecords(aiTable, this.actions),
                 disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
                 hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
             }

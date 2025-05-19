@@ -18,7 +18,7 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
         const currentFieldIndex = fields.findIndex((item) => item._id === originId);
         newField.positions = {
             ...newField.positions,
-            [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex + 1)
+            [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex - 1)
         };
     } else {
         newField.positions = createDefaultPositions(

@@ -13,7 +13,6 @@ import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
-
 export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
         type: 'removeRecords',
@@ -30,6 +29,57 @@ export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AI
                 Actions.removeRecord(aiTable as AIViewTable, [id]);
             });
             aiTableGridSelectionService.clearSelection();
+        }
+    };
+};
+
+export const InsertUpwardRecords = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
+    return {
+        type: 'insertUpwardRecords',
+        name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertUpward),
+        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.row),
+        icon: 'table-insert-rows-top',
+        isInputNumber: true,
+        count: 1,
+        exec: (
+            aiTable: AITable,
+            targetName: string,
+            position: { x: number; y: number },
+            aiTableGridSelectionService: AITableGridSelectionService,
+            notifyService: ThyNotifyService,
+            count: any
+        ) => {
+            let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
+            actions.addRecord({
+                targetId: selectedRecordIds[0],
+                count,
+                isInsertBefore: true
+            });
+        }
+    };
+};
+
+export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
+    return {
+        type: 'insertDownwardRecords',
+        name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertDownward),
+        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.row),
+        icon: 'table-insert-rows-down',
+        count: 1,
+        isInputNumber: true,
+        exec: (
+            aiTable: AITable,
+            targetName: string,
+            position: { x: number; y: number },
+            aiTableGridSelectionService: AITableGridSelectionService,
+            notifyService: ThyNotifyService,
+            count: any
+        ) => {
+            let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
+            actions.addRecord({
+                targetId: selectedRecordIds[0],
+                count
+            });
         }
     };
 };

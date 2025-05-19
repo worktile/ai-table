@@ -5,7 +5,12 @@
         } @else {
             @let disabled = !!(menu.disabled && menu.disabled(aiTable(), targetName(), position()));
             @let isRemoveRecords = menu.type === 'removeRecords';
-            @let isPreventClearSelection = menu.type === 'copyCells' || menu.type === 'pasteCells' || menu.type === 'removeRecords';
+            @let isPreventClearSelection =
+                menu.type === 'copyCells' ||
+                menu.type === 'pasteCells' ||
+                menu.type === 'removeRecords' ||
+                menu.type === 'insertUpwardRecords' ||
+                menu.type === 'insertDownwardRecords';
 
             <a
                 thyDropdownMenuItem
@@ -18,7 +23,25 @@
                 [thyDisabled]="disabled"
             >
                 <thy-icon thyDropdownMenuItemIcon [thyIconName]="menu.icon!"></thy-icon>
-                <span thyDropdownMenuItemName>{{ menu.name }}</span>
+                @if (menu?.isInputNumber) {
+                    <span thyDropdownMenuItemName class="d-flex align-items-center">
+                        {{ menu.name }}
+                        <thy-input-number
+                            #inputNumber
+                            class="mx-2"
+                            thySize="sm"
+                            [(ngModel)]="menu.count"
+                            [thyStep]="1"
+                            [thyMin]="1"
+                            (click)="inputNumberFocus($event)"
+                            (thyEnter)="itemEnterHandle($event, menu)"
+                            thyStopPropagation
+                        ></thy-input-number>
+                        {{ menu.nameSuffix }}
+                    </span>
+                } @else {
+                    <span thyDropdownMenuItemName>{{ menu.name }}</span>
+                }
                 <span thyDropdownMenuItemMeta class="text-desc">{{ menu.shortcutKey }}</span>
             </a>
         }

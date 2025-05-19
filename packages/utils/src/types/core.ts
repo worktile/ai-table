@@ -180,6 +180,9 @@ export interface AddRecordOptions {
     originId?: string;
     isDuplicate?: boolean;
     count?: number;
+    targetIndex?: number;
+    targetId?: string;
+    isInsertBefore?: boolean;
 }
 
 export interface AddFieldOptions {
