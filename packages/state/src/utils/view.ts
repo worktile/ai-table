@@ -1,13 +1,14 @@
 import { idCreator, shortIdCreator } from '@ai-table/grid';
-import { AITableView, AITableViewField, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
+import { AITableAction, AITableView, AITableViewField, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
 import { Actions } from '../action';
 import { ViewActions } from '../action/view';
-import { PositionsActions } from '../action/position';
+import { buildSetRecordPositionsActon, PositionsActions } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
 import { AIViewTable } from '../types';
 import _ from 'lodash';
+import { buildSetFieldAction } from '../action/field';
 
 export function createPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
     return createMultiplePositions(views, activeId, data, index)[0];
@@ -104,11 +105,13 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
         };
     }
     ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
+    const actions: AITableAction[] = [];
     (aiTable.records() as AITableViewRecords).forEach((record, index) => {
-        PositionsActions.setRecordPositions(aiTable, { [newId]: record.positions[originViewId] }, [index]);
+        const action = buildSetRecordPositionsActon(aiTable, { [newId]: record.positions[originViewId] }, [index]);
+        actions.push(action);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
-        Actions.setField<AITableViewField>(
+        const action = buildSetFieldAction(
             aiTable,
             {
                 positions: {
@@ -118,7 +121,11 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
             },
             [field._id]
         );
+        if (action) {
+            actions.push(action);
+        }
     });
+    aiTable.apply(actions);
     return newView;
 }
 

@@ -8,10 +8,10 @@ export const withState = (aiTable: AITable) => {
     const viewTable = aiTable as AIViewTable;
     viewTable.actions = [];
 
-    viewTable.apply = (action: AITableAction) => {
-        viewTable.actions.push(action);
-        Actions.transform(viewTable, action as AITableAction);
-
+    viewTable.apply = (action: AITableAction | AITableAction[]) => {
+        const actions = Array.isArray(action) ? action : [action];
+        viewTable.actions.push(...actions);
+        Actions.transform(viewTable, actions);
         if (!FLUSHING.get(viewTable)) {
             FLUSHING.set(viewTable, true);
             Promise.resolve().then(() => {
@@ -21,5 +21,6 @@ export const withState = (aiTable: AITable) => {
             });
         }
     };
+
     return aiTable;
 };

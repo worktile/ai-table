@@ -8,5 +8,5 @@ export interface AIViewTable extends AITable {
     viewsMap: Signal<{ [key: string]: AITableView }>;
     actions: AITableAction[];
     onChange: () => void;
-    apply: (action: AITableAction) => void;
+    apply: (action: AITableAction | AITableAction[]) => void;
 }
