@@ -37,9 +37,5 @@ export function applyYjsEvents(aiTable: AIViewTable, sharedType: SharedType, eve
 }
 
 export function applyActions(actions: AITableAction[], aiTable: AIViewTable) {
-    console.time('applyActions');
-    actions.forEach((item: AITableAction) => {
-        aiTable.apply(item);
-    });
-    console.timeEnd('applyActions');
+    aiTable.apply(actions);
 }

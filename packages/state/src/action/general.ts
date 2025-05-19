@@ -150,11 +150,13 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
 };
 
 export const GeneralActions = {
-    transform(aiTable: AIViewTable, action: AITableAction): void {
+    transform(aiTable: AIViewTable, actions: AITableAction[]): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
         const views = createDraft(aiTable.views());
-        apply(aiTable, records, fields, views, action);
+        actions.forEach((action) => {
+            apply(aiTable, records, fields, views, action);
+        });
         const newFields = finishDraft(fields);
         const newRecords = finishDraft(records);
         const newViews = finishDraft(views);
