@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.3](https://github.com/worktile/ai-table/compare/0.1.2...0.1.3) (2025-05-19)
+
+
+### Bug Fixes
+
+* **utils:** #WIK-17975 valid objectId add number type judgment ([94c5b34](https://github.com/worktile/ai-table/commit/94c5b34a2a31135e7ff05746ef5741a39884d648)), closes [#WIK-17975](https://github.com/worktile/ai-table/issues/WIK-17975)
+
+
+
 ## [0.1.2](https://github.com/worktile/ai-table/compare/0.1.1...0.1.2) (2025-05-19)
 
 
