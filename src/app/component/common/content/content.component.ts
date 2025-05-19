@@ -397,15 +397,11 @@ export class DemoTableContent {
     }
 
     addField(data: AddFieldOptions) {
-        const member = 'member_02';
-        const time = new Date().getTime();
-        addFields(this.aiTable, data, { updated_by: member, updated_at: time });
+        addFields(this.aiTable, data);
     }
 
     dragMoveField(data: MoveFieldOptions) {
-        const member = 'member_02';
-        const time = new Date().getTime();
-        moveFields(this.aiTable, data, { updated_by: member, updated_at: time });
+        moveFields(this.aiTable, data);
     }
 
     setFieldWidth(data: SetFieldWidthOptions) {
