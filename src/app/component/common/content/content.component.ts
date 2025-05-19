@@ -261,17 +261,22 @@ export class DemoTableContent {
                 hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
             },
             {
-                ...RemoveRecordsItem(aiTable, this.actions),
-                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
-                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
-            },
-            {
                 ...InsertUpwardRecords(aiTable, this.actions),
                 disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
                 hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
             },
             {
                 ...InsertDownwardRecords(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...DividerMenuItem,
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...RemoveRecordsItem(aiTable, this.actions),
                 disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
                 hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
             }
