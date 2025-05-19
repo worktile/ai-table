@@ -7,36 +7,65 @@ import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
 import { AIViewTable } from '../types';
+import _ from 'lodash';
 
-export function createDefaultPositions(
+export function createPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
+    return createMultiplePositions(views, activeId, data, index)[0];
+}
+
+export function createMultiplePositions(
     views: AITableView[],
     activeId: string,
     data: AITableViewRecords | AITableViewFields,
-    index: number
+    targetIndex: number = data.length - 1,
+    count: number = 1,
+    isInsertUpward: boolean = false
 ) {
-    const positions: Positions = {};
-    const position = getPosition(data, activeId, index);
-    views.forEach((element) => {
-        if (element._id === activeId) {
-            positions[element._id] = position;
-        } else {
-            positions[element._id] = getMaxPosition(data, element._id) + 1;
-        }
+    const positionsOfItems = getPositions(activeId, data, targetIndex, count, isInsertUpward);
+    let maxPosition = getMaxPosition(data, activeId);
+    const positions = positionsOfItems.map((itemPositions) => {
+        const viewPositions: Positions = {};
+        maxPosition += 1;
+        views.forEach((element) => {
+            if (element._id === activeId) {
+                viewPositions[element._id] = itemPositions;
+            } else {
+                viewPositions[element._id] = maxPosition;
+            }
+        });
+        return viewPositions;
     });
     return positions;
 }
 
-export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index: number) {
-    let position = data.length - 1;
-    if (index !== 0 && index !== data.length) {
-        const previousViewPosition = data[index - 1].positions[activeViewId];
-        const nextViewPosition = data[index].positions[activeViewId!];
-        position = (previousViewPosition + nextViewPosition) / 2;
-    } else {
-        const maxPosition = getMaxPosition(data, activeViewId);
-        position = maxPosition + 1;
+export function getPositions(
+    activeId: string,
+    data: AITableViewRecords | AITableViewFields,
+    targetIndex: number = data.length - 1,
+    count: number = 1,
+    isInsertBefore: boolean = false
+) {
+    let startPosition = data.length - 1;
+    let endPosition = startPosition + count + 1;
+    if (data[targetIndex]) {
+        if (isInsertBefore) {
+            endPosition = data[targetIndex].positions[activeId!];
+            startPosition = targetIndex - 1 >= 0 ? data[targetIndex - 1].positions[activeId!] : endPosition - count - 1;
+        } else {
+            startPosition = data[targetIndex].positions[activeId!];
+            endPosition =
+                targetIndex + 1 < data.length
+                    ? data[targetIndex + 1].positions[activeId!]
+                    : data[targetIndex].positions[activeId!] + count + 1;
+        }
     }
-    return position;
+    const step = (endPosition - startPosition) / (count + 1);
+    const positions = _.range(startPosition + step, endPosition, step);
+    return positions;
+}
+
+export function getPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string, index?: number) {
+    return getPositions(activeViewId, data, index)[0];
 }
 
 export function getMaxPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string) {

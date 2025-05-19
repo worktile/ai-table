@@ -8,21 +8,19 @@ import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, Trackab
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     const { originId, isDuplicate, count = 1 } = options || {};
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-
     const newRecordIds = idsCreator(count);
     const newRecordShortIds = shortIdsCreator(count);
     const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
-
     if (activeView.settings?.conditions?.length) {
         aiTable.recordsWillHidden?.update((value) => {
             value.push(...newRecordIds);
             return [...value];
         });
     }
-    newRecordIds.forEach((id, index) => {
-        const newRecord: AITableRecord = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        Actions.addRecord(aiTable, newRecord);
+    const newRecords = newRecordIds.map((id, index) => {
+        return { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
     });
+    Actions.addRecords(aiTable, newRecords, options);
 }
 
 export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false, recordId?: string) {

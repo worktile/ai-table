@@ -1,7 +1,6 @@
 import { AIViewTable } from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions } from '../utils';
 import {
     ActionName,
     AITableAction,
@@ -38,14 +37,6 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
         case ActionName.AddRecord: {
-            if (!(action.record as AITableViewRecord).positions) {
-                (action.record as AITableViewRecord).positions = createDefaultPositions(
-                    aiTable.views(),
-                    aiTable.activeViewId(),
-                    aiTable.records() as AITableViewRecords,
-                    records.length
-                );
-            }
             records.push(action.record as AITableViewRecord);
             break;
         }

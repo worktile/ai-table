@@ -43,12 +43,16 @@ export interface AITableContextMenuItem {
     name?: string;
     icon?: string;
     shortcutKey?: string;
+    isInputNumber?: boolean;
+    nameSuffix?: string;
+    count?: number;
     exec?: (
         aiTable: AITable,
         targetName: string,
         position: { x: number; y: number },
         aiTableGridSelectionService: AITableGridSelectionService,
-        notifyService: ThyNotifyService
+        notifyService: ThyNotifyService,
+        moduleValue?: any
     ) => void;
     hidden?: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => boolean;
     disabled?: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => boolean;

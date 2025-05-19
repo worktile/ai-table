@@ -11,7 +11,10 @@ export enum AITableStateI18nKey {
     editField = 'editField',
     removeField = 'removeField',
     pasteOverMaxRecords = 'pasteOverMaxRecords',
-    pasteOverMaxFields = 'pasteOverMaxFields'
+    pasteOverMaxFields = 'pasteOverMaxFields',
+    insertUpward = 'insertUpward',
+    insertDownward = 'insertDownward',
+    row = 'row'
 }
 
 const AITableI18nText = {
@@ -25,7 +28,10 @@ const AITableI18nText = {
     [AITableStateI18nKey.editField]: '编辑列',
     [AITableStateI18nKey.removeField]: '删除列',
     [AITableStateI18nKey.pasteOverMaxRecords]: '粘贴数据超过最大行数',
-    [AITableStateI18nKey.pasteOverMaxFields]: '粘贴数据超过最大列数'
+    [AITableStateI18nKey.pasteOverMaxFields]: '粘贴数据超过最大列数',
+    [AITableStateI18nKey.insertUpward]: '向上插入',
+    [AITableStateI18nKey.insertDownward]: '向下插入',
+    [AITableStateI18nKey.row]: '行'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {
