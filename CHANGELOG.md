@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.2](https://github.com/worktile/ai-table/compare/0.1.1...0.1.2) (2025-05-19)
+
+
+### Features
+
+* #WIK-17969 aitable-右键在指定行增加 向上、下插入指定数量行 ([#468](https://github.com/worktile/ai-table/issues/468)) ([fb8ec47](https://github.com/worktile/ai-table/commit/fb8ec4754b2907448832247b41464d63605c404f)), closes [#WIK-17969](https://github.com/worktile/ai-table/issues/WIK-17969)
+
+
+
 ## [0.1.1](https://github.com/worktile/ai-table/compare/0.1.0...0.1.1) (2025-05-16)
 
 

@@ -1,10 +1,10 @@
-import { AddFieldOptions, AITableRecordUpdatedInfo, AITableViewField, AITableViewFields } from '@ai-table/utils';
+import { AddFieldOptions, AITableViewField, AITableViewFields } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { idCreator } from '@ai-table/grid';
 import { createPositions, getPosition } from '../view';
 
-export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
+export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
     const { defaultValue, isDuplicate, originId } = options;
     const fields = aiTable.gridData().fields as AITableViewFields;
     const fieldsMap = aiTable.fieldsMap();

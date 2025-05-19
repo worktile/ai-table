@@ -55,7 +55,11 @@ export function removeField(aiTable: AIViewTable, path: IdPath) {
     aiTable.apply(operation);
 }
 
-export function setField<T extends AITableViewField = AITableViewField>(aiTable: AIViewTable, value: Partial<T>, path: IdPath) {
+export function buildSetFieldAction<T extends AITableViewField = AITableViewField>(
+    aiTable: AIViewTable,
+    value: Partial<T>,
+    path: IdPath
+): SetFieldAction | null {
     const field = AITableQueries.getField(aiTable, path) as T;
     if (field) {
         const properties: Partial<T> = {};
@@ -71,15 +75,21 @@ export function setField<T extends AITableViewField = AITableViewField>(aiTable:
                 }
             }
         }
-
         const operation: SetFieldAction = {
             type: ActionName.SetField,
             properties,
             newProperties,
             path
         };
+        return operation;
+    }
+    return null;
+}
 
-        aiTable.apply(operation);
+export function setField<T extends AITableViewField = AITableViewField>(aiTable: AIViewTable, value: Partial<T>, path: IdPath) {
+    const action = buildSetFieldAction(aiTable, value, path);
+    if (action) {
+        aiTable.apply(action);
     }
 }
 

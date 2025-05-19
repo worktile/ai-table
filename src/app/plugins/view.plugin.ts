@@ -1,18 +1,19 @@
 import { AITable } from '@ai-table/grid';
 import { TABLE_SERVICE_MAP } from '../service/table.service';
-import { AIViewTable, VIEW_ACTIONS } from '@ai-table/state';
+import { AIViewTable } from '@ai-table/state';
 import { ActionName, AITableAction, RemoveViewAction } from '@ai-table/utils';
 
 export const withRemoveView = (aiTable: AITable) => {
     const viewTable = aiTable as AIViewTable;
     const { apply } = viewTable;
-    viewTable.apply = (action: AITableAction) => {
-        if (VIEW_ACTIONS.includes(action.type as ActionName)) {
-            if (action.type === ActionName.RemoveView) {
-                const tableService = TABLE_SERVICE_MAP.get(viewTable);
-                const activeId = getActiveViewId(viewTable, action);
-                activeId && tableService?.setActiveView(activeId);
-            }
+    viewTable.apply = (action: AITableAction | AITableAction[]) => {
+        const actions = Array.isArray(action) ? action : [action];
+        const hasRemoveView = actions.some((item) => item.type === ActionName.RemoveView);
+        if (hasRemoveView) {
+            const removeAction = actions.find((item) => item.type === ActionName.RemoveView) as RemoveViewAction;
+            const tableService = TABLE_SERVICE_MAP.get(viewTable);
+            const activeId = getActiveViewId(viewTable, removeAction);
+            activeId && tableService?.setActiveView(activeId);
         }
         apply(action);
     };
