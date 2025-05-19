@@ -15,19 +15,31 @@ export function translateYjsEvent(aiTable: AIViewTable, sharedType: SharedType, 
 }
 
 export function applyEvents(aiTable: AIViewTable, sharedType: SharedType, events: Y.YEvent<any>[]) {
+    const actions: AITableAction[] = [];
     events.forEach((event) =>
         translateYjsEvent(aiTable, sharedType, event).forEach((item: AITableAction) => {
-            aiTable.apply(item);
+            actions.push(item);
         })
     );
+    return actions;
 }
 
 export function applyYjsEvents(aiTable: AIViewTable, sharedType: SharedType, events: Y.YEvent<any>[]): void {
     if (YjsAITable.isUndo(aiTable)) {
-        applyEvents(aiTable, sharedType, events);
+        const actions = applyEvents(aiTable, sharedType, events);
+        applyActions(actions, aiTable);
     } else {
         YjsAITable.asRemote(aiTable, () => {
-            applyEvents(aiTable, sharedType, events);
+            const actions = applyEvents(aiTable, sharedType, events);
+            applyActions(actions, aiTable);
         });
     }
+}
+
+export function applyActions(actions: AITableAction[], aiTable: AIViewTable) {
+    console.time('applyActions');
+    actions.forEach((item: AITableAction) => {
+        aiTable.apply(item);
+    });
+    console.timeEnd('applyActions');
 }
