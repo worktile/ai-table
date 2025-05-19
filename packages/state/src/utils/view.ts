@@ -130,21 +130,27 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
 }
 
 export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeViewId: string) {
+    ViewActions.removeView(aiTable, [activeViewId]);
+    const actions: AITableAction[] = [];
     records.forEach((record, index) => {
-        PositionsActions.setRecordPositions(aiTable, { [activeViewId]: undefined }, [index]);
+        const action = buildSetRecordPositionsActon(aiTable, { [activeViewId]: undefined }, [index]);
+        actions.push(action);
     });
     fields.forEach((field) => {
         const positions = { ...field.positions };
         delete positions[activeViewId];
-        Actions.setField<AITableViewField>(
+        const action = buildSetFieldAction(
             aiTable,
             {
                 positions
             },
             [field._id]
         );
+        if (action) {
+            actions.push(action);
+        }
     });
-    ViewActions.removeView(aiTable, [activeViewId]);
+    aiTable.apply(actions);
 }
 
 export function sortViews(data: AITableView[]) {
