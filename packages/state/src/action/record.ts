@@ -14,7 +14,7 @@ import {
     AddRecordOptions
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { createMultipleDefaultPositions, getPositions, getSortRecords } from '../utils';
+import { createMultiplePositions, getSortRecords } from '../utils';
 
 export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
     const field = AITableQueries.getField(aiTable, [path[1]]);
@@ -63,7 +63,7 @@ export function addRecords(
     const targetIndex = options?.targetId
         ? sortRecords.findIndex((item) => item._id === options.targetId)
         : options?.targetIndex || sortRecords.length - 1;
-    const positions = createMultipleDefaultPositions(
+    const positions = createMultiplePositions(
         aiTable.views(),
         aiTable.activeViewId(),
         sortRecords,

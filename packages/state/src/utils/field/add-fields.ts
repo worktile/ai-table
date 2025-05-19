@@ -2,7 +2,7 @@ import { AddFieldOptions, AITableRecordUpdatedInfo, AITableViewField, AITableVie
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { idCreator } from '@ai-table/grid';
-import { createDefaultPositions, getPosition } from '../view';
+import { createPositions, getPosition } from '../view';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions, updatedInfo: AITableRecordUpdatedInfo) {
     const { defaultValue, isDuplicate, originId } = options;
@@ -21,7 +21,7 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions, update
             [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex - 1)
         };
     } else {
-        newField.positions = createDefaultPositions(
+        newField.positions = createPositions(
             aiTable.views(),
             aiTable.activeViewId(),
             aiTable.gridData().fields as AITableViewFields,

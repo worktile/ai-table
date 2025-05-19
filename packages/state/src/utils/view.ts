@@ -9,16 +9,11 @@ import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
 import { AIViewTable } from '../types';
 import _ from 'lodash';
 
-export function createDefaultPositions(
-    views: AITableView[],
-    activeId: string,
-    data: AITableViewRecords | AITableViewFields,
-    index: number
-) {
-    return createMultipleDefaultPositions(views, activeId, data, index)[0];
+export function createPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
+    return createMultiplePositions(views, activeId, data, index)[0];
 }
 
-export function createMultipleDefaultPositions(
+export function createMultiplePositions(
     views: AITableView[],
     activeId: string,
     data: AITableViewRecords | AITableViewFields,
@@ -26,17 +21,19 @@ export function createMultipleDefaultPositions(
     count: number = 1,
     isInsertUpward: boolean = false
 ) {
-    const activeViewPositions = getPositions(activeId, data, targetIndex, count, isInsertUpward);
-    const positions = activeViewPositions.map((position) => {
-        const viewActions: Positions = {};
+    const positionsOfItems = getPositions(activeId, data, targetIndex, count, isInsertUpward);
+    let maxPosition = getMaxPosition(data, activeId);
+    const positions = positionsOfItems.map((itemPositions) => {
+        const viewPositions: Positions = {};
+        maxPosition += 1;
         views.forEach((element) => {
             if (element._id === activeId) {
-                viewActions[element._id] = position;
+                viewPositions[element._id] = itemPositions;
             } else {
-                viewActions[element._id] = getMaxPosition(data, element._id) + 1;
+                viewPositions[element._id] = maxPosition;
             }
         });
-        return viewActions;
+        return viewPositions;
     });
     return positions;
 }

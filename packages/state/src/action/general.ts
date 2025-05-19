@@ -1,7 +1,6 @@
 import { AIViewTable } from '../types';
 import { createDraft, finishDraft } from 'immer';
 import { getDefaultFieldValue } from '@ai-table/grid';
-import { createDefaultPositions } from '../utils';
 import {
     ActionName,
     AITableAction,
