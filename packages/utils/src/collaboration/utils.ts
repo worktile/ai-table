@@ -22,6 +22,7 @@ import {
 } from '../types';
 import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from '../constants';
 import ObjectID from 'bson-objectid';
+import { isNumber } from 'lodash';
 
 export const getIdBySystemFieldValuesType = (systemFieldValuesType: Y.Array<any>): string => {
     return systemFieldValuesType.get(SystemFieldIndex.Id)['_id'];
@@ -71,11 +72,7 @@ export function translatePositionToPath(
 
 export function toAITableSharedType(
     sharedType: Y.Map<any>,
-    data: {
-        fields: AITableField[];
-        records: AITableViewRecord[];
-        views: AITableView[];
-    },
+    data: { fields: AITableField[]; records: AITableViewRecord[]; views: AITableView[] },
     operationContext?: TransactionOriginInfo
 ): void {
     sharedType.doc!.transact(
@@ -102,7 +99,7 @@ export function toAITableSharedType(
 export function toMapSyncElement(node: any): SyncMapElement {
     const element: SyncMapElement = new Y.Map();
     for (const key in node) {
-        element.set(key, ObjectID.isValid(node[key]) ? node[key].toString() : node[key]);
+        element.set(key, !isNumber(node[key]) && ObjectID.isValid(node[key]) ? node[key].toString() : node[key]);
     }
     return element;
 }
