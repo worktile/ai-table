@@ -11,3 +11,7 @@ export const Actions = {
     ...ViewActions,
     ...PositionsActions
 };
+
+export { buildSetRecordPositionsActon } from './position';
+
+export { buildSetFieldAction } from './field';
