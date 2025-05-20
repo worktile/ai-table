@@ -37,7 +37,7 @@ export const InsertUpwardRecords = (aiTable: AITable, actions: AITableActions): 
     return {
         type: 'insertUpwardRecords',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertUpward),
-        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.row),
+        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.upward),
         icon: 'table-insert-rows-top',
         isInputNumber: true,
         count: 1,
@@ -63,7 +63,7 @@ export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions)
     return {
         type: 'insertDownwardRecords',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertDownward),
-        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.row),
+        nameSuffix: getStateI18nTextByKey(aiTable, AITableStateI18nKey.downward),
         icon: 'table-insert-rows-down',
         count: 1,
         isInputNumber: true,
