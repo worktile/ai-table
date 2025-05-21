@@ -1,5 +1,5 @@
 import { helpers } from 'ngx-tethys/util';
-import { compareString, hasIntersect, isMeetFilter } from '../operate';
+import { hasIntersect, isMeetFilter } from '../operate';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
 import { AITable, idCreator } from '../../../core';
 import {
@@ -17,6 +17,7 @@ import {
     isEmpty
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
+import { compareOption } from '../operate';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {
@@ -31,8 +32,8 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
             field: AITableField;
         }
     ) {
-        const optionsMap = helpers.keyBy((options?.field?.settings as SelectSettings)?.options || [], '_id');
-        const validCellValue = cellValue.filter((optionId) => !!optionsMap[optionId]);
+        const selectOptions = (options?.field?.settings as SelectSettings)?.options || [];
+        const validCellValue = getValidCellValue(cellValue, selectOptions);
 
         switch (condition.operation) {
             case AITableFilterOperation.empty:
@@ -58,9 +59,11 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
             field: AITableField;
         }
     ): number {
-        const value1 = cellValueToSortValue(cellValue1, options.field);
-        const value2 = cellValueToSortValue(cellValue2, options.field);
-        return compareString(value1, value2);
+        const selectOptions = (options.field.settings as SelectSettings)?.options || [];
+        const validCellValue1 = getValidCellValue(cellValue1, selectOptions);
+        const validCellValue2 = getValidCellValue(cellValue2, selectOptions);
+
+        return compareOption(validCellValue1, validCellValue2, selectOptions);
     }
 
     toFieldValue(
@@ -169,19 +172,8 @@ function copyOption(
     return newOption;
 }
 
-function cellValueToSortValue(cellValue: SelectFieldValue, field: AITableField): string | null {
-    if (!cellValue) {
-        return null;
-    }
-    const texts: string[] = [];
-    const optionsMap = helpers.keyBy((field.settings as SelectSettings).options || [], '_id');
-    if (cellValue && Array.isArray(cellValue) && cellValue.length) {
-        cellValue.forEach((optionId) => {
-            const option = optionsMap[optionId];
-            if (option && option.text) {
-                texts.push(option.text);
-            }
-        });
-    }
-    return texts && texts.length ? texts.join(',') : null;
+function getValidCellValue(cellValue: SelectFieldValue, options: AITableSelectOption[]) {
+    const optionsMap = helpers.keyBy(options, '_id');
+    const validCellValue = cellValue.filter((optionId) => !!optionsMap[optionId]);
+    return validCellValue;
 }

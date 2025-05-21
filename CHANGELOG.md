@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.5](https://github.com/worktile/ai-table/compare/0.1.4...0.1.5) (2025-05-21)
+
+
+### Bug Fixes
+
+* **grid:** the select field should be sorted in the order of the options ([2415e9d](https://github.com/worktile/ai-table/commit/2415e9d355b86322646bd56fc0658dad9f502254))
+
+
+
+## [0.1.4](https://github.com/worktile/ai-table/compare/0.1.3...0.1.4) (2025-05-20)
+
+
+### Features
+
+* #WIK-17987 aitable 插入行  i18n 调整 ([7a21b8c](https://github.com/worktile/ai-table/commit/7a21b8cb061afced11016139dc1ee34bb3cd10b1)), closes [#WIK-17987](https://github.com/worktile/ai-table/issues/WIK-17987)
+
+
+
 ## [0.1.3](https://github.com/worktile/ai-table/compare/0.1.2...0.1.3) (2025-05-19)
 
 

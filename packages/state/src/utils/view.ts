@@ -23,15 +23,18 @@ export function createMultiplePositions(
     isInsertUpward: boolean = false
 ) {
     const positionsOfItems = getPositions(activeId, data, targetIndex, count, isInsertUpward);
-    let maxPosition = getMaxPosition(data, activeId);
+    const viewsMaxPosition: Record<string, number> = {};
+    views.forEach((view) => {
+        viewsMaxPosition[view._id] = getMaxPosition(data, view._id);
+    });
     const positions = positionsOfItems.map((itemPositions) => {
         const viewPositions: Positions = {};
-        maxPosition += 1;
-        views.forEach((element) => {
-            if (element._id === activeId) {
-                viewPositions[element._id] = itemPositions;
+        views.forEach((view) => {
+            if (view._id === activeId) {
+                viewPositions[view._id] = itemPositions;
             } else {
-                viewPositions[element._id] = maxPosition;
+                viewsMaxPosition[view._id] += 1;
+                viewPositions[view._id] = viewsMaxPosition[view._id];
             }
         });
         return viewPositions;

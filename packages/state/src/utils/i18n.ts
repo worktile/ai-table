@@ -14,7 +14,8 @@ export enum AITableStateI18nKey {
     pasteOverMaxFields = 'pasteOverMaxFields',
     insertUpward = 'insertUpward',
     insertDownward = 'insertDownward',
-    row = 'row'
+    upward = 'upward',
+    downward = 'downward'
 }
 
 const AITableI18nText = {
@@ -31,7 +32,8 @@ const AITableI18nText = {
     [AITableStateI18nKey.pasteOverMaxFields]: '粘贴数据超过最大列数',
     [AITableStateI18nKey.insertUpward]: '向上插入',
     [AITableStateI18nKey.insertDownward]: '向下插入',
-    [AITableStateI18nKey.row]: '行'
+    [AITableStateI18nKey.upward]: '行',
+    [AITableStateI18nKey.downward]: '行'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {

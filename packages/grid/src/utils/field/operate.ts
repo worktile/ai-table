@@ -1,4 +1,12 @@
-import { AITableFilterCondition, AITableFilterOperation, AITableField, FieldValue, isEmpty } from '@ai-table/utils';
+import {
+    AITableFilterCondition,
+    AITableFilterOperation,
+    AITableField,
+    FieldValue,
+    isEmpty,
+    AITableSelectOption,
+    Id
+} from '@ai-table/utils';
 import { AITable } from '../../core';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
@@ -31,6 +39,39 @@ export function compareString(a: string | null, b: string | null): number {
 
     //  pinyin sort
     return a === b ? 0 : zhIntlCollator ? zhIntlCollator.compare(a, b) : a.localeCompare(b, 'zh-CN') > 0 ? 1 : -1;
+}
+
+export function compareOption(a: Id[] | null, b: Id[] | null, options: AITableSelectOption[]): number {
+    if (isEmpty(a) && isEmpty(b)) {
+        return 0;
+    }
+    if (isEmpty(a)) {
+        return 1;
+    }
+    if (isEmpty(b)) {
+        return -1;
+    }
+
+    const arr1 = a as Id[];
+    const arr2 = b as Id[];
+
+    const optionOrderMap = new Map<Id, number>();
+    options.forEach((option, index) => {
+        optionOrderMap.set(option._id, index);
+    });
+
+    const minLength = Math.min(arr1.length, arr2.length);
+    for (let i = 0; i < minLength; i++) {
+        const order1 = optionOrderMap.get(arr1[i]) ?? Number.MAX_SAFE_INTEGER;
+        const order2 = optionOrderMap.get(arr2[i]) ?? Number.MAX_SAFE_INTEGER;
+
+        if (order1 !== order2) {
+            return order1 - order2;
+        }
+    }
+
+    // 如果前面的元素都相同，则长度较短的数组排在前面
+    return arr1.length - arr2.length;
 }
 
 export function stringInclude(str: string, searchStr: string) {
