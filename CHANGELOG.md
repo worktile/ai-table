@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.6](https://github.com/worktile/ai-table/compare/0.1.5...0.1.6) (2025-05-21)
+
+
+### Bug Fixes
+
+* #WIK-17998 【aitable】在一个视图中有筛选的某条数据上方插入一行，在其他视图中被插入行的位置应该在最后 ([756a874](https://github.com/worktile/ai-table/commit/756a874836cdb753529cada6bbd38a29583d51f8)), closes [#WIK-17998](https://github.com/worktile/ai-table/issues/WIK-17998)
+
+
+### Features
+
+* #WIK-18016 【AiTable】右键新增行中的input输入框无法删除输入内容 ([#479](https://github.com/worktile/ai-table/issues/479)) ([04a48ae](https://github.com/worktile/ai-table/commit/04a48aeb65c06c110dd7d770c73a37f6193e832a)), closes [#WIK-18016](https://github.com/worktile/ai-table/issues/WIK-18016)
+* **grid:** #WIK-18008 paste cancel maximum row and column limit prompt ([#478](https://github.com/worktile/ai-table/issues/478)) ([a515bf1](https://github.com/worktile/ai-table/commit/a515bf19b452081fa34726eee9322681fc31df9b)), closes [#WIK-18008](https://github.com/worktile/ai-table/issues/WIK-18008)
+
+
+
 ## [0.1.5](https://github.com/worktile/ai-table/compare/0.1.4...0.1.5) (2025-05-21)
 
 
