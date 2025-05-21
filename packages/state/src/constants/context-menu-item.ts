@@ -131,22 +131,13 @@ export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITa
             notifyService: ThyNotifyService
         ) => {
             writeToAITable(aiTable, actions).then((result) => {
+                if (result.isPasteOverMaxRecords || result.isPasteOverMaxFields) {
+                    return;
+                }
                 if (!result.isPasteSuccess) {
                     notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.invalidPasteContent), undefined, {
                         placement: 'bottomLeft'
                     });
-                }
-                if (result.isPasteOverMaxRecords) {
-                    notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.pasteOverMaxRecords), undefined, {
-                        placement: 'bottomLeft'
-                    });
-                    console.warn('Pasting exceeds maximum records limit');
-                }
-                if (result.isPasteOverMaxFields) {
-                    notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.pasteOverMaxFields), undefined, {
-                        placement: 'bottomLeft'
-                    });
-                    console.warn('Pasting exceeds maximum fields limit');
                 }
             });
         }
