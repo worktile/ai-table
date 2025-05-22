@@ -6,7 +6,14 @@ import { getDefaultRecordDataByFilter } from './filter';
 import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
-    const { originId, isDuplicate, count = 1 } = options || {};
+    options = options || {};
+    let { originId, isDuplicate, count = 1 } = options;
+    const recordCount = aiTable.records().length;
+    const maxRecordCount = aiTable.context?.maxRecords();
+    if (maxRecordCount && recordCount + count > maxRecordCount) {
+        count = maxRecordCount! - recordCount;
+        options.count = count;
+    }
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
     const newRecordIds = idsCreator(count);
     const newRecordShortIds = shortIdsCreator(count);

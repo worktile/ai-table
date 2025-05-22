@@ -33,6 +33,7 @@
                             [(ngModel)]="menu.count"
                             [thyStep]="1"
                             [thyMin]="1"
+                            [thyMax]="maxCount()"
                             (click)="inputNumberFocus($event)"
                             (thyEnter)="itemEnterHandle($event, menu)"
                             thyStopPropagation
