@@ -48,7 +48,12 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
         name,
         icon: 'copy',
         exec: (aiTable: AIViewTable, field: Signal<AITableField>) => {
-            const allFieldNames = (aiTable.fields() || []).map((item) => item.name);
+            const fields = aiTable.fields() || [];
+            const maxFields = aiTable.context?.maxFields();
+            if (maxFields && fields.length >= maxFields) {
+                return;
+            }
+            const allFieldNames = fields.map((item) => item.name);
             const copyName = field().name;
             let newFieldName = generateCopyName(aiTable, allFieldNames, copyName);
 
@@ -62,6 +67,11 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
                 }
             };
             addFieldFn(fieldOptions);
+        },
+        disabled: () => {
+            const fieldLength = aiTable.fields()?.length || 0;
+            const maxFields = aiTable.context?.maxFields();
+            return maxFields && fieldLength >= maxFields;
         }
     };
 };
