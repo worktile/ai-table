@@ -1,5 +1,5 @@
 import { NgClass, NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import {
     ThyDropdownAbstractMenu,
     ThyDropdownMenuItemDirective,
@@ -52,6 +52,8 @@ export class AITableContextMenu extends ThyDropdownAbstractMenu {
     targetName = input.required<string>();
 
     position = input.required<{ x: number; y: number }>();
+
+    maxCount = computed(() => this.aiTable().context?.maxRecords()! - this.aiTable().records().length);
 
     execute(menu: AITableContextMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable(), this.targetName(), this.position())) || !menu.disabled) {
