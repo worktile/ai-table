@@ -3,3 +3,8 @@
 @forward '../packages/grid/src/styles/styles.scss';
 @forward './app/app.component.scss';
 @forward './app/component/table.scss';
+
+html,
+body {
+    height: 100%;
+}
