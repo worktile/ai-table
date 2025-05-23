@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.8](https://github.com/worktile/ai-table/compare/0.1.7...0.1.8) (2025-05-23)
+
+
+### Bug Fixes
+
+* fixed copy field disabled return type ([#486](https://github.com/worktile/ai-table/issues/486)) ([eb3c15f](https://github.com/worktile/ai-table/commit/eb3c15fb20c6f72ed356355d40fe9926ffec6700))
+
+
+
 ## [0.1.7](https://github.com/worktile/ai-table/compare/0.1.6...0.1.7) (2025-05-23)
 
 
