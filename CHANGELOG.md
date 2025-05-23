@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.7](https://github.com/worktile/ai-table/compare/0.1.6...0.1.7) (2025-05-23)
+
+
+### Bug Fixes
+
+* #WIK-18017 【AiTable】右键新增行，需要校验最大量限制 ([#481](https://github.com/worktile/ai-table/issues/481)) ([ddfd6b8](https://github.com/worktile/ai-table/commit/ddfd6b8837f7dfdd465fe0e9c68423bc3558e8d6)), closes [#WIK-18017](https://github.com/worktile/ai-table/issues/WIK-18017)
+* **state:** #WIK-18027 maximum limit for copying fields ([#483](https://github.com/worktile/ai-table/issues/483)) ([8867f8d](https://github.com/worktile/ai-table/commit/8867f8d6dd165e54b242fdc5c8d1c090f10dc22d)), closes [#WIK-18027](https://github.com/worktile/ai-table/issues/WIK-18027)
+
+
+### Features
+
+* #WIK-18019 列的更多菜单「重复」列，位置不正确 ([#482](https://github.com/worktile/ai-table/issues/482)) ([2af4233](https://github.com/worktile/ai-table/commit/2af4233b74cb5d94dc809320d3b507b5a8353446)), closes [#WIK-18019](https://github.com/worktile/ai-table/issues/WIK-18019)
+
+
+
 ## [0.1.6](https://github.com/worktile/ai-table/compare/0.1.5...0.1.6) (2025-05-21)
 
 
