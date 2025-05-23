@@ -71,7 +71,7 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
         disabled: () => {
             const fieldLength = aiTable.fields()?.length || 0;
             const maxFields = aiTable.context?.maxFields();
-            return maxFields && fieldLength >= maxFields;
+            return maxFields ? fieldLength >= maxFields : false;
         }
     };
 };
