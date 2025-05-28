@@ -156,49 +156,39 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     }
 };
 
+const getRowBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetName: string, aiTable: AITable): string => {
+    const colors = AITable.getColors();
+    const [recordId, fieldId] = cell;
+    if (isWillHiddenCell(cell, aiTable)) {
+        return colors.itemMatchBgColor;
+    }
+
+    if (isSelectedRecord(recordId, aiTable) || isSiblingCell(cell, aiTable)) {
+        return colors.itemActiveBgColor;
+    }
+
+    if (isHoverRecord(isHover, targetName)) {
+        return colors.gray80;
+    }
+    return colors.white;
+};
+
 const getCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetName: string, aiTable: AITable): string => {
     const colors = AITable.getColors();
     const [recordId, fieldId] = cell;
-    let background = colors.white;
-
-    const _isHoverRecord = isHoverRecord(isHover, targetName);
-    const _isSelectedRecord = isSelectedRecord(recordId, aiTable);
-    const _isSelectedField = isSelectedField(fieldId, aiTable);
-    const _isSiblingCell = isSiblingCell(cell, aiTable);
-    const _isActiveCell = isActiveCell(cell, aiTable);
-    const _isSelectedCell = isSelectedCell(cell, aiTable);
-    const _isKeywordsMatchedCell = isKeywordsMatchedCell(cell, aiTable);
-    const _isWillHiddenCell = isWillHiddenCell(cell, aiTable);
-
-    if (_isKeywordsMatchedCell || (_isWillHiddenCell && !_isActiveCell)) {
-        background = colors.itemMatchBgColor;
-    } else if (_isSelectedRecord || _isSelectedField || _isSiblingCell || (_isSelectedCell && !_isActiveCell)) {
-        background = colors.itemActiveBgColor;
-    } else if (_isHoverRecord && !_isActiveCell) {
-        background = colors.gray80;
+    if (isActiveCell(cell, aiTable)) {
+        return colors.white;
+    }
+    if (isSelectedField(fieldId, aiTable) || isSelectedCell(cell, aiTable)) {
+        return colors.itemActiveBgColor;
     }
 
-    return background;
+    return getRowBackground(cell, isHover, targetName, aiTable);
 };
 
 const getIndexCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetName: string, aiTable: AITable): string => {
-    const colors = AITable.getColors();
     const [recordId, fieldId] = cell;
-    let background = colors.white;
-    const _isHoverRecord = isHoverRecord(isHover, targetName);
-    const _isSelectedRecord = isSelectedRecord(recordId, aiTable);
-    const _isSiblingCell = isSiblingCell(cell, aiTable);
-    const _isActiveCell = isActiveCell(cell, aiTable);
-    const _isWillHiddenCell = isWillHiddenCell(cell, aiTable);
-    if (_isWillHiddenCell) {
-        background = colors.itemMatchBgColor;
-    } else if (_isSelectedRecord || _isSiblingCell || _isActiveCell) {
-        background = colors.itemActiveBgColor;
-    } else if (_isHoverRecord) {
-        background = colors.gray80;
-    }
-
-    return background;
+    return getRowBackground([recordId, ''], isHover, targetName, aiTable);
 };
 
 export const isActiveCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {

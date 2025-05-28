@@ -18,7 +18,9 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const newRecordIds = idsCreator(count);
     const newRecordShortIds = shortIdsCreator(count);
     const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
-    const newRecords = newRecordIds.map((id, index) => {
+    const newRecords: AITableRecord[] = [];
+    const hiddenRecordIds: string[] = [];
+    newRecordIds.forEach((id, index) => {
         const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
         if (activeView.settings?.conditions?.length) {
             const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
@@ -28,23 +30,26 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
                 condition_logical: conditionLogical
             });
             if (!checkResult) {
-                aiTable.recordsWillHidden?.update((value) => {
-                    return [...value, id];
-                });
+                hiddenRecordIds.push(id);
             }
         }
-        return record;
+
+        newRecords.push(record);
     });
+    if (hiddenRecordIds.length) {
+        aiTable.recordsWillHidden?.update((value) => {
+            return [...value, ...hiddenRecordIds];
+        });
+    }
     Actions.addRecords(aiTable, newRecords, options);
+    const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
     aiTable.selection.set({
         selectedRecords: new Set(),
         selectedFields: new Set(),
         selectedCells: new Set(),
-        activeCell: null,
+        activeCell: [recentAddRecord._id, aiTable.gridData().fields[0]._id],
         selectAllState: AITableSelectAllState.none
     });
-    const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
-    aiTable.selection().activeCell = [recentAddRecord._id, aiTable.gridData().fields[0]._id];
 }
 
 export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false, recordId?: string) {
