@@ -33,6 +33,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
                 hiddenRecordIds.push(id);
             }
         }
+        newRecords.push(record);
     });
     if (hiddenRecordIds.length) {
         aiTable.recordsWillHidden?.update((value) => {
@@ -41,11 +42,13 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     }
     Actions.addRecords(aiTable, newRecords, options);
     const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
+    const activeRecordId = recentAddRecord._id;
+    const activeFieldId = aiTable.gridData().fields[0]._id;
     aiTable.selection.set({
         selectedRecords: new Set(),
         selectedFields: new Set(),
-        selectedCells: new Set(),
-        activeCell: [recentAddRecord._id, aiTable.gridData().fields[0]._id],
+        selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
+        activeCell: [activeRecordId, activeFieldId],
         selectAllState: AITableSelectAllState.none
     });
 }
