@@ -129,8 +129,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     domToolTips = computed(() => {
         const scrollTop = this.aiTable.context!.scrollState().scrollTop;
-        const rowIndexes = this.toolTipRowIndexes();
-        return rowIndexes.map((rowIndex) => {
+        const rowIndices = this.toolTipRowIndices();
+        return rowIndices.map((rowIndex) => {
             return {
                 top: rowIndex * AI_TABLE_ROW_HEIGHT - scrollTop,
                 left: 0
@@ -138,12 +138,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
     });
 
-    toolTipRowIndexes = computed(() => {
+    toolTipRowIndices = computed(() => {
         const hiddenRows = this.aiTable.recordsWillHidden() || [];
-        const toolTipRowIndexes: number[] = hiddenRows.map((rowId) => {
+        const toolTipRowIndices: number[] = hiddenRows.map((rowId) => {
             return this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0;
         });
-        return toolTipRowIndexes;
+        return toolTipRowIndices;
     });
 
     visibleColumnsIndexMap = computed(() => {
