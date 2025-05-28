@@ -36,7 +36,7 @@ export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRec
     });
 }
 
-function checkConditions(
+export function checkConditions(
     aiTable: AIViewTable,
     fields: AITableViewFields,
     record: AITableRecord,

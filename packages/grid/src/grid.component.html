@@ -10,6 +10,23 @@
             (koDblclick)="stageDblclick($event)"
             (koMouseleave)="stageMouseleave($event)"
         >
+            @if (domToolTips().length > 0) {
+                <div
+                    class="ai-table-left-background-wrapper"
+                    [style.height.px]="containerRect().height - fieldHeadHeight"
+                    [style.top.px]="fieldHeadHeight"
+                >
+                    @for (domToolTip of domToolTips(); track trackBy(idx, domToolTip); let idx = $index) {
+                        <div
+                            class="ai-table-left-background"
+                            [thyTooltip]="'本记录已被筛选过滤，点击该记录以外位置将被隐藏'"
+                            [style.--scroll-top.px]="domToolTip.top"
+                        >
+                            <thy-icon styxI18nTracking class="text-white" thyIconName="filter-line"></thy-icon>
+                        </div>
+                    }
+                </div>
+            }
             <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
                 <div class="ai-table-scroll-bar-inner" [style.width.px]="scrollbarWidth()"></div>
             </div>
