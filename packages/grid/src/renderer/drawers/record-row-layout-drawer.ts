@@ -38,18 +38,6 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
-        // 编号的上下边框
-        // let fillBg = colors.transparent;
-        // if (fill) {
-        //     fillBg = fill;
-        // } else {
-        //     if (isCheckedRow) {
-        //         fillBg = colors.itemActiveBgColor;
-        //     } else if (isHoverRow) {
-        //         fillBg = colors.gray80;
-        //     }
-        // }
-
         if (!this.hiddenIndexColumn) {
             this.customRect({
                 x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,

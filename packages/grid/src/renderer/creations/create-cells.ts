@@ -168,8 +168,9 @@ const getCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetNa
     const _isActiveCell = isActiveCell(cell, aiTable);
     const _isSelectedCell = isSelectedCell(cell, aiTable);
     const _isKeywordsMatchedCell = isKeywordsMatchedCell(cell, aiTable);
+    const _isWillHiddenCell = isWillHiddenCell(cell, aiTable);
 
-    if (_isKeywordsMatchedCell) {
+    if (_isKeywordsMatchedCell || (_isWillHiddenCell && !_isActiveCell)) {
         background = colors.itemMatchBgColor;
     } else if (_isSelectedRecord || _isSelectedField || _isSiblingCell || (_isSelectedCell && !_isActiveCell)) {
         background = colors.itemActiveBgColor;
