@@ -32,6 +32,7 @@ import {
     AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
@@ -72,11 +73,14 @@ import {
     AddRecordOptions,
     AIRecordFieldIdPath,
     AITableField,
+    AITableViewFields,
     DragEndData,
     DragType,
     IdPath,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
+import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
+import { ThyIcon } from 'ngx-tethys/icon';
 
 @Component({
     selector: 'ai-table-grid',
@@ -85,7 +89,7 @@ import {
     host: {
         class: 'ai-table-grid'
     },
-    imports: [AITableRenderer, AITableDragComponent],
+    imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
     providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
@@ -123,6 +127,25 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return buildGridLinearRows(this.gridData().records, !this.aiReadonly());
     });
 
+    domToolTips = computed(() => {
+        const scrollTop = this.aiTable.context!.scrollState().scrollTop;
+        const rowIndexs = this.toolTipRowIndexs();
+        return rowIndexs.map((rowIndex) => {
+            return {
+                top: rowIndex * AI_TABLE_ROW_HEIGHT - scrollTop,
+                left: 0
+            };
+        });
+    });
+
+    toolTipRowIndexs = computed(() => {
+        const hiddenRows = this.aiTable.recordsWillHidden() || [];
+        const toolTipRowIndexs: number[] = hiddenRows.map((rowId) => {
+            return this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0;
+        });
+        return toolTipRowIndexs;
+    });
+
     visibleColumnsIndexMap = computed(() => {
         const columns = AITable.getVisibleFields(this.aiTable);
         return new Map(columns?.map((item, index) => [item._id, index]));
@@ -135,6 +158,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     containerElement = computed(() => {
         return this.container()!.nativeElement;
     });
+
+    trackBy = (index: number, item: any) => {
+        return item.sort_by ?? index;
+    };
 
     rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
@@ -460,8 +487,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 this.aiTableGridSelectionService.clearSelection();
                 this.addRecord();
-                const { records, fields } = this.gridData();
-                this.aiTableGridSelectionService.setActiveCell([records[records.length - 1]._id, fields[0]._id]);
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
@@ -781,7 +806,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
     }
 
-    private getScrollPosition() {
+    getScrollPosition() {
         const horizontalBar = this.horizontalBarRef()?.nativeElement;
         const verticalBar = this.verticalBarRef()?.nativeElement;
         let scrollLeft = horizontalBar?.scrollLeft || 0;

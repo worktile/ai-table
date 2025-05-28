@@ -30,20 +30,25 @@ export class RecordRowLayout extends Layout {
     }
 
     // 首列
-    private renderFirstCell({ row, style, isHoverRow, isCheckedRow }: AITableCell) {
+    private renderFirstCell({ row, style, indexStyle, isHoverRow, isCheckedRow }: AITableCell) {
         if (!this.isFirst) return;
-        const { fill } = style;
+        const { fill } = style || {};
+        const { fill: indexFill } = indexStyle || {};
         const y = this.y;
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
         // 编号的上下边框
-        let fillBg = colors.transparent;
-        if (isCheckedRow) {
-            fillBg = colors.itemActiveBgColor;
-        } else if (isHoverRow) {
-            fillBg = colors.gray80;
-        }
+        // let fillBg = colors.transparent;
+        // if (fill) {
+        //     fillBg = fill;
+        // } else {
+        //     if (isCheckedRow) {
+        //         fillBg = colors.itemActiveBgColor;
+        //     } else if (isHoverRow) {
+        //         fillBg = colors.gray80;
+        //     }
+        // }
 
         if (!this.hiddenIndexColumn) {
             this.customRect({
@@ -51,7 +56,7 @@ export class RecordRowLayout extends Layout {
                 y,
                 width: this.rowHeadWidth - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 height: rowHeight,
-                fill: fillBg,
+                fill: indexFill,
                 strokes: {
                     right: colors.gray200,
                     bottom: colors.gray200
@@ -100,7 +105,7 @@ export class RecordRowLayout extends Layout {
     // 尾列
     private renderLastCell({ style, isHoverRow, isCheckedRow }: Pick<AITableCell, 'style' | 'isHoverRow' | 'isCheckedRow'>) {
         if (!this.isLast || this.isFirst) return;
-        const { fill, stroke } = style;
+        const { fill, stroke } = style || {};
         const colors = AITable.getColors();
 
         // 背景、边框
@@ -120,7 +125,7 @@ export class RecordRowLayout extends Layout {
     private renderCommonCell({ style }: Pick<AITableCell, 'style'>) {
         if (this.isFirst || this.isLast) return;
 
-        const { fill, stroke } = style;
+        const { fill, stroke } = style || {};
         const colors = AITable.getColors();
 
         // 背景、边框
@@ -135,8 +140,8 @@ export class RecordRowLayout extends Layout {
     }
 
     render(config: AITableCell) {
-        const { row, style, isCheckedRow, isHoverRow } = config;
-        this.renderFirstCell({ row, style, isCheckedRow, isHoverRow });
+        const { row, style, indexStyle, isCheckedRow, isHoverRow } = config;
+        this.renderFirstCell({ row, style, indexStyle, isCheckedRow, isHoverRow });
         this.renderCommonCell({ style });
         this.renderLastCell({ style, isCheckedRow, isHoverRow });
     }

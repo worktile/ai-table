@@ -1,8 +1,8 @@
-import { getDefaultFieldValue, idsCreator, shortIdsCreator } from '@ai-table/grid';
+import { AITableSelectAllState, getDefaultFieldValue, idsCreator, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
-import { getDefaultRecordDataByFilter } from './filter';
+import { checkConditions, getDefaultRecordDataByFilter } from './filter';
 import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
@@ -18,16 +18,33 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const newRecordIds = idsCreator(count);
     const newRecordShortIds = shortIdsCreator(count);
     const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
-    if (activeView.settings?.conditions?.length) {
-        aiTable.recordsWillHidden?.update((value) => {
-            value.push(...newRecordIds);
-            return [...value];
-        });
-    }
     const newRecords = newRecordIds.map((id, index) => {
-        return { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
+        const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
+        if (activeView.settings?.conditions?.length) {
+            const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
+            const conditionLogical = aiTable.viewsMap()[aiTable.activeViewId()].settings?.condition_logical;
+            const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record, {
+                conditions,
+                condition_logical: conditionLogical
+            });
+            if (!checkResult) {
+                aiTable.recordsWillHidden?.update((value) => {
+                    return [...value, id];
+                });
+            }
+        }
+        return record;
     });
     Actions.addRecords(aiTable, newRecords, options);
+    aiTable.selection.set({
+        selectedRecords: new Set(),
+        selectedFields: new Set(),
+        selectedCells: new Set(),
+        activeCell: null,
+        selectAllState: AITableSelectAllState.none
+    });
+    const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
+    aiTable.selection().activeCell = [recentAddRecord._id, aiTable.gridData().fields[0]._id];
 }
 
 export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false, recordId?: string) {

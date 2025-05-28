@@ -162,6 +162,36 @@
         height: 100%;
         position: relative;
     }
+
+    .ai-table-left-background-wrapper {
+        position: absolute;
+        left: 0;
+        width: 18px;
+        overflow: hidden;
+    }
+
+    .ai-table-left-background {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        cursor: pointer;
+        border-radius: 12px 0px 0px 12px;
+        background: #ff9f73;
+        width: 18px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(var(--scroll-top, 0));
+
+        thy-icon {
+            display: block;
+            margin: 0;
+            line-height: 1;
+            font-size: 14px;
+        }
+    }
+
     .ai-table-horizontal-scroll-bar-wrapper,
     .ai-table-vertical-scroll-bar-wrapper {
         position: absolute;

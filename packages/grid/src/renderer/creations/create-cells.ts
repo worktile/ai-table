@@ -85,6 +85,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const fieldId = field._id;
                     const cell: AIRecordFieldIdPath = [recordId, fieldId];
                     let background = getCellBackground(cell, isHover, targetName, aiTable);
+                    let indexBackground = getIndexCellBackground(cell, isHover, targetName, aiTable);
 
                     recordRowLayout.init({
                         x,
@@ -101,6 +102,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     recordRowLayout.render({
                         row,
                         style: { fill: background },
+                        indexStyle: { fill: indexBackground },
                         isHoverRow: isHoverRecord(isHover, targetName),
                         isCheckedRow: isSelectedRecord(recordId, aiTable)
                     });
@@ -178,6 +180,26 @@ const getCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetNa
     return background;
 };
 
+const getIndexCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetName: string, aiTable: AITable): string => {
+    const colors = AITable.getColors();
+    const [recordId, fieldId] = cell;
+    let background = colors.white;
+    const _isHoverRecord = isHoverRecord(isHover, targetName);
+    const _isSelectedRecord = isSelectedRecord(recordId, aiTable);
+    const _isSiblingCell = isSiblingCell(cell, aiTable);
+    const _isActiveCell = isActiveCell(cell, aiTable);
+    const _isWillHiddenCell = isWillHiddenCell(cell, aiTable);
+    if (_isWillHiddenCell) {
+        background = colors.itemMatchBgColor;
+    } else if (_isSelectedRecord || _isSiblingCell || _isActiveCell) {
+        background = colors.itemActiveBgColor;
+    } else if (_isHoverRecord) {
+        background = colors.gray80;
+    }
+
+    return background;
+};
+
 export const isActiveCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
     const [recordId, fieldId] = cell;
     const [activeRecordId, activeFieldId] = AITable.getActiveCell(aiTable) || [];
@@ -193,6 +215,11 @@ const isSiblingCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => 
 const isKeywordsMatchedCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
     const [recordId, fieldId] = cell;
     return aiTable.keywordsMatchedCells().has(`${recordId}:${fieldId}`);
+};
+
+const isWillHiddenCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
+    const [recordId, fieldId] = cell;
+    return aiTable.recordsWillHidden().includes(recordId);
 };
 
 const isSelectedCell = (cell: AIRecordFieldIdPath, aiTable: AITable): boolean => {
