@@ -33,8 +33,6 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
                 hiddenRecordIds.push(id);
             }
         }
-
-        newRecords.push(record);
     });
     if (hiddenRecordIds.length) {
         aiTable.recordsWillHidden?.update((value) => {
