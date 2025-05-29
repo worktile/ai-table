@@ -329,6 +329,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const endCell: AIRecordFieldIdPath = [recordId, fieldId];
                     if (startCell && !!startCell.length) {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
+                        this.aiTableGridSelectionService.scrollCell(
+                            endCell,
+                            this.coordinate(),
+                            this.horizontalBarRef(),
+                            this.verticalBarRef()
+                        );
                     }
                 }
             }
@@ -753,7 +759,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.aiTableGridSelectionService.drag({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }
@@ -764,7 +769,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.aiTableGridSelectionService.drag({
                 type: DragType.columnWidth,
                 sourceIds: new Set([fieldId]),
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }
@@ -775,7 +779,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.aiTableGridSelectionService.drag({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }

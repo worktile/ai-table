@@ -1,10 +1,14 @@
-import { computed, Injectable, signal } from '@angular/core';
-import { AITable, AITableDragState } from '../core';
+import { computed, ElementRef, inject, Injectable, signal } from '@angular/core';
+import { AITable, AITableDragState, Coordinate } from '../core';
 import { AITableSelectAllState } from '../types';
 import { AIRecordFieldIdPath, DragType } from '@ai-table/utils';
+import { ScrollControllerService } from './scroll-controller.service';
+import { AI_TABLE_FIELD_HEAD_HEIGHT } from '../constants';
 @Injectable()
 export class AITableGridSelectionService {
     aiTable!: AITable;
+
+    private scrollControllerService = inject(ScrollControllerService);
 
     selectAllState = computed(() => {
         const selectedRecords = this.aiTable.selection().selectedRecords;
@@ -157,5 +161,43 @@ export class AITableGridSelectionService {
         this.clearSelection();
         this.setActiveCell(startCell);
         this.aiTable.selection().selectedCells = selectedCells;
+    }
+
+    scrollCell(
+        endCell: AIRecordFieldIdPath,
+        coordinate: Coordinate,
+        horizontalBarRef?: ElementRef<HTMLElement>,
+        verticalBarRef?: ElementRef<HTMLElement>
+    ) {
+        const [recordId, fieldId] = endCell;
+
+        const rowIndex = this.aiTable.context!.visibleRowsIndexMap().get(recordId)!;
+        const colIndex = this.aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+
+        const cellTop = coordinate.getRowOffset(rowIndex);
+        const cellLeft = coordinate.getColumnOffset(colIndex);
+        const cellHeight = coordinate.getRowHeight(rowIndex);
+        const cellWidth = coordinate.getColumnWidth(colIndex);
+
+        const scrollState = this.aiTable.context!.scrollState();
+        this.scrollControllerService.scroll({
+            container: coordinate.container.getBoundingClientRect(),
+            element: {
+                top: cellTop - scrollState.scrollTop,
+                left: cellLeft - scrollState.scrollLeft,
+                height: cellHeight,
+                width: cellWidth
+            },
+            direction: 'both',
+            scrollableElement: {
+                horizontalElement: horizontalBarRef?.nativeElement,
+                verticalElement: verticalBarRef?.nativeElement
+            },
+            threshold: 10, // 预留10px空隙，避免正好贴边不滚动
+            frozenArea: {
+                top: AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth()
+            }
+        });
     }
 }
