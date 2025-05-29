@@ -46,9 +46,15 @@ export interface AITableRenderStyle {
 
 export interface AITableCell {
     row: AITableLinearRowRecord;
-    style?: any;
+    style?: AITableCellStyle;
+    indexStyle?: AITableCellStyle;
     isHoverRow: boolean;
     isCheckedRow: boolean;
     width?: number;
     disabled?: boolean;
+}
+
+export interface AITableCellStyle {
+    fill?: string;
+    stroke?: string;
 }
