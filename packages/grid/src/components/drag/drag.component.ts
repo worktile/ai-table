@@ -218,7 +218,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             }
         });
         // 处理最后一列
-        if (pointerX + dragCenter + scrollService.x > lastColumnEndX) {
+        if (rectLeft + dragCenter + scrollService.x > lastColumnEndX) {
             targetColumnIndex = coordinate.columnCount;
             targetColumnStartX = lastColumnOffset + lastColumnWidth;
             isLastColumn = true;
