@@ -37,7 +37,7 @@ import { AITableCustomFieldType } from '../../types/field';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellRelation implements HoverCellComponent {
-    static fieldType = AITableCustomFieldType.relation;
+    static fieldType = AITableCustomFieldType.relationTicket;
 
     config = input<AITableHoverCellConfig>();
 

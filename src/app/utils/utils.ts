@@ -81,7 +81,7 @@ export function getCanvasDefaultValue() {
                         '67da7c599675bccb963cc52f'
                     ],
                     'column-25': [],
-                    'column-relation1': ['67da7c119675bccb963cc52r', '67da7c119675bccb963cc52y']
+                    'column-custom_ticket1': ['67da7c119675bccb963cc52r', '67da7c119675bccb963cc52y']
                 }
             },
             {
@@ -172,8 +172,8 @@ export function getCanvasDefaultValue() {
                             ]
                         }
                     ],
-                    'column-relation1': ['67da7c119675bccb963cc52y']
-                    // 'column-relation1': null
+                    'column-custom_ticket1': ['67da7c119675bccb963cc52y']
+                    // 'column-custom_ticket1': null
                 }
             },
             {
@@ -227,14 +227,14 @@ export function getCanvasDefaultValue() {
                 type: AITableFieldType.text
             },
             {
-                _id: 'column-relation1',
-                name: '自定义',
-                icon: 'relation',
+                _id: 'column-custom_ticket1',
+                name: '自定义字段-工单',
+                icon: 'ticket',
                 positions: {
                     view1: 0.5,
                     view2: 31
                 },
-                type: AITableCustomFieldType.relation
+                type: AITableCustomFieldType.relationTicket
             },
             {
                 _id: 'column-13',

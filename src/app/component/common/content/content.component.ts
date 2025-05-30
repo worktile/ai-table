@@ -111,11 +111,11 @@ export class DemoTableContent {
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             customFields: {
-                [AITableCustomFieldType.relation]: {
+                [AITableCustomFieldType.relationTicket]: {
                     fieldOption: {
-                        type: AITableCustomFieldType.relation,
-                        name: '自定义',
-                        icon: 'relation',
+                        type: AITableCustomFieldType.relationTicket,
+                        name: '工单',
+                        icon: 'ticket',
                         path: RelationIconPath,
                         width: AI_TABLE_FIELD_MAX_WIDTH
                     },
