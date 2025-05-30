@@ -68,11 +68,11 @@ import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { renderRelationCell } from '../../../custom-field/relation/render';
-import { AITableCellRelation } from '../../../custom-field/relation/hover-render';
+import { renderRelationCell } from '../../../custom-field/relation-ticket/render';
+import { AITableCellRelationTicket } from '../../../custom-field/relation-ticket/hover-render';
 import { AITableCustomReferences } from '../../../types/grid';
 import { AITableCustomFieldType } from '../../../types/field';
-import { RelationField } from '../../../custom-field/relation/field-model';
+import { RelationTicketField } from '../../../custom-field/relation-ticket/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
@@ -119,7 +119,7 @@ export class DemoTableContent {
                         path: RelationIconPath,
                         width: AI_TABLE_FIELD_MAX_WIDTH
                     },
-                    fieldModel: new RelationField(),
+                    fieldModel: new RelationTicketField(),
                     render: renderRelationCell,
                     // hoverRender: AITableCellRelation,
                     getDefaultFieldValue: (field: AITableField) => {

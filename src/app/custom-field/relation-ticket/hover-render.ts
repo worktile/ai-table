@@ -36,7 +36,7 @@ import { AITableCustomFieldType } from '../../types/field';
     imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRelation implements HoverCellComponent {
+export class AITableCellRelationTicket implements HoverCellComponent {
     static fieldType = AITableCustomFieldType.relationTicket;
 
     config = input<AITableHoverCellConfig>();
