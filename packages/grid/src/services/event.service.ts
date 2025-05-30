@@ -18,7 +18,7 @@ import {
 } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
 import { AITableFieldType, AIRecordFieldIdPath } from '@ai-table/utils';
-import { componentMap } from '../renderer/components/cells/cells';
+import { ComponentMap } from '../renderer/components/cells/cells';
 
 @Injectable()
 export class AITableGridEventService {

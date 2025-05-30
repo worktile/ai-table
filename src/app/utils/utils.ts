@@ -81,7 +81,7 @@ export function getCanvasDefaultValue() {
                         '67da7c599675bccb963cc52f'
                     ],
                     'column-25': [],
-                    'column-relation1': ['67da7c119675bccb963cc52r']
+                    'column-custom_ticket1': ['67da7c119675bccb963cc52r', '67da7c119675bccb963cc52y']
                 }
             },
             {
@@ -171,7 +171,9 @@ export function getCanvasDefaultValue() {
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    'column-custom_ticket1': ['67da7c119675bccb963cc52y']
+                    // 'column-custom_ticket1': null
                 }
             },
             {
@@ -225,13 +227,14 @@ export function getCanvasDefaultValue() {
                 type: AITableFieldType.text
             },
             {
-                _id: 'column-relation1',
-                name: '自定义',
+                _id: 'column-custom_ticket1',
+                name: '自定义字段-工单',
+                icon: 'ticket',
                 positions: {
                     view1: 0.5,
                     view2: 31
                 },
-                type: AITableCustomFieldType.relation
+                type: AITableCustomFieldType.relationTicket
             },
             {
                 _id: 'column-13',
@@ -873,7 +876,13 @@ export function getReferences(): AITableCustomReferences {
         relations: {
             '67da7c119675bccb963cc52r': {
                 _id: '67da7c119675bccb963cc52r',
-                name: '1.xlsx'
+                title: '关联项标题超级长长长长长长长长长',
+                whole_identifier: 'ICE-T66'
+            },
+            '67da7c119675bccb963cc52y': {
+                _id: '67da7c119675bccb963cc52y',
+                title: '关联项2',
+                whole_identifier: 'ICE-T99999'
             }
         }
     };

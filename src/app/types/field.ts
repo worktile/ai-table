@@ -1,3 +1,3 @@
 export enum AITableCustomFieldType {
-    relation = 'relation'
+    relationTicket = 'relation_ticket'
 }

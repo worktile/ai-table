@@ -27,6 +27,7 @@ export interface AITableFieldTypeIconConfig {
     width?: number;
     height?: number;
     fill?: string;
+    path?: string;
 }
 
 export interface AITableFieldHeadConfig {

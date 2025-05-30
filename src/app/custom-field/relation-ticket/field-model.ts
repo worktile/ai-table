@@ -12,7 +12,7 @@ import {
 } from '@ai-table/utils';
 import { AITable, compareString, FieldOperable, hasIntersect, isMeetFilter } from '@ai-table/grid';
 
-export class RelationField extends FieldBase implements FieldOperable<string, AttachmentFieldValue> {
+export class RelationTicketField extends FieldBase implements FieldOperable<string, AttachmentFieldValue> {
     isValid(cellValue: AttachmentFieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }

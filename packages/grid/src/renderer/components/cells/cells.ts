@@ -4,8 +4,8 @@ import { HoverCellComponent } from '../../interfaces';
 
 import * as cellComponents from '.';
 
-export const componentMap: Partial<Record<AITableFieldType | string, Constructor<HoverCellComponent>>> = {};
+export const ComponentMap: Partial<Record<AITableFieldType | string, Constructor<HoverCellComponent>>> = {};
 
 Object.values(cellComponents).forEach((cellComponent) => {
-    componentMap[cellComponent.fieldType] = cellComponent;
+    ComponentMap[cellComponent.fieldType] = cellComponent;
 });

@@ -1,5 +1,5 @@
 import { AITable } from '../core';
-import { componentMap } from '../renderer/components/cells/cells';
+import { ComponentMap } from '../renderer/components/cells/cells';
 import { getDetailByTargetName } from './common';
 
 export function getHoverCell(aiTable: AITable) {
@@ -15,7 +15,7 @@ export function getHoverCell(aiTable: AITable) {
         return;
     }
 
-    const renderComponentDefinition = componentMap[field?.type];
+    const renderComponentDefinition = ComponentMap[field?.type];
     if (!renderComponentDefinition) {
         return;
     }

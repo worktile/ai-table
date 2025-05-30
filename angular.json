@@ -35,6 +35,11 @@
                                 "glob": "**/*",
                                 "input": "./node_modules/@tethys/icons/defs",
                                 "output": "/assets/icons/defs/"
+                            },
+                            {
+                                "glob": "**/*.svg",
+                                "input": "src/app/icons",
+                                "output": "/assets/icons/"
                             }
                         ],
                         "styles": ["src/styles.scss"],
