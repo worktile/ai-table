@@ -13,7 +13,7 @@ import {
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { AITableCustomReferences } from '../../types/grid';
 
-export function renderRelationCell(render: AITableRender<AITableCustomReferences>, draw: CellDrawer) {
+export function renderRelationCell(render: AITableRender<AITableCustomReferences>, drawer: CellDrawer) {
     const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive, style } = render;
     if (isUndefinedOrNull(transformValue)) {
         return;
@@ -47,13 +47,13 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
         const relationInfo = references?.relations?.[relationId];
         if (relationInfo) {
             const { title, type, whole_identifier } = relationInfo;
-            const { text: identifierText, textWidth: identifierTextWidth } = draw.textEllipsis({
+            const { text: identifierText, textWidth: identifierTextWidth } = drawer.textEllipsis({
                 text: whole_identifier,
                 maxWidth: relationTextMaxWidth,
                 fontWeight
             });
 
-            const { text: titleText, textWidth: titleTextWidth } = draw.textEllipsis({
+            const { text: titleText, textWidth: titleTextWidth } = drawer.textEllipsis({
                 text: title,
                 maxWidth: relationTextMaxWidth - identifierTextWidth - relationTitleMarginLeft,
                 fontWeight
@@ -81,17 +81,17 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
 
             if (showMoreCount) {
                 // 关联项背景绘制
-                draw.rect({
+                drawer.rect({
                     x: x + currentX,
                     y: y + currentY,
                     width: countContainerWidth,
                     height: itemHeight,
-                    fill: draw?.colors.gray100,
+                    fill: drawer?.colors.gray100,
                     radius: 4
                 });
 
                 const countString = `+${transformValue.length - index}`;
-                const { text: countText, textWidth: countTextWidth } = draw.textEllipsis({
+                const { text: countText, textWidth: countTextWidth } = drawer.textEllipsis({
                     text: countString,
                     fontWeight
                 });
@@ -99,12 +99,12 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
                 const textX = x + currentX + (countContainerWidth - countTextWidth) / 2;
                 const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
                 const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
-                draw.text({
+                drawer.text({
                     x: textX,
                     y: textY,
                     text: countString,
                     textAlign,
-                    fillStyle: draw?.colors.gray600,
+                    fillStyle: drawer?.colors.gray600,
                     fontWeight,
                     textDecoration: DEFAULT_TEXT_DECORATION,
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
@@ -114,13 +114,13 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
 
             // 关联项背景绘制
             {
-                draw.rect({
+                drawer.rect({
                     x: x + currentX,
                     y: y + currentY,
                     width: relationWidth,
                     height: itemHeight,
                     // stroke: draw?.colors.gray100,
-                    fill: draw?.colors.gray100,
+                    fill: drawer?.colors.gray100,
                     radius: 4
                 });
             }
@@ -131,7 +131,7 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
 
                 const img = new Image();
                 img.src = '/assets/icons/工单.svg';
-                draw.image({
+                drawer.image({
                     name: img.src,
                     x: iconX,
                     y: iconY,
@@ -146,12 +146,12 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
                 const textX = x + currentX + relationIconMarginLeft + relationIconWidth + relationIdentifierMarginLeft;
                 const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
                 const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
-                draw.text({
+                drawer.text({
                     x: textX,
                     y: textY,
                     text: identifierText,
                     textAlign,
-                    fillStyle: draw?.colors.gray600,
+                    fillStyle: drawer?.colors.gray600,
                     fontWeight,
                     textDecoration: DEFAULT_TEXT_DECORATION,
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
@@ -170,12 +170,12 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
                     relationTitleMarginLeft;
                 const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
                 const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
-                draw.text({
+                drawer.text({
                     x: textX,
                     y: textY,
                     text: titleText,
                     textAlign,
-                    fillStyle: draw?.colors.gray800,
+                    fillStyle: drawer?.colors.gray800,
                     fontWeight,
                     textDecoration: DEFAULT_TEXT_DECORATION,
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
