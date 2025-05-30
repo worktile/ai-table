@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
 import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
-import { AITableText } from '../text.component';
+import { AITableTextComponent } from '../text.component';
 import { AITableHoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
@@ -16,7 +16,7 @@ import { HoverCellComponent } from '../../interfaces';
             <ai-table-text [config]="textConfig()!" (koClick)="linkClick($event)" (koMouseMove)="linkMouseMove($event)"></ai-table-text>
         }
     `,
-    imports: [AITableText],
+    imports: [AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellLink implements HoverCellComponent {

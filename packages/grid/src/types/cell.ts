@@ -22,7 +22,7 @@ export interface AITableCellsDrawerConfig extends AITableCellsConfig {
     ctx: Konva.Context | CanvasRenderingContext2D;
 }
 
-export interface AITableRender {
+export interface AITableRender<TR extends AITableReferences = AITableReferences> {
     aiTable: AITable;
     x: number;
     y: number;
@@ -34,7 +34,7 @@ export interface AITableRender {
     transformValue: any;
     isActive: boolean;
     style: AITableRenderStyle;
-    references?: AITableReferences;
+    references?: TR;
     zIndex?: number;
 }
 

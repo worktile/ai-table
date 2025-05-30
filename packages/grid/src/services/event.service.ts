@@ -8,15 +8,23 @@ import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../constants';
 import { AITable } from '../core';
 import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, getHoverEditorBoxOffset, getHoverEditorSpace } from '../utils';
+import {
+    FieldModelMap,
+    getCellHorizontalPosition,
+    getEditorBoxOffset,
+    getEditorSpace,
+    getHoverEditorBoxOffset,
+    getHoverEditorSpace
+} from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
 import { AITableFieldType, AIRecordFieldIdPath } from '@ai-table/utils';
+import { componentMap } from '../renderer/components/cells/cells';
 
 @Injectable()
 export class AITableGridEventService {
     aiTable!: AITable;
 
-    aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
+    aiFieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema>>;
 
     dblClickEvent$ = new Subject<MouseEvent>();
 
@@ -71,7 +79,7 @@ export class AITableGridEventService {
             });
     }
 
-    private getEditorComponent(type: AITableFieldType) {
+    private getEditorComponent(type: AITableFieldType | string) {
         const filedRenderSchema = this.aiFieldRenderers && this.aiFieldRenderers[type];
         if (filedRenderSchema && filedRenderSchema.editor) {
             return {

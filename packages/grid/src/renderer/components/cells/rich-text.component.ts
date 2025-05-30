@@ -16,7 +16,7 @@ import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
-import { AITableText } from '../text.component';
+import { AITableTextComponent } from '../text.component';
 
 @Component({
     selector: 'ai-table-rich-text',
@@ -26,7 +26,7 @@ import { AITableText } from '../text.component';
         }
         <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
     `,
-    imports: [AITableText, AITableActionIcon],
+    imports: [AITableTextComponent, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellRichText implements HoverCellComponent {

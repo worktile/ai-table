@@ -13,6 +13,7 @@ export enum AITableFieldType {
     rate = 'rate',
     link = 'link',
     attachment = 'attachment',
+    // relation = 'relation',
     createdAt = 'created_at',
     updatedAt = 'updated_at',
     createdBy = 'created_by',
@@ -48,7 +49,7 @@ export enum AITableStatType {
 
 export interface AITableFieldOption {
     name: string;
-    type: AITableFieldType;
+    type: AITableFieldType | string;
     icon: string;
     width: number;
     settings?: AITableFieldSettings;
@@ -57,7 +58,7 @@ export interface AITableFieldOption {
 export interface AITableField {
     _id: string;
     name: string;
-    type: AITableFieldType;
+    type: AITableFieldType | string;
     icon?: string;
     width?: number;
     hidden?: boolean;
@@ -66,11 +67,19 @@ export interface AITableField {
     settings?: AITableFieldSettings;
 }
 
-export type AITableFieldSettings = TextSettings | RichTextSettings | SelectSettings | MemberSettings | AttachmentSettings;
+export type AITableFieldSettings =
+    | TextSettings
+    | RichTextSettings
+    | SelectSettings
+    | MemberSettings
+    | AttachmentSettings
+    | RelationSettings;
 
 export interface TextSettings {}
 
 export interface RichTextSettings {}
+
+export interface RelationSettings {}
 
 export interface SelectSettings extends IsMultiple {
     option_style?: AITableSelectOptionStyle;

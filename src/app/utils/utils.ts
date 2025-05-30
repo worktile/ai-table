@@ -8,6 +8,8 @@ import {
     AITableViewRecords
 } from '@ai-table/utils';
 import { getUnixTime } from 'date-fns';
+import { AITableCustomReferences } from '../types/grid';
+import { AITableCustomFieldType } from '../types/field';
 
 export function sortDataByView(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
     const hasPositions = data.every((item) => item.positions && item.positions);
@@ -78,7 +80,8 @@ export function getCanvasDefaultValue() {
                         '67da7c419675bccb963cc52d',
                         '67da7c599675bccb963cc52f'
                     ],
-                    'column-25': []
+                    'column-25': [],
+                    'column-relation1': ['67da7c119675bccb963cc52r']
                 }
             },
             {
@@ -220,6 +223,15 @@ export function getCanvasDefaultValue() {
                     view2: 30
                 },
                 type: AITableFieldType.text
+            },
+            {
+                _id: 'column-relation1',
+                name: '自定义',
+                positions: {
+                    view1: 0.5,
+                    view2: 31
+                },
+                type: AITableCustomFieldType.relation
             },
             {
                 _id: 'column-13',
@@ -731,7 +743,7 @@ export function getBigData() {
     return initValue;
 }
 
-export function getReferences(): AITableReferences {
+export function getReferences(): AITableCustomReferences {
     return {
         members: {
             member_01: {
@@ -856,6 +868,12 @@ export function getReferences(): AITableReferences {
                     path: '8a5f7b97-d515-4d73-9c20-141c88e41828',
                     size: 2474023
                 }
+            }
+        },
+        relations: {
+            '67da7c119675bccb963cc52r': {
+                _id: '67da7c119675bccb963cc52r',
+                name: '1.xlsx'
             }
         }
     };

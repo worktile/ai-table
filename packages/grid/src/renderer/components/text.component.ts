@@ -24,7 +24,7 @@ import { Context } from 'konva/lib/Context';
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableText {
+export class AITableTextComponent {
     config = input.required<Konva.ShapeConfig>();
 
     // @Output() koClick = new EventEmitter<KoEventObject<MouseEvent>>();

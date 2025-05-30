@@ -19,7 +19,7 @@ import { AITableFieldHeadConfig } from '../../types';
 import { generateTargetName, TextMeasure } from '../../utils';
 import { AITableFieldIcon } from './field-icon.component';
 import { AITableIcon } from './icon.component';
-import { AITableText } from './text.component';
+import { AITableTextComponent } from './text.component';
 
 @Component({
     selector: 'ai-table-field-head',
@@ -36,7 +36,7 @@ import { AITableText } from './text.component';
             <ko-line [config]="fieldOpacityLineConfig()"></ko-line>
         </ko-group>
     `,
-    imports: [KoContainer, KoShape, AITableFieldIcon, AITableText, AITableIcon],
+    imports: [KoContainer, KoShape, AITableFieldIcon, AITableTextComponent, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFieldHead {
