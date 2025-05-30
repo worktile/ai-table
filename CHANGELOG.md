@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.9](https://github.com/worktile/ai-table/compare/0.1.8...0.1.9) (2025-05-30)
+
+
+### Bug Fixes
+
+* **utils:** #WIK-18087 when updating records get fieldId index error ([#488](https://github.com/worktile/ai-table/issues/488)) ([bdfd92a](https://github.com/worktile/ai-table/commit/bdfd92aa7d81771ff5d90995a3dd302ded06bd96)), closes [#WIK-18087](https://github.com/worktile/ai-table/issues/WIK-18087)
+
+
+### Features
+
+* #WIK-18091 ai-table支持在有筛选条件时，新增数据被筛选掉，增加tooltip提示 ([#489](https://github.com/worktile/ai-table/issues/489)) ([d5da91c](https://github.com/worktile/ai-table/commit/d5da91ccb0fccb51c38b87a284945f4fb4aa3998)), closes [#WIK-18091](https://github.com/worktile/ai-table/issues/WIK-18091)
+* #WIK-18105 ai-table 支持用户自定义字段 ([#491](https://github.com/worktile/ai-table/issues/491)) ([7c43173](https://github.com/worktile/ai-table/commit/7c431736305cae3eb390529dfde46b0e6f48d7cf)), closes [#WIK-18105](https://github.com/worktile/ai-table/issues/WIK-18105)
+* #WIK-18111 ai-table 自定义字段-关联事项 - 静态canvas渲染 ([#492](https://github.com/worktile/ai-table/issues/492)) ([58c6314](https://github.com/worktile/ai-table/commit/58c631410f2d5fd6c14275f9a5c286846ce3b35c)), closes [#WIK-18111](https://github.com/worktile/ai-table/issues/WIK-18111) [#WIK-18111](https://github.com/worktile/ai-table/issues/WIK-18111) [#WIK-18111](https://github.com/worktile/ai-table/issues/WIK-18111) [#WIK-18111](https://github.com/worktile/ai-table/issues/WIK-18111) [#WIK-18111](https://github.com/worktile/ai-table/issues/WIK-18111)
+
+
+
 ## [0.1.8](https://github.com/worktile/ai-table/compare/0.1.7...0.1.8) (2025-05-23)
 
 
