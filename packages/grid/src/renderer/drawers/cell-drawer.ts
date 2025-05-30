@@ -84,12 +84,18 @@ export class CellDrawer extends Drawer {
 
     // 单元格渲染
     public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
-        const { field, cellValue } = render;
+        const { field, cellValue, aiTable } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
         if (!fieldMethod.isValid(cellValue)) {
             return;
         }
+
+        const customFieldRender = aiTable.context?.aiFieldConfig()?.customFields?.[fieldType]?.render;
+        if (customFieldRender) {
+            return customFieldRender(render, this);
+        }
+
         switch (fieldType) {
             case AITableFieldType.text:
             case AITableFieldType.richText:

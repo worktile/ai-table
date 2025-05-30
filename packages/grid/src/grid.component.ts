@@ -61,7 +61,8 @@ import {
     handleMouseStyle,
     isCellMatchKeywords,
     isWindows,
-    clearCells
+    clearCells,
+    FieldModelMap
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -73,6 +74,7 @@ import {
     AddRecordOptions,
     AIRecordFieldIdPath,
     AITableField,
+    AITableFieldType,
     AITableViewFields,
     DragEndData,
     DragType,
@@ -81,6 +83,7 @@ import {
 } from '@ai-table/utils';
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
+import { componentMap } from './renderer/components/cells/cells';
 
 @Component({
     selector: 'ai-table-grid',
@@ -275,6 +278,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     override ngOnInit(): void {
         super.ngOnInit();
         this.initContext();
+        this.initCustomField();
     }
 
     ngOnDestroy(): void {
@@ -295,6 +299,22 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords
+        });
+    }
+
+    private initCustomField() {
+        const customFields = this.aiFieldConfig()?.customFields;
+        if (customFields) {
+            Object.entries(customFields).forEach(([key, customField]) => {
+                if (customField?.hoverRender) {
+                    componentMap[key] = customField.hoverRender;
+                }
+            });
+        }
+        Object.entries(this.aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([key, fieldConfig]) => {
+            if (fieldConfig?.fieldModel) {
+                FieldModelMap[key] = fieldConfig.fieldModel;
+            }
         });
     }
 
@@ -568,7 +588,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
         const field = this.aiTable.fieldsMap()[fieldId];
         const fieldType = field.type;
-        if (DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
+        if (DBL_CLICK_EDIT_TYPE.includes(fieldType as AITableFieldType)) {
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
                     viewContainerRef: this.viewContainerRef,

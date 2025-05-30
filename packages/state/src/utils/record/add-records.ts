@@ -60,8 +60,13 @@ export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false
     } else {
         const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
         const fields = getSortFields(aiTable, aiTable.fields() as AITableViewFields, activeView);
-        fields.map((item) => {
-            newRecordValues[item._id] = getDefaultFieldValue(item);
+        fields.map((field) => {
+            const customGetDefaultFieldValue = aiTable.context?.aiFieldConfig()?.customFields?.[field.type]?.getDefaultFieldValue;
+            if (customGetDefaultFieldValue) {
+                newRecordValues[field._id] = customGetDefaultFieldValue(field);
+            } else {
+                newRecordValues[field._id] = getDefaultFieldValue(field);
+            }
         });
         const { conditions, condition_logical } = activeView.settings || {};
         if (conditions && conditions.length) {

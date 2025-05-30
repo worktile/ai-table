@@ -3,6 +3,6 @@ import { AITableHoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 
 export abstract class HoverCellComponent extends Component {
-    static fieldType: AITableFieldType;
+    static fieldType: AITableFieldType | string;
     config!: InputSignal<AITableHoverCellConfig | undefined>;
 }
