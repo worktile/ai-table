@@ -36,7 +36,8 @@ import {
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
-    DEFAULT_SCROLL_STATE
+    DEFAULT_SCROLL_STATE,
+    IconPathMap
 } from './constants';
 import { Coordinate, RendererContext, AITable } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -83,7 +84,7 @@ import {
 } from '@ai-table/utils';
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { componentMap } from './renderer/components/cells/cells';
+import { ComponentMap } from './renderer/components/cells/cells';
 
 @Component({
     selector: 'ai-table-grid',
@@ -307,15 +308,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (customFields) {
             Object.entries(customFields).forEach(([key, customField]) => {
                 if (customField?.hoverRender) {
-                    componentMap[key] = customField.hoverRender;
+                    ComponentMap[key] = customField.hoverRender;
+                }
+                if (customField?.fieldModel) {
+                    FieldModelMap[key] = customField.fieldModel;
+                }
+                if (customField?.fieldOption?.path) {
+                    IconPathMap[customField?.fieldOption.icon] = customField.fieldOption.path;
                 }
             });
         }
-        Object.entries(this.aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([key, fieldConfig]) => {
-            if (fieldConfig?.fieldModel) {
-                FieldModelMap[key] = fieldConfig.fieldModel;
-            }
-        });
     }
 
     private setKeywordsMatchedCells() {

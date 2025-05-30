@@ -50,6 +50,7 @@ export interface AITableFieldOption {
     name: string;
     type: AITableFieldType | string;
     icon: string;
+    path?: string;
     width: number;
     settings?: AITableFieldSettings;
 }

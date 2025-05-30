@@ -1,88 +1,188 @@
 import {
-    AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE,
-    AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
-    AI_TABLE_CELL_MAX_ROW_COUNT,
     AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
-    AI_TABLE_FILE_ICON_ITEM_HEIGHT,
-    AI_TABLE_FILE_ICON_SIZE,
-    AI_TABLE_ROW_BLANK_HEIGHT,
     AITableRender,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_DECORATION,
-    DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     CellDrawer,
-    getFileThumbnailSvgString
+    getFileThumbnailSvgString,
+    DEFAULT_FONT_WEIGHT,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_CELL_MULTI_PADDING_LEFT
 } from '@ai-table/grid';
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { AITableCustomReferences } from '../../types/grid';
 
-export function renderRelationCell(render: AITableRender<AITableCustomReferences>, draw?: CellDrawer) {
+export function renderRelationCell(render: AITableRender<AITableCustomReferences>, draw: CellDrawer) {
     const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive, style } = render;
     if (isUndefinedOrNull(transformValue)) {
         return;
     }
-
-    const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
-    const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
-    const isOperating = isActive;
-
+    const fieldType = field.type;
+    const itemHeight = 24;
     let currentX = AI_TABLE_CELL_PADDING;
-    let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - itemHeight) / 2;
-    const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-    const maxTextWidth = isOperating
-        ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
-        : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
+    let currentY = (AI_TABLE_FIELD_HEAD_HEIGHT - itemHeight) / 2;
+    const fontWeight = style?.fontWeight || DEFAULT_FONT_WEIGHT;
+    let maxRelationContainerWidth = 240;
+    const relationIconMarginLeft = 12;
+    const relationIconWidth = 16;
+    const relationIdentifierMarginLeft = 8;
+    const relationTitleMarginLeft = 8;
+    const relationTitleMarginRight = 18;
+    const countContainerWidth = 42;
 
-    const color = style?.color || draw?.colors.gray800;
-    const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
-    const fontWeight = style?.fontWeight;
+    if (transformValue.length <= 1) {
+        maxRelationContainerWidth = Math.min(maxRelationContainerWidth, columnWidth - AI_TABLE_CELL_PADDING - relationTitleMarginRight);
+    } else {
+        maxRelationContainerWidth = Math.min(
+            maxRelationContainerWidth,
+            columnWidth - AI_TABLE_CELL_PADDING - relationTitleMarginRight - countContainerWidth
+        );
+    }
 
-    const listCount = transformValue.length;
-    for (let index = 0; index < listCount; index++) {
-        const relationInfo = references?.relations?.[transformValue[index]];
-        if (!relationInfo) continue;
-        const { title, addition } = relationInfo;
-        const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-        currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
-        let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
-        if (index === 0 && isOperating) {
-            const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
-            realMaxTextWidth = operatingMaxWidth;
-        }
-        if (columnWidth != null) {
-            // 在非活动状态下，当超出列宽时，不会渲染后续内容
-            if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
-                break;
+    const relationTextMaxWidth =
+        maxRelationContainerWidth - relationIconMarginLeft - relationIconWidth - relationIdentifierMarginLeft - relationTitleMarginRight;
+
+    for (const [index, relationId] of transformValue.entries()) {
+        const relationInfo = references?.relations?.[relationId];
+        if (relationInfo) {
+            const { title, type, whole_identifier } = relationInfo;
+            const { text: identifierText, textWidth: identifierTextWidth } = draw.textEllipsis({
+                text: whole_identifier,
+                maxWidth: relationTextMaxWidth,
+                fontWeight
+            });
+
+            const { text: titleText, textWidth: titleTextWidth } = draw.textEllipsis({
+                text: title,
+                maxWidth: relationTextMaxWidth - identifierTextWidth - relationTitleMarginLeft,
+                fontWeight
+            });
+
+            const relationWidth =
+                identifierTextWidth +
+                titleTextWidth +
+                relationTitleMarginLeft +
+                relationIconWidth +
+                relationIconMarginLeft +
+                relationIdentifierMarginLeft +
+                relationTitleMarginRight;
+
+            let showMoreCount = false;
+            if (index < transformValue.length - 1) {
+                if (currentX + relationWidth >= columnWidth - AI_TABLE_CELL_PADDING - 42) {
+                    showMoreCount = true;
+                }
+            } else {
+                if (currentX + relationWidth >= columnWidth - AI_TABLE_CELL_PADDING) {
+                    showMoreCount = true;
+                }
             }
-        }
-        const svgString = getFileThumbnailSvgString(addition?.ext);
-        const img = new Image();
-        img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
-        if (draw?.ctx) {
-            draw.image({
-                name: img.src,
-                x: x + currentX,
-                y: y + currentY,
-                url: img.src,
-                width: AI_TABLE_FILE_ICON_SIZE,
-                height: AI_TABLE_FILE_ICON_SIZE
-            });
-            draw.wrapText({
-                x: x + currentX + 30,
-                y: y + currentY + 10,
-                text: 'ceshi ',
-                maxWidth: 400,
-                maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
-                lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
-                textAlign: 'left',
-                verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-                fontWeight,
-                textDecoration: DEFAULT_TEXT_DECORATION,
-                fieldType: field.type,
-                needDraw: true
-            });
+
+            if (showMoreCount) {
+                // 关联项背景绘制
+                draw.rect({
+                    x: x + currentX,
+                    y: y + currentY,
+                    width: countContainerWidth,
+                    height: itemHeight,
+                    fill: draw?.colors.gray100,
+                    radius: 4
+                });
+
+                const countString = `+${transformValue.length - index}`;
+                const { text: countText, textWidth: countTextWidth } = draw.textEllipsis({
+                    text: countString,
+                    fontWeight
+                });
+
+                const textX = x + currentX + (countContainerWidth - countTextWidth) / 2;
+                const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+                const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
+                draw.text({
+                    x: textX,
+                    y: textY,
+                    text: countString,
+                    textAlign,
+                    fillStyle: draw?.colors.gray600,
+                    fontWeight,
+                    textDecoration: DEFAULT_TEXT_DECORATION,
+                    verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                });
+                continue;
+            }
+
+            // 关联项背景绘制
+            {
+                draw.rect({
+                    x: x + currentX,
+                    y: y + currentY,
+                    width: relationWidth,
+                    height: itemHeight,
+                    // stroke: draw?.colors.gray100,
+                    fill: draw?.colors.gray100,
+                    radius: 4
+                });
+            }
+            // 关联项图标绘制
+            {
+                const iconX = x + currentX + relationIconMarginLeft;
+                const iconY = y + currentY + (itemHeight - relationIconWidth) / 2;
+
+                const img = new Image();
+                img.src = '/assets/icons/工单.svg';
+                draw.image({
+                    name: img.src,
+                    x: iconX,
+                    y: iconY,
+                    url: img.src,
+                    width: relationIconWidth,
+                    height: relationIconWidth
+                });
+            }
+
+            // 绘制 identifier 文本
+            {
+                const textX = x + currentX + relationIconMarginLeft + relationIconWidth + relationIdentifierMarginLeft;
+                const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+                const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
+                draw.text({
+                    x: textX,
+                    y: textY,
+                    text: identifierText,
+                    textAlign,
+                    fillStyle: draw?.colors.gray600,
+                    fontWeight,
+                    textDecoration: DEFAULT_TEXT_DECORATION,
+                    verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                });
+            }
+
+            // 绘制 title 文本
+            {
+                const textX =
+                    x +
+                    currentX +
+                    relationIconMarginLeft +
+                    relationIconWidth +
+                    relationIdentifierMarginLeft +
+                    identifierTextWidth +
+                    relationTitleMarginLeft;
+                const textY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+                const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
+                draw.text({
+                    x: textX,
+                    y: textY,
+                    text: titleText,
+                    textAlign,
+                    fillStyle: draw?.colors.gray800,
+                    fontWeight,
+                    textDecoration: DEFAULT_TEXT_DECORATION,
+                    verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+                });
+            }
+
+            currentX += relationWidth + AI_TABLE_CELL_MULTI_PADDING_LEFT;
         }
     }
 }

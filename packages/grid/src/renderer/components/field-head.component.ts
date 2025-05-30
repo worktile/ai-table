@@ -13,6 +13,7 @@ import {
     AI_TABLE_OFFSET,
     Colors,
     DEFAULT_FONT_SIZE,
+    IconPathMap,
     MoreStandOutlinedPath
 } from '../../constants';
 import { AITableFieldHeadConfig } from '../../types';
@@ -100,7 +101,8 @@ export class AITableFieldHead {
             y: (height - AI_TABLE_ICON_COMMON_SIZE) / 2,
             width: AI_TABLE_ICON_COMMON_SIZE,
             height: AI_TABLE_ICON_COMMON_SIZE,
-            fill: Colors.gray600
+            fill: Colors.gray600,
+            path: IconPathMap[field.icon!]
         };
     });
 

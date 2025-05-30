@@ -72,7 +72,8 @@ import { renderRelationCell } from '../../../custom-field/relation/render';
 import { AITableCellRelation } from '../../../custom-field/relation/hover-render';
 import { AITableCustomReferences } from '../../../types/grid';
 import { AITableCustomFieldType } from '../../../types/field';
-import { RelationField } from '../../../custom-field/field/relation';
+import { RelationField } from '../../../custom-field/relation/field-model';
+import { RelationIconPath } from '../../../icons/icon-path';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
@@ -114,12 +115,13 @@ export class DemoTableContent {
                     fieldOption: {
                         type: AITableCustomFieldType.relation,
                         name: '自定义',
-                        icon: 'font',
+                        icon: 'relation',
+                        path: RelationIconPath,
                         width: AI_TABLE_FIELD_MAX_WIDTH
                     },
                     fieldModel: new RelationField(),
                     render: renderRelationCell,
-                    hoverRender: AITableCellRelation,
+                    // hoverRender: AITableCellRelation,
                     getDefaultFieldValue: (field: AITableField) => {
                         return [];
                     }
