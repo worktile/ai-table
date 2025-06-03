@@ -7,16 +7,6 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 @Component({
     selector: 'text-cell-editor',
     template: `
-        <textarea
-            placeholder=""
-            rows="1"
-            thyInput
-            [thyAutofocus]="true"
-            [(ngModel)]="modelValue"
-            (ngModelChange)="valueChange()"
-            (thyEnter)="updateValue()"
-            (blur)="updateValue()"
-        ></textarea>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyAutofocusDirective, ThyInputDirective, ThyEnterDirective],
@@ -36,6 +26,15 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
 
     ngAfterViewInit() {
         setTimeout(() => {
+            const aa = document.querySelector('.textarea-grid')! as HTMLElement;
+            // this.elementRef.nativeElement.appendChild(aa);
+            aa.style.opacity = '1';
+            aa.style.position = 'absolute';
+            const rect = this.elementRef.nativeElement.getBoundingClientRect();
+            aa.style.left = `${0}px`;
+            aa.style.top = `${0}px`;
+            aa.style.width = `${rect.width}px`;
+            aa.style.height = `${rect.height}px`;
             this.updateStyle();
         });
     }

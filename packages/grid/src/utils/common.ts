@@ -1,5 +1,6 @@
 import { AI_TABLE_BLANK } from '../constants';
 import { AITableTargetNameDetail, AITableTargetNameOptions } from '../types';
+import { isKeyHotkey } from 'is-hotkey';
 
 /**
  * 生成目标名称
@@ -52,3 +53,15 @@ export const castToString = (value: string): string | null => {
     }
     return typeof value !== 'string' ? String(value) : value;
 };
+
+export function isVirtualKey(e: KeyboardEvent) {
+    const isMod = e.ctrlKey || e.metaKey;
+    const isAlt = isKeyHotkey('alt', e);
+    const isShift = isKeyHotkey('shift', e);
+    const isCapsLock = e.key.includes('CapsLock');
+    const isTab = e.key.includes('Tab');
+    const isEsc = e.key.includes('Escape');
+    const isF = e.key.startsWith('F');
+    const isArrow = e.key.includes('Arrow') ? true : false;
+    return isCapsLock || isMod || isAlt || isArrow || isShift || isTab || isEsc || isF;
+}

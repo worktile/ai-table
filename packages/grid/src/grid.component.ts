@@ -15,7 +15,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, fromEvent } from 'rxjs';
+import { filter, fromEvent, tap } from 'rxjs';
 import { KoEventObject } from './angular-konva';
 import {
     AI_TABLE_CELL,
@@ -63,7 +63,8 @@ import {
     isCellMatchKeywords,
     isWindows,
     clearCells,
-    FieldModelMap
+    FieldModelMap,
+    isVirtualKey
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -126,6 +127,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     verticalBarRef = viewChild<ElementRef>('verticalBar');
 
     horizontalBarRef = viewChild<ElementRef>('horizontalBar');
+
+    inputRef = viewChild<ElementRef>('input');
 
     linearRows = computed(() => {
         return buildGridLinearRows(this.gridData().records, !this.aiReadonly());
@@ -231,7 +234,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
-            this.bindClipboardShortcuts();
+            this.bindShortcuts();
         });
 
         effect(() => {
@@ -415,6 +418,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectionState(true, dragSelectionStart);
                 this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                setTimeout(() => {
+                    this.inputRef()?.nativeElement.focus();
+                }, 0);
                 return;
             case AI_TABLE_ROW_DRAG:
                 if (!recordId) return;
@@ -723,9 +729,30 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
-    private bindClipboardShortcuts() {
+    private bindShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(
+                tap((event) => {
+                    const activeCell = this.aiTable.selection().activeCell;
+                    if (
+                        this.inputRef() &&
+                        !isVirtualKey(event) &&
+                        activeCell &&
+                        this.aiTableGridEventService.getCurrentEditCell() === null
+                    ) {
+                        this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                            viewContainerRef: this.viewContainerRef,
+                            container: this.containerElement(),
+                            coordinate: this.coordinate(),
+                            fieldId: activeCell[1]!,
+                            recordId: activeCell[0]!,
+                            references: this.aiReferences(),
+                            updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                                this.aiUpdateFieldValue.emit(value);
+                            }
+                        });
+                    }
+                }),
                 filter(
                     (event) =>
                         ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) ||
