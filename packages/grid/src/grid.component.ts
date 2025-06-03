@@ -63,7 +63,8 @@ import {
     isCellMatchKeywords,
     isWindows,
     clearCells,
-    FieldModelMap
+    FieldModelMap,
+    isVirtualKey
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -231,7 +232,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
-            this.bindClipboardShortcuts();
+            this.bindShortcuts();
         });
 
         effect(() => {
@@ -723,17 +724,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
-    private bindClipboardShortcuts() {
+    private bindShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(
-                filter(
-                    (event) =>
-                        ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) ||
-                        event.key === 'Backspace' ||
-                        event.key === 'Delete'
-                ),
-                takeUntilDestroyed(this.destroyRef)
-            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async (event: KeyboardEvent) => {
                 if (this.aiReadonly()) {
                     return;
@@ -756,12 +749,42 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
 
                 event.preventDefault();
-                if (event.key === 'c') {
-                    this.copyCells();
-                } else if (event.key === 'v') {
-                    this.pasteCells();
-                } else if (event.key === 'Backspace' || event.key === 'Delete') {
+
+                const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
+                const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
+
+                if (isCopyOrPaste) {
+                    if (event.key === 'c') {
+                        this.copyCells();
+                    } else if (event.key === 'v') {
+                        this.pasteCells();
+                    }
+                    return;
+                }
+
+                if (isDeleteOrBackspace) {
                     clearCells(this.aiTable, this.actions);
+                    return;
+                }
+
+                // quick enter cell editor
+                const isKeyForInput = !isVirtualKey(event);
+                const activeCell = this.aiTable.selection().activeCell;
+                const field = activeCell && this.aiTable.fieldsMap()[activeCell[1]];
+                if (isKeyForInput && activeCell && field && field.type === AITableFieldType.text) {
+                    const [recordId, fieldId] = activeCell;
+                    this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                        viewContainerRef: this.viewContainerRef,
+                        container: this.containerElement(),
+                        coordinate: this.coordinate(),
+                        fieldId,
+                        recordId,
+                        isSelectAll: true,
+                        references: this.aiReferences(),
+                        updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                            this.aiUpdateFieldValue.emit(value);
+                        }
+                    });
                 }
             });
     }
