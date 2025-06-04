@@ -125,8 +125,8 @@ export interface AITableOpenEditOptions {
     coordinate: Coordinate;
     references: AITableReferences;
     container?: HTMLDivElement;
-    isHoverEdit?: boolean;
     viewContainerRef?: ViewContainerRef;
+    isSelectAll?: boolean;
     updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
 }
 

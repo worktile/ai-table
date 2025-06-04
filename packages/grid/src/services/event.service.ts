@@ -127,7 +127,7 @@ export class AITableGridEventService {
     }
 
     getOriginPosition(aiTable: AITable, options: AITableOpenEditOptions) {
-        const { container, coordinate, recordId, fieldId, isHoverEdit } = options;
+        const { container, coordinate, recordId, fieldId } = options;
         const { scrollState } = aiTable.context!;
         const { rowHeight, columnCount } = coordinate;
         const cell: AIRecordFieldIdPath = [recordId, fieldId];
@@ -154,13 +154,6 @@ export class AITableGridEventService {
         let y = originPosition.y + getEditorBoxOffset();
         let width = getEditorSpace(originPosition.width);
         let height = getEditorSpace(originPosition.height);
-        // hover 编辑组件无边框
-        if (isHoverEdit) {
-            x = originPosition.x + getHoverEditorBoxOffset();
-            y = originPosition.y + getHoverEditorBoxOffset();
-            width = getHoverEditorSpace(originPosition.width);
-            height = getHoverEditorSpace(originPosition.height);
-        }
         return {
             ...originPosition,
             x: x,
@@ -171,7 +164,7 @@ export class AITableGridEventService {
     }
 
     openCellEditor(aiTable: AITable, options: AITableOpenEditOptions) {
-        const { container, recordId, fieldId, isHoverEdit, references } = options;
+        const { container, recordId, fieldId, references } = options;
         const fieldType = this.aiTable.fieldsMap()[fieldId].type;
         const { component, isInternalComponent } = this.getEditorComponent(fieldType);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
@@ -188,7 +181,8 @@ export class AITableGridEventService {
                 fieldId: fieldId,
                 recordId: recordId,
                 references,
-                aiTable: aiTable
+                aiTable: aiTable,
+                isSelectAll: options.isSelectAll,
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: fieldType === AITableFieldType.link ? true : false,
