@@ -21,11 +21,11 @@ import {
     AITableActionIcon,
     HoverCellComponent,
     drawer,
-    transformTextCanvasToKonva,
+    aiTableTextConfigToKonvaConfig,
     AITableTextComponent,
     KoContainer,
-    transformRectCanvasToKonva,
-    transformImageCanvasToKonva
+    aiTableRectConfigToKonvaConfig,
+    aiTableImageConfigToKonvaConfig
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
@@ -100,7 +100,7 @@ export class AITableCellRelationTicket implements HoverCellComponent {
         const moreCount = this.relationRenderConfig().moreCount;
         if (moreCount) {
             return {
-                bgRect: transformRectCanvasToKonva(moreCount.bgRect, {
+                bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
                     name: generateTargetName({
                         targetName: AI_TABLE_CELL,
                         fieldId: field._id,
@@ -109,7 +109,7 @@ export class AITableCellRelationTicket implements HoverCellComponent {
                     }),
                     listening: true
                 }),
-                text: transformTextCanvasToKonva(moreCount.text, rowHeight)
+                text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
             };
         }
         return null;
@@ -124,7 +124,7 @@ export class AITableCellRelationTicket implements HoverCellComponent {
                 const relationItemConfig = relationItem as unknown as AITableRelationConfig;
                 const { relationInfo } = relationItemConfig;
                 const relationConfig: AITableRelationConfig = {
-                    bgRect: transformRectCanvasToKonva(relationItem.bgRect, {
+                    bgRect: aiTableRectConfigToKonvaConfig(relationItem.bgRect, {
                         name: generateTargetName({
                             targetName: AI_TABLE_CELL,
                             fieldId: field._id,
@@ -134,11 +134,11 @@ export class AITableCellRelationTicket implements HoverCellComponent {
                         }),
                         listening: true
                     }),
-                    icon: transformImageCanvasToKonva(relationItem.icon, {
+                    icon: aiTableImageConfigToKonvaConfig(relationItem.icon, {
                         listening: false
                     }),
-                    identifier: transformTextCanvasToKonva(relationItem.identifier, rowHeight),
-                    title: transformTextCanvasToKonva(relationItem.title, rowHeight),
+                    identifier: aiTableTextConfigToKonvaConfig(relationItem.identifier, rowHeight),
+                    title: aiTableTextConfigToKonvaConfig(relationItem.title, rowHeight),
                     relationInfo: relationItemConfig.relationInfo
                 };
                 return relationConfig;
