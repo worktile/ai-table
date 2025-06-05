@@ -65,7 +65,11 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private horizontalBarElement?: HTMLElement;
 
+    private horizontalBarMaxScroll: number = 0;
+
     private verticalBarElement?: HTMLElement;
+
+    private verticalBarMaxScroll: number = 0;
 
     private mousedownListener?: () => void;
     private mousemoveListener?: () => void;
@@ -95,7 +99,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             this.isDraggingEnabled = false;
 
             this.horizontalBarElement = this.horizontalBar?.()?.nativeElement;
+            this.horizontalBarMaxScroll = (this.horizontalBarElement?.scrollWidth || 0) - (this.horizontalBarElement?.clientWidth || 0);
             this.verticalBarElement = this.verticalBar?.()?.nativeElement;
+            this.verticalBarMaxScroll = (this.verticalBarElement?.scrollHeight || 0) - (this.verticalBarElement?.clientHeight || 0);
             this.scrollBarStartPosition = { x: this.horizontalBarElement?.scrollLeft || 0, y: this.verticalBarElement?.scrollTop || 0 };
             this.mouseDownTimeout = setTimeout(() => {
                 this.isDraggingEnabled = true;
@@ -182,29 +188,93 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const pointerX = moveX + sourceColumnStartX;
         // 拖拽中心点
         const dragCenter = sourceColumnWidth / 2;
-        const rectLeft = pointerX - (isSourceColumnFrozen ? 0 : this.scrollBarStartPosition.x);
+
+        const currentRectLeft = pointerX - (isSourceColumnFrozen ? 0 : this.scrollBarStartPosition.x);
+        let newScrollPosition = { x: scroll.x, y: scroll.y };
 
         this.setRectStyles({
             cursor: 'move',
             width: `${width}px`,
             height: '100%',
             top: '0',
-            left: `${rectLeft}px`
+            left: `${currentRectLeft}px`
         });
-        let targetColumnIndex = coordinate.getColumnStartIndex(rectLeft + scroll.x + dragCenter);
-        const lastColumnOffset = coordinate.getColumnOffset(coordinate.columnCount - 1);
-        const lastColumnWidth = coordinate.getColumnWidth(coordinate.columnCount - 1);
-        const lastColumnEndX = lastColumnOffset + lastColumnWidth;
 
-        let targetColumnStartX = coordinate.getColumnOffset(targetColumnIndex);
-        let isLastColumn = false;
-        const scrollService = this.scrollControllerService.scroll({
+        // 计算目标列和辅助线
+        const updateTargetAndLine = (rectLeft: number, scrollPosition: { x: number; y: number }) => {
+            let targetColumnIndex = coordinate.getColumnStartIndex(rectLeft + scrollPosition.x + dragCenter);
+            const lastColumnOffset = coordinate.getColumnOffset(coordinate.columnCount - 1);
+            const lastColumnWidth = coordinate.getColumnWidth(coordinate.columnCount - 1);
+            const lastColumnEndX = lastColumnOffset + lastColumnWidth;
+
+            let targetColumnStartX = coordinate.getColumnOffset(targetColumnIndex);
+            let isLastColumn = false;
+
+            // 处理最后一列
+            if (rectLeft + dragCenter + scrollPosition.x > lastColumnEndX) {
+                targetColumnIndex = coordinate.columnCount;
+                targetColumnStartX = lastColumnOffset + lastColumnWidth;
+                isLastColumn = true;
+            }
+
+            if (
+                (targetColumnIndex >= 0 && (targetColumnIndex - sourceColumnIndex > 1 || targetColumnIndex - sourceColumnIndex < 0)) ||
+                isLastColumn
+            ) {
+                let lineLeft = targetColumnStartX - scrollPosition.x;
+                const lineForFrozenX = lineLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
+                const rectDistanceFrozenX = rectLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
+
+                if (lineForFrozenX < 0) {
+                    if (Math.abs(rectDistanceFrozenX) < dragCenter) {
+                        // 滚动中保持上一个位置
+                        const nextColumnStartX = coordinate.getColumnOffset(targetColumnIndex + 1);
+                        this.setAuxiliaryLineStyles({
+                            left: `${nextColumnStartX - scrollPosition.x}px`
+                        });
+                        this.draggedData = {
+                            type: DragType.field,
+                            targetIndex: targetColumnIndex + 1,
+                            fieldIds: drag.sourceIds,
+                            fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
+                        };
+                        return;
+                    }
+                }
+
+                this.setAuxiliaryLineStyles({
+                    width: '2px',
+                    height: '100%',
+                    top: 0,
+                    left: `${lineLeft}px`
+                });
+
+                // 向右移动目标在目标列的前一列
+                if (targetColumnIndex > sourceColumnIndex) {
+                    targetColumnIndex -= 1;
+                }
+
+                this.draggedData = {
+                    type: DragType.field,
+                    targetIndex: targetColumnIndex,
+                    fieldIds: drag.sourceIds,
+                    fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
+                };
+            } else {
+                this.resetAuxiliaryLine();
+                this.draggedData = null;
+            }
+        };
+
+        updateTargetAndLine(currentRectLeft, newScrollPosition);
+
+        this.scrollControllerService.scroll({
             container: {
                 width: this.containerWidth,
                 height: this.containerHeight
             },
             element: {
-                left: rectLeft,
+                left: currentRectLeft,
                 width: sourceColumnWidth,
                 top: 0,
                 height: this.containerHeight
@@ -215,57 +285,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             },
             frozenArea: {
                 left: frozenColumnWidth + aiTable.context!.rowHeadWidth()
-            }
-        });
-        // 处理最后一列
-        if (rectLeft + dragCenter + scrollService.x > lastColumnEndX) {
-            targetColumnIndex = coordinate.columnCount;
-            targetColumnStartX = lastColumnOffset + lastColumnWidth;
-            isLastColumn = true;
-        }
-        if (
-            (targetColumnIndex >= 0 && (targetColumnIndex - sourceColumnIndex > 1 || targetColumnIndex - sourceColumnIndex < 0)) ||
-            isLastColumn
-        ) {
-            let lineLeft = targetColumnStartX - scrollService.x;
-            const lineForFrozenX = lineLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
-            const rectDistanceFrozenX = rectLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
-            if (lineForFrozenX < 0) {
-                if (Math.abs(rectDistanceFrozenX) < dragCenter) {
-                    // 保持上一个位置
-                    const nextColumnStartX = coordinate.getColumnOffset(targetColumnIndex + 1);
-                    this.setAuxiliaryLineStyles({
-                        left: `${nextColumnStartX - scrollService.x}px`
-                    });
-                    this.draggedData = {
-                        type: DragType.field,
-                        targetIndex: targetColumnIndex + 1,
-                        fieldIds: drag.sourceIds,
-                        fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
-                    };
-                    return;
+            },
+            onScrollChange: (position) => {
+                newScrollPosition = position;
+                if (position.x > 0 && position.x < this.horizontalBarMaxScroll) {
+                    updateTargetAndLine(currentRectLeft, position);
                 }
             }
-            this.setAuxiliaryLineStyles({
-                width: '2px',
-                height: '100%',
-                top: 0,
-                left: `${lineLeft}px`
-            });
-            // 向右移动目标在目标列的前一列
-            if (targetColumnIndex > sourceColumnIndex) {
-                targetColumnIndex -= 1;
-            }
-            this.draggedData = {
-                type: DragType.field,
-                targetIndex: targetColumnIndex,
-                fieldIds: drag.sourceIds,
-                fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
-            };
-        } else {
-            this.resetAuxiliaryLine();
-            this.draggedData = null;
-        }
+        });
     }
 
     private movingColumnWidth(drag: AITableDragState, moveX: number) {
@@ -310,6 +337,47 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             top: `${rectTop}px`,
             left: '0'
         });
+        let newScrollPosition = { x: scroll.x, y: scroll.y };
+        const updateTargetAndLine = (rectTop: number, scrollPosition: { x: number; y: number }) => {
+            const dragCenter = sourceRowHeight / 2;
+            const targetRowIndex = coordinate.getRowStartIndex(rectTop + scrollPosition.y + dragCenter);
+            const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
+            const lineHeight = 2;
+            if (
+                (targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
+                (sourceRowIndex < targetRowIndex && targetRowIndex - sourceRowIndex > 1)
+            ) {
+                let lineTop = targetRowStartY - scrollPosition.y;
+                if (lineTop < AI_TABLE_FIELD_HEAD_HEIGHT) {
+                    // 滚动中保持上一个位置
+                    const nextColumnStartY = coordinate.getRowOffset(targetRowIndex + 1);
+                    this.setAuxiliaryLineStyles({
+                        top: `${nextColumnStartY - scrollPosition.y}px`
+                    });
+                    this.draggedData = {
+                        type: DragType.record,
+                        recordIds: drag.sourceIds,
+                        targetIndex: targetRowIndex + 1
+                    };
+                    return;
+                }
+                this.setAuxiliaryLineStyles({
+                    width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
+                    height: `${lineHeight}px`,
+                    top: `${lineTop}px`,
+                    left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
+                });
+                this.draggedData = {
+                    type: DragType.record,
+                    recordIds: drag.sourceIds,
+                    targetIndex: targetRowIndex
+                };
+            } else {
+                this.resetAuxiliaryLine();
+                this.draggedData = null;
+            }
+        };
+        updateTargetAndLine(rectTop, newScrollPosition);
         this.scrollControllerService.scroll({
             container: {
                 width: this.containerWidth,
@@ -327,45 +395,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             },
             frozenArea: {
                 top: AI_TABLE_FIELD_HEAD_HEIGHT
+            },
+            onScrollChange: (position) => {
+                newScrollPosition = position;
+                if (position.y > 0 && position.y < this.verticalBarMaxScroll) {
+                    updateTargetAndLine(rectTop, newScrollPosition);
+                }
             }
         });
-        const dragCenter = sourceRowHeight / 2;
-        const targetRowIndex = coordinate.getRowStartIndex(rectTop + scroll.y + dragCenter);
-        const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
-        const lineHeight = 2;
-        if (
-            (targetRowIndex >= 0 && sourceRowIndex > targetRowIndex && sourceRowIndex - targetRowIndex > 0) ||
-            (sourceRowIndex < targetRowIndex && targetRowIndex - sourceRowIndex > 1)
-        ) {
-            let lineTop = targetRowStartY - scroll.y;
-            if (lineTop < AI_TABLE_FIELD_HEAD_HEIGHT) {
-                // 保持上一个位置
-                const nextColumnStartY = coordinate.getRowOffset(targetRowIndex + 1);
-                this.setAuxiliaryLineStyles({
-                    top: `${nextColumnStartY - scroll.y}px`
-                });
-                this.draggedData = {
-                    type: DragType.record,
-                    recordIds: drag.sourceIds,
-                    targetIndex: targetRowIndex + 1
-                };
-                return;
-            }
-            this.setAuxiliaryLineStyles({
-                width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
-                height: `${lineHeight}px`,
-                top: `${lineTop}px`,
-                left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
-            });
-            this.draggedData = {
-                type: DragType.record,
-                recordIds: drag.sourceIds,
-                targetIndex: targetRowIndex
-            };
-        } else {
-            this.resetAuxiliaryLine();
-            this.draggedData = null;
-        }
     }
 
     private handleDragEnd() {
@@ -435,5 +472,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             cancelAnimationFrame(this.timer);
             this.timer = null;
         }
+        this.scrollControllerService.destroy();
     }
 }

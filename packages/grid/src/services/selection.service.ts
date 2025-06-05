@@ -162,42 +162,4 @@ export class AITableGridSelectionService {
         this.setActiveCell(startCell);
         this.aiTable.selection().selectedCells = selectedCells;
     }
-
-    scrollCell(
-        endCell: AIRecordFieldIdPath,
-        coordinate: Coordinate,
-        horizontalBarRef?: ElementRef<HTMLElement>,
-        verticalBarRef?: ElementRef<HTMLElement>
-    ) {
-        const [recordId, fieldId] = endCell;
-
-        const rowIndex = this.aiTable.context!.visibleRowsIndexMap().get(recordId)!;
-        const colIndex = this.aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
-
-        const cellTop = coordinate.getRowOffset(rowIndex);
-        const cellLeft = coordinate.getColumnOffset(colIndex);
-        const cellHeight = coordinate.getRowHeight(rowIndex);
-        const cellWidth = coordinate.getColumnWidth(colIndex);
-
-        const scrollState = this.aiTable.context!.scrollState();
-        this.scrollControllerService.scroll({
-            container: coordinate.container.getBoundingClientRect(),
-            element: {
-                top: cellTop - scrollState.scrollTop,
-                left: cellLeft - scrollState.scrollLeft,
-                height: cellHeight,
-                width: cellWidth
-            },
-            direction: 'both',
-            scrollableElement: {
-                horizontalElement: horizontalBarRef?.nativeElement,
-                verticalElement: verticalBarRef?.nativeElement
-            },
-            threshold: 10, // 预留10px空隙，避免正好贴边不滚动
-            frozenArea: {
-                top: AI_TABLE_FIELD_HEAD_HEIGHT,
-                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth()
-            }
-        });
-    }
 }

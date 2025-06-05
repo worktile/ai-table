@@ -356,12 +356,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const endCell: AIRecordFieldIdPath = [recordId, fieldId];
                     if (startCell && !!startCell.length) {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
-                        this.aiTableGridSelectionService.scrollCell(
-                            endCell,
-                            this.coordinate(),
-                            this.horizontalBarRef(),
-                            this.verticalBarRef()
-                        );
                     }
                 }
             }
