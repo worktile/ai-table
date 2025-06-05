@@ -74,6 +74,7 @@ import { AITableCustomReferences } from '../../../types/grid';
 import { AITableCustomFieldType } from '../../../types/field';
 import { RelationTicketField } from '../../../custom-field/relation-ticket/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
+import { AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
@@ -121,7 +122,7 @@ export class DemoTableContent {
                     },
                     fieldModel: new RelationTicketField(),
                     render: renderRelationCell,
-                    // hoverRender: AITableCellRelation,
+                    hoverRender: AITableCellRelationTicket,
                     getDefaultFieldValue: (field: AITableField) => {
                         return [];
                     }
@@ -386,6 +387,14 @@ export class DemoTableContent {
             if (field?.type === AITableFieldType.richText && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_EDIT) {
                     alert('打开多行文本编辑');
+                }
+            }
+
+            if (field?.type === AITableCustomFieldType.relationTicket && e.targetNameDetail.source) {
+                if (e.targetNameDetail.source === AI_TABLE_CELL_TICKET_ADD) {
+                    alert('打开新增工单窗口');
+                } else {
+                    alert('打开工单详情');
                 }
             }
         }

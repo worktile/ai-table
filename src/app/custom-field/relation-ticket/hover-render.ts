@@ -19,21 +19,50 @@ import {
     AITableAttachmentConfig,
     AITableHoverCellConfig,
     AITableActionIcon,
-    HoverCellComponent
+    HoverCellComponent,
+    drawer,
+    aiTableTextConfigToKonvaConfig,
+    AITableTextComponent,
+    KoContainer,
+    aiTableRectConfigToKonvaConfig,
+    aiTableImageConfigToKonvaConfig
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
-import { AITableCustomFieldType } from '../../types/field';
+import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationItem } from '../../types/field';
+import { getRelationItemsConfigs } from './render';
+import { RectConfig } from 'konva/lib/shapes/Rect';
+import { TextConfig } from 'konva/lib/shapes/Text';
+import { RELATION_ADD_NAME_MAP } from '../../constants/field';
 
 @Component({
     selector: 'ai-table-relation',
     template: `
-        @for (attachment of relations(); track attachment.attachmentInfo._id) {
-            <ko-image [config]="attachment"></ko-image>
+        @for (relation of relations(); track relation.relationInfo._id) {
+            <ko-group>
+                <ko-group>
+                    <ko-rect [config]="relation.bgRect"></ko-rect>
+                </ko-group>
+                <ko-group>
+                    <ko-image [config]="relation.icon"></ko-image>
+                    <ai-table-text [config]="relation.identifier"></ai-table-text>
+                    <ai-table-text [config]="relation.title"></ai-table-text>
+                </ko-group>
+            </ko-group>
         }
-        <ai-table-action-icon [config]="iconConfig()"></ai-table-action-icon>
+
+        @if (moreCount()) {
+            <ko-group>
+                <ko-rect [config]="moreCount()!.bgRect"></ko-rect>
+            </ko-group>
+            <ko-group>
+                <ai-table-text [config]="moreCount()!.text"></ai-table-text>
+            </ko-group>
+        }
+
+        <ai-table-action-icon [config]="addActionConfig()"></ai-table-action-icon>
     `,
-    imports: [KoShape, AITableActionIcon],
+    imports: [KoShape, KoContainer, AITableActionIcon, AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellRelationTicket implements HoverCellComponent {
@@ -41,81 +70,100 @@ export class AITableCellRelationTicket implements HoverCellComponent {
 
     config = input<AITableHoverCellConfig>();
 
-    relations = computed<AITableAttachmentConfig[]>(() => {
+    relationRenderConfig = computed(() => {
         const { render, aiTable, field, recordId, readonly } = this.config()!;
-
-        if (render) {
-            const {} = aiTable;
-            const { transformValue, references, columnWidth } = render;
-            if (!transformValue?.length) {
-                return [];
+        render.transformValue = render.transformValue || [];
+        const { relationItems, moreCount, addActionConfig } = getRelationItemsConfigs(
+            {
+                ...render,
+                x: AI_TABLE_OFFSET,
+                y: AI_TABLE_OFFSET
+            },
+            drawer,
+            {
+                showAddAction: true
             }
-            const result =
-                transformValue?.map((attachmentId: string, index: number) => {
-                    const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-                    const currentX = AI_TABLE_CELL_PADDING + index * itemWidth + AI_TABLE_OFFSET;
-                    let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_FILE_ICON_SIZE) / 2 + AI_TABLE_OFFSET;
-                    if (columnWidth != null) {
-                        // 当超出列宽时，不会渲染后续内容
-                        if (currentX >= columnWidth - AI_TABLE_ACTION_COMMON_SIZE - 2 * AI_TABLE_CELL_PADDING) {
-                            return null;
-                        }
-                    }
+        );
+        return {
+            relationItems,
+            moreCount,
+            addActionConfig
+        };
+    });
 
-                    const attachmentInfo = references!.attachments[attachmentId];
-                    if (attachmentInfo) {
-                        const svgString = getFileThumbnailSvgString(attachmentInfo.addition.ext);
-                        const image = new Image();
-                        image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
-                        return {
-                            attachmentInfo,
-                            name: generateTargetName({
-                                targetName: AI_TABLE_CELL,
-                                fieldId: field._id,
-                                recordId,
-                                mouseStyle: readonly ? 'default' : 'pointer',
-                                source: attachmentInfo._id
-                            }),
-                            x: currentX,
-                            y: currentY,
-                            width: AI_TABLE_FILE_ICON_SIZE,
-                            height: AI_TABLE_FILE_ICON_SIZE,
-                            image,
-                            listening: true
-                        };
-                    }
-                    return null;
-                }) || [];
-            return result.filter((item: AITableAttachmentConfig) => !!item);
+    moreCount = computed<{
+        bgRect: RectConfig;
+        text: TextConfig;
+    } | null>(() => {
+        const { render, aiTable, field, recordId, readonly } = this.config()!;
+        const { rowHeight } = render;
+        const moreCount = this.relationRenderConfig().moreCount;
+        if (moreCount) {
+            return {
+                bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
+                    name: generateTargetName({
+                        targetName: AI_TABLE_CELL,
+                        fieldId: field._id,
+                        recordId,
+                        mouseStyle: readonly ? 'default' : 'pointer'
+                    }),
+                    listening: true
+                }),
+                text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
+            };
         }
+        return null;
+    });
 
+    relations = computed<AITableRelationConfig[]>(() => {
+        const { render, aiTable, field, recordId, readonly } = this.config()!;
+        const { rowHeight } = render;
+        const { relationItems } = this.relationRenderConfig();
+        if (relationItems?.length > 0) {
+            const items = relationItems.map((relationItem: RelationItem) => {
+                const relationItemConfig = relationItem as unknown as AITableRelationConfig;
+                const { relationInfo } = relationItemConfig;
+                const relationConfig: AITableRelationConfig = {
+                    bgRect: aiTableRectConfigToKonvaConfig(relationItem.bgRect, {
+                        name: generateTargetName({
+                            targetName: AI_TABLE_CELL,
+                            fieldId: field._id,
+                            recordId,
+                            mouseStyle: readonly ? 'default' : 'pointer',
+                            source: relationInfo._id
+                        }),
+                        listening: true
+                    }),
+                    icon: aiTableImageConfigToKonvaConfig(relationItem.icon, {
+                        listening: false
+                    }),
+                    identifier: aiTableTextConfigToKonvaConfig(relationItem.identifier, rowHeight),
+                    title: aiTableTextConfigToKonvaConfig(relationItem.title, rowHeight),
+                    relationInfo: relationItemConfig.relationInfo
+                };
+                return relationConfig;
+            });
+            return items;
+        }
         return [];
     });
 
-    iconConfig = computed<AITableActionIconConfig>(() => {
-        const { coordinate, render, field, recordId, readonly } = this.config()!;
-        const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_ACTION_COMMON_RIGHT_PADDING;
-        const offsetY = (coordinate.rowInitSize - AI_TABLE_ACTION_COMMON_SIZE) / 2;
+    addActionConfig = computed<AITableActionIconConfig>(() => {
+        const { coordinate, field, recordId, readonly } = this.config()!;
+        const { addActionConfig } = this.relationRenderConfig();
 
         return {
+            ...addActionConfig,
             coordinate,
             readonly,
+            listening: true,
             name: generateTargetName({
                 targetName: AI_TABLE_CELL,
                 fieldId: field._id,
                 recordId,
-                source: AI_TABLE_CELL_ATTACHMENT_ADD,
+                source: RELATION_ADD_NAME_MAP[field.type as AITableCustomFieldType],
                 mouseStyle: readonly ? 'default' : 'pointer'
-            }),
-            x: offsetX,
-            y: offsetY,
-            data: AddOutlinedPath,
-            fill: Colors.gray600,
-            hoverFill: Colors.primary,
-            backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
-            backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
-            cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,
-            listening: true
+            })
         };
     });
 }

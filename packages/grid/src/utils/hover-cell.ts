@@ -1,6 +1,10 @@
+import { TextConfig } from 'konva/lib/shapes/Text';
 import { AITable } from '../core';
 import { ComponentMap } from '../renderer/components/cells/cells';
+import { AITableImage, AITableRect, AITableText } from '../types';
 import { getDetailByTargetName } from './common';
+import { RectConfig } from 'konva/lib/shapes/Rect';
+import { ImageConfig } from 'konva/lib/shapes/Image';
 
 export function getHoverCell(aiTable: AITable) {
     const pointPosition = aiTable.context!.pointPosition();
