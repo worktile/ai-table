@@ -1,6 +1,6 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
-import { AITableReferences } from '@ai-table/utils';
+import { AITableFieldOption, AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
     rowHeadWidth: Signal<number>;
@@ -15,6 +15,8 @@ export class RendererContext {
     scrollAction: (options: ScrollActionOptions) => void;
     maxFields: Signal<number | undefined>;
     maxRecords: Signal<number | undefined>;
+    fieldOptions: Signal<AITableFieldOption[]>;
+    fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
 
     constructor(options: AITableContext) {
         const {
@@ -29,7 +31,9 @@ export class RendererContext {
             aiFieldConfig,
             scrollAction,
             maxFields,
-            maxRecords
+            maxRecords,
+            fieldOptions,
+            fieldOptionMap
         } = options;
         this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
@@ -43,6 +47,8 @@ export class RendererContext {
         this.aiFieldConfig = aiFieldConfig;
         this.maxFields = maxFields;
         this.maxRecords = maxRecords;
+        this.fieldOptions = fieldOptions;
+        this.fieldOptionMap = fieldOptionMap;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

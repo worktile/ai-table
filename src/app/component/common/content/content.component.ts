@@ -62,7 +62,8 @@ import {
     RichTextFieldValue,
     SetFieldWidthOptions,
     UpdateFieldValueOptions,
-    isUndefinedOrNull
+    isUndefinedOrNull,
+    AITableFieldGroup
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -74,7 +75,7 @@ import { AITableCustomReferences } from '../../../types/grid';
 import { AITableCustomFieldType } from '../../../types/field';
 import { RelationTicketField } from '../../../custom-field/relation-ticket/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
-import { AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
+import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
@@ -111,14 +112,17 @@ export class DemoTableContent {
         const onlyOneField = this.tableService.fields().length === 1;
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
+            // fieldOptionKeys: [AITableCustomFieldType.relationTicket],
             customFields: {
                 [AITableCustomFieldType.relationTicket]: {
                     fieldOption: {
                         type: AITableCustomFieldType.relationTicket,
+                        group: AITableFieldGroup.advanced,
                         name: '工单',
                         icon: 'ticket',
                         path: RelationIconPath,
-                        width: AI_TABLE_FIELD_MAX_WIDTH
+                        width: AI_TABLE_FIELD_MAX_WIDTH,
+                        minWidth: 245
                     },
                     fieldModel: new RelationTicketField(),
                     render: renderRelationCell,
@@ -393,6 +397,11 @@ export class DemoTableContent {
             if (field?.type === AITableCustomFieldType.relationTicket && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_TICKET_ADD) {
                     alert('打开新增工单窗口');
+                } else if (e.targetNameDetail.source === AI_TABLE_CELL_MORE_COUNT) {
+                    this.aiTable.selection.set({
+                        ...this.aiTable.selection(),
+                        expandCell: [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]
+                    });
                 } else {
                     alert('打开工单详情');
                 }

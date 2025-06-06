@@ -36,7 +36,9 @@ export enum AITableGridI18nKey {
     fieldTypeCreatedBy = 'fieldTypeCreatedBy',
     fieldTypeCreatedAt = 'fieldTypeCreatedAt',
     fieldTypeUpdatedBy = 'fieldTypeUpdatedBy',
-    fieldTypeUpdatedAt = 'fieldTypeUpdatedAt'
+    fieldTypeUpdatedAt = 'fieldTypeUpdatedAt',
+    fieldGroupBase = 'fieldGroupBase',
+    fieldGroupAdvanced = 'fieldGroupAdvanced'
 }
 
 const AITableI18nText = {
@@ -75,7 +77,9 @@ const AITableI18nText = {
     [AITableGridI18nKey.fieldTypeCreatedBy]: '创建人',
     [AITableGridI18nKey.fieldTypeCreatedAt]: '创建时间',
     [AITableGridI18nKey.fieldTypeUpdatedBy]: '更新人',
-    [AITableGridI18nKey.fieldTypeUpdatedAt]: '更新时间'
+    [AITableGridI18nKey.fieldTypeUpdatedAt]: '更新时间',
+    [AITableGridI18nKey.fieldGroupBase]: '基础',
+    [AITableGridI18nKey.fieldGroupAdvanced]: '高级'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableGridI18nKey): string => {

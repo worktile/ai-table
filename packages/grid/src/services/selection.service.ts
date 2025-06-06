@@ -31,12 +31,20 @@ export class AITableGridSelectionService {
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
+            expandCell: null,
             selectAllState: AITableSelectAllState.none
         });
     }
 
     setActiveCell(activeCell: AIRecordFieldIdPath) {
         this.aiTable.selection().activeCell = activeCell;
+    }
+
+    setExpandCell(expandCell: AIRecordFieldIdPath) {
+        this.aiTable.selection.set({
+            ...this.aiTable.selection(),
+            expandCell: expandCell
+        });
     }
 
     selectField(fieldId: string) {
@@ -82,6 +90,7 @@ export class AITableGridSelectionService {
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
+            expandCell: null,
             selectAllState: this.selectAllState()
         });
     }

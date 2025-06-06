@@ -17,6 +17,7 @@ export function createAITable(
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
+            expandCell: null,
             selectAllState: AITableSelectAllState.none
         }),
         keywordsMatchedCells: signal(new Set()),

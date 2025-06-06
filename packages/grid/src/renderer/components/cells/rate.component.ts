@@ -1,11 +1,9 @@
 import { Component, computed, input, signal } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
-import { HoverCellComponent } from '../../interfaces';
-import { AITableHoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
-import { isActiveCell } from '../../../renderer';
+import { HoverCellComponent, isActiveCell } from '../../../renderer';
 import {
     StarFill,
     Colors,
@@ -32,16 +30,14 @@ import {
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRate implements HoverCellComponent {
-    static fieldType = AITableFieldType.rate;
+export class AITableCellRate extends HoverCellComponent {
+    static override fieldType = AITableFieldType.rate;
 
     private pointerX = signal<number>(0);
 
     private pointerY = signal<number>(0);
 
     private resetStatus = signal<boolean>(false);
-
-    config = input<AITableHoverCellConfig>();
 
     readonly = computed(() => {
         return this.config()?.readonly;

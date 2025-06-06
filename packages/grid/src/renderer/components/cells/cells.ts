@@ -1,8 +1,8 @@
 import { Constructor } from 'ngx-tethys/core';
 import { AITableFieldType } from '@ai-table/utils';
-import { HoverCellComponent } from '../../interfaces';
 
 import * as cellComponents from '.';
+import { HoverCellComponent } from './hover-cell';
 
 export const ComponentMap: Partial<Record<AITableFieldType | string, Constructor<HoverCellComponent>>> = {};
 

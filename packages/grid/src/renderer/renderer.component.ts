@@ -148,15 +148,6 @@ export class AITableRenderer {
         };
     });
 
-    hoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
-        return {
-            clipX: this.frozenAreaWidth() + 1,
-            clipY: this.coordinate()!.rowInitSize + 1,
-            clipWidth: this.containerWidth() - this.frozenAreaWidth(),
-            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
-        };
-    });
-
     frozenAttachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: 0,
@@ -234,6 +225,26 @@ export class AITableRenderer {
 
     activeCellBorderConfig = computed(() => {
         return createActiveCellBorder(this.cellsConfig());
+    });
+
+    showExpandCellBorder = computed(() => {
+        let expandCellBorder = false;
+        let frozenExpandCellBorder = false;
+        const { aiTable } = this.config();
+        const expandCellPath = aiTable.selection().expandCell;
+        if (expandCellPath) {
+            const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, expandCellPath)!;
+            const isFrozenColumn = columnIndex < aiTable.context!.frozenColumnCount();
+            if (isFrozenColumn) {
+                frozenExpandCellBorder = true;
+            } else {
+                expandCellBorder = true;
+            }
+        }
+        return {
+            expandCellBorder,
+            frozenExpandCellBorder
+        };
     });
 
     stageMousemove(e: KoEventObject<MouseEvent>) {

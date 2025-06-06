@@ -10,13 +10,13 @@ import {
     EditPath
 } from '../../../constants';
 import { generateTargetName } from '../../../utils';
-import { AITableActionIconConfig, AITableHoverCellConfig } from '../../../types';
+import { AITableActionIconConfig } from '../../../types';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
-import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { AITableTextComponent } from '../text.component';
+import { HoverCellComponent } from './hover-cell';
 
 @Component({
     selector: 'ai-table-rich-text',
@@ -29,10 +29,8 @@ import { AITableTextComponent } from '../text.component';
     imports: [AITableTextComponent, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRichText implements HoverCellComponent {
-    static fieldType = AITableFieldType.richText;
-
-    config = input<AITableHoverCellConfig>();
+export class AITableCellRichText extends HoverCellComponent {
+    static override fieldType = AITableFieldType.richText;
 
     textConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
