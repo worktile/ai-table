@@ -62,7 +62,6 @@ export class LinkEditComponent implements OnInit {
             return;
         }
 
-        console.log(this.url)
         if (this.url && !isUrl(this.url)) {
             form.validator.setElementErrorMessage('url', getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.invalidLinkFormat));
             return;
