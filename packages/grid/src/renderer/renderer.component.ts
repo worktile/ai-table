@@ -152,7 +152,7 @@ export class AITableRenderer {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize - 1,
-            clipWidth: this.frozenAreaWidth() + 4,
+            clipWidth: this.frozenAreaWidth(),
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
     });
@@ -161,7 +161,7 @@ export class AITableRenderer {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize + 1,
-            clipWidth: this.frozenAreaWidth() + 4,
+            clipWidth: this.frozenAreaWidth(),
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
     });
