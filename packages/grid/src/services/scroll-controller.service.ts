@@ -3,21 +3,21 @@ import { isObject } from 'lodash';
 import { fromEvent, Subscription, animationFrames } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
-export interface ScrollableElement {
+export interface AITableScrollableElement {
     horizontalElement?: HTMLElement;
     verticalElement?: HTMLElement;
 }
 
-export interface ScrollDistance {
+export interface AITableScrollDistance {
     x: number;
     y: number;
     speedX?: number;
     speedY?: number;
 }
 
-export type EdgeThreshold = number | { left: number; right: number; top: number; bottom: number };
+export type AITableScrollEdgeThreshold = number | { left: number; right: number; top: number; bottom: number };
 
-export interface ScrollControllerOptions {
+export interface AITableScrollControllerOptions {
     container: {
         width: number;
         height: number;
@@ -31,7 +31,7 @@ export interface ScrollControllerOptions {
         height?: number;
     };
     direction?: 'horizontal' | 'vertical' | 'both';
-    scrollableElement: ScrollableElement;
+    scrollableElement: AITableScrollableElement;
     frozenArea?: {
         top?: number;
         left?: number;
@@ -44,7 +44,7 @@ export interface ScrollControllerOptions {
     scrollSpeedFactor?: number; // 滚动速度因子，默认1.0
     minScrollSpeed?: number; // 最小滚动速度
     maxScrollSpeed?: number; // 最大滚动速度
-    edgeThreshold?: EdgeThreshold; // 边缘触发阈值
+    edgeThreshold?: AITableScrollEdgeThreshold; // 边缘触发阈值
     onScrollChange?: (position: { x: number; y: number }, isAutoScrolling: boolean) => void;
 }
 
@@ -57,7 +57,7 @@ export class AITableScrollControllerService {
     private autoScrollSub: Subscription | null = null;
     private edgeDistanceX = 0;
     private edgeDistanceY = 0;
-    private lastAutoScrollOptions: ScrollControllerOptions | null = null;
+    private lastAutoScrollOptions: AITableScrollControllerOptions | null = null;
 
     constructor(private ngZone: NgZone) {
         this.ngZone.runOutsideAngular(() => {
@@ -67,7 +67,7 @@ export class AITableScrollControllerService {
         });
     }
 
-    scroll(options: ScrollControllerOptions) {
+    scroll(options: AITableScrollControllerOptions) {
         const { autoScroll = true } = options;
         const { needsScroll } = this.calculateScrollDistance(options);
         if (!needsScroll) {
@@ -89,7 +89,7 @@ export class AITableScrollControllerService {
         this.isAutoScrolling = false;
     }
 
-    private startAutoScroll(options: ScrollControllerOptions): void {
+    private startAutoScroll(options: AITableScrollControllerOptions): void {
         if (this.autoScrollSub) {
             this.autoScrollSub.unsubscribe();
             this.autoScrollSub = null;
@@ -138,7 +138,7 @@ export class AITableScrollControllerService {
         });
     }
 
-    private getEdgeThreshold(threshold: EdgeThreshold, direction: 'left' | 'right' | 'top' | 'bottom'): number {
+    private getEdgeThreshold(threshold: AITableScrollEdgeThreshold, direction: 'left' | 'right' | 'top' | 'bottom'): number {
         const defaultThreshold = 10; // 默认阈值
         if (isObject(threshold)) {
             return threshold[direction] || defaultThreshold;
@@ -147,8 +147,8 @@ export class AITableScrollControllerService {
     }
 
     // 计算距离和滚动速度
-    private calculateScrollDistance(options: ScrollControllerOptions): {
-        scrollResult: ScrollDistance;
+    private calculateScrollDistance(options: AITableScrollControllerOptions): {
+        scrollResult: AITableScrollDistance;
         needsScroll: boolean;
     } {
         const {
@@ -167,7 +167,7 @@ export class AITableScrollControllerService {
         const { horizontalElement, verticalElement } = scrollableElement;
 
         // 初始化滚动结果
-        const scrollResult: ScrollDistance = {
+        const scrollResult: AITableScrollDistance = {
             x: 0,
             y: 0,
             speedX: 0,
