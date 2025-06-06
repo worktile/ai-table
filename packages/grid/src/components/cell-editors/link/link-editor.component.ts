@@ -7,10 +7,11 @@ import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyFlexibleTextModule } from 'ngx-tethys/flexible-text';
 import { ThyPopover } from 'ngx-tethys/popover';
-import { LINK_URL_REGEX, LinkEditComponent } from './edit-link/edit-link.component';
+import { LinkEditComponent } from './edit-link/edit-link.component';
 import * as _ from 'lodash';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../../utils/i18n';
+import { isUrl } from '@ai-table/utils';
 
 @Component({
     selector: 'link-cell-editor',
@@ -49,13 +50,10 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     isOpened = false;
 
     isValidLink(link: { text: string; url: string }) {
-        if (!link?.text?.trim()) {
+        if (!link.text) {
             return true;
         }
-        if (!link.url) {
-            return LINK_URL_REGEX.test(link.text);
-        }
-        return true;
+        return isUrl(link.text);
     }
 
     createLinkValue(link: { text: string; url: string }) {
@@ -88,11 +86,12 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
     }
 
     updateValue() {
-        if (!this.isValidLink({ text: this.text, url: this.url ?? '' })) {
+        const linkValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
+        if (!this.isValidLink(linkValue)) {
             this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidLinkFormat));
             return;
         }
-        this.modelValue = this.createLinkValue({ text: this.text, url: this.url ?? '' });
+        this.modelValue = linkValue;
         if (!_.isEqual(this.originValue, this.modelValue)) {
             super.update();
             this.originValue = this.modelValue;
