@@ -1,5 +1,5 @@
 import { Signal, WritableSignal, computed, signal } from '@angular/core';
-import { AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue } from '@ai-table/utils';
+import { AITableField, AITableFields, AITableRecord, AITableRecords, AITableValue, DragType } from '@ai-table/utils';
 import { AITableSelectAllState } from '../../types';
 import { AITable } from '../types';
 
@@ -40,7 +40,11 @@ export function createAITable(
             );
         }),
         recordsWillHidden: signal([]),
-        recordsWillMove: signal([])
+        recordsWillMove: signal([]),
+        dragState: signal({
+            type: DragType.none,
+            sourceIds: new Set()
+        })
     };
     return aiTable;
 }
