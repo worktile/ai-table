@@ -39,7 +39,7 @@ import {
     DEFAULT_SCROLL_STATE,
     IconPathMap
 } from './constants';
-import { Coordinate, RendererContext, AITable, defaultFieldOptions } from './core';
+import { Coordinate, RendererContext, AITable, defaultFieldOptions, AITableDragState } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -78,7 +78,6 @@ import {
     AITableField,
     AITableFieldOption,
     AITableFieldType,
-    AITableViewFields,
     DragEndData,
     DragType,
     IdPath,
@@ -851,7 +850,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleFieldDragStart() {
         if (!this.aiReadonly() && this.aiTableGridSelectionService.selectedFields.size > 0) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,
                 scroll: this.getScrollPosition(),
@@ -862,7 +861,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleFieldWidthDragStart(fieldId: string) {
         if (!this.aiReadonly() && fieldId) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.columnWidth,
                 sourceIds: new Set([fieldId]),
                 scroll: this.getScrollPosition(),
@@ -873,7 +872,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleRowDragStart(recordIds: string[]) {
         if (!this.aiReadonly() && !this.aiRowDragDisabled() && recordIds.length > 0) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),
                 scroll: this.getScrollPosition(),
@@ -920,6 +919,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 return;
         }
-        this.aiTableGridSelectionService.clearDrag();
+
+        this.setDragState({
+            type: DragType.none,
+            sourceIds: new Set()
+        });
+    }
+
+    setDragState(config: AITableDragState) {
+        this.aiTable.dragState!.set(config);
     }
 }
