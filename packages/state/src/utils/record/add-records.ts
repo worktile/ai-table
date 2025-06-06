@@ -49,6 +49,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
         selectedFields: new Set(),
         selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
         activeCell: [activeRecordId, activeFieldId],
+        expandCell: null,
         selectAllState: AITableSelectAllState.none
     });
 }

@@ -39,6 +39,6 @@ export interface AITableRelationConfig extends Konva.ShapeConfig {
     bgRect: RectConfig;
     icon: ImageConfig;
     identifier: TextConfig;
-    title: TextConfig;
+    title: TextConfig | null;
     relationInfo: AITableRelationInfo;
 }

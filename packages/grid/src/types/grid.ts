@@ -41,6 +41,7 @@ export interface AITableSelection {
     selectedFields: Set<string>; // `${fieldId}`
     selectedCells: Set<string>; // `${recordId}:${fieldId}`
     activeCell: AIRecordFieldIdPath | null;
+    expandCell: AIRecordFieldIdPath | null;
     selectAllState: AITableSelectAllState; // 'all','partial','none'
 }
 
@@ -58,6 +59,7 @@ export interface AIFieldConfig<TR extends AITableReferences = AITableReferences>
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
+    fieldOptionKeys?: string[];
 }
 
 export interface AITableRendererConfig {
@@ -143,6 +145,8 @@ export interface AITableContext {
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     maxFields: Signal<number | undefined>;
     maxRecords: Signal<number | undefined>;
+    fieldOptions: Signal<AITableFieldOption[]>;
+    fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
 }
 
 export enum AITableSelectAllState {

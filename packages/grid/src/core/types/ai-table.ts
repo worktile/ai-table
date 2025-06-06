@@ -3,7 +3,7 @@ import { Colors } from '../../constants/colors';
 import { AITableSelection } from '../../types';
 import { RendererContext } from '../context';
 import { AITableGridI18nKey } from '../../utils/i18n';
-import { AITableRecords, AITableFields, AITableField, AITableValue, AITableRecord, AIRecordFieldIdPath } from '@ai-table/utils';
+import { AITableRecords, AITableFields, AITableField, AITableValue, AITableRecord, AIRecordFieldIdPath, DragType } from '@ai-table/utils';
 import { AITableDragState } from './core';
 
 export interface AITable {
@@ -74,5 +74,8 @@ export const AITable = {
             return true;
         }
         return false;
+    },
+    getDragState(aiTable: AITable): DragType {
+        return aiTable.dragState?.()?.type || DragType.none;
     }
 };

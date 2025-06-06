@@ -1,9 +1,8 @@
-import { computed, ElementRef, inject, Injectable, signal } from '@angular/core';
-import { AITable, AITableDragState, Coordinate } from '../core';
+import { computed, Injectable } from '@angular/core';
+import { AITable } from '../core';
 import { AITableSelectAllState } from '../types';
-import { AIRecordFieldIdPath, DragType } from '@ai-table/utils';
-import { AITableScrollControllerService } from './scroll-controller.service';
-import { AI_TABLE_FIELD_HEAD_HEIGHT } from '../constants';
+import { AIRecordFieldIdPath } from '@ai-table/utils';
+
 @Injectable()
 export class AITableGridSelectionService {
     aiTable!: AITable;
@@ -21,10 +20,6 @@ export class AITableGridSelectionService {
 
     initialize(aiTable: AITable) {
         this.aiTable = aiTable;
-        this.aiTable.dragState = signal({
-            type: DragType.none,
-            sourceIds: new Set()
-        });
     }
 
     clearSelection() {
@@ -33,12 +28,20 @@ export class AITableGridSelectionService {
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
+            expandCell: null,
             selectAllState: AITableSelectAllState.none
         });
     }
 
     setActiveCell(activeCell: AIRecordFieldIdPath) {
         this.aiTable.selection().activeCell = activeCell;
+    }
+
+    setExpandCell(expandCell: AIRecordFieldIdPath) {
+        this.aiTable.selection.set({
+            ...this.aiTable.selection(),
+            expandCell: expandCell
+        });
     }
 
     selectField(fieldId: string) {
@@ -57,21 +60,6 @@ export class AITableGridSelectionService {
         return this.aiTable.selection().selectedRecords;
     }
 
-    drag(config: AITableDragState) {
-        this.aiTable.dragState!.set(config);
-    }
-
-    getDragStateType() {
-        return this.aiTable.dragState?.()?.type;
-    }
-
-    clearDrag() {
-        this.aiTable.dragState!.set({
-            type: DragType.none,
-            sourceIds: new Set()
-        });
-    }
-
     selectRecord(recordId: string) {
         if (this.aiTable.selection().selectedRecords.has(recordId)) {
             this.aiTable.selection().selectedRecords.delete(recordId);
@@ -84,6 +72,7 @@ export class AITableGridSelectionService {
             selectedFields: new Set(),
             selectedCells: new Set(),
             activeCell: null,
+            expandCell: null,
             selectAllState: this.selectAllState()
         });
     }

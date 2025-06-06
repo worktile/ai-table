@@ -39,7 +39,7 @@ import {
     DEFAULT_SCROLL_STATE,
     IconPathMap
 } from './constants';
-import { Coordinate, RendererContext, AITable } from './core';
+import { Coordinate, RendererContext, AITable, defaultFieldOptions, AITableDragState } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -76,8 +76,8 @@ import {
     AddRecordOptions,
     AIRecordFieldIdPath,
     AITableField,
+    AITableFieldOption,
     AITableFieldType,
-    AITableViewFields,
     DragEndData,
     DragType,
     IdPath,
@@ -157,6 +157,31 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     visibleColumnsIndexMap = computed(() => {
         const columns = AITable.getVisibleFields(this.aiTable);
         return new Map(columns?.map((item, index) => [item._id, index]));
+    });
+
+    fieldOptions = computed<AITableFieldOption[]>(() => {
+        let allFieldOptions = defaultFieldOptions.map((fieldOption) => {
+            fieldOption.name = getI18nTextByKey(this.aiTable, fieldOption.name);
+            return fieldOption;
+        });
+
+        Object.entries(this.aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([fieldType, fieldConfig]) => {
+            if (fieldConfig?.fieldOption) {
+                allFieldOptions.push(fieldConfig.fieldOption);
+            }
+        });
+
+        const fieldOptionMap = new Map<string, AITableFieldOption>(allFieldOptions.map((fieldOption) => [fieldOption.type, fieldOption]));
+
+        const fieldOptionKeys = this.aiTable.context?.aiFieldConfig()?.fieldOptionKeys || [];
+        if (fieldOptionKeys.length > 0) {
+            allFieldOptions = fieldOptionKeys.map((fieldOptionKey) => fieldOptionMap.get(fieldOptionKey) as AITableFieldOption);
+        }
+        return allFieldOptions;
+    });
+
+    fieldOptionMap = computed<Map<string, AITableFieldOption>>(() => {
+        return new Map<string, AITableFieldOption>(this.fieldOptions().map((fieldOption) => [fieldOption.type, fieldOption]));
     });
 
     visibleRowsIndexMap = computed(() => {
@@ -303,7 +328,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             aiFieldConfig: this.aiFieldConfig,
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
-            maxRecords: this.aiMaxRecords
+            maxRecords: this.aiMaxRecords,
+            fieldOptions: this.fieldOptions,
+            fieldOptionMap: this.fieldOptionMap
         });
     }
 
@@ -419,7 +446,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId || !fieldId) return;
                 const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectionState(true, dragSelectionStart);
-                this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                const [expandRecordId, expandFieldId] = this.aiTable.selection().expandCell || [null, null];
+                if (expandRecordId !== recordId || expandFieldId !== fieldId) {
+                    this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                }
                 return;
             case AI_TABLE_ROW_DRAG:
                 if (!recordId) return;
@@ -824,7 +854,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleFieldDragStart() {
         if (!this.aiReadonly() && this.aiTableGridSelectionService.selectedFields.size > 0) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,
                 coordinate: this.coordinate()
@@ -834,7 +864,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleFieldWidthDragStart(fieldId: string) {
         if (!this.aiReadonly() && fieldId) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.columnWidth,
                 sourceIds: new Set([fieldId]),
                 coordinate: this.coordinate()
@@ -844,7 +874,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private handleRowDragStart(recordIds: string[]) {
         if (!this.aiReadonly() && !this.aiRowDragDisabled() && recordIds.length > 0) {
-            this.aiTableGridSelectionService.drag({
+            this.setDragState({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),
                 coordinate: this.coordinate()
@@ -882,7 +912,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 return;
         }
-        this.aiTableGridSelectionService.clearDrag();
+
+        this.setDragState({
+            type: DragType.none,
+            sourceIds: new Set()
+        });
+    }
+
+    setDragState(config: AITableDragState) {
+        this.aiTable.dragState!.set(config);
     }
 
     scrollViewToCell(

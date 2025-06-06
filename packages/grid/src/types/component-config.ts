@@ -69,6 +69,7 @@ export interface AITableHoverCellConfig {
     y: number;
     render: AITableRender;
     readonly: boolean;
+    isExpand: boolean;
     actions: {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };

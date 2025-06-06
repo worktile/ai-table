@@ -58,17 +58,35 @@
 </form>
 
 <thy-dropdown-menu #menu>
-    @for (item of fieldOptions(); track $index) {
-        <a
-            thyDropdownMenuItem
-            href="javascript:;"
-            [ngClass]="{
-                active: (item | fieldIsSameOption: aiEditField())
-            }"
-            (click)="selectFieldType(item)"
-        >
-            <thy-icon [thyIconName]="item.icon!"></thy-icon>
-            <span thyDropdownMenuItemName>{{ item.name }}</span>
-        </a>
-    }
+    <thy-dropdown-menu-group [thyTitle]="i18nTexts().base">
+        @for (item of fieldOptions().base; track $index) {
+            <a
+                thyDropdownMenuItem
+                href="javascript:;"
+                [ngClass]="{
+                    active: (item | fieldIsSameOption: aiEditField())
+                }"
+                (click)="selectFieldType(item)"
+            >
+                <thy-icon [thyIconName]="item.icon!"></thy-icon>
+                <span thyDropdownMenuItemName>{{ item.name }}</span>
+            </a>
+        }
+    </thy-dropdown-menu-group>
+
+    <thy-dropdown-menu-group [thyTitle]="i18nTexts().advanced">
+        @for (item of fieldOptions().advanced; track $index) {
+            <a
+                thyDropdownMenuItem
+                href="javascript:;"
+                [ngClass]="{
+                    active: (item | fieldIsSameOption: aiEditField())
+                }"
+                (click)="selectFieldType(item)"
+            >
+                <thy-icon [thyIconName]="item.icon!"></thy-icon>
+                <span thyDropdownMenuItemName>{{ item.name }}</span>
+            </a>
+        }
+    </thy-dropdown-menu-group>
 </thy-dropdown-menu>

@@ -17,6 +17,7 @@ import { ThyButton } from 'ngx-tethys/button';
 import {
     ThyDropdownDirective,
     ThyDropdownMenuComponent,
+    ThyDropdownMenuGroup,
     ThyDropdownMenuItemDirective,
     ThyDropdownMenuItemExtendIconDirective,
     ThyDropdownMenuItemIconDirective,
@@ -48,6 +49,7 @@ import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions
         ThyInputDirective,
         ThyUniqueCheckValidator,
         ThyDropdownMenuComponent,
+        ThyDropdownMenuGroup,
         ThyDropdownDirective,
         ThyDropdownMenuItemDirective,
         ThyDropdownMenuItemIconDirective,
@@ -101,8 +103,15 @@ export class AITableFieldSetting implements OnInit {
         };
     });
 
-    fieldOptions = computed(() => {
-        return getFieldOptions(this.aiTable());
+    fieldOptions = computed<{
+        base: AITableFieldOption[];
+        advanced: AITableFieldOption[];
+    }>(() => {
+        const fieldOptions = getFieldOptions(this.aiTable());
+        return _.groupBy(fieldOptions, 'group') as {
+            base: AITableFieldOption[];
+            advanced: AITableFieldOption[];
+        };
     });
 
     aITableFieldType = AITableFieldType;
@@ -182,7 +191,9 @@ export class AITableFieldSetting implements OnInit {
             fieldType: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldType),
             allowMultipleMembers: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.allowMultipleMembers),
             cancel: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.cancel),
-            confirm: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.confirm)
+            confirm: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.confirm),
+            base: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldGroupBase),
+            advanced: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.fieldGroupAdvanced)
         };
     });
 }

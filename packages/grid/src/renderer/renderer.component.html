@@ -26,6 +26,8 @@
             <ko-group [config]="commonGroupConfig()">
                 <ko-group [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
+                    <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
+                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
 
                 <ko-group [config]="offsetXConfig()">
@@ -36,15 +38,17 @@
 
             <ko-group [config]="attachGroupConfig()">
                 <ko-group [config]="offsetConfig()">
-                    <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
                     @if (activeCellBorderConfig().activeCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
+                    }
+                    @if (showExpandCellBorder().expandCellBorder) {
+                        <ai-table-hover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-hover-cell>
                     }
                 </ko-group>
             </ko-group>
 
-            <ko-group [config]="hoverAttachGroupConfig()">
-                <ko-group [config]="offsetConfig()">
+            <ko-group [config]="frozenHoverAttachGroupConfig()">
+                <ko-group [config]="offsetYConfig()">
                     <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
                 </ko-group>
             </ko-group>
@@ -54,12 +58,9 @@
                     @if (activeCellBorderConfig().frozenActiveCellBorder) {
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
-                </ko-group>
-            </ko-group>
-
-            <ko-group [config]="frozenHoverAttachGroupConfig()">
-                <ko-group [config]="offsetYConfig()">
-                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
+                    @if (showExpandCellBorder().frozenExpandCellBorder) {
+                        <ai-table-hover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-hover-cell>
+                    }
                 </ko-group>
             </ko-group>
         </ko-group>

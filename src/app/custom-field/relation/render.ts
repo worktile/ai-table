@@ -15,7 +15,8 @@ import {
     AddOutlinedPath,
     Colors,
     AI_TABLE_ACTION_COMMON_RADIUS,
-    AITableActionIconConfig
+    AITableActionIconConfig,
+    AI_TABLE_OFFSET
 } from '@ai-table/grid';
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { AITableCustomReferences } from '../../types/grid';
@@ -32,7 +33,7 @@ export function renderRelationCell(render: AITableRender<AITableCustomReferences
         for (const relationItem of relationItems) {
             drawer.rect(relationItem.bgRect);
             drawer.text(relationItem.identifier);
-            drawer.text(relationItem.title);
+            relationItem.title && drawer.text(relationItem.title);
             drawer.image({
                 ...relationItem.icon,
                 name: relationItem.icon.url
@@ -50,86 +51,95 @@ export function getRelationItemsConfigs(
     drawer: Drawer,
     options?: {
         showAddAction?: boolean;
+        multilineRow?: boolean;
     }
 ) {
     const showAddAction = options?.showAddAction;
+    const multilineRow = options?.multilineRow;
     const { references, x, y, field, transformValue = [], rowHeight, columnWidth, isActive, style } = render;
     const itemHeight = 24;
     let currentX = AI_TABLE_CELL_PADDING;
     let currentY = (AI_TABLE_FIELD_HEAD_HEIGHT - itemHeight) / 2;
     const fontWeight = style?.fontWeight || DEFAULT_FONT_WEIGHT;
-    let maxRelationContainerWidth = 240;
+    let maxRelationContainerWidth = 240; // 最大关联项容器宽度
+    let minRelationContainerWidth = 128; // 最小关联项容器宽度
     const relationIconMarginLeft = 12;
     const relationIconWidth = 16;
     const relationIdentifierMarginLeft = 8;
     const relationTitleMarginLeft = 8;
     const relationTitleMarginRight = 18;
-    const countContainerWidth = 42;
-
-    // 渲染 关联元素（包括 +x 部分）的宽度
-    const renderRelationContainerWidth = showAddAction
-        ? columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_ACTION_COMMON_RIGHT_PADDING
-        : columnWidth;
-
-    if (transformValue.length <= 1) {
-        maxRelationContainerWidth = Math.min(
-            maxRelationContainerWidth,
-            renderRelationContainerWidth - AI_TABLE_CELL_PADDING - relationTitleMarginRight
-        );
-    } else {
-        maxRelationContainerWidth = Math.min(
-            maxRelationContainerWidth,
-            renderRelationContainerWidth - AI_TABLE_CELL_PADDING - relationTitleMarginRight - countContainerWidth
-        );
+    const relationItemHeight = 30;
+    let countContainerWidth = 42 + AI_TABLE_CELL_MULTI_PADDING_LEFT;
+    if (multilineRow) {
+        countContainerWidth = 0;
     }
-
-    const relationTextMaxWidth =
-        maxRelationContainerWidth - relationIconMarginLeft - relationIconWidth - relationIdentifierMarginLeft - relationTitleMarginRight;
 
     const relationItems: RelationItem[] = [];
     let moreCount: MoreCountItem | null = null;
 
     const textAlign = style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT;
 
+    let rowIndex = 0;
     for (const [index, relationId] of transformValue.entries()) {
         const relationInfo = references?.relations?.[relationId];
         if (relationInfo) {
-            const { title: titleString, type, whole_identifier } = relationInfo;
-            const { text: identifierText, textWidth: identifierTextWidth } = drawer.textEllipsis({
-                text: whole_identifier,
-                maxWidth: relationTextMaxWidth,
-                fontWeight
-            });
+            // 剩余宽度
+            let { relationContainerWidth, remainingWidth } = getNewRowWidth(
+                columnWidth,
+                currentX,
+                showAddAction || false,
+                maxRelationContainerWidth
+            );
 
-            const { text: titleText, textWidth: titleTextWidth } = drawer.textEllipsis({
-                text: titleString,
-                maxWidth: relationTextMaxWidth - identifierTextWidth - relationTitleMarginLeft,
-                fontWeight
-            });
-
-            const relationWidth =
-                identifierTextWidth +
-                titleTextWidth +
-                relationTitleMarginLeft +
-                relationIconWidth +
-                relationIconMarginLeft +
-                relationIdentifierMarginLeft +
-                relationTitleMarginRight;
-
+            // 是否显示更多计数
             let showMoreCount = false;
             if (index < transformValue.length - 1) {
-                if (currentX + relationWidth >= renderRelationContainerWidth - AI_TABLE_CELL_PADDING - 42) {
-                    showMoreCount = true;
+                // 后续还有元素
+                relationContainerWidth = Math.min(remainingWidth - countContainerWidth, maxRelationContainerWidth);
+
+                if (relationContainerWidth < minRelationContainerWidth) {
+                    // 容纳不下则 换行 或 展示count
+                    if (multilineRow) {
+                        rowIndex++;
+                        currentX = AI_TABLE_CELL_PADDING;
+                        currentY += relationItemHeight;
+                        let { relationContainerWidth: newRelationContainerWidth, remainingWidth: newRemainingWidth } = getNewRowWidth(
+                            columnWidth,
+                            currentX,
+                            showAddAction || false,
+                            maxRelationContainerWidth
+                        );
+                        relationContainerWidth = newRelationContainerWidth;
+                        remainingWidth = newRemainingWidth;
+                    } else {
+                        showMoreCount = true;
+                    }
                 }
             } else {
-                if (currentX + relationWidth >= renderRelationContainerWidth - AI_TABLE_CELL_PADDING) {
-                    showMoreCount = true;
+                // 最后一个元素
+                if (remainingWidth < minRelationContainerWidth) {
+                    // 容纳不下这一条，换行 或 展示count
+                    if (multilineRow) {
+                        rowIndex++;
+                        currentX = AI_TABLE_CELL_PADDING;
+                        currentY += relationItemHeight;
+                        let { relationContainerWidth: newRelationContainerWidth, remainingWidth: newRemainingWidth } = getNewRowWidth(
+                            columnWidth,
+                            currentX,
+                            showAddAction || false,
+                            maxRelationContainerWidth
+                        );
+                        relationContainerWidth = newRelationContainerWidth;
+                        remainingWidth = newRemainingWidth;
+                    } else {
+                        showMoreCount = true;
+                    }
                 }
             }
 
-            if (showMoreCount) {
+            // 不换行 需要渲染 count，则结束
+            if (showMoreCount && !multilineRow) {
                 // 关联项背景绘制
-
                 const countString = `+${transformValue.length - index}`;
                 const { text: countText, textWidth: countTextWidth } = drawer.textEllipsis({
                     text: countString,
@@ -152,7 +162,7 @@ export function getRelationItemsConfigs(
                         y: textY,
                         text: countString,
                         textAlign,
-                        fillStyle: drawer?.colors.gray600,
+                        fillStyle: drawer?.colors.gray800,
                         fontWeight,
                         textDecoration: DEFAULT_TEXT_DECORATION,
                         verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
@@ -160,6 +170,36 @@ export function getRelationItemsConfigs(
                 };
                 continue;
             }
+
+            const relationTextMaxWidth =
+                relationContainerWidth -
+                relationIconMarginLeft -
+                relationIconWidth -
+                relationIdentifierMarginLeft -
+                relationTitleMarginRight;
+
+            const { title: titleString, type, whole_identifier } = relationInfo;
+            const { text: identifierText, textWidth: identifierTextWidth } = drawer.textEllipsis({
+                text: whole_identifier,
+                maxWidth: relationTextMaxWidth,
+                fontWeight
+            });
+
+            const { text: titleText, textWidth: titleTextWidth } = drawer.textEllipsis({
+                text: titleString,
+                maxWidth: relationTextMaxWidth - identifierTextWidth - relationTitleMarginLeft,
+                // maxWidth: 1,
+                fontWeight
+            });
+
+            const relationWidth =
+                identifierTextWidth +
+                titleTextWidth +
+                relationTitleMarginLeft +
+                relationIconWidth +
+                relationIconMarginLeft +
+                relationIdentifierMarginLeft +
+                relationTitleMarginRight;
 
             // 关联项背景绘制
             const bgRect = {
@@ -185,7 +225,7 @@ export function getRelationItemsConfigs(
 
             // 绘制 identifier 文本
             const identifierX = x + currentX + relationIconMarginLeft + relationIconWidth + relationIdentifierMarginLeft;
-            const identifierY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+            const identifierY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2 + AI_TABLE_OFFSET + rowIndex * relationItemHeight;
             const identifier: AITableText = {
                 x: identifierX,
                 y: identifierY,
@@ -206,7 +246,7 @@ export function getRelationItemsConfigs(
                 relationIdentifierMarginLeft +
                 identifierTextWidth +
                 relationTitleMarginLeft;
-            const titleY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2;
+            const titleY = y + AI_TABLE_FIELD_HEAD_HEIGHT / 2 + AI_TABLE_OFFSET + rowIndex * relationItemHeight;
 
             const title: AITableText = {
                 x: titleX,
@@ -245,9 +285,23 @@ export function getRelationItemsConfigs(
         listening: true
     };
 
+    const totalWidth = rowHeight + rowIndex * relationItemHeight - AI_TABLE_OFFSET * 2;
+
     return {
         relationItems,
         moreCount,
-        addActionConfig
+        addActionConfig,
+        totalWidth
     };
+}
+
+function getNewRowWidth(columnWidth: number, currentX: number, showAddAction: boolean, maxRelationContainerWidth: number) {
+    let remainingWidth = columnWidth - currentX - AI_TABLE_CELL_PADDING;
+    // 需要 新增按钮时 减去 新增按钮的宽度
+    if (showAddAction) {
+        remainingWidth -= AI_TABLE_CELL_MULTI_PADDING_LEFT + AI_TABLE_ACTION_COMMON_SIZE + AI_TABLE_ACTION_COMMON_RIGHT_PADDING;
+    }
+
+    let relationContainerWidth = Math.min(remainingWidth, maxRelationContainerWidth);
+    return { relationContainerWidth, remainingWidth };
 }

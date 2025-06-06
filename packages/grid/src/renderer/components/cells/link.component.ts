@@ -7,7 +7,7 @@ import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
-import { HoverCellComponent } from '../../interfaces';
+import { HoverCellComponent } from './hover-cell';
 
 @Component({
     selector: 'ai-table-link',
@@ -19,10 +19,8 @@ import { HoverCellComponent } from '../../interfaces';
     imports: [AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellLink implements HoverCellComponent {
-    static fieldType = AITableFieldType.link;
-
-    config = input<AITableHoverCellConfig | undefined>();
+export class AITableCellLink extends HoverCellComponent {
+    static override fieldType = AITableFieldType.link;
 
     textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
 

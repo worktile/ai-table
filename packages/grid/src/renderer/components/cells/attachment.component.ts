@@ -17,8 +17,8 @@ import {
 import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
 import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
-import { HoverCellComponent } from '../../interfaces';
 import { AITableActionIcon } from '../action-icon.component';
+import { HoverCellComponent } from './hover-cell';
 
 @Component({
     selector: 'ai-table-attachments',
@@ -31,10 +31,8 @@ import { AITableActionIcon } from '../action-icon.component';
     imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellAttachment implements HoverCellComponent {
-    static fieldType = AITableFieldType.attachment;
-
-    config = input<AITableHoverCellConfig>();
+export class AITableCellAttachment extends HoverCellComponent {
+    static override fieldType = AITableFieldType.attachment;
 
     attachments = computed<AITableAttachmentConfig[]>(() => {
         const { render, aiTable, field, recordId, readonly } = this.config()!;
