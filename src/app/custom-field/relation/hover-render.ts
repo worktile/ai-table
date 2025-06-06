@@ -27,7 +27,7 @@ import { AI_TABLE_CELL_MORE_COUNT, RELATION_ADD_NAME_MAP } from '../../constants
 @Component({
     selector: 'ai-table-relation',
     template: `
-        @if (onlyExpandBorder()) {
+        @if (onlyDisplayBorder()) {
             @if (expandBorderConfig()) {
                 <ko-rect [config]="expandBorderConfig()!"></ko-rect>
             }
@@ -73,9 +73,9 @@ export class AITableCellRelationTicket extends HoverCellComponent {
     static override fieldType = AITableCustomFieldType.relationTicket;
 
     expandBorderConfig = computed(() => {
-        const { render, field, recordId, readonly } = this.config()!;
+        const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
-        if (this.isExpanded()) {
+        if (isExpand) {
             const { totalWidth } = this.relationRenderConfig();
             return {
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
@@ -89,9 +89,9 @@ export class AITableCellRelationTicket extends HoverCellComponent {
     });
 
     expandContainer = computed(() => {
-        const { render, field, recordId, readonly } = this.config()!;
+        const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
-        if (this.isExpanded()) {
+        if (isExpand) {
             const { totalWidth } = this.relationRenderConfig();
             return {
                 name: generateTargetName({
@@ -109,13 +109,8 @@ export class AITableCellRelationTicket extends HoverCellComponent {
         return null;
     });
 
-    isExpanded = computed(() => {
-        const { aiTable } = this.config()!;
-        return !!aiTable.selection().expandCell;
-    });
-
     relationRenderConfig = computed(() => {
-        const { render, aiTable, field, recordId, readonly } = this.config()!;
+        const { render, aiTable, field, recordId, readonly, isExpand } = this.config()!;
         render.transformValue = render.transformValue || [];
         const { relationItems, moreCount, addActionConfig, totalWidth } = getRelationItemsConfigs(
             {
@@ -126,7 +121,7 @@ export class AITableCellRelationTicket extends HoverCellComponent {
             drawer,
             {
                 showAddAction: true,
-                multilineRow: this.isExpanded()
+                multilineRow: isExpand
             }
         );
         return {

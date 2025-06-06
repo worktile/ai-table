@@ -18,7 +18,7 @@ import { HoverCellComponent } from './cells/hover-cell';
                 <ng-container
                     *ngComponentOutlet="
                         hoverCell()!.renderComponentDefinition;
-                        inputs: { config: hoverCellConfig(), onlyExpandBorder: onlyExpandBorder() }
+                        inputs: { config: hoverCellConfig(), onlyDisplayBorder: onlyDisplayBorder() }
                     "
                 >
                 </ng-container>
@@ -31,7 +31,7 @@ import { HoverCellComponent } from './cells/hover-cell';
 export class AITableHoverCells {
     config = input.required<AITableCellsConfig>();
 
-    onlyExpandBorder = input<boolean>(false);
+    onlyDisplayBorder = input<boolean>(false);
 
     componentMap: Partial<Record<AITableFieldType, Constructor<HoverCellComponent>>> = {};
 
@@ -45,20 +45,16 @@ export class AITableHoverCells {
 
     hoverCellConfig = computed<AITableHoverCellConfig | undefined>(() => {
         const { aiTable, coordinate, references, readonly, actions } = this.config();
-        const pointPosition = aiTable.context!.pointPosition();
         const hoverCell = this.hoverCell();
         if (!hoverCell) {
             return;
         }
-        const { field, recordId } = hoverCell;
+        const { field, recordId, isExpand } = hoverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
         const fieldModel = FieldModelMap[field.type];
         const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
 
         const { rowHeight, columnCount, rowCount } = coordinate;
-
-        // const columnIndex = pointPosition.columnIndex;
-        // const rowIndex = pointPosition.rowIndex;
 
         const columnIndex = aiTable.context?.visibleColumnsIndexMap().get(field._id) ?? 0;
         const rowIndex = aiTable.context?.visibleRowsIndexMap().get(recordId) ?? 0;
@@ -91,6 +87,7 @@ export class AITableHoverCells {
             y,
             readonly,
             actions,
+            isExpand,
             render: {
                 aiTable,
                 recordId,

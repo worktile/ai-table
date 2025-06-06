@@ -112,7 +112,6 @@ export class DemoTableContent {
         const onlyOneField = this.tableService.fields().length === 1;
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
-            // fieldOptionKeys: [AITableCustomFieldType.relationTicket],
             customFields: {
                 [AITableCustomFieldType.relationTicket]: {
                     fieldOption: {
@@ -405,6 +404,18 @@ export class DemoTableContent {
                 } else {
                     alert('打开工单详情');
                 }
+            }
+        }
+    }
+
+    onDbClick(e: KoEventObjectOutput<MouseEvent>) {
+        if (e.targetNameDetail.targetName === AI_TABLE_CELL) {
+            const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
+            if (field?.type === AITableCustomFieldType.relationTicket) {
+                this.aiTable.selection.set({
+                    ...this.aiTable.selection(),
+                    expandCell: [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]
+                });
             }
         }
     }

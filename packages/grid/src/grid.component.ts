@@ -607,7 +607,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     stageDblclick(e: KoEventObject<MouseEvent>) {
         const _targetName = e.event.target.name();
         const targetNameDetail = getDetailByTargetName(_targetName);
-        this.aiTableGridSelectionService.setExpandCell([targetNameDetail.recordId!, targetNameDetail.fieldId!]);
         this.aiDbClick.emit({
             ...e,
             targetNameDetail

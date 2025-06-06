@@ -37,6 +37,7 @@ export function getHoverCell(aiTable: AITable) {
         field,
         recordId,
         fieldId,
+        isExpand: !!expandCell,
         renderComponentDefinition
     };
 }

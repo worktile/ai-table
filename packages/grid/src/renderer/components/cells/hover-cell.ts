@@ -12,5 +12,5 @@ export class HoverCellComponent extends Component {
 
     config = input<AITableHoverCellConfig>();
 
-    onlyExpandBorder = input<boolean>(false);
+    onlyDisplayBorder = input<boolean>(false);
 }
