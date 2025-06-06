@@ -13,13 +13,14 @@ import {
     AI_TABLE_OFFSET,
     Colors,
     DEFAULT_FONT_SIZE,
+    IconPathMap,
     MoreStandOutlinedPath
 } from '../../constants';
 import { AITableFieldHeadConfig } from '../../types';
 import { generateTargetName, TextMeasure } from '../../utils';
 import { AITableFieldIcon } from './field-icon.component';
 import { AITableIcon } from './icon.component';
-import { AITableText } from './text.component';
+import { AITableTextComponent } from './text.component';
 
 @Component({
     selector: 'ai-table-field-head',
@@ -36,7 +37,7 @@ import { AITableText } from './text.component';
             <ko-line [config]="fieldOpacityLineConfig()"></ko-line>
         </ko-group>
     `,
-    imports: [KoContainer, KoShape, AITableFieldIcon, AITableText, AITableIcon],
+    imports: [KoContainer, KoShape, AITableFieldIcon, AITableTextComponent, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFieldHead {
@@ -100,7 +101,8 @@ export class AITableFieldHead {
             y: (height - AI_TABLE_ICON_COMMON_SIZE) / 2,
             width: AI_TABLE_ICON_COMMON_SIZE,
             height: AI_TABLE_ICON_COMMON_SIZE,
-            fill: Colors.gray600
+            fill: Colors.gray600,
+            path: IconPathMap[field.icon!]
         };
     });
 

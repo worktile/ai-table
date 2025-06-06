@@ -22,7 +22,7 @@ export function sortRecordsBySortInfo(
     aiTable: AITable,
     records: AITableViewRecords,
     activeView: AITableView,
-    sortKeysMap?: Partial<Record<AITableFieldType, string>>
+    sortKeysMap?: Partial<Record<AITableFieldType | string, string>>
 ) {
     const shallowRows = [...records];
     if (activeView.settings?.sorts?.length) {

@@ -8,7 +8,7 @@ export const AI_TABLE_FIELD_MIDDLE_WIDTH = 200;
 export const AI_TABLE_FIELD_MAX_WIDTH = 300;
 
 export function getFieldOptions(aiTable: AITable): AITableFieldOption[] {
-    return [
+    const defaultFieldOptions = [
         {
             type: AITableFieldType.text,
             name: getI18nTextByKey(aiTable, AITableGridI18nKey.fieldTypeText),
@@ -106,4 +106,11 @@ export function getFieldOptions(aiTable: AITable): AITableFieldOption[] {
             width: AI_TABLE_FIELD_MIDDLE_WIDTH
         }
     ];
+    const fieldOptions: AITableFieldOption[] = [];
+    Object.entries(aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([fieldType, fieldConfig]) => {
+        if (fieldConfig?.fieldOption) {
+            fieldOptions.push(fieldConfig.fieldOption);
+        }
+    });
+    return [...defaultFieldOptions, ...fieldOptions];
 }

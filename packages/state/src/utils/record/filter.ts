@@ -116,7 +116,7 @@ export function getDefaultRecordDataByFilter(
                     (field?.settings as SelectSettings)?.is_multiple;
                 if (
                     [AITableFilterOperation.eq, AITableFilterOperation.in].includes(condition.operation) &&
-                    [AITableFieldType.select, AITableFieldType.member].includes(field?.type) &&
+                    [AITableFieldType.select, AITableFieldType.member].includes(field?.type as AITableFieldType) &&
                     canMultipleOperationCondition
                 ) {
                     recordValues[condition.field_id] = condition.value;
@@ -134,7 +134,7 @@ export function getDefaultRecordDataByFilter(
 
                 if (
                     condition.operation === AITableFilterOperation.eq &&
-                    [AITableFieldType.rate, AITableFieldType.number, AITableFieldType.progress].includes(field?.type)
+                    [AITableFieldType.rate, AITableFieldType.number, AITableFieldType.progress].includes(field?.type as AITableFieldType)
                 ) {
                     recordValues[condition.field_id] = condition.value;
                 }
@@ -148,7 +148,7 @@ function getFilterValue(fields: AITableViewFields, record: AITableRecord, condit
     const field = fields.find((item) => item._id === condition.field_id);
     let cellValue = null;
     if (field && isSystemField(field)) {
-        if ([AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type)) {
+        if ([AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type as AITableFieldType)) {
             cellValue = { timestamp: record[field.type as SystemFieldTypes] };
         } else {
             cellValue = record[field.type as SystemFieldTypes];
@@ -157,7 +157,10 @@ function getFilterValue(fields: AITableViewFields, record: AITableRecord, condit
         cellValue = record.values[condition.field_id];
     }
 
-    if (field && [AITableFieldType.createdBy, AITableFieldType.updatedBy, AITableFieldType.member].includes(field.type)) {
+    if (
+        field &&
+        [AITableFieldType.createdBy, AITableFieldType.updatedBy, AITableFieldType.member].includes(field.type as AITableFieldType)
+    ) {
         cellValue = Array.isArray(cellValue) ? cellValue : isEmpty(cellValue) ? [] : [cellValue];
     }
 

@@ -8,7 +8,8 @@ import {
     AI_TABLE_CELL_EDIT,
     KoEventObjectOutput,
     AITableContextMenuItem,
-    AITableGridSelectionService
+    AITableGridSelectionService,
+    AI_TABLE_FIELD_MAX_WIDTH
 } from '@ai-table/grid';
 import {
     Actions,
@@ -67,6 +68,13 @@ import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { renderRelationCell } from '../../../custom-field/relation-ticket/render';
+import { AITableCellRelationTicket } from '../../../custom-field/relation-ticket/hover-render';
+import { AITableCustomReferences } from '../../../types/grid';
+import { AITableCustomFieldType } from '../../../types/field';
+import { RelationTicketField } from '../../../custom-field/relation-ticket/field-model';
+import { RelationIconPath } from '../../../icons/icon-path';
+import { AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
@@ -98,11 +106,28 @@ export class DemoTableContent {
 
     plugins = [withState, withRemoveView];
 
-    aiFieldConfig: Signal<AIFieldConfig> = computed(() => {
+    aiFieldConfig: Signal<AIFieldConfig<AITableCustomReferences>> = computed(() => {
         const readonly = this.tableService.readonly();
         const onlyOneField = this.tableService.fields().length === 1;
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
+            customFields: {
+                [AITableCustomFieldType.relationTicket]: {
+                    fieldOption: {
+                        type: AITableCustomFieldType.relationTicket,
+                        name: '工单',
+                        icon: 'ticket',
+                        path: RelationIconPath,
+                        width: AI_TABLE_FIELD_MAX_WIDTH
+                    },
+                    fieldModel: new RelationTicketField(),
+                    render: renderRelationCell,
+                    hoverRender: AITableCellRelationTicket,
+                    getDefaultFieldValue: (field: AITableField) => {
+                        return [];
+                    }
+                }
+            },
             fieldRenderers: {
                 [AITableFieldType.date]: {
                     transform: (field: AITableField, value: DateFieldValue) => {
@@ -362,6 +387,14 @@ export class DemoTableContent {
             if (field?.type === AITableFieldType.richText && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_EDIT) {
                     alert('打开多行文本编辑');
+                }
+            }
+
+            if (field?.type === AITableCustomFieldType.relationTicket && e.targetNameDetail.source) {
+                if (e.targetNameDetail.source === AI_TABLE_CELL_TICKET_ADD) {
+                    alert('打开新增工单窗口');
+                } else {
+                    alert('打开工单详情');
                 }
             }
         }

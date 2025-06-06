@@ -11,11 +11,18 @@ import {
     AITableFieldType,
     UpdateFieldValueOptions,
     AITableReferences,
-    AddRecordOptions
+    AddRecordOptions,
+    AITableFieldOption
 } from '@ai-table/utils';
 import { AITable, Coordinate } from '../core';
+import { AITableRender } from './cell';
+import { Drawer } from '../renderer/drawers/drawer';
+import { FieldOperable } from '../utils';
+import { CellDrawer } from '../renderer/drawers/cell-drawer';
+import { Constructor } from 'ngx-tethys/core';
+import { HoverCellComponent } from '../renderer';
 
-export interface AITableGridCellRenderSchema {
+export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
     editor?: any;
     transform?: (field: AITableField, value: FieldValue) => any;
 }
@@ -37,11 +44,20 @@ export interface AITableSelection {
     selectAllState: AITableSelectAllState; // 'all','partial','none'
 }
 
-export interface AIFieldConfig {
+export interface AITableCustomFieldConfig<TR extends AITableReferences = AITableReferences> {
+    fieldOption?: AITableFieldOption;
+    fieldModel?: FieldOperable<unknown, unknown>;
+    render?: (render: AITableRender<TR>, drawer: CellDrawer) => any;
+    hoverRender?: Constructor<HoverCellComponent>;
+    getDefaultFieldValue?: (field: AITableField) => FieldValue;
+}
+
+export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;
-    fieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>;
+    fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
+    customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
 }
 
 export interface AITableRendererConfig {
@@ -109,8 +125,8 @@ export interface AITableOpenEditOptions {
     coordinate: Coordinate;
     references: AITableReferences;
     container?: HTMLDivElement;
-    isHoverEdit?: boolean;
     viewContainerRef?: ViewContainerRef;
+    isSelectAll?: boolean;
     updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
 }
 

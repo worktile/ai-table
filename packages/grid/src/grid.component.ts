@@ -36,7 +36,8 @@ import {
     AI_TABLE_ROW_SELECT_CHECKBOX,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
-    DEFAULT_SCROLL_STATE
+    DEFAULT_SCROLL_STATE,
+    IconPathMap
 } from './constants';
 import { Coordinate, RendererContext, AITable } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -61,7 +62,9 @@ import {
     handleMouseStyle,
     isCellMatchKeywords,
     isWindows,
-    clearCells
+    clearCells,
+    FieldModelMap,
+    isVirtualKey
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -73,6 +76,7 @@ import {
     AddRecordOptions,
     AIRecordFieldIdPath,
     AITableField,
+    AITableFieldType,
     AITableViewFields,
     DragEndData,
     DragType,
@@ -81,6 +85,7 @@ import {
 } from '@ai-table/utils';
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
+import { ComponentMap } from './renderer/components/cells/cells';
 
 @Component({
     selector: 'ai-table-grid',
@@ -227,7 +232,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.bindGlobalMousedown();
             this.containerResizeListener();
             this.bindWheel();
-            this.bindClipboardShortcuts();
+            this.bindShortcuts();
         });
 
         effect(() => {
@@ -275,6 +280,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     override ngOnInit(): void {
         super.ngOnInit();
         this.initContext();
+        this.initCustomField();
     }
 
     ngOnDestroy(): void {
@@ -296,6 +302,23 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords
         });
+    }
+
+    private initCustomField() {
+        const customFields = this.aiFieldConfig()?.customFields;
+        if (customFields) {
+            Object.entries(customFields).forEach(([key, customField]) => {
+                if (customField?.hoverRender) {
+                    ComponentMap[key] = customField.hoverRender;
+                }
+                if (customField?.fieldModel) {
+                    FieldModelMap[key] = customField.fieldModel;
+                }
+                if (customField?.fieldOption?.path) {
+                    IconPathMap[customField?.fieldOption.icon] = customField.fieldOption.path;
+                }
+            });
+        }
     }
 
     private setKeywordsMatchedCells() {
@@ -576,7 +599,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
         const field = this.aiTable.fieldsMap()[fieldId];
         const fieldType = field.type;
-        if (DBL_CLICK_EDIT_TYPE.includes(fieldType)) {
+        if (DBL_CLICK_EDIT_TYPE.includes(fieldType as AITableFieldType)) {
             setTimeout(() => {
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
                     viewContainerRef: this.viewContainerRef,
@@ -709,17 +732,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
-    private bindClipboardShortcuts() {
+    private bindShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(
-                filter(
-                    (event) =>
-                        ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) ||
-                        event.key === 'Backspace' ||
-                        event.key === 'Delete'
-                ),
-                takeUntilDestroyed(this.destroyRef)
-            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async (event: KeyboardEvent) => {
                 if (this.aiReadonly()) {
                     return;
@@ -742,12 +757,42 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
 
                 event.preventDefault();
-                if (event.key === 'c') {
-                    this.copyCells();
-                } else if (event.key === 'v') {
-                    this.pasteCells();
-                } else if (event.key === 'Backspace' || event.key === 'Delete') {
+
+                const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
+                const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
+
+                if (isCopyOrPaste) {
+                    if (event.key === 'c') {
+                        this.copyCells();
+                    } else if (event.key === 'v') {
+                        this.pasteCells();
+                    }
+                    return;
+                }
+
+                if (isDeleteOrBackspace) {
                     clearCells(this.aiTable, this.actions);
+                    return;
+                }
+
+                // quick enter cell editor
+                const isKeyForInput = !isVirtualKey(event);
+                const activeCell = this.aiTable.selection().activeCell;
+                const field = activeCell && this.aiTable.fieldsMap()[activeCell[1]];
+                if (isKeyForInput && activeCell && field && field.type === AITableFieldType.text) {
+                    const [recordId, fieldId] = activeCell;
+                    this.aiTableGridEventService.openCellEditor(this.aiTable, {
+                        viewContainerRef: this.viewContainerRef,
+                        container: this.containerElement(),
+                        coordinate: this.coordinate(),
+                        fieldId,
+                        recordId,
+                        isSelectAll: true,
+                        references: this.aiReferences(),
+                        updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
+                            this.aiUpdateFieldValue.emit(value);
+                        }
+                    });
                 }
             });
     }

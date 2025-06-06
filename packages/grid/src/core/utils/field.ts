@@ -12,21 +12,21 @@ export const isArrayField = (field: AITableField) => {
         AITableFieldType.select,
         AITableFieldType.attachment,
         AITableFieldType.richText
-    ].includes(field.type);
+    ].includes(field.type as AITableFieldType);
 };
 
 export const isSystemField = (field: AITableField) => {
     return [AITableFieldType.createdAt, AITableFieldType.createdBy, AITableFieldType.updatedAt, AITableFieldType.updatedBy].includes(
-        field.type
+        field.type as AITableFieldType
     );
 };
 
 export const isNumberFiled = (field: AITableField) => {
-    return [AITableFieldType.number, AITableFieldType.progress, AITableFieldType.rate].includes(field.type);
+    return [AITableFieldType.number, AITableFieldType.progress, AITableFieldType.rate].includes(field.type as AITableFieldType);
 };
 
 export const isDateFiled = (field: AITableField) => {
-    return [AITableFieldType.date, AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type);
+    return [AITableFieldType.date, AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type as AITableFieldType);
 };
 
 export function getDefaultFieldValue(field: AITableField) {

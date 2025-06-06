@@ -13,7 +13,7 @@ import {
     TextField
 } from './model';
 
-export const FieldModelMap: Record<AITableFieldType, FieldOperable<unknown, unknown>> = {
+export const FieldModelMap: Record<AITableFieldType | string, FieldOperable<unknown, unknown>> = {
     ...FieldModelBaseMap,
     [AITableFieldType.text]: new TextField(),
     [AITableFieldType.richText]: new RichTextField(),

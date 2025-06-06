@@ -7,7 +7,7 @@ import {
     TextCellEditorComponent
 } from '../components';
 
-export const GRID_CELL_EDITOR_MAP: Partial<Record<AITableFieldType, any>> = {
+export const GRID_CELL_EDITOR_MAP: Partial<Record<AITableFieldType | string, any>> = {
     [AITableFieldType.text]: TextCellEditorComponent,
     [AITableFieldType.richText]: TextCellEditorComponent,
     [AITableFieldType.select]: SelectCellEditorComponent,

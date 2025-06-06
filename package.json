@@ -1,6 +1,6 @@
 {
     "name": "ai-table",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "workspaces": [
         "packages/*"
     ],
@@ -52,7 +52,8 @@
         "npm": "^10.8.1",
         "rxjs": "~7.8.0",
         "tslib": "^2.6.3",
-        "zone.js": "~0.15.0"
+        "zone.js": "~0.15.0",
+        "is-hotkey": "^0.2.0"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^19.2.8",
@@ -77,6 +78,7 @@
         "typescript": "~5.8.3",
         "ws": "8.0.0",
         "y-websocket": "^2.0.3",
-        "yjs": "13.6.26"
+        "yjs": "13.6.26",
+        "@types/is-hotkey": "^0.1.6"
     }
 }

@@ -72,7 +72,7 @@ export interface AITableText extends AITableGraph {
 export interface AITableWrapText extends AITableText {
     maxWidth: number;
     lineHeight: number;
-    fieldType: AITableFieldType;
+    fieldType: AITableFieldType | string;
     maxRow?: number;
     originValue?: any[] | null;
     isLinkSplit?: boolean;

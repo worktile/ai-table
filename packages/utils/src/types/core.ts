@@ -48,8 +48,9 @@ export enum AITableStatType {
 
 export interface AITableFieldOption {
     name: string;
-    type: AITableFieldType;
+    type: AITableFieldType | string;
     icon: string;
+    path?: string;
     width: number;
     settings?: AITableFieldSettings;
 }
@@ -57,7 +58,7 @@ export interface AITableFieldOption {
 export interface AITableField {
     _id: string;
     name: string;
-    type: AITableFieldType;
+    type: AITableFieldType | string;
     icon?: string;
     width?: number;
     hidden?: boolean;

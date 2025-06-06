@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, input, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
@@ -8,6 +8,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
     selector: 'text-cell-editor',
     template: `
         <textarea
+            #textarea
             placeholder=""
             rows="1"
             thyInput
@@ -30,6 +31,8 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
 
     private minHeight = 24;
 
+    isSelectAll = input(false);
+
     constructor() {
         super();
     }
@@ -37,7 +40,8 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     ngAfterViewInit() {
         setTimeout(() => {
             this.updateStyle();
-        });
+            this.handleSelectAll();
+        }, 0);
     }
 
     updateStyle() {
@@ -50,6 +54,13 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
             this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
             this.render2.setStyle(textarea, 'height', `${newHeight}px`);
             this.render2.setStyle(textarea, 'resize', 'none');
+        }
+    }
+
+    handleSelectAll() {
+        if (this.isSelectAll()) {
+            const textarea = this.elementRef.nativeElement.querySelector('textarea')!;
+            textarea.select();
         }
     }
 

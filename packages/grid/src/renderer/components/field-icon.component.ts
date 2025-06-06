@@ -26,8 +26,8 @@ export class AITableFieldIcon {
     config = input.required<AITableFieldTypeIconConfig>();
 
     iconConfig = computed(() => {
-        const { field, x, y, width, height, fill } = this.config();
-        let data = null;
+        const { field, x, y, width, height, fill, path } = this.config();
+        let data = path;
         switch (field.type) {
             case AITableFieldType.text:
                 data = ColumnTextFilledPath;
