@@ -86,6 +86,7 @@ import {
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
+import { AITableScrollControllerService } from './services/scroll-controller.service';
 
 @Component({
     selector: 'ai-table-grid',
@@ -95,7 +96,7 @@ import { ComponentMap } from './renderer/components/cells/cells';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService, AITableScrollControllerService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);

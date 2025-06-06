@@ -2,13 +2,13 @@ import { computed, ElementRef, inject, Injectable, signal } from '@angular/core'
 import { AITable, AITableDragState, Coordinate } from '../core';
 import { AITableSelectAllState } from '../types';
 import { AIRecordFieldIdPath, DragType } from '@ai-table/utils';
-import { ScrollControllerService } from './scroll-controller.service';
+import { AITableScrollControllerService } from './scroll-controller.service';
 import { AI_TABLE_FIELD_HEAD_HEIGHT } from '../constants';
 @Injectable()
 export class AITableGridSelectionService {
     aiTable!: AITable;
 
-    private scrollControllerService = inject(ScrollControllerService);
+    private scrollControllerService = inject(AITableScrollControllerService);
 
     selectAllState = computed(() => {
         const selectedRecords = this.aiTable.selection().selectedRecords;

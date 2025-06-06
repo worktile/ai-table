@@ -48,8 +48,8 @@ export interface ScrollControllerOptions {
     onScrollChange?: (position: { x: number; y: number }, isAutoScrolling: boolean) => void;
 }
 
-@Injectable({ providedIn: 'root' })
-export class ScrollControllerService {
+@Injectable()
+export class AITableScrollControllerService {
     private animationFrame: number | null = null;
     private mouseUpSubscription: Subscription | null = null;
 

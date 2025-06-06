@@ -16,7 +16,7 @@ import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
 import { AITableDragState } from '../../core';
-import { ScrollControllerService } from '../../services/scroll-controller.service';
+import { AITableScrollControllerService } from '../../services/scroll-controller.service';
 
 @Component({
     selector: 'ai-table-drag',
@@ -37,7 +37,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private render2 = inject(Renderer2);
 
-    private scrollControllerService = inject(ScrollControllerService);
+    private scrollControllerService = inject(AITableScrollControllerService);
 
     elementRef: ElementRef<HTMLElement> = inject(ElementRef<HTMLElement>);
 
