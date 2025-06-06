@@ -291,7 +291,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             edgeThreshold: { left: 40, top: 10, right: 18 + 40, bottom: 10 },
             onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
-                if (isAutoScrolling && position.x > 0 && position.x < this.horizontalBarMaxScroll) {
+                if (isAutoScrolling && position.x > 0 && Math.round(position.x) < this.horizontalBarMaxScroll) {
                     updateTargetAndLine(currentRectLeft, position);
                 }
             }
