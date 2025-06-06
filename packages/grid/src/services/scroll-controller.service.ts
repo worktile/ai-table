@@ -38,9 +38,6 @@ export interface AITableScrollControllerOptions {
         right?: number;
         bottom?: number;
     };
-    // 平滑滚动配置
-    smooth?: boolean;
-    autoScroll?: boolean;
     scrollSpeedFactor?: number; // 滚动速度因子，默认1.0
     minScrollSpeed?: number; // 最小滚动速度
     maxScrollSpeed?: number; // 最大滚动速度
@@ -68,14 +65,13 @@ export class AITableScrollControllerService {
     }
 
     scroll(options: AITableScrollControllerOptions) {
-        const { autoScroll = true } = options;
         const { needsScroll } = this.calculateScrollDistance(options);
         if (!needsScroll) {
             this.isAutoScrolling = false;
             return;
         }
         this.lastAutoScrollOptions = options;
-        if (autoScroll && !this.isAutoScrolling) {
+        if (!this.isAutoScrolling) {
             this.startAutoScroll(options);
         }
     }
