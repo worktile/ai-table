@@ -234,6 +234,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
 
+    i18nTexts = computed(() => {
+        this.aiGetI18nTextByKey();
+        return {
+            rowAddFilterTooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip)
+        };
+    });
+    // rowAddFilterTooltip = getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip);
+
     private actions: AITableActions = {
         updateFieldValue: (data: UpdateFieldValueOptions) => {
             this.aiUpdateFieldValue.emit(data);

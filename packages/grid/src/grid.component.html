@@ -19,10 +19,10 @@
                     @for (domToolTip of domToolTips(); track trackBy(idx, domToolTip); let idx = $index) {
                         <div
                             class="ai-table-left-background"
-                            [thyTooltip]="'本记录已被筛选过滤，点击该记录以外位置将被隐藏'"
+                            [thyTooltip]="i18nTexts().rowAddFilterTooltip"
                             [style.--scroll-top.px]="domToolTip.top"
                         >
-                            <thy-icon styxI18nTracking class="text-white" thyIconName="filter-line"></thy-icon>
+                            <thy-icon class="text-white" thyIconName="filter-line"></thy-icon>
                         </div>
                     }
                 </div>
