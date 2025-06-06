@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { isObject } from 'lodash';
 import { fromEvent, Subscription, animationFrames } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
@@ -14,14 +15,18 @@ export interface ScrollDistance {
     speedY?: number;
 }
 
+export type EdgeThreshold = number | { left: number; right: number; top: number; bottom: number };
+
 export interface ScrollControllerOptions {
     container: {
         width: number;
         height: number;
     };
-    element: {
-        left?: number;
-        top?: number;
+    targetPoint: {
+        x: number;
+        y: number;
+    };
+    targetElement?: {
         width?: number;
         height?: number;
     };
@@ -39,8 +44,8 @@ export interface ScrollControllerOptions {
     scrollSpeedFactor?: number; // 滚动速度因子，默认1.0
     minScrollSpeed?: number; // 最小滚动速度
     maxScrollSpeed?: number; // 最大滚动速度
-    edgeThreshold?: number; // 边缘触发阈值
-    onScrollChange?: (position: { x: number; y: number }) => void;
+    edgeThreshold?: EdgeThreshold; // 边缘触发阈值
+    onScrollChange?: (position: { x: number; y: number }, isAutoScrolling: boolean) => void;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -108,14 +113,18 @@ export class ScrollControllerService {
 
                         // 计算最新滚动距离和速度
                         const { scrollResult } = this.calculateScrollDistance(currentOptions);
-
+                        let left = 0;
+                        let top = 0;
                         if (horizontalElement && scrollResult.speedX !== undefined && scrollResult.speedX !== 0) {
-                            horizontalElement.scrollLeft = Math.max(0, currentScrollX + scrollResult.speedX);
+                            left = Math.max(0, currentScrollX + scrollResult.speedX);
+                            horizontalElement.scrollLeft = left;
                         }
 
                         if (verticalElement && scrollResult.speedY !== undefined && scrollResult.speedY !== 0) {
-                            verticalElement.scrollTop = Math.max(0, currentScrollY + scrollResult.speedY);
+                            top = Math.max(0, currentScrollY + scrollResult.speedY);
+                            verticalElement.scrollTop = top;
                         }
+                        this.isAutoScrolling = left !== 0 || top !== 0;
 
                         return {
                             x: horizontalElement?.scrollLeft || 0,
@@ -124,9 +133,17 @@ export class ScrollControllerService {
                     })
                 )
                 .subscribe((position) => {
-                    options.onScrollChange?.({ x: position.x, y: position.y });
+                    options.onScrollChange?.({ x: position.x, y: position.y }, this.isAutoScrolling);
                 });
         });
+    }
+
+    private getEdgeThreshold(threshold: EdgeThreshold, direction: 'left' | 'right' | 'top' | 'bottom'): number {
+        const defaultThreshold = 10; // 默认阈值
+        if (isObject(threshold)) {
+            return threshold[direction] || defaultThreshold;
+        }
+        return threshold || defaultThreshold;
     }
 
     // 计算距离和滚动速度
@@ -136,7 +153,8 @@ export class ScrollControllerService {
     } {
         const {
             container,
-            element,
+            targetPoint,
+            targetElement,
             direction = 'both',
             scrollableElement,
             frozenArea = {},
@@ -159,30 +177,27 @@ export class ScrollControllerService {
         let needsScroll = false;
 
         // 水平滚动计算
-        if (
-            (direction === 'horizontal' || direction === 'both') &&
-            element.left !== undefined &&
-            element.width !== undefined &&
-            horizontalElement
-        ) {
+        if ((direction === 'horizontal' || direction === 'both') && horizontalElement) {
             const minLeft = frozenArea.left || 0;
             const maxLeft = frozenArea.right || container.width;
-            if (element.left < minLeft + edgeThreshold) {
-                this.edgeDistanceX = Math.min(0, element.left - minLeft + edgeThreshold);
-                const distanceFactor = Math.min(1.0, Math.abs(this.edgeDistanceX) / element.left);
+            const leftEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'left');
+            const rightEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'right');
+            if (targetPoint.x < minLeft + leftEdgeThreshold) {
+                this.edgeDistanceX = Math.abs(minLeft + leftEdgeThreshold - targetPoint.x);
+                // point点位离左边界阈值越远，速度越快
+                const distanceFactor = Math.min(1.0, this.edgeDistanceX / leftEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.x = this.edgeDistanceX;
                 scrollResult.speedX = -speed; // 向左滚动
-                needsScroll = true;
-            } else if (element.left + element.width > maxLeft - edgeThreshold) {
-                const rightEdge = element.left + element.width;
-                this.edgeDistanceX = Math.max(0, rightEdge - maxLeft - edgeThreshold);
-                const distanceFactor = Math.min(1.0, this.edgeDistanceX / element.width);
+                needsScroll = this.edgeDistanceX > 0;
+            } else if (targetPoint.x + (targetElement?.width || 0) > maxLeft - rightEdgeThreshold) {
+                const rightEdge = targetPoint.x + (targetElement?.width || 0);
+                this.edgeDistanceX = Math.abs(rightEdge - maxLeft + rightEdgeThreshold);
+                const distanceFactor = Math.min(1.0, this.edgeDistanceX / rightEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
-
                 scrollResult.x = this.edgeDistanceX;
                 scrollResult.speedX = speed;
-                needsScroll = true;
+                needsScroll = this.edgeDistanceX > 0;
             } else {
                 this.edgeDistanceX = 0;
                 scrollResult.speedX = 0;
@@ -190,32 +205,29 @@ export class ScrollControllerService {
         }
 
         // 垂直滚动计算
-        if (
-            (direction === 'vertical' || direction === 'both') &&
-            element.top !== undefined &&
-            element.height !== undefined &&
-            verticalElement
-        ) {
+        if ((direction === 'vertical' || direction === 'both') && verticalElement) {
             const minTop = frozenArea.top || 0;
             const maxTop = frozenArea.bottom || container.height;
 
-            if (element.top < minTop + edgeThreshold) {
-                // 向上滚动
-                this.edgeDistanceY = Math.min(0, element.top - minTop + edgeThreshold);
-                const distanceFactor = Math.min(1.0, Math.abs(this.edgeDistanceY) / element.top);
+            const topEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'top');
+            const bottomEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'bottom');
+            if (targetPoint.y < minTop + topEdgeThreshold) {
+                // 滚动距离
+                this.edgeDistanceY = Math.abs(minTop + topEdgeThreshold - targetPoint.y);
+                const distanceFactor = Math.min(1.0, this.edgeDistanceY / topEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.y = this.edgeDistanceY;
                 scrollResult.speedY = -speed; // 负值表示向上滚动
-                needsScroll = true;
-            } else if (element.top + element.height > maxTop - edgeThreshold) {
+                needsScroll = this.edgeDistanceY > 0;
+            } else if (targetPoint.y + (targetElement?.height || 0) > maxTop - bottomEdgeThreshold) {
                 // 向下滚动
-                this.edgeDistanceY = Math.max(0, element.top + element.height - maxTop + edgeThreshold);
-                const distanceFactor = Math.min(1.0, this.edgeDistanceY / element.height);
+                this.edgeDistanceY = Math.abs(targetPoint.y + (targetElement?.height || 0) - maxTop + bottomEdgeThreshold);
+                const distanceFactor = Math.min(1.0, this.edgeDistanceY / bottomEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
 
                 scrollResult.y = this.edgeDistanceY;
                 scrollResult.speedY = speed;
-                needsScroll = true;
+                needsScroll = this.edgeDistanceY > 0;
             } else {
                 // 不在边缘区域，重置边缘距离
                 this.edgeDistanceY = 0;

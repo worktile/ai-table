@@ -273,10 +273,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 width: this.containerWidth,
                 height: this.containerHeight
             },
-            element: {
-                left: currentRectLeft,
+            targetPoint: {
+                x: currentRectLeft,
+                y: 0
+            },
+            targetElement: {
                 width: sourceColumnWidth,
-                top: 0,
                 height: this.containerHeight
             },
             direction: 'horizontal',
@@ -286,9 +288,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             frozenArea: {
                 left: frozenColumnWidth + aiTable.context!.rowHeadWidth()
             },
-            onScrollChange: (position) => {
+            edgeThreshold: { left: 40, top: 10, right: 18 + 40, bottom: 10 },
+            onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
-                if (position.x > 0 && position.x < this.horizontalBarMaxScroll) {
+                if (isAutoScrolling && position.x > 0 && position.x < this.horizontalBarMaxScroll) {
                     updateTargetAndLine(currentRectLeft, position);
                 }
             }
@@ -383,10 +386,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 width: this.containerWidth,
                 height: this.containerHeight
             },
-            element: {
-                top: rectTop,
+            targetPoint: {
+                x: 0,
+                y: rectTop
+            },
+            targetElement: {
                 height: sourceRowHeight,
-                left: 0,
                 width: this.containerWidth
             },
             direction: 'vertical',
@@ -396,9 +401,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             frozenArea: {
                 top: AI_TABLE_FIELD_HEAD_HEIGHT
             },
-            onScrollChange: (position) => {
+            onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
-                if (position.y > 0 && position.y < this.verticalBarMaxScroll) {
+                if (isAutoScrolling && position.y > 0 && position.y < this.verticalBarMaxScroll) {
                     updateTargetAndLine(rectTop, newScrollPosition);
                 }
             }

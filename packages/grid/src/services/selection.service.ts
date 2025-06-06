@@ -162,4 +162,54 @@ export class AITableGridSelectionService {
         this.setActiveCell(startCell);
         this.aiTable.selection().selectedCells = selectedCells;
     }
+
+    scrollCell(
+        position: { x: number; y: number },
+        startCell: AIRecordFieldIdPath,
+        endCell: AIRecordFieldIdPath,
+        coordinate: Coordinate,
+        horizontalBarRef?: ElementRef<HTMLElement>,
+        verticalBarRef?: ElementRef<HTMLElement>
+    ) {
+        const [recordId, fieldId] = endCell;
+
+        const rowIndex = this.aiTable.context!.visibleRowsIndexMap().get(recordId)!;
+        const colIndex = this.aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+
+        const cellTop = coordinate.getRowOffset(rowIndex);
+        const cellLeft = coordinate.getColumnOffset(colIndex);
+
+        const scrollState = this.aiTable.context!.scrollState();
+        const gridData = this.aiTable.gridData();
+        const scrollSize = 18;
+
+        this.scrollControllerService.scroll({
+            container: coordinate.container.getBoundingClientRect(),
+            targetPoint: position,
+            direction: 'both',
+            scrollableElement: {
+                horizontalElement: horizontalBarRef?.nativeElement,
+                verticalElement: verticalBarRef?.nativeElement
+            },
+            frozenArea: {
+                top: AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth()
+            },
+            edgeThreshold: { left: 40, top: 10, right: scrollSize + 40, bottom: 10 },
+            onScrollChange: (position, isAutoScrolling) => {
+                if (isAutoScrolling) {
+                    const scrollLeft = position.x - scrollState.scrollLeft;
+                    const scrollTop = position.y - scrollState.scrollTop;
+                    const nextCellIndex = coordinate.getColumnStartIndex(cellLeft + scrollLeft);
+                    const nextRowIndex = coordinate.getRowStartIndex(cellTop + scrollTop);
+                    // 向左滚动，单元格向后退一格，防止选区进入冻结列
+                    const nextField = gridData.fields[scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
+                    const nextRecord = gridData.records[nextRowIndex];
+                    if (nextField && nextRecord) {
+                        this.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);
+                    }
+                }
+            }
+        });
+    }
 }
