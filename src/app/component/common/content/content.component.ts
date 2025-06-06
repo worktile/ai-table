@@ -69,11 +69,11 @@ import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
-import { renderRelationCell } from '../../../custom-field/relation-ticket/render';
-import { AITableCellRelationTicket } from '../../../custom-field/relation-ticket/hover-render';
+import { renderRelationCell } from '../../../custom-field/relation/render';
+import { AITableCellRelationTicket } from '../../../custom-field/relation/hover-render';
 import { AITableCustomReferences } from '../../../types/grid';
 import { AITableCustomFieldType } from '../../../types/field';
-import { RelationTicketField } from '../../../custom-field/relation-ticket/field-model';
+import { RelationTicketField } from '../../../custom-field/relation/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
 import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
 
