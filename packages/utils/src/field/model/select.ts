@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { AITableField, SelectFieldValue, SelectSettings } from '../../types';
 import { FieldBase } from './field';
+import { keyBy } from '../../helps';
 
 export class SelectFieldBase extends FieldBase {
     override isValid(cellValue: SelectFieldValue): boolean {
@@ -9,7 +10,7 @@ export class SelectFieldBase extends FieldBase {
 
     override cellFullText(transformValue: string[], field: AITableField): string[] {
         let fullText: string[] = [];
-        const optionsMap = _.keyBy((field.settings as SelectSettings).options || [], '_id');
+        const optionsMap = keyBy((field.settings as SelectSettings).options || [], '_id');
         if (transformValue && Array.isArray(transformValue) && transformValue.length) {
             transformValue.forEach((optionId) => {
                 const option = optionsMap[optionId];
