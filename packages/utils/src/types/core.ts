@@ -46,12 +46,19 @@ export enum AITableStatType {
     PercentUnChecked = 17
 }
 
+export enum AITableFieldGroup {
+    base = 'base',
+    advanced = 'advanced'
+}
+
 export interface AITableFieldOption {
     name: string;
     type: AITableFieldType | string;
+    group: AITableFieldGroup;
     icon: string;
     path?: string;
     width: number;
+    minWidth?: number;
     settings?: AITableFieldSettings;
 }
 

@@ -4,4 +4,3 @@ export * from './renderer.component';
 export * from './drawers/drawer';
 export * from './drawers/cell-drawer';
 export * from './components';
-export * from './interfaces';

@@ -1,14 +1,24 @@
-import { TextConfig } from 'konva/lib/shapes/Text';
 import { AITable } from '../core';
 import { ComponentMap } from '../renderer/components/cells/cells';
-import { AITableImage, AITableRect, AITableText } from '../types';
 import { getDetailByTargetName } from './common';
-import { RectConfig } from 'konva/lib/shapes/Rect';
-import { ImageConfig } from 'konva/lib/shapes/Image';
 
 export function getHoverCell(aiTable: AITable) {
     const pointPosition = aiTable.context!.pointPosition();
-    const { fieldId, recordId } = getDetailByTargetName(pointPosition.realTargetName!) ?? {};
+    let fieldId;
+    let recordId;
+    const expandCell = aiTable.selection().expandCell;
+    if (expandCell) {
+        fieldId = expandCell[1];
+        recordId = expandCell[0];
+    } else {
+        const { fieldId: fieldIdDetail, recordId: recordIdDetail } = getDetailByTargetName(pointPosition.realTargetName!) ?? {};
+        if (fieldIdDetail) {
+            fieldId = fieldIdDetail;
+        }
+        if (recordIdDetail) {
+            recordId = recordIdDetail;
+        }
+    }
     if (!recordId || !fieldId) {
         return;
     }
@@ -27,6 +37,7 @@ export function getHoverCell(aiTable: AITable) {
         field,
         recordId,
         fieldId,
+        isExpand: !!expandCell,
         renderComponentDefinition
     };
 }

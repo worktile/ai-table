@@ -222,10 +222,18 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             top: '0',
             left
         });
+        let minWidth = MIN_COLUMN_WIDTH;
+        drag.sourceIds.forEach((id) => {
+            const field = aiTable.fieldsMap()[id];
+            const fieldOption = aiTable.context!.fieldOptionMap().get(field.type);
+            if (fieldOption && fieldOption.minWidth) {
+                minWidth = Math.max(minWidth, fieldOption.minWidth);
+            }
+        });
         this.draggedData = {
             type: DragType.columnWidth,
             fieldIds: drag.sourceIds,
-            width: Math.max(MIN_COLUMN_WIDTH, sourceColumnWidth + moveX)
+            width: Math.max(minWidth, sourceColumnWidth + moveX)
         };
     }
 
