@@ -11,7 +11,7 @@
         <input thyInput [placeholder]="i18nTexts().textPlaceholder" name="text" [(ngModel)]="text" />
     </thy-form-group>
     <thy-form-group [thyLabelText]="i18nTexts().urlLabel">
-        <input name="url" thyInput [placeholder]="i18nTexts().urlPlaceholder" [pattern]="URLRegex" type="text" [(ngModel)]="url" />
+        <input name="url" thyInput [placeholder]="i18nTexts().urlPlaceholder" type="text" [(ngModel)]="url" />
     </thy-form-group>
     <thy-form-group-footer thyAlign="right">
         <div class="btn-pair">

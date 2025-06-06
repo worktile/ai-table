@@ -8,8 +8,7 @@ import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { SafeAny } from 'ngx-tethys/types';
-
-export const LINK_URL_REGEX = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+import { isUrl } from '@ai-table/utils';
 
 /**
  * @private
@@ -27,8 +26,6 @@ export class LinkEditComponent implements OnInit {
     aiTable = input<AITable>();
 
     @Output() confirm = new EventEmitter<{ url: string; text: string }>();
-
-    public URLRegex = LINK_URL_REGEX;
 
     i18nTexts = computed(() => {
         return {
@@ -62,6 +59,11 @@ export class LinkEditComponent implements OnInit {
     apply(form: ThyFormDirective) {
         if (this.text && !this.url) {
             form.validator.setElementErrorMessage('url', getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.linkRequired));
+            return;
+        }
+
+        if (this.url && !isUrl(this.url)) {
+            form.validator.setElementErrorMessage('url', getI18nTextByKey(this.aiTable()!, AITableGridI18nKey.invalidLinkFormat));
             return;
         }
 
