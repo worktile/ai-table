@@ -7,7 +7,6 @@ import { imageCache } from './image-cache';
 export function aiTableTextConfigToKonvaConfig(textConfig: AITableText, rowHeight: number): TextConfig {
     const result: TextConfig = {
         x: textConfig.x,
-        // y: textConfig.y - 22.5,
         y: textConfig.y,
         text: textConfig.text,
         fill: textConfig.fillStyle,
@@ -35,7 +34,7 @@ export function aiTableImageConfigToKonvaConfig(
     }
     const result: ImageConfig = {
         ...imageConfig,
-        listening: options?.listening ?? false,
+        listening: options?.listening,
         image: image as HTMLImageElement
     };
     return result;
