@@ -4,6 +4,7 @@ import {
     effect,
     ElementRef,
     inject,
+    input,
     Input,
     OnDestroy,
     OnInit,
@@ -27,9 +28,9 @@ import { AITableScrollControllerService } from '../../services/scroll-controller
     }
 })
 export class AITableDragComponent implements OnInit, OnDestroy {
-    @Input() horizontalBar?: Signal<ElementRef<HTMLElement> | undefined>;
+    horizontalBar = input<ElementRef<HTMLElement> | undefined>();
 
-    @Input() verticalBar?: Signal<ElementRef<HTMLElement> | undefined>;
+    verticalBar = input<ElementRef<HTMLElement> | undefined>();
 
     dragEnd = output<DragEndData>();
 
@@ -98,9 +99,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             }
             this.isDraggingEnabled = false;
 
-            this.horizontalBarElement = this.horizontalBar?.()?.nativeElement;
+            this.horizontalBarElement = this.horizontalBar()?.nativeElement;
             this.horizontalBarMaxScroll = (this.horizontalBarElement?.scrollWidth || 0) - (this.horizontalBarElement?.clientWidth || 0);
-            this.verticalBarElement = this.verticalBar?.()?.nativeElement;
+            this.verticalBarElement = this.verticalBar()?.nativeElement;
             this.verticalBarMaxScroll = (this.verticalBarElement?.scrollHeight || 0) - (this.verticalBarElement?.clientHeight || 0);
             this.scrollBarStartPosition = { x: this.horizontalBarElement?.scrollLeft || 0, y: this.verticalBarElement?.scrollTop || 0 };
             this.mouseDownTimeout = setTimeout(() => {

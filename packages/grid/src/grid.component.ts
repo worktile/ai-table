@@ -107,6 +107,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private notifyService = inject(ThyNotifyService);
 
+    private scrollControllerService = inject(AITableScrollControllerService);
+
     private isPopoverOpen = false;
 
     timer!: number | null;
@@ -380,14 +382,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const endCell: AIRecordFieldIdPath = [recordId, fieldId];
                     if (startCell && !!startCell.length) {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
-                        this.aiTableGridSelectionService.scrollCell(
-                            pos,
-                            startCell,
-                            endCell,
-                            this.coordinate(),
-                            this.horizontalBarRef(),
-                            this.verticalBarRef()
-                        );
+                        this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
                     }
                 }
             }
@@ -857,14 +852,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
     }
 
-    getScrollPosition() {
-        const horizontalBar = this.horizontalBarRef()?.nativeElement;
-        const verticalBar = this.verticalBarRef()?.nativeElement;
-        let scrollLeft = horizontalBar?.scrollLeft || 0;
-        let scrollTop = verticalBar?.scrollTop || 0;
-        return { x: scrollLeft, y: scrollTop };
-    }
-
     dragEnd(data: DragEndData) {
         switch (data.type) {
             case DragType.field:
@@ -896,5 +883,55 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
         }
         this.aiTableGridSelectionService.clearDrag();
+    }
+
+    scrollViewToCell(
+        position: { x: number; y: number },
+        startCell: AIRecordFieldIdPath,
+        endCell: AIRecordFieldIdPath,
+        coordinate: Coordinate,
+        horizontalBarRef?: ElementRef<HTMLElement>,
+        verticalBarRef?: ElementRef<HTMLElement>
+    ) {
+        const [recordId, fieldId] = endCell;
+
+        const rowIndex = this.aiTable.context!.visibleRowsIndexMap().get(recordId)!;
+        const colIndex = this.aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+
+        const cellTop = coordinate.getRowOffset(rowIndex);
+        const cellLeft = coordinate.getColumnOffset(colIndex);
+
+        const scrollState = this.aiTable.context!.scrollState();
+        const gridData = this.aiTable.gridData();
+        const scrollSize = 18;
+
+        this.scrollControllerService.scroll({
+            container: coordinate.container.getBoundingClientRect(),
+            targetPoint: position,
+            direction: 'both',
+            scrollableElement: {
+                horizontalElement: horizontalBarRef?.nativeElement,
+                verticalElement: verticalBarRef?.nativeElement
+            },
+            frozenArea: {
+                top: AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth()
+            },
+            edgeThreshold: { left: 40, top: 10, right: scrollSize + 40, bottom: 10 },
+            onScrollChange: (position, isAutoScrolling) => {
+                if (isAutoScrolling) {
+                    const scrollLeft = position.x - scrollState.scrollLeft;
+                    const scrollTop = position.y - scrollState.scrollTop;
+                    const nextCellIndex = coordinate.getColumnStartIndex(cellLeft + scrollLeft);
+                    const nextRowIndex = coordinate.getRowStartIndex(cellTop + scrollTop);
+                    // 向左滚动，单元格向后退一格，防止选区进入冻结列
+                    const nextField = gridData.fields[scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
+                    const nextRecord = gridData.records[nextRowIndex];
+                    if (nextField && nextRecord) {
+                        this.aiTableGridSelectionService.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);
+                    }
+                }
+            }
+        });
     }
 }
