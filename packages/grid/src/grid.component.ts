@@ -236,10 +236,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     });
 
     i18nTexts = computed(() => {
+        this.aiGetI18nTextByKey();
         return {
             rowAddFilterTooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip)
         };
     });
+    // rowAddFilterTooltip = getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip);
 
     private actions: AITableActions = {
         updateFieldValue: (data: UpdateFieldValueOptions) => {
