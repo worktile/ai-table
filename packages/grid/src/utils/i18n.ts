@@ -38,7 +38,8 @@ export enum AITableGridI18nKey {
     fieldTypeUpdatedBy = 'fieldTypeUpdatedBy',
     fieldTypeUpdatedAt = 'fieldTypeUpdatedAt',
     fieldGroupBase = 'fieldGroupBase',
-    fieldGroupAdvanced = 'fieldGroupAdvanced'
+    fieldGroupAdvanced = 'fieldGroupAdvanced',
+    rowAddFilterTooltip = 'rowAddFilterTooltip'
 }
 
 const AITableI18nText = {
@@ -79,7 +80,8 @@ const AITableI18nText = {
     [AITableGridI18nKey.fieldTypeUpdatedBy]: '更新人',
     [AITableGridI18nKey.fieldTypeUpdatedAt]: '更新时间',
     [AITableGridI18nKey.fieldGroupBase]: '基础',
-    [AITableGridI18nKey.fieldGroupAdvanced]: '高级'
+    [AITableGridI18nKey.fieldGroupAdvanced]: '高级',
+    [AITableGridI18nKey.rowAddFilterTooltip]: '本记录已被筛选过滤，点击该记录以外位置将被隐藏'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableGridI18nKey): string => {
