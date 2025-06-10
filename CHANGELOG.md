@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.11](https://github.com/worktile/ai-table/compare/0.1.10...0.1.11) (2025-06-10)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-18099 drag the cell after the mouse exceeds the chart, and it is still in the drag state ([#504](https://github.com/worktile/ai-table/issues/504)) ([00c5227](https://github.com/worktile/ai-table/commit/00c52270f3a3c1db1d6134371613cf584c0e5dfa)), closes [#WIK-18099](https://github.com/worktile/ai-table/issues/WIK-18099)
+
+
+
 ## [0.1.10](https://github.com/worktile/ai-table/compare/0.1.9...0.1.10) (2025-06-10)
 
 
