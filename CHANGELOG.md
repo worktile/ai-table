@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.10](https://github.com/worktile/ai-table/compare/0.1.9...0.1.10) (2025-06-10)
+
+
+### Bug Fixes
+
+* #WIK-18121 【AItable】搜索改丢了，搜索回车关键词不亮了 ([#497](https://github.com/worktile/ai-table/issues/497)) ([11eb295](https://github.com/worktile/ai-table/commit/11eb29569613e27a318bacd38862152ce95cbf9e)), closes [#WIK-18121](https://github.com/worktile/ai-table/issues/WIK-18121)
+* #WIK-18169 【AITable】需要支持多语言，不应该出现业务指令 styxI18nTracking ([#498](https://github.com/worktile/ai-table/issues/498)) ([f398510](https://github.com/worktile/ai-table/commit/f3985101cc90cbfc723e460021b038fa2f5997c6)), closes [#WIK-18169](https://github.com/worktile/ai-table/issues/WIK-18169) [#WIK-18169](https://github.com/worktile/ai-table/issues/WIK-18169) [#WIK-18169](https://github.com/worktile/ai-table/issues/WIK-18169)
+* fix package-lock new package is-hotkey ([#502](https://github.com/worktile/ai-table/issues/502)) ([27e8c63](https://github.com/worktile/ai-table/commit/27e8c63c99c52c0c9b627b4c7b20f9da5245a122))
+
+
+### Features
+
+* #WIK-18112 ai-table 自定义字段- hover 交互渲染 ([#495](https://github.com/worktile/ai-table/issues/495)) ([4741467](https://github.com/worktile/ai-table/commit/47414673db24193fd49886e6d41893b2b87dc438)), closes [#WIK-18112](https://github.com/worktile/ai-table/issues/WIK-18112)
+* #WIK-18113 ai-table 双击展开渲染交互实现 ([#496](https://github.com/worktile/ai-table/issues/496)) ([5c7c9a2](https://github.com/worktile/ai-table/commit/5c7c9a2c5fcedb982bae2ece7ea28c5610972296)), closes [#WIK-18113](https://github.com/worktile/ai-table/issues/WIK-18113)
+* **editor:** support quick edit for single text field #WIK-17835 ([#494](https://github.com/worktile/ai-table/issues/494)) ([bfdfad0](https://github.com/worktile/ai-table/commit/bfdfad00c91469e88830d93cc829e577563eb15c)), closes [#WIK-17835](https://github.com/worktile/ai-table/issues/WIK-17835)
+* **grid:** #WIK-17907 supports automatic scrolling of dragging rows, columns, and selecting cells ([#490](https://github.com/worktile/ai-table/issues/490)) ([cbdabab](https://github.com/worktile/ai-table/commit/cbdababfb0c6c28fa13b2d3e321c7885028a8f5b)), closes [#WIK-17907](https://github.com/worktile/ai-table/issues/WIK-17907)
+* **link:** support validate by isUrl ([#499](https://github.com/worktile/ai-table/issues/499)) ([58dede6](https://github.com/worktile/ai-table/commit/58dede6191a483f2c8ba4f86fd9d94497554e424))
+
+
+
 ## [0.1.9](https://github.com/worktile/ai-table/compare/0.1.8...0.1.9) (2025-05-30)
 
 
