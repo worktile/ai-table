@@ -80,7 +80,32 @@ export function toSelectFieldValue(
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue } | null
 ): FieldValue | null {
-    return null;
+    const targetFieldOptions = (targetField.settings as SelectSettings)?.options || [];
+    const isMultiple = (targetField.settings as SelectSettings)?.is_multiple;
+    const { field, cellValue } = originData || {};
+    let value: SelectFieldValue = [];
+
+    if (field && field.type === AITableFieldType.select) {
+        value = getValidCellValue(cellValue as SelectFieldValue, targetFieldOptions);
+    } else {
+        const cellFullTexts: string[] = plainText
+            .split(',')
+            .map((text) => text.trim())
+            .filter((text) => !!text);
+
+        cellFullTexts.forEach((text) => {
+            const option = targetFieldOptions.find((option) => option.text.trim() === text);
+            if (option) {
+                value.push(option._id);
+            }
+        });
+    }
+
+    if (value.length) {
+        return isMultiple ? value : [value[0]];
+    } else {
+        return null;
+    }
 }
 
 export function processPastedValueForSelect(

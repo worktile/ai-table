@@ -30,11 +30,33 @@ import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldOption,
+    SetFieldOptions,
+    AITableFieldType,
+    MemberSettings,
+    SystemFieldTypes,
+    isUndefinedOrNull,
+    AITableSelectOption,
+    AITableReferences,
+    SelectSettings,
+    AITableSelectOptionStyle
+} from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
-import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
+import {
+    AITable,
+    AITableQueries,
+    createDefaultFieldName,
+    getFieldOptionByField,
+    getFieldOptions,
+    idCreator,
+    isSystemField
+} from '../../core';
+import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
+import { FieldModelMap } from '../../utils';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -76,23 +98,25 @@ import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions
 export class AITableFieldSetting implements OnInit {
     aiEditField = model.required<AITableField>();
 
-    aiTable = input.required<AITable>();
+    readonly aiTable = input.required<AITable>();
 
-    aiExternalTemplate = input<TemplateRef<any> | null>(null);
+    readonly aiExternalTemplate = input<TemplateRef<any> | null>(null);
 
-    isUpdate = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly aiReferences = input<AITableReferences>();
 
-    addField = output<AITableField>();
+    readonly isUpdate = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    setField = output<SetFieldOptions>();
+    readonly addField = output<AITableField>();
 
-    selectedFieldOption = computed(() => {
+    readonly setField = output<SetFieldOptions>();
+
+    readonly selectedFieldOption = computed(() => {
         return getFieldOptionByField(this.aiTable(), this.aiEditField())!;
     });
 
     fieldMaxLength = 32;
 
-    validatorConfig = computed(() => {
+    readonly validatorConfig = computed(() => {
         return {
             validationMessages: {
                 fieldName: {
@@ -103,7 +127,7 @@ export class AITableFieldSetting implements OnInit {
         };
     });
 
-    fieldOptions = computed<{
+    readonly fieldOptions = computed<{
         base: AITableFieldOption[];
         advanced: AITableFieldOption[];
     }>(() => {
@@ -140,13 +164,83 @@ export class AITableFieldSetting implements OnInit {
         const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
             const width = fieldsSizeMap[item._id] ?? field.width;
-            const settings = field.settings || {};
             const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
+            let settings = field.settings || {};
+            if (this.isUpdate() && field.type === AITableFieldType.select) {
+                settings = { ...settings, ...this.getSelectOptions(field) };
+            }
             return { ...item, ...field, width, name, settings };
         });
         setTimeout(() => {
             this.thyPopoverRef.updatePosition();
         }, 0);
+    }
+
+    private getSelectOptions(field: AITableFieldOption) {
+        const originField = this.aiEditField();
+        const isOnlySwitchMultiple =
+            originField.type === AITableFieldType.select &&
+            (field.settings as SelectSettings)?.is_multiple !== (originField.settings as SelectSettings)?.is_multiple;
+
+        let options: AITableSelectOption[] = [];
+        let optionStyle: AITableSelectOptionStyle = AITableSelectOptionStyle.text;
+
+        if (isOnlySwitchMultiple) {
+            const settings = (originField.settings as SelectSettings) || {};
+            options = settings.options;
+            optionStyle = settings.option_style || AITableSelectOptionStyle.text;
+        } else {
+            const isMultiple = !!(field.settings as SelectSettings)?.is_multiple;
+            options = this.generateSelectOptions(isMultiple);
+        }
+
+        return { options, optionStyle };
+    }
+
+    private generateSelectOptions(isMultiple: boolean): AITableSelectOption[] {
+        const aiTable = this.aiTable();
+        const references = this.aiReferences();
+        const records = aiTable.records();
+        const originField = this.aiEditField();
+        const originFieldModel = FieldModelMap[originField.type!];
+
+        let optionTexts: string[] = [];
+
+        records.forEach((record) => {
+            const cellValue = isSystemField(originField)
+                ? AITableQueries.getSystemFieldValue(record, originField.type as SystemFieldTypes)
+                : AITableQueries.getFieldValue(aiTable, [record._id, originField._id!]);
+
+            const transformValue = originFieldModel.transformCellValue(cellValue, {
+                aiTable,
+                field: originField
+            });
+
+            const texts = originFieldModel.cellFullText(transformValue, originField, references);
+
+            if (texts.length > 0) {
+                if (isMultiple) {
+                    optionTexts = [...optionTexts, ...texts];
+                } else {
+                    optionTexts = [...optionTexts, texts[0]];
+                }
+            }
+        });
+
+        optionTexts = optionTexts.filter((value) => {
+            return !isUndefinedOrNull(value) && value !== '';
+        });
+        optionTexts = _.uniq(optionTexts);
+
+        const options = optionTexts.map((value) => {
+            const option = {
+                _id: idCreator(),
+                text: value,
+                bg_color: DEFAULT_COLORS[10 + (optionTexts.length || 0)]
+            };
+            return option;
+        });
+        return options;
     }
 
     editFieldProperty() {
