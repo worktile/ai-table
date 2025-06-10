@@ -18,6 +18,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, fromEvent } from 'rxjs';
 import { KoEventObject } from './angular-konva';
 import {
+    AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
     AI_TABLE_CELL,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_ADD_BUTTON,
@@ -34,6 +38,7 @@ import {
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_HEIGHT,
     AI_TABLE_ROW_SELECT_CHECKBOX,
+    AI_TABLE_SCROLL_BAR_SIZE,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
@@ -86,6 +91,7 @@ import {
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
+import { AITableScrollControllerService } from './services/scroll-controller.service';
 
 @Component({
     selector: 'ai-table-grid',
@@ -95,7 +101,7 @@ import { ComponentMap } from './renderer/components/cells/cells';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService, AITableScrollControllerService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
@@ -105,6 +111,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private dragSelectionStart: AIRecordFieldIdPath | null = null;
 
     private notifyService = inject(ThyNotifyService);
+
+    private scrollControllerService = inject(AITableScrollControllerService);
 
     private isPopoverOpen = false;
 
@@ -414,6 +422,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const endCell: AIRecordFieldIdPath = [recordId, fieldId];
                     if (startCell && !!startCell.length) {
                         this.aiTableGridSelectionService.selectCells(startCell, endCell);
+                        this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
                     }
                 }
             }
@@ -861,7 +870,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setDragState({
                 type: DragType.field,
                 sourceIds: this.aiTableGridSelectionService.selectedFields,
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }
@@ -872,7 +880,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setDragState({
                 type: DragType.columnWidth,
                 sourceIds: new Set([fieldId]),
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }
@@ -883,18 +890,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setDragState({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),
-                scroll: this.getScrollPosition(),
                 coordinate: this.coordinate()
             });
         }
-    }
-
-    getScrollPosition() {
-        const horizontalBar = this.horizontalBarRef()?.nativeElement;
-        const verticalBar = this.verticalBarRef()?.nativeElement;
-        let scrollLeft = horizontalBar?.scrollLeft || 0;
-        let scrollTop = verticalBar?.scrollTop || 0;
-        return { x: scrollLeft, y: scrollTop };
     }
 
     dragEnd(data: DragEndData) {
@@ -936,5 +934,66 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     setDragState(config: AITableDragState) {
         this.aiTable.dragState!.set(config);
+    }
+
+    scrollViewToCell(
+        position: { x: number; y: number },
+        startCell: AIRecordFieldIdPath,
+        endCell: AIRecordFieldIdPath,
+        coordinate: Coordinate,
+        horizontalBarRef?: ElementRef<HTMLElement>,
+        verticalBarRef?: ElementRef<HTMLElement>
+    ) {
+        const [, startFieldId] = startCell;
+        const [endRecordId, endFieldId] = endCell;
+
+        const startColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(startFieldId)!;
+        const endRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(endRecordId)!;
+        const endColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(endFieldId)!;
+        const isSelectionOnlyOnFrozenColumn = startColIndex === 0 && endColIndex === 0;
+
+        const endCellTop = coordinate.getRowOffset(endRowIndex);
+        const endCellLeft = coordinate.getColumnOffset(endColIndex);
+
+        const scrollState = this.aiTable.context!.scrollState();
+        const gridData = this.aiTable.gridData();
+
+        const containerRect = coordinate.container.getBoundingClientRect();
+
+        this.scrollControllerService.scroll({
+            container: containerRect,
+            target: position,
+            direction: isSelectionOnlyOnFrozenColumn ? 'vertical' : 'both',
+            scrollableElement: {
+                horizontalElement: horizontalBarRef?.nativeElement,
+                verticalElement: verticalBarRef?.nativeElement
+            },
+            frozenArea: {
+                top: AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth(),
+                bottom: containerRect.height - AI_TABLE_SCROLL_BAR_SIZE,
+                right: containerRect.width - AI_TABLE_SCROLL_BAR_SIZE
+            },
+            edgeThreshold: {
+                left: AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+                top: AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
+                right: AI_TABLE_SCROLL_BAR_SIZE + AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
+                bottom: AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD
+            },
+            onScrollChange: (position, isAutoScrolling) => {
+                if (isAutoScrolling) {
+                    const scrollLeft = position.x - scrollState.scrollLeft;
+                    const scrollTop = position.y - scrollState.scrollTop;
+                    const nextCellIndex = coordinate.getColumnStartIndex(endCellLeft + scrollLeft);
+                    const nextRowIndex = coordinate.getRowStartIndex(endCellTop + scrollTop);
+                    // 向左滚动，单元格向后退一格，防止选区进入冻结列
+                    const nextField = gridData.fields[isSelectionOnlyOnFrozenColumn || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
+                    const nextRecord = gridData.records[nextRowIndex];
+                    if (nextField && nextRecord) {
+                        this.aiTableGridSelectionService.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);
+                    }
+                }
+            }
+        });
     }
 }

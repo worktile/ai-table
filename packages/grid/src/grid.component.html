@@ -40,5 +40,5 @@
             </div>
         </ai-table-renderer>
     }
-    <ai-table-drag (dragEnd)="dragEnd($event)"></ai-table-drag>
+    <ai-table-drag [horizontalBar]="horizontalBarRef()" [verticalBar]="verticalBarRef()" (dragEnd)="dragEnd($event)"></ai-table-drag>
 </div>
