@@ -63,8 +63,8 @@ export class AITableScrollControllerService {
     }
 
     scroll(options: AITableScrollControllerOptions) {
-        const { needsScroll } = this.calculateScrollDistance(options);
-        if (!needsScroll) {
+        const { needScroll } = this.calculateScrollDistance(options);
+        if (!needScroll) {
             this.isAutoScrolling = false;
             return;
         }
@@ -143,7 +143,7 @@ export class AITableScrollControllerService {
     // 计算距离和滚动速度
     private calculateScrollDistance(options: AITableScrollControllerOptions): {
         scrollResult: AITableScrollDistance;
-        needsScroll: boolean;
+        needScroll: boolean;
     } {
         const {
             container,
@@ -167,7 +167,7 @@ export class AITableScrollControllerService {
             speedY: 0
         };
 
-        let needsScroll = false;
+        let needScroll = false;
 
         // 水平滚动计算
         if ((direction === 'horizontal' || direction === 'both') && horizontalElement) {
@@ -182,7 +182,7 @@ export class AITableScrollControllerService {
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.x = this.edgeDistanceX;
                 scrollResult.speedX = -speed; // 向左滚动
-                needsScroll = this.edgeDistanceX > 0;
+                needScroll = this.edgeDistanceX > 0;
             } else if (target.x + (target.width || 0) > maxLeft - rightEdgeThreshold) {
                 const rightEdge = target.x + (target.width || 0);
                 this.edgeDistanceX = Math.abs(rightEdge - maxLeft + rightEdgeThreshold);
@@ -190,7 +190,7 @@ export class AITableScrollControllerService {
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.x = this.edgeDistanceX;
                 scrollResult.speedX = speed;
-                needsScroll = this.edgeDistanceX > 0;
+                needScroll = this.edgeDistanceX > 0;
             } else {
                 this.edgeDistanceX = 0;
                 scrollResult.speedX = 0;
@@ -211,7 +211,7 @@ export class AITableScrollControllerService {
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.y = this.edgeDistanceY;
                 scrollResult.speedY = -speed; // 负值表示向上滚动
-                needsScroll = this.edgeDistanceY > 0;
+                needScroll = this.edgeDistanceY > 0;
             } else if (target.y + (target.height || 0) > maxTop - bottomEdgeThreshold) {
                 // 向下滚动
                 this.edgeDistanceY = Math.abs(target.y + (target.height || 0) - maxTop + bottomEdgeThreshold);
@@ -220,7 +220,7 @@ export class AITableScrollControllerService {
 
                 scrollResult.y = this.edgeDistanceY;
                 scrollResult.speedY = speed;
-                needsScroll = this.edgeDistanceY > 0;
+                needScroll = this.edgeDistanceY > 0;
             } else {
                 // 不在边缘区域，重置边缘距离
                 this.edgeDistanceY = 0;
@@ -228,7 +228,7 @@ export class AITableScrollControllerService {
             }
         }
 
-        return { scrollResult, needsScroll };
+        return { scrollResult, needScroll };
     }
 
     /**
