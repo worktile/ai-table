@@ -15,18 +15,16 @@ export interface AITableScrollDistance {
     speedY?: number;
 }
 
-export type AITableScrollEdgeThreshold = number | { left: number; right: number; top: number; bottom: number };
+export type AITableScrollEdgeThreshold = number | { left?: number; right?: number; top?: number; bottom?: number };
 
 export interface AITableScrollControllerOptions {
     container: {
         width: number;
         height: number;
     };
-    targetPoint: {
+    target: {
         x: number;
         y: number;
-    };
-    targetElement?: {
         width?: number;
         height?: number;
     };
@@ -149,8 +147,7 @@ export class AITableScrollControllerService {
     } {
         const {
             container,
-            targetPoint,
-            targetElement,
+            target,
             direction = 'both',
             scrollableElement,
             frozenArea = {},
@@ -178,16 +175,16 @@ export class AITableScrollControllerService {
             const maxLeft = frozenArea.right || container.width;
             const leftEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'left');
             const rightEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'right');
-            if (targetPoint.x < minLeft + leftEdgeThreshold) {
-                this.edgeDistanceX = Math.abs(minLeft + leftEdgeThreshold - targetPoint.x);
+            if (target.x < minLeft + leftEdgeThreshold) {
+                this.edgeDistanceX = Math.abs(minLeft + leftEdgeThreshold - target.x);
                 // point点位离左边界阈值越远，速度越快
                 const distanceFactor = Math.min(1.0, this.edgeDistanceX / leftEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.x = this.edgeDistanceX;
                 scrollResult.speedX = -speed; // 向左滚动
                 needsScroll = this.edgeDistanceX > 0;
-            } else if (targetPoint.x + (targetElement?.width || 0) > maxLeft - rightEdgeThreshold) {
-                const rightEdge = targetPoint.x + (targetElement?.width || 0);
+            } else if (target.x + (target.width || 0) > maxLeft - rightEdgeThreshold) {
+                const rightEdge = target.x + (target.width || 0);
                 this.edgeDistanceX = Math.abs(rightEdge - maxLeft + rightEdgeThreshold);
                 const distanceFactor = Math.min(1.0, this.edgeDistanceX / rightEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
@@ -207,17 +204,17 @@ export class AITableScrollControllerService {
 
             const topEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'top');
             const bottomEdgeThreshold = this.getEdgeThreshold(edgeThreshold, 'bottom');
-            if (targetPoint.y < minTop + topEdgeThreshold) {
+            if (target.y < minTop + topEdgeThreshold) {
                 // 滚动距离
-                this.edgeDistanceY = Math.abs(minTop + topEdgeThreshold - targetPoint.y);
+                this.edgeDistanceY = Math.abs(minTop + topEdgeThreshold - target.y);
                 const distanceFactor = Math.min(1.0, this.edgeDistanceY / topEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
                 scrollResult.y = this.edgeDistanceY;
                 scrollResult.speedY = -speed; // 负值表示向上滚动
                 needsScroll = this.edgeDistanceY > 0;
-            } else if (targetPoint.y + (targetElement?.height || 0) > maxTop - bottomEdgeThreshold) {
+            } else if (target.y + (target.height || 0) > maxTop - bottomEdgeThreshold) {
                 // 向下滚动
-                this.edgeDistanceY = Math.abs(targetPoint.y + (targetElement?.height || 0) - maxTop + bottomEdgeThreshold);
+                this.edgeDistanceY = Math.abs(target.y + (target.height || 0) - maxTop + bottomEdgeThreshold);
                 const distanceFactor = Math.min(1.0, this.edgeDistanceY / bottomEdgeThreshold);
                 const speed = this.calculateSpeed(distanceFactor, minScrollSpeed, maxScrollSpeed, scrollSpeedFactor);
 

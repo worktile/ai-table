@@ -18,6 +18,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, fromEvent } from 'rxjs';
 import { KoEventObject } from './angular-konva';
 import {
+    AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
     AI_TABLE_CELL,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_ADD_BUTTON,
@@ -34,6 +38,7 @@ import {
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_HEIGHT,
     AI_TABLE_ROW_SELECT_CHECKBOX,
+    AI_TABLE_SCROLL_BAR_SIZE,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
@@ -939,39 +944,50 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         horizontalBarRef?: ElementRef<HTMLElement>,
         verticalBarRef?: ElementRef<HTMLElement>
     ) {
-        const [recordId, fieldId] = endCell;
+        const [, startFieldId] = startCell;
+        const [endRecordId, endFieldId] = endCell;
 
-        const rowIndex = this.aiTable.context!.visibleRowsIndexMap().get(recordId)!;
-        const colIndex = this.aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+        const startColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(startFieldId)!;
+        const endRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(endRecordId)!;
+        const endColIndex = this.aiTable.context!.visibleColumnsIndexMap().get(endFieldId)!;
+        const isSelectionOnlyOnFrozenColumn = startColIndex === 0 && endColIndex === 0;
 
-        const cellTop = coordinate.getRowOffset(rowIndex);
-        const cellLeft = coordinate.getColumnOffset(colIndex);
+        const endCellTop = coordinate.getRowOffset(endRowIndex);
+        const endCellLeft = coordinate.getColumnOffset(endColIndex);
 
         const scrollState = this.aiTable.context!.scrollState();
         const gridData = this.aiTable.gridData();
-        const scrollSize = 18;
+
+        const containerRect = coordinate.container.getBoundingClientRect();
 
         this.scrollControllerService.scroll({
-            container: coordinate.container.getBoundingClientRect(),
-            targetPoint: position,
-            direction: 'both',
+            container: containerRect,
+            target: position,
+            direction: isSelectionOnlyOnFrozenColumn ? 'vertical' : 'both',
             scrollableElement: {
                 horizontalElement: horizontalBarRef?.nativeElement,
                 verticalElement: verticalBarRef?.nativeElement
             },
             frozenArea: {
                 top: AI_TABLE_FIELD_HEAD_HEIGHT,
-                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth()
+                left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth(),
+                bottom: containerRect.height - AI_TABLE_SCROLL_BAR_SIZE,
+                right: containerRect.width - AI_TABLE_SCROLL_BAR_SIZE
             },
-            edgeThreshold: { left: 40, top: 10, right: scrollSize + 40, bottom: 10 },
+            edgeThreshold: {
+                left: AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+                top: AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
+                right: AI_TABLE_SCROLL_BAR_SIZE + AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
+                bottom: AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD
+            },
             onScrollChange: (position, isAutoScrolling) => {
                 if (isAutoScrolling) {
                     const scrollLeft = position.x - scrollState.scrollLeft;
                     const scrollTop = position.y - scrollState.scrollTop;
-                    const nextCellIndex = coordinate.getColumnStartIndex(cellLeft + scrollLeft);
-                    const nextRowIndex = coordinate.getRowStartIndex(cellTop + scrollTop);
+                    const nextCellIndex = coordinate.getColumnStartIndex(endCellLeft + scrollLeft);
+                    const nextRowIndex = coordinate.getRowStartIndex(endCellTop + scrollTop);
                     // 向左滚动，单元格向后退一格，防止选区进入冻结列
-                    const nextField = gridData.fields[scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
+                    const nextField = gridData.fields[isSelectionOnlyOnFrozenColumn || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
                     const nextRecord = gridData.records[nextRowIndex];
                     if (nextField && nextRecord) {
                         this.aiTableGridSelectionService.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);

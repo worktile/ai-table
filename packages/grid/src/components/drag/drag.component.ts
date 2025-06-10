@@ -15,7 +15,15 @@ import {
 import { DragEndData, DragType } from '@ai-table/utils';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_ROW_DRAG_ICON_WIDTH } from '../../constants/table';
+import {
+    AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
+    AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
+    AI_TABLE_SCROLL_BAR_SIZE
+} from '../../constants/table';
 import { AITableDragState } from '../../core';
 import { AITableScrollControllerService } from '../../services/scroll-controller.service';
 
@@ -274,11 +282,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 width: this.containerWidth,
                 height: this.containerHeight
             },
-            targetPoint: {
+            target: {
                 x: currentRectLeft,
-                y: 0
-            },
-            targetElement: {
+                y: 0,
                 width: sourceColumnWidth,
                 height: this.containerHeight
             },
@@ -289,7 +295,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             frozenArea: {
                 left: frozenColumnWidth + aiTable.context!.rowHeadWidth()
             },
-            edgeThreshold: { left: 40, top: 10, right: 18 + 40, bottom: 10 },
+            edgeThreshold: {
+                left: AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
+                right: AI_TABLE_SCROLL_BAR_SIZE + AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD
+            },
             onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
                 if (isAutoScrolling && position.x > 0 && Math.round(position.x) < this.horizontalBarMaxScroll) {
@@ -395,13 +404,11 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 width: this.containerWidth,
                 height: this.containerHeight
             },
-            targetPoint: {
+            target: {
                 x: 0,
-                y: rectTop
-            },
-            targetElement: {
-                height: sourceRowHeight,
-                width: this.containerWidth
+                y: rectTop,
+                width: this.containerWidth,
+                height: sourceRowHeight
             },
             direction: 'vertical',
             scrollableElement: {
@@ -409,6 +416,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             },
             frozenArea: {
                 top: AI_TABLE_FIELD_HEAD_HEIGHT
+            },
+            edgeThreshold: {
+                top: AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
+                right: AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD
             },
             onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
