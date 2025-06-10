@@ -419,7 +419,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             },
             edgeThreshold: {
                 top: AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
-                right: AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD
+                bottom: AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD
             },
             onScrollChange: (position, isAutoScrolling) => {
                 newScrollPosition = position;
