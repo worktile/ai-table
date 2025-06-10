@@ -182,6 +182,9 @@ const getCellBackground = (cell: AIRecordFieldIdPath, isHover: boolean, targetNa
     if (isSelectedField(fieldId, aiTable) || isSelectedCell(cell, aiTable)) {
         return colors.itemActiveBgColor;
     }
+    if (isKeywordsMatchedCell(cell, aiTable)) {
+        return colors.itemMatchBgColor;
+    }
 
     return getRowBackground(cell, isHover, targetName, aiTable);
 };
