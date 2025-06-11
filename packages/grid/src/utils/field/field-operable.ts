@@ -10,6 +10,7 @@ export interface FieldOperable<TFC = string, TCV extends FieldValue = FieldValue
             field: AITableField;
         }
     ): boolean;
+
     compare(
         cellValue1: TCV,
         cellValue2: TCV,
