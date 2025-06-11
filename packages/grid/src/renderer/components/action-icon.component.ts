@@ -46,7 +46,7 @@ export class AITableActionIcon {
             name,
             backgroundWidth,
             backgroundHeight,
-            coverFill: hoverFill,
+            coverFill,
             size = DEFAULT_ICON_SIZE,
             strokeWidth = 1,
             cornerRadius
@@ -56,8 +56,8 @@ export class AITableActionIcon {
             width: backgroundWidth || size,
             height: backgroundHeight || size,
             strokeWidth: strokeWidth,
-            fill: hoverFill && this.isHover() ? hoverFill : Colors.transparent,
-            opacity: hoverFill && this.isHover() ? 0.1 : 1,
+            fill: coverFill && this.isHover() ? coverFill : Colors.transparent,
+            opacity: coverFill && this.isHover() ? 0.1 : 1,
             cornerRadius
         };
     });
