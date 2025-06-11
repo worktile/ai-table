@@ -15,10 +15,10 @@ import {
     Colors
 } from '../../../constants';
 import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
-import { AITableActionIconConfig, AITableAttachmentConfig, AITableHoverCellConfig } from '../../../types';
+import { AITableActionIconConfig, AITableAttachmentConfig, AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
-import { HoverCellComponent } from './hover-cell';
+import { CoverCellComponent } from './cover-cell';
 
 @Component({
     selector: 'ai-table-attachments',
@@ -31,7 +31,7 @@ import { HoverCellComponent } from './hover-cell';
     imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellAttachment extends HoverCellComponent {
+export class AITableCellAttachment extends CoverCellComponent {
     static override fieldType = AITableFieldType.attachment;
 
     attachments = computed<AITableAttachmentConfig[]>(() => {
@@ -104,7 +104,7 @@ export class AITableCellAttachment extends HoverCellComponent {
             y: offsetY,
             data: AddOutlinedPath,
             fill: Colors.gray600,
-            hoverFill: Colors.primary,
+            coverFill: Colors.primary,
             backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
             backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
             cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,

@@ -20,7 +20,7 @@ import { Drawer } from '../renderer/drawers/drawer';
 import { FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
-import { HoverCellComponent } from '../renderer';
+import { CoverCellComponent } from '../renderer';
 
 export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
     editor?: any;
@@ -49,7 +49,7 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
     fieldOption?: AITableFieldOption;
     fieldModel?: FieldOperable<unknown, unknown>;
     render?: (render: AITableRender<TR>, drawer: CellDrawer) => any;
-    hoverRender?: Constructor<HoverCellComponent>;
+    coverRender?: Constructor<CoverCellComponent>;
     getDefaultFieldValue?: (field: AITableField) => FieldValue;
 }
 

@@ -9,7 +9,8 @@ import {
     KoEventObjectOutput,
     AITableContextMenuItem,
     AITableGridSelectionService,
-    AI_TABLE_FIELD_MAX_WIDTH
+    AI_TABLE_FIELD_MAX_WIDTH,
+    expandCell
 } from '@ai-table/grid';
 import {
     Actions,
@@ -397,10 +398,7 @@ export class DemoTableContent {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_TICKET_ADD) {
                     alert('打开新增工单窗口');
                 } else if (e.targetNameDetail.source === AI_TABLE_CELL_MORE_COUNT) {
-                    this.aiTable.selection.set({
-                        ...this.aiTable.selection(),
-                        expandCell: [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]
-                    });
+                    expandCell(this.aiTable, [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]);
                 } else {
                     alert('打开工单详情');
                 }
@@ -412,10 +410,7 @@ export class DemoTableContent {
         if (e.targetNameDetail.targetName === AI_TABLE_CELL) {
             const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
             if (field?.type === AITableCustomFieldType.relationTicket) {
-                this.aiTable.selection.set({
-                    ...this.aiTable.selection(),
-                    expandCell: [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]
-                });
+                expandCell(this.aiTable, [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]);
             }
         }
     }

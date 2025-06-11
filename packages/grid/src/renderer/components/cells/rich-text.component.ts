@@ -16,7 +16,7 @@ import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { AITableTextComponent } from '../text.component';
-import { HoverCellComponent } from './hover-cell';
+import { CoverCellComponent } from './cover-cell';
 
 @Component({
     selector: 'ai-table-rich-text',
@@ -29,7 +29,7 @@ import { HoverCellComponent } from './hover-cell';
     imports: [AITableTextComponent, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRichText extends HoverCellComponent {
+export class AITableCellRichText extends CoverCellComponent {
     static override fieldType = AITableFieldType.richText;
 
     textConfig = computed<TextConfig | undefined>(() => {
@@ -85,7 +85,7 @@ export class AITableCellRichText extends HoverCellComponent {
             y: offsetY,
             data: EditPath,
             fill: Colors.gray600,
-            hoverFill: Colors.primary,
+            coverFill: Colors.primary,
             backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
             backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
             cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,

@@ -17,7 +17,7 @@ import {
     AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
-import { AITableHoverCells } from './components/hover-cell.component';
+import { AITableCoverCells } from './components/cover-cell.component';
 
 Konva.pixelRatio = 2;
 
@@ -33,7 +33,7 @@ Konva.pixelRatio = 2;
         AITableCells,
         AITableFrozenCells,
         AITableFrozenPlaceholderCells,
-        AITableHoverCells,
+        AITableCoverCells,
         AITablePlaceholderCells,
         AITableAddField,
         AITableHoverRowHeads,
@@ -157,7 +157,7 @@ export class AITableRenderer {
         };
     });
 
-    frozenHoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
+    frozenCoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize + 1,

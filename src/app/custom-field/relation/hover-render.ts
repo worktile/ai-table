@@ -7,7 +7,7 @@ import {
     generateTargetName,
     AITableActionIconConfig,
     AITableActionIcon,
-    HoverCellComponent,
+    CoverCellComponent,
     drawer,
     aiTableTextConfigToKonvaConfig,
     AITableTextComponent,
@@ -69,7 +69,7 @@ import { AI_TABLE_CELL_MORE_COUNT, RELATION_ADD_NAME_MAP } from '../../constants
     imports: [KoShape, KoContainer, AITableActionIcon, AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRelationTicket extends HoverCellComponent {
+export class AITableCellRelationTicket extends CoverCellComponent {
     static override fieldType = AITableCustomFieldType.relationTicket;
 
     expandBorderConfig = computed(() => {

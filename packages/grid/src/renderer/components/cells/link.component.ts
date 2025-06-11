@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
 import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableTextComponent } from '../text.component';
-import { AITableHoverCellConfig, AITableRender } from '../../../types';
+import { AITableCoverCellConfig, AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
-import { HoverCellComponent } from './hover-cell';
+import { CoverCellComponent } from './cover-cell';
 
 @Component({
     selector: 'ai-table-link',
@@ -19,7 +19,7 @@ import { HoverCellComponent } from './hover-cell';
     imports: [AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellLink extends HoverCellComponent {
+export class AITableCellLink extends CoverCellComponent {
     static override fieldType = AITableFieldType.link;
 
     textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;

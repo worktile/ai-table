@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.12](https://github.com/worktile/ai-table/compare/0.1.11...0.1.12) (2025-06-11)
+
+
+### Features
+
+* #WIK-18214 ai-table的hoverCell 重构成 coverCell ([#507](https://github.com/worktile/ai-table/issues/507)) ([eeea425](https://github.com/worktile/ai-table/commit/eeea425fa250241afa9430bb75f54adfb499c1e9)), closes [#WIK-18214](https://github.com/worktile/ai-table/issues/WIK-18214)
+* #WIK-18219 ai-table 增加expandCell方法 ([#508](https://github.com/worktile/ai-table/issues/508)) ([daa8cbc](https://github.com/worktile/ai-table/commit/daa8cbc7159cca9eb6cf848d4f67c34c4aa6af6c)), closes [#WIK-18219](https://github.com/worktile/ai-table/issues/WIK-18219)
+
+
+
 ## [0.1.11](https://github.com/worktile/ai-table/compare/0.1.10...0.1.11) (2025-06-10)
 
 

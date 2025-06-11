@@ -27,7 +27,7 @@
                 <ko-group [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
-                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
+                    <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
                 </ko-group>
 
                 <ko-group [config]="offsetXConfig()">
@@ -42,14 +42,14 @@
                         <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
                     }
                     @if (showExpandCellBorder().expandCellBorder) {
-                        <ai-table-hover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-hover-cell>
+                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
                     }
                 </ko-group>
             </ko-group>
 
-            <ko-group [config]="frozenHoverAttachGroupConfig()">
+            <ko-group [config]="frozenCoverAttachGroupConfig()">
                 <ko-group [config]="offsetYConfig()">
-                    <ai-table-hover-cell [config]="cellsConfig()"></ai-table-hover-cell>
+                    <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
                 </ko-group>
             </ko-group>
 
@@ -59,7 +59,7 @@
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
                     @if (showExpandCellBorder().frozenExpandCellBorder) {
-                        <ai-table-hover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-hover-cell>
+                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
                     }
                 </ko-group>
             </ko-group>

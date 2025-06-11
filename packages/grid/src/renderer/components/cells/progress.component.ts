@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
-import { HoverCellComponent, isActiveCell } from '../../../renderer';
+import { CoverCellComponent, isActiveCell } from '../../../renderer';
 import {
     Colors,
     AI_TABLE_CELL_PADDING,
@@ -41,7 +41,7 @@ import {
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellProgress extends HoverCellComponent {
+export class AITableCellProgress extends CoverCellComponent {
     static override fieldType = AITableFieldType.progress;
 
     readonly = computed(() => {
