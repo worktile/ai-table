@@ -41,20 +41,13 @@ import {
     AITableSelectOption,
     AITableReferences,
     SelectSettings,
-    AITableSelectOptionStyle
+    AITableSelectOptionStyle,
+    idCreator
 } from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
-import {
-    AITable,
-    AITableQueries,
-    createDefaultFieldName,
-    getFieldOptionByField,
-    getFieldOptions,
-    idCreator,
-    isSystemField
-} from '../../core';
+import { AITable, AITableQueries, createDefaultFieldName, getFieldOptionByField, getFieldOptions, isSystemField } from '../../core';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
 import { FieldModelMap } from '../../utils';
 

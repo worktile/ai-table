@@ -5,7 +5,6 @@ import {
     AITableFieldSetting,
     AITableQueries,
     FieldModelMap,
-    idCreator,
     isSystemField
 } from '@ai-table/grid';
 import { ElementRef, Signal } from '@angular/core';
@@ -22,7 +21,8 @@ import {
     MemberSettings,
     SelectSettings,
     SetFieldOptions,
-    SystemFieldTypes
+    SystemFieldTypes,
+    idCreator
 } from '@ai-table/utils';
 
 export const DividerMenuItem = {

@@ -1,8 +1,7 @@
-import { idCreator, shortIdCreator } from '@ai-table/grid';
-import { AITableAction, AITableView, AITableViewField, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
-import { Actions } from '../action';
+import { shortIdCreator } from '@ai-table/grid';
+import { AITableAction, AITableView, idCreator, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
 import { ViewActions } from '../action/view';
-import { buildSetRecordPositionsActon, PositionsActions } from '../action/position';
+import { buildSetRecordPositionsActon } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';

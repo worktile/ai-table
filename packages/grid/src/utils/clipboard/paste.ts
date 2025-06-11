@@ -1,5 +1,5 @@
 import { AITableContent } from '../../types';
-import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue, idCreator } from '../../core';
+import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { processPastedValueForSelect } from '../field/model/select';
 import { FieldModelMap } from '../field';
@@ -12,7 +12,8 @@ import {
     UpdateFieldValueOptions,
     AddRecordOptions,
     AddFieldOptions,
-    AITableReferences
+    AITableReferences,
+    idCreator
 } from '@ai-table/utils';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
