@@ -493,6 +493,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
+        this.isDragSelecting = false;
         if (this.timer) {
             cancelAnimationFrame(this.timer);
         }
