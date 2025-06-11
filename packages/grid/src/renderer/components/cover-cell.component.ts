@@ -1,24 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { KoContainer } from '../../angular-konva';
-import { AITableCellsConfig, AITableHoverCellConfig } from '../../types';
+import { AITableCellsConfig, AITableCoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
-import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getHoverCell, transformCellValue } from '../../utils';
+import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getCoverCell, transformCellValue } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 import { Constructor } from 'ngx-tethys/core';
-import { HoverCellComponent } from './cells/hover-cell';
+import { CoverCellComponent } from './cells/cover-cell';
 
 @Component({
-    selector: 'ai-table-hover-cell',
+    selector: 'ai-table-cover-cell',
     template: `
-        @if (hoverCell()) {
+        @if (coverCell()) {
             <ko-group [config]="groupConfig()">
                 <ng-container
                     *ngComponentOutlet="
-                        hoverCell()!.renderComponentDefinition;
-                        inputs: { config: hoverCellConfig(), onlyDisplayBorder: onlyDisplayBorder() }
+                        coverCell()!.renderComponentDefinition;
+                        inputs: { config: coverCellConfig(), onlyDisplayBorder: onlyDisplayBorder() }
                     "
                 >
                 </ng-container>
@@ -28,28 +28,28 @@ import { HoverCellComponent } from './cells/hover-cell';
     imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableHoverCells {
+export class AITableCoverCells {
     config = input.required<AITableCellsConfig>();
 
     onlyDisplayBorder = input<boolean>(false);
 
-    componentMap: Partial<Record<AITableFieldType, Constructor<HoverCellComponent>>> = {};
+    componentMap: Partial<Record<AITableFieldType, Constructor<CoverCellComponent>>> = {};
 
     groupConfig = computed(() => {
         return {
-            x: this.hoverCellConfig()?.x,
-            y: this.hoverCellConfig()?.y,
+            x: this.coverCellConfig()?.x,
+            y: this.coverCellConfig()?.y,
             listening: true
         };
     });
 
-    hoverCellConfig = computed<AITableHoverCellConfig | undefined>(() => {
+    coverCellConfig = computed<AITableCoverCellConfig | undefined>(() => {
         const { aiTable, coordinate, references, readonly, actions } = this.config();
-        const hoverCell = this.hoverCell();
-        if (!hoverCell) {
+        const coverCell = this.coverCell();
+        if (!coverCell) {
             return;
         }
-        const { field, recordId, isExpand } = hoverCell;
+        const { field, recordId, isExpand } = coverCell;
         const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, field._id]);
         const fieldModel = FieldModelMap[field.type];
         const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
@@ -78,7 +78,7 @@ export class AITableHoverCells {
                 : AI_TABLE_CELL_PADDING + AI_TABLE_OFFSET;
         const renderY = 0 - AI_TABLE_OFFSET * 2;
 
-        const result: AITableHoverCellConfig = {
+        const result: AITableCoverCellConfig = {
             field,
             recordId,
             aiTable,
@@ -107,5 +107,5 @@ export class AITableHoverCells {
         return result;
     });
 
-    hoverCell = computed(() => getHoverCell(this.config().aiTable));
+    coverCell = computed(() => getCoverCell(this.config().aiTable));
 }

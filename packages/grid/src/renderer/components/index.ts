@@ -13,4 +13,4 @@ export * from './placeholder-cells.component';
 export * from './text.component';
 export * from './cells';
 export * from './action-icon.component';
-export * from './cells/hover-cell';
+export * from './cells/cover-cell';
