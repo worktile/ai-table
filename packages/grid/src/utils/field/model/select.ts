@@ -79,7 +79,7 @@ export function toSelectFieldValue(
     plainText: string,
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue } | null
-): FieldValue | null {
+): SelectFieldValue | null {
     const targetFieldOptions = (targetField.settings as SelectSettings)?.options || [];
     const isMultiple = (targetField.settings as SelectSettings)?.is_multiple;
     const { field, cellValue } = originData || {};
