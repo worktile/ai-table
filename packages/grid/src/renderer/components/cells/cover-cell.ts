@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
-import { AITableHoverCellConfig } from '../../../types';
+import { AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 
 @Component({
-    selector: 'ai-table-hover-cell',
+    selector: 'ai-table-cover-cell',
     template: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HoverCellComponent extends Component {
+export class CoverCellComponent extends Component {
     static fieldType: AITableFieldType | string;
 
-    config = input<AITableHoverCellConfig>();
+    config = input<AITableCoverCellConfig>();
 
     onlyDisplayBorder = input<boolean>(false);
 }
