@@ -1,4 +1,4 @@
-import { AITableField, AITableFieldOption, AITableSizeMap, FieldValue } from '@ai-table/utils';
+import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, FieldValue } from '@ai-table/utils';
 import { AITable, getFieldOptionByField } from '../core';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
 import { FieldModelMap } from './field';
@@ -99,4 +99,12 @@ export function getAvatarBgColor(name: string) {
               ).value
             : 0;
     return colors[code % 9];
+}
+
+export function expandCell(aiTable: AITable, path: AIRecordFieldIdPath) {
+    const [recordId, fieldId] = path;
+    aiTable.selection.set({
+        ...aiTable.selection(),
+        expandCell: [recordId, fieldId]
+    });
 }
