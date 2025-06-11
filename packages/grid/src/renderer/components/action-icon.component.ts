@@ -46,7 +46,7 @@ export class AITableActionIcon {
             name,
             backgroundWidth,
             backgroundHeight,
-            hoverFill,
+            coverFill: hoverFill,
             size = DEFAULT_ICON_SIZE,
             strokeWidth = 1,
             cornerRadius
@@ -77,7 +77,7 @@ export class AITableActionIcon {
             offsetY,
             rotation,
             fill,
-            hoverFill,
+            coverFill: hoverFill,
             transformsEnabled = 'position'
         } = this.config();
         fill = fill || Colors.gray600;

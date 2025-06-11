@@ -351,8 +351,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const customFields = this.aiFieldConfig()?.customFields;
         if (customFields) {
             Object.entries(customFields).forEach(([key, customField]) => {
-                if (customField?.hoverRender) {
-                    ComponentMap[key] = customField.hoverRender;
+                if (customField?.coverRender) {
+                    ComponentMap[key] = customField.coverRender;
                 }
                 if (customField?.fieldModel) {
                     FieldModelMap[key] = customField.fieldModel;

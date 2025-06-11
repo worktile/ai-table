@@ -278,7 +278,7 @@ export function getRelationItemsConfigs(
         y: offsetY,
         data: AddOutlinedPath,
         fill: Colors.gray600,
-        hoverFill: Colors.primary,
+        coverFill: Colors.primary,
         backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
         backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
         cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,

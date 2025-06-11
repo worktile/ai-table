@@ -11,8 +11,8 @@ export interface AITableIconConfig extends Konva.ShapeConfig {
 
 export interface AITableActionIconConfig extends AITableIconConfig {
     coordinate: Coordinate;
-    hoverBackground?: string;
-    hoverFill?: string;
+    coverBackground?: string;
+    coverFill?: string;
 }
 
 export interface AITableAttachmentConfig extends Konva.ShapeConfig {
@@ -60,7 +60,7 @@ export interface AITableAddFieldConfig {
     maxFields?: number;
 }
 
-export interface AITableHoverCellConfig {
+export interface AITableCoverCellConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     field: AITableField;
