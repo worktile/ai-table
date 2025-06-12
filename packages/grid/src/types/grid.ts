@@ -16,7 +16,6 @@ import {
 } from '@ai-table/utils';
 import { AITable, Coordinate } from '../core';
 import { AITableRender } from './cell';
-import { Drawer } from '../renderer/drawers/drawer';
 import { FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
@@ -25,6 +24,7 @@ import { CoverCellComponent } from '../renderer';
 export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
     editor?: any;
     transform?: (field: AITableField, value: FieldValue) => any;
+    generator?: (text: string, value: FieldValue) => any;
 }
 
 export interface AITableContent {

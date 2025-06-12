@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
