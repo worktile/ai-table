@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoContainer } from '../../angular-konva';
 import { AITableCellsConfig, AITableCoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
 import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
-import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getCoverCell, transformCellValue } from '../../utils';
+import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 import { Constructor } from 'ngx-tethys/core';

@@ -1,7 +1,5 @@
-import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, FieldValue } from '@ai-table/utils';
+import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, FieldValue, FieldOptions } from '@ai-table/utils';
 import { AITable, getFieldOptionByField } from '../core';
-import { AI_TABLE_GRID_FIELD_SERVICE_MAP } from '../services';
-import { FieldModelMap } from './field';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
@@ -21,33 +19,19 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
     return { width: columnWidth, offset: 0 };
 }
 
-// @deprecated 请使用 FieldModelMap 的 transformCellValue 方法
-// const fieldModel = FieldModelMap[field.type];
-// const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
-export function transformCellValue<T = any>(aiTable: AITable, field: AITableField, cellValue: FieldValue): T | null {
-    const fieldModel = FieldModelMap[field.type];
-    if (!fieldModel.isValid(cellValue)) {
-        return null;
-    }
-
-    const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
-
-    if (!fieldService) {
+export function transformToCellText<T = any>(cellValue: FieldValue, options: FieldOptions): T | null {
+    const { aiTable, field } = options;
+    const fieldRenderers = aiTable?.context?.aiFieldConfig()?.fieldRenderers;
+    if (!fieldRenderers || !field) {
         return cellValue;
     }
 
-    const fieldRenderers = fieldService.aiFieldConfig?.fieldRenderers;
-    if (!fieldRenderers) {
+    const transform = fieldRenderers[field.type]?.transform;
+    if (!transform) {
         return cellValue;
     }
 
-    const cellTransform = fieldRenderers[field.type]?.transform;
-    if (!cellTransform) {
-        return cellValue;
-    }
-
-    const cellText = cellTransform(field, cellValue);
-
+    const cellText = transform(field, cellValue);
     if (cellText == null) {
         return cellValue;
     }

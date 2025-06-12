@@ -989,8 +989,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const scrollTop = position.y - scrollState.scrollTop;
                     const nextCellIndex = coordinate.getColumnStartIndex(endCellLeft + scrollLeft);
                     const nextRowIndex = coordinate.getRowStartIndex(endCellTop + scrollTop);
+                    const isHorizontalScroll = scrollLeft !== 0;
                     // 向左滚动，单元格向后退一格，防止选区进入冻结列
-                    const nextField = gridData.fields[isSelectionOnlyOnFrozenColumn || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
+                    const nextField = gridData.fields[!isHorizontalScroll || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
                     const nextRecord = gridData.records[nextRowIndex];
                     if (nextField && nextRecord) {
                         this.aiTableGridSelectionService.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);

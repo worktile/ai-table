@@ -1,7 +1,6 @@
-import { AddFieldOptions, AITableViewField, AITableViewFields } from '@ai-table/utils';
+import { AddFieldOptions, AITableViewField, AITableViewFields, idCreator } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
-import { idCreator } from '@ai-table/grid';
 import { createPositions, getPosition } from '../view';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {

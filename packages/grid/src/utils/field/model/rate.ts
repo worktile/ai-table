@@ -65,6 +65,9 @@ export function toRateFieldValue(
                     value = optionsMap[cellValue[0]]?.text;
                 }
                 break;
+            case AITableFieldType.date:
+                value = null;
+                break;
             default:
                 break;
         }
@@ -72,10 +75,15 @@ export function toRateFieldValue(
 
     if (!isEmpty(value) || isNumber(value)) {
         const rateValue = Number(value);
-        if (!Number.isNaN(rateValue) && rateValue > 0 && rateValue < 5) {
-            return Math.round(rateValue);
+        if (!Number.isNaN(rateValue)) {
+            if (rateValue < 0) {
+                return null;
+            } else if (rateValue >= 0 && rateValue < 5) {
+                return Math.round(rateValue);
+            } else {
+                return 5;
+            }
         }
-        return 5;
     }
 
     return null;

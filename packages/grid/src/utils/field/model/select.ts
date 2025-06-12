@@ -1,7 +1,7 @@
 import { helpers } from 'ngx-tethys/util';
 import { hasIntersect, isMeetFilter } from '../operate';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
-import { AITable, idCreator } from '../../../core';
+import { AITable, AITableQueries, isSystemField } from '../../../core';
 import {
     AITableFilterCondition,
     AITableFilterOperation,
@@ -14,24 +14,22 @@ import {
     FieldValue,
     SelectFieldValue,
     SelectSettings,
-    isEmpty
+    isEmpty,
+    idCreator,
+    SystemFieldTypes,
+    generateOptionsByTexts,
+    FieldOptions
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareOption } from '../operate';
+import { FieldModelMap } from '../field';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }
 
-    isMeetFilter(
-        condition: AITableFilterCondition<string>,
-        cellValue: SelectFieldValue,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
-    ) {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue, options: FieldOptions) {
         const selectOptions = (options?.field?.settings as SelectSettings)?.options || [];
         const validCellValue = getValidCellValue(cellValue, selectOptions);
 
@@ -54,12 +52,9 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
         cellValue2: SelectFieldValue,
         references: AITableReferences,
         sortKey: string,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
+        options: FieldOptions
     ): number {
-        const selectOptions = (options.field.settings as SelectSettings)?.options || [];
+        const selectOptions = (options.field?.settings as SelectSettings)?.options || [];
         const validCellValue1 = getValidCellValue(cellValue1, selectOptions);
         const validCellValue2 = getValidCellValue(cellValue2, selectOptions);
 
@@ -79,8 +74,66 @@ export function toSelectFieldValue(
     plainText: string,
     targetField: AITableField,
     originData?: { field: AITableField; cellValue: FieldValue } | null
-): FieldValue | null {
-    return null;
+): SelectFieldValue | null {
+    const targetFieldOptions = (targetField.settings as SelectSettings)?.options || [];
+    const isMultiple = (targetField.settings as SelectSettings)?.is_multiple;
+    const { field, cellValue } = originData || {};
+    let value: SelectFieldValue = [];
+
+    if (field && field.type === AITableFieldType.select) {
+        value = getValidCellValue(cellValue as SelectFieldValue, targetFieldOptions);
+    } else {
+        const cellFullTexts: string[] = plainText
+            .split(',')
+            .map((text) => text.trim())
+            .filter((text) => !!text);
+
+        cellFullTexts.forEach((text) => {
+            const option = targetFieldOptions.find((option) => option.text.trim() === text);
+            if (option) {
+                value.push(option._id);
+            }
+        });
+    }
+
+    if (value.length) {
+        return isMultiple ? value : [value[0]];
+    } else {
+        return null;
+    }
+}
+
+export function getOptionsByFieldAndRecords(aiTable: AITable, field: AITableField, references: AITableReferences) {
+    let records = aiTable.records();
+
+    let options: AITableSelectOption[] = [];
+    let optionStyle: AITableSelectOptionStyle = AITableSelectOptionStyle.text;
+
+    if (field.type === AITableFieldType.select) {
+        options = (field.settings as SelectSettings)?.options || [];
+        optionStyle = (field.settings as SelectSettings)?.option_style || AITableSelectOptionStyle.text;
+    } else {
+        const originFieldModel = FieldModelMap[field.type!];
+        let optionTexts: string[] = [];
+
+        records.forEach((record) => {
+            const cellValue = isSystemField(field)
+                ? AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes)
+                : AITableQueries.getFieldValue(aiTable, [record._id, field._id!]);
+
+            const transformValue = originFieldModel.transformCellValue(cellValue, {
+                aiTable,
+                field
+            });
+
+            const texts = originFieldModel.cellFullText(transformValue, field, references) || [];
+            optionTexts = [...optionTexts, ...texts];
+        });
+
+        options = generateOptionsByTexts(optionTexts);
+    }
+
+    return { options, optionStyle };
 }
 
 export function processPastedValueForSelect(

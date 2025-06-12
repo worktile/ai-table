@@ -184,7 +184,8 @@ export class AITableGridBase implements OnInit {
             field,
             isUpdate: false,
             origin: gridColumnBlank!,
-            position
+            position,
+            references: this.aiReferences()
         });
         if (popoverRef && !this.aiFieldConfig()?.fieldSettingComponent) {
             (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((defaultValue) => {

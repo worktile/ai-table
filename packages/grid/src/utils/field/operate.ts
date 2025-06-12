@@ -1,13 +1,4 @@
-import {
-    AITableFilterCondition,
-    AITableFilterOperation,
-    AITableField,
-    FieldValue,
-    isEmpty,
-    AITableSelectOption,
-    Id
-} from '@ai-table/utils';
-import { AITable } from '../../core';
+import { AITableFilterCondition, AITableFilterOperation, FieldValue, isEmpty, AITableSelectOption, Id } from '@ai-table/utils';
 
 export const zhIntlCollator = typeof Intl !== 'undefined' ? new Intl.Collator('zh-CN') : undefined;
 
@@ -95,14 +86,7 @@ export function hasIntersect<T extends number | string>(array1: T[], array2: T[]
     return false;
 }
 
-export function isMeetFilter(
-    condition: AITableFilterCondition,
-    cellValue: FieldValue,
-    options?: {
-        aiTable: AITable;
-        field: AITableField;
-    }
-) {
+export function isMeetFilter(condition: AITableFilterCondition, cellValue: FieldValue) {
     switch (condition.operation) {
         case AITableFilterOperation.empty:
         case AITableFilterOperation.exists: {

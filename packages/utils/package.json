@@ -1,12 +1,13 @@
 {
     "name": "@ai-table/utils",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "main": "index.js",
     "scripts": {
         "build": "rimraf ../../dist/utils && tsc -p tsconfig.lib.json && cpx package.json ../../dist/utils"
     },
     "peerDependencies": {
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "bson-objectid": "^2.0.4"
     },
     "dependencies": {
         "tslib": "^2.3.0"

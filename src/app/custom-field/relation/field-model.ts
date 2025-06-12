@@ -2,7 +2,6 @@ import {
     AITableFilterCondition,
     AITableFilterOperation,
     AITableReferences,
-    AttachmentFieldBase,
     AITableField,
     AttachmentFieldValue,
     FieldValue,
@@ -16,6 +15,7 @@ export class RelationTicketField extends FieldBase implements FieldOperable<stri
     isValid(cellValue: AttachmentFieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }
+
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {
         switch (condition.operation) {
             case AITableFilterOperation.empty:

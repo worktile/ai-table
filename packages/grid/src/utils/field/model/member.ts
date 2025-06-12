@@ -10,10 +10,10 @@ import {
     MemberSettings,
     AITableFilterOperation,
     Id,
-    isEmpty
+    isEmpty,
+    FieldOptions
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
-import { AITable } from '../../../core';
 
 export class MemberField extends MemberFieldBase implements FieldOperable<string, MemberFieldValue> {
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: MemberFieldValue) {
@@ -36,13 +36,10 @@ export class MemberField extends MemberFieldBase implements FieldOperable<string
         cellValue2: MemberFieldValue,
         references: AITableReferences,
         sortKey: string,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
+        options: FieldOptions
     ): number {
-        const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
-        const value2 = cellValueToSortValue(cellValue2, options.field, references, sortKey);
+        const value1 = cellValueToSortValue(cellValue1, options.field!, references, sortKey);
+        const value2 = cellValueToSortValue(cellValue2, options.field!, references, sortKey);
         return compareString(value1, value2);
     }
 

@@ -1,5 +1,5 @@
 import { FieldBase } from './field';
-import { DateFieldValue, FieldValue } from '../../types';
+import { DateFieldValue } from '../../types';
 
 export const isDateValid = (cellValue: DateFieldValue): cellValue is DateFieldValue => {
     return (

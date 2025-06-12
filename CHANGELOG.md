@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.13](https://github.com/worktile/ai-table/compare/0.1.12...0.1.13) (2025-06-12)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-18222 拖选单元格垂直滚动选区多选了一列 ([#510](https://github.com/worktile/ai-table/issues/510)) ([cd827a6](https://github.com/worktile/ai-table/commit/cd827a60561119ed71468f763a516222c94ba2ee)), closes [#WIK-18222](https://github.com/worktile/ai-table/issues/WIK-18222)
+
+
+### Features
+
+* support switch field type #WIK-16049 ([#506](https://github.com/worktile/ai-table/issues/506)) ([022621a](https://github.com/worktile/ai-table/commit/022621a9cb6ad4352aa808634222b99b8ace62cc)), closes [#WIK-16049](https://github.com/worktile/ai-table/issues/WIK-16049)
+
+
+
 ## [0.1.12](https://github.com/worktile/ai-table/compare/0.1.11...0.1.12) (2025-06-11)
 
 
