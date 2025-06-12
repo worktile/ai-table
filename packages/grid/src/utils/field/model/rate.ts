@@ -76,7 +76,9 @@ export function toRateFieldValue(
     if (!isEmpty(value) || isNumber(value)) {
         const rateValue = Number(value);
         if (!Number.isNaN(rateValue)) {
-            if (rateValue >= 0 && rateValue < 5) {
+            if (rateValue < 0) {
+                return null;
+            } else if (rateValue >= 0 && rateValue < 5) {
                 return Math.round(rateValue);
             } else {
                 return 5;
