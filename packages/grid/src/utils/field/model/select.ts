@@ -1,7 +1,7 @@
 import { helpers } from 'ngx-tethys/util';
 import { hasIntersect, isMeetFilter } from '../operate';
 import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
-import { AITable } from '../../../core';
+import { AITable, AITableQueries, isSystemField } from '../../../core';
 import {
     AITableFilterCondition,
     AITableFilterOperation,
@@ -15,10 +15,13 @@ import {
     SelectFieldValue,
     SelectSettings,
     isEmpty,
-    idCreator
+    idCreator,
+    SystemFieldTypes,
+    generateOptionsByTexts
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareOption } from '../operate';
+import { FieldModelMap } from '../field';
 
 export class SelectField extends SelectFieldBase implements FieldOperable<string, SelectFieldValue> {
     override isValid(cellValue: FieldValue): boolean {
@@ -107,6 +110,39 @@ export function toSelectFieldValue(
     } else {
         return null;
     }
+}
+
+export function getOptionsByFieldAndRecords(aiTable: AITable, field: AITableField, references: AITableReferences) {
+    let records = aiTable.records();
+
+    let options: AITableSelectOption[] = [];
+    let optionStyle: AITableSelectOptionStyle = AITableSelectOptionStyle.text;
+
+    if (field.type === AITableFieldType.select) {
+        options = (field.settings as SelectSettings)?.options || [];
+        optionStyle = (field.settings as SelectSettings)?.option_style || AITableSelectOptionStyle.text;
+    } else {
+        const originFieldModel = FieldModelMap[field.type!];
+        let optionTexts: string[] = [];
+
+        records.forEach((record) => {
+            const cellValue = isSystemField(field)
+                ? AITableQueries.getSystemFieldValue(record, field.type as SystemFieldTypes)
+                : AITableQueries.getFieldValue(aiTable, [record._id, field._id!]);
+
+            const transformValue = originFieldModel.transformCellValue(cellValue, {
+                aiTable,
+                field
+            });
+
+            const texts = originFieldModel.cellFullText(transformValue, field, references) || [];
+            optionTexts = [...optionTexts, ...texts];
+        });
+
+        options = generateOptionsByTexts(optionTexts);
+    }
+
+    return { options, optionStyle };
 }
 
 export function processPastedValueForSelect(

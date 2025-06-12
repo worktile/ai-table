@@ -30,26 +30,12 @@ import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import {
-    AITableField,
-    AITableFieldOption,
-    SetFieldOptions,
-    AITableFieldType,
-    MemberSettings,
-    SystemFieldTypes,
-    isUndefinedOrNull,
-    AITableSelectOption,
-    AITableReferences,
-    SelectSettings,
-    AITableSelectOptionStyle,
-    idCreator
-} from '@ai-table/utils';
+import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings, AITableReferences } from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
-import { AITable, AITableQueries, createDefaultFieldName, getFieldOptionByField, getFieldOptions, isSystemField } from '../../core';
-import { DEFAULT_COLORS } from 'ngx-tethys/color-picker';
-import { FieldModelMap } from '../../utils';
+import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
+import { getOptionsByFieldAndRecords } from '../../utils';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -159,81 +145,17 @@ export class AITableFieldSetting implements OnInit {
             const width = fieldsSizeMap[item._id] ?? field.width;
             const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
             let settings = field.settings || {};
+
             if (this.isUpdate() && field.type === AITableFieldType.select) {
-                settings = { ...settings, ...this.getSelectOptions(field) };
+                const { options, optionStyle } = getOptionsByFieldAndRecords(this.aiTable(), this.aiEditField(), this.aiReferences()!);
+                settings = { ...settings, options, option_style: optionStyle };
             }
+
             return { ...item, ...field, width, name, settings };
         });
         setTimeout(() => {
             this.thyPopoverRef.updatePosition();
         }, 0);
-    }
-
-    private getSelectOptions(field: AITableFieldOption) {
-        const originField = this.aiEditField();
-        const isOnlySwitchMultiple =
-            originField.type === AITableFieldType.select &&
-            (field.settings as SelectSettings)?.is_multiple !== (originField.settings as SelectSettings)?.is_multiple;
-
-        let options: AITableSelectOption[] = [];
-        let optionStyle: AITableSelectOptionStyle = AITableSelectOptionStyle.text;
-
-        if (isOnlySwitchMultiple) {
-            const settings = (originField.settings as SelectSettings) || {};
-            options = settings.options;
-            optionStyle = settings.option_style || AITableSelectOptionStyle.text;
-        } else {
-            const isMultiple = !!(field.settings as SelectSettings)?.is_multiple;
-            options = this.generateSelectOptions(isMultiple);
-        }
-
-        return { options, optionStyle };
-    }
-
-    private generateSelectOptions(isMultiple: boolean): AITableSelectOption[] {
-        const aiTable = this.aiTable();
-        const references = this.aiReferences();
-        const records = aiTable.records();
-        const originField = this.aiEditField();
-        const originFieldModel = FieldModelMap[originField.type!];
-
-        let optionTexts: string[] = [];
-
-        records.forEach((record) => {
-            const cellValue = isSystemField(originField)
-                ? AITableQueries.getSystemFieldValue(record, originField.type as SystemFieldTypes)
-                : AITableQueries.getFieldValue(aiTable, [record._id, originField._id!]);
-
-            const transformValue = originFieldModel.transformCellValue(cellValue, {
-                aiTable,
-                field: originField
-            });
-
-            const texts = originFieldModel.cellFullText(transformValue, originField, references);
-
-            if (texts.length > 0) {
-                if (isMultiple) {
-                    optionTexts = [...optionTexts, ...texts];
-                } else {
-                    optionTexts = [...optionTexts, texts[0]];
-                }
-            }
-        });
-
-        optionTexts = optionTexts.filter((value) => {
-            return !isUndefinedOrNull(value) && value !== '';
-        });
-        optionTexts = _.uniq(optionTexts);
-
-        const options = optionTexts.map((value) => {
-            const option = {
-                _id: idCreator(),
-                text: value,
-                bg_color: DEFAULT_COLORS[10 + (optionTexts.length || 0)]
-            };
-            return option;
-        });
-        return options;
     }
 
     editFieldProperty() {
