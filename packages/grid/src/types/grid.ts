@@ -23,8 +23,8 @@ import { CoverCellComponent } from '../renderer';
 
 export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
     editor?: any;
-    transform?: (field: AITableField, value: FieldValue) => any;
-    generator?: (text: string, value: FieldValue) => any;
+    toText?: (field: AITableField, value: FieldValue) => any;
+    toFieldValue?: (text: string, value: FieldValue) => any;
 }
 
 export interface AITableContent {

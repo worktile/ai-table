@@ -97,8 +97,8 @@ export const updateFieldAndValues = (
                 field: originField,
                 cellValue: originCellValue
             };
-            const generator = aiTable.context?.aiFieldConfig()?.fieldRenderers?.[field.type]?.generator;
-            const newFieldValue = fieldModel.toFieldValue(originPlainText, field, originData, references, generator);
+            const toFieldValue = aiTable.context?.aiFieldConfig()?.fieldRenderers?.[field.type]?.toFieldValue;
+            const newFieldValue = fieldModel.toFieldValue(originPlainText, field, originData, references, toFieldValue);
 
             actions.updateFieldValue({
                 path: [record._id, field._id],

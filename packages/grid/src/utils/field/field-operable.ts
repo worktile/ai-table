@@ -17,6 +17,6 @@ export interface FieldOperable<TFC = string, TCV extends FieldValue = FieldValue
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: TCV } | null,
         references?: AITableReferences,
-        generator?: (text: string, cellValue: TCV) => TCV
+        toFieldValue?: (text: string, cellValue: TCV) => TCV
     ): TCV | null;
 }

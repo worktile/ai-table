@@ -130,7 +130,7 @@ export class DemoTableContent {
             },
             fieldRenderers: {
                 [AITableFieldType.date]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -138,7 +138,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.createdAt]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -146,7 +146,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.updatedAt]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -154,7 +154,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.richText]: {
-                    transform: (field: AITableField, value: RichTextFieldValue) => {
+                    toText: (field: AITableField, value: RichTextFieldValue) => {
                         return (value || [])
                             .map((item) => {
                                 const texts = _.get(item, 'children', [])
@@ -165,7 +165,7 @@ export class DemoTableContent {
                             .filter((text) => text)
                             .join(' ');
                     },
-                    generator: (text: string, cellValue: FieldValue) => {
+                    toFieldValue: (text: string, cellValue: FieldValue) => {
                         if (typeof text !== 'string') {
                             return text;
                         }
