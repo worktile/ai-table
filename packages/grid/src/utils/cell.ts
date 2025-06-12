@@ -26,12 +26,12 @@ export function transformToCellText<T = any>(cellValue: FieldValue, options: Fie
         return cellValue;
     }
 
-    const transform = fieldRenderers[field.type]?.transform;
-    if (!transform) {
+    const toText = fieldRenderers[field.type]?.toText;
+    if (!toText) {
         return cellValue;
     }
 
-    const cellText = transform(field, cellValue);
+    const cellText = toText(field, cellValue);
     if (cellText == null) {
         return cellValue;
     }

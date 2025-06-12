@@ -61,7 +61,8 @@ import {
     SetFieldWidthOptions,
     UpdateFieldValueOptions,
     isUndefinedOrNull,
-    AITableFieldGroup
+    AITableFieldGroup,
+    FieldValue
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -129,7 +130,7 @@ export class DemoTableContent {
             },
             fieldRenderers: {
                 [AITableFieldType.date]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -137,7 +138,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.createdAt]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -145,7 +146,7 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.updatedAt]: {
-                    transform: (field: AITableField, value: DateFieldValue) => {
+                    toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {
                             return value;
                         }
@@ -153,8 +154,8 @@ export class DemoTableContent {
                     }
                 },
                 [AITableFieldType.richText]: {
-                    transform: (field: AITableField, value: RichTextFieldValue) => {
-                        return value
+                    toText: (field: AITableField, value: RichTextFieldValue) => {
+                        return (value || [])
                             .map((item) => {
                                 const texts = _.get(item, 'children', [])
                                     .map((child: { text?: string }) => _.get(child, 'text', ''))
@@ -163,6 +164,21 @@ export class DemoTableContent {
                             })
                             .filter((text) => text)
                             .join(' ');
+                    },
+                    toFieldValue: (text: string, cellValue: FieldValue) => {
+                        if (typeof text !== 'string') {
+                            return text;
+                        }
+                        return text.split('\n').map((i) => {
+                            return {
+                                type: 'paragraph',
+                                children: [
+                                    {
+                                        text: i
+                                    }
+                                ]
+                            };
+                        });
                     }
                 }
             },

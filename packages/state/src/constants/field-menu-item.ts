@@ -93,15 +93,12 @@ export const updateFieldAndValues = (
             });
             const originPlainText = originFieldModel.cellFullText(originTransformValue, originField, references)?.join(',');
 
-            const newFieldValue = fieldModel.toFieldValue(
-                originPlainText,
-                field,
-                {
-                    field: originField,
-                    cellValue: originCellValue
-                },
-                references
-            );
+            const originData = {
+                field: originField,
+                cellValue: originCellValue
+            };
+            const toFieldValue = aiTable.context?.aiFieldConfig()?.fieldRenderers?.[field.type]?.toFieldValue;
+            const newFieldValue = fieldModel.toFieldValue(originPlainText, field, originData, references, toFieldValue);
 
             actions.updateFieldValue({
                 path: [record._id, field._id],

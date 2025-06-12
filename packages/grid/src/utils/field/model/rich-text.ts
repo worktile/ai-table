@@ -13,7 +13,6 @@ import {
 import { transformToCellText } from '../../cell';
 import { compareString, isMeetFilter, stringInclude } from '../operate';
 import { FieldOperable } from '../field-operable';
-import { AITable } from '../../../core';
 
 export class RichTextField extends RichTextFieldBase implements FieldOperable<string, RichTextFieldValue> {
     override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
@@ -49,22 +48,29 @@ export class RichTextField extends RichTextFieldBase implements FieldOperable<st
     toFieldValue(
         plainText: string,
         targetField: AITableField,
-        originData?: { field: AITableField; cellValue: FieldValue }
+        originData?: { field: AITableField; cellValue: FieldValue },
+        references?: AITableReferences,
+        toFieldValue?: (text: string, cellValue: FieldValue) => RichTextFieldValue
     ): FieldValue | null {
-        return toRichTextFieldValue(plainText, targetField, originData);
+        return toRichTextFieldValue(plainText, targetField, originData, toFieldValue);
     }
 }
 
 export function toRichTextFieldValue(
     plainText: string,
     targetField: AITableField,
-    originData?: { field: AITableField; cellValue: FieldValue }
-): FieldValue | null {
+    originData?: { field: AITableField; cellValue: FieldValue } | null,
+    toFieldValue?: (text: string, cellValue: FieldValue) => FieldValue
+): RichTextFieldValue | null {
     if (originData) {
         const { field, cellValue } = originData;
         if (field.type === AITableFieldType.richText) {
             return cellValue;
         }
+    }
+
+    if (plainText && toFieldValue) {
+        return toFieldValue(plainText, originData?.cellValue);
     }
 
     return null;
