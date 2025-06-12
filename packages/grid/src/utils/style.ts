@@ -33,6 +33,9 @@ export const handleMouseStyle = (
             }
             return setMouseStyle('col-resize', container);
         }
+        case AI_TABLE_ROW_DRAG: {
+            return setMouseStyle('pointer', container);
+        }
 
         default:
             return setMouseStyle('default', container);
