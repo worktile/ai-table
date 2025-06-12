@@ -1,6 +1,5 @@
 import { AITable, getFieldValue, getSystemFieldValue, isSystemField } from '../../core';
 import { FieldModelMap } from '../field';
-import { transformCellValue } from '../cell';
 import { AITableFieldType, AITableRecord, SystemFieldTypes } from '@ai-table/utils';
 import { AITableContent, ClipboardContent } from '../../types';
 
