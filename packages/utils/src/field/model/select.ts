@@ -29,11 +29,11 @@ export function generateOptionsByTexts(texts: string[]) {
     });
     texts = _.uniq(texts);
 
-    const options = texts.map((value) => {
+    const options = texts.map((value, index) => {
         const option = {
             _id: idCreator(),
             text: value,
-            bg_color: DEFAULT_COLORS[10 + (texts.length || 0)]
+            bg_color: DEFAULT_COLORS[10 + (texts.length + index || 0)]
         };
         return option;
     });
