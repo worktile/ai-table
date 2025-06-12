@@ -15,11 +15,11 @@ import {
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
-import { transformCellValue } from '../../cell';
+import { transformToCellText } from '../../cell';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
     override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
-        return transformCellValue(options.aiTable, options.field!, cellValue);
+        return transformToCellText(cellValue, options);
     }
 
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {

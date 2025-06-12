@@ -7,9 +7,9 @@ import {
     AttachmentFieldValue,
     FieldValue,
     AITableFieldType,
-    isEmpty
+    isEmpty,
+    FieldOptions
 } from '@ai-table/utils';
-import { AITable } from '../../../core';
 import { compareString, hasIntersect, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
 
@@ -34,13 +34,10 @@ export class AttachmentField extends AttachmentFieldBase implements FieldOperabl
         cellValue2: AttachmentFieldValue,
         references: AITableReferences,
         sortKey: string,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
+        options: FieldOptions
     ): number {
-        const value1 = cellValueToSortValue(cellValue1, options.field, references, sortKey);
-        const value2 = cellValueToSortValue(cellValue2, options.field, references, sortKey);
+        const value1 = cellValueToSortValue(cellValue1, options.field!, references, sortKey);
+        const value2 = cellValueToSortValue(cellValue2, options.field!, references, sortKey);
         return compareString(value1, value2);
     }
 

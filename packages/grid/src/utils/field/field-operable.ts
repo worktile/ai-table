@@ -1,15 +1,8 @@
-import { AITableField, AITableFilterCondition, AITableReferences, FieldBase, FieldValue } from '@ai-table/utils';
+import { AITableField, AITableFilterCondition, AITableReferences, FieldBase, FieldOptions, FieldValue } from '@ai-table/utils';
 import { AITable } from '../../core';
 
 export interface FieldOperable<TFC = string, TCV extends FieldValue = FieldValue> extends FieldBase {
-    isMeetFilter(
-        condition: AITableFilterCondition<TFC>,
-        cellValue: TCV,
-        options?: {
-            aiTable: AITable;
-            field: AITableField;
-        }
-    ): boolean;
+    isMeetFilter(condition: AITableFilterCondition<TFC>, cellValue: TCV, options?: FieldOptions): boolean;
 
     compare(
         cellValue1: TCV,

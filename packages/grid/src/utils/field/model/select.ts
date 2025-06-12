@@ -17,7 +17,8 @@ import {
     isEmpty,
     idCreator,
     SystemFieldTypes,
-    generateOptionsByTexts
+    generateOptionsByTexts,
+    FieldOptions
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareOption } from '../operate';
@@ -28,14 +29,7 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
         return Array.isArray(cellValue) || cellValue === null;
     }
 
-    isMeetFilter(
-        condition: AITableFilterCondition<string>,
-        cellValue: SelectFieldValue,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
-    ) {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: SelectFieldValue, options: FieldOptions) {
         const selectOptions = (options?.field?.settings as SelectSettings)?.options || [];
         const validCellValue = getValidCellValue(cellValue, selectOptions);
 
@@ -58,12 +52,9 @@ export class SelectField extends SelectFieldBase implements FieldOperable<string
         cellValue2: SelectFieldValue,
         references: AITableReferences,
         sortKey: string,
-        options: {
-            aiTable: AITable;
-            field: AITableField;
-        }
+        options: FieldOptions
     ): number {
-        const selectOptions = (options.field.settings as SelectSettings)?.options || [];
+        const selectOptions = (options.field?.settings as SelectSettings)?.options || [];
         const validCellValue1 = getValidCellValue(cellValue1, selectOptions);
         const validCellValue2 = getValidCellValue(cellValue2, selectOptions);
 
