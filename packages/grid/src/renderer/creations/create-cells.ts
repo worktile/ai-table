@@ -72,12 +72,12 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnCount,
                         containerWidth: coordinate.containerWidth,
                         rowHeadWidth: context.rowHeadWidth(),
-                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
+                        hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag
                     });
                     addRowLayout.render({
                         isHoverRow,
-                        isCheckedRow,
-                        disabled: maxRecords ? rowIndex >= maxRecords : false
+                        isCheckedRow
                     });
                     break;
                 }
@@ -97,7 +97,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         columnCount,
                         containerWidth: coordinate.containerWidth,
                         rowHeadWidth: context.rowHeadWidth(),
-                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
+                        hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        readonly: aiTable.context?.readonly?.()
                     });
                     recordRowLayout.render({
                         row,

@@ -61,8 +61,6 @@ export class AITableGridBase implements OnInit {
 
     aiReadonly = input<boolean>(false);
 
-    aiRowDragDisabled = input<boolean>(false);
-
     aiPlugins = input<AIPlugin[]>();
 
     aiMaxFields = input<number | undefined>();

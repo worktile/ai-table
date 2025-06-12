@@ -5,6 +5,7 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
+    AI_TABLE_INDEX_FIELD_TEXT,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     Colors
@@ -13,6 +14,8 @@ import { AITableCheckType, AITableColumnHeadsConfig, AITableSelectAllState } fro
 import { createColumnHeads } from '../creations/create-heads';
 import { AITableFieldHead } from './field-head.component';
 import { AITableIcon } from './icon.component';
+import { AITableTextComponent } from './text.component';
+import { TextMeasure } from '../../utils';
 
 @Component({
     selector: 'ai-table-frozen-column-heads',
@@ -24,7 +27,11 @@ import { AITableIcon } from './icon.component';
             <ko-line [config]="topLineConfig()"></ko-line>
             <ko-line [config]="bottomLineConfig()"></ko-line>
             <ko-group>
-                <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+                @if (!readonly()) {
+                    <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+                } @else {
+                    <ai-table-text [config]="textConfig()"></ai-table-text>
+                }
             </ko-group>
         } @else {
             @for (lineConfig of cellLinesConfig(); track $index) {
@@ -35,11 +42,13 @@ import { AITableIcon } from './icon.component';
             <ai-table-field-head [config]="config"></ai-table-field-head>
         }
     `,
-    imports: [KoShape, AITableFieldHead, AITableIcon, KoContainer],
+    imports: [KoShape, AITableFieldHead, AITableIcon, AITableTextComponent, KoContainer],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenColumnHeads {
     config = input.required<AITableColumnHeadsConfig>();
+
+    textMeasure = TextMeasure();
 
     coordinate = computed(() => {
         const config = this.config();
@@ -57,6 +66,11 @@ export class AITableFrozenColumnHeads {
         const config = this.config();
         if (!config) return null;
         return config?.aiTable.context;
+    });
+
+    readonly = computed(() => {
+        const context = this.context();
+        return !!context?.readonly?.();
     });
 
     isChecked = computed(() => {
@@ -105,11 +119,16 @@ export class AITableFrozenColumnHeads {
         };
     });
 
+    dragOccupyWidth = computed(() => {
+        const ctx = this.context();
+        return ctx?.aiFieldConfig()?.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
+    });
+
     topLineConfig = computed(() => {
         const ctx = this.context();
         if (!ctx) return { points: [0, 0, 0, 0] };
         return {
-            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: AI_TABLE_OFFSET + this.dragOccupyWidth(),
             y: AI_TABLE_OFFSET,
             points: [0, 0, ctx.rowHeadWidth(), 0],
             stroke: Colors.gray200,
@@ -122,7 +141,7 @@ export class AITableFrozenColumnHeads {
         const ctx = this.context();
         if (!ctx) return { points: [0, 0, 0, 0] };
         return {
-            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: AI_TABLE_OFFSET + this.dragOccupyWidth(),
             y: AI_TABLE_OFFSET,
             points: [ctx.rowHeadWidth(), this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
             stroke: Colors.gray200,
@@ -134,13 +153,27 @@ export class AITableFrozenColumnHeads {
     iconConfig = computed(() => {
         return {
             name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: AI_TABLE_CELL_PADDING + this.dragOccupyWidth(),
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill:
                 this.isChecked() || (this.config().pointPosition.targetName === AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX && !this.isChecked())
                     ? Colors.primary
                     : Colors.gray300
+        };
+    });
+
+    textConfig = computed(() => {
+        const text = AI_TABLE_INDEX_FIELD_TEXT;
+        const lineHeight = 1.84;
+        const measureText = TextMeasure().measureText(text);
+        return {
+            x: AI_TABLE_CELL_PADDING + this.dragOccupyWidth() + measureText.width / 2,
+            y: measureText.height / 2,
+            width: measureText.width,
+            height: measureText.height,
+            text,
+            lineHeight
         };
     });
 

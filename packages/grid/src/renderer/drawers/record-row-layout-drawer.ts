@@ -38,11 +38,12 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
+        const dragOccupyWidth = this.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
         if (!this.hiddenIndexColumn) {
             this.customRect({
-                x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+                x: AI_TABLE_OFFSET + dragOccupyWidth,
                 y,
-                width: this.rowHeadWidth - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_ICON_WIDTH,
+                width: this.rowHeadWidth - AI_TABLE_OFFSET - dragOccupyWidth,
                 height: rowHeight,
                 fill: indexFill,
                 strokes: {
@@ -50,11 +51,11 @@ export class RecordRowLayout extends Layout {
                     bottom: colors.gray200
                 }
             });
-            if (!isCheckedRow && !isHoverRow) {
+            if (this.readonly || (!isCheckedRow && !isHoverRow)) {
                 // 设置字体样式，居中绘制行号
                 this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
                 this.text({
-                    x: (this.rowHeadWidth + AI_TABLE_ROW_DRAG_ICON_WIDTH) / 2,
+                    x: (this.rowHeadWidth + dragOccupyWidth) / 2,
                     y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
                     text: String(row.displayIndex),
                     textAlign: DEFAULT_TEXT_ALIGN_CENTER,

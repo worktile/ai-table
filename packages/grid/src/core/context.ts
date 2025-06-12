@@ -17,6 +17,7 @@ export class RendererContext {
     maxRecords: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
+    readonly?: Signal<boolean>;
 
     constructor(options: AITableContext) {
         const {
@@ -33,7 +34,8 @@ export class RendererContext {
             maxFields,
             maxRecords,
             fieldOptions,
-            fieldOptionMap
+            fieldOptionMap,
+            readonly
         } = options;
         this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
@@ -49,6 +51,7 @@ export class RendererContext {
         this.maxRecords = maxRecords;
         this.fieldOptions = fieldOptions;
         this.fieldOptionMap = fieldOptionMap;
+        this.readonly = readonly;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

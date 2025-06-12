@@ -36,6 +36,7 @@ import {
     AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEIGHT,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     AI_TABLE_SCROLL_BAR_SIZE,
@@ -223,7 +224,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             containerHeight: this.containerRect().height,
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
-            rowDragDisabled: this.aiRowDragDisabled(),
             actions: this.actions,
             maxFields: this.aiMaxFields(),
             maxRecords: this.aiMaxRecords()
@@ -330,7 +330,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private initContext() {
         this.aiTable.context = new RendererContext({
-            rowHeadWidth: computed(() => (this.aiFieldConfig()?.hiddenIndexColumn ? 0 : AI_TABLE_ROW_HEAD_WIDTH)),
+            rowHeadWidth: computed(() => {
+                const aiFieldConfig = this.aiFieldConfig();
+                let width = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
+                if (aiFieldConfig?.hiddenRowDrag) {
+                    width = AI_TABLE_ROW_HEAD_WIDTH;
+                }
+                return aiFieldConfig?.hiddenIndexColumn ? 0 : width;
+            }),
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
@@ -343,7 +350,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords,
             fieldOptions: this.fieldOptions,
-            fieldOptionMap: this.fieldOptionMap
+            fieldOptionMap: this.fieldOptionMap,
+            readonly: this.aiReadonly
         });
     }
 
@@ -402,13 +410,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 context!,
                 targetName
             );
-            handleMouseStyle(
-                curMousePosition.realTargetName,
-                curMousePosition.areaType,
-                this.containerElement(),
-                this.aiReadonly(),
-                this.aiRowDragDisabled()
-            );
+            handleMouseStyle(curMousePosition.realTargetName, curMousePosition.areaType, this.containerElement(), this.aiReadonly());
             if (curMousePosition.areaType !== AITableAreaType.none) {
                 context!.setPointPosition(curMousePosition);
             } else {
@@ -887,7 +889,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private handleRowDragStart(recordIds: string[]) {
-        if (!this.aiReadonly() && !this.aiRowDragDisabled() && recordIds.length > 0) {
+        if (!this.aiReadonly() && recordIds.length > 0) {
             this.setDragState({
                 type: DragType.record,
                 sourceIds: new Set(recordIds),

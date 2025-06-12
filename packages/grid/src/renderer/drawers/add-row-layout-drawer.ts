@@ -45,34 +45,40 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    private renderFirstCell({ isHoverRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'disabled'>) {
+    private renderFirstCell({ isHoverRow }: Pick<AITableCell, 'isHoverRow'>) {
         if (!this.isFirst) return;
         const y = this.y;
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const frozenOffset = AI_TABLE_OFFSET;
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
+        let x = 0;
+        if (this.hiddenIndexColumn) {
+            x = frozenOffset;
+        } else {
+            x = frozenOffset + (this.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH);
+        }
 
         this.rect({
-            x: this.hiddenIndexColumn ? frozenOffset : frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x,
             y: y + AI_TABLE_OFFSET,
             width: columnWidth + this.rowHeadWidth - frozenOffset + 1,
             height: rowHeight,
             fill
         });
         this.line({
-            x: this.hiddenIndexColumn ? frozenOffset : frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x,
             y,
             points: [0, rowHeight, columnWidth + this.rowHeadWidth - frozenOffset + 1, rowHeight],
             stroke: this.colors.gray200
         });
 
         this.path({
-            x: this.hiddenIndexColumn ? AI_TABLE_CELL_PADDING : AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
+            x: x + AI_TABLE_CELL_PADDING,
             y: y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2 - AI_TABLE_OFFSET,
             data: AddOutlinedPath,
             size: AI_TABLE_ROW_HEAD_SIZE,
-            fill: disabled ? this.colors.gray300 : this.colors.gray600
+            fill: this.readonly ? this.colors.gray300 : this.colors.gray600
         });
     }
 
@@ -96,10 +102,9 @@ export class AddRowLayout extends Layout {
         });
     }
 
-    render({ isHoverRow, isCheckedRow, disabled }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow' | 'disabled'>) {
+    render({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>) {
         this.renderFirstCell({
-            isHoverRow,
-            disabled
+            isHoverRow
         });
         this.renderCommonCell({
             isHoverRow
