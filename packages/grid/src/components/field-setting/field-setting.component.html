@@ -20,14 +20,7 @@
     <thy-form-group [thyLabelText]="i18nTexts().fieldType">
         <div class="thy-dropdown-menu py-0">
             <div class="ml-n5 mr-n5">
-                <span
-                    thyDropdownMenuItem
-                    [thyDropdown]="menu"
-                    [thyDisabled]="isUpdate()"
-                    thyTrigger="hover"
-                    thyPlacement="right"
-                    (click)="fieldTypeClick($event)"
-                >
+                <span thyDropdownMenuItem [thyDropdown]="menu" thyTrigger="hover" thyPlacement="right" (click)="fieldTypeClick($event)">
                     <thy-icon thyDropdownMenuItemIcon [thyIconName]="selectedFieldOption().icon"></thy-icon>
                     <span thyDropdownMenuItemName>{{ selectedFieldOption().name }}</span>
                     <thy-icon thyDropdownMenuItemExtendIcon thyIconName="angle-right" class="text-desc"></thy-icon>
@@ -40,7 +33,6 @@
                 {{ i18nTexts().allowMultipleMembers }}
                 <thy-switch
                     name="isMultipleMember"
-                    [thyDisabled]="isUpdate()"
                     [(ngModel)]="isMultipleMember"
                     (ngModelChange)="multipleMemberChange()"
                     thySize="sm"

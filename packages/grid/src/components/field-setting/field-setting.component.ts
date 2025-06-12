@@ -30,11 +30,12 @@ import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings } from '@ai-table/utils';
+import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings, AITableReferences } from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
 import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
+import { getOptionsByFieldAndRecords } from '../../utils';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -76,23 +77,25 @@ import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions
 export class AITableFieldSetting implements OnInit {
     aiEditField = model.required<AITableField>();
 
-    aiTable = input.required<AITable>();
+    readonly aiTable = input.required<AITable>();
 
-    aiExternalTemplate = input<TemplateRef<any> | null>(null);
+    readonly aiExternalTemplate = input<TemplateRef<any> | null>(null);
 
-    isUpdate = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly aiReferences = input<AITableReferences>();
 
-    addField = output<AITableField>();
+    readonly isUpdate = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    setField = output<SetFieldOptions>();
+    readonly addField = output<AITableField>();
 
-    selectedFieldOption = computed(() => {
+    readonly setField = output<SetFieldOptions>();
+
+    readonly selectedFieldOption = computed(() => {
         return getFieldOptionByField(this.aiTable(), this.aiEditField())!;
     });
 
     fieldMaxLength = 32;
 
-    validatorConfig = computed(() => {
+    readonly validatorConfig = computed(() => {
         return {
             validationMessages: {
                 fieldName: {
@@ -103,7 +106,7 @@ export class AITableFieldSetting implements OnInit {
         };
     });
 
-    fieldOptions = computed<{
+    readonly fieldOptions = computed<{
         base: AITableFieldOption[];
         advanced: AITableFieldOption[];
     }>(() => {
@@ -140,8 +143,14 @@ export class AITableFieldSetting implements OnInit {
         const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
             const width = fieldsSizeMap[item._id] ?? field.width;
-            const settings = field.settings || {};
             const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
+            let settings = field.settings || {};
+
+            if (this.isUpdate() && field.type === AITableFieldType.select) {
+                const { options, optionStyle } = getOptionsByFieldAndRecords(this.aiTable(), this.aiEditField(), this.aiReferences()!);
+                settings = { ...settings, options, option_style: optionStyle };
+            }
+
             return { ...item, ...field, width, name, settings };
         });
         setTimeout(() => {

@@ -1,6 +1,6 @@
 import { ElementRef, Signal } from '@angular/core';
 import { AITable } from '../core';
-import { AITableField, SelectSettings } from '@ai-table/utils';
+import { AITableField, AITableReferences, SelectSettings } from '@ai-table/utils';
 
 export interface AITableFieldMenuItem {
     type: string;
@@ -22,6 +22,7 @@ export interface AITableSelectField extends AITableField {
 
 export interface AITableEditFieldOptions {
     field: AITableField;
+    references: AITableReferences;
     isUpdate: boolean;
     origin: HTMLElement | ElementRef<any>;
     position?: { x: number; y: number };

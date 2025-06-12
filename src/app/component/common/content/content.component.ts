@@ -7,8 +7,6 @@ import {
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_EDIT,
     KoEventObjectOutput,
-    AITableContextMenuItem,
-    AITableGridSelectionService,
     AI_TABLE_FIELD_MAX_WIDTH,
     expandCell
 } from '@ai-table/grid';
@@ -30,7 +28,6 @@ import {
     YjsAITable,
     moveFields,
     moveRecords,
-    getStateI18nTextByKey,
     InsertUpwardRecords,
     InsertDownwardRecords
 } from '@ai-table/state';
@@ -68,7 +65,6 @@ import {
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
-import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { renderRelationCell } from '../../../custom-field/relation/render';
 import { AITableCellRelationTicket } from '../../../custom-field/relation/hover-render';
@@ -79,7 +75,6 @@ import { RelationIconPath } from '../../../icons/icon-path';
 import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
-const LOCAL_STORAGE_RENDER_MODE = 'ai-table-demo-render-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
 
 @Component({
@@ -173,7 +168,7 @@ export class DemoTableContent {
             },
             fieldMenus: (aiTable: AITable) => {
                 return [
-                    { ...EditFieldPropertyItem(aiTable), hidden: () => readonly } as any,
+                    { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {
                         ...CopyFieldPropertyItem(aiTable, (data: AddFieldOptions) => {
                             this.addField(data);

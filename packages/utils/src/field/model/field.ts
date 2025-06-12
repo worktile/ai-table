@@ -10,6 +10,7 @@ export abstract class FieldBase {
         }
         return cellValue;
     }
+
     cellFullText(transformValue: any, field: AITableField, references?: AITableReferences): string[] {
         let fullText: string[] = [];
         if (!isEmpty(transformValue)) {
