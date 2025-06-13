@@ -354,6 +354,10 @@ export class DemoTableContent {
                 return 'Select Date';
             case AITableStateI18nKey.copyField:
                 return 'Copy Field';
+            case AITableGridI18nKey.fieldGroupBase:
+                return 'Basic';
+            case AITableGridI18nKey.fieldTypeNumber:
+                return 'Number';
         }
         return;
     };
