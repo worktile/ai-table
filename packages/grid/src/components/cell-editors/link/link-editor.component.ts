@@ -53,7 +53,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         if (!link.text) {
             return true;
         }
-        return isUrl(link.text);
+        return isUrl(link.url);
     }
 
     createLinkValue(link: { text: string; url: string }) {
@@ -70,7 +70,6 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         const action = this.elementRef.nativeElement.querySelector('.edit-icon');
         if (!(event.relatedTarget as HTMLElement)?.contains(action)) {
             this.updateValue();
-            this.closePopover();
         }
     }
 
@@ -94,6 +93,7 @@ export class LinkCellEditorComponent extends AbstractEditCellEditor<{ text: stri
         this.modelValue = linkValue;
         if (!_.isEqual(this.originValue, this.modelValue)) {
             super.update();
+            this.closePopover();
             this.originValue = this.modelValue;
         }
     }
