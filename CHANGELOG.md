@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.15](https://github.com/worktile/ai-table/compare/0.1.14...0.1.15) (2025-06-13)
+
+
+### Features
+
+* output isSwitchType from field setting ([#521](https://github.com/worktile/ai-table/issues/521)) ([9d80e85](https://github.com/worktile/ai-table/commit/9d80e8515ac37819e9e7cb69d60dd2ee9e6eba0f))
+
+
+
 ## [0.1.14](https://github.com/worktile/ai-table/compare/0.1.13...0.1.14) (2025-06-13)
 
 
