@@ -38,7 +38,7 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
-        const dragOccupyWidth = this.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
+        const dragOccupyWidth = this.hiddenRowDrag || this.readonly ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
         if (!this.hiddenIndexColumn) {
             this.customRect({
                 x: AI_TABLE_OFFSET + dragOccupyWidth,

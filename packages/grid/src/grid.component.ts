@@ -333,7 +333,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             rowHeadWidth: computed(() => {
                 const aiFieldConfig = this.aiFieldConfig();
                 let width = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
-                if (aiFieldConfig?.hiddenRowDrag) {
+                if (aiFieldConfig?.hiddenRowDrag || this.aiReadonly()) {
                     width = AI_TABLE_ROW_HEAD_WIDTH;
                 }
                 return aiFieldConfig?.hiddenIndexColumn ? 0 : width;

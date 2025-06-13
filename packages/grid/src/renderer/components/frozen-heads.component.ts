@@ -121,7 +121,7 @@ export class AITableFrozenColumnHeads {
 
     dragOccupyWidth = computed(() => {
         const ctx = this.context();
-        return ctx?.aiFieldConfig()?.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
+        return ctx?.aiFieldConfig()?.hiddenRowDrag || this.readonly() ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
     });
 
     topLineConfig = computed(() => {
