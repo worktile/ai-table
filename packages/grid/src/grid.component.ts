@@ -994,7 +994,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     const nextField = gridData.fields[!isHorizontalScroll || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
                     const nextRecord = gridData.records[nextRowIndex];
                     if (nextField && nextRecord) {
-                        this.aiTableGridSelectionService.selectCells([startCell[0], nextField._id], [nextRecord._id, startCell[1]]);
+                        this.aiTableGridSelectionService.selectCells([startCell[0], startCell[1]], [nextRecord._id, nextField._id]);
                     }
                 }
             }
