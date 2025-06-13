@@ -34,7 +34,6 @@ export interface AITableRowHeadsConfig {
     rowStopIndex: number;
     aiTable: AITable;
     readonly: boolean;
-    rowDragDisabled: boolean;
     maxRecords?: number;
 }
 

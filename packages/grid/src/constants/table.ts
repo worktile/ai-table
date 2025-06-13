@@ -8,11 +8,13 @@ export const AI_TABLE_TEXT_GAP = 8; // 文本间距
 
 export const AI_TABLE_ROW_HEAD = 'AI_TABLE_ROW_HEAD'; // 行头
 export const AI_TABLE_ROW_DRAG_ICON_WIDTH = 18; // 行拖拽宽度
-export const AI_TABLE_ROW_HEAD_WIDTH = 44 + AI_TABLE_ROW_DRAG_ICON_WIDTH; // 表格行头 checkbox 列的宽度
+export const AI_TABLE_ROW_HEAD_WIDTH = 44; // 表格行头 checkbox 列的宽度
+export const AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH = AI_TABLE_ROW_HEAD_WIDTH + AI_TABLE_ROW_DRAG_ICON_WIDTH;
 export const AI_TABLE_ROW_HEAD_SIZE = 16; // 添加行按钮的尺寸
 export const AI_TABLE_ROW_ADD_BUTTON = 'AI_TABLE_ROW_ADD_BUTTON'; // 添加行名称
 export const AI_TABLE_BLANK = 'AI_TABLE_BLANK'; // 空白区域
 
+export const AI_TABLE_INDEX_FIELD_TEXT = ''; // 索引列显示文本
 export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD'; // 属性列头标识
 export const AI_TABLE_FIELD_HEAD_HEIGHT = 44; // 表格字段列头的高度
 export const AI_TABLE_ROW_BLANK_HEIGHT = 43; // 减去边框后真实的行高

@@ -46,9 +46,9 @@ export class TableService {
 
     readonly: WritableSignal<boolean> = signal(false);
 
-    rowDragDisabled: WritableSignal<boolean> = signal(false);
-
     hiddenIndexColumn: WritableSignal<boolean> = signal(false);
+
+    hiddenRowDrag: WritableSignal<boolean> = signal(false);
 
     maxRecords: WritableSignal<number> = signal(500);
 
@@ -129,12 +129,12 @@ export class TableService {
         this.readonly.set(readonly);
     }
 
-    setRowDragDisabled(rowDragDisabled: boolean) {
-        this.rowDragDisabled.set(rowDragDisabled);
-    }
-
     setHiddenIndexColumn(hiddenIndexColumn: boolean) {
         this.hiddenIndexColumn.set(hiddenIndexColumn);
+    }
+
+    setHiddenRowDrag(hiddenRowDrag: boolean) {
+        this.hiddenRowDrag.set(hiddenRowDrag);
     }
 
     setMaxRecords(maxRecords: number) {

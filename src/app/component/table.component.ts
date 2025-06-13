@@ -61,9 +61,9 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     readonly = false;
 
-    rowDragDisabled = false;
-
     hiddenIndexColumn = false;
+
+    hiddenRowDrag = false;
 
     activeViewName!: string;
 
@@ -99,14 +99,14 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setReadonly(e.target.checked);
     }
 
-    handleRowDragDisabledChange(e: any) {
-        this.rowDragDisabled = e.target.checked;
-        this.tableService.setRowDragDisabled(e.target.checked);
-    }
-
     handleHiddenIndexColumnChange(e: any) {
         this.hiddenIndexColumn = e.target.checked;
         this.tableService.setHiddenIndexColumn(e.target.checked);
+    }
+
+    handleHiddenRowDragChange(e: any) {
+        this.hiddenRowDrag = e.target.checked;
+        this.tableService.setHiddenRowDrag(e.target.checked);
     }
 
     handleMaxRecordsChange() {

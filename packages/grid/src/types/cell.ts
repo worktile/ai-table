@@ -14,7 +14,6 @@ export interface AITableCellsConfig {
         updateFieldValue: (options: UpdateFieldValueOptions) => void;
     };
     references?: AITableReferences;
-    rowDragDisabled: boolean;
     maxRecords?: number;
 }
 
@@ -51,7 +50,6 @@ export interface AITableCell {
     isHoverRow: boolean;
     isCheckedRow: boolean;
     width?: number;
-    disabled?: boolean;
 }
 
 export interface AITableCellStyle {

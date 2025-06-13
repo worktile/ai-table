@@ -109,6 +109,7 @@ export class DemoTableContent {
         const onlyOneField = this.tableService.fields().length === 1;
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
+            hiddenRowDrag: this.tableService.hiddenRowDrag(),
             customFields: {
                 [AITableCustomFieldType.relationTicket]: {
                     fieldOption: {

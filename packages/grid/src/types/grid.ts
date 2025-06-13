@@ -55,6 +55,7 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;
+    hiddenRowDrag?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
@@ -70,7 +71,6 @@ export interface AITableRendererConfig {
     containerHeight: number;
     references: AITableReferences;
     readonly: boolean;
-    rowDragDisabled: boolean;
     maxFields?: number;
     maxRecords?: number;
     actions: {
@@ -147,6 +147,7 @@ export interface AITableContext {
     maxRecords: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
+    readonly?: Signal<boolean>;
 }
 
 export enum AITableSelectAllState {
