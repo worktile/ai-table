@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.14](https://github.com/worktile/ai-table/compare/0.1.13...0.1.14) (2025-06-13)
+
+
+### Bug Fixes
+
+* **field:** fix field name i18n issue #WIK-18234 ([#518](https://github.com/worktile/ai-table/issues/518)) ([6bbdd41](https://github.com/worktile/ai-table/commit/6bbdd41319e3edc8d57c6fda7d8c1d993048b205)), closes [#WIK-18234](https://github.com/worktile/ai-table/issues/WIK-18234)
+* **grid:** #WIK-18233 drag select cell automatically scroll the selected cell should remain unchanged ([#517](https://github.com/worktile/ai-table/issues/517)) ([17a3ca5](https://github.com/worktile/ai-table/commit/17a3ca554f9c1c393ac5f5863ae9ed9e9ae6120d)), closes [#WIK-18233](https://github.com/worktile/ai-table/issues/WIK-18233)
+* **link:** fix link valid issue #WIK-18228 ([#516](https://github.com/worktile/ai-table/issues/516)) ([85a19c0](https://github.com/worktile/ai-table/commit/85a19c03e4c680013dc8f8502ea5c8566f354292)), closes [#WIK-18228](https://github.com/worktile/ai-table/issues/WIK-18228)
+
+
+### Features
+
+* **grid:** #WIK-18088 支持隐藏行拖拽、只读模式不显示复选框 ([#513](https://github.com/worktile/ai-table/issues/513)) ([82671ab](https://github.com/worktile/ai-table/commit/82671ab69554289c5171f85dcb7b7b46865a5c3e)), closes [#WIK-18088](https://github.com/worktile/ai-table/issues/WIK-18088)
+* **grid:** support switch rich text ([#514](https://github.com/worktile/ai-table/issues/514)) ([fede188](https://github.com/worktile/ai-table/commit/fede188a13c286c59c7428ada0d96ead4f20a18f))
+* support batch update field values ([#519](https://github.com/worktile/ai-table/issues/519)) ([eee1e75](https://github.com/worktile/ai-table/commit/eee1e7592d5d4318ea4409d29f4062b95b86b19b))
+
+
+
 ## [0.1.13](https://github.com/worktile/ai-table/compare/0.1.12...0.1.13) (2025-06-12)
 
 
