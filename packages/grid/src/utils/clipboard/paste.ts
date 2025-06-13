@@ -222,11 +222,11 @@ export const writeToAITable = async (
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
     const copiedFieldLength = clipboardContent[0].length;
     const appendColCount = copiedFieldLength - (lastColIndex - startColIndex) - 1;
-    const appendOffeset = copiedFieldLength - appendColCount;
+    const appendOffset = copiedFieldLength - appendColCount;
 
     for (let i = 0; i < appendColCount; i++) {
         if (maxFields && lastColIndex + i + 1 < maxFields) {
-            const originField = aiTableContent?.fields[appendOffeset + i] || null;
+            const originField = aiTableContent?.fields[appendOffset + i] || null;
             appendField(aiTable, originField, actions);
         } else {
             result.isPasteOverMaxFields = true;

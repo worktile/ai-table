@@ -45,7 +45,7 @@ import {
     DEFAULT_SCROLL_STATE,
     IconPathMap
 } from './constants';
-import { Coordinate, RendererContext, AITable, defaultFieldOptions, AITableDragState } from './core';
+import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
@@ -166,9 +166,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     });
 
     fieldOptions = computed<AITableFieldOption[]>(() => {
-        let allFieldOptions = defaultFieldOptions.map((fieldOption) => {
-            fieldOption.name = getI18nTextByKey(this.aiTable, fieldOption.name);
-            return fieldOption;
+        let allFieldOptions = getDefaultFieldOptions().map((fieldOption) => {
+            const name = getI18nTextByKey(this.aiTable, fieldOption.name);
+            return { ...fieldOption, name };
         });
 
         Object.entries(this.aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([fieldType, fieldConfig]) => {
