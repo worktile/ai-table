@@ -155,11 +155,13 @@ export class AITableCellRate extends CoverCellComponent {
             this.resetStatus.set(true);
         }
 
-        if (!readonly && actions && actions.updateFieldValue) {
-            actions.updateFieldValue({
-                value,
-                path: [recordId!, field._id]
-            });
+        if (!readonly && actions && actions.updateFieldValues) {
+            actions.updateFieldValues([
+                {
+                    value,
+                    path: [recordId!, field._id]
+                }
+            ]);
         }
     }
 }

@@ -49,10 +49,12 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
     }
 
     updateValue(value: number) {
-        this.updateFieldValue.emit({
-            value: { timestamp: value },
-            path: [this.record()._id, this.field()._id]
-        });
+        this.updateFieldValues.emit([
+            {
+                value: { timestamp: value },
+                path: [this.record()._id, this.field()._id]
+            }
+        ]);
         this.closePopover();
     }
 

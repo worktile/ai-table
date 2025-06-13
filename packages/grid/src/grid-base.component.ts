@@ -10,9 +10,7 @@ import {
     NgZone,
     OnInit,
     output,
-    signal,
-    Signal,
-    WritableSignal
+    Signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
@@ -93,7 +91,7 @@ export class AITableGridBase implements OnInit {
 
     aiMoveField = output<MoveFieldOptions>();
 
-    aiUpdateFieldValue = output<UpdateFieldValueOptions>();
+    aiUpdateFieldValues = output<UpdateFieldValueOptions[]>();
 
     aiSetField = output<AITableField>();
 

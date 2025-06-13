@@ -2,12 +2,22 @@ import { AITableQueries } from '@ai-table/grid';
 import * as _ from 'lodash';
 import { Actions } from '../../action';
 import { AIViewTable } from '../../types';
-import { UpdateFieldValueOptions, AITableRecordUpdatedInfo } from '@ai-table/utils';
+import { UpdateFieldValueOptions, AITableRecordUpdatedInfo, AITableSystemFieldValueOption } from '@ai-table/utils';
 
-export function updateFieldValue(aiTable: AIViewTable, options: UpdateFieldValueOptions, updatedInfo: AITableRecordUpdatedInfo) {
-    const oldValue = AITableQueries.getFieldValue(aiTable, options.path);
-    if (!_.isEqual(oldValue, options.value)) {
-        Actions.updateFieldValue(aiTable, options.value, options.path);
-        Actions.updateSystemFieldValue(aiTable, [options.path[0]], updatedInfo);
+export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[], updatedInfo?: AITableRecordUpdatedInfo) {
+    const needUpdateOptions = options.filter((option) => {
+        const oldValue = AITableQueries.getFieldValue(aiTable, option.path);
+        return !_.isEqual(oldValue, option.value);
+    });
+    Actions.updateFieldValues(aiTable, needUpdateOptions);
+
+    if (updatedInfo) {
+        const needUpdateSystemOptions: AITableSystemFieldValueOption[] = needUpdateOptions.map((option) => {
+            return {
+                path: [option.path[0]],
+                updatedInfo: updatedInfo
+            };
+        });
+        Actions.updateSystemFieldValues(aiTable, needUpdateSystemOptions);
     }
 }

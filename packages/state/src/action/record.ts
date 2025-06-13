@@ -5,39 +5,53 @@ import {
     AddRecordAction,
     RemoveRecordAction,
     UpdateSystemFieldValue,
-    AIRecordFieldIdPath,
     AITableRecord,
-    AITableRecordUpdatedInfo,
     IdPath,
     AITableViewRecords,
     AITableViewRecord,
-    AddRecordOptions
+    AddRecordOptions,
+    UpdateFieldValueOptions,
+    AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { createMultiplePositions, getSortRecords } from '../utils';
 
-export function updateFieldValue(aiTable: AIViewTable, value: any, path: AIRecordFieldIdPath) {
-    const field = AITableQueries.getField(aiTable, [path[1]]);
-    const fieldModel = field && FieldModelMap[field.type];
-    if (fieldModel && fieldModel.isValid(value)) {
-        const operation: UpdateFieldValueAction = {
-            type: ActionName.UpdateFieldValue,
-            newFieldValue: value,
-            path
-        };
-        aiTable.apply(operation);
-    } else {
-        console.error(`Invalid field value at update field value. invalidFieldType: ${field?.type}, value: ${value}, field_id: ${path[1]}`);
-    }
+export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
+    let operations: UpdateFieldValueAction[] = [];
+
+    (options || []).forEach((option) => {
+        const field = AITableQueries.getField(aiTable, [option.path[1]]);
+        const fieldModel = field && FieldModelMap[field.type];
+        if (fieldModel && fieldModel.isValid(option.value)) {
+            const operation: UpdateFieldValueAction = {
+                type: ActionName.UpdateFieldValue,
+                newFieldValue: option.value,
+                path: option.path
+            };
+
+            operations.push(operation);
+        } else {
+            console.error(
+                `Invalid field value at update field value. invalidFieldType: ${field?.type}, value: ${option.value}, field_id: ${option.path[1]}`
+            );
+        }
+    });
+
+    aiTable.apply(operations);
 }
 
-export function updateSystemFieldValue(aiTable: AIViewTable, path: IdPath, updatedInfo: AITableRecordUpdatedInfo) {
-    const operation: UpdateSystemFieldValue = {
-        type: ActionName.UpdateSystemFieldValue,
-        updatedInfo,
-        path
-    };
-    aiTable.apply(operation);
+export function updateSystemFieldValues(aiTable: AIViewTable, options: AITableSystemFieldValueOption[]) {
+    const operations: UpdateSystemFieldValue[] = [];
+    (options || []).forEach((option) => {
+        const operation: UpdateSystemFieldValue = {
+            type: ActionName.UpdateSystemFieldValue,
+            updatedInfo: option.updatedInfo,
+            path: option.path
+        };
+        operations.push(operation);
+    });
+
+    aiTable.apply(operations);
 }
 
 export function addRecord(aiTable: AIViewTable, record: AITableRecord) {
@@ -108,7 +122,7 @@ export function removeRecord(aiTable: AIViewTable, path: IdPath) {
 export const RecordActions = {
     addRecord,
     addRecords,
-    updateFieldValue,
     removeRecord,
-    updateSystemFieldValue
+    updateFieldValues,
+    updateSystemFieldValues
 };

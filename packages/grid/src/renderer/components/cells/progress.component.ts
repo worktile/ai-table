@@ -282,11 +282,13 @@ export class AITableCellProgress extends CoverCellComponent {
         const dragX = point.x - columnLeftX - x;
         const percentage = this.calculatePercentage(dragX);
 
-        if (!this.readonly() && actions && actions.updateFieldValue) {
-            actions.updateFieldValue({
-                value: percentage,
-                path: [recordId!, field._id]
-            });
+        if (!this.readonly() && actions && actions.updateFieldValues) {
+            actions.updateFieldValues([
+                {
+                    value: percentage,
+                    path: [recordId!, field._id]
+                }
+            ]);
         }
     }
 }

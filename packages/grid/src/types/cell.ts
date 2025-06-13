@@ -2,6 +2,7 @@ import Konva from 'konva';
 import { AITableLinearRowRecord } from './row';
 import { AITable, Coordinate } from '../core';
 import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions } from '@ai-table/utils';
+
 export interface AITableCellsConfig {
     aiTable: AITable;
     coordinate: Coordinate;
@@ -11,7 +12,7 @@ export interface AITableCellsConfig {
     columnStopIndex: number;
     readonly: boolean;
     actions: {
-        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+        updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
     };
     references?: AITableReferences;
     maxRecords?: number;

@@ -71,7 +71,7 @@ export interface AITableCoverCellConfig {
     readonly: boolean;
     isExpand: boolean;
     actions: {
-        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+        updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
     };
 }
 

@@ -160,7 +160,7 @@ function getPasteValue(
 }
 
 export interface AITableActions {
-    updateFieldValue: (data: UpdateFieldValueOptions) => void;
+    updateFieldValues: (data: UpdateFieldValueOptions[]) => void;
     setField: (field: AITableField) => void;
     addRecord: (data: AddRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
@@ -258,10 +258,12 @@ export const writeToAITable = async (
 
             if (value !== null) {
                 try {
-                    actions.updateFieldValue({
-                        value,
-                        path: [targetRecord._id, targetField._id]
-                    });
+                    actions.updateFieldValues([
+                        {
+                            value,
+                            path: [targetRecord._id, targetField._id]
+                        }
+                    ]);
                     result.isPasteSuccess = true;
                 } catch (error) {
                     console.error('Failed to paste value:', error);

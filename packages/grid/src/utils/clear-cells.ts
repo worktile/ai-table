@@ -20,9 +20,11 @@ export function clearCells(aiTable: AITable, actions: AITableActions): void {
             continue;
         }
 
-        actions.updateFieldValue({
-            path: [recordId, fieldId],
-            value: getDefaultFieldValue(field)
-        });
+        actions.updateFieldValues([
+            {
+                path: [recordId, fieldId],
+                value: getDefaultFieldValue(field)
+            }
+        ]);
     }
 }
