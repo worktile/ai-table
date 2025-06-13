@@ -87,7 +87,7 @@ export class AITableFieldSetting implements OnInit {
 
     readonly addField = output<AITableField>();
 
-    readonly setField = output<SetFieldOptions>();
+    readonly setField = output<{ fieldOptions: SetFieldOptions; isSwitchType: boolean }>();
 
     readonly selectedFieldOption = computed(() => {
         return getFieldOptionByField(this.aiTable(), this.aiEditField())!;
@@ -123,9 +123,13 @@ export class AITableFieldSetting implements OnInit {
 
     private isManualInputName = signal(false);
 
+    private originFieldType?: AITableFieldType | string;
+
     protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
 
     ngOnInit(): void {
+        this.originFieldType = this.aiEditField()?.type;
+
         this.isMultipleMember =
             this.aiEditField().type === AITableFieldType.member && !!(this.aiEditField().settings as MemberSettings)?.is_multiple;
     }
@@ -161,8 +165,11 @@ export class AITableFieldSetting implements OnInit {
     editFieldProperty() {
         if (this.isUpdate()) {
             this.setField.emit({
-                field: this.aiEditField(),
-                path: [this.aiEditField()._id]
+                fieldOptions: {
+                    field: this.aiEditField(),
+                    path: [this.aiEditField()._id]
+                },
+                isSwitchType: !!this.originFieldType && this.aiEditField().type !== this.originFieldType
             });
         } else {
             this.addField.emit(this.aiEditField());

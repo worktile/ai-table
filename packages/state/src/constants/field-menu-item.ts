@@ -51,8 +51,8 @@ export const EditFieldPropertyItem = (aiTable: AITable, actions: AITableActions,
                 position
             });
             if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
-                (popoverRef.componentInstance as AITableFieldSetting).setField.subscribe((options: SetFieldOptions) => {
-                    updateFieldAndValues(aiTable, references, actions, options);
+                (popoverRef.componentInstance as AITableFieldSetting).setField.subscribe(({ fieldOptions }) => {
+                    updateFieldAndValues(aiTable, references, actions, fieldOptions);
                 });
             }
             return popoverRef;
