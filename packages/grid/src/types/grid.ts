@@ -1,5 +1,4 @@
 import { Signal, ViewContainerRef, WritableSignal } from '@angular/core';
-
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 import {
@@ -74,7 +73,7 @@ export interface AITableRendererConfig {
     maxFields?: number;
     maxRecords?: number;
     actions: {
-        updateFieldValue: (options: UpdateFieldValueOptions) => void;
+        updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
         addRecord: (options: AddRecordOptions) => void;
     };
 }
@@ -129,7 +128,7 @@ export interface AITableOpenEditOptions {
     container?: HTMLDivElement;
     viewContainerRef?: ViewContainerRef;
     isSelectAll?: boolean;
-    updateFieldValue: (options: UpdateFieldValueOptions<any>) => void;
+    updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
 }
 
 export interface AITableContext {

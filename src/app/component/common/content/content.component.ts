@@ -23,7 +23,7 @@ import {
     CopyFieldPropertyItem,
     PasteCellsItem,
     RemoveRecordsItem,
-    updateFieldValue,
+    updateFieldValues,
     withState,
     YjsAITable,
     moveFields,
@@ -270,8 +270,8 @@ export class DemoTableContent {
     });
 
     actions: AITableActions = {
-        updateFieldValue: (data: UpdateFieldValueOptions) => {
-            this.updateFieldValue(data);
+        updateFieldValues: (data: UpdateFieldValueOptions[]) => {
+            this.updateFieldValues(data);
         },
         setField: (field: AITableField) => {
             this.setField(field);
@@ -446,10 +446,10 @@ export class DemoTableContent {
         addRecords(this.aiTable, trackableEntity, options);
     }
 
-    updateFieldValue(value: UpdateFieldValueOptions) {
+    updateFieldValues(options: UpdateFieldValueOptions[]) {
         const member = 'member_02';
         const time = new Date().getTime();
-        updateFieldValue(this.aiTable, value, { updated_by: member, updated_at: time });
+        updateFieldValues(this.aiTable, options, { updated_by: member, updated_at: time });
     }
 
     setField(field: AITableField) {

@@ -22,7 +22,8 @@ import {
     SelectSettings,
     SetFieldOptions,
     SystemFieldTypes,
-    idCreator
+    idCreator,
+    UpdateFieldValueOptions
 } from '@ai-table/utils';
 
 export const DividerMenuItem = {
@@ -79,6 +80,7 @@ export const updateFieldAndValues = (
         const originFieldModel = FieldModelMap[originField?.type!];
         const fieldModel = FieldModelMap[field.type];
 
+        let fieldValueOptions: UpdateFieldValueOptions[] = [];
         aiTable.records().forEach((record) => {
             let originCellValue: FieldValue;
             if (isSystemField(originField)) {
@@ -100,11 +102,13 @@ export const updateFieldAndValues = (
             const toFieldValue = aiTable.context?.aiFieldConfig()?.fieldRenderers?.[field.type]?.toFieldValue;
             const newFieldValue = fieldModel.toFieldValue(originPlainText, field, originData, references, toFieldValue);
 
-            actions.updateFieldValue({
+            fieldValueOptions.push({
                 path: [record._id, field._id],
                 value: newFieldValue
             });
         });
+
+        actions.updateFieldValues(fieldValueOptions);
     }
 };
 

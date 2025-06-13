@@ -17,7 +17,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     @Input({ required: true }) references!: AITableReferences;
 
-    updateFieldValue = output<UpdateFieldValueOptions<TValue>>();
+    updateFieldValues = output<UpdateFieldValueOptions<TValue>[]>();
 
     modelValue!: TValue;
 
@@ -41,10 +41,12 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
         if (this.modelValue === AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id])) {
             return;
         }
-        this.updateFieldValue.emit({
-            value: this.modelValue,
-            path: [this.record()._id, this.field()._id]
-        });
+        this.updateFieldValues.emit([
+            {
+                value: this.modelValue,
+                path: [this.record()._id, this.field()._id]
+            }
+        ]);
     }
 
     closePopover() {

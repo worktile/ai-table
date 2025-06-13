@@ -169,6 +169,11 @@ export interface AITableRecordUpdatedInfo {
     updated_by: string;
 }
 
+export interface AITableSystemFieldValueOption {
+    path: IdPath;
+    updatedInfo: AITableRecordUpdatedInfo;
+}
+
 export type AITableRecords = AITableRecord[];
 
 export type AITableFields = AITableField[];

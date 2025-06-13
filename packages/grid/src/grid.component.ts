@@ -251,8 +251,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     // rowAddFilterTooltip = getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip);
 
     private actions: AITableActions = {
-        updateFieldValue: (data: UpdateFieldValueOptions) => {
-            this.aiUpdateFieldValue.emit(data);
+        updateFieldValues: (data: UpdateFieldValueOptions[]) => {
+            this.aiUpdateFieldValues.emit(data);
         },
         setField: (field: AITableField) => {
             this.aiSetField.emit(field);
@@ -650,8 +650,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     fieldId: fieldId!,
                     recordId: recordId!,
                     references: this.aiReferences(),
-                    updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
-                        this.aiUpdateFieldValue.emit(value);
+                    updateFieldValues: (value: UpdateFieldValueOptions[]) => {
+                        this.aiUpdateFieldValues.emit(value);
                     }
                 });
             }, 0);
@@ -831,8 +831,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         recordId,
                         isSelectAll: true,
                         references: this.aiReferences(),
-                        updateFieldValue: (value: UpdateFieldValueOptions<any>) => {
-                            this.aiUpdateFieldValue.emit(value);
+                        updateFieldValues: (value: UpdateFieldValueOptions[]) => {
+                            this.aiUpdateFieldValues.emit(value);
                         }
                     });
                 }

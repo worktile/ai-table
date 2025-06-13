@@ -8,17 +8,9 @@ import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../constants';
 import { AITable } from '../core';
 import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import {
-    FieldModelMap,
-    getCellHorizontalPosition,
-    getEditorBoxOffset,
-    getEditorSpace,
-    getHoverEditorBoxOffset,
-    getHoverEditorSpace
-} from '../utils';
+import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
-import { AITableFieldType, AIRecordFieldIdPath } from '@ai-table/utils';
-import { ComponentMap } from '../renderer/components/cells/cells';
+import { AITableFieldType, AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
 
 @Injectable()
 export class AITableGridEventService {
@@ -182,7 +174,7 @@ export class AITableGridEventService {
                 recordId: recordId,
                 references,
                 aiTable: aiTable,
-                isSelectAll: options.isSelectAll,
+                isSelectAll: options.isSelectAll
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: fieldType === AITableFieldType.link ? true : false,
@@ -220,9 +212,11 @@ export class AITableGridEventService {
                 wheelEvent.unsubscribe();
                 this.cellEditorPopoverRef = null;
             });
-            (this.cellEditorPopoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValue.subscribe((value) => {
-                options.updateFieldValue(value);
-            });
+            (this.cellEditorPopoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValues.subscribe(
+                (value: UpdateFieldValueOptions[]) => {
+                    options.updateFieldValues(value);
+                }
+            );
         }
         return this.cellEditorPopoverRef;
     }
