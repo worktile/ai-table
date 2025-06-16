@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.16](https://github.com/worktile/ai-table/compare/0.1.15...0.1.16) (2025-06-16)
+
+
+### Features
+
+* #WIK-18245 ai-table 的action-icon组件支持挂载source数据 ([#523](https://github.com/worktile/ai-table/issues/523)) ([7d8e7d4](https://github.com/worktile/ai-table/commit/7d8e7d4eebbbc4d9270f8b239120280846a314cd)), closes [#WIK-18245](https://github.com/worktile/ai-table/issues/WIK-18245)
+
+
+
 ## [0.1.15](https://github.com/worktile/ai-table/compare/0.1.14...0.1.15) (2025-06-13)
 
 
