@@ -8,7 +8,8 @@ import {
     ProgressFieldValue,
     SelectSettings,
     ProgressFieldBase,
-    isEmpty
+    isEmpty,
+    isProgress
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
@@ -75,20 +76,8 @@ export function toProgressFieldValue(
         }
     }
 
-    const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;
-    if (progressRegex.test(value)) {
-        value = parseFloat(value);
+    if (isProgress(value)) {
+        return parseFloat(value);
     }
-
-    if (!isEmpty(value)) {
-        let progressValue = Number(value);
-        if (!Number.isNaN(progressValue)) {
-            progressValue = Math.round(progressValue);
-            if (progressValue >= 0 && progressValue <= 100) {
-                return progressValue;
-            }
-        }
-    }
-
     return null;
 }

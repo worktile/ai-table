@@ -15,3 +15,21 @@ export class ProgressFieldBase extends FieldBase {
         return fullText;
     }
 }
+export function isProgress(input: string) {
+    let value;
+    const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;
+    if(progressRegex.test(input)) {
+        value = parseFloat(input);
+    };
+    if (!isEmpty(value)) {
+        let progressValue = Number(value);
+        if (!Number.isNaN(progressValue)) {
+            progressValue = Math.round(progressValue);
+            if (progressValue >= 0 && progressValue <= 100) {
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
