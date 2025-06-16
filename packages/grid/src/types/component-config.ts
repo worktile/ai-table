@@ -12,7 +12,8 @@ export interface AITableIconConfig extends Konva.ShapeConfig {
 export interface AITableActionIconConfig extends AITableIconConfig {
     coordinate: Coordinate;
     coverBackground?: string;
-    coverFill?: string;
+    hoverFill?: string;
+    source?: any;
 }
 
 export interface AITableAttachmentConfig extends Konva.ShapeConfig {
