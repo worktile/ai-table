@@ -14,5 +14,6 @@ export const Colors = {
     itemActiveBgColor: '#6698ff1a',
     itemMatchBgColor: '#ff9f731a',
     waring: '#ffcd5d',
-    success: '#73d897'
+    success: '#73d897',
+    danger: '#ff5b57'
 };

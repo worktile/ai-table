@@ -46,10 +46,11 @@ export class AITableActionIcon {
             name,
             backgroundWidth,
             backgroundHeight,
-            coverFill,
+            hoverFill: coverFill,
             size = DEFAULT_ICON_SIZE,
             strokeWidth = 1,
-            cornerRadius
+            cornerRadius,
+            source
         } = this.config();
         return {
             name,
@@ -58,7 +59,8 @@ export class AITableActionIcon {
             strokeWidth: strokeWidth,
             fill: coverFill && this.isHover() ? coverFill : Colors.transparent,
             opacity: coverFill && this.isHover() ? 0.1 : 1,
-            cornerRadius
+            cornerRadius,
+            source
         };
     });
 
@@ -77,7 +79,7 @@ export class AITableActionIcon {
             offsetY,
             rotation,
             fill,
-            coverFill: hoverFill,
+            hoverFill: hoverFill,
             transformsEnabled = 'position'
         } = this.config();
         fill = fill || Colors.gray600;

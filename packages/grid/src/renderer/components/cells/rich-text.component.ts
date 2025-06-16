@@ -85,7 +85,7 @@ export class AITableCellRichText extends CoverCellComponent {
             y: offsetY,
             data: EditPath,
             fill: Colors.gray600,
-            coverFill: Colors.primary,
+            hoverFill: Colors.primary,
             backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
             backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
             cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,
