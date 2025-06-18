@@ -41,6 +41,7 @@ export interface AITableScrollControllerOptions {
     maxScrollSpeed?: number; // 最大滚动速度
     edgeThreshold?: AITableScrollEdgeThreshold; // 边缘触发阈值
     onScrollChange?: (position: { x: number; y: number }, isAutoScrolling: boolean) => void;
+    onAutoScrollEnd?: () => void;
 }
 
 @Injectable()
@@ -81,6 +82,7 @@ export class AITableScrollControllerService {
             this.autoScrollSub = null;
         }
         this.isAutoScrolling = false;
+        this.lastAutoScrollOptions?.onAutoScrollEnd?.();
     }
 
     private startAutoScroll(options: AITableScrollControllerOptions): void {

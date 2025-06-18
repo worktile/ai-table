@@ -109,6 +109,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private isDragSelecting = false;
 
+    private isDragSelectionAutoScrolling = false;
+
     private dragSelectionStart: AIRecordFieldIdPath | null = null;
 
     private notifyService = inject(ThyNotifyService);
@@ -495,7 +497,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
-        this.isDragSelecting = false;
+        if (!this.isDragSelectionAutoScrolling) {
+            this.updateDragSelectionState(false, null);
+        }
         if (this.timer) {
             cancelAnimationFrame(this.timer);
         }
@@ -984,6 +988,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 bottom: AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD
             },
             onScrollChange: (position, isAutoScrolling) => {
+                this.isDragSelectionAutoScrolling = isAutoScrolling;
                 if (isAutoScrolling) {
                     const scrollLeft = position.x - scrollState.scrollLeft;
                     const scrollTop = position.y - scrollState.scrollTop;
@@ -997,6 +1002,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         this.aiTableGridSelectionService.selectCells([startCell[0], startCell[1]], [nextRecord._id, nextField._id]);
                     }
                 }
+            },
+            onAutoScrollEnd: () => {
+                this.isDragSelectionAutoScrolling = false;
+                this.updateDragSelectionState(false, null);
             }
         });
     }
