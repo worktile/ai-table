@@ -15,12 +15,15 @@ export class ProgressFieldBase extends FieldBase {
         return fullText;
     }
 }
-export function isProgress(input: string) {
+export function isProgress(input: string, isMustIncludePercent: boolean = false) {
     let value;
     const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;
     if(progressRegex.test(input)) {
         value = parseFloat(input);
-    };
+    }
+    else if (!isMustIncludePercent && progressRegex.test(`${input}%`)) {
+        value = parseFloat(`${input}%`);
+    }
     if (!isEmpty(value)) {
         let progressValue = Number(value);
         if (!Number.isNaN(progressValue)) {
