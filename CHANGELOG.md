@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.17](https://github.com/worktile/ai-table/compare/0.1.16...0.1.17) (2025-06-18)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-17996 adding a row on the menu will insert javascript text ([#526](https://github.com/worktile/ai-table/issues/526)) ([f40f9c0](https://github.com/worktile/ai-table/commit/f40f9c05b98705d70af76c7d28dcad4474df3260)), closes [#WIK-17996](https://github.com/worktile/ai-table/issues/WIK-17996)
+
+
+### Features
+
+* **grid:** set max height for field type menu #WIK-18236 ([#527](https://github.com/worktile/ai-table/issues/527)) ([3275a9d](https://github.com/worktile/ai-table/commit/3275a9dadbc1c47ab865232c03737f70fd949afd)), closes [#WIK-18236](https://github.com/worktile/ai-table/issues/WIK-18236)
+* 抽取一些公用的函数 ([#525](https://github.com/worktile/ai-table/issues/525)) ([4c2e7c4](https://github.com/worktile/ai-table/commit/4c2e7c417eb93a70cfb30dd8f4c5440b43f0cb65))
+
+
+
 ## [0.1.16](https://github.com/worktile/ai-table/compare/0.1.15...0.1.16) (2025-06-16)
 
 
