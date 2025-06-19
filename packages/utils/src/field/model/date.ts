@@ -16,11 +16,11 @@ export class DateFieldBase extends FieldBase {
 }
 
 export function isDateAndReturnDate(input: any): Date | null {
-    if (!input || isEmpty(input)) {
-        return null;
-    }
     if (input instanceof Date) {
         return input;
+    }
+    if (!input || isEmpty(input)) {
+        return null;
     }
     const value = input.trim();
     const datePattern = String.raw`(?:(\d{2}|\d{4})[-/.年](\d{1,2})[-/.月](\d{1,2})日?)`;
