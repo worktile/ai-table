@@ -15,7 +15,7 @@ export class ProgressFieldBase extends FieldBase {
         return fullText;
     }
 }
-export function isProgress(input: string, isMustIncludePercent: boolean = false) {
+export function isProgressAndReturnValue(input: string, isMustIncludePercent: boolean = false) {
     let value;
     const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;
     if(progressRegex.test(input)) {
@@ -27,12 +27,19 @@ export function isProgress(input: string, isMustIncludePercent: boolean = false)
     if (!isEmpty(value)) {
         let progressValue = Number(value);
         if (!Number.isNaN(progressValue)) {
-            progressValue = Math.round(progressValue);
-            if (progressValue >= 0 && progressValue <= 100) {
-                return true;
+            if (progressValue > 1) {
+                progressValue = Math.round(progressValue);
+                if (progressValue >= 0 && progressValue <= 100) {
+                    return progressValue
+                }
+            } else if (progressValue >= 0 && progressValue <= 1) {
+                return Math.round(progressValue * 100);
+            } else {
+                return null;
             }
+            
         }
-        return false;
+        return null;
     }
-    return false;
+    return null;
 }
