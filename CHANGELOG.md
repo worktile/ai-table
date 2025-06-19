@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.18](https://github.com/worktile/ai-table/compare/0.1.17...0.1.18) (2025-06-19)
+
+
+### Bug Fixes
+
+* fixed isDateAndReturnDate date is object ([#532](https://github.com/worktile/ai-table/issues/532)) ([286ae92](https://github.com/worktile/ai-table/commit/286ae9291f9bf8d9faadf27da14f16fa845ff55a))
+
+
+### Features
+
+* isProgress and return value ([#531](https://github.com/worktile/ai-table/issues/531)) ([947010e](https://github.com/worktile/ai-table/commit/947010eeed2d6e410d013fd51ec54e096a0f93ed))
+
+
+
 ## [0.1.17](https://github.com/worktile/ai-table/compare/0.1.16...0.1.17) (2025-06-18)
 
 
