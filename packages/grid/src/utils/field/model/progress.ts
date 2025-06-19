@@ -9,7 +9,7 @@ import {
     SelectSettings,
     ProgressFieldBase,
     isEmpty,
-    isProgress
+    isProgressAndReturnValue
 } from '@ai-table/utils';
 import { compareNumber, isMeetFilter } from '../operate';
 import { FieldOperable } from '../field-operable';
@@ -75,9 +75,5 @@ export function toProgressFieldValue(
                 break;
         }
     }
-
-    if (isProgress(value)) {
-        return parseFloat(value);
-    }
-    return null;
+    return isProgressAndReturnValue(value);
 }
