@@ -93,6 +93,7 @@ import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
+import _ from 'lodash';
 
 @Component({
     selector: 'ai-table-grid',
@@ -179,11 +180,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             }
         });
 
-        const fieldOptionMap = new Map<string, AITableFieldOption>(allFieldOptions.map((fieldOption) => [fieldOption.type, fieldOption]));
-
-        const fieldOptionKeys = this.aiTable.context?.aiFieldConfig()?.fieldOptionKeys || [];
-        if (fieldOptionKeys.length > 0) {
-            allFieldOptions = fieldOptionKeys.map((fieldOptionKey) => fieldOptionMap.get(fieldOptionKey) as AITableFieldOption);
+        const filterFieldOptions = this.aiTable.context?.aiFieldConfig()?.filterFieldOptions;
+        if (_.isFunction(filterFieldOptions)) {
+            allFieldOptions = filterFieldOptions(allFieldOptions);
         }
         return allFieldOptions;
     });
