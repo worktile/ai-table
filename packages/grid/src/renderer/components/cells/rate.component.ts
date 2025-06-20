@@ -1,9 +1,9 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
-import { CoverCellComponent, isActiveCell } from '../../../renderer';
+import { CoverCellComponent } from '../../../renderer';
 import {
     StarFill,
     Colors,
@@ -39,24 +39,30 @@ export class AITableCellRate extends CoverCellComponent {
 
     private resetStatus = signal<boolean>(false);
 
-    readonly = computed(() => {
+    readonly readonly = computed(() => {
         return this.config()?.readonly;
     });
 
-    whiteBgConfig = computed(() => {
+    readonly whiteBgConfig = computed(() => {
         const { aiTable, render, field, recordId, coordinate } = this.config()!;
         const pointPosition = aiTable.context!.pointPosition();
         const { x, y } = render;
         const { columnIndex } = pointPosition;
-        const isActive = isActiveCell([recordId!, field._id], aiTable);
+
+        const hasSelectedArea =
+            aiTable.selection().selectedCells.size > 0 ||
+            aiTable.selection().selectedRecords.size > 0 ||
+            aiTable.selection().selectedFields.size > 0;
+
+        const bgColor = hasSelectedArea ? null : Colors.white;
 
         return {
             x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
-            fill: Colors.white,
-            stroke: isActive ? null : Colors.white,
+            fill: bgColor,
+            stroke: bgColor,
             zIndex: 0,
             name: generateTargetName({
                 targetName: AI_TABLE_CELL,
@@ -66,7 +72,7 @@ export class AITableCellRate extends CoverCellComponent {
         };
     });
 
-    starConfigs = computed(() => {
+    readonly starConfigs = computed(() => {
         const { render, field, recordId, readonly, aiTable, coordinate } = this.config()!;
         const { x, transformValue } = render;
         const max = AI_TABLE_RATE_MAX;
