@@ -15,6 +15,7 @@ export class RendererContext {
     scrollAction: (options: ScrollActionOptions) => void;
     maxFields: Signal<number | undefined>;
     maxRecords: Signal<number | undefined>;
+    maxSelectOptions: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
     readonly?: Signal<boolean>;
@@ -33,6 +34,7 @@ export class RendererContext {
             scrollAction,
             maxFields,
             maxRecords,
+            maxSelectOptions,
             fieldOptions,
             fieldOptionMap,
             readonly
@@ -49,6 +51,7 @@ export class RendererContext {
         this.aiFieldConfig = aiFieldConfig;
         this.maxFields = maxFields;
         this.maxRecords = maxRecords;
+        this.maxSelectOptions = maxSelectOptions;
         this.fieldOptions = fieldOptions;
         this.fieldOptionMap = fieldOptionMap;
         this.readonly = readonly;
