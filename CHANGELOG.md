@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.19](https://github.com/worktile/ai-table/compare/0.1.18...0.1.19) (2025-06-20)
+
+
+### Bug Fixes
+
+* **grid:** not change field name when update field type ([#534](https://github.com/worktile/ai-table/issues/534)) ([54468c6](https://github.com/worktile/ai-table/commit/54468c6bf06e79cca0a10e59505a2deb2b67de5d))
+
+
+### Features
+
+* #WIK-18297 ai-table 的action-icon 支持调整icon大小 ([#536](https://github.com/worktile/ai-table/issues/536)) ([635a5ad](https://github.com/worktile/ai-table/commit/635a5ad912d11d4e82ed216438ef7485f10c43ab)), closes [#WIK-18297](https://github.com/worktile/ai-table/issues/WIK-18297) [#WIK-18297](https://github.com/worktile/ai-table/issues/WIK-18297) [#WIK-18297](https://github.com/worktile/ai-table/issues/WIK-18297)
+* **grid:** support set aiMaxSelectOptions for select and multi-select field ([#535](https://github.com/worktile/ai-table/issues/535)) ([ec47911](https://github.com/worktile/ai-table/commit/ec47911d14a9cd4788986fc55b27374e4d277d0e))
+
+
+### Performance Improvements
+
+* when a row, column, or cell is selected, the background color of the progress or rating cell should not turn white when the mouse is hovered over it ([#537](https://github.com/worktile/ai-table/issues/537)) ([71da8cf](https://github.com/worktile/ai-table/commit/71da8cfb0c8e32628425ed584ed4b8019b6e87a4))
+
+
+
 ## [0.1.18](https://github.com/worktile/ai-table/compare/0.1.17...0.1.18) (2025-06-19)
 
 
