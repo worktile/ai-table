@@ -228,7 +228,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             readonly: this.aiReadonly(),
             actions: this.actions,
             maxFields: this.aiMaxFields(),
-            maxRecords: this.aiMaxRecords()
+            maxRecords: this.aiMaxRecords(),
+            maxSelectOptions: this.aiMaxSelectOptions()
         };
     });
 
@@ -351,6 +352,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords,
+            maxSelectOptions: this.aiMaxSelectOptions,
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
             readonly: this.aiReadonly

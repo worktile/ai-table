@@ -144,6 +144,7 @@ export interface AITableContext {
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
     maxFields: Signal<number | undefined>;
     maxRecords: Signal<number | undefined>;
+    maxSelectOptions: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
     readonly?: Signal<boolean>;

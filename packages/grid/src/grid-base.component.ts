@@ -65,6 +65,8 @@ export class AITableGridBase implements OnInit {
 
     aiMaxRecords = input<number | undefined>();
 
+    aiMaxSelectOptions = input<number | undefined>();
+
     aiReferences = input.required<AITableReferences>();
 
     aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();

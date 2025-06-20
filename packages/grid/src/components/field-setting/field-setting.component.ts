@@ -30,7 +30,15 @@ import { ThySwitch } from 'ngx-tethys/switch';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { of } from 'rxjs';
-import { AITableField, AITableFieldOption, SetFieldOptions, AITableFieldType, MemberSettings, AITableReferences } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldOption,
+    SetFieldOptions,
+    AITableFieldType,
+    MemberSettings,
+    AITableReferences,
+    isUndefinedOrNull
+} from '@ai-table/utils';
 import { AITableFieldIsSameOptionPipe } from '../../pipes';
 import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
@@ -152,7 +160,18 @@ export class AITableFieldSetting implements OnInit {
 
             if (this.isUpdate() && field.type === AITableFieldType.select) {
                 const { options, optionStyle } = getOptionsByFieldAndRecords(this.aiTable(), this.aiEditField(), this.aiReferences()!);
-                settings = { ...settings, options, option_style: optionStyle };
+
+                const maxCount = this.aiTable().context?.maxSelectOptions();
+                let selectOptions = options;
+                if (!isUndefinedOrNull(maxCount) && options.length > maxCount!) {
+                    selectOptions = options.slice(0, maxCount!);
+                }
+
+                settings = {
+                    ...settings,
+                    options: selectOptions,
+                    option_style: optionStyle
+                };
             }
 
             return { ...item, ...field, width, name, settings };
