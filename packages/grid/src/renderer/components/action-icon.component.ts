@@ -83,8 +83,6 @@ export class AITableActionIcon {
         let {
             type,
             data,
-            backgroundWidth,
-            backgroundHeight,
             size = DEFAULT_ICON_SIZE,
             stroke,
             strokeWidth = 1,
@@ -110,8 +108,6 @@ export class AITableActionIcon {
         }
 
         return {
-            // x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
-            // y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
             data: pathData,
             width: size,
             height: size,
