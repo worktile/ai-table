@@ -147,7 +147,7 @@ export class AITableFieldSetting implements OnInit {
         const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
             const width = fieldsSizeMap[item._id] ?? field.width;
-            const name = this.isManualInputName() ? item.name : createDefaultFieldName(this.aiTable(), field);
+            const name = this.isManualInputName() || this.isUpdate() ? item.name : createDefaultFieldName(this.aiTable(), field);
             let settings = field.settings || {};
 
             if (this.isUpdate() && field.type === AITableFieldType.select) {
