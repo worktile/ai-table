@@ -17,7 +17,9 @@ import { setMouseStyle } from '../../utils';
             (koMouseleave)="koMouseleave($event)"
         >
             <ko-rect [config]="squareShapeConfig()"></ko-rect>
-            <ko-path [config]="iconConfig()"></ko-path>
+            <ko-group [config]="iconGroupConfig()">
+                <ko-path [config]="iconConfig()"></ko-path>
+            </ko-group>
         </ko-group>
     `,
     imports: [KoContainer, KoShape],
@@ -64,6 +66,19 @@ export class AITableActionIcon {
         };
     });
 
+    iconGroupConfig = computed(() => {
+        let { backgroundWidth, backgroundHeight, size = DEFAULT_ICON_SIZE, scaleX, scaleY, offsetX, offsetY } = this.config();
+
+        return {
+            x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
+            y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
+            offsetX,
+            offsetY,
+            scaleX: scaleX || size / DEFAULT_ICON_SIZE,
+            scaleY: scaleY || size / DEFAULT_ICON_SIZE
+        };
+    });
+
     iconConfig = computed(() => {
         let {
             type,
@@ -95,8 +110,8 @@ export class AITableActionIcon {
         }
 
         return {
-            x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
-            y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
+            // x: backgroundWidth && (backgroundWidth - size * (scaleX || 1)) / 2,
+            // y: backgroundHeight && (backgroundHeight - size * (scaleY || 1)) / 2,
             data: pathData,
             width: size,
             height: size,
