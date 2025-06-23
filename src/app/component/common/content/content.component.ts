@@ -156,15 +156,18 @@ export class DemoTableContent {
                 },
                 [AITableFieldType.richText]: {
                     toText: (field: AITableField, value: RichTextFieldValue) => {
-                        return (value || [])
-                            .map((item) => {
-                                const texts = _.get(item, 'children', [])
-                                    .map((child: { text?: string }) => _.get(child, 'text', ''))
-                                    .filter((text: string) => text);
-                                return texts.join('');
-                            })
-                            .filter((text) => text)
-                            .join(' ');
+                        if (Array.isArray(value)) {
+                            return (value || [])
+                                .map((item) => {
+                                    const texts = _.get(item, 'children', [])
+                                        .map((child: { text?: string }) => _.get(child, 'text', ''))
+                                        .filter((text: string) => text);
+                                    return texts.join('');
+                                })
+                                .filter((text) => text)
+                                .join(' ');
+                        }
+                        return value;
                     },
                     toFieldValue: (text: string, cellValue: FieldValue) => {
                         if (typeof text !== 'string') {
