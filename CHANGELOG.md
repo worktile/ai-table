@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.20](https://github.com/worktile/ai-table/compare/0.1.19...0.1.20) (2025-06-23)
+
+
+### Features
+
+* #WIK-18301 ai-table 支持方法自定义字段和字段顺序 ([#539](https://github.com/worktile/ai-table/issues/539)) ([7ed14d9](https://github.com/worktile/ai-table/commit/7ed14d9657ddeb5d8ea2f94fa8064f115684b697)), closes [#WIK-18301](https://github.com/worktile/ai-table/issues/WIK-18301)
+
+
+
 ## [0.1.19](https://github.com/worktile/ai-table/compare/0.1.18...0.1.19) (2025-06-20)
 
 
