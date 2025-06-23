@@ -59,7 +59,8 @@ export interface AIFieldConfig<TR extends AITableReferences = AITableReferences>
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
-    fieldOptionKeys?: string[];
+    // fieldOptionKeys?: string[];
+    filterFieldOptions?: (fieldOptions: AITableFieldOption[]) => AITableFieldOption[];
 }
 
 export interface AITableRendererConfig {
