@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.21](https://github.com/worktile/ai-table/compare/0.1.20...0.1.21) (2025-06-24)
+
+
+### Bug Fixes
+
+* **grid:** switch to other types first and then switch to select type, the options are wrong. ([#541](https://github.com/worktile/ai-table/issues/541)) ([a5f87e5](https://github.com/worktile/ai-table/commit/a5f87e55ef88bb37aaa7e75b556d7011c25df8bd))
+
+
+
 ## [0.1.20](https://github.com/worktile/ai-table/compare/0.1.19...0.1.20) (2025-06-23)
 
 
