@@ -15,7 +15,7 @@ import {
 } from '@ai-table/utils';
 import { AITable, Coordinate } from '../core';
 import { AITableRender } from './cell';
-import { FieldOperable } from '../utils';
+import { AITableActions, FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
 import { CoverCellComponent } from '../renderer';
@@ -73,10 +73,7 @@ export interface AITableRendererConfig {
     readonly: boolean;
     maxFields?: number;
     maxRecords?: number;
-    actions: {
-        updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
-        addRecord: (options: AddRecordOptions) => void;
-    };
+    actions: AITableActions;
 }
 
 export enum AITableCheckType {

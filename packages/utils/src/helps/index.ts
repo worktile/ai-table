@@ -3,3 +3,4 @@ export * from './collection';
 export * from './is-url';
 export * from './id-creator';
 export * from './colors';
+export * from './field-stat';

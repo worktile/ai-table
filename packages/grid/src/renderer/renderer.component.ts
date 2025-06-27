@@ -18,6 +18,7 @@ import {
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableCoverCells } from './components/cover-cell.component';
+import { AITableFieldStats } from './components/field-stat/stats.component';
 
 Konva.pixelRatio = 2;
 
@@ -37,7 +38,8 @@ Konva.pixelRatio = 2;
         AITablePlaceholderCells,
         AITableAddField,
         AITableHoverRowHeads,
-        AITableOtherRows
+        AITableOtherRows,
+        AITableFieldStats
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -186,11 +188,12 @@ export class AITableRenderer {
 
     columnHeadOrAddFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
-        const { aiTable, coordinate, readonly, maxFields } = this.config();
+        const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
         const { pointPosition } = aiTable.context!;
         const fields = this.fields();
         return {
             aiTable,
+            actions,
             coordinate,
             fields,
             columnStartIndex,
