@@ -1,0 +1,7 @@
+@if (field()) {
+    @for (menu of statMenus(); track index; let index = $index) {
+        <a thyDropdownMenuItem href="javascript:;" (click)="execute(menu)">
+            <span>{{ menu.name }}</span>
+        </a>
+    }
+}

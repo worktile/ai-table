@@ -1,4 +1,6 @@
+import { Signal } from '@angular/core';
 import { AITableFieldsSizeMap } from './grid';
+import { AITableFieldStatType } from './field';
 
 export type Id = string;
 
@@ -70,7 +72,7 @@ export interface AITableField {
     width?: number;
     hidden?: boolean;
     frozen?: boolean;
-    stat_type?: AITableStatType;
+    stat_type?: AITableFieldStatType;
     settings?: AITableFieldSettings;
 }
 

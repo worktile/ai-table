@@ -3,6 +3,7 @@ import { AITable, Coordinate } from '../core';
 import { AITableAttachmentInfo, AITableField, UpdateFieldValueOptions } from '@ai-table/utils';
 import { AITableRender } from './cell';
 import { AITablePointPosition } from './grid';
+import { AITableActions } from '../utils';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
@@ -43,8 +44,28 @@ export interface AITableFieldHeadConfig {
     isHoverIcon?: boolean;
 }
 
+export interface AITableFieldStatConfig {
+    aiTable: AITable;
+    coordinate: Coordinate;
+    actions: AITableActions;
+    x?: number;
+    y?: number;
+    width: number;
+    height: number;
+    field: AITableField;
+}
+
 export interface AITableColumnHeadsConfig {
     aiTable: AITable;
+    coordinate: Coordinate;
+    columnStartIndex: number;
+    columnStopIndex: number;
+    pointPosition: AITablePointPosition;
+}
+
+export interface AITableFieldStatsConfig {
+    aiTable: AITable;
+    actions: AITableActions;
     coordinate: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
