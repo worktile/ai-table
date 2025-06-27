@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import { FIELD_STAT_DEFAULT_MENUS } from '../../constants/field-stat';
+import { DEFAULT_FIELD_STAT_TYPE_ITEMS } from '../../constants/field-stat';
 import { isEmpty } from '../../helps';
 import {
     AITableFieldStatType,
@@ -19,7 +19,7 @@ export abstract class FieldBase {
 
     abstract isValid(cellValue: FieldValue): boolean;
 
-    constructor(statTypes: AITableFieldStatTypeItemInfo[] = FIELD_STAT_DEFAULT_MENUS) {
+    constructor(statTypes: AITableFieldStatTypeItemInfo[] = DEFAULT_FIELD_STAT_TYPE_ITEMS) {
         this.statTypes = statTypes;
         statTypes.forEach((item) => {
             this.statTypeMap.set(item.type, item);

@@ -18,8 +18,6 @@ export class AITableFieldStats {
 
     statConfigs = computed(() => {
         const { coordinate, columnStartIndex } = this.config();
-        // console.log('============ 11 =============');
-        // console.log(11);
         const { frozenColumnCount } = coordinate;
 
         return createFieldStats({

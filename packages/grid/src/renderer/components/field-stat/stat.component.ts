@@ -18,7 +18,7 @@ import { FieldModelMap, generateTargetName, TextMeasure } from '../../../utils';
 import { AITableIcon } from '../icon.component';
 import { AITableTextComponent } from '../text.component';
 import { ThyPopover } from 'ngx-tethys/popover';
-import { AITableStatMenu } from '../../../components/field-stat-menu/field-stat-menu.component';
+import { AITableStatTypeMenu } from '../../../components/stat-type-menu/stat-type-menucomponent';
 
 @Component({
     selector: 'ai-table-field-stat',
@@ -159,7 +159,7 @@ export class AITableFieldStat {
 
         const fieldModel = FieldModelMap[field.type];
 
-        const ref = this.thyPopover.open(AITableStatMenu, {
+        const ref = this.thyPopover.open(AITableStatTypeMenu, {
             origin: coordinate!.container,
             originPosition: position,
             placement: 'topLeft',

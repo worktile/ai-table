@@ -18,15 +18,15 @@ import { AITableFieldMenuItem } from '../../types/field';
 import { AITable } from '../../core';
 
 @Component({
-    selector: 'ai-table-field-stat-menu',
-    templateUrl: './field-stat-menu.component.html',
+    selector: 'ai-table-stat-type-menu',
+    templateUrl: './stat-type-menu.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'field-stat-menu'
+        class: 'stat-type-menu'
     },
     imports: [ThyDropdownMenuItemDirective]
 })
-export class AITableStatMenu extends ThyDropdownAbstractMenu {
+export class AITableStatTypeMenu extends ThyDropdownAbstractMenu {
     field = input.required<AITableField>();
 
     aiTable = input.required<AITable>();

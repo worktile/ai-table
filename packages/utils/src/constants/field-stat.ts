@@ -1,7 +1,7 @@
 import { countAll, countEmpty, countFilled } from '../helps/field-stat';
 import { AITableFieldStatTypeItemInfo, AITableStatType } from '../types';
 
-export const FIELD_STAT_DEFAULT_MENUS: AITableFieldStatTypeItemInfo[] = [
+export const DEFAULT_FIELD_STAT_TYPE_ITEMS: AITableFieldStatTypeItemInfo[] = [
     {
         name: '记录总数',
         type: AITableStatType.CountAll,
