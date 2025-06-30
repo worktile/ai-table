@@ -69,8 +69,8 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
 
     updateValueFn() {
         const value = (this.isMultiple ? this.modelValue : (this.modelValue && ([this.modelValue] as string[])) || []) as string[];
-        const originValue = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]) as string[];
-        if (!value.every((v, i) => v === originValue[i]) || value.length !== originValue.length) {
+        const originValue = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]) || [];
+        if (value.length !== originValue.length || !value.every((v, i) => v === originValue[i])) {
             this.updateFieldValues.emit([
                 {
                     value: value,
