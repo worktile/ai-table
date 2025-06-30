@@ -97,6 +97,12 @@ export interface AITableCoverCellConfig {
     };
 }
 
+export interface AITableFillHandleConfig {
+    aiTable: AITable;
+    coordinate: Coordinate;
+    readonly: boolean;
+}
+
 export interface AITableTargetNameOptions {
     targetName: string;
     fieldId?: string;
