@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.22](https://github.com/worktile/ai-table/compare/0.1.21...0.1.22) (2025-06-30)
+
+
+### Bug Fixes
+
+* **grid:** error when modifying select value ([b2a49ba](https://github.com/worktile/ai-table/commit/b2a49bad538332fb6e2f5fde10c3b6b60ae41e69))
+
+
+
 ## [0.1.21](https://github.com/worktile/ai-table/compare/0.1.20...0.1.21) (2025-06-24)
 
 
