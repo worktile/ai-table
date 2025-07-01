@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -17,6 +17,7 @@ import {
     AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
+import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
 
@@ -39,6 +40,7 @@ Konva.pixelRatio = 2;
         AITableAddField,
         AITableHoverRowHeads,
         AITableOtherRows,
+        AITableFillHandle,
         AITableFieldStats
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -218,6 +220,14 @@ export class AITableRenderer {
             columnStopIndex,
             actions,
             maxRecords
+        };
+    });
+
+    readonly fillHandleConfig = computed<AITableFillHandleConfig>(() => {
+        return {
+            aiTable: this.config().aiTable,
+            coordinate: this.coordinate(),
+            readonly: this.readonly()
         };
     });
 

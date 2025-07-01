@@ -117,7 +117,7 @@ export class AITableGridSelectionService {
         }
     }
 
-    selectCells(startCell: AIRecordFieldIdPath, endCell?: AIRecordFieldIdPath) {
+    selectCells(startCell: AIRecordFieldIdPath, endCell?: AIRecordFieldIdPath, activeCell?: AIRecordFieldIdPath | null) {
         const [startRecordId, startFieldId] = startCell;
         const records = this.aiTable.context!.linearRows();
         const fields = AITable.getVisibleFields(this.aiTable);
@@ -146,7 +146,7 @@ export class AITableGridSelectionService {
         }
 
         this.clearSelection();
-        this.setActiveCell(startCell);
+        this.setActiveCell(activeCell || startCell);
         this.aiTable.selection().selectedCells = selectedCells;
     }
 }
