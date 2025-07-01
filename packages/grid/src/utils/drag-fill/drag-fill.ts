@@ -5,53 +5,54 @@ import { AITableActions } from '../../utils';
 export interface AITableDragFillState {
     isDragging: boolean;
     sourceCells: Set<string>;
-    direction?: 'downward' | 'upward';
 }
 
-export function dragFillSelectArea(aiTable: AITable, sourceCells: Set<string>, currentRecordId: string) {
-    let dragFillStartCell: AIRecordFieldIdPath;
-    let dragFillEndCell: AIRecordFieldIdPath;
+export function getFillDirection(aiTable: AITable, sourceCells: Set<string>, mouseUpRecordId: string) {
+    const { startCell: sourceStartCell, endCell: sourceEndCell } = getStartAndEndCell(sourceCells);
+    const currentRowIndex = aiTable.context!.visibleRowsIndexMap().get(mouseUpRecordId)!;
+    const sourceStartRowIndex = aiTable.context!.visibleRowsIndexMap().get(sourceStartCell[0])!;
+    const sourceEndRowIndex = aiTable.context!.visibleRowsIndexMap().get(sourceEndCell[0])!;
 
-    const { firstCell, lastCell } = getFillAreaBounds(sourceCells);
-
-    const currentRowIndex = aiTable.context!.visibleRowsIndexMap().get(currentRecordId)!;
-    const firstRowIndex = aiTable.context!.visibleRowsIndexMap().get(firstCell[0])!;
-    const lastRowIndex = aiTable.context!.visibleRowsIndexMap().get(lastCell[0])!;
-
-    let direction: 'downward' | 'upward' | undefined = undefined;
-    if (currentRowIndex < firstRowIndex) {
-        direction = 'upward';
-    } else if (currentRowIndex > lastRowIndex) {
-        direction = 'downward';
+    if (currentRowIndex < sourceStartRowIndex) {
+        return 'upward';
+    } else if (currentRowIndex > sourceEndRowIndex) {
+        return 'downward';
+    } else {
+        return undefined;
     }
+}
 
-    const firstCellRecordId = firstCell[0];
-    const firstCellFieldId = firstCell[1];
-    const lastCellRecordId = lastCell[0];
-    const lastCellFieldId = lastCell[1];
+export function dragFillHighlightArea(aiTable: AITable, sourceCells: Set<string>, currentRecordId: string) {
+    const { startCell: sourceStartCell, endCell: sourceEndCell } = getStartAndEndCell(sourceCells);
+    const direction = getFillDirection(aiTable, sourceCells, currentRecordId);
+    const sourceStartCellFieldId = sourceStartCell[1];
+    const sourceEndCellFieldId = sourceEndCell[1];
+
+    let highlightStartCell: AIRecordFieldIdPath;
+    let highlightEndCell: AIRecordFieldIdPath;
 
     if (direction === 'downward') {
-        dragFillStartCell = [firstCellRecordId, firstCellFieldId];
-        dragFillEndCell = [currentRecordId, lastCellFieldId];
+        highlightStartCell = sourceStartCell;
+        highlightEndCell = [currentRecordId, sourceEndCellFieldId];
     } else if (direction === 'upward') {
-        dragFillStartCell = [currentRecordId, firstCellFieldId];
-        dragFillEndCell = [lastCellRecordId, lastCellFieldId];
+        highlightStartCell = [currentRecordId, sourceStartCellFieldId];
+        highlightEndCell = sourceEndCell;
     } else {
-        dragFillStartCell = firstCell;
-        dragFillEndCell = lastCell;
+        highlightStartCell = sourceStartCell;
+        highlightEndCell = sourceEndCell;
     }
 
-    return { dragFillStartCell, dragFillEndCell, direction };
+    return { highlightStartCell, highlightEndCell };
 }
 
-export function performFill(aiTable: AITable, dragFillState: AITableDragFillState, actions: AITableActions) {
+export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpRecordId: string, actions: AITableActions) {
     const selectedCells: string[] = Array.from(aiTable.selection().selectedCells);
-    const { sourceCells, direction } = dragFillState;
+
     if (sourceCells.size === 0 || selectedCells.length === 0) {
         return;
     }
 
-    const { firstCell: sourceStartCell, lastCell: sourceEndCell } = getFillAreaBounds(sourceCells);
+    const { startCell: sourceStartCell, endCell: sourceEndCell } = getStartAndEndCell(sourceCells);
     const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap();
     const sourceStartRowIndex = visibleRowsIndexMap.get(sourceStartCell[0])!;
     const sourceEndRowIndex = visibleRowsIndexMap.get(sourceEndCell[0])!;
@@ -61,6 +62,7 @@ export function performFill(aiTable: AITable, dragFillState: AITableDragFillStat
 
     let targetStartRowIndex: number;
     let targetEndRowIndex: number;
+    const direction = getFillDirection(aiTable, sourceCells, mouseUpRecordId);
 
     if (direction === 'downward') {
         targetStartRowIndex = sourceEndRowIndex + 1;
@@ -112,15 +114,14 @@ export function performFill(aiTable: AITable, dragFillState: AITableDragFillStat
     }
 }
 
-export function getFillAreaBounds(selectedCells: Set<string>): { firstCell: AIRecordFieldIdPath; lastCell: AIRecordFieldIdPath } {
-    let firstCell: AIRecordFieldIdPath;
-    let lastCell: AIRecordFieldIdPath;
-
+export function getStartAndEndCell(selectedCells: Set<string>): {
+    startCell: AIRecordFieldIdPath;
+    endCell: AIRecordFieldIdPath;
+} {
     const selectedCellsArray = Array.from(selectedCells);
-    const startCell = selectedCellsArray[0].split(':');
-    const endCell = selectedCellsArray[selectedCellsArray.length - 1].split(':');
-    firstCell = [startCell[0], startCell[1]];
-    lastCell = [endCell[0], endCell[1]];
-
-    return { firstCell, lastCell };
+    const firstCell = selectedCellsArray[0].split(':');
+    const lastCell = selectedCellsArray[selectedCellsArray.length - 1].split(':');
+    const startCell = [firstCell[0], firstCell[1]] as AIRecordFieldIdPath;
+    const endCell = [lastCell[0], lastCell[1]] as AIRecordFieldIdPath;
+    return { startCell, endCell };
 }

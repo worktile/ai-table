@@ -73,7 +73,7 @@ import {
     FieldModelMap,
     isVirtualKey,
     setMouseStyle,
-    dragFillSelectArea,
+    dragFillHighlightArea,
     performFill,
     AITableDragFillState
 } from './utils';
@@ -444,19 +444,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
                     if (this.dragFillState.isDragging) {
                         setMouseStyle('crosshair', this.containerElement());
-                        const { dragFillStartCell, dragFillEndCell, direction } = dragFillSelectArea(
+                        const { highlightStartCell, highlightEndCell } = dragFillHighlightArea(
                             this.aiTable,
                             this.dragFillState.sourceCells,
                             recordId
                         );
-                        if (direction !== this.dragFillState.direction) {
-                            this.updateDragFillState({
-                                direction
-                            });
-                        }
+
                         activeCell = this.aiTable.selection().activeCell;
-                        startCell = dragFillStartCell;
-                        endCell = dragFillEndCell;
+                        startCell = highlightStartCell;
+                        endCell = highlightEndCell;
                     } else {
                         startCell = this.dragSelectState.startCell!;
                         endCell = [recordId, fieldId];
@@ -540,10 +536,35 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     stageMouseup(e: KoEventObject<MouseEvent>) {
         this.updateDragSelectState(false, null);
 
-        if (this.dragFillState.isDragging && this.dragFillState.direction) {
-            performFill(this.aiTable, this.dragFillState, this.actions);
-            this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
+        if (this.dragFillState.isDragging) {
+            this.performFill(e);
         }
+    }
+
+    private performFill(e: KoEventObject<MouseEvent>) {
+        const targetName = e.event.target.name();
+        const gridStage = e.event.currentTarget.getStage();
+        const pos = gridStage?.getPointerPosition();
+        if (pos == null) {
+            this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
+            return;
+        }
+        const { context } = this.aiTable;
+        const { x, y } = pos;
+        const curMousePosition = getMousePosition(
+            this.aiTable,
+            x,
+            y,
+            this.coordinate(),
+            AITable.getVisibleFields(this.aiTable),
+            context!,
+            targetName
+        );
+        const { recordId } = getDetailByTargetName(curMousePosition.realTargetName);
+        if (recordId) {
+            performFill(this.aiTable, this.dragFillState.sourceCells, recordId, this.actions);
+        }
+        this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
@@ -786,11 +807,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         };
     }
 
-    private updateDragFillState(updates: Partial<AITableDragFillState>) {
-        this.dragFillState = {
-            ...this.dragFillState,
-            ...updates
-        };
+    private updateDragFillState(dragFillState: AITableDragFillState) {
+        this.dragFillState = dragFillState;
     }
 
     private resetScrolling = () => {
