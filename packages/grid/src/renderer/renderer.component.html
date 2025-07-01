@@ -45,6 +45,9 @@
                     @if (showExpandCellBorder().expandCellBorder) {
                         <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
                     }
+                    @if (!isLastSelectedCellInFrozenColumn()) {
+                        <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
+                    }
                 </ko-group>
             </ko-group>
 
@@ -62,11 +65,10 @@
                     @if (showExpandCellBorder().frozenExpandCellBorder) {
                         <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
                     }
+                    @if (isLastSelectedCellInFrozenColumn()) {
+                        <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
+                    }
                 </ko-group>
-            </ko-group>
-
-            <ko-group>
-                <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
             </ko-group>
         </ko-group>
     </ko-layer>
