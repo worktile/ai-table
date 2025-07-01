@@ -29,28 +29,26 @@ export class AITableFillHandle {
         const selectedCells = Array.from(aiTable.selection().selectedCells);
         const lastCell = selectedCells[selectedCells.length - 1];
         const [recordId, fieldId] = lastCell.split(':');
-        const { scrollLeft, scrollTop } = aiTable.context!.scrollState();
 
         const columnIndex = aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
         const columnOffset = coordinate.getColumnOffset(columnIndex);
         const columnWidth = coordinate.getColumnWidth(columnIndex);
-        const x = columnOffset + columnWidth - scrollLeft;
 
         const rowIndex = aiTable.context!.visibleRowsIndexMap().get(recordId)!;
         const rowOffset = coordinate.getRowOffset(rowIndex);
-        const y = rowOffset + AI_TABLE_ROW_HEIGHT - scrollTop;
 
         const width = 6;
         const height = 6;
 
         return {
-            x: x - width / 2 + AI_TABLE_OFFSET,
-            y: y - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
+            x: columnOffset + columnWidth - width / 2 + AI_TABLE_OFFSET,
+            y: rowOffset + AI_TABLE_ROW_HEIGHT - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width,
             height,
             fill: Colors.primary,
             stroke: Colors.white,
             strokeWidth: 2,
+            zIndex: 20,
             name: generateTargetName({
                 targetName: AI_TABLE_FILL_HANDLE,
                 fieldId,

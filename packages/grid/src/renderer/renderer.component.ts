@@ -152,7 +152,7 @@ export class AITableRenderer {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize - 1,
-            clipWidth: this.frozenAreaWidth(),
+            clipWidth: this.frozenAreaWidth() + 10,
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
     });
@@ -229,6 +229,18 @@ export class AITableRenderer {
             coordinate: this.coordinate(),
             readonly: this.readonly()
         };
+    });
+
+    readonly isLastSelectedCellInFrozenColumn = computed(() => {
+        const { aiTable } = this.config();
+        const selectedCells = Array.from(aiTable.selection().selectedCells);
+        if (selectedCells.length === 0) return false;
+
+        const lastCell = selectedCells[selectedCells.length - 1];
+        const [, fieldId] = lastCell.split(':');
+        const columnIndex = aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+
+        return AITable.isFrozenColumn(aiTable, columnIndex);
     });
 
     activeCellBorderConfig = computed(() => {
