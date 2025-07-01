@@ -17,3 +17,4 @@ export * from './clear-cells';
 export * from './i18n';
 export * from './file';
 export * from './transform';
+export * from './field-stat';

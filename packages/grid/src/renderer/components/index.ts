@@ -14,3 +14,4 @@ export * from './text.component';
 export * from './cells';
 export * from './action-icon.component';
 export * from './cells/cover-cell';
+export * from './background.component';

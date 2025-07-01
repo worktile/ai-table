@@ -31,6 +31,7 @@ export const AI_TABLE_FIELD_ADD_BUTTON_WIDTH = 100; // 添加列宽度
 export const AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE = 8; // 字段表列头图标的间距
 export const AI_TABLE_FIELD_HEAD_MORE = 'AI_TABLE_FIELD_HEAD_MORE'; // 更多图标名称
 export const AI_TABLE_FIELD_HEAD_OPACITY_LINE = 'AI_TABLE_FIELD_HEAD_OPACITY_LINE'; // 字段列头透明线
+export const AI_TABLE_FIELD_STAT_BG = 'AI_TABLE_FIELD_STAT_BG'; // 统计按钮背景
 export const AI_TABLE_ROW_DRAG = 'AI_TABLE_ROW_DRAG'; // 行拖拽
 
 export const AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS = '.ai-table-prevent-clear-selection';

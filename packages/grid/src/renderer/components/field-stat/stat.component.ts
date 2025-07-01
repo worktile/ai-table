@@ -6,25 +6,31 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
+    AI_TABLE_FIELD_STAT_BG,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_POPOVER_LEFT_OFFSET,
     AngleDownPath,
     Colors,
-    DEFAULT_FONT_SIZE
+    DEFAULT_FONT_SIZE,
+    DEFAULT_FONT_WEIGHT
 } from '../../../constants';
 import { AITableFieldStatConfig } from '../../../types';
-import { AITableField, AITableFieldStatTypeItemInfo } from '@ai-table/utils';
+import { AITableField, AITableFieldStatTypeItemInfo, FieldOptions } from '@ai-table/utils';
 import { FieldModelMap, generateTargetName, TextMeasure } from '../../../utils';
 import { AITableIcon } from '../icon.component';
 import { AITableTextComponent } from '../text.component';
 import { ThyPopover } from 'ngx-tethys/popover';
 import { AITableStatTypeMenu } from '../../../components/stat-type-menu/stat-type-menucomponent';
+import { AITableBackground } from '../background.component';
+import { drawer } from '../../drawers/drawer';
 
 @Component({
     selector: 'ai-table-field-stat',
     template: `
         <ko-group [config]="groupConfig()">
-            <ko-rect [config]="bgConfig()" (koClick)="clickStat($event)"></ko-rect>
+            <ai-table-background [config]="bgConfig()" (koClick)="clickStat($event)" [isActive]="isActive()"></ai-table-background>
+
             @if (textConfig()) {
                 <ko-group>
                     <ai-table-text [config]="textConfig()!"></ai-table-text>
@@ -33,7 +39,7 @@ import { AITableStatTypeMenu } from '../../../components/stat-type-menu/stat-typ
             }
         </ko-group>
     `,
-    imports: [KoContainer, KoShape, AITableTextComponent, AITableIcon],
+    imports: [KoContainer, AITableTextComponent, AITableIcon, AITableBackground],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFieldStat {
@@ -41,23 +47,29 @@ export class AITableFieldStat {
 
     config = input.required<AITableFieldStatConfig>();
 
-    textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
-
     textMeasure = TextMeasure();
+
+    isActive = signal(false);
 
     availableTextWidth = computed(() => {
         const { width } = this.config();
-        return width - AI_TABLE_ICON_COMMON_SIZE;
+        return width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
     });
 
     textData = computed(() => {
-        const fieldName = this.config().field.name.replace(/\r|\n/g, ' ');
+        const textString = this.statValue() || '';
         this.textMeasure.setFont({ fontSize: DEFAULT_FONT_SIZE });
-        const { width, height, isOverflow } = this.textMeasure.measureText(fieldName, this.availableTextWidth(), 1);
+        const availableTextWidth = this.availableTextWidth();
+        const { text, textWidth } = drawer.textEllipsis({
+            text: textString,
+            maxWidth: availableTextWidth,
+            fontSize: DEFAULT_FONT_SIZE,
+            fontWeight: DEFAULT_FONT_WEIGHT
+        });
+
         return {
-            width: Math.min(width, this.availableTextWidth()),
-            height,
-            isOverflow
+            width: textWidth,
+            text
         };
     });
 
@@ -69,21 +81,24 @@ export class AITableFieldStat {
     });
 
     bgConfig = computed(() => {
-        const { field, width, height } = this.config();
+        const { field, width, height, coordinate } = this.config();
         return {
+            coordinate,
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
             name: generateTargetName({
-                targetName: 'sss',
+                targetName: AI_TABLE_FIELD_STAT_BG,
                 fieldId: field._id,
                 mouseStyle: 'pointer'
             }),
-            width: width,
-            height: height,
+            width: width - 1,
+            height: height - 1,
             fill: Colors.white,
+            hoverFill: Colors.gray100,
             stroke: Colors.gray200,
             strokeWidth: 1,
-            opacity: 1
+            opacity: 1,
+            listening: true
         };
     });
 
@@ -97,25 +112,39 @@ export class AITableFieldStat {
         return aiTable.records;
     });
 
+    options = computed<FieldOptions>(() => {
+        const { aiTable } = this.config();
+        return {
+            field: this.field(),
+            aiTable: {
+                context: {
+                    aiFieldConfig: () => aiTable.context?.aiFieldConfig()
+                }
+            }
+        };
+    });
+
     statValue = computed(() => {
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
-        const result = fieldModel.getStatFormatValue(field, records());
+        const result = fieldModel.getStatFormatValue(records(), this.options());
         return result;
     });
 
     textConfig = computed(() => {
-        const { field, height, aiTable } = this.config();
+        const { field, height, aiTable, width } = this.config();
         const text = this.statValue();
         if (text) {
+            const renderWidth = this.textData().width;
             return {
-                x: this.textOffset,
+                x: width - AI_TABLE_ACTION_COMMON_SIZE - renderWidth,
                 y: 0,
-                width: Math.max(this.textData().width, AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH),
+                width: renderWidth,
                 height: height + 2,
-                text: this.statValue(),
-                lineHeight: 1.84
+                text: this.textData().text,
+                lineHeight: 1.84,
+                listening: false
             };
         }
 
@@ -140,7 +169,9 @@ export class AITableFieldStat {
 
     clickStat(e: KoEventObject<MouseEvent>) {
         e.event.evt.stopPropagation();
+        this.isActive.set(true);
         const { aiTable, coordinate, field, actions } = this.config();
+        const { pointPosition } = aiTable.context!;
 
         const statRect = e.event.target.getClientRect();
         const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
@@ -171,15 +202,19 @@ export class AITableFieldStat {
                 aiTable,
                 field,
                 statMenus: fieldModel.statTypes
-                // fieldMenus:
             }
         });
 
         ref.componentInstance.menuClick.subscribe((event: { menu: AITableFieldStatTypeItemInfo; field: AITableField }) => {
+            this.isActive.set(false);
             actions.setField({
                 ...event.field,
                 stat_type: event.menu.type
             });
+        });
+
+        ref.afterClosed().subscribe(() => {
+            this.isActive.set(false);
         });
     }
 }

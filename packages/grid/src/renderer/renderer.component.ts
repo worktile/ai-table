@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableFieldStatsConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -19,6 +19,7 @@ import {
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
+import { AI_TABLE_FIELD_STAT_HEIGHT } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -130,7 +131,7 @@ export class AITableRenderer {
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
-            clipX: this.frozenAreaWidth() + 1,
+            clipX: this.frozenAreaWidth(),
             clipY: 0,
             clipWidth: this.cellGroupClipWidth(),
             clipHeight: this.containerHeight()
@@ -186,7 +187,7 @@ export class AITableRenderer {
         };
     });
 
-    columnHeadOrAddFieldConfig = computed(() => {
+    columnFrozenHeadFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
         const { pointPosition } = aiTable.context!;
@@ -201,6 +202,34 @@ export class AITableRenderer {
             pointPosition: pointPosition(),
             readonly,
             maxFields
+        };
+    });
+
+    columnHeadFieldConfig = computed(() => {
+        const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
+        const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
+        const { pointPosition } = aiTable.context!;
+        const fields = this.fields();
+        return {
+            aiTable,
+            actions,
+            coordinate,
+            fields,
+            columnStartIndex,
+            columnStopIndex,
+            pointPosition: pointPosition(),
+            readonly,
+            maxFields
+        };
+    });
+
+    columnHeadFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+        return {
+            ...this.columnHeadFieldConfig(),
+            width: this.cellGroupClipWidth(),
+            x: this.frozenAreaWidth(),
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - 1,
+            height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });
 
