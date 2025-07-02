@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableFieldStatsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -20,6 +20,7 @@ import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -188,7 +189,7 @@ export class AITableRenderer {
         };
     });
 
-    columnHeadOrAddFieldConfig = computed(() => {
+    columnFrozenHeadFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
         const { pointPosition } = aiTable.context!;
@@ -203,6 +204,34 @@ export class AITableRenderer {
             pointPosition: pointPosition(),
             readonly,
             maxFields
+        };
+    });
+
+    columnHeadFieldConfig = computed(() => {
+        const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
+        const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
+        const { pointPosition } = aiTable.context!;
+        const fields = this.fields();
+        return {
+            aiTable,
+            actions,
+            coordinate,
+            fields,
+            columnStartIndex,
+            columnStopIndex,
+            pointPosition: pointPosition(),
+            readonly,
+            maxFields
+        };
+    });
+
+    columnFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+        return {
+            ...this.columnHeadFieldConfig(),
+            width: this.cellGroupClipWidth(),
+            x: this.frozenAreaWidth(),
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });
 

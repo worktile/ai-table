@@ -28,24 +28,26 @@ export type SystemFieldTypes =
     | AITableFieldType.updatedBy;
 
 export enum AITableStatType {
-    None = 0,
-    CountAll = 1,
-    Empty = 2,
-    Filled = 3,
-    Unique = 4,
-    PercentEmpty = 5,
-    PercentFilled = 6,
-    PercentUnique = 7,
-    Sum = 8,
-    Average = 9,
-    Max = 10,
-    Min = 11,
-    DateRangeOfDays = 12,
-    DateRangeOfMonths = 13,
-    Checked = 14,
-    UnChecked = 15,
-    PercentChecked = 16,
-    PercentUnChecked = 17
+    None = 'none',
+    CountAll = 'count_all',
+    Empty = 'empty',
+    Filled = 'filled',
+    Unique = 'unique',
+    PercentEmpty = 'percent_empty',
+    PercentFilled = 'percent_filled',
+    PercentUnique = 'percent_unique',
+    Sum = 'sum',
+    Average = 'average',
+    Max = 'max',
+    Min = 'min',
+    DateRangeOfDays = 'date_range_of_days',
+    DateRangeOfMonths = 'date_range_of_months',
+    Checked = 'checked',
+    UnChecked = 'unchecked',
+    PercentChecked = 'percent_checked',
+    PercentUnChecked = 'percent_unchecked',
+    EarliestTime = 'earliest_time',
+    LatestTime = 'latest_time'
 }
 
 export enum AITableFieldGroup {
