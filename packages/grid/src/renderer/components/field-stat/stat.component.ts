@@ -49,8 +49,6 @@ export class AITableFieldStat {
 
     config = input.required<AITableFieldStatConfig>();
 
-    textMeasure = TextMeasure();
-
     isActive = signal(false);
 
     availableTextWidth = computed(() => {
@@ -60,7 +58,6 @@ export class AITableFieldStat {
 
     textData = computed(() => {
         const textString = this.statValue() || '';
-        this.textMeasure.setFont({ fontSize: DEFAULT_FONT_SIZE });
         const availableTextWidth = this.availableTextWidth();
         const { text, textWidth } = drawer.textEllipsis({
             text: textString,
@@ -111,16 +108,20 @@ export class AITableFieldStat {
 
     records = computed(() => {
         const { aiTable } = this.config();
-        return aiTable.records;
+        return aiTable.gridData().records;
+    });
+
+    aiFieldConfig = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.context?.aiFieldConfig;
     });
 
     options = computed<FieldOptions>(() => {
-        const { aiTable } = this.config();
         return {
             field: this.field(),
             aiTable: {
                 context: {
-                    aiFieldConfig: () => aiTable.context?.aiFieldConfig()
+                    aiFieldConfig: this.aiFieldConfig()
                 }
             }
         };
@@ -130,12 +131,23 @@ export class AITableFieldStat {
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
-        const result = fieldModel.getStatFormatValue(records(), this.options());
-        return result;
+        const isShowSelectedCount = this.isShowSelectedCount();
+        if (isShowSelectedCount) {
+            const selectedRecords = this.config().aiTable.selection().selectedRecords;
+            return `已经选择 ${selectedRecords.size} 条记录`;
+        } else {
+            const result = fieldModel.getStatFormatValue(records, this.options());
+            return result;
+        }
+    });
+
+    containerBox = computed(() => {
+        const { height, width } = this.config();
+        return { height, width };
     });
 
     textConfig = computed(() => {
-        const { field, height, aiTable, width } = this.config();
+        const { height, width } = this.containerBox();
         const text = this.statValue();
         if (text) {
             const renderWidth = this.textData().width;
@@ -151,6 +163,13 @@ export class AITableFieldStat {
         }
 
         return null;
+    });
+
+    isShowSelectedCount = computed(() => {
+        const { columnIndex } = this.config();
+        const { aiTable } = this.config();
+        const selectedRecords = aiTable.selection().selectedRecords;
+        return selectedRecords.size > 0 && columnIndex === 0;
     });
 
     iconConfig = computed(() => {

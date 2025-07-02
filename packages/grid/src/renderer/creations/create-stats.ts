@@ -19,6 +19,7 @@ export const createFieldStats = (config: AITableFieldStatsConfig) => {
             aiTable,
             coordinate,
             actions,
+            columnIndex,
             x,
             y,
             width: columnWidth,
