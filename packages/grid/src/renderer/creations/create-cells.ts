@@ -73,11 +73,13 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         containerWidth: coordinate.containerWidth,
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
-                        hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag
+                        hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        readonly: aiTable.context?.readonly?.()
                     });
                     addRowLayout.render({
                         isHoverRow,
-                        isCheckedRow
+                        isCheckedRow,
+                        isDisabled: maxRecords ? aiTable.records().length >= maxRecords : false
                     });
                     break;
                 }

@@ -159,7 +159,7 @@ export class AITableGridBase implements OnInit {
     }
 
     addRecord(options?: AddRecordOptions) {
-        const records = this.aiTable.gridData().records;
+        const records = this.aiTable.records();
         const recordCount = records.length;
         if (this.aiMaxRecords() && recordCount >= this.aiMaxRecords()!) {
             return;
@@ -176,7 +176,7 @@ export class AITableGridBase implements OnInit {
     }
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
-        if (this.aiMaxFields() && this.aiTable.gridData().fields.length >= this.aiMaxFields()!) {
+        if (this.aiMaxFields() && this.aiTable.fields().length >= this.aiMaxFields()!) {
             return;
         }
         const field = createDefaultField(this.aiTable, AITableFieldType.text);

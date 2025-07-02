@@ -211,9 +211,10 @@ export const writeToAITable = async (
 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
     const lastRowIndex = aiTable.context!.linearRows().length - 1;
+    const recordsCount = aiTable.records().length;
     let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
-    if (maxRecords && lastRowIndex + appendRowCount > maxRecords) {
-        appendRowCount = maxRecords - lastRowIndex;
+    if (maxRecords && recordsCount + appendRowCount > maxRecords) {
+        appendRowCount = maxRecords - recordsCount;
         result.isPasteOverMaxRecords = true;
     }
     actions.addRecord({ count: appendRowCount });
@@ -223,9 +224,10 @@ export const writeToAITable = async (
     const copiedFieldLength = clipboardContent[0].length;
     const appendColCount = copiedFieldLength - (lastColIndex - startColIndex) - 1;
     const appendOffset = copiedFieldLength - appendColCount;
+    const fieldsCount = aiTable.fields().length;
 
     for (let i = 0; i < appendColCount; i++) {
-        if (maxFields && lastColIndex + i + 1 < maxFields) {
+        if (maxFields && fieldsCount + i + 1 < maxFields) {
             const originField = aiTableContent?.fields[appendOffset + i] || null;
             appendField(aiTable, originField, actions);
         } else {
