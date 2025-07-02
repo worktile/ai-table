@@ -51,6 +51,7 @@ export interface AITableCell {
     isHoverRow: boolean;
     isCheckedRow: boolean;
     width?: number;
+    isDisabled?: boolean;
 }
 
 export interface AITableCellStyle {
