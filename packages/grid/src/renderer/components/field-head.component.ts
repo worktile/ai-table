@@ -11,6 +11,7 @@ import {
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_SIZE,
     IconPathMap,
@@ -114,7 +115,7 @@ export class AITableFieldHead {
             width: Math.max(this.textData().width, AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH),
             height: height + 2,
             text: field.name,
-            lineHeight: 1.84
+            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT
         };
     });
 

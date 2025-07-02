@@ -6,6 +6,7 @@ import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_EDIT,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     EditPath
 } from '../../../constants';
@@ -57,7 +58,7 @@ export class AITableCellRichText extends CoverCellComponent {
                 width: textWidth,
                 fillStyle: Colors.primary,
                 height: rowHeight + 2,
-                lineHeight: 1.84,
+                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: false,
                 ellipsis: true,
                 zIndex

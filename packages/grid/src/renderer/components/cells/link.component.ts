@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { AI_TABLE_CELL_PADDING, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../../constants';
+import {
+    AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
+    AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_TEXT_LINE_HEIGHT,
+    Colors
+} from '../../../constants';
 import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableTextComponent } from '../text.component';
 import { AITableCoverCellConfig, AITableRender } from '../../../types';
@@ -57,7 +63,7 @@ export class AITableCellLink extends CoverCellComponent {
                 fillStyle: Colors.primary,
                 fill: Colors.primary,
                 height: rowHeight + 2,
-                lineHeight: 1.84,
+                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: true,
                 ellipsis: true,
                 textDecoration: 'underline',

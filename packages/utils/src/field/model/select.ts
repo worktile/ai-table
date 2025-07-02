@@ -1,9 +1,20 @@
 import _ from 'lodash';
-import { AITableField, SelectFieldValue, SelectSettings } from '../../types';
+import { AITableField, AITableStatType, SelectFieldValue, SelectSettings } from '../../types';
 import { FieldBase } from './field';
 import { isUndefinedOrNull, keyBy, idCreator, DEFAULT_COLORS } from '../../helps';
+import { DEFAULT_FIELD_STAT_TYPE_MAP } from '../../constants';
 
 export class SelectFieldBase extends FieldBase {
+    constructor() {
+        super([
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.None]!,
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.CountAll]!,
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Filled]!,
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Empty]!,
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.PercentFilled]!,
+            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.PercentEmpty]!
+        ]);
+    }
     override isValid(cellValue: SelectFieldValue): boolean {
         return Array.isArray(cellValue) || cellValue === null;
     }

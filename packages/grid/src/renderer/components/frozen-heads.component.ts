@@ -8,6 +8,7 @@ import {
     AI_TABLE_INDEX_FIELD_TEXT,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
+    AI_TABLE_TEXT_LINE_HEIGHT,
     Colors
 } from '../../constants';
 import { AITableCheckType, AITableColumnHeadsConfig, AITableSelectAllState } from '../../types';
@@ -165,7 +166,7 @@ export class AITableFrozenColumnHeads {
 
     textConfig = computed(() => {
         const text = AI_TABLE_INDEX_FIELD_TEXT;
-        const lineHeight = 1.84;
+        const lineHeight = AI_TABLE_TEXT_LINE_HEIGHT;
         const measureText = TextMeasure().measureText(text);
         return {
             x: AI_TABLE_CELL_PADDING + this.dragOccupyWidth() + measureText.width / 2,

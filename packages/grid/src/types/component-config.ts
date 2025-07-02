@@ -10,6 +10,25 @@ export interface AITableIconConfig extends Konva.ShapeConfig {
     disabled?: boolean;
 }
 
+export interface AITableBackgroundConfig extends Konva.ShapeConfig {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    fill?: string;
+    stroke?: string;
+    strokeWidth?: number;
+    opacity?: number;
+    name?: string;
+    hoverFill?: string;
+    hoverStroke?: string;
+    hoverStrokeWidth?: number;
+    hoverOpacity?: number;
+    hoverName?: string;
+    hoverWidth?: number;
+    hoverHeight?: number;
+}
+
 export interface AITableActionIconConfig extends AITableIconConfig {
     coordinate: Coordinate;
     coverBackground?: string;
@@ -66,6 +85,10 @@ export interface AITableColumnHeadsConfig {
 export interface AITableFieldStatsConfig {
     aiTable: AITable;
     actions: AITableActions;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
     coordinate: Coordinate;
     columnStartIndex: number;
     columnStopIndex: number;
@@ -95,6 +118,12 @@ export interface AITableCoverCellConfig {
     actions: {
         updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
     };
+}
+
+export interface AITableFillHandleConfig {
+    aiTable: AITable;
+    coordinate: Coordinate;
+    readonly: boolean;
 }
 
 export interface AITableTargetNameOptions {

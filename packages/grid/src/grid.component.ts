@@ -31,6 +31,7 @@ import {
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
+    AI_TABLE_FILL_HANDLE,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
@@ -70,7 +71,11 @@ import {
     isWindows,
     clearCells,
     FieldModelMap,
-    isVirtualKey
+    isVirtualKey,
+    setMouseStyle,
+    dragFillHighlightArea,
+    performFill,
+    AITableDragFillState
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -108,11 +113,20 @@ import _ from 'lodash';
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
 
-    private isDragSelecting = false;
-
     private isDragSelectionAutoScrolling = false;
 
-    private dragSelectionStart: AIRecordFieldIdPath | null = null;
+    private dragSelectState: {
+        isDragging: boolean;
+        startCell: AIRecordFieldIdPath | null;
+    } = {
+        isDragging: false,
+        startCell: null
+    };
+
+    private dragFillState: AITableDragFillState = {
+        isDragging: false,
+        sourceCells: new Set<string>()
+    };
 
     private notifyService = inject(ThyNotifyService);
 
@@ -420,13 +434,32 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.setDefaultPointPosition();
             }
             this.timer = null;
-            if (this.isDragSelecting) {
+
+            if (this.dragSelectState.isDragging || this.dragFillState.isDragging) {
                 const { fieldId, recordId } = getDetailByTargetName(curMousePosition.realTargetName);
                 if (fieldId && recordId) {
-                    const startCell = this.dragSelectionStart;
-                    const endCell: AIRecordFieldIdPath = [recordId, fieldId];
+                    let startCell: AIRecordFieldIdPath;
+                    let endCell: AIRecordFieldIdPath;
+                    let activeCell: AIRecordFieldIdPath | null = null;
+
+                    if (this.dragFillState.isDragging) {
+                        setMouseStyle('crosshair', this.containerElement());
+                        const { highlightStartCell, highlightEndCell } = dragFillHighlightArea(
+                            this.aiTable,
+                            this.dragFillState.sourceCells,
+                            recordId
+                        );
+
+                        activeCell = this.aiTable.selection().activeCell;
+                        startCell = highlightStartCell;
+                        endCell = highlightEndCell;
+                    } else {
+                        startCell = this.dragSelectState.startCell!;
+                        endCell = [recordId, fieldId];
+                    }
+
                     if (startCell && !!startCell.length) {
-                        this.aiTableGridSelectionService.selectCells(startCell, endCell);
+                        this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
                         this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
                     }
                 }
@@ -462,12 +495,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 return;
             case AI_TABLE_CELL:
                 if (!recordId || !fieldId) return;
-                const dragSelectionStart: AIRecordFieldIdPath = [recordId, fieldId];
-                this.updateDragSelectionState(true, dragSelectionStart);
+                const startCell: AIRecordFieldIdPath = [recordId, fieldId];
+                this.updateDragSelectState(true, startCell);
                 const [expandRecordId, expandFieldId] = this.aiTable.selection().expandCell || [null, null];
                 if (expandRecordId !== recordId || expandFieldId !== fieldId) {
-                    this.aiTableGridSelectionService.selectCells(dragSelectionStart);
+                    this.aiTableGridSelectionService.selectCells(startCell);
                 }
+                return;
+            case AI_TABLE_FILL_HANDLE:
+                if (!recordId || !fieldId) return;
+                this.updateDragFillState({
+                    isDragging: true,
+                    sourceCells: this.aiTable.selection().selectedCells
+                });
                 return;
             case AI_TABLE_ROW_DRAG:
                 if (!recordId) return;
@@ -494,12 +534,42 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
-        this.updateDragSelectionState(false, null);
+        this.updateDragSelectState(false, null);
+
+        if (this.dragFillState.isDragging) {
+            this.performFill(e);
+        }
+    }
+
+    private performFill(e: KoEventObject<MouseEvent>) {
+        const targetName = e.event.target.name();
+        const gridStage = e.event.currentTarget.getStage();
+        const pos = gridStage?.getPointerPosition();
+        if (pos == null) {
+            this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
+            return;
+        }
+        const { context } = this.aiTable;
+        const { x, y } = pos;
+        const curMousePosition = getMousePosition(
+            this.aiTable,
+            x,
+            y,
+            this.coordinate(),
+            AITable.getVisibleFields(this.aiTable),
+            context!,
+            targetName
+        );
+        const { recordId } = getDetailByTargetName(curMousePosition.realTargetName);
+        if (recordId) {
+            performFill(this.aiTable, this.dragFillState.sourceCells, recordId, this.actions);
+        }
+        this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
         if (!this.isDragSelectionAutoScrolling) {
-            this.updateDragSelectionState(false, null);
+            this.updateDragSelectState(false, null);
         }
         if (this.timer) {
             cancelAnimationFrame(this.timer);
@@ -725,14 +795,20 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
-                this.updateDragSelectionState(false, null);
+                this.updateDragSelectState(false, null);
                 this.aiTableGridSelectionService.clearSelection();
             });
     }
 
-    private updateDragSelectionState(isDragSelecting: boolean, dragSelectionStart: AIRecordFieldIdPath | null) {
-        this.isDragSelecting = isDragSelecting;
-        this.dragSelectionStart = dragSelectionStart;
+    private updateDragSelectState(isDragging: boolean, startCell: AIRecordFieldIdPath | null) {
+        this.dragSelectState = {
+            isDragging: isDragging,
+            startCell: startCell
+        };
+    }
+
+    private updateDragFillState(dragFillState: AITableDragFillState) {
+        this.dragFillState = dragFillState;
     }
 
     private resetScrolling = () => {
@@ -971,7 +1047,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.scrollControllerService.scroll({
             container: containerRect,
             target: position,
-            direction: isSelectionOnlyOnFrozenColumn ? 'vertical' : 'both',
+            direction: isSelectionOnlyOnFrozenColumn || this.dragFillState.isDragging ? 'vertical' : 'both',
             scrollableElement: {
                 horizontalElement: horizontalBarRef?.nativeElement,
                 verticalElement: verticalBarRef?.nativeElement
@@ -1006,7 +1082,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             },
             onAutoScrollEnd: () => {
                 this.isDragSelectionAutoScrolling = false;
-                this.updateDragSelectionState(false, null);
+                this.updateDragSelectState(false, null);
             }
         });
     }

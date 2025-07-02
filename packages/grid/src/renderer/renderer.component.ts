@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableFieldStatsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
@@ -17,8 +17,10 @@ import {
     AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
+import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -39,6 +41,7 @@ Konva.pixelRatio = 2;
         AITableAddField,
         AITableHoverRowHeads,
         AITableOtherRows,
+        AITableFillHandle,
         AITableFieldStats
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -150,7 +153,7 @@ export class AITableRenderer {
         return {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize - 1,
-            clipWidth: this.frozenAreaWidth(),
+            clipWidth: this.frozenAreaWidth() + 10,
             clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
         };
     });
@@ -186,7 +189,7 @@ export class AITableRenderer {
         };
     });
 
-    columnHeadOrAddFieldConfig = computed(() => {
+    columnFrozenHeadFieldConfig = computed(() => {
         const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
         const { pointPosition } = aiTable.context!;
@@ -201,6 +204,45 @@ export class AITableRenderer {
             pointPosition: pointPosition(),
             readonly,
             maxFields
+        };
+    });
+
+    columnHeadFieldConfig = computed(() => {
+        const { columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
+        const { aiTable, coordinate, readonly, maxFields, actions } = this.config();
+        const { pointPosition } = aiTable.context!;
+        const fields = this.fields();
+        return {
+            aiTable,
+            actions,
+            coordinate,
+            fields,
+            columnStartIndex,
+            columnStopIndex,
+            pointPosition: pointPosition(),
+            readonly,
+            maxFields
+        };
+    });
+
+    columnFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+        return {
+            ...this.columnHeadFieldConfig(),
+            width: this.cellGroupClipWidth(),
+            x: this.frozenAreaWidth(),
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            height: AI_TABLE_FIELD_STAT_HEIGHT
+        };
+    });
+    columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+        return {
+            ...this.columnHeadFieldConfig(),
+            width: this.cellGroupClipWidth(),
+            x: 0,
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            columnStartIndex: 0,
+            columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
+            height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });
 
@@ -219,6 +261,26 @@ export class AITableRenderer {
             actions,
             maxRecords
         };
+    });
+
+    readonly fillHandleConfig = computed<AITableFillHandleConfig>(() => {
+        return {
+            aiTable: this.config().aiTable,
+            coordinate: this.coordinate(),
+            readonly: this.readonly()
+        };
+    });
+
+    readonly isLastSelectedCellInFrozenColumn = computed(() => {
+        const { aiTable } = this.config();
+        const selectedCells = Array.from(aiTable.selection().selectedCells);
+        if (selectedCells.length === 0) return false;
+
+        const lastCell = selectedCells[selectedCells.length - 1];
+        const [, fieldId] = lastCell.split(':');
+        const columnIndex = aiTable.context!.visibleColumnsIndexMap().get(fieldId)!;
+
+        return AITable.isFrozenColumn(aiTable, columnIndex);
     });
 
     activeCellBorderConfig = computed(() => {

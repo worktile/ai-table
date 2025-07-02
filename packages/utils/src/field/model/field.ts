@@ -26,26 +26,28 @@ export abstract class FieldBase {
         });
     }
 
-    private stat(field: AITableField, records: AITableRecords) {
-        const exec = this.statTypeMap.get(field.stat_type!)?.exec;
+    private stat(records: AITableRecords, options: FieldOptions) {
+        const { field } = options;
+        const exec = this.statTypeMap.get(field!.stat_type!)?.exec;
         if (exec) {
-            return exec(records, field);
+            return exec(records, options);
         }
         return null;
     }
 
-    private statFormat(statValue: number, field: AITableField) {
-        const format = this.statTypeMap.get(field.stat_type!)?.format;
+    private statFormat(statValue: number, options: FieldOptions) {
+        const { field } = options;
+        const format = this.statTypeMap.get(field!.stat_type!)?.format;
         if (format) {
             return format.replace('{{statValue}}', statValue.toString());
         }
         return statValue.toString();
     }
 
-    getStatFormatValue(field: AITableField, records: AITableRecords) {
-        const statValue = this.stat(field, records);
+    getStatFormatValue(records: AITableRecords, options: FieldOptions) {
+        const statValue = this.stat(records, options);
         if (!isNil(statValue)) {
-            return this.statFormat(statValue, field);
+            return this.statFormat(statValue, options);
         }
         return null;
     }

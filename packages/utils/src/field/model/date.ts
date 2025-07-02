@@ -1,6 +1,7 @@
 import { FieldBase } from './field';
-import { DateFieldValue } from '../../types';
+import { AITableFieldStatTypeItemInfo, AITableStatType, DateFieldValue } from '../../types';
 import { isEmpty } from '../../helps/is';
+import { DEFAULT_FIELD_STAT_TYPE_ITEMS, DEFAULT_FIELD_STAT_TYPE_MAP } from '../../constants';
 
 export const isDateValid = (cellValue: DateFieldValue): cellValue is DateFieldValue => {
     return (
@@ -10,6 +11,10 @@ export const isDateValid = (cellValue: DateFieldValue): cellValue is DateFieldVa
 };
 
 export class DateFieldBase extends FieldBase {
+    constructor(statTypes?: AITableFieldStatTypeItemInfo[]) {
+        super(statTypes || DEFAULT_FIELD_STAT_TYPE_ITEMS);
+    }
+
     override isValid(cellValue: DateFieldValue): boolean {
         return isDateValid(cellValue);
     }
@@ -63,4 +68,3 @@ export function isDateAndReturnDate(input: any): Date | null {
         return null;
     }
 }
-

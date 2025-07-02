@@ -1,4 +1,4 @@
-import { fromUnixTime, subDays } from 'date-fns';
+import { differenceInDays, differenceInMonths, fromUnixTime, subDays } from 'date-fns';
 import { isArray, TinyDate } from 'ngx-tethys/util';
 import {
     AITableFilterCondition,
@@ -12,13 +12,26 @@ import {
     FieldValue,
     isEmpty,
     isUndefinedOrNull,
-    isDateAndReturnDate
+    isDateAndReturnDate,
+    DEFAULT_FIELD_STAT_TYPE_ITEMS,
+    AITableStatType
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
 import { transformToCellText } from '../../cell';
+import { FIELD_STAT_TYPE_MAP } from '../../../constants/field-stat';
 
 export class DateField extends DateFieldBase implements FieldOperable<string, DateFieldValue> {
+    constructor() {
+        super([
+            ...DEFAULT_FIELD_STAT_TYPE_ITEMS,
+            FIELD_STAT_TYPE_MAP[AITableStatType.EarliestTime]!,
+            FIELD_STAT_TYPE_MAP[AITableStatType.LatestTime]!,
+            FIELD_STAT_TYPE_MAP[AITableStatType.DateRangeOfDays]!,
+            FIELD_STAT_TYPE_MAP[AITableStatType.DateRangeOfMonths]!
+        ]);
+    }
+
     override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
         return transformToCellText(cellValue, options);
     }
