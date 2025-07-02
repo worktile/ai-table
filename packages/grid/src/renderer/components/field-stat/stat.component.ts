@@ -132,7 +132,7 @@ export class AITableFieldStat {
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
         const selectedInfo = this.selectedInfo();
-        if (selectedInfo.isSelected) {
+        if (this.isFirstColumn() && selectedInfo.isSelected) {
             if (selectedInfo.selectedType === 'records') {
                 return `已经选择 ${selectedInfo.selectedCount} 条记录`;
             } else {
@@ -169,20 +169,24 @@ export class AITableFieldStat {
     });
 
     selectedInfo = computed(() => {
-        const { columnIndex } = this.config();
         const { aiTable } = this.config();
         const selectedRecords = aiTable.selection().selectedRecords;
         const selectedCells = aiTable.selection().selectedCells;
 
         const selectedCount = selectedRecords.size || selectedCells.size;
         const selectedType = selectedRecords.size > 0 ? 'records' : selectedCells.size > 0 ? 'cells' : null;
-        const isSelected = (selectedRecords.size > 0 || selectedCells.size > 1) && columnIndex === 0;
+        const isSelected = selectedRecords.size > 0 || selectedCells.size > 1;
         const result = {
             isSelected,
             selectedType,
             selectedCount
         };
         return result;
+    });
+
+    isFirstColumn = computed(() => {
+        const { columnIndex } = this.config();
+        return columnIndex === 0;
     });
 
     iconConfig = computed(() => {
