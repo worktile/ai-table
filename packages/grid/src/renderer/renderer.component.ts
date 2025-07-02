@@ -19,7 +19,7 @@ import {
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import { AI_TABLE_FIELD_STAT_HEIGHT } from '../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -131,7 +131,7 @@ export class AITableRenderer {
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
-            clipX: this.frozenAreaWidth(),
+            clipX: this.frozenAreaWidth() + 1,
             clipY: 0,
             clipWidth: this.cellGroupClipWidth(),
             clipHeight: this.containerHeight()
@@ -223,12 +223,12 @@ export class AITableRenderer {
         };
     });
 
-    columnHeadFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+    columnFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
         return {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - 1,
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
             height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });

@@ -23,27 +23,6 @@ export class AITableFieldStats {
 
     isHover = signal(false);
 
-    bgConfig = computed(() => {
-        const { x, y, width, height, coordinate } = this.config();
-        return {
-            coordinate,
-            x,
-            y,
-            name: generateTargetName({
-                targetName: 'sssffff',
-                mouseStyle: 'pointer'
-            }),
-            width: width,
-            height: height,
-            // fill: Colors.black,
-            hoverFill: Colors.gray100,
-            stroke: Colors.black,
-            strokeWidth: 1,
-            opacity: 1,
-            listening: true
-        };
-    });
-
     onMouseenter(e: KoEventObject<MouseEvent>) {
         this.isHover.set(true);
     }

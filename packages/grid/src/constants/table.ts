@@ -41,6 +41,7 @@ export const AI_TABLE_CELL = 'AI_TABLE_CELL'; // 单元格标识
 // 因为 dom 的边距 12 是不包含 边框的，所以加上边框 2px  才能跟 编辑里面的内容对其；
 export const AI_TABLE_CELL_PADDING = 14; // 单元格内容的内边距
 export const AI_TABLE_CELL_BORDER = 2; // 单元格边框宽度
+export const AI_TABLE_CELL_LINE_BORDER = 1; // 单元格线宽度
 export const AI_TABLE_CELL_MULTI_PADDING_TOP = 10;
 export const AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP = 4;
 export const AI_TABLE_CELL_MULTI_PADDING_LEFT = 4;
@@ -96,3 +97,4 @@ export const AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD = AI_TABLE_FIELD_HEAD_HEIGHT / 2
 export const AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD = AI_TABLE_FIELD_HEAD_HEIGHT / 2;
 
 export const AI_TABLE_FIELD_STAT_HEIGHT = 48; // 字段统计高度
+export const AI_TABLE_TEXT_LINE_HEIGHT = 1.84; // 默认文本行高

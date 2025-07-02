@@ -3,7 +3,9 @@ import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape } from '../../../angular-konva';
 import {
     AI_TABLE_ACTION_COMMON_SIZE,
+    AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_TEXT_LINE_HEIGHT,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_FIELD_STAT_BG,
@@ -91,12 +93,12 @@ export class AITableFieldStat {
                 fieldId: field._id,
                 mouseStyle: 'pointer'
             }),
-            width: width - 1,
-            height: height - 1,
+            width: width,
+            height: height,
             fill: Colors.white,
             hoverFill: Colors.gray100,
             stroke: Colors.gray200,
-            strokeWidth: 1,
+            strokeWidth: AI_TABLE_CELL_LINE_BORDER,
             opacity: 1,
             listening: true
         };
@@ -141,9 +143,9 @@ export class AITableFieldStat {
                 x: width - AI_TABLE_ACTION_COMMON_SIZE - renderWidth,
                 y: 0,
                 width: renderWidth,
-                height: height + 2,
+                height: height,
                 text: this.textData().text,
-                lineHeight: 1.84,
+                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: false
             };
         }
