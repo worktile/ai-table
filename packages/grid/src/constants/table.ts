@@ -33,6 +33,7 @@ export const AI_TABLE_FIELD_HEAD_MORE = 'AI_TABLE_FIELD_HEAD_MORE'; // 更多图
 export const AI_TABLE_FIELD_HEAD_OPACITY_LINE = 'AI_TABLE_FIELD_HEAD_OPACITY_LINE'; // 字段列头透明线
 export const AI_TABLE_FIELD_STAT_BG = 'AI_TABLE_FIELD_STAT_BG'; // 统计按钮背景
 export const AI_TABLE_ROW_DRAG = 'AI_TABLE_ROW_DRAG'; // 行拖拽
+export const AI_TABLE_FILL_HANDLE = 'AI_TABLE_FILL_HANDLE'; // 填充手柄
 
 export const AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS = '.ai-table-prevent-clear-selection';
 

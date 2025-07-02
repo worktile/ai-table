@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.23](https://github.com/worktile/ai-table/compare/0.1.21...0.1.23) (2025-07-02)
+
+
+### Bug Fixes
+
+* **grid:** error when modifying select value ([5c48643](https://github.com/worktile/ai-table/commit/5c4864334beb9cd4662754f51e1ebf273fb63300))
+
+
+### Features
+
+* #WIK-18342 统计整体技术方案设计 ([#543](https://github.com/worktile/ai-table/issues/543)) ([f3cab46](https://github.com/worktile/ai-table/commit/f3cab46451203a3f5e3c0e9df7b0347d460d8a66)), closes [#WIK-18342](https://github.com/worktile/ai-table/issues/WIK-18342)
+* **grid:** fill-handle is fixed at the lower right corner of the selected cell ([8836873](https://github.com/worktile/ai-table/commit/88368730897c2286de6bed1cc49067bf68685d94))
+* **grid:** support drag to fill fields ([#546](https://github.com/worktile/ai-table/issues/546)) ([716371f](https://github.com/worktile/ai-table/commit/716371ff978bbcb63f4fe40e7ba96e7d52aa8628))
+
+
+
 ## [0.1.21](https://github.com/worktile/ai-table/compare/0.1.20...0.1.21) (2025-06-24)
 
 

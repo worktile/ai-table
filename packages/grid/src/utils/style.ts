@@ -3,6 +3,7 @@ import {
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
+    AI_TABLE_FILL_HANDLE,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_SELECT_CHECKBOX
@@ -19,6 +20,7 @@ export const handleMouseStyle = (
     const { targetName, mouseStyle } = getDetailByTargetName(realTargetName);
     if (mouseStyle) return setMouseStyle(mouseStyle, container);
     if (areaType === AITableAreaType.none) return setMouseStyle('default', container);
+
     switch (targetName) {
         case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
         case AI_TABLE_FIELD_HEAD_MORE:
@@ -35,6 +37,9 @@ export const handleMouseStyle = (
         }
         case AI_TABLE_ROW_DRAG: {
             return setMouseStyle('pointer', container);
+        }
+        case AI_TABLE_FILL_HANDLE: {
+            return setMouseStyle('crosshair', container);
         }
 
         default:
