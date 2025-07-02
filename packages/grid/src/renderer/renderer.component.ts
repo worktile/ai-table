@@ -234,6 +234,17 @@ export class AITableRenderer {
             height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });
+    columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+        return {
+            ...this.columnHeadFieldConfig(),
+            width: this.cellGroupClipWidth(),
+            x: 0,
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            columnStartIndex: 0,
+            columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
+            height: AI_TABLE_FIELD_STAT_HEIGHT
+        };
+    });
 
     cellsConfig = computed<AITableCellsConfig>(() => {
         const { aiTable, readonly, coordinate, references, actions, maxRecords } = this.config();

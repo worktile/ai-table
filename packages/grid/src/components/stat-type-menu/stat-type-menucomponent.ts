@@ -10,12 +10,10 @@ import {
     output,
     signal
 } from '@angular/core';
-import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
-import { ThyIcon } from 'ngx-tethys/icon';
-import { AITableField, AITableFieldStatTypeItemInfo } from '@ai-table/utils';
-import { AITableFieldMenuItem } from '../../types/field';
+import { AITableField, AITableFieldStatTypeItemInfo, AITableStatType } from '@ai-table/utils';
 import { AITable } from '../../core';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'ai-table-stat-type-menu',
@@ -24,7 +22,7 @@ import { AITable } from '../../core';
     host: {
         class: 'stat-type-menu'
     },
-    imports: [ThyDropdownMenuItemDirective]
+    imports: [ThyDropdownMenuItemDirective, NgClass]
 })
 export class AITableStatTypeMenu extends ThyDropdownAbstractMenu {
     field = input.required<AITableField>();
@@ -34,6 +32,8 @@ export class AITableStatTypeMenu extends ThyDropdownAbstractMenu {
     statMenus = input.required<AITableFieldStatTypeItemInfo[]>();
 
     menuClick = output<{ menu: AITableFieldStatTypeItemInfo; field: AITableField }>();
+
+    selectStatType = computed(() => this.field().stat_type || AITableStatType.None);
 
     execute(menu: AITableFieldStatTypeItemInfo) {
         this.menuClick.emit({
