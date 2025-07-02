@@ -131,10 +131,13 @@ export class AITableFieldStat {
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
-        const isShowSelectedCount = this.isShowSelectedCount();
-        if (isShowSelectedCount) {
-            const selectedRecords = this.config().aiTable.selection().selectedRecords;
-            return `已经选择 ${selectedRecords.size} 条记录`;
+        const selectedInfo = this.selectedInfo();
+        if (selectedInfo.isSelected) {
+            if (selectedInfo.selectedType === 'records') {
+                return `已经选择 ${selectedInfo.selectedCount} 条记录`;
+            } else {
+                return `已经选择 ${selectedInfo.selectedCount} 个单元格`;
+            }
         } else {
             const result = fieldModel.getStatFormatValue(records, this.options());
             return result;
@@ -165,11 +168,21 @@ export class AITableFieldStat {
         return null;
     });
 
-    isShowSelectedCount = computed(() => {
+    selectedInfo = computed(() => {
         const { columnIndex } = this.config();
         const { aiTable } = this.config();
         const selectedRecords = aiTable.selection().selectedRecords;
-        return selectedRecords.size > 0 && columnIndex === 0;
+        const selectedCells = aiTable.selection().selectedCells;
+
+        const selectedCount = selectedRecords.size || selectedCells.size;
+        const selectedType = selectedRecords.size > 0 ? 'records' : selectedCells.size > 0 ? 'cells' : null;
+        const isSelected = (selectedRecords.size > 0 || selectedCells.size > 1) && columnIndex === 0;
+        const result = {
+            isSelected,
+            selectedType,
+            selectedCount
+        };
+        return result;
     });
 
     iconConfig = computed(() => {
