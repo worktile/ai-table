@@ -49,8 +49,6 @@ export class AITableFieldStat {
 
     config = input.required<AITableFieldStatConfig>();
 
-    textMeasure = TextMeasure();
-
     isActive = signal(false);
 
     availableTextWidth = computed(() => {
@@ -60,7 +58,6 @@ export class AITableFieldStat {
 
     textData = computed(() => {
         const textString = this.statValue() || '';
-        this.textMeasure.setFont({ fontSize: DEFAULT_FONT_SIZE });
         const availableTextWidth = this.availableTextWidth();
         const { text, textWidth } = drawer.textEllipsis({
             text: textString,
@@ -111,16 +108,20 @@ export class AITableFieldStat {
 
     records = computed(() => {
         const { aiTable } = this.config();
-        return aiTable.records;
+        return aiTable.gridData().records;
+    });
+
+    aiFieldConfig = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.context?.aiFieldConfig;
     });
 
     options = computed<FieldOptions>(() => {
-        const { aiTable } = this.config();
         return {
             field: this.field(),
             aiTable: {
                 context: {
-                    aiFieldConfig: () => aiTable.context?.aiFieldConfig()
+                    aiFieldConfig: this.aiFieldConfig()
                 }
             }
         };
@@ -130,12 +131,26 @@ export class AITableFieldStat {
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
-        const result = fieldModel.getStatFormatValue(records(), this.options());
-        return result;
+        const selectedInfo = this.selectedInfo();
+        if (this.isFirstColumn() && selectedInfo.isSelected) {
+            if (selectedInfo.selectedType === 'records') {
+                return `已经选择 ${selectedInfo.selectedCount} 条记录`;
+            } else {
+                return `已经选择 ${selectedInfo.selectedCount} 个单元格`;
+            }
+        } else {
+            const result = fieldModel.getStatFormatValue(records, this.options());
+            return result;
+        }
+    });
+
+    containerBox = computed(() => {
+        const { height, width } = this.config();
+        return { height, width };
     });
 
     textConfig = computed(() => {
-        const { field, height, aiTable, width } = this.config();
+        const { height, width } = this.containerBox();
         const text = this.statValue();
         if (text) {
             const renderWidth = this.textData().width;
@@ -151,6 +166,27 @@ export class AITableFieldStat {
         }
 
         return null;
+    });
+
+    selectedInfo = computed(() => {
+        const { aiTable } = this.config();
+        const selectedRecords = aiTable.selection().selectedRecords;
+        const selectedCells = aiTable.selection().selectedCells;
+
+        const selectedCount = selectedRecords.size || selectedCells.size;
+        const selectedType = selectedRecords.size > 0 ? 'records' : selectedCells.size > 0 ? 'cells' : null;
+        const isSelected = selectedRecords.size > 0 || selectedCells.size > 1;
+        const result = {
+            isSelected,
+            selectedType,
+            selectedCount
+        };
+        return result;
+    });
+
+    isFirstColumn = computed(() => {
+        const { columnIndex } = this.config();
+        return columnIndex === 0;
     });
 
     iconConfig = computed(() => {

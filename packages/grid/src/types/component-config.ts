@@ -67,6 +67,7 @@ export interface AITableFieldStatConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     actions: AITableActions;
+    columnIndex: number;
     x?: number;
     y?: number;
     width: number;
