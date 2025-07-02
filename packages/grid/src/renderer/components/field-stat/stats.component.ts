@@ -31,13 +31,5 @@ export class AITableFieldStats {
         this.isHover.set(false);
     }
 
-    statConfigs = computed(() => {
-        const { coordinate, columnStartIndex } = this.config();
-        const { frozenColumnCount } = coordinate;
-
-        return createFieldStats({
-            ...this.config(),
-            columnStartIndex: Math.max(columnStartIndex, frozenColumnCount)
-        });
-    });
+    statConfigs = computed(() => createFieldStats(this.config()));
 }
