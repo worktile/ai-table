@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
+import { AITableCellsConfig, AITableFieldStatsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
