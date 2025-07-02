@@ -53,7 +53,7 @@ export class AITableAddField {
         const fields = this.config().fields || [];
         const index = this.config().columnStopIndex;
         const fieldId = fields.length && index < fields.length ? fields[index]._id : '';
-        const disabled = maxFields && aiTable.gridData().fields.length >= maxFields;
+        const disabled = maxFields && aiTable.fields().length >= maxFields;
         return {
             name: generateTargetName({
                 targetName: AI_TABLE_FIELD_ADD_BUTTON,
@@ -84,7 +84,7 @@ export class AITableAddField {
             fill: Colors.gray600,
             listening: false,
             visible: !readonly,
-            disabled: maxFields ? aiTable.gridData().fields.length >= maxFields : false
+            disabled: maxFields ? aiTable.fields().length >= maxFields : false
         };
     });
 }
