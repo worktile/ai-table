@@ -234,7 +234,7 @@ export class AITableRenderer {
             height: AI_TABLE_FIELD_STAT_HEIGHT
         };
     });
-    columnFrozenHeadFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
+    columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
         return {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
