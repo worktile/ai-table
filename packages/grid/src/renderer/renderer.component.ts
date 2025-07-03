@@ -1,12 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableFieldStatsConfig, AITableFillHandleConfig, AITableRendererConfig } from '../types';
+import {
+    AITableBackgroundConfig,
+    AITableCellsConfig,
+    AITableFieldStatsConfig,
+    AITableFillHandleConfig,
+    AITableRendererConfig
+} from '../types';
 import { getVisibleRangeInfo } from '../utils';
 import {
     AITableAddField,
+    AITableBackground,
     AITableCells,
     AITableColumnHeads,
     AITableFrozenCells,
@@ -20,7 +27,7 @@ import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET } from '../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET, Colors } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -42,7 +49,8 @@ Konva.pixelRatio = 2;
         AITableHoverRowHeads,
         AITableOtherRows,
         AITableFillHandle,
-        AITableFieldStats
+        AITableFieldStats,
+        AITableBackground
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -64,6 +72,10 @@ export class AITableRenderer {
     koDblclick = output<KoEventObject<MouseEvent>>();
 
     koMouseleave = output<KoEventObject<MouseEvent>>();
+
+    statContainerHeight = AI_TABLE_FIELD_STAT_HEIGHT + AI_TABLE_CELL_LINE_BORDER * 2;
+
+    isHoverStatContainer = signal(false);
 
     fields = computed(() => {
         return AITable.getVisibleFields(this.config().aiTable);
@@ -87,6 +99,10 @@ export class AITableRenderer {
 
     containerHeight = computed<number>(() => {
         return this.config().containerHeight;
+    });
+
+    gridContainerHeight = computed<number>(() => {
+        return this.containerHeight() - this.statContainerHeight;
     });
 
     scrollState = computed(() => {
@@ -127,7 +143,16 @@ export class AITableRenderer {
             clipX: 0,
             clipY: 0,
             clipWidth: this.containerWidth(),
-            clipHeight: this.containerHeight()
+            clipHeight: this.gridContainerHeight()
+        };
+    });
+
+    statGroupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            x: 0,
+            y: this.containerHeight() - this.statContainerHeight - AI_TABLE_CELL_LINE_BORDER,
+            width: this.containerWidth(),
+            height: this.statContainerHeight
         };
     });
 
@@ -136,7 +161,7 @@ export class AITableRenderer {
             clipX: this.frozenAreaWidth() + 1,
             clipY: 0,
             clipWidth: this.cellGroupClipWidth(),
-            clipHeight: this.containerHeight()
+            clipHeight: this.gridContainerHeight()
         };
     });
 
@@ -145,7 +170,7 @@ export class AITableRenderer {
             clipX: this.frozenAreaWidth() - 1,
             clipY: this.coordinate()!.rowInitSize - 1,
             clipWidth: this.containerWidth() - this.frozenAreaWidth(),
-            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
         };
     });
 
@@ -154,7 +179,7 @@ export class AITableRenderer {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize - 1,
             clipWidth: this.frozenAreaWidth() + 10,
-            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
         };
     });
 
@@ -163,7 +188,7 @@ export class AITableRenderer {
             clipX: 0,
             clipY: this.coordinate()!.rowInitSize + 1,
             clipWidth: this.frozenAreaWidth(),
-            clipHeight: this.containerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
         };
     });
 
@@ -230,19 +255,38 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
-            height: AI_TABLE_FIELD_STAT_HEIGHT
+            y: AI_TABLE_CELL_LINE_BORDER,
+            height: AI_TABLE_FIELD_STAT_HEIGHT,
+            isHoverStatContainer: this.isHoverStatContainer()
         };
     });
+
+    columnFieldStatsBgConfig = computed<AITableBackgroundConfig>(() => {
+        return {
+            x: 0,
+            y: 0,
+            width: this.containerWidth(),
+            height: AI_TABLE_FIELD_STAT_HEIGHT + AI_TABLE_CELL_LINE_BORDER * 2,
+            fill: Colors.white,
+            stroke: Colors.gray200,
+            strokeWidth: AI_TABLE_CELL_LINE_BORDER,
+            opacity: 1,
+            borders: [true, false, true, false],
+            listening: true,
+            coordinate: this.coordinate()
+        };
+    });
+
     columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
         return {
             ...this.columnHeadFieldConfig(),
-            width: this.cellGroupClipWidth(),
+            width: this.frozenAreaWidth(),
             x: 0,
-            y: this.containerHeight() - AI_TABLE_FIELD_STAT_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            y: AI_TABLE_CELL_LINE_BORDER,
             columnStartIndex: 0,
             columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
-            height: AI_TABLE_FIELD_STAT_HEIGHT
+            height: AI_TABLE_FIELD_STAT_HEIGHT,
+            isHoverStatContainer: this.isHoverStatContainer()
         };
     });
 
@@ -333,5 +377,9 @@ export class AITableRenderer {
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
+    }
+
+    onStatContainerHover(isHover: boolean) {
+        this.isHoverStatContainer.set(isHover);
     }
 }

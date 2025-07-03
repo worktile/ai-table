@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape } from '../../../angular-konva';
 import {
@@ -31,7 +31,12 @@ import { drawer } from '../../drawers/drawer';
     selector: 'ai-table-field-stat',
     template: `
         <ko-group [config]="groupConfig()">
-            <ai-table-background [config]="bgConfig()" (koClick)="clickStat($event)" [isActive]="isActive()"></ai-table-background>
+            <ai-table-background
+                [config]="bgConfig()"
+                (koClick)="clickStat($event)"
+                [isActive]="isActive()"
+                (hover)="onHoverChange($event)"
+            ></ai-table-background>
 
             @if (textConfig()) {
                 <ko-group>
@@ -49,6 +54,8 @@ export class AITableFieldStat {
 
     config = input.required<AITableFieldStatConfig>();
 
+    hover = output<boolean>();
+
     isActive = signal(false);
 
     availableTextWidth = computed(() => {
@@ -57,7 +64,7 @@ export class AITableFieldStat {
     });
 
     textData = computed(() => {
-        const textString = this.statValue() || '';
+        const textString = this.renderText() || '';
         const availableTextWidth = this.availableTextWidth();
         const { text, textWidth } = drawer.textEllipsis({
             text: textString,
@@ -83,8 +90,8 @@ export class AITableFieldStat {
         const { field, width, height, coordinate } = this.config();
         return {
             coordinate,
-            x: AI_TABLE_OFFSET,
-            y: AI_TABLE_OFFSET,
+            x: 0,
+            y: 0,
             name: generateTargetName({
                 targetName: AI_TABLE_FIELD_STAT_BG,
                 fieldId: field._id,
@@ -94,8 +101,6 @@ export class AITableFieldStat {
             height: height,
             fill: Colors.white,
             hoverFill: Colors.gray100,
-            stroke: Colors.gray200,
-            strokeWidth: AI_TABLE_CELL_LINE_BORDER,
             opacity: 1,
             listening: true
         };
@@ -116,18 +121,22 @@ export class AITableFieldStat {
         return aiTable.context?.aiFieldConfig;
     });
 
+    aiTable = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable;
+    });
+
     options = computed<FieldOptions>(() => {
+        const aiTable = this.aiTable();
         return {
             field: this.field(),
-            aiTable: {
-                context: {
-                    aiFieldConfig: this.aiFieldConfig()
-                }
-            }
+            aiTable
         };
     });
 
-    statValue = computed(() => {
+    isHoverStatContainer = computed(() => this.config().isHoverStatContainer);
+
+    renderText = computed(() => {
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
@@ -140,6 +149,9 @@ export class AITableFieldStat {
             }
         } else {
             const result = fieldModel.getStatFormatValue(records, this.options());
+            if (!result && this.isHoverStatContainer()) {
+                return `不展示`;
+            }
             return result;
         }
     });
@@ -151,7 +163,7 @@ export class AITableFieldStat {
 
     textConfig = computed(() => {
         const { height, width } = this.containerBox();
-        const text = this.statValue();
+        const text = this.renderText();
         if (text) {
             const renderWidth = this.textData().width;
             return {
@@ -168,14 +180,24 @@ export class AITableFieldStat {
         return null;
     });
 
-    selectedInfo = computed(() => {
-        const { aiTable } = this.config();
+    selectedRecordCount = computed(() => {
+        const aiTable = this.aiTable();
         const selectedRecords = aiTable.selection().selectedRecords;
-        const selectedCells = aiTable.selection().selectedCells;
+        return selectedRecords.size;
+    });
 
-        const selectedCount = selectedRecords.size || selectedCells.size;
-        const selectedType = selectedRecords.size > 0 ? 'records' : selectedCells.size > 0 ? 'cells' : null;
-        const isSelected = selectedRecords.size > 0 || selectedCells.size > 1;
+    selectedCellCount = computed(() => {
+        const aiTable = this.aiTable();
+        const selectedCells = aiTable.selection().selectedCells;
+        return selectedCells.size;
+    });
+
+    selectedInfo = computed(() => {
+        const selectedRecordCount = this.selectedRecordCount();
+        const selectedCellCount = this.selectedCellCount();
+        const selectedCount = selectedRecordCount || selectedCellCount;
+        const selectedType = selectedRecordCount > 0 ? 'records' : selectedCellCount > 0 ? 'cells' : null;
+        const isSelected = selectedRecordCount > 0 || selectedCellCount > 1;
         const result = {
             isSelected,
             selectedType,
@@ -205,12 +227,14 @@ export class AITableFieldStat {
         };
     });
 
+    onHoverChange(isHover: boolean) {
+        this.hover.emit(this.isActive() || isHover);
+    }
+
     clickStat(e: KoEventObject<MouseEvent>) {
         e.event.evt.stopPropagation();
         this.isActive.set(true);
         const { aiTable, coordinate, field, actions } = this.config();
-        const { pointPosition } = aiTable.context!;
-
         const statRect = e.event.target.getClientRect();
         const fieldGroupRect = e.event.target.getParent()?.getParent()?.getClientRect()!;
         const containerRect = coordinate!.container.getBoundingClientRect();
@@ -253,6 +277,7 @@ export class AITableFieldStat {
 
         ref.afterClosed().subscribe(() => {
             this.isActive.set(false);
+            this.hover.emit(false);
         });
     }
 }
