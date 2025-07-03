@@ -73,12 +73,13 @@ export const AI_TABLE_FIELD_ITEM_MARGIN_RIGHT = 8; // 文件图标之间的间�
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
 export const AI_TABLE_OPTION_ITEM_FONT_SIZE = 14;
+export const AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE = 12;
 export const AI_TABLE_OPTION_ITEM_RADIUS = 18;
 export const AI_TABLE_TAG_PADDING = 12;
 export const AI_TABLE_TAG_FONT_SIZE = 12;
 
 export const AI_TABLE_PIECE_WIDTH = 10;
-export const AI_TABLE_PIECE_RADIUS = 2;
+export const AI_TABLE_PIECE_RADIUS = 4;
 export const AI_TABLE_COMMON_FONT_SIZE = 14;
 export const AI_TABLE_DOT_RADIUS = 5;
 
