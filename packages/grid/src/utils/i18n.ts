@@ -39,10 +39,18 @@ export enum AITableGridI18nKey {
     fieldTypeUpdatedAt = 'fieldTypeUpdatedAt',
     fieldGroupBase = 'fieldGroupBase',
     fieldGroupAdvanced = 'fieldGroupAdvanced',
-    rowAddFilterTooltip = 'rowAddFilterTooltip'
+    rowAddFilterTooltip = 'rowAddFilterTooltip',
+    earliestTime = 'earliestTime',
+    earliestTimeResult = 'earliestTimeResult',
+    latestTime = 'latestTime',
+    latestTimeResult = 'latestTimeResult',
+    dateRangeOfDays = 'dateRangeOfDays',
+    dateRangeOfDaysResult = 'dateRangeOfDaysResult',
+    dateRangeOfMonths = 'dateRangeOfMonths',
+    dateRangeOfMonthsResult = 'dateRangeOfMonthsResult'
 }
 
-const AITableI18nText = {
+export const AITableGridI18nText = {
     [AITableGridI18nKey.dataPickerPlaceholder]: '选择日期',
     [AITableGridI18nKey.linkTooltip]: '链接',
     [AITableGridI18nKey.invalidLinkFormat]: '链接格式不正确',
@@ -81,11 +89,19 @@ const AITableI18nText = {
     [AITableGridI18nKey.fieldTypeUpdatedAt]: '更新时间',
     [AITableGridI18nKey.fieldGroupBase]: '基础',
     [AITableGridI18nKey.fieldGroupAdvanced]: '高级',
-    [AITableGridI18nKey.rowAddFilterTooltip]: '本记录已被筛选过滤，点击该记录以外位置将被隐藏'
+    [AITableGridI18nKey.rowAddFilterTooltip]: '本记录已被筛选过滤，点击该记录以外位置将被隐藏',
+    [AITableGridI18nKey.earliestTime]: '最早时间',
+    [AITableGridI18nKey.earliestTimeResult]: '最早时间 {{statValue}}',
+    [AITableGridI18nKey.latestTime]: '最晚时间',
+    [AITableGridI18nKey.latestTimeResult]: '最晚时间 {{statValue}}',
+    [AITableGridI18nKey.dateRangeOfDays]: '时间范围(日)',
+    [AITableGridI18nKey.dateRangeOfDaysResult]: '时间范围 {{statValue}} 天',
+    [AITableGridI18nKey.dateRangeOfMonths]: '时间范围(月)',
+    [AITableGridI18nKey.dateRangeOfMonthsResult]: '时间范围 {{statValue}} 月'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableGridI18nKey): string => {
-    return AITableI18nText[key] || key;
+    return AITableGridI18nText[key] || key;
 };
 
 export const getI18nTextByKey = (aiTable: AITable, key: AITableGridI18nKey | string): string => {

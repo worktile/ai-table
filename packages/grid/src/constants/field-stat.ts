@@ -1,29 +1,29 @@
 import { AITableFieldStatTypeItemInfo, AITableStatType, statCountAll } from '@ai-table/utils';
-import { statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils';
+import { AITableGridI18nKey, statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils';
 
 export const FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITableFieldStatTypeItemInfo>> = {
     [AITableStatType.EarliestTime]: {
-        name: '最早时间',
+        name: AITableGridI18nKey.earliestTime,
         type: AITableStatType.EarliestTime,
-        format: '最早时间 {{statValue}}',
+        format: AITableGridI18nKey.earliestTimeResult,
         exec: statEarliestTime
     },
     [AITableStatType.LatestTime]: {
-        name: '最晚时间',
+        name: AITableGridI18nKey.latestTime,
         type: AITableStatType.LatestTime,
-        format: '最晚时间 {{statValue}}',
+        format: AITableGridI18nKey.latestTimeResult,
         exec: statLatestTime
     },
     [AITableStatType.DateRangeOfDays]: {
-        name: '时间范围(日)',
+        name: AITableGridI18nKey.dateRangeOfDays,
         type: AITableStatType.DateRangeOfDays,
-        format: '时间范围 {{statValue}} 天',
+        format: AITableGridI18nKey.dateRangeOfDaysResult,
         exec: statDateRangeOfDays
     },
     [AITableStatType.DateRangeOfMonths]: {
-        name: '时间范围(月)',
+        name: AITableGridI18nKey.dateRangeOfMonths,
         type: AITableStatType.DateRangeOfMonths,
-        format: '时间范围 {{statValue}} 月',
+        format: AITableGridI18nKey.dateRangeOfMonthsResult,
         exec: statDateRangeOfMonths
     }
 };

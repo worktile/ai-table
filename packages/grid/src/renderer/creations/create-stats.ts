@@ -4,7 +4,7 @@ import { AITableFieldStatsConfig, AITableFieldStatConfig } from '../../types';
 import { FieldModelMap } from '../../utils';
 
 export const createFieldStats = (config: AITableFieldStatsConfig) => {
-    const { coordinate, columnStartIndex, columnStopIndex, aiTable, actions, y, isHoverStatContainer } = config;
+    const { coordinate, columnStartIndex, columnStopIndex, aiTable, actions, y, isHoverStatContainer, readonly } = config;
     const colors = Colors;
     const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const fields = aiTable.gridData().fields;
@@ -28,7 +28,8 @@ export const createFieldStats = (config: AITableFieldStatsConfig) => {
             height: AI_TABLE_FIELD_STAT_HEIGHT,
             field,
             stroke: columnIndex === 0 ? colors.transparent : undefined,
-            isHoverStatContainer: isHoverStatContainer
+            isHoverStatContainer: isHoverStatContainer,
+            readonly
         };
 
         fieldStats.push(fieldStat);

@@ -8,7 +8,8 @@ import {
     AI_TABLE_CELL_EDIT,
     KoEventObjectOutput,
     AI_TABLE_FIELD_MAX_WIDTH,
-    expandCell
+    expandCell,
+    AITableGridI18nText
 } from '@ai-table/grid';
 import {
     Actions,
@@ -29,7 +30,8 @@ import {
     moveFields,
     moveRecords,
     InsertUpwardRecords,
-    InsertDownwardRecords
+    InsertDownwardRecords,
+    AITableStateI18nText
 } from '@ai-table/state';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -62,7 +64,8 @@ import {
     UpdateFieldValueOptions,
     isUndefinedOrNull,
     AITableFieldGroup,
-    FieldValue
+    FieldValue,
+    AITableUtilsI18nText
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -77,6 +80,16 @@ import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../con
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
+
+const AITableI18nText: Record<string, string> = {
+    ...AITableUtilsI18nText,
+    ...AITableGridI18nText,
+    ...AITableStateI18nText,
+    [AITableGridI18nKey.dataPickerPlaceholder]: 'Select Date',
+    [AITableStateI18nKey.copyField]: 'Copy Field',
+    [AITableGridI18nKey.fieldGroupBase]: 'Basic',
+    [AITableGridI18nKey.fieldTypeNumber]: 'Number'
+};
 
 @Component({
     selector: 'ai-table-add-input',
@@ -352,17 +365,7 @@ export class DemoTableContent {
     dateModeActiveIndex = computed(() => (this.dataMode() === 'default' ? 0 : 1));
 
     getI18nTextByKey = (key: string) => {
-        switch (key) {
-            case AITableGridI18nKey.dataPickerPlaceholder:
-                return 'Select Date';
-            case AITableStateI18nKey.copyField:
-                return 'Copy Field';
-            case AITableGridI18nKey.fieldGroupBase:
-                return 'Basic';
-            case AITableGridI18nKey.fieldTypeNumber:
-                return 'Number';
-        }
-        return;
+        return AITableI18nText[key];
     };
 
     constructor() {

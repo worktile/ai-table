@@ -87,7 +87,7 @@ export class AITableFieldStat {
     });
 
     bgConfig = computed(() => {
-        const { field, width, height, coordinate } = this.config();
+        const { field, width, height, coordinate, readonly } = this.config();
         return {
             coordinate,
             x: 0,
@@ -102,7 +102,7 @@ export class AITableFieldStat {
             fill: Colors.white,
             hoverFill: Colors.gray100,
             opacity: 1,
-            listening: true
+            listening: !readonly
         };
     });
 
@@ -263,7 +263,7 @@ export class AITableFieldStat {
                 position: editFieldPosition,
                 aiTable,
                 field,
-                statMenus: fieldModel.statTypes
+                statMenus: fieldModel.getStatTypes(aiTable)
             }
         });
 
