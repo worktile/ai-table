@@ -31,6 +31,7 @@ import {
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_FIELD_HEAD_OPACITY_LINE,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
     AI_TABLE_FILL_HANDLE,
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
@@ -1055,7 +1056,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             frozenArea: {
                 top: AI_TABLE_FIELD_HEAD_HEIGHT,
                 left: coordinate.getColumnWidth(0) + this.aiTable.context!.rowHeadWidth(),
-                bottom: containerRect.height - AI_TABLE_SCROLL_BAR_SIZE,
+                bottom: containerRect.height - AI_TABLE_SCROLL_BAR_SIZE - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
                 right: containerRect.width - AI_TABLE_SCROLL_BAR_SIZE
             },
             edgeThreshold: {
