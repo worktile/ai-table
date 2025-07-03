@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.24](https://github.com/worktile/ai-table/compare/0.1.23...0.1.24) (2025-07-03)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-18360 修复表格超过最大行限制筛数据后又可以新增 ([#554](https://github.com/worktile/ai-table/issues/554)) ([1290ee7](https://github.com/worktile/ai-table/commit/1290ee7eaccf364ba980eeeaabc01a01093fca84)), closes [#WIK-18360](https://github.com/worktile/ai-table/issues/WIK-18360)
+
+
+### Features
+
+* #WIK-18348 aitable列统计各个字段维度的统计 ([#549](https://github.com/worktile/ai-table/issues/549)) ([bcf5cfe](https://github.com/worktile/ai-table/commit/bcf5cfe42a9807f709baa6f306ce67f29b03c8fa)), closes [#WIK-18348](https://github.com/worktile/ai-table/issues/WIK-18348)
+* #WIK-18374 左侧固定列的统计 ([#552](https://github.com/worktile/ai-table/issues/552)) ([6f66987](https://github.com/worktile/ai-table/commit/6f669873575657b9910e2a5bb181b7a72b901081)), closes [#WIK-18374](https://github.com/worktile/ai-table/issues/WIK-18374)
+* #WIK-18375 底部固定列占位后，原有的底部展示交互影响（向下滚动） ([#557](https://github.com/worktile/ai-table/issues/557)) ([23a617f](https://github.com/worktile/ai-table/commit/23a617f61e707c3900b82989f77a4acc47389aee)), closes [#WIK-18375](https://github.com/worktile/ai-table/issues/WIK-18375)
+* #WIK-18376 统计字段和结果的i18n ([#556](https://github.com/worktile/ai-table/issues/556)) ([e74fcb8](https://github.com/worktile/ai-table/commit/e74fcb86de656ed3eb8811abde18d2064993f75e)), closes [#WIK-18376](https://github.com/worktile/ai-table/issues/WIK-18376)
+* #WIK-18377 选择行后，单独统计和展示选中的行数据 ([#553](https://github.com/worktile/ai-table/issues/553)) ([927f0ab](https://github.com/worktile/ai-table/commit/927f0aba2d9c649c4605ae0eca9a0bfcff48f8a9)), closes [#WIK-18377](https://github.com/worktile/ai-table/issues/WIK-18377) [#WIK-18377](https://github.com/worktile/ai-table/issues/WIK-18377) [#WIK-18377](https://github.com/worktile/ai-table/issues/WIK-18377) [#WIK-18377](https://github.com/worktile/ai-table/issues/WIK-18377)
+* #WIK-18378 默认统计结果渲染和hover后的渲染交互细节实现 ([#555](https://github.com/worktile/ai-table/issues/555)) ([97dd2c5](https://github.com/worktile/ai-table/commit/97dd2c59fdfe0c2c96cc902c693312bf54379954)), closes [#WIK-18378](https://github.com/worktile/ai-table/issues/WIK-18378)
+
+
+
 ## [0.1.23](https://github.com/worktile/ai-table/compare/0.1.21...0.1.23) (2025-07-02)
 
 
