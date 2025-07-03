@@ -75,7 +75,6 @@ export interface AITableField {
     hidden?: boolean;
     frozen?: boolean;
     stat_type?: AITableFieldStatType;
-    stat_value?: any;
     settings?: AITableFieldSettings;
 }
 

@@ -27,7 +27,13 @@ import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_HEIGHT, AI_TABLE_OFFSET, Colors } from '../constants';
+import {
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
+    AI_TABLE_FIELD_STAT_HEIGHT,
+    AI_TABLE_OFFSET,
+    Colors
+} from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -73,8 +79,6 @@ export class AITableRenderer {
 
     koMouseleave = output<KoEventObject<MouseEvent>>();
 
-    statContainerHeight = AI_TABLE_FIELD_STAT_HEIGHT + AI_TABLE_CELL_LINE_BORDER * 2;
-
     isHoverStatContainer = signal(false);
 
     fields = computed(() => {
@@ -102,7 +106,7 @@ export class AITableRenderer {
     });
 
     gridContainerHeight = computed<number>(() => {
-        return this.containerHeight() - this.statContainerHeight;
+        return this.containerHeight() - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT;
     });
 
     scrollState = computed(() => {
@@ -150,9 +154,9 @@ export class AITableRenderer {
     statGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             x: 0,
-            y: this.containerHeight() - this.statContainerHeight - AI_TABLE_CELL_LINE_BORDER,
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
             width: this.containerWidth(),
-            height: this.statContainerHeight
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT
         };
     });
 
