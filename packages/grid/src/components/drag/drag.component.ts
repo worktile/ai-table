@@ -21,6 +21,7 @@ import {
     AI_TABLE_AUTO_SCROLL_RIGHT_THRESHOLD,
     AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_SCROLL_BAR_SIZE
 } from '../../constants/table';
@@ -415,7 +416,8 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 verticalElement: this.verticalBarElement
             },
             frozenArea: {
-                top: AI_TABLE_FIELD_HEAD_HEIGHT
+                top: AI_TABLE_FIELD_HEAD_HEIGHT,
+                bottom: this.containerHeight - AI_TABLE_SCROLL_BAR_SIZE - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT
             },
             edgeThreshold: {
                 top: AI_TABLE_AUTO_SCROLL_TOP_THRESHOLD,
