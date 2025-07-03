@@ -18,7 +18,7 @@ export enum AITableStateI18nKey {
     downward = 'downward'
 }
 
-const AITableI18nText = {
+export const AITableStateI18nText = {
     [AITableStateI18nKey.copyField]: '复制列',
     [AITableStateI18nKey.removeRecords]: '删除行',
     [AITableStateI18nKey.copy]: '复制',
@@ -37,7 +37,7 @@ const AITableI18nText = {
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {
-    return AITableI18nText[key] || key;
+    return AITableStateI18nText[key] || key;
 };
 
 export const getStateI18nTextByKey = (aiTable: AITable, key: AITableStateI18nKey | string): string => {

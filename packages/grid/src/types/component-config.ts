@@ -15,6 +15,7 @@ export interface AITableBackgroundConfig extends Konva.ShapeConfig {
     y: number;
     width: number;
     height: number;
+    readonly?: boolean;
     fill?: string;
     stroke?: string;
     strokeWidth?: number;
@@ -74,6 +75,7 @@ export interface AITableFieldStatConfig {
     isHoverStatContainer?: boolean;
     x?: number;
     y?: number;
+    readonly?: boolean;
     width: number;
     height: number;
     field: AITableField;
@@ -99,6 +101,7 @@ export interface AITableFieldStatsConfig {
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
     isHoverStatContainer?: boolean;
+    readonly?: boolean;
 }
 
 export interface AITableAddFieldConfig {

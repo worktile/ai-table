@@ -9,8 +9,10 @@ import {
     AITableStatType,
     FieldOptions,
     FieldValue,
-    AITableFieldStatTypeItemInfo
+    AITableFieldStatTypeItemInfo,
+    AITable
 } from '../../types';
+import { getI18nTextByKey } from '../../helps/i18n';
 
 export abstract class FieldBase {
     public statTypeMap: Map<AITableFieldStatType, AITableFieldStatTypeItemInfo> = new Map();
@@ -36,10 +38,11 @@ export abstract class FieldBase {
     }
 
     private statFormat(statValue: number, options: FieldOptions) {
-        const { field } = options;
+        const { field, aiTable } = options;
         const format = this.statTypeMap.get(field!.stat_type!)?.format;
         if (format) {
-            return format.replace('{{statValue}}', statValue.toString());
+            const i18nText = getI18nTextByKey(aiTable, format);
+            return i18nText.replace('{{statValue}}', statValue.toString());
         }
         return statValue.toString();
     }
@@ -50,6 +53,13 @@ export abstract class FieldBase {
             return this.statFormat(statValue, options);
         }
         return null;
+    }
+
+    getStatTypes(aiTable: AITable) {
+        this.statTypes.forEach((statType) => {
+            statType.name = getI18nTextByKey(aiTable, statType.name);
+        });
+        return this.statTypes;
     }
 
     transformCellValue(cellValue: FieldValue, options: FieldOptions): FieldValue | null {

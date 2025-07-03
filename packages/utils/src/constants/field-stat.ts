@@ -11,103 +11,104 @@ import {
     statPercentUnique,
     statSum
 } from '../helps/field-stat';
+import { AITableUtilsI18nKey } from '../helps/i18n';
 import { AITableFieldStatTypeItemInfo, AITableStatType } from '../types';
 
 export const DEFAULT_FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITableFieldStatTypeItemInfo>> = {
     [AITableStatType.None]: {
-        name: '不展示',
+        name: AITableUtilsI18nKey.none,
         type: AITableStatType.None,
-        format: '不展示',
+        format: AITableUtilsI18nKey.none,
         exec: () => null
     },
     [AITableStatType.CountAll]: {
-        name: '记录总数',
+        name: AITableUtilsI18nKey.countAll,
         type: AITableStatType.CountAll,
-        format: '{{statValue}} 条记录',
+        format: AITableUtilsI18nKey.countAllResult,
         exec: statCountAll
     },
     [AITableStatType.Filled]: {
-        name: '已填写数',
+        name: AITableUtilsI18nKey.filled,
         type: AITableStatType.Filled,
-        format: '已填写 {{statValue}}',
+        format: AITableUtilsI18nKey.filledResult,
         exec: statCountFilled
     },
     [AITableStatType.Empty]: {
-        name: '未填写数',
+        name: AITableUtilsI18nKey.empty,
         type: AITableStatType.Empty,
-        format: '未填写 {{statValue}}',
+        format: AITableUtilsI18nKey.emptyResult,
         exec: statCountEmpty
     },
     [AITableStatType.Unique]: {
-        name: '唯一数',
+        name: AITableUtilsI18nKey.unique,
         type: AITableStatType.Unique,
-        format: '唯一数 {{statValue}}',
+        format: AITableUtilsI18nKey.uniqueResult,
         exec: statCountUnique
     },
     [AITableStatType.PercentFilled]: {
-        name: '已填写占比',
+        name: AITableUtilsI18nKey.percentFilled,
         type: AITableStatType.PercentFilled,
-        format: '已填写 {{statValue}}%',
+        format: AITableUtilsI18nKey.percentFilledResult,
         exec: statPercentFilled
     },
     [AITableStatType.PercentEmpty]: {
-        name: '未填写占比',
+        name: AITableUtilsI18nKey.percentEmpty,
         type: AITableStatType.PercentEmpty,
-        format: '未填写 {{statValue}}%',
+        format: AITableUtilsI18nKey.percentEmptyResult,
         exec: statPercentEmpty
     },
     [AITableStatType.PercentUnique]: {
-        name: '唯一数占比',
+        name: AITableUtilsI18nKey.percentUnique,
         type: AITableStatType.PercentUnique,
-        format: '唯一 {{statValue}}%',
+        format: AITableUtilsI18nKey.percentUniqueResult,
         exec: statPercentUnique
     },
     [AITableStatType.Sum]: {
-        name: '求和',
-        type: AITableStatType.PercentUnique,
-        format: '求和 {{statValue}}',
+        name: AITableUtilsI18nKey.sum,
+        type: AITableStatType.Sum,
+        format: AITableUtilsI18nKey.sumResult,
         exec: statSum
     },
     [AITableStatType.Max]: {
-        name: '最大值',
+        name: AITableUtilsI18nKey.max,
         type: AITableStatType.Max,
-        format: '最大值 {{statValue}}',
+        format: AITableUtilsI18nKey.maxResult,
         exec: statMax
     },
     [AITableStatType.Min]: {
-        name: '最小值',
+        name: AITableUtilsI18nKey.min,
         type: AITableStatType.Min,
-        format: '最小值 {{statValue}}',
+        format: AITableUtilsI18nKey.minResult,
         exec: statMin
     },
     [AITableStatType.Average]: {
-        name: '平均值',
+        name: AITableUtilsI18nKey.average,
         type: AITableStatType.Average,
-        format: '平均值 {{statValue}}',
+        format: AITableUtilsI18nKey.averageResult,
         exec: statAverage
     },
     [AITableStatType.Checked]: {
-        name: '已勾选',
+        name: AITableUtilsI18nKey.checked,
         type: AITableStatType.Checked,
-        format: '已勾选 {{statValue}}',
+        format: AITableUtilsI18nKey.checkedResult,
         exec: statCountFilled
     },
     [AITableStatType.UnChecked]: {
-        name: '未勾选',
+        name: AITableUtilsI18nKey.unChecked,
         type: AITableStatType.UnChecked,
-        format: '未勾选 {{statValue}}',
+        format: AITableUtilsI18nKey.unCheckedResult,
         exec: statCountEmpty
     },
     [AITableStatType.PercentChecked]: {
-        name: '已选中占比',
+        name: AITableUtilsI18nKey.percentChecked,
         type: AITableStatType.PercentChecked,
-        format: '已选中 {{statValue}}%',
+        format: AITableUtilsI18nKey.percentCheckedResult,
         exec: statPercentFilled
     },
     [AITableStatType.PercentUnChecked]: {
-        name: '未选中占比',
+        name: AITableUtilsI18nKey.percentUnChecked,
         type: AITableStatType.PercentUnChecked,
-        format: '未选中 {{statValue}}%',
+        format: AITableUtilsI18nKey.percentUnCheckedResult,
         exec: statPercentEmpty
     }
 };
