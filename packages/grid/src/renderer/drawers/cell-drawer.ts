@@ -47,7 +47,8 @@ import {
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     FONT_SIZE_SM,
     AI_TABLE_RATE_MAX,
-    StarFill
+    StarFill,
+    AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
 } from '../../constants';
 import { AITable } from '../../core';
 import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isUndefinedOrNull } from '@ai-table/utils';
@@ -213,7 +214,7 @@ export class CellDrawer extends Drawer {
         let currentX = x + AI_TABLE_CELL_PADDING;
         const maxContainerWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
         const optionStyle = (field as AITableSelectField).settings.option_style;
-        const fontStyle = `${DEFAULT_FONT_WEIGHT} ${AI_TABLE_OPTION_ITEM_FONT_SIZE}px ${DEFAULT_FONT_FAMILY}`;
+        const fontStyle = `${DEFAULT_FONT_WEIGHT} ${AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE}px ${DEFAULT_FONT_FAMILY}`;
         const isDotOrPiece = optionStyle === AITableSelectOptionStyle.dot || optionStyle === AITableSelectOptionStyle.piece;
 
         let totalWidth = 0;
@@ -314,14 +315,14 @@ export class CellDrawer extends Drawer {
 
                     this.text({
                         x: bgConfig.x + AI_TABLE_CELL_PADDING + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT,
-                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_FONT_SIZE) / 2,
+                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE) / 2,
                         text: this.textEllipsis({
                             text: item.text,
                             maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                            fontSize: AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
                         }).text,
                         fillStyle: Colors.gray700,
-                        fontSize: AI_TABLE_OPTION_ITEM_FONT_SIZE
+                        fontSize: AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
                     });
                 } else if (optionStyle === AITableSelectOptionStyle.tag) {
                     this.tag({

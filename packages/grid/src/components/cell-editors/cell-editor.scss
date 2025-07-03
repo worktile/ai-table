@@ -43,6 +43,9 @@
         border: 2px solid variables.$primary;
         outline: none;
     }
+    .thy-select .select-control-multiple .select-option {
+        font-size: variables.$font-size-sm;
+    }
 }
 
 .number-cell-editor {
