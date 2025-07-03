@@ -1,5 +1,6 @@
 import { AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
 import { AITableCellMetaData } from '../types';
+import { AI_TABLE_FIELD_STAT_HEIGHT } from '../constants';
 
 /**
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础
@@ -72,7 +73,7 @@ export class Coordinate {
      */
     public get totalHeight() {
         const { offset, size } = this.getCellMetaData(this.rowCount - 1, AITableRowColumnType.row);
-        return offset + size;
+        return offset + size + AI_TABLE_FIELD_STAT_HEIGHT;
     }
 
     /**

@@ -2,12 +2,6 @@ import { AITableFieldStatTypeItemInfo, AITableStatType, statCountAll } from '@ai
 import { statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils';
 
 export const FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITableFieldStatTypeItemInfo>> = {
-    [AITableStatType.None]: {
-        name: '不展示',
-        type: AITableStatType.None,
-        format: '{{statValue}} 条记录',
-        exec: statCountAll
-    },
     [AITableStatType.EarliestTime]: {
         name: '最早时间',
         type: AITableStatType.EarliestTime,

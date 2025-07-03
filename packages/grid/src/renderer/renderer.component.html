@@ -21,7 +21,6 @@
 
             <ko-group>
                 <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
-                <ai-table-column-stats [config]="columnFrozenFieldStatsConfig()"></ai-table-column-stats>
             </ko-group>
 
             <ko-group [config]="commonGroupConfig()">
@@ -34,7 +33,6 @@
                 <ko-group [config]="offsetXConfig()">
                     <ai-table-column-heads [config]="columnHeadFieldConfig()"></ai-table-column-heads>
                     <ai-table-add-field [config]="columnHeadFieldConfig()"></ai-table-add-field>
-                    <ai-table-column-stats [config]="columnFieldStatsConfig()"></ai-table-column-stats>
                 </ko-group>
             </ko-group>
 
@@ -69,6 +67,24 @@
                     @if (isLastSelectedCellInFrozenColumn()) {
                         <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
                     }
+                </ko-group>
+            </ko-group>
+        </ko-group>
+
+        <ko-group [config]="statGroupConfig()">
+            <ai-table-background [config]="columnFieldStatsBgConfig()"></ai-table-background>
+            <ko-group>
+                <ai-table-column-stats
+                    [config]="columnFrozenFieldStatsConfig()"
+                    (hover)="onStatContainerHover($event)"
+                ></ai-table-column-stats>
+            </ko-group>
+            <ko-group [config]="commonGroupConfig()">
+                <ko-group [config]="offsetXConfig()">
+                    <ai-table-column-stats
+                        [config]="columnFieldStatsConfig()"
+                        (hover)="onStatContainerHover($event)"
+                    ></ai-table-column-stats>
                 </ko-group>
             </ko-group>
         </ko-group>

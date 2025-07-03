@@ -1,8 +1,10 @@
+import { computed } from '@angular/core';
 import { AI_TABLE_FIELD_STAT_HEIGHT, Colors } from '../../constants';
 import { AITableFieldStatsConfig, AITableFieldStatConfig } from '../../types';
+import { FieldModelMap } from '../../utils';
 
 export const createFieldStats = (config: AITableFieldStatsConfig) => {
-    const { coordinate, columnStartIndex, columnStopIndex, aiTable, actions, y } = config;
+    const { coordinate, columnStartIndex, columnStopIndex, aiTable, actions, y, isHoverStatContainer } = config;
     const colors = Colors;
     const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
     const fields = aiTable.gridData().fields;
@@ -25,7 +27,8 @@ export const createFieldStats = (config: AITableFieldStatsConfig) => {
             width: columnWidth,
             height: AI_TABLE_FIELD_STAT_HEIGHT,
             field,
-            stroke: columnIndex === 0 ? colors.transparent : undefined
+            stroke: columnIndex === 0 ? colors.transparent : undefined,
+            isHoverStatContainer: isHoverStatContainer
         };
 
         fieldStats.push(fieldStat);

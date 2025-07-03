@@ -1,11 +1,23 @@
-import { AITableRecords, FieldOptions, getFieldValues } from '@ai-table/utils';
+import { AITableField, AITableRecords, FieldOptions, getFieldValues } from '@ai-table/utils';
 import _ from 'lodash';
 import { transformToCellText } from './cell';
 import { differenceInDays, differenceInMonths, fromUnixTime } from 'date-fns';
+import { AITableQueries } from '../core';
+
+export function getDateFieldValues(records: AITableRecords, options: FieldOptions, filterNull = false) {
+    const { aiTable, field } = options;
+    const result = _.map(records, (record) => {
+        const cellValue = AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
+        return cellValue;
+    });
+    if (filterNull) {
+        return result.filter((value) => value !== null);
+    }
+    return result;
+}
 
 export function statEarliestTime(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+    const values = getDateFieldValues(records, options, true);
     const result = _.minBy(values, (value) => {
         return value.timestamp;
     });
@@ -14,7 +26,7 @@ export function statEarliestTime(records: AITableRecords, options: FieldOptions)
 
 export function statLatestTime(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
-    const values = getFieldValues(records, field!, true);
+    const values = getDateFieldValues(records, options, true);
     const result = _.maxBy(values, (value) => {
         return value.timestamp;
     });
@@ -23,7 +35,7 @@ export function statLatestTime(records: AITableRecords, options: FieldOptions) {
 
 export function statDateRangeOfDays(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
-    const values = getFieldValues(records, field!, true);
+    const values = getDateFieldValues(records, options, true);
     const start = _.minBy(values, (value) => {
         return value.timestamp;
     });
@@ -38,8 +50,7 @@ export function statDateRangeOfDays(records: AITableRecords, options: FieldOptio
 }
 
 export function statDateRangeOfMonths(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+    const values = getDateFieldValues(records, options, true);
     const start = _.minBy(values, (value) => {
         return value.timestamp;
     });

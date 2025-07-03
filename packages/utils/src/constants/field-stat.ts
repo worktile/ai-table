@@ -17,8 +17,8 @@ export const DEFAULT_FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITabl
     [AITableStatType.None]: {
         name: '不展示',
         type: AITableStatType.None,
-        format: '{{statValue}} 条记录',
-        exec: statCountAll
+        format: '不展示',
+        exec: () => null
     },
     [AITableStatType.CountAll]: {
         name: '记录总数',

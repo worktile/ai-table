@@ -27,6 +27,9 @@ export interface AITableBackgroundConfig extends Konva.ShapeConfig {
     hoverName?: string;
     hoverWidth?: number;
     hoverHeight?: number;
+    borders?: [boolean, boolean, boolean, boolean]; // 上边框，右边框，下边框，左边框
+    listening?: boolean;
+    coordinate?: Coordinate;
 }
 
 export interface AITableActionIconConfig extends AITableIconConfig {
@@ -68,6 +71,7 @@ export interface AITableFieldStatConfig {
     coordinate: Coordinate;
     actions: AITableActions;
     columnIndex: number;
+    isHoverStatContainer?: boolean;
     x?: number;
     y?: number;
     width: number;
@@ -94,6 +98,7 @@ export interface AITableFieldStatsConfig {
     columnStartIndex: number;
     columnStopIndex: number;
     pointPosition: AITablePointPosition;
+    isHoverStatContainer?: boolean;
 }
 
 export interface AITableAddFieldConfig {

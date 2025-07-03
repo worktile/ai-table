@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { AITableColumnHeadsConfig, AITableFieldStatsConfig } from '../../../types';
 import { createFieldStats } from '../../creations/create-stats';
 import { AITableFieldStat } from './stat.component';
@@ -11,7 +11,7 @@ import { generateTargetName } from '../../../utils';
     template: `
         <ko-group>
             @for (config of statConfigs(); track $index) {
-                <ai-table-field-stat [config]="config"></ai-table-field-stat>
+                <ai-table-field-stat [config]="config" (hover)="hover.emit($event)"></ai-table-field-stat>
             }
         </ko-group>
     `,
@@ -20,6 +20,8 @@ import { generateTargetName } from '../../../utils';
 })
 export class AITableFieldStats {
     config = input.required<AITableFieldStatsConfig>();
+
+    hover = output<boolean>();
 
     isHover = signal(false);
 
