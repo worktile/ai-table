@@ -265,4 +265,6 @@ export interface TransactionOriginInfo {
     [key: string]: any;
 }
 
-export type AITable = any;
+export interface AITable {
+    getI18nTextByKey?: (key: string) => string;
+}
