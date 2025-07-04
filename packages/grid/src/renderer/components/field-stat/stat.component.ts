@@ -38,12 +38,12 @@ import { drawer } from '../../drawers/drawer';
                 (hover)="onHoverChange($event)"
             ></ai-table-background>
 
-            @if (textConfig()) {
-                <ko-group>
+            <ko-group>
+                @if (textConfig()) {
                     <ai-table-text [config]="textConfig()!"></ai-table-text>
                     <ai-table-icon [config]="iconConfig()"></ai-table-icon>
-                </ko-group>
-            }
+                }
+            </ko-group>
         </ko-group>
     `,
     imports: [KoContainer, AITableTextComponent, AITableIcon, AITableBackground],
