@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.25](https://github.com/worktile/ai-table/compare/0.1.24...0.1.25) (2025-07-04)
+
+
+### Bug Fixes
+
+* #WIK-18412 统计i18n的key会重复，首屏不渲染统计结果 ([#560](https://github.com/worktile/ai-table/issues/560)) ([cfe6852](https://github.com/worktile/ai-table/commit/cfe6852bc39d9986f5d703240932defb18a9adec)), closes [#WIK-18412](https://github.com/worktile/ai-table/issues/WIK-18412) [#WIK-18412](https://github.com/worktile/ai-table/issues/WIK-18412) [#WIK-18412](https://github.com/worktile/ai-table/issues/WIK-18412)
+* **grid:** #WIK-18309 表格多选展示和展开时字号不一致，且展示的时候圆角小了 ([#559](https://github.com/worktile/ai-table/issues/559)) ([820dea9](https://github.com/worktile/ai-table/commit/820dea9e337ba9679a777bf4d1459aa203c4b401)), closes [#WIK-18309](https://github.com/worktile/ai-table/issues/WIK-18309)
+
+
+
 ## [0.1.24](https://github.com/worktile/ai-table/compare/0.1.23...0.1.24) (2025-07-03)
 
 
