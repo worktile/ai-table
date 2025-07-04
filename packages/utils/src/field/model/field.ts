@@ -56,10 +56,12 @@ export abstract class FieldBase {
     }
 
     getStatTypes(aiTable: AITable) {
-        this.statTypes.forEach((statType) => {
-            statType.name = getI18nTextByKey(aiTable, statType.name);
+        return this.statTypes.map((statType) => {
+            return {
+                ...statType,
+                name: getI18nTextByKey(aiTable, statType.name)
+            };
         });
-        return this.statTypes;
     }
 
     transformCellValue(cellValue: FieldValue, options: FieldOptions): FieldValue | null {

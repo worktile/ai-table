@@ -1,4 +1,4 @@
-import { AITableFieldType, AITableSelectOptionStyle, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AITableFieldType, AITableSelectOptionStyle, AITableStatType, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { getUnixTime } from 'date-fns';
 import { AITableCustomReferences } from '../types/grid';
 import { AITableCustomFieldType } from '../types/field';
@@ -216,7 +216,8 @@ export function getCanvasDefaultValue() {
                     view1: 0,
                     view2: 30
                 },
-                type: AITableFieldType.text
+                type: AITableFieldType.text,
+                stat_type: AITableStatType.CountAll
             },
             {
                 _id: 'column-custom_ticket1',
@@ -226,7 +227,8 @@ export function getCanvasDefaultValue() {
                     view1: 0.5,
                     view2: 31
                 },
-                type: AITableCustomFieldType.relationTicket
+                type: AITableCustomFieldType.relationTicket,
+                stat_type: AITableStatType.CountAll
             },
             {
                 _id: 'column-13',
