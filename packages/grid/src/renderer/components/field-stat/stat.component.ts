@@ -152,8 +152,6 @@ export class AITableFieldStat {
             if (!result && this.isHoverStatContainer()) {
                 return `不展示`;
             }
-            console.log('============ result =============');
-            console.log(result);
             return result;
         }
     });
