@@ -30,7 +30,7 @@ import { AITableFieldStats } from './components/field-stat/stats.component';
 import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
-    AI_TABLE_FIELD_STAT_HEIGHT,
+    AI_TABLE_FIELD_STAT_INNER_HEIGHT,
     AI_TABLE_OFFSET,
     Colors
 } from '../constants';
@@ -154,7 +154,7 @@ export class AITableRenderer {
     statGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             x: 0,
-            y: this.containerHeight() - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT - AI_TABLE_CELL_LINE_BORDER,
+            y: this.containerHeight() - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             width: this.containerWidth(),
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT
         };
@@ -162,6 +162,16 @@ export class AITableRenderer {
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
+            clipX: this.frozenAreaWidth() + 1,
+            clipY: 0,
+            clipWidth: this.cellGroupClipWidth(),
+            clipHeight: this.gridContainerHeight()
+        };
+    });
+
+    statCommonGroupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            x: AI_TABLE_OFFSET,
             clipX: this.frozenAreaWidth() + 1,
             clipY: 0,
             clipWidth: this.cellGroupClipWidth(),
@@ -259,8 +269,8 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: AI_TABLE_CELL_LINE_BORDER,
-            height: AI_TABLE_FIELD_STAT_HEIGHT,
+            y: AI_TABLE_OFFSET,
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             isHoverStatContainer: this.isHoverStatContainer()
         };
     });
@@ -270,7 +280,7 @@ export class AITableRenderer {
             x: 0,
             y: 0,
             width: this.containerWidth(),
-            height: AI_TABLE_FIELD_STAT_HEIGHT + AI_TABLE_CELL_LINE_BORDER * 2,
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             fill: Colors.white,
             stroke: Colors.gray200,
             strokeWidth: AI_TABLE_CELL_LINE_BORDER,
@@ -286,10 +296,10 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.frozenAreaWidth(),
             x: 0,
-            y: AI_TABLE_CELL_LINE_BORDER,
+            y: AI_TABLE_OFFSET,
             columnStartIndex: 0,
             columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
-            height: AI_TABLE_FIELD_STAT_HEIGHT,
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             isHoverStatContainer: this.isHoverStatContainer()
         };
     });
