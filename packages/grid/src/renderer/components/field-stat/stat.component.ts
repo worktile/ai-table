@@ -17,7 +17,7 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT
 } from '../../../constants';
-import { AITableFieldStatConfig } from '../../../types';
+import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
 import { AITableField, AITableFieldStatTypeItemInfo, FieldOptions } from '@ai-table/utils';
 import { FieldModelMap, generateTargetName, TextMeasure } from '../../../utils';
 import { AITableIcon } from '../icon.component';
@@ -89,8 +89,9 @@ export class AITableFieldStat {
     });
 
     bgConfig = computed(() => {
-        const { field, width, height, coordinate, readonly } = this.config();
-        return {
+        const { field, width, height, coordinate, readonly, aiTable } = this.config();
+        const rowHeadWidth = aiTable.context!.rowHeadWidth();
+        const config: AITableBackgroundConfig = {
             coordinate,
             x: 0,
             y: 0,
@@ -106,6 +107,22 @@ export class AITableFieldStat {
             opacity: 1,
             listening: !readonly
         };
+        if (this.renderText()) {
+            config.borders = [false, true, false, true];
+            config.stroke = Colors.gray200;
+            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+        }
+
+        if (this.isFirstColumn()) {
+            if (rowHeadWidth === 0) {
+                config.borders = [false, true, false, false];
+            } else {
+                config.borders = [false, true, false, true];
+            }
+            config.stroke = Colors.gray200;
+            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+        }
+        return config;
     });
 
     field = computed(() => {
