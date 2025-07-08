@@ -58,6 +58,8 @@ export class AITableFieldStat {
 
     isActive = signal(false);
 
+    isHover = signal(false);
+
     availableTextWidth = computed(() => {
         const { width } = this.config();
         return width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
@@ -134,7 +136,9 @@ export class AITableFieldStat {
         };
     });
 
-    isHoverStatContainer = computed(() => this.config().isHoverStatContainer);
+    isActiveOrHover = computed(() => {
+        return this.isActive() || this.isHover();
+    });
 
     renderText = computed(() => {
         const field = this.field();
@@ -149,7 +153,7 @@ export class AITableFieldStat {
             }
         } else {
             const result = fieldModel.getStatFormatValue(records, this.options());
-            if (!result && this.isHoverStatContainer()) {
+            if (!result && this.isActiveOrHover()) {
                 return `不展示`;
             }
             return result;
@@ -228,6 +232,7 @@ export class AITableFieldStat {
     });
 
     onHoverChange(isHover: boolean) {
+        this.isHover.set(isHover);
         this.hover.emit(this.isActive() || isHover);
     }
 
