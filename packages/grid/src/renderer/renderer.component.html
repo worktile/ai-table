@@ -71,6 +71,7 @@
             </ko-group>
         </ko-group>
 
+        <ko-group [config]="offsetYConfig()"> <ai-table-frozen-field-shadow [config]="config()"></ai-table-frozen-field-shadow></ko-group>
         <ko-group [config]="statGroupConfig()">
             <ai-table-background [config]="columnFieldStatsBgConfig()"></ai-table-background>
             <ko-group>
@@ -86,6 +87,9 @@
                         (hover)="onStatContainerHover($event)"
                     ></ai-table-column-stats>
                 </ko-group>
+            </ko-group>
+            <ko-group>
+                <ai-table-frozen-field-shadow [config]="columnFieldStatsConfig()" [position]="'fieldStats'"></ai-table-frozen-field-shadow>
             </ko-group>
         </ko-group>
     </ko-layer>

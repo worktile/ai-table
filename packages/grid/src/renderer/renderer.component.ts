@@ -18,6 +18,7 @@ import {
     AITableColumnHeads,
     AITableFrozenCells,
     AITableFrozenColumnHeads,
+    AITableFrozenFieldShadow,
     AITableFrozenPlaceholderCells,
     AITableHoverRowHeads,
     AITableOtherRows,
@@ -27,13 +28,7 @@ import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import {
-    AI_TABLE_CELL_LINE_BORDER,
-    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
-    AI_TABLE_FIELD_STAT_INNER_HEIGHT,
-    AI_TABLE_OFFSET,
-    Colors
-} from '../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT, AI_TABLE_OFFSET, Colors } from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -56,7 +51,8 @@ Konva.pixelRatio = 2;
         AITableOtherRows,
         AITableFillHandle,
         AITableFieldStats,
-        AITableBackground
+        AITableBackground,
+        AITableFrozenFieldShadow
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
