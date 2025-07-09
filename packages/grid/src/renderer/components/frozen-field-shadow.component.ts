@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, computed, input } from '@angular/core';
 import { KoShape } from '../../angular-konva';
 import { ShapeConfig } from 'konva/lib/Shape';
-import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_STAT_HEIGHT, Colors } from '../../constants';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, Colors } from '../../constants';
 import { AITableFieldStatsConfig, AITableRendererConfig } from '../../types';
 
 @Component({
@@ -29,17 +29,15 @@ export class AITableFrozenFieldShadow {
 
     frozenShadowConfig = computed<Partial<ShapeConfig>>(() => {
         const { aiTable, readonly } = this.config();
-        const isStatContainerHover =
-            this.position() === 'fieldStats' ? (this.config() as AITableFieldStatsConfig).isHoverStatContainer : false;
         const coordinate = this.coordinate();
         const visibleRowSize = aiTable.context!.visibleRowsIndexMap().size;
         const rowCount = readonly ? visibleRowSize : visibleRowSize - 1;
-        const isScrolled = this.scrollState()!.scrollLeft > 0;
-        const visible = this.position() !== 'fieldStats' ? isScrolled : isScrolled && isStatContainerHover;
         const height =
-            this.position() !== 'fieldStats' ? rowCount * coordinate.rowHeight + AI_TABLE_FIELD_HEAD_HEIGHT : AI_TABLE_FIELD_STAT_HEIGHT;
+            this.position() !== 'fieldStats'
+                ? rowCount * coordinate.rowHeight + AI_TABLE_FIELD_HEAD_HEIGHT
+                : (this.config() as AITableFieldStatsConfig).height;
         return {
-            visible,
+            visible: this.scrollState()!.scrollLeft > 0,
             x: this.frozenAreaWidth(),
             y: 0,
             points: [0, 0, 0, height],
@@ -48,7 +46,7 @@ export class AITableFrozenFieldShadow {
             shadowColor: Colors.black,
             shadowBlur: 6,
             shadowOffset: { x: 3, y: 0 },
-            shadowOpacity: 0.28,
+            shadowOpacity: 0.25,
             shadowForStrokeEnabled: true
         };
     });
