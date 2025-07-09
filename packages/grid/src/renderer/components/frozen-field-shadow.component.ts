@@ -44,7 +44,7 @@ export class AITableFrozenFieldShadow {
             strokeWidth: 1,
             shadowColor: Colors.black,
             shadowBlur: 6,
-            shadowOffset: { x: 3, y: 0 },
+            shadowOffset: { x: 3.5, y: 0 },
             shadowOpacity: 0.25,
             shadowForStrokeEnabled: true
         };
