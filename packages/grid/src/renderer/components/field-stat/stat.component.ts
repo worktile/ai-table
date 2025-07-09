@@ -19,7 +19,7 @@ import {
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
 import { AITableField, AITableFieldStatTypeItemInfo, FieldOptions } from '@ai-table/utils';
-import { FieldModelMap, generateTargetName, TextMeasure } from '../../../utils';
+import { AITableGridI18nKey, FieldModelMap, generateTargetName, getI18nTextByKey, TextMeasure } from '../../../utils';
 import { AITableIcon } from '../icon.component';
 import { AITableTextComponent } from '../text.component';
 import { ThyPopover } from 'ngx-tethys/popover';
@@ -100,7 +100,7 @@ export class AITableFieldStat {
                 fieldId: field._id,
                 mouseStyle: 'pointer'
             }),
-            width: width,
+            width: this.isFirstColumn() ? width + AI_TABLE_OFFSET : width,
             height: height,
             fill: Colors.white,
             hoverFill: Colors.gray100,
@@ -164,14 +164,16 @@ export class AITableFieldStat {
         const selectedInfo = this.selectedInfo();
         if (this.isFirstColumn() && selectedInfo.isSelected) {
             if (selectedInfo.selectedType === 'records') {
-                return `已经选择 ${selectedInfo.selectedCount} 条记录`;
+                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
+                return result.replace('{count}', selectedInfo.selectedCount.toString());
             } else {
-                return `已经选择 ${selectedInfo.selectedCount} 个单元格`;
+                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
+                return result.replace('{count}', selectedInfo.selectedCount.toString());
             }
         } else {
-            const result = fieldModel.getStatFormatValue(records, this.options());
+            let result = fieldModel.getStatFormatValue(records, this.options());
             if (!result && this.isActiveOrHover()) {
-                return `不展示`;
+                result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
             }
             return result;
         }

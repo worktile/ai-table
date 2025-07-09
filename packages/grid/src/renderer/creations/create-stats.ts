@@ -22,7 +22,7 @@ export const createFieldStats = (config: AITableFieldStatsConfig) => {
             columnIndex,
             x,
             y,
-            width: columnWidth + AI_TABLE_OFFSET,
+            width: columnWidth,
             height: AI_TABLE_FIELD_STAT_INNER_HEIGHT,
             field,
             stroke: columnIndex === 0 ? colors.transparent : undefined,

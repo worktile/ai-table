@@ -47,7 +47,10 @@ export enum AITableGridI18nKey {
     dateRangeOfDays = 'dateRangeOfDays',
     dateRangeOfDaysResult = 'dateRangeOfDaysResult',
     dateRangeOfMonths = 'dateRangeOfMonths',
-    dateRangeOfMonthsResult = 'dateRangeOfMonthsResult'
+    dateRangeOfMonthsResult = 'dateRangeOfMonthsResult',
+    selectedRecordsCount = 'selectedRecordsCount',
+    selectedCellsCount = 'selectedCellsCount',
+    stat = 'stat'
 }
 
 export const AITableGridI18nText = {
@@ -97,7 +100,10 @@ export const AITableGridI18nText = {
     [AITableGridI18nKey.dateRangeOfDays]: '时间范围(日)',
     [AITableGridI18nKey.dateRangeOfDaysResult]: '时间范围 {{statValue}} 天',
     [AITableGridI18nKey.dateRangeOfMonths]: '时间范围(月)',
-    [AITableGridI18nKey.dateRangeOfMonthsResult]: '时间范围 {{statValue}} 月'
+    [AITableGridI18nKey.dateRangeOfMonthsResult]: '时间范围 {{statValue}} 月',
+    [AITableGridI18nKey.selectedRecordsCount]: '已经选择 {count} 条记录',
+    [AITableGridI18nKey.selectedCellsCount]: '已经选择 {count} 个单元格',
+    [AITableGridI18nKey.stat]: '统计'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableGridI18nKey): string => {
