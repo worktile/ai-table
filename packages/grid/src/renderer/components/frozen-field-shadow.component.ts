@@ -6,7 +6,7 @@ import { AITableFieldStatsConfig, AITableRendererConfig } from '../../types';
 
 @Component({
     selector: 'ai-table-frozen-field-shadow',
-    template: ` <ko-line [config]="frozenShadowConfig()"></ko-line> `,
+    template: `<ko-line [config]="frozenShadowConfig()"></ko-line>`,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
