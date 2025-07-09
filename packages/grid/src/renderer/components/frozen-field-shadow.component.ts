@@ -28,16 +28,15 @@ export class AITableFrozenFieldShadow {
     });
 
     frozenShadowConfig = computed<Partial<ShapeConfig>>(() => {
-        const { aiTable, readonly } = this.config();
+        const { aiTable } = this.config();
         const coordinate = this.coordinate();
-        const visibleRowSize = aiTable.context!.visibleRowsIndexMap().size;
-        const rowCount = readonly ? visibleRowSize : visibleRowSize - 1;
+        const rowCount = aiTable.gridData().records.length;
         const height =
             this.position() !== 'fieldStats'
                 ? rowCount * coordinate.rowHeight + AI_TABLE_FIELD_HEAD_HEIGHT
                 : (this.config() as AITableFieldStatsConfig).height;
         return {
-            visible: this.scrollState()!.scrollLeft > 0,
+            visible: this.scrollState().scrollLeft > 0,
             x: this.frozenAreaWidth(),
             y: 0,
             points: [0, 0, 0, height],
