@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.26](https://github.com/worktile/ai-table/compare/0.1.25...0.1.26) (2025-07-10)
+
+
+### Bug Fixes
+
+* #WIK-18416 【aitable】统计行hover 不是所有列都一起出来，hover到哪哪列的显示 ([#562](https://github.com/worktile/ai-table/issues/562)) ([59be39f](https://github.com/worktile/ai-table/commit/59be39ff0939e2d5738d0f1a3c91bae00ec0df81)), closes [#WIK-18416](https://github.com/worktile/ai-table/issues/WIK-18416)
+* #WIK-18438 【统计】鼠标 hover 到底部列的时候文案是：统计；点击统计展开弹窗，弹窗中默认选中不展示 ([#565](https://github.com/worktile/ai-table/issues/565)) ([9ee7fdf](https://github.com/worktile/ai-table/commit/9ee7fdfdf4e7ea6b12374f716d1acadc3c16578c)), closes [#WIK-18438](https://github.com/worktile/ai-table/issues/WIK-18438)
+
+
+### Features
+
+* #WIK-18429 统计样式细节调整 ([#563](https://github.com/worktile/ai-table/issues/563)) ([8c7722e](https://github.com/worktile/ai-table/commit/8c7722e73cf0e4747b36557a4e88fb35a365eadd)), closes [#WIK-18429](https://github.com/worktile/ai-table/issues/WIK-18429)
+* **grid:** #WIK-18287 表格固定列和统计列支持阴影 ([#564](https://github.com/worktile/ai-table/issues/564)) ([f01449b](https://github.com/worktile/ai-table/commit/f01449b9bc879ad21ac731fdc108e7da1000b9d9)), closes [#WIK-18287](https://github.com/worktile/ai-table/issues/WIK-18287)
+
+
+
 ## [0.1.25](https://github.com/worktile/ai-table/compare/0.1.24...0.1.25) (2025-07-04)
 
 
