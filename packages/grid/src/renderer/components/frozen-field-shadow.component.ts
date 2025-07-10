@@ -6,7 +6,7 @@ import { AITableFieldStatsConfig, AITableRendererConfig } from '../../types';
 
 @Component({
     selector: 'ai-table-frozen-field-shadow',
-    template: `<ko-line [config]="frozenShadowConfig()"></ko-line>`,
+    template: `<ko-rect [config]="frozenShadowConfig()"></ko-rect>`,
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -37,16 +37,13 @@ export class AITableFrozenFieldShadow {
                 : (this.config() as AITableFieldStatsConfig).height;
         return {
             visible: this.scrollState().scrollLeft > 0,
-            x: this.frozenAreaWidth(),
+            x: this.frozenAreaWidth() + 1, // 偏移1，避免和边框重叠导致颜色太深
             y: 0,
-            points: [0, 0, 0, height],
-            stroke: Colors.gray200,
-            strokeWidth: 1,
-            shadowColor: Colors.black,
-            shadowBlur: 6,
-            shadowOffset: { x: 3.5, y: 0 },
-            shadowOpacity: 0.25,
-            shadowForStrokeEnabled: true
+            width: 8,
+            height,
+            fillLinearGradientStartPoint: { x: 0, y: 0 },
+            fillLinearGradientEndPoint: { x: 8, y: 0 },
+            fillLinearGradientColorStops: [0, 'rgba(0,0,0,0.05)', 1, Colors.transparent]
         };
     });
 }
