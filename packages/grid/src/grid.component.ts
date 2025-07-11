@@ -289,7 +289,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setContainerRect();
             this.bindGlobalMousedown();
             this.containerResizeListener();
-            this.bindWheel();
+            // this.bindWheel();
             this.bindShortcuts();
         });
 
@@ -583,6 +583,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
     }
 
+    stageWheel(e: KoEventObject<WheelEvent>) {
+        e.event.evt.preventDefault();
+        this.aiTableGridEventService.closeCellEditor();
+        this.scrollAction({ deltaX: e.event.evt.deltaX, deltaY: e.event.evt.deltaY, shiftKey: e.event.evt.shiftKey });
+    }
+
+    onScrollPositionChange(position: { scrollX: number; scrollY: number }) {
+        console.log('============ position =============');
+        console.log(position);
+        this.scrollAction2(position);
+    }
+
     stageContextmenu(e: KoEventObject<MouseEvent>) {
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
@@ -761,6 +773,17 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
             }
             options.callback && options.callback();
+            this.timer = null;
+        });
+    };
+
+    scrollAction2 = (options: { scrollX: number; scrollY: number }) => {
+        if (this.timer) {
+            cancelAnimationFrame(this.timer);
+        }
+        this.timer = requestAnimationFrame(() => {
+            this.horizontalScroll({ target: { scrollLeft: options.scrollX } });
+            this.verticalScroll({ target: { scrollTop: options.scrollY } });
             this.timer = null;
         });
     };

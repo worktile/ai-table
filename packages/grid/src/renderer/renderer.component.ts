@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
@@ -22,13 +22,21 @@ import {
     AITableFrozenPlaceholderCells,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells
+    AITablePlaceholderCells,
+    AITableScrollableGroup
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT, AI_TABLE_OFFSET, Colors } from '../constants';
+import {
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
+    AI_TABLE_OFFSET,
+    Colors
+} from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -52,11 +60,12 @@ Konva.pixelRatio = 2;
         AITableFillHandle,
         AITableFieldStats,
         AITableBackground,
-        AITableFrozenFieldShadow
+        AITableFrozenFieldShadow,
+        AITableScrollableGroup
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableRenderer {
+export class AITableRenderer implements AfterViewInit {
     config = input.required<AITableRendererConfig>();
 
     koMousemove = output<KoEventObject<MouseEvent>>();
@@ -75,7 +84,11 @@ export class AITableRenderer {
 
     koMouseleave = output<KoEventObject<MouseEvent>>();
 
+    onScrollPosition = output<{ scrollX: number; scrollY: number }>();
+
     isHoverStatContainer = signal(false);
+
+    waitShow = signal(false);
 
     fields = computed(() => {
         return AITable.getVisibleFields(this.config().aiTable);
@@ -155,6 +168,56 @@ export class AITableRenderer {
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT
         };
     });
+
+    scrollTotalHeight = computed(() => {
+        return Math.max(this.coordinate().totalHeight, this.containerHeight() - AI_TABLE_FIELD_HEAD_HEIGHT);
+    });
+
+    scrollTotalWidth = computed(() => {
+        return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
+    });
+
+    scrollConfig = computed<any>(() => {
+        return {
+            width: this.containerWidth(),
+            height: this.containerHeight() - 200,
+            contentWidth: this.scrollTotalWidth(), // 内容宽度大于容器宽度，会显示横向滚动条
+            contentHeight: this.scrollTotalHeight(), // 内容高度大于容器高度，会显示竖向滚动条
+            scrollbarSize: 10,
+            scrollbarColor: Colors.gray700,
+            // scrollbarTrackColor: Colors.gray200,
+            x: 0,
+            y: 0,
+            listening: true,
+            verticalScrollbar: true,
+            horizontalScrollbar: true
+        };
+    });
+
+    scrollConfig2 = computed<any>(() => ({
+        width: 400,
+        height: 300,
+        contentWidth: 500, // 内容宽度大于容器宽度，会显示横向滚动条
+        contentHeight: 600, // 内容高度大于容器高度，会显示竖向滚动条
+        scrollbarSize: 10,
+        scrollbarColor: Colors.gray700,
+        // scrollbarTrackColor: Colors.gray200,
+        x: 500,
+        y: 500,
+        listening: true,
+        verticalScrollbar: true,
+        horizontalScrollbar: true
+    }));
+
+    // 文本配置
+    textConfig = computed(() => ({
+        x: 20,
+        y: 20,
+        text: '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条',
+        fontSize: 16,
+        fill: '#333333',
+        width: 760
+    }));
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
@@ -287,6 +350,22 @@ export class AITableRenderer {
         };
     });
 
+    wheelBgConfig = computed<AITableBackgroundConfig>(() => {
+        return {
+            x: 0,
+            y: 0,
+            width: 500,
+            height: 500,
+            fill: Colors.black,
+            stroke: Colors.gray200,
+            strokeWidth: AI_TABLE_CELL_LINE_BORDER,
+            opacity: 1,
+            borders: [true, false, true, false],
+            listening: true,
+            coordinate: this.coordinate()
+        };
+    });
+
     columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
         return {
             ...this.columnHeadFieldConfig(),
@@ -361,6 +440,12 @@ export class AITableRenderer {
         };
     });
 
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.waitShow.set(true);
+        }, 1000);
+    }
+
     stageMousemove(e: KoEventObject<MouseEvent>) {
         this.koMousemove.emit(e as KoEventObject<MouseEvent>);
     }
@@ -387,6 +472,14 @@ export class AITableRenderer {
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
+    }
+
+    stageWheel(e: KoEventObject<WheelEvent>, a?: any) {
+        console.log('============ e =============');
+        console.log(e);
+        console.log('============ a =============');
+        console.log(a);
+        this.koWheel.emit(e as KoEventObject<WheelEvent>);
     }
 
     onStatContainerHover(isHover: boolean) {
