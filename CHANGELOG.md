@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.27](https://github.com/worktile/ai-table/compare/0.1.26...0.1.27) (2025-07-11)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-18451 固定列阴影改为 Rect 渲染渐变色实现 ([#567](https://github.com/worktile/ai-table/issues/567)) ([c8bb68e](https://github.com/worktile/ai-table/commit/c8bb68edb4441d0eb29669f4178dad14278617d8)), closes [#WIK-18451](https://github.com/worktile/ai-table/issues/WIK-18451)
+* the highlighted area is incorrect when scrolling and filling ([#568](https://github.com/worktile/ai-table/issues/568)) ([ef8a1dc](https://github.com/worktile/ai-table/commit/ef8a1dcf679a407c784c3961f574445a6d5577c5))
+
+
+
 ## [0.1.26](https://github.com/worktile/ai-table/compare/0.1.25...0.1.26) (2025-07-10)
 
 
