@@ -10,7 +10,9 @@
 >
     <ko-layer>
         <ai-table-scrollable-group [config]="scrollConfig()" (scrollPosition)="onScrollPosition.emit($event)">
-            <ko-group [config]="gridGroupConfig()">
+            <ai-table-scrollable-group2></ai-table-scrollable-group2>
+            <!-- <ko-group [config]="gridGroupConfig()"></ko-group> -->
+            <!-- <ko-group [config]="gridGroupConfig()">
                 <ko-group [config]="offsetYConfig()">
                     <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
                     <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
@@ -93,7 +95,7 @@
                 <ko-group>
                     <ai-table-frozen-field-shadow [config]="columnFieldStatsConfig()" position="fieldStats"></ai-table-frozen-field-shadow>
                 </ko-group>
-            </ko-group>
+            </ko-group> -->
 
             <!-- <ai-table-wheel [config]="wheelGroupConfig()">
             <ai-table-background [config]="wheelBgConfig()"></ai-table-background>

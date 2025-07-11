@@ -37,6 +37,7 @@ import {
     AI_TABLE_OFFSET,
     Colors
 } from '../constants';
+import { AITableScrollableGroup2 } from './components/scrollable-group/scrollable-group.component2';
 
 Konva.pixelRatio = 2;
 
@@ -61,7 +62,8 @@ Konva.pixelRatio = 2;
         AITableFieldStats,
         AITableBackground,
         AITableFrozenFieldShadow,
-        AITableScrollableGroup
+        AITableScrollableGroup,
+        AITableScrollableGroup2
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal, effect, ViewChild, TemplateRef, output } from '@angular/core';
-import Konva from 'konva';
-import { KoContainer, KoEventObject } from '../../../angular-konva';
+import { KO_CONTAINER_TOKEN, KoContainer, KoEventObject } from '../../../angular-konva';
 import { KoShape } from '../../../angular-konva/components/shape.component';
 import { Colors } from '../../../constants';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { Vector2d } from 'konva/lib/types';
-import { single } from 'rxjs';
 
 export interface ScrollableGroupConfig {
     width: number;
@@ -30,7 +28,7 @@ export interface ScrollableGroupConfig {
             </ko-group>
 
             <!-- 内容区域 -->
-            <ko-group [config]="contentConfig()">
+            <ko-group #contentGroup [config]="contentConfig()">
                 <ko-text [config]="textConfig()"></ko-text>
                 <ng-content></ng-content>
             </ko-group>
@@ -71,6 +69,20 @@ export interface ScrollableGroupConfig {
             </ko-group>
         </ko-group>
     `,
+    providers: [
+        {
+            provide: KO_CONTAINER_TOKEN,
+            // useFactory: (container: AITableScrollableGroup) => {
+            //     // 通过组件实例返回特定的那个 group
+            //     console.log('============ container.contentGroup =============');
+            //     console.log(container.contentGroup);
+            //     return container.contentGroup;
+            // },
+            // useClass: AITableScrollableGroup
+            useExisting: AITableScrollableGroup
+            // deps: []
+        }
+    ],
     imports: [KoContainer, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -82,6 +94,7 @@ export class AITableScrollableGroup {
     @ViewChild('verticalTrack') verticalTrack!: KoShape;
     @ViewChild('verticalThumb') verticalThumb!: KoShape;
     @ViewChild('horizontalTrack') horizontalTrack!: KoShape;
+    @ViewChild('contentGroup') contentGroup!: KoContainer;
 
     private hiddenScrollbarTimer: any;
 
