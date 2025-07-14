@@ -126,6 +126,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private dragFillState: AITableDragFillState = {
         isDragging: false,
+        activeCell: null,
         sourceCells: new Set<string>()
     };
 
@@ -451,7 +452,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             recordId
                         );
 
-                        activeCell = this.aiTable.selection().activeCell;
+                        activeCell = this.dragFillState.activeCell;
                         startCell = highlightStartCell;
                         endCell = highlightEndCell;
                     } else {
@@ -507,6 +508,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId || !fieldId) return;
                 this.updateDragFillState({
                     isDragging: true,
+                    activeCell: this.aiTable.selection().activeCell,
                     sourceCells: this.aiTable.selection().selectedCells
                 });
                 return;
@@ -547,7 +549,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const gridStage = e.event.currentTarget.getStage();
         const pos = gridStage?.getPointerPosition();
         if (pos == null) {
-            this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
+            this.updateDragFillState({ isDragging: false, activeCell: null, sourceCells: new Set<string>() });
             return;
         }
         const { context } = this.aiTable;
@@ -565,7 +567,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (recordId) {
             performFill(this.aiTable, this.dragFillState.sourceCells, recordId, this.actions);
         }
-        this.updateDragFillState({ isDragging: false, sourceCells: new Set<string>() });
+        this.updateDragFillState({ isDragging: false, activeCell: null, sourceCells: new Set<string>() });
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
@@ -1097,8 +1099,28 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     // 向左滚动，单元格向后退一格，防止选区进入冻结列
                     const nextField = gridData.fields[!isHorizontalScroll || scrollLeft > 0 ? nextCellIndex : nextCellIndex + 1];
                     const nextRecord = gridData.records[nextRowIndex];
+
                     if (nextField && nextRecord) {
-                        this.aiTableGridSelectionService.selectCells([startCell[0], startCell[1]], [nextRecord._id, nextField._id]);
+                        let newStartCell: AIRecordFieldIdPath | null = null;
+                        let newEndCell: AIRecordFieldIdPath | null = null;
+                        let newActiveCell: AIRecordFieldIdPath | null = null;
+
+                        if (this.dragFillState.isDragging) {
+                            const { highlightStartCell, highlightEndCell } = dragFillHighlightArea(
+                                this.aiTable,
+                                this.dragFillState.sourceCells,
+                                nextRecord._id
+                            );
+                            newStartCell = highlightStartCell;
+                            newEndCell = highlightEndCell;
+                            newActiveCell = this.dragFillState.activeCell;
+                        } else {
+                            newStartCell = [startCell[0], startCell[1]];
+                            newEndCell = [nextRecord._id, nextField._id];
+                            newActiveCell = null;
+                        }
+
+                        this.aiTableGridSelectionService.selectCells(newStartCell, newEndCell, newActiveCell);
                     }
                 }
             },

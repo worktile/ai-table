@@ -4,6 +4,7 @@ import { AITableActions } from '../../utils';
 
 export interface AITableDragFillState {
     isDragging: boolean;
+    activeCell: AIRecordFieldIdPath | null;
     sourceCells: Set<string>;
 }
 
