@@ -590,8 +590,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     onScrollPositionChange(position: { scrollX: number; scrollY: number }) {
-        console.log('============ position =============');
-        console.log(position);
         this.scrollAction2(position);
     }
 

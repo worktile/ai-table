@@ -23,7 +23,8 @@ import {
     AITableHoverRowHeads,
     AITableOtherRows,
     AITablePlaceholderCells,
-    AITableScrollableGroup
+    AITableScrollableGroup,
+    ScrollableGroupConfig
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
@@ -37,7 +38,6 @@ import {
     AI_TABLE_OFFSET,
     Colors
 } from '../constants';
-import { AITableScrollableGroup2 } from './components/scrollable-group/scrollable-group.component2';
 
 Konva.pixelRatio = 2;
 
@@ -62,8 +62,7 @@ Konva.pixelRatio = 2;
         AITableFieldStats,
         AITableBackground,
         AITableFrozenFieldShadow,
-        AITableScrollableGroup,
-        AITableScrollableGroup2
+        AITableScrollableGroup
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -179,10 +178,10 @@ export class AITableRenderer implements AfterViewInit {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
 
-    scrollConfig = computed<any>(() => {
+    scrollConfig = computed<ScrollableGroupConfig>(() => {
         return {
             width: this.containerWidth(),
-            height: this.containerHeight() - 200,
+            height: this.containerHeight(),
             contentWidth: this.scrollTotalWidth(), // 内容宽度大于容器宽度，会显示横向滚动条
             contentHeight: this.scrollTotalHeight(), // 内容高度大于容器高度，会显示竖向滚动条
             scrollbarSize: 10,
@@ -192,7 +191,8 @@ export class AITableRenderer implements AfterViewInit {
             y: 0,
             listening: true,
             verticalScrollbar: true,
-            horizontalScrollbar: true
+            horizontalScrollbar: true,
+            contentNotScrollbar: true
         };
     });
 
@@ -477,10 +477,6 @@ export class AITableRenderer implements AfterViewInit {
     }
 
     stageWheel(e: KoEventObject<WheelEvent>, a?: any) {
-        console.log('============ e =============');
-        console.log(e);
-        console.log('============ a =============');
-        console.log(a);
         this.koWheel.emit(e as KoEventObject<WheelEvent>);
     }
 

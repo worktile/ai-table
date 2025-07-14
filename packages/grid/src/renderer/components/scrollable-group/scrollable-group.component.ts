@@ -10,13 +10,14 @@ export interface ScrollableGroupConfig {
     height: number;
     contentWidth: number;
     contentHeight: number;
+    x?: number;
+    y?: number;
     scrollbarSize?: number;
     scrollbarColor?: string;
     scrollbarTrackColor?: string;
     verticalScrollbar?: boolean;
     horizontalScrollbar?: boolean;
-    x?: number;
-    y?: number;
+    contentNotScrollbar?: boolean;
 }
 
 @Component({
@@ -69,25 +70,13 @@ export interface ScrollableGroupConfig {
             </ko-group>
         </ko-group>
     `,
-    providers: [
-        {
-            provide: KO_CONTAINER_TOKEN,
-            // useFactory: (container: AITableScrollableGroup) => {
-            //     // 通过组件实例返回特定的那个 group
-            //     console.log('============ container.contentGroup =============');
-            //     console.log(container.contentGroup);
-            //     return container.contentGroup;
-            // },
-            // useClass: AITableScrollableGroup
-            useExisting: AITableScrollableGroup
-            // deps: []
-        }
-    ],
     imports: [KoContainer, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableScrollableGroup {
     config = input.required<ScrollableGroupConfig>();
+
+    contentTemplate = input.required<KoContainer>();
 
     scrollPosition = output<{ scrollX: number; scrollY: number }>();
 
@@ -128,10 +117,12 @@ export class AITableScrollableGroup {
         effect(() => {
             const scrollX = this.scrollX();
             const scrollY = this.scrollY();
-            console.log('============ scrollX, scrollY =============');
-            console.log(scrollX, scrollY);
             this.scrollPosition.emit({ scrollX, scrollY });
         });
+    }
+
+    ngAfterViewInit() {
+        this.contentTemplate().getNode().moveTo(this.contentGroup.getNode());
     }
 
     // 容器配置
@@ -176,9 +167,15 @@ export class AITableScrollableGroup {
 
     // 内容区域配置
     contentConfig = computed(() => {
+        if (this.config().contentNotScrollbar) {
+            return {
+                offsetX: 0,
+                offsetY: 0
+            };
+        }
         return {
-            x: -this.scrollX(),
-            y: -this.scrollY()
+            offsetX: this.scrollX(),
+            offsetY: this.scrollY()
         };
     });
 
