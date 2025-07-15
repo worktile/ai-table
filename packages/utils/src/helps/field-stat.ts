@@ -42,7 +42,7 @@ export function statCountUnique(records: AITableRecords, options: FieldOptions) 
     const { field } = options;
     records = records.filter((record) => {
         const fieldValue = record.values[field!._id];
-        if (fieldValue && isEmpty(fieldValue)) {
+        if (!fieldValue || isEmpty(fieldValue)) {
             return false;
         }
         return true;
@@ -71,10 +71,9 @@ export function statPercentEmpty(records: AITableRecords, options: FieldOptions)
 }
 
 export function statPercentUnique(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
     const uniqueCount = statCountUnique(records, options);
-    const allCount = statCountAll(records, options);
-    return ((uniqueCount / allCount) * 100).toFixed(2);
+    const filledCount = statCountFilled(records, options);
+    return ((uniqueCount / filledCount) * 100).toFixed(2);
 }
 
 export function statSum(records: AITableRecords, options: FieldOptions) {
