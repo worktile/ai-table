@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
@@ -22,13 +22,22 @@ import {
     AITableFrozenPlaceholderCells,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells
+    AITablePlaceholderCells,
+    AITableScrollableGroup,
+    ScrollableGroupConfig
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCells } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT, AI_TABLE_OFFSET, Colors } from '../constants';
+import {
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
+    AI_TABLE_OFFSET,
+    Colors
+} from '../constants';
 
 Konva.pixelRatio = 2;
 
@@ -74,6 +83,8 @@ export class AITableRenderer {
     koDblclick = output<KoEventObject<MouseEvent>>();
 
     koMouseleave = output<KoEventObject<MouseEvent>>();
+
+    onScrollPosition = output<{ scrollX: number; scrollY: number }>();
 
     isHoverStatContainer = signal(false);
 
@@ -154,6 +165,14 @@ export class AITableRenderer {
             width: this.containerWidth(),
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT
         };
+    });
+
+    scrollTotalHeight = computed(() => {
+        return Math.max(this.coordinate().totalHeight, this.containerHeight() - AI_TABLE_FIELD_HEAD_HEIGHT);
+    });
+
+    scrollTotalWidth = computed(() => {
+        return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
@@ -387,6 +406,10 @@ export class AITableRenderer {
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
+    }
+
+    stageWheel(e: KoEventObject<WheelEvent>) {
+        this.koWheel.emit(e);
     }
 
     onStatContainerHover(isHover: boolean) {

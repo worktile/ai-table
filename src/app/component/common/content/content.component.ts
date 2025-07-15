@@ -124,11 +124,11 @@ export class DemoTableContent {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             hiddenRowDrag: this.tableService.hiddenRowDrag(),
             customFields: {
-                [AITableCustomFieldType.relationTicket]: {
+                [AITableCustomFieldType.customDemo]: {
                     fieldOption: {
-                        type: AITableCustomFieldType.relationTicket,
+                        type: AITableCustomFieldType.customDemo,
                         group: AITableFieldGroup.advanced,
-                        name: '工单',
+                        name: '自定义字段',
                         icon: 'ticket',
                         path: RelationIconPath,
                         width: AI_TABLE_FIELD_MAX_WIDTH,
@@ -136,9 +136,9 @@ export class DemoTableContent {
                     },
                     fieldModel: new RelationTicketField(),
                     render: renderRelationCell,
-                    hoverRender: AITableCellRelationTicket,
+                    coverRender: AITableCellRelationTicket,
                     getDefaultFieldValue: (field: AITableField) => {
-                        return [];
+                        return null;
                     }
                 }
             },
@@ -416,7 +416,7 @@ export class DemoTableContent {
                 }
             }
 
-            if (field?.type === AITableCustomFieldType.relationTicket && e.targetNameDetail.source) {
+            if (field?.type === AITableCustomFieldType.customDemo && e.targetNameDetail.source) {
                 if (e.targetNameDetail.source === AI_TABLE_CELL_TICKET_ADD) {
                     alert('打开新增工单窗口');
                 } else if (e.targetNameDetail.source === AI_TABLE_CELL_MORE_COUNT) {
@@ -431,7 +431,7 @@ export class DemoTableContent {
     onDbClick(e: KoEventObjectOutput<MouseEvent>) {
         if (e.targetNameDetail.targetName === AI_TABLE_CELL) {
             const field = this.aiTable.fieldsMap()[e.targetNameDetail.fieldId!];
-            if (field?.type === AITableCustomFieldType.relationTicket) {
+            if (field?.type === AITableCustomFieldType.customDemo) {
                 expandCell(this.aiTable, [e.targetNameDetail.recordId!, e.targetNameDetail.fieldId!]);
             }
         }

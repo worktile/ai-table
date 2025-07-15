@@ -14,72 +14,51 @@ import {
     KoContainer,
     aiTableRectConfigToKonvaConfig,
     aiTableImageConfigToKonvaConfig,
-    AI_TABLE_CELL_BORDER
+    AI_TABLE_CELL_BORDER,
+    AITableScrollableGroup,
+    ScrollableGroupConfig
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
 import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationItem } from '../../types/field';
-import { getRelationItemsConfigs } from './render';
-import { RectConfig } from 'konva/lib/shapes/Rect';
-import { TextConfig } from 'konva/lib/shapes/Text';
-import { AI_TABLE_CELL_MORE_COUNT, RELATION_ADD_NAME_MAP } from '../../constants/field';
 
 @Component({
     selector: 'ai-table-relation',
     template: `
-        @if (onlyDisplayBorder()) {
-            @if (expandBorderConfig()) {
-                <ko-rect [config]="expandBorderConfig()!"></ko-rect>
+        <ko-group #rootGroup>
+            @if (onlyDisplayBorder()) {
+                @if (expandBorderConfig()) {
+                    <ko-rect [config]="expandBorderConfig()!"></ko-rect>
+                }
+            } @else {
+                <ko-group>
+                    @if (expandContainer()) {
+                        <ko-rect [config]="expandContainer()!"></ko-rect>
+                        <ai-table-scrollable-group [config]="scrollConfig()" [contentTemplate]="contentGroup" [parentContainer]="rootGroup">
+                            <ko-group #contentGroup>
+                                <ko-text [config]="textConfig()"></ko-text>
+                            </ko-group>
+                        </ai-table-scrollable-group>
+                    }
+                </ko-group>
             }
-        } @else {
-            <ko-group>
-                @if (expandContainer()) {
-                    <ko-rect [config]="expandContainer()!"></ko-rect>
-                }
-            </ko-group>
-            <ko-group>
-                @for (relation of relations(); track relation.relationInfo._id) {
-                    <ko-group>
-                        <ko-group>
-                            <ko-rect [config]="relation.bgRect"></ko-rect>
-                        </ko-group>
-                        <ko-group>
-                            <ko-image [config]="relation.icon"></ko-image>
-                            <ai-table-text [config]="relation.identifier"></ai-table-text>
-                            @if (relation.title) {
-                                <ai-table-text [config]="relation.title"></ai-table-text>
-                            }
-                        </ko-group>
-                    </ko-group>
-                }
-
-                @if (moreCount()) {
-                    <ko-group>
-                        <ko-rect [config]="moreCount()!.bgRect"></ko-rect>
-                    </ko-group>
-                    <ko-group>
-                        <ai-table-text [config]="moreCount()!.text"></ai-table-text>
-                    </ko-group>
-                }
-
-                <ai-table-action-icon [config]="addActionConfig()"></ai-table-action-icon>
-            </ko-group>
-        }
+        </ko-group>
     `,
-    imports: [KoShape, KoContainer, AITableActionIcon, AITableTextComponent],
+    imports: [KoShape, KoContainer, AITableScrollableGroup, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellRelationTicket extends CoverCellComponent {
-    static override fieldType = AITableCustomFieldType.relationTicket;
+    static override fieldType = AITableCustomFieldType.customDemo;
+
+    maxHeight = 200;
 
     expandBorderConfig = computed(() => {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
         if (isExpand) {
-            const { totalWidth } = this.relationRenderConfig();
             return {
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
-                height: totalWidth,
+                height: this.maxHeight,
                 stroke: Colors.primary,
                 strokeWidth: 2,
                 listening: false
@@ -92,7 +71,6 @@ export class AITableCellRelationTicket extends CoverCellComponent {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
         if (isExpand) {
-            const { totalWidth } = this.relationRenderConfig();
             return {
                 name: generateTargetName({
                     targetName: AI_TABLE_CELL,
@@ -101,7 +79,7 @@ export class AITableCellRelationTicket extends CoverCellComponent {
                     mouseStyle: 'default'
                 }),
                 width: columnWidth,
-                height: totalWidth,
+                height: this.maxHeight,
                 fill: Colors.white,
                 listening: true
             };
@@ -109,103 +87,35 @@ export class AITableCellRelationTicket extends CoverCellComponent {
         return null;
     });
 
-    relationRenderConfig = computed(() => {
-        const { render, aiTable, field, recordId, readonly, isExpand } = this.config()!;
-        render.transformValue = render.transformValue || [];
-        const { relationItems, moreCount, addActionConfig, totalWidth } = getRelationItemsConfigs(
-            {
-                ...render,
-                x: AI_TABLE_OFFSET,
-                y: AI_TABLE_OFFSET
-            },
-            drawer,
-            {
-                showAddAction: true,
-                multilineRow: isExpand
-            }
-        );
+    scrollConfig = computed<ScrollableGroupConfig>(() => {
+        const { render, field, recordId, readonly, isExpand, coordinate } = this.config()!;
+        const { columnWidth } = render;
         return {
-            relationItems,
-            moreCount,
-            addActionConfig,
-            totalWidth
+            width: columnWidth,
+            height: this.maxHeight,
+            contentWidth: columnWidth, // 内容宽度大于容器宽度，会显示横向滚动条
+            contentHeight: 500, // 内容高度大于容器高度，会显示竖向滚动条
+            scrollbarSize: 10,
+            scrollbarColor: Colors.gray700,
+            x: 0,
+            y: 0,
+            listening: true,
+            verticalScrollbar: true,
+            horizontalScrollbar: true,
+            contentNotScrollbar: false
         };
     });
 
-    moreCount = computed<{
-        bgRect: RectConfig;
-        text: TextConfig;
-    } | null>(() => {
-        const { render, aiTable, field, recordId, readonly } = this.config()!;
-        const { rowHeight } = render;
-        const moreCount = this.relationRenderConfig().moreCount;
-        if (moreCount) {
-            return {
-                bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
-                    name: generateTargetName({
-                        targetName: AI_TABLE_CELL,
-                        fieldId: field._id,
-                        recordId,
-                        source: AI_TABLE_CELL_MORE_COUNT,
-                        mouseStyle: 'pointer'
-                    }),
-                    listening: true
-                }),
-                text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
-            };
-        }
-        return null;
-    });
-
-    relations = computed<AITableRelationConfig[]>(() => {
-        const { render, aiTable, field, recordId, readonly } = this.config()!;
-        const { rowHeight } = render;
-        const { relationItems } = this.relationRenderConfig();
-        if (relationItems?.length > 0) {
-            const items = relationItems.map((relationItem: RelationItem) => {
-                const relationItemConfig = relationItem as unknown as AITableRelationConfig;
-                const { relationInfo } = relationItemConfig;
-                const relationConfig: AITableRelationConfig = {
-                    bgRect: aiTableRectConfigToKonvaConfig(relationItem.bgRect, {
-                        name: generateTargetName({
-                            targetName: AI_TABLE_CELL,
-                            fieldId: field._id,
-                            recordId,
-                            mouseStyle: readonly ? 'default' : 'pointer',
-                            source: relationInfo._id
-                        }),
-                        listening: true
-                    }),
-                    icon: aiTableImageConfigToKonvaConfig(relationItem.icon, {
-                        listening: false
-                    }),
-                    identifier: aiTableTextConfigToKonvaConfig(relationItem.identifier, rowHeight),
-                    title: aiTableTextConfigToKonvaConfig(relationItem.title, rowHeight),
-                    relationInfo: relationItemConfig.relationInfo
-                };
-                return relationConfig;
-            });
-            return items;
-        }
-        return [];
-    });
-
-    addActionConfig = computed<AITableActionIconConfig>(() => {
-        const { coordinate, field, recordId, readonly } = this.config()!;
-        const { addActionConfig } = this.relationRenderConfig();
-
+    textConfig = computed(() => {
+        const { render, field, recordId, readonly, isExpand } = this.config()!;
+        const transformValue = render.transformValue;
         return {
-            ...addActionConfig,
-            coordinate,
-            readonly,
-            listening: true,
-            name: generateTargetName({
-                targetName: AI_TABLE_CELL,
-                fieldId: field._id,
-                recordId,
-                source: RELATION_ADD_NAME_MAP[field.type as AITableCustomFieldType],
-                mouseStyle: readonly ? 'default' : 'pointer'
-            })
+            x: 20,
+            y: 20,
+            text: transformValue,
+            fontSize: 16,
+            fill: '#333333',
+            width: 760
         };
     });
 }

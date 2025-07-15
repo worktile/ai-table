@@ -290,7 +290,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setContainerRect();
             this.bindGlobalMousedown();
             this.containerResizeListener();
-            this.bindWheel();
             this.bindShortcuts();
         });
 
@@ -585,6 +584,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
     }
 
+    stageWheel(e: KoEventObject<WheelEvent>) {
+        e.event.evt.preventDefault();
+        this.aiTableGridEventService.closeCellEditor();
+        this.scrollAction({ deltaX: e.event.evt.deltaX, deltaY: e.event.evt.deltaY, shiftKey: e.event.evt.shiftKey });
+    }
+
     stageContextmenu(e: KoEventObject<MouseEvent>) {
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
@@ -734,16 +739,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 });
             }, 0);
         }
-    }
-
-    private bindWheel() {
-        fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((e: WheelEvent) => {
-                e.preventDefault();
-                this.aiTableGridEventService.closeCellEditor();
-                this.scrollAction({ deltaX: e.deltaX, deltaY: e.deltaY, shiftKey: e.shiftKey });
-            });
     }
 
     scrollAction = (options: ScrollActionOptions) => {
