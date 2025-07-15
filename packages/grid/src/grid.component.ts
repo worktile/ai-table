@@ -290,7 +290,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             this.setContainerRect();
             this.bindGlobalMousedown();
             this.containerResizeListener();
-            // this.bindWheel();
             this.bindShortcuts();
         });
 

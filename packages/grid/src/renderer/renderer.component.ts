@@ -65,7 +65,7 @@ Konva.pixelRatio = 2;
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableRenderer implements AfterViewInit {
+export class AITableRenderer {
     config = input.required<AITableRendererConfig>();
 
     koMousemove = output<KoEventObject<MouseEvent>>();
@@ -87,8 +87,6 @@ export class AITableRenderer implements AfterViewInit {
     onScrollPosition = output<{ scrollX: number; scrollY: number }>();
 
     isHoverStatContainer = signal(false);
-
-    waitShow = signal(false);
 
     fields = computed(() => {
         return AITable.getVisibleFields(this.config().aiTable);
@@ -308,22 +306,6 @@ export class AITableRenderer implements AfterViewInit {
         };
     });
 
-    wheelBgConfig = computed<AITableBackgroundConfig>(() => {
-        return {
-            x: 0,
-            y: 0,
-            width: 500,
-            height: 500,
-            fill: Colors.black,
-            stroke: Colors.gray200,
-            strokeWidth: AI_TABLE_CELL_LINE_BORDER,
-            opacity: 1,
-            borders: [true, false, true, false],
-            listening: true,
-            coordinate: this.coordinate()
-        };
-    });
-
     columnFrozenFieldStatsConfig = computed<AITableFieldStatsConfig>(() => {
         return {
             ...this.columnHeadFieldConfig(),
@@ -398,12 +380,6 @@ export class AITableRenderer implements AfterViewInit {
         };
     });
 
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.waitShow.set(true);
-        }, 1000);
-    }
-
     stageMousemove(e: KoEventObject<MouseEvent>) {
         this.koMousemove.emit(e as KoEventObject<MouseEvent>);
     }
@@ -432,8 +408,8 @@ export class AITableRenderer implements AfterViewInit {
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
     }
 
-    stageWheel(e: KoEventObject<WheelEvent>, a?: any) {
-        this.koWheel.emit(e as KoEventObject<WheelEvent>);
+    stageWheel(e: KoEventObject<WheelEvent>) {
+        this.koWheel.emit(e);
     }
 
     onStatContainerHover(isHover: boolean) {
