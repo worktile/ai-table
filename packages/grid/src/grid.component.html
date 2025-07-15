@@ -10,7 +10,6 @@
             (koDblclick)="stageDblclick($event)"
             (koMouseleave)="stageMouseleave($event)"
             (koWheel)="stageWheel($event)"
-            (onScrollPosition)="onScrollPositionChange($event)"
         >
             @if (domToolTips().length > 0) {
                 <div
@@ -29,7 +28,7 @@
                     }
                 </div>
             }
-            <!-- <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
+            <div #horizontalBar class="ai-table-horizontal-scroll-bar-wrapper" [style.width.px]="containerRect().width">
                 <div class="ai-table-scroll-bar-inner" [style.width.px]="scrollbarWidth()"></div>
             </div>
             <div
@@ -39,7 +38,7 @@
                 [style.top.px]="fieldHeadHeight"
             >
                 <div class="ai-table-scroll-bar-inner" [style.height.px]="scrollTotalHeight()"></div>
-            </div> -->
+            </div>
         </ai-table-renderer>
     }
     <ai-table-drag [horizontalBar]="horizontalBarRef()" [verticalBar]="verticalBarRef()" (dragEnd)="dragEnd($event)"></ai-table-drag>

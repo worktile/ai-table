@@ -10,10 +10,11 @@ import {
     FieldBase
 } from '@ai-table/utils';
 import { AITable, compareString, FieldOperable, hasIntersect, isMeetFilter } from '@ai-table/grid';
+import _ from 'lodash';
 
 export class RelationTicketField extends FieldBase implements FieldOperable<string, AttachmentFieldValue> {
     isValid(cellValue: AttachmentFieldValue): boolean {
-        return Array.isArray(cellValue) || cellValue === null;
+        return _.isString(cellValue) || cellValue === null;
     }
 
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: AttachmentFieldValue) {

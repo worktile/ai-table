@@ -61,8 +61,7 @@ Konva.pixelRatio = 2;
         AITableFillHandle,
         AITableFieldStats,
         AITableBackground,
-        AITableFrozenFieldShadow,
-        AITableScrollableGroup
+        AITableFrozenFieldShadow
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -177,49 +176,6 @@ export class AITableRenderer implements AfterViewInit {
     scrollTotalWidth = computed(() => {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
-
-    scrollConfig = computed<ScrollableGroupConfig>(() => {
-        return {
-            width: this.containerWidth(),
-            height: this.containerHeight(),
-            contentWidth: this.scrollTotalWidth(), // 内容宽度大于容器宽度，会显示横向滚动条
-            contentHeight: this.scrollTotalHeight(), // 内容高度大于容器高度，会显示竖向滚动条
-            scrollbarSize: 10,
-            scrollbarColor: Colors.gray700,
-            // scrollbarTrackColor: Colors.gray200,
-            x: 0,
-            y: 0,
-            listening: true,
-            verticalScrollbar: true,
-            horizontalScrollbar: true,
-            contentNotScrollbar: true
-        };
-    });
-
-    scrollConfig2 = computed<any>(() => ({
-        width: 400,
-        height: 300,
-        contentWidth: 500, // 内容宽度大于容器宽度，会显示横向滚动条
-        contentHeight: 600, // 内容高度大于容器高度，会显示竖向滚动条
-        scrollbarSize: 10,
-        scrollbarColor: Colors.gray700,
-        // scrollbarTrackColor: Colors.gray200,
-        x: 500,
-        y: 500,
-        listening: true,
-        verticalScrollbar: true,
-        horizontalScrollbar: true
-    }));
-
-    // 文本配置
-    textConfig = computed(() => ({
-        x: 20,
-        y: 20,
-        text: '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条',
-        fontSize: 16,
-        fill: '#333333',
-        width: 760
-    }));
 
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {

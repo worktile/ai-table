@@ -591,10 +591,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.scrollAction({ deltaX: e.event.evt.deltaX, deltaY: e.event.evt.deltaY, shiftKey: e.event.evt.shiftKey });
     }
 
-    onScrollPositionChange(position: { scrollX: number; scrollY: number }) {
-        this.scrollAction2(position);
-    }
-
     stageContextmenu(e: KoEventObject<MouseEvent>) {
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
@@ -746,16 +742,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
     }
 
-    private bindWheel() {
-        fromEvent<WheelEvent>(this.containerElement(), 'wheel', { passive: false })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((e: WheelEvent) => {
-                e.preventDefault();
-                this.aiTableGridEventService.closeCellEditor();
-                this.scrollAction({ deltaX: e.deltaX, deltaY: e.deltaY, shiftKey: e.shiftKey });
-            });
-    }
-
     scrollAction = (options: ScrollActionOptions) => {
         if (this.timer) {
             cancelAnimationFrame(this.timer);
@@ -773,17 +759,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 verticalBar.scrollTop = verticalBar.scrollTop + fixedDeltaY;
             }
             options.callback && options.callback();
-            this.timer = null;
-        });
-    };
-
-    scrollAction2 = (options: { scrollX: number; scrollY: number }) => {
-        if (this.timer) {
-            cancelAnimationFrame(this.timer);
-        }
-        this.timer = requestAnimationFrame(() => {
-            this.horizontalScroll({ target: { scrollLeft: options.scrollX } });
-            this.verticalScroll({ target: { scrollTop: options.scrollY } });
             this.timer = null;
         });
     };

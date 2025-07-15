@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { KoContainer } from '../../angular-konva';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, input, ViewChild } from '@angular/core';
+import { KoContainer, KoEventObject } from '../../angular-konva';
 import { AITableCellsConfig, AITableCoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
@@ -14,11 +14,11 @@ import { CoverCellComponent } from './cells/cover-cell';
     selector: 'ai-table-cover-cell',
     template: `
         @if (coverCell()) {
-            <ko-group [config]="groupConfig()">
+            <ko-group #rootGroup [config]="groupConfig()">
                 <ng-container
                     *ngComponentOutlet="
                         coverCell()!.renderComponentDefinition;
-                        inputs: { config: coverCellConfig(), onlyDisplayBorder: onlyDisplayBorder() }
+                        inputs: { config: coverCellConfig(), onlyDisplayBorder: onlyDisplayBorder(), parentContainer: rootGroup }
                     "
                 >
                 </ng-container>
@@ -28,7 +28,17 @@ import { CoverCellComponent } from './cells/cover-cell';
     imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCoverCells {
+export class AITableCoverCells implements AfterViewInit {
+    parentContainer = input<KoContainer>();
+
+    @ViewChild('rootGroup') rootGroup!: KoContainer;
+
+    ngAfterViewInit() {
+        if (this.parentContainer() && this.rootGroup) {
+            this.rootGroup.getNode().moveTo(this.parentContainer()!.getNode());
+        }
+    }
+
     config = input.required<AITableCellsConfig>();
 
     onlyDisplayBorder = input<boolean>(false);
@@ -77,7 +87,6 @@ export class AITableCoverCells {
                 ? columnWidth - AI_TABLE_CELL_PADDING + AI_TABLE_OFFSET
                 : AI_TABLE_CELL_PADDING + AI_TABLE_OFFSET;
         const renderY = 0 - AI_TABLE_OFFSET * 2;
-
         const result: AITableCoverCellConfig = {
             field,
             recordId,

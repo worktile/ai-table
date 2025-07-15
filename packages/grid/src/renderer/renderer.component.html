@@ -7,109 +7,93 @@
     (koClick)="stageClick($event)"
     (koDblclick)="stageDblclick($event)"
     (koMouseleave)="stageMouseleave($event)"
+    (koWheel)="stageWheel($event)"
 >
     <ko-layer>
-        <ai-table-scrollable-group
-            [config]="scrollConfig()"
-            [contentTemplate]="contentGroup"
-            (scrollPosition)="onScrollPosition.emit($event)"
-        >
-            <ko-group #contentGroup>
-                <ko-group [config]="gridGroupConfig()">
-                    <ko-group [config]="offsetYConfig()">
-                        <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
-                        <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
-                        @if (!hiddenIndexColumn()) {
-                            <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
-                        }
-                        <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
-                    </ko-group>
-
-                    <ko-group>
-                        <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
-                    </ko-group>
-                    <ko-group [config]="commonGroupConfig()">
-                        <ko-group [config]="offsetConfig()">
-                            <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
-                            <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
-                            <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
-                        </ko-group>
-
-                        <ko-group [config]="offsetXConfig()">
-                            <ai-table-column-heads [config]="columnHeadFieldConfig()"></ai-table-column-heads>
-                            <ai-table-add-field [config]="columnHeadFieldConfig()"></ai-table-add-field>
-                        </ko-group>
-                    </ko-group>
-
-                    <ko-group [config]="offsetYConfig()">
-                        <ai-table-frozen-field-shadow [config]="config()"></ai-table-frozen-field-shadow>
-                    </ko-group>
-
-                    <ko-group [config]="attachGroupConfig()">
-                        <ko-group [config]="offsetConfig()">
-                            @if (activeCellBorderConfig().activeCellBorder) {
-                                <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
-                            }
-                            @if (showExpandCellBorder().expandCellBorder) {
-                                <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
-                            }
-                            @if (!isLastSelectedCellInFrozenColumn()) {
-                                <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
-                            }
-                        </ko-group>
-                    </ko-group>
-                    <ko-group [config]="frozenCoverAttachGroupConfig()">
-                        <ko-group [config]="offsetYConfig()">
-                            <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
-                        </ko-group>
-                    </ko-group>
-
-                    <ko-group [config]="frozenAttachGroupConfig()">
-                        <ko-group [config]="offsetYConfig()">
-                            @if (activeCellBorderConfig().frozenActiveCellBorder) {
-                                <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
-                            }
-                            @if (showExpandCellBorder().frozenExpandCellBorder) {
-                                <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
-                            }
-                            @if (isLastSelectedCellInFrozenColumn()) {
-                                <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
-                            }
-                        </ko-group>
-                    </ko-group>
-                </ko-group>
-
-                <ko-group [config]="statGroupConfig()">
-                    <ai-table-background [config]="columnFieldStatsBgConfig()"></ai-table-background>
-                    <ko-group>
-                        <ai-table-column-stats
-                            [config]="columnFrozenFieldStatsConfig()"
-                            (hover)="onStatContainerHover($event)"
-                        ></ai-table-column-stats>
-                    </ko-group>
-                    <ko-group [config]="statCommonGroupConfig()">
-                        <ko-group [config]="offsetXConfig()">
-                            <ai-table-column-stats
-                                [config]="columnFieldStatsConfig()"
-                                (hover)="onStatContainerHover($event)"
-                            ></ai-table-column-stats>
-                        </ko-group>
-                    </ko-group>
-                    <ko-group>
-                        <ai-table-frozen-field-shadow
-                            [config]="columnFieldStatsConfig()"
-                            position="fieldStats"
-                        ></ai-table-frozen-field-shadow>
-                    </ko-group>
-                </ko-group>
+        <ko-group [config]="gridGroupConfig()">
+            <ko-group [config]="offsetYConfig()">
+                <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
+                <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
+                @if (!hiddenIndexColumn()) {
+                    <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
+                }
+                <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
             </ko-group>
 
             <ko-group>
-                <ai-table-scrollable-group [config]="scrollConfig2()" [contentTemplate]="ttttt">
-                    <ko-text #ttttt [config]="textConfig()"></ko-text>
-                </ai-table-scrollable-group>
+                <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
             </ko-group>
-        </ai-table-scrollable-group>
+            <ko-group [config]="commonGroupConfig()">
+                <ko-group [name]="'commonOffsetGroup'" #commonOffsetGroup [config]="offsetConfig()">
+                    <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
+                    <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
+                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="commonOffsetGroup"></ai-table-cover-cell>
+                </ko-group>
+
+                <ko-group [config]="offsetXConfig()">
+                    <ai-table-column-heads [config]="columnHeadFieldConfig()"></ai-table-column-heads>
+                    <ai-table-add-field [config]="columnHeadFieldConfig()"></ai-table-add-field>
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="offsetYConfig()">
+                <ai-table-frozen-field-shadow [config]="config()"></ai-table-frozen-field-shadow>
+            </ko-group>
+
+            <ko-group [config]="attachGroupConfig()">
+                <ko-group [config]="offsetConfig()">
+                    @if (activeCellBorderConfig().activeCellBorder) {
+                        <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
+                    }
+                    @if (showExpandCellBorder().expandCellBorder) {
+                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
+                    }
+                    @if (!isLastSelectedCellInFrozenColumn()) {
+                        <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
+                    }
+                </ko-group>
+            </ko-group>
+            <ko-group [config]="frozenCoverAttachGroupConfig()">
+                <ko-group #frozenCoverAttachOffsetGroup [config]="offsetYConfig()">
+                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="frozenCoverAttachOffsetGroup"></ai-table-cover-cell>
+                </ko-group>
+            </ko-group>
+
+            <ko-group [config]="frozenAttachGroupConfig()">
+                <ko-group [config]="offsetYConfig()">
+                    @if (activeCellBorderConfig().frozenActiveCellBorder) {
+                        <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
+                    }
+                    @if (showExpandCellBorder().frozenExpandCellBorder) {
+                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
+                    }
+                    @if (isLastSelectedCellInFrozenColumn()) {
+                        <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
+                    }
+                </ko-group>
+            </ko-group>
+        </ko-group>
+
+        <ko-group [config]="statGroupConfig()">
+            <ai-table-background [config]="columnFieldStatsBgConfig()"></ai-table-background>
+            <ko-group>
+                <ai-table-column-stats
+                    [config]="columnFrozenFieldStatsConfig()"
+                    (hover)="onStatContainerHover($event)"
+                ></ai-table-column-stats>
+            </ko-group>
+            <ko-group [config]="statCommonGroupConfig()">
+                <ko-group [config]="offsetXConfig()">
+                    <ai-table-column-stats
+                        [config]="columnFieldStatsConfig()"
+                        (hover)="onStatContainerHover($event)"
+                    ></ai-table-column-stats>
+                </ko-group>
+            </ko-group>
+            <ko-group>
+                <ai-table-frozen-field-shadow [config]="columnFieldStatsConfig()" position="fieldStats"></ai-table-frozen-field-shadow>
+            </ko-group>
+        </ko-group>
     </ko-layer>
 </ko-stage>
 

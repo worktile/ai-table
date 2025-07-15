@@ -5,7 +5,7 @@ import { TextConfig } from 'konva/lib/shapes/Text';
 import { ImageConfig } from 'konva/lib/shapes/Image';
 
 export enum AITableCustomFieldType {
-    relationTicket = 'relation_ticket'
+    customDemo = 'custom_demo'
 }
 
 export interface RelationItem {

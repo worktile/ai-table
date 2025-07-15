@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal, effect, ViewChild, TemplateRef, output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+    signal,
+    effect,
+    ViewChild,
+    TemplateRef,
+    output,
+    AfterViewInit
+} from '@angular/core';
 import { KO_CONTAINER_TOKEN, KoContainer, KoEventObject } from '../../../angular-konva';
 import { KoShape } from '../../../angular-konva/components/shape.component';
 import { Colors } from '../../../constants';
@@ -23,14 +34,13 @@ export interface ScrollableGroupConfig {
 @Component({
     selector: 'ai-table-scrollable-group',
     template: `
-        <ko-group [config]="containerConfig()" (koWheel)="stageWheel($event)">
+        <ko-group #rootGroup [config]="containerConfig()" (koWheel)="stageWheel($event)">
             <ko-group>
                 <ko-rect [config]="bgConfig()"></ko-rect>
             </ko-group>
 
             <!-- 内容区域 -->
             <ko-group #contentGroup [config]="contentConfig()">
-                <ko-text [config]="textConfig()"></ko-text>
                 <ng-content></ng-content>
             </ko-group>
 
@@ -73,10 +83,12 @@ export interface ScrollableGroupConfig {
     imports: [KoContainer, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableScrollableGroup {
+export class AITableScrollableGroup implements AfterViewInit {
     config = input.required<ScrollableGroupConfig>();
 
     contentTemplate = input.required<KoContainer>();
+
+    parentContainer = input<KoContainer>();
 
     scrollPosition = output<{ scrollX: number; scrollY: number }>();
 
@@ -84,6 +96,7 @@ export class AITableScrollableGroup {
     @ViewChild('verticalThumb') verticalThumb!: KoShape;
     @ViewChild('horizontalTrack') horizontalTrack!: KoShape;
     @ViewChild('contentGroup') contentGroup!: KoContainer;
+    @ViewChild('rootGroup') rootGroup!: KoContainer;
 
     private hiddenScrollbarTimer: any;
 
@@ -123,6 +136,9 @@ export class AITableScrollableGroup {
 
     ngAfterViewInit() {
         this.contentTemplate().getNode().moveTo(this.contentGroup.getNode());
+        if (this.parentContainer() && this.rootGroup) {
+            this.rootGroup.getNode().moveTo(this.parentContainer()!.getNode());
+        }
     }
 
     // 容器配置
@@ -142,16 +158,6 @@ export class AITableScrollableGroup {
             name: 'scrollable-group'
         };
     });
-
-    // 文本配置
-    textConfig = computed(() => ({
-        x: 20,
-        y: 20,
-        text: '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条 00000\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条',
-        fontSize: 16,
-        fill: '#333333',
-        width: 760
-    }));
 
     bgConfig = computed(() => {
         const { x = 0, y = 0, width, height } = this.config();
