@@ -27,7 +27,7 @@
                 <ko-group #commonOffsetGroup [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
-                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="commonOffsetGroup"></ai-table-cover-cell>
+                    <ai-table-cover-cell-entry [config]="cellsConfig()"></ai-table-cover-cell-entry>
                 </ko-group>
 
                 <ko-group [config]="offsetXConfig()">
@@ -46,7 +46,7 @@
                         <ko-rect [config]="activeCellBorderConfig().activeCellBorder!"></ko-rect>
                     }
                     @if (showExpandCellBorder().expandCellBorder) {
-                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
+                        <ai-table-cover-cell-entry [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell-entry>
                     }
                     @if (!isLastSelectedCellInFrozenColumn()) {
                         <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>
@@ -55,7 +55,7 @@
             </ko-group>
             <ko-group [config]="frozenCoverAttachGroupConfig()">
                 <ko-group #frozenCoverAttachOffsetGroup [config]="offsetYConfig()">
-                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="frozenCoverAttachOffsetGroup"></ai-table-cover-cell>
+                    <ai-table-cover-cell-entry [config]="cellsConfig()"></ai-table-cover-cell-entry>
                 </ko-group>
             </ko-group>
 
@@ -65,7 +65,7 @@
                         <ko-rect [config]="activeCellBorderConfig().frozenActiveCellBorder!"></ko-rect>
                     }
                     @if (showExpandCellBorder().frozenExpandCellBorder) {
-                        <ai-table-cover-cell [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell>
+                        <ai-table-cover-cell-entry [config]="cellsConfig()" [onlyDisplayBorder]="true"></ai-table-cover-cell-entry>
                     }
                     @if (isLastSelectedCellInFrozenColumn()) {
                         <ai-table-fill-handle [config]="fillHandleConfig()"></ai-table-fill-handle>

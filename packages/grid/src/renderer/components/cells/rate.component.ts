@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
-import { CoverCellComponent } from '../../../renderer';
+import { BaseCoverCell } from '../../../renderer';
 import {
     StarFill,
     Colors,
@@ -30,7 +30,7 @@ import {
     imports: [KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRate extends CoverCellComponent {
+export class AITableCellRate extends BaseCoverCell {
     static override fieldType = AITableFieldType.rate;
 
     private pointerX = signal<number>(0);

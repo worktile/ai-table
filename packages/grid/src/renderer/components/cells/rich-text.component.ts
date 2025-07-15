@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     AI_TABLE_ACTION_COMMON_RADIUS,
     AI_TABLE_ACTION_COMMON_RIGHT_PADDING,
@@ -17,7 +17,7 @@ import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { AITableTextComponent } from '../text.component';
-import { CoverCellComponent } from './cover-cell';
+import { BaseCoverCell } from './base-cover-cell';
 
 @Component({
     selector: 'ai-table-rich-text',
@@ -30,7 +30,7 @@ import { CoverCellComponent } from './cover-cell';
     imports: [AITableTextComponent, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRichText extends CoverCellComponent {
+export class AITableCellRichText extends BaseCoverCell {
     static override fieldType = AITableFieldType.richText;
 
     textConfig = computed<TextConfig | undefined>(() => {

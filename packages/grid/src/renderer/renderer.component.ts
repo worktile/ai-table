@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import Konva from 'konva';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape, KoStage } from '../angular-konva';
@@ -22,13 +22,11 @@ import {
     AITableFrozenPlaceholderCells,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells,
-    AITableScrollableGroup,
-    ScrollableGroupConfig
+    AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
-import { AITableCoverCells } from './components/cover-cell.component';
+import { AITableCoverCellEntry } from './components/cover-cell-entry.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
 import {
     AI_TABLE_CELL_LINE_BORDER,
@@ -53,7 +51,7 @@ Konva.pixelRatio = 2;
         AITableCells,
         AITableFrozenCells,
         AITableFrozenPlaceholderCells,
-        AITableCoverCells,
+        AITableCoverCellEntry,
         AITablePlaceholderCells,
         AITableAddField,
         AITableHoverRowHeads,

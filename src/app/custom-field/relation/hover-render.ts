@@ -1,31 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     KoShape,
     AI_TABLE_CELL,
-    AI_TABLE_OFFSET,
     Colors,
     generateTargetName,
-    AITableActionIconConfig,
-    AITableActionIcon,
-    CoverCellComponent,
-    drawer,
-    aiTableTextConfigToKonvaConfig,
-    AITableTextComponent,
+    BaseCoverCell,
     KoContainer,
-    aiTableRectConfigToKonvaConfig,
-    aiTableImageConfigToKonvaConfig,
     AI_TABLE_CELL_BORDER,
     AITableScrollableGroup,
     ScrollableGroupConfig
 } from '@ai-table/grid';
 
-import { AITableFieldType } from '@ai-table/utils';
-import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationItem } from '../../types/field';
+import { AITableCustomFieldType } from '../../types/field';
 
 @Component({
     selector: 'ai-table-relation',
     template: `
-        <ko-group #rootGroup>
+        <ko-group>
             @if (onlyDisplayBorder()) {
                 @if (expandBorderConfig()) {
                     <ko-rect [config]="expandBorderConfig()!"></ko-rect>
@@ -47,7 +38,7 @@ import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationI
     imports: [KoShape, KoContainer, AITableScrollableGroup, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRelationTicket extends CoverCellComponent {
+export class AITableCellRelationTicket extends BaseCoverCell {
     static override fieldType = AITableCustomFieldType.customDemo;
 
     maxHeight = 200;
