@@ -24,7 +24,7 @@
                 <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
             </ko-group>
             <ko-group [config]="commonGroupConfig()">
-                <ko-group [name]="'commonOffsetGroup'" #commonOffsetGroup [config]="offsetConfig()">
+                <ko-group #commonOffsetGroup [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
                     <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="commonOffsetGroup"></ai-table-cover-cell>

@@ -166,7 +166,6 @@ export class AITableScrollableGroup implements AfterViewInit {
             y: 0,
             width,
             height,
-            // fill: Colors.gray600,
             listening: true
         };
     });

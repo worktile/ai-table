@@ -46,8 +46,6 @@ import { KO_CONTAINER_TOKEN } from './container.token';
 export class KoShape implements OnInit, AfterViewInit, OnDestroy, KoComponent {
     config = input<KoShapeConfigTypes>();
 
-    name = input<string>();
-
     @Output() koMouseover = new EventEmitter<KoEventObject<MouseEvent>>();
 
     @Output() koMousemove = new EventEmitter<KoEventObject<MouseEvent>>();
@@ -185,9 +183,6 @@ export class KoShape implements OnInit, AfterViewInit, OnDestroy, KoComponent {
 
         if (this.config()) {
             this.updateNode(this.config()!);
-        }
-        if (this.name()) {
-            (this._node as any)['debugName'] = this.name()!;
         }
     }
 
