@@ -34,7 +34,13 @@ export interface ScrollableGroupConfig {
 @Component({
     selector: 'ai-table-scrollable-group',
     template: `
-        <ko-group #rootGroup [config]="containerConfig()" (koWheel)="stageWheel($event)">
+        <ko-group
+            #rootGroup
+            [config]="containerConfig()"
+            (koWheel)="stageWheel($event)"
+            (koMousedown)="stopBubble($event)"
+            (koMouseup)="stopBubble($event)"
+        >
             <ko-group>
                 <ko-rect [config]="bgConfig()"></ko-rect>
             </ko-group>
@@ -378,7 +384,12 @@ export class AITableScrollableGroup implements AfterViewInit {
         return width;
     });
 
+    stopBubble(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
+    }
+
     verticalScrollbarClick(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
         const { contentHeight, height } = this.config();
         const y = e.event.evt.offsetY - this.verticalThumbHeight() / 2;
         const maxThumbY = this.verticalThumbMaxY();
@@ -390,6 +401,7 @@ export class AITableScrollableGroup implements AfterViewInit {
     }
 
     horizontalScrollbarClick(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
         const { contentWidth, width } = this.config();
         const x = e.event.evt.offsetX - this.horizontalThumbWidth() / 2;
         const maxThumbX = this.horizontalThumbMaxX();
