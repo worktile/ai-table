@@ -27,7 +27,7 @@
                 <ko-group #commonOffsetGroup [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
-                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="commonOffsetGroup"></ai-table-cover-cell>
+                    <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
                 </ko-group>
 
                 <ko-group [config]="offsetXConfig()">
@@ -55,7 +55,7 @@
             </ko-group>
             <ko-group [config]="frozenCoverAttachGroupConfig()">
                 <ko-group #frozenCoverAttachOffsetGroup [config]="offsetYConfig()">
-                    <ai-table-cover-cell [config]="cellsConfig()" [parentContainer]="frozenCoverAttachOffsetGroup"></ai-table-cover-cell>
+                    <ai-table-cover-cell [config]="cellsConfig()"></ai-table-cover-cell>
                 </ko-group>
             </ko-group>
 
