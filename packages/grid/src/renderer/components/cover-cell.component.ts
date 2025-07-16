@@ -18,7 +18,7 @@ import { CoverCellComponent } from './cells/cover-cell';
                 <ng-container
                     *ngComponentOutlet="
                         coverCell()!.renderComponentDefinition;
-                        inputs: { config: coverCellConfig(), onlyDisplayBorder: onlyDisplayBorder(), parentContainer: rootGroup }
+                        inputs: { config: coverCellConfig(), onlyDisplayBorder: onlyDisplayBorder() }
                     "
                 >
                 </ng-container>
@@ -28,17 +28,7 @@ import { CoverCellComponent } from './cells/cover-cell';
     imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCoverCells implements AfterViewInit {
-    parentContainer = input<KoContainer>();
-
-    @ViewChild('rootGroup') rootGroup!: KoContainer;
-
-    ngAfterViewInit() {
-        if (this.parentContainer() && this.rootGroup) {
-            this.rootGroup.getNode().moveTo(this.parentContainer()!.getNode());
-        }
-    }
-
+export class AITableCoverCells {
     config = input.required<AITableCellsConfig>();
 
     onlyDisplayBorder = input<boolean>(false);
