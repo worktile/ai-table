@@ -3,11 +3,11 @@ import { AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 
 @Component({
-    selector: 'ai-table-cover-cell',
+    selector: 'ai-table-cover-cell-base',
     template: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CoverCellComponent extends Component {
+export class CoverCellBase {
     static fieldType: AITableFieldType | string;
 
     config = input<AITableCoverCellConfig>();

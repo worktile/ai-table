@@ -17,7 +17,7 @@ import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
 import { AITableTextComponent } from '../text.component';
-import { CoverCellComponent } from './cover-cell';
+import { CoverCellBase } from './cover-cell-base';
 
 @Component({
     selector: 'ai-table-rich-text',
@@ -30,7 +30,7 @@ import { CoverCellComponent } from './cover-cell';
     imports: [AITableTextComponent, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRichText extends CoverCellComponent {
+export class AITableCellRichText extends CoverCellBase {
     static override fieldType = AITableFieldType.richText;
 
     textConfig = computed<TextConfig | undefined>(() => {

@@ -13,7 +13,7 @@ import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { drawer } from '../../drawers/drawer';
-import { CoverCellComponent } from './cover-cell';
+import { CoverCellBase } from './cover-cell-base';
 
 @Component({
     selector: 'ai-table-link',
@@ -25,7 +25,7 @@ import { CoverCellComponent } from './cover-cell';
     imports: [AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellLink extends CoverCellComponent {
+export class AITableCellLink extends CoverCellBase {
     static override fieldType = AITableFieldType.link;
 
     textOffset = AI_TABLE_CELL_PADDING + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;

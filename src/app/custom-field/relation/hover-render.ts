@@ -7,7 +7,7 @@ import {
     generateTargetName,
     AITableActionIconConfig,
     AITableActionIcon,
-    CoverCellComponent,
+    CoverCellBase,
     drawer,
     aiTableTextConfigToKonvaConfig,
     AITableTextComponent,
@@ -47,7 +47,7 @@ import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationI
     imports: [KoShape, KoContainer, AITableScrollableGroup, KoShape],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellRelationTicket extends CoverCellComponent {
+export class AITableCellRelationTicket extends CoverCellBase {
     static override fieldType = AITableCustomFieldType.customDemo;
 
     maxHeight = 200;
