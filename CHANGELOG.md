@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.28](https://github.com/worktile/ai-table/compare/0.1.27...0.1.28) (2025-07-16)
+
+
+### Bug Fixes
+
+* #WIK-18464 【统计行】唯一数占比计算？空行也算去重唯一了吗？ ([#571](https://github.com/worktile/ai-table/issues/571)) ([46a192a](https://github.com/worktile/ai-table/commit/46a192ad551f0780cdc071b59bf5c958151596a3)), closes [#WIK-18464](https://github.com/worktile/ai-table/issues/WIK-18464)
+* #WIK-18465 【统计行】多选统计指标不全，缺少唯一数和唯一数占比 ([#572](https://github.com/worktile/ai-table/issues/572)) ([4c2839f](https://github.com/worktile/ai-table/commit/4c2839f92763f11cc132e2f1a427bcdfedb5ce88)), closes [#WIK-18465](https://github.com/worktile/ai-table/issues/WIK-18465)
+* #WIK-18466 【统计行】进度指标不全，缺少最大值最小值 ([#573](https://github.com/worktile/ai-table/issues/573)) ([c06f5c5](https://github.com/worktile/ai-table/commit/c06f5c56fcc88027bcdea3d6d72d41ba6f76c633)), closes [#WIK-18466](https://github.com/worktile/ai-table/issues/WIK-18466)
+* #WIK-18496 滚动组件-阻止相关事件冒泡，破坏内部行为 ([1e4e005](https://github.com/worktile/ai-table/commit/1e4e005c17b0376e05ef839ec9c8980bf705a91f)), closes [#WIK-18496](https://github.com/worktile/ai-table/issues/WIK-18496)
+
+
+### Features
+
+* #WIK-18458 aitable 封装统一滚动组件 ([#570](https://github.com/worktile/ai-table/issues/570)) ([10e6f5c](https://github.com/worktile/ai-table/commit/10e6f5c3c136b390fb57194bed9445959c3ddca6)), closes [#WIK-18458](https://github.com/worktile/ai-table/issues/WIK-18458)
+
+
+
 ## [0.1.27](https://github.com/worktile/ai-table/compare/0.1.26...0.1.27) (2025-07-11)
 
 
