@@ -22,7 +22,7 @@ import { AITableCustomFieldType } from '../../types/field';
                     <ko-rect [config]="expandBorderConfig()!"></ko-rect>
                 }
             } @else {
-                <ko-group>
+                <ko-group #rootGroup>
                     @if (expandContainer()) {
                         <ko-rect [config]="expandContainer()!"></ko-rect>
                         <ai-table-scrollable-group [config]="scrollConfig()" [contentTemplate]="contentGroup" [parentContainer]="rootGroup">
