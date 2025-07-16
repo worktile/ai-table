@@ -1,5 +1,5 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, computed, input, ViewChild } from '@angular/core';
-import { KoContainer, KoEventObject } from '../../angular-konva';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { KoContainer } from '../../angular-konva';
 import { AITableCellsConfig, AITableCoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
@@ -8,10 +8,10 @@ import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getCoverCell 
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
 import { Constructor } from 'ngx-tethys/core';
-import { CoverCellComponent } from './cells/cover-cell';
+import { CoverCellBase } from './cells/cover-cell-base';
 
 @Component({
-    selector: 'ai-table-cover-cell',
+    selector: 'ai-table-cover-cell-entry',
     template: `
         @if (coverCell()) {
             <ko-group #rootGroup [config]="groupConfig()">
@@ -28,12 +28,12 @@ import { CoverCellComponent } from './cells/cover-cell';
     imports: [KoContainer, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCoverCells {
+export class AITableCoverCellEntry {
     config = input.required<AITableCellsConfig>();
 
     onlyDisplayBorder = input<boolean>(false);
 
-    componentMap: Partial<Record<AITableFieldType, Constructor<CoverCellComponent>>> = {};
+    componentMap: Partial<Record<AITableFieldType, Constructor<CoverCellBase>>> = {};
 
     groupConfig = computed(() => {
         return {

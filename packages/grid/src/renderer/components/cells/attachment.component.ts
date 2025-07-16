@@ -18,7 +18,7 @@ import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
 import { AITableActionIconConfig, AITableAttachmentConfig, AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
-import { CoverCellComponent } from './cover-cell';
+import { CoverCellBase } from './cover-cell-base';
 
 @Component({
     selector: 'ai-table-attachments',
@@ -31,7 +31,7 @@ import { CoverCellComponent } from './cover-cell';
     imports: [KoShape, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AITableCellAttachment extends CoverCellComponent {
+export class AITableCellAttachment extends CoverCellBase {
     static override fieldType = AITableFieldType.attachment;
 
     attachments = computed<AITableAttachmentConfig[]>(() => {

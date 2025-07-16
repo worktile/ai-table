@@ -18,7 +18,7 @@ import { AITableRender } from './cell';
 import { AITableActions, FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
-import { CoverCellComponent } from '../renderer';
+import { CoverCellBase } from '../renderer';
 
 export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
     editor?: any;
@@ -48,7 +48,7 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
     fieldOption?: AITableFieldOption;
     fieldModel?: FieldOperable<unknown, unknown>;
     render?: (render: AITableRender<TR>, drawer: CellDrawer) => any;
-    coverRender?: Constructor<CoverCellComponent>;
+    coverRender?: Constructor<CoverCellBase>;
     getDefaultFieldValue?: (field: AITableField) => FieldValue;
 }
 
