@@ -1,5 +1,5 @@
 import { AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
-import { AITable } from '../../core';
+import { AITable, isSystemField } from '../../core';
 import { AITableActions } from '../../utils';
 
 export interface AITableDragFillState {
@@ -92,7 +92,12 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
     const endFieldIndex = visibleColumnsIndexMap.get(sourceEndCell[1])!;
 
     for (let index = startFieldIndex; index <= endFieldIndex; index++) {
-        const fieldId = fields[index]._id;
+        const field = fields[index];
+        const fieldId = field._id;
+
+        if (isSystemField(field)) {
+            continue;
+        }
 
         for (let rowIndex = targetStartRowIndex; rowIndex <= targetEndRowIndex; rowIndex++) {
             const targetRecordId = linearRows[rowIndex]._id;
