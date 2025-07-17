@@ -5,3 +5,4 @@ export * from './id-creator';
 export * from './colors';
 export * from './field-stat';
 export * from './i18n';
+export * from './number';

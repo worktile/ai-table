@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { isEmpty } from '../public-api';
 import { AITableField, AITableRecords, FieldOptions } from '../types';
+import { isEmpty, numberFormat } from '.';
 
 export function getFieldValues(records: AITableRecords, field: AITableField, filterNull = false) {
     const result = _.map(records, (record) => {
@@ -60,42 +60,42 @@ export function statPercentFilled(records: AITableRecords, options: FieldOptions
     const { field } = options;
     const filledCount = statCountFilled(records, options);
     const allCount = statCountAll(records, options);
-    return ((filledCount / allCount) * 100).toFixed(2);
+    return numberFormat((filledCount / allCount) * 100);
 }
 
 export function statPercentEmpty(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
     const emptyCount = statCountEmpty(records, options);
     const allCount = statCountAll(records, options);
-    return ((emptyCount / allCount) * 100).toFixed(2);
+    return numberFormat((emptyCount / allCount) * 100);
 }
 
 export function statPercentUnique(records: AITableRecords, options: FieldOptions) {
     const uniqueCount = statCountUnique(records, options);
     const filledCount = statCountFilled(records, options);
-    return ((uniqueCount / filledCount) * 100).toFixed(2);
+    return numberFormat((uniqueCount / filledCount) * 100);
 }
 
 export function statSum(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
     const values = getFieldValues(records, field!, true);
-    return _.sum(values);
+    return numberFormat(_.sum(values));
 }
 
 export function statMax(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
     const values = getFieldValues(records, field!, true);
-    return _.maxBy(values);
+    return numberFormat(_.maxBy(values));
 }
 
 export function statMin(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
     const values = getFieldValues(records, field!, true);
-    return _.minBy(values);
+    return numberFormat(_.minBy(values));
 }
 
 export function statAverage(records: AITableRecords, options: FieldOptions) {
     const { field } = options;
     const values = getFieldValues(records, field!, true);
-    return _.mean(values).toFixed(2);
+    return numberFormat(_.mean(values));
 }
