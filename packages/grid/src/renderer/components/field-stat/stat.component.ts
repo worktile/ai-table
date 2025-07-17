@@ -189,12 +189,12 @@ export class AITableFieldStat {
         if (texts) {
             let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
             let totalWidth = 0;
-            for (const text of texts) {
+            for (const [index, text] of texts.entries()) {
                 if (remainingWidth <= 0) {
                     break;
                 }
                 let isNumber = _.isFinite(_.toNumber(text.replace('%', '')));
-                const tmpText = isNumber ? ` ${text} ` : text;
+                const tmpText = isNumber ? (index === texts.length - 1 ? ` ${text}` : ` ${text} `) : text;
                 const { text: renderText, textWidth } = drawer.textEllipsis({
                     text: tmpText,
                     maxWidth: remainingWidth,
@@ -203,6 +203,7 @@ export class AITableFieldStat {
                 });
                 remainingWidth -= textWidth;
                 totalWidth += textWidth;
+
                 result.push({
                     x: 0,
                     y: 0,
