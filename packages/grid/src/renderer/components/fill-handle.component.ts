@@ -7,7 +7,7 @@ import { generateTargetName } from '../../utils';
 @Component({
     selector: 'ai-table-fill-handle',
     template: `
-        @if (hasSelectedCells() && !readonly()) {
+        @if (showFillHandle()) {
             <ko-rect [config]="handleConfig()"></ko-rect>
         }
     `,
@@ -16,12 +16,14 @@ import { generateTargetName } from '../../utils';
 export class AITableFillHandle {
     readonly config = input.required<AITableFillHandleConfig>();
 
-    readonly hasSelectedCells = computed(() => {
-        return this.config().aiTable.selection().selectedCells.size > 0;
-    });
+    readonly showFillHandle = computed(() => {
+        const { aiTable, readonly } = this.config();
+        const selection = aiTable.selection();
+        const hasSelectedCells = selection.selectedCells.size > 0;
+        const isExpandCell = selection.expandCell;
+        const isEditingCell = selection.editingCell;
 
-    readonly readonly = computed(() => {
-        return this.config().readonly;
+        return hasSelectedCells && !readonly && !isEditingCell && !isExpandCell;
     });
 
     readonly handleConfig = computed(() => {

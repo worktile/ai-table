@@ -29,6 +29,7 @@ export class AITableGridSelectionService {
             selectedCells: new Set(),
             activeCell: null,
             expandCell: null,
+            editingCell: null,
             selectAllState: AITableSelectAllState.none
         });
     }
@@ -41,6 +42,13 @@ export class AITableGridSelectionService {
         this.aiTable.selection.set({
             ...this.aiTable.selection(),
             expandCell: expandCell
+        });
+    }
+
+    setEditingCell(editingCell: AIRecordFieldIdPath | null) {
+        this.aiTable.selection.set({
+            ...this.aiTable.selection(),
+            editingCell: editingCell
         });
     }
 
@@ -73,6 +81,7 @@ export class AITableGridSelectionService {
             selectedCells: new Set(),
             activeCell: null,
             expandCell: null,
+            editingCell: null,
             selectAllState: this.selectAllState()
         });
     }

@@ -41,6 +41,7 @@ export interface AITableSelection {
     selectedCells: Set<string>; // `${recordId}:${fieldId}`
     activeCell: AIRecordFieldIdPath | null;
     expandCell: AIRecordFieldIdPath | null;
+    editingCell: AIRecordFieldIdPath | null;
     selectAllState: AITableSelectAllState; // 'all','partial','none'
 }
 

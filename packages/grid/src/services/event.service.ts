@@ -11,6 +11,7 @@ import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEdit
 import { getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
 import { AITableFieldType, AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AITableGridSelectionService } from './selection.service';
 
 @Injectable()
 export class AITableGridEventService {
@@ -33,6 +34,8 @@ export class AITableGridEventService {
     private destroyRef = inject(DestroyRef);
 
     private thyPopover = inject(ThyPopover);
+
+    private selectionService = inject(AITableGridSelectionService);
 
     initialize(aiTable: AITable, aiFieldRenderers?: Partial<Record<AITableFieldType, AITableGridCellRenderSchema>>) {
         this.aiTable = aiTable;
@@ -160,6 +163,8 @@ export class AITableGridEventService {
         const fieldType = this.aiTable.fieldsMap()[fieldId].type;
         const { component, isInternalComponent } = this.getEditorComponent(fieldType);
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
+
+        this.selectionService.setEditingCell([recordId, fieldId]);
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             viewContainerRef: isInternalComponent ? undefined : options?.viewContainerRef,
             origin: container!,
@@ -211,6 +216,7 @@ export class AITableGridEventService {
             this.cellEditorPopoverRef.afterClosed().subscribe(() => {
                 wheelEvent.unsubscribe();
                 this.cellEditorPopoverRef = null;
+                this.selectionService.setEditingCell(null);
             });
             (this.cellEditorPopoverRef.componentInstance as AbstractEditCellEditor<any>).updateFieldValues.subscribe(
                 (value: UpdateFieldValueOptions[]) => {
@@ -225,6 +231,7 @@ export class AITableGridEventService {
         if (this.cellEditorPopoverRef) {
             this.cellEditorPopoverRef.close();
             this.cellEditorPopoverRef = null;
+            this.selectionService.setEditingCell(null);
         }
     }
 
