@@ -18,8 +18,16 @@ import {
     DEFAULT_FONT_WEIGHT
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
-import { AITableField, AITableFieldStatTypeItemInfo, FieldOptions } from '@ai-table/utils';
-import { AITableGridI18nKey, FieldModelMap, generateTargetName, getI18nTextByKey, TextMeasure } from '../../../utils';
+import { AITableField, AITableFieldStatTypeItemInfo, AITableRecord, FieldOptions, FieldStatOptions } from '@ai-table/utils';
+import {
+    AITableGridI18nKey,
+    AITableQueries,
+    FieldModelMap,
+    generateTargetName,
+    getI18nTextByKey,
+    TextMeasure,
+    transformToCellText
+} from '../../../utils';
 import { AITableIcon } from '../icon.component';
 import { AITableTextComponent } from '../text.component';
 import { ThyPopover } from 'ngx-tethys/popover';
@@ -133,11 +141,16 @@ export class AITableFieldStat {
         return aiTable;
     });
 
-    options = computed<FieldOptions>(() => {
+    options = computed<FieldStatOptions>(() => {
         const aiTable = this.aiTable();
         return {
             field: this.field(),
-            aiTable
+            aiTable,
+            getFieldValue: (record: AITableRecord, options: FieldOptions) => {
+                const { aiTable, field } = options;
+                const cellValue = AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
+                return transformToCellText(cellValue, options);
+            }
         };
     });
 
