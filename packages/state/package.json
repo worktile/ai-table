@@ -1,6 +1,6 @@
 {
     "name": "@ai-table/state",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "peerDependencies": {},
     "dependencies": {
         "tslib": "^2.3.0"
