@@ -153,6 +153,7 @@ export class AITableFieldStat {
         const selectedInfo = this.selectedInfo();
         let resultString = null;
         let formatString = null;
+        let statValue = '';
         if (this.isFirstColumn() && selectedInfo.isSelected) {
             if (selectedInfo.selectedType === 'records') {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
@@ -160,12 +161,14 @@ export class AITableFieldStat {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
             }
             resultString = formatString.replace('{count}', `${selectedInfo.selectedCount.toString()}`);
+            statValue = selectedInfo.selectedCount.toString();
         } else {
-            let statValue = fieldModel.stat(records, this.options());
+            statValue = fieldModel.stat(records, this.options());
             if (!isNil(statValue)) {
                 formatString = fieldModel.getFormat(this.field(), this.aiTable());
                 if (formatString) {
                     resultString = formatString.replace('{{statValue}}', `${statValue.toString()}`);
+                    statValue = statValue.toString();
                 }
             } else if (this.isActiveOrHover()) {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
@@ -185,7 +188,8 @@ export class AITableFieldStat {
 
         return {
             texts: text.split(' '),
-            totalWidth: textWidth
+            totalWidth: textWidth,
+            statValue: statValue || ''
         };
     });
 
@@ -200,14 +204,14 @@ export class AITableFieldStat {
         const result = [];
         let previousColor = Colors.gray700;
         if (renderTexts) {
-            const { texts, totalWidth } = renderTexts;
+            const { texts, totalWidth, statValue } = renderTexts;
             let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
             for (const [index, text] of texts.entries()) {
                 if (remainingWidth <= 0) {
                     break;
                 }
                 let isLast = index === texts.length - 1;
-                let isNumber = _.isFinite(_.toNumber(text.replace('%', '').replace('…', '')));
+                let isStatValue = statValue.includes(text.replace('%', '').replace('…', ''));
                 let isEllipsis = text === '…';
                 const { text: renderText, textWidth } = drawer.textEllipsis({
                     text: isLast ? text : `${text} `,
@@ -217,7 +221,7 @@ export class AITableFieldStat {
                 });
                 remainingWidth -= textWidth;
                 let fill;
-                if (isNumber) {
+                if (isStatValue) {
                     fill = Colors.gray700;
                 } else if (isEllipsis) {
                     fill = previousColor;
