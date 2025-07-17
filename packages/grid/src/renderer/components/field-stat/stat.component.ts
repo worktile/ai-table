@@ -95,7 +95,7 @@ export class AITableFieldStat {
             opacity: 1,
             listening: !readonly
         };
-        if (this.renderText()) {
+        if (this.renderTexts()) {
             config.borders = [false, true, false, true];
             config.stroke = Colors.gray200;
             config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
@@ -145,28 +145,30 @@ export class AITableFieldStat {
         return this.isActive() || this.isHover();
     });
 
-    renderText = computed(() => {
+    renderTexts = computed(() => {
+        const { height, width } = this.containerBox();
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
         const selectedInfo = this.selectedInfo();
         let resultString = null;
+        let formatString = null;
         if (this.isFirstColumn() && selectedInfo.isSelected) {
             if (selectedInfo.selectedType === 'records') {
-                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
-                resultString = result.replace('{count}', selectedInfo.selectedCount.toString());
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
             } else {
-                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
-                resultString = result.replace('{count}', selectedInfo.selectedCount.toString());
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
             }
+            resultString = formatString.replace('{count}', `${selectedInfo.selectedCount.toString()}`);
         } else {
             let statValue = fieldModel.stat(records, this.options());
             if (!isNil(statValue)) {
-                const formatString = fieldModel.getFormat(this.field(), this.aiTable());
+                formatString = fieldModel.getFormat(this.field(), this.aiTable());
                 if (formatString) {
-                    resultString = formatString.replace('{{statValue}}', statValue.toString());
+                    resultString = formatString.replace('{{statValue}}', `${statValue.toString()}`);
                 }
             } else if (this.isActiveOrHover()) {
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
                 resultString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
             }
         }
@@ -174,7 +176,17 @@ export class AITableFieldStat {
             return null;
         }
 
-        return resultString.split(' ');
+        const { text, textWidth } = drawer.textEllipsis({
+            text: resultString,
+            maxWidth: width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING,
+            fontSize: DEFAULT_FONT_SIZE,
+            fontWeight: DEFAULT_FONT_WEIGHT
+        });
+
+        return {
+            texts: text.split(' '),
+            totalWidth: textWidth
+        };
     });
 
     containerBox = computed(() => {
@@ -184,36 +196,46 @@ export class AITableFieldStat {
 
     textsConfig = computed(() => {
         const { height, width } = this.containerBox();
-        const texts = this.renderText();
+        const renderTexts = this.renderTexts();
         const result = [];
-        if (texts) {
+        let previousColor = Colors.gray700;
+        if (renderTexts) {
+            const { texts, totalWidth } = renderTexts;
             let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
-            let totalWidth = 0;
             for (const [index, text] of texts.entries()) {
                 if (remainingWidth <= 0) {
                     break;
                 }
-                let isNumber = _.isFinite(_.toNumber(text.replace('%', '')));
-                const tmpText = isNumber ? (index === texts.length - 1 ? ` ${text}` : ` ${text} `) : text;
+                let isLast = index === texts.length - 1;
+                let isNumber = _.isFinite(_.toNumber(text.replace('%', '').replace('…', '')));
+                let isEllipsis = text === '…';
                 const { text: renderText, textWidth } = drawer.textEllipsis({
-                    text: tmpText,
+                    text: isLast ? text : `${text} `,
                     maxWidth: remainingWidth,
                     fontSize: DEFAULT_FONT_SIZE,
                     fontWeight: DEFAULT_FONT_WEIGHT
                 });
                 remainingWidth -= textWidth;
-                totalWidth += textWidth;
+                let fill;
+                if (isNumber) {
+                    fill = Colors.gray700;
+                } else if (isEllipsis) {
+                    fill = previousColor;
+                } else {
+                    fill = Colors.gray600;
+                }
 
                 result.push({
                     x: 0,
                     y: 0,
                     width: textWidth,
                     height: height,
-                    fill: isNumber ? Colors.gray700 : Colors.gray600,
+                    fill,
                     text: renderText,
                     lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                     listening: false
                 });
+                previousColor = fill;
             }
             let startX = width - AI_TABLE_ACTION_COMMON_SIZE - totalWidth;
             result.forEach((item) => {
