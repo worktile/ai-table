@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 export function numberFormat(num: number, precision: number = 2) {
-    if (!_.isFinite(num)) return _.toString(num);
+    if (!_.isFinite(num)) return null;
     const absNum = Math.abs(num);
     if (absNum < 1e8) {
         const str = _.toString(num);

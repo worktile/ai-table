@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { numberFormat, isEmpty } from '../public-api';
 import { AITableField, AITableRecords, FieldOptions } from '../types';
+import { isEmpty, numberFormat } from '.';
 
 export function getFieldValues(records: AITableRecords, field: AITableField, filterNull = false) {
     const result = _.map(records, (record) => {
