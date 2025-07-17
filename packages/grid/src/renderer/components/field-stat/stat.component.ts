@@ -19,7 +19,15 @@ import {
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
 import { AITableField, AITableFieldStatTypeItemInfo, AITableRecord, FieldOptions, FieldStatOptions } from '@ai-table/utils';
-import { AITableGridI18nKey, AITableQueries, FieldModelMap, generateTargetName, getI18nTextByKey, TextMeasure } from '../../../utils';
+import {
+    AITableGridI18nKey,
+    AITableQueries,
+    FieldModelMap,
+    generateTargetName,
+    getI18nTextByKey,
+    TextMeasure,
+    transformToCellText
+} from '../../../utils';
 import { AITableIcon } from '../icon.component';
 import { AITableTextComponent } from '../text.component';
 import { ThyPopover } from 'ngx-tethys/popover';
@@ -140,7 +148,8 @@ export class AITableFieldStat {
             aiTable,
             getFieldValue: (record: AITableRecord, options: FieldOptions) => {
                 const { aiTable, field } = options;
-                return AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
+                const cellValue = AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
+                return transformToCellText(cellValue, options);
             }
         };
     });

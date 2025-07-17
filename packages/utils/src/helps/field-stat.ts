@@ -54,9 +54,6 @@ export function statCountUnique(records: AITableRecords, options: FieldStatOptio
         if (_.isArray(fieldValue)) {
             return fieldValue.join(',');
         }
-        if (_.isObject(fieldValue)) {
-            return JSON.stringify(fieldValue);
-        }
         return fieldValue;
     }).length;
 }
