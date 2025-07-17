@@ -28,7 +28,7 @@ export abstract class FieldBase {
         });
     }
 
-    private stat(records: AITableRecords, options: FieldOptions) {
+    stat(records: AITableRecords, options: FieldOptions) {
         const { field } = options;
         const exec = this.statTypeMap.get(field!.stat_type!)?.exec;
         if (exec) {
@@ -37,9 +37,17 @@ export abstract class FieldBase {
         return null;
     }
 
-    private statFormat(statValue: number, options: FieldOptions) {
+    getFormat(field: AITableField, aiTable: AITable) {
+        const formatString = this.statTypeMap.get(field.stat_type!)?.format;
+        if (formatString) {
+            return getI18nTextByKey(aiTable, formatString);
+        }
+        return null;
+    }
+
+    statFormat(statValue: number, options: FieldOptions) {
         const { field, aiTable } = options;
-        const format = this.statTypeMap.get(field!.stat_type!)?.format;
+        const format = this.getFormat(field!, aiTable);
         if (format) {
             const i18nText = getI18nTextByKey(aiTable, format);
             return i18nText.replace('{{statValue}}', statValue.toString());

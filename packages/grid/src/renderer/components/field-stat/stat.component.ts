@@ -26,6 +26,8 @@ import { ThyPopover } from 'ngx-tethys/popover';
 import { AITableStatTypeMenu } from '../../../components/stat-type-menu/stat-type-menucomponent';
 import { AITableBackground } from '../background.component';
 import { drawer } from '../../drawers/drawer';
+import { isNil } from 'lodash';
+import _ from 'lodash';
 
 @Component({
     selector: 'ai-table-field-stat',
@@ -39,8 +41,10 @@ import { drawer } from '../../drawers/drawer';
             ></ai-table-background>
 
             <ko-group>
-                @if (textConfig()) {
-                    <ai-table-text [config]="textConfig()!"></ai-table-text>
+                @if (textsConfig()) {
+                    @for (textConfig of textsConfig(); track $index) {
+                        <ai-table-text [config]="textConfig"></ai-table-text>
+                    }
                     <ai-table-icon [config]="iconConfig()"></ai-table-icon>
                 }
             </ko-group>
@@ -63,22 +67,6 @@ export class AITableFieldStat {
     availableTextWidth = computed(() => {
         const { width } = this.config();
         return width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING;
-    });
-
-    textData = computed(() => {
-        const textString = this.renderText() || '';
-        const availableTextWidth = this.availableTextWidth();
-        const { text, textWidth } = drawer.textEllipsis({
-            text: textString,
-            maxWidth: availableTextWidth,
-            fontSize: DEFAULT_FONT_SIZE,
-            fontWeight: DEFAULT_FONT_WEIGHT
-        });
-
-        return {
-            width: textWidth,
-            text
-        };
     });
 
     groupConfig = computed<Partial<StageConfig>>(() => {
@@ -107,7 +95,7 @@ export class AITableFieldStat {
             opacity: 1,
             listening: !readonly
         };
-        if (this.renderText()) {
+        if (this.renderTexts()) {
             config.borders = [false, true, false, true];
             config.stroke = Colors.gray200;
             config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
@@ -157,26 +145,52 @@ export class AITableFieldStat {
         return this.isActive() || this.isHover();
     });
 
-    renderText = computed(() => {
+    renderTexts = computed(() => {
+        const { height, width } = this.containerBox();
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
         const selectedInfo = this.selectedInfo();
+        let resultString = null;
+        let formatString = null;
+        let statValue = '';
         if (this.isFirstColumn() && selectedInfo.isSelected) {
             if (selectedInfo.selectedType === 'records') {
-                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
-                return result.replace('{count}', selectedInfo.selectedCount.toString());
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
             } else {
-                const result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
-                return result.replace('{count}', selectedInfo.selectedCount.toString());
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
             }
+            resultString = formatString.replace('{count}', `${selectedInfo.selectedCount.toString()}`);
+            statValue = selectedInfo.selectedCount.toString();
         } else {
-            let result = fieldModel.getStatFormatValue(records, this.options());
-            if (!result && this.isActiveOrHover()) {
-                result = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
+            statValue = fieldModel.stat(records, this.options());
+            if (!isNil(statValue)) {
+                formatString = fieldModel.getFormat(this.field(), this.aiTable());
+                if (formatString) {
+                    resultString = formatString.replace('{{statValue}}', `${statValue.toString()}`);
+                    statValue = statValue.toString();
+                }
+            } else if (this.isActiveOrHover()) {
+                formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
+                resultString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
             }
-            return result;
         }
+        if (!resultString) {
+            return null;
+        }
+
+        const { text, textWidth } = drawer.textEllipsis({
+            text: resultString,
+            maxWidth: width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING,
+            fontSize: DEFAULT_FONT_SIZE,
+            fontWeight: DEFAULT_FONT_WEIGHT
+        });
+
+        return {
+            texts: text.split(' '),
+            totalWidth: textWidth,
+            statValue: statValue || ''
+        };
     });
 
     containerBox = computed(() => {
@@ -184,20 +198,55 @@ export class AITableFieldStat {
         return { height, width };
     });
 
-    textConfig = computed(() => {
+    textsConfig = computed(() => {
         const { height, width } = this.containerBox();
-        const text = this.renderText();
-        if (text) {
-            const renderWidth = this.textData().width;
-            return {
-                x: width - AI_TABLE_ACTION_COMMON_SIZE - renderWidth,
-                y: 0,
-                width: renderWidth,
-                height: height,
-                text: this.textData().text,
-                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-                listening: false
-            };
+        const renderTexts = this.renderTexts();
+        const result = [];
+        let previousColor = Colors.gray700;
+        if (renderTexts) {
+            const { texts, totalWidth, statValue } = renderTexts;
+            let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
+            for (const [index, text] of texts.entries()) {
+                if (remainingWidth <= 0) {
+                    break;
+                }
+                let isLast = index === texts.length - 1;
+                let isStatValue = statValue.includes(text.replace('%', '').replace('…', ''));
+                let isEllipsis = text === '…';
+                const { text: renderText, textWidth } = drawer.textEllipsis({
+                    text: isLast ? text : `${text} `,
+                    maxWidth: remainingWidth,
+                    fontSize: DEFAULT_FONT_SIZE,
+                    fontWeight: DEFAULT_FONT_WEIGHT
+                });
+                remainingWidth -= textWidth;
+                let fill;
+                if (isStatValue) {
+                    fill = Colors.gray700;
+                } else if (isEllipsis) {
+                    fill = previousColor;
+                } else {
+                    fill = Colors.gray600;
+                }
+
+                result.push({
+                    x: 0,
+                    y: 0,
+                    width: textWidth,
+                    height: height,
+                    fill,
+                    text: renderText,
+                    lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+                    listening: false
+                });
+                previousColor = fill;
+            }
+            let startX = width - AI_TABLE_ACTION_COMMON_SIZE - totalWidth;
+            result.forEach((item) => {
+                item.x = startX;
+                startX += item.width;
+            });
+            return result;
         }
 
         return null;
