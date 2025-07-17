@@ -1,10 +1,14 @@
 import _ from 'lodash';
-import { AITableField, AITableRecords, FieldOptions } from '../types';
+import { AITableRecord, AITableRecords, FieldStatOptions } from '../types';
 import { isEmpty, numberFormat } from '.';
 
-export function getFieldValues(records: AITableRecords, field: AITableField, filterNull = false) {
+export function getFieldValue(record: AITableRecord, options: FieldStatOptions) {
+    return options.getFieldValue ? options.getFieldValue(record, options) : record.values[options.field!._id];
+}
+
+export function getFieldValues(records: AITableRecords, options: FieldStatOptions, filterNull = false) {
     const result = _.map(records, (record) => {
-        return record.values[field._id];
+        return getFieldValue(record, options);
     });
     if (filterNull) {
         return result.filter((value) => value !== null);
@@ -12,14 +16,14 @@ export function getFieldValues(records: AITableRecords, field: AITableField, fil
     return result;
 }
 
-export function statCountAll(records: AITableRecords, options: FieldOptions) {
+export function statCountAll(records: AITableRecords, options: FieldStatOptions) {
     return records.length;
 }
 
-export function statCountEmpty(records: AITableRecords, options: FieldOptions) {
+export function statCountEmpty(records: AITableRecords, options: FieldStatOptions) {
     const { field } = options;
     return records.filter((record) => {
-        const fieldValue = record.values[field!._id];
+        const fieldValue = getFieldValue(record, options);
         if (isEmpty(fieldValue)) {
             return true;
         }
@@ -27,10 +31,9 @@ export function statCountEmpty(records: AITableRecords, options: FieldOptions) {
     }).length;
 }
 
-export function statCountFilled(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
+export function statCountFilled(records: AITableRecords, options: FieldStatOptions) {
     return records.filter((record) => {
-        const fieldValue = record.values[field!._id];
+        const fieldValue = getFieldValue(record, options);
         if (isEmpty(fieldValue)) {
             return false;
         }
@@ -38,64 +41,60 @@ export function statCountFilled(records: AITableRecords, options: FieldOptions) 
     }).length;
 }
 
-export function statCountUnique(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
+export function statCountUnique(records: AITableRecords, options: FieldStatOptions) {
     records = records.filter((record) => {
-        const fieldValue = record.values[field!._id];
-        if (!fieldValue || isEmpty(fieldValue)) {
+        const fieldValue = getFieldValue(record, options);
+        if (isEmpty(fieldValue)) {
             return false;
         }
         return true;
     });
     return _.uniqBy(records, (record) => {
-        const fieldValue = record.values[field!._id];
+        const fieldValue = getFieldValue(record, options);
         if (_.isArray(fieldValue)) {
             return fieldValue.join(',');
+        }
+        if (_.isObject(fieldValue)) {
+            return JSON.stringify(fieldValue);
         }
         return fieldValue;
     }).length;
 }
 
-export function statPercentFilled(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
+export function statPercentFilled(records: AITableRecords, options: FieldStatOptions) {
     const filledCount = statCountFilled(records, options);
     const allCount = statCountAll(records, options);
     return numberFormat((filledCount / allCount) * 100);
 }
 
-export function statPercentEmpty(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
+export function statPercentEmpty(records: AITableRecords, options: FieldStatOptions) {
     const emptyCount = statCountEmpty(records, options);
     const allCount = statCountAll(records, options);
     return numberFormat((emptyCount / allCount) * 100);
 }
 
-export function statPercentUnique(records: AITableRecords, options: FieldOptions) {
+export function statPercentUnique(records: AITableRecords, options: FieldStatOptions) {
     const uniqueCount = statCountUnique(records, options);
-    const filledCount = statCountFilled(records, options);
-    return numberFormat((uniqueCount / filledCount) * 100);
+    const countAll = statCountAll(records, options);
+    return numberFormat((uniqueCount / countAll) * 100);
 }
 
-export function statSum(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+export function statSum(records: AITableRecords, options: FieldStatOptions) {
+    const values = getFieldValues(records, options, true);
     return numberFormat(_.sum(values));
 }
 
-export function statMax(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+export function statMax(records: AITableRecords, options: FieldStatOptions) {
+    const values = getFieldValues(records, options, true);
     return numberFormat(_.maxBy(values));
 }
 
-export function statMin(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+export function statMin(records: AITableRecords, options: FieldStatOptions) {
+    const values = getFieldValues(records, options, true);
     return numberFormat(_.minBy(values));
 }
 
-export function statAverage(records: AITableRecords, options: FieldOptions) {
-    const { field } = options;
-    const values = getFieldValues(records, field!, true);
+export function statAverage(records: AITableRecords, options: FieldStatOptions) {
+    const values = getFieldValues(records, options, true);
     return numberFormat(_.mean(values));
 }

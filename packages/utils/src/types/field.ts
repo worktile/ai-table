@@ -1,8 +1,12 @@
-import { AITableField, AITableRecords, AITableStatType } from './core';
+import { AITableField, AITableRecord, AITableRecords, AITableStatType } from './core';
 
 export interface FieldOptions {
     aiTable?: any;
     field?: AITableField;
+}
+
+export interface FieldStatOptions extends FieldOptions {
+    getFieldValue?: (record: AITableRecord, fieldOptions: FieldOptions) => any;
 }
 
 export type AITableFieldStatType = AITableStatType | string;
