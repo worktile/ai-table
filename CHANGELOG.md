@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.29](https://github.com/worktile/ai-table/compare/0.1.28...0.1.29) (2025-07-17)
+
+
+### Bug Fixes
+
+* #WIK-18468 【统计行】数字求和达到亿要简化显示，参考组件 ([#582](https://github.com/worktile/ai-table/issues/582)) ([e3a6776](https://github.com/worktile/ai-table/commit/e3a6776b22abc509fa2c272d629aa024b4428b74)), closes [#WIK-18468](https://github.com/worktile/ai-table/issues/WIK-18468) [#WIK-18468](https://github.com/worktile/ai-table/issues/WIK-18468) [#WIK-18468](https://github.com/worktile/ai-table/issues/WIK-18468)
+* #WIK-18513 【AITable】表格统计 唯一数占比 （1）百分百数值不对、（2）NaN、（3）多行文本唯一数（4）平均值NaN ([#583](https://github.com/worktile/ai-table/issues/583)) ([a1e37f7](https://github.com/worktile/ai-table/commit/a1e37f76378127706b492a4efd3989c83be6519e)), closes [#WIK-18513](https://github.com/worktile/ai-table/issues/WIK-18513) [#WIK-18513](https://github.com/worktile/ai-table/issues/WIK-18513) [#WIK-18513](https://github.com/worktile/ai-table/issues/WIK-18513)
+* do not fill system field when drag fill ([#581](https://github.com/worktile/ai-table/issues/581)) ([a13d9c0](https://github.com/worktile/ai-table/commit/a13d9c0afc03b59e704ede9dcdc4dfe894e7dd6a))
+* hidden drag fill handle when cell is editing or expanding ([795b107](https://github.com/worktile/ai-table/commit/795b10768f67a10b8c0484b544797b1e7cc41236))
+
+
+
 ## [0.1.28](https://github.com/worktile/ai-table/compare/0.1.27...0.1.28) (2025-07-16)
 
 
