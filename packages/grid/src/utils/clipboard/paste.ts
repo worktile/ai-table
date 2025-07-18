@@ -13,7 +13,8 @@ import {
     AddRecordOptions,
     AddFieldOptions,
     AITableReferences,
-    idCreator
+    idCreator,
+    SetFieldStatTypeOptions
 } from '@ai-table/utils';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -162,6 +163,7 @@ function getPasteValue(
 export interface AITableActions {
     updateFieldValues: (data: UpdateFieldValueOptions[]) => void;
     setField: (field: AITableField) => void;
+    setFieldStatType: (data: SetFieldStatTypeOptions) => void;
     addRecord: (data: AddRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
 }

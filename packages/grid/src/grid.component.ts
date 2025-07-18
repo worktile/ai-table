@@ -93,6 +93,7 @@ import {
     DragEndData,
     DragType,
     IdPath,
+    SetFieldStatTypeOptions,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
 import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
@@ -274,6 +275,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         },
         setField: (field: AITableField) => {
             this.aiSetField.emit(field);
+        },
+        setFieldStatType: (data: SetFieldStatTypeOptions) => {
+            this.aiSetFieldStatType.emit(data);
         },
         addField: (data: AddFieldOptions) => {
             this.aiAddField.emit(data);

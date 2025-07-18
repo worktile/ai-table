@@ -65,7 +65,9 @@ import {
     isUndefinedOrNull,
     AITableFieldGroup,
     FieldValue,
-    AITableUtilsI18nText
+    AITableUtilsI18nText,
+    AITableViewField,
+    SetFieldStatTypeOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -292,6 +294,9 @@ export class DemoTableContent {
         setField: (field: AITableField) => {
             this.setField(field);
         },
+        setFieldStatType: (data: SetFieldStatTypeOptions) => {
+            this.setFieldStatType(data);
+        },
         addRecord: (data: AddRecordOptions) => {
             this.addRecord(data);
         },
@@ -476,6 +481,10 @@ export class DemoTableContent {
 
     setFieldWidth(data: SetFieldWidthOptions) {
         Actions.setFieldWidth(this.aiTable, data.path, data.width);
+    }
+
+    setFieldStatType(data: SetFieldStatTypeOptions) {
+        Actions.setFieldStatType(this.aiTable, data.path, data.statType);
     }
 
     dragMoveRecords(data: MoveRecordOptions) {

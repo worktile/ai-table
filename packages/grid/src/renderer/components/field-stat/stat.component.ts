@@ -355,9 +355,9 @@ export class AITableFieldStat {
 
         ref.componentInstance.menuClick.subscribe((event: { menu: AITableFieldStatTypeItemInfo; field: AITableField }) => {
             this.isActive.set(false);
-            actions.setField({
-                ...event.field,
-                stat_type: event.menu.type
+            actions.setFieldStatType({
+                path: [field._id],
+                statType: event.menu.type
             });
         });
 

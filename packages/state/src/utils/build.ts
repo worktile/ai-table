@@ -3,6 +3,7 @@ import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
 import { AITableFieldType, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../types';
+import { buildFieldStatType } from './field/stat-field';
 
 export function buildRecordsByView(
     aiTable: AIViewTable,
@@ -16,5 +17,7 @@ export function buildRecordsByView(
 }
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {
-    return getSortFields(aiTable, fields as AITableViewFields, activeView);
+    const sortFields = getSortFields(aiTable, fields as AITableViewFields, activeView);
+    buildFieldStatType(sortFields, activeView);
+    return sortFields;
 }

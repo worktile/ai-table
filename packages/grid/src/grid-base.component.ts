@@ -29,6 +29,7 @@ import {
     AITableValue,
     MoveFieldOptions,
     MoveRecordOptions,
+    SetFieldStatTypeOptions,
     SetFieldWidthOptions,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
@@ -98,6 +99,8 @@ export class AITableGridBase implements OnInit {
     aiSetField = output<AITableField>();
 
     aiSetFieldWidth = output<SetFieldWidthOptions>();
+
+    aiSetFieldStatType = output<SetFieldStatTypeOptions>();
 
     aiMoveRecords = output<MoveRecordOptions>();
 

@@ -1,4 +1,5 @@
 import { AITableField, AITableRecord, Id } from './core';
+import { AITableFieldStatType } from './field';
 
 export class Positions {
     [view_id: string]: number;
@@ -16,6 +17,7 @@ export interface AITableViewRecord extends AITableRecord {
 export interface AITableViewField extends AITableField {
     positions: Positions;
     widths?: Record<Id, number>;
+    fieldStatTypes?: Record<Id, AITableFieldStatType>;
 }
 
 export type AITableViewRecords = AITableViewRecord[];
