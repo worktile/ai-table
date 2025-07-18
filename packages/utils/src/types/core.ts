@@ -230,6 +230,11 @@ export interface SetFieldWidthOptions {
     width: number;
 }
 
+export interface SetFieldStatTypeOptions {
+    path: IdPath;
+    statType: AITableFieldStatType;
+}
+
 export interface MoveRecordOptions {
     recordIds: IdPath[];
     newPath: NumberPath;

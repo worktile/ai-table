@@ -7,7 +7,8 @@ import {
     AITableViewField,
     AITableField,
     IdPath,
-    NumberPath
+    NumberPath,
+    AITableFieldStatType
 } from '@ai-table/utils';
 import { isPathEqual } from '../utils';
 import { getFieldPositionInView } from '../utils/field/position-field';
@@ -43,8 +44,12 @@ export function moveField(aiTable: AIViewTable, path: NumberPath, newPath: Numbe
 
 export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number) {
     const field = AITableQueries.getField(aiTable, path) as AITableViewField;
-    const activeView = aiTable.views().find((item) => item._id === aiTable.activeViewId());
-    setField(aiTable, { widths: { ...field.widths, [activeView!._id]: width } }, [field._id]);
+    setField(aiTable, { widths: { ...field.widths, [aiTable.activeViewId()]: width } }, [field._id]);
+}
+
+export function setFieldStatType(aiTable: AIViewTable, path: IdPath, statType: AITableFieldStatType) {
+    const field = AITableQueries.getField(aiTable, path) as AITableViewField;
+    setField(aiTable, { fieldStatTypes: { ...field.fieldStatTypes, [aiTable.activeViewId()]: statType } }, [field._id]);
 }
 
 export function removeField(aiTable: AIViewTable, path: IdPath) {
@@ -98,5 +103,6 @@ export const FieldActions = {
     moveField,
     removeField,
     setField,
-    setFieldWidth
+    setFieldWidth,
+    setFieldStatType
 };
