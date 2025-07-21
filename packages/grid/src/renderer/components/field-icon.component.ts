@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import {
     AttachmentPath,
+    ColumnCheckboxFilledPath,
     ColumnCalendarFilledPath,
     ColumnLinkOutlinedPath,
     ColumnMemberFilledPath,
@@ -62,6 +63,9 @@ export class AITableFieldIcon {
                 break;
             case AITableFieldType.attachment:
                 data = AttachmentPath;
+                break;
+            case AITableFieldType.checkbox:
+                data = ColumnCheckboxFilledPath;
                 break;
         }
         return {

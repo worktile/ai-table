@@ -15,6 +15,7 @@ export enum AITableFieldType {
     rate = 'rate',
     link = 'link',
     attachment = 'attachment',
+    checkbox = 'checkbox',
     createdAt = 'created_at',
     updatedAt = 'updated_at',
     createdBy = 'created_by',

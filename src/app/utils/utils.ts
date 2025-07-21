@@ -74,7 +74,8 @@ export function getCanvasDefaultValue() {
                     ],
                     'column-25': [],
                     'column-custom_demo':
-                        '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条 00000\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条'
+                        '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条 00000\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条',
+                    'column-checkbox': true
                 }
             },
             {
@@ -228,6 +229,17 @@ export function getCanvasDefaultValue() {
                     view2: 31
                 },
                 type: AITableCustomFieldType.customDemo,
+                stat_type: AITableStatType.CountAll
+            },
+            {
+                _id: 'column-checkbox',
+                name: '复选框',
+                icon: 'check-square',
+                positions: {
+                    view1: 0.6,
+                    view2: 31
+                },
+                type: AITableFieldType.checkbox,
                 stat_type: AITableStatType.CountAll
             },
             {

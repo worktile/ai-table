@@ -9,3 +9,4 @@ export * from './rate';
 export * from './rich-text';
 export * from './select';
 export * from './text';
+export * from './checkbox';

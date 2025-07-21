@@ -7,7 +7,7 @@ import {
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableCellsDrawerConfig, AITableRender, AITableRowType } from '../../types';
+import { AITableCellsDrawerConfig, AITableRender, AITableRenderStyle, AITableRowType } from '../../types';
 import { FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
@@ -134,12 +134,14 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         references,
                         isActive: isSelectedField(fieldId, aiTable),
                         style,
-                        colors
+                        colors,
+                        isCoverCell: false
                     };
                     // hover 组件渲染时，底层的 cell 渲染为空
                     if (coverCell && coverCell.recordId === recordId && coverCell.fieldId === fieldId) {
                         render.cellValue = '';
                         render.transformValue = '';
+                        render.isCoverCell = true;
                     }
 
                     cellDrawer.initStyle(field, style);
