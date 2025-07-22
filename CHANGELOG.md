@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.30](https://github.com/worktile/ai-table/compare/0.1.29...0.1.30) (2025-07-22)
+
+
+### Bug Fixes
+
+* #WIK-18516 【AITable】各视图的统计单独存，互不干扰 ([#585](https://github.com/worktile/ai-table/issues/585)) ([286ff81](https://github.com/worktile/ai-table/commit/286ff814848b29d16dfd09f984979b3abf405ce9)), closes [#WIK-18516](https://github.com/worktile/ai-table/issues/WIK-18516)
+* #WIK-18564 【Rc】ai-table 空白， isNil 报错 ([#587](https://github.com/worktile/ai-table/issues/587)) ([d55f927](https://github.com/worktile/ai-table/commit/d55f927de8b8a9bff1cf157d08de602c1d8cef9e)), closes [#WIK-18564](https://github.com/worktile/ai-table/issues/WIK-18564)
+
+
+
 ## [0.1.29](https://github.com/worktile/ai-table/compare/0.1.28...0.1.29) (2025-07-17)
 
 
