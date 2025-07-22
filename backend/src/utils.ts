@@ -7,7 +7,6 @@ import * as encoding from 'lib0/encoding';
 import * as decoding from 'lib0/decoding';
 import * as map from 'lib0/map';
 import { callbackHandler, isCallbackSet } from './callback';
-import { AI_TABLE_CONTENT_FIELD_NAME, applyEvents, correctSharedType, SharedType, translateArrayEvent } from '@ai-table/utils';
 const debounce = require('lodash.debounce');
 
 const CALLBACK_DEBOUNCE_WAIT = parseInt(process.env['CALLBACK_DEBOUNCE_WAIT'] || '2000');
