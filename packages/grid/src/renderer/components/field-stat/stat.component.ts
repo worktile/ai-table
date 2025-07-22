@@ -18,7 +18,14 @@ import {
     DEFAULT_FONT_WEIGHT
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
-import { AITableField, AITableFieldStatTypeItemInfo, AITableRecord, FieldOptions, FieldStatOptions } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldStatTypeItemInfo,
+    AITableRecord,
+    FieldOptions,
+    FieldStatOptions,
+    isUndefinedOrNull
+} from '@ai-table/utils';
 import {
     AITableGridI18nKey,
     AITableQueries,
@@ -34,7 +41,6 @@ import { ThyPopover } from 'ngx-tethys/popover';
 import { AITableStatTypeMenu } from '../../../components/stat-type-menu/stat-type-menucomponent';
 import { AITableBackground } from '../background.component';
 import { drawer } from '../../drawers/drawer';
-import { isNil } from 'lodash';
 import _ from 'lodash';
 
 @Component({
@@ -177,7 +183,7 @@ export class AITableFieldStat {
             statValue = selectedInfo.selectedCount.toString();
         } else {
             statValue = fieldModel.stat(records, this.options());
-            if (!isNil(statValue)) {
+            if (!isUndefinedOrNull(statValue)) {
                 formatString = fieldModel.getFormat(this.field(), this.aiTable());
                 if (formatString) {
                     resultString = formatString.replace('{{statValue}}', `${statValue.toString()}`);

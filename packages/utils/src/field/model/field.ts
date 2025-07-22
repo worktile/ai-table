@@ -1,6 +1,5 @@
-import { isNil } from 'lodash';
 import { DEFAULT_FIELD_STAT_TYPE_ITEMS } from '../../constants/field-stat';
-import { isEmpty } from '../../helps';
+import { isEmpty, isUndefinedOrNull } from '../../helps';
 import {
     AITableFieldStatType,
     AITableField,
@@ -57,7 +56,7 @@ export abstract class FieldBase {
 
     getStatFormatValue(records: AITableRecords, options: FieldOptions) {
         const statValue = this.stat(records, options);
-        if (!isNil(statValue)) {
+        if (!isUndefinedOrNull(statValue)) {
             return this.statFormat(statValue, options);
         }
         return null;
