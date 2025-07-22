@@ -4,3 +4,4 @@ export * from './attachment.component';
 export * from './rich-text.component';
 export * from './rate.component';
 export * from './progress.component';
+export * from './checkbox.component';

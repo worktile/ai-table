@@ -32,7 +32,7 @@ export function getDefaultFieldValue(field: AITableField) {
     if (isArrayField(field)) {
         return [];
     }
-    if (isNumberFiled(field) || isDateFiled(field) || field.type === AITableFieldType.link) {
+    if (isNumberFiled(field) || isDateFiled(field) || field.type === AITableFieldType.link || field.type === AITableFieldType.checkbox) {
         return null;
     }
     return '';

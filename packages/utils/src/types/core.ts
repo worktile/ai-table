@@ -15,6 +15,7 @@ export enum AITableFieldType {
     rate = 'rate',
     link = 'link',
     attachment = 'attachment',
+    checkbox = 'checkbox',
     createdAt = 'created_at',
     updatedAt = 'updated_at',
     createdBy = 'created_by',
@@ -114,6 +115,8 @@ export enum AITableSelectOptionStyle {
 
 export type TextFieldValue = string | null;
 
+export type CheckboxFieldValue = boolean | null;
+
 export type RichTextFieldValue = any[];
 
 export type LinkFieldValue = { url: string; text: string } | null;
@@ -143,6 +146,7 @@ export type FieldValue =
     | ProgressFieldValue
     | RateFieldValue
     | AttachmentFieldValue
+    | CheckboxFieldValue
     | any;
 
 export interface TrackableEntity {

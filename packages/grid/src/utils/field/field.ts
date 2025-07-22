@@ -12,6 +12,7 @@ import {
     SelectField,
     TextField
 } from './model';
+import { CheckboxField } from './model/checkbox';
 
 export const FieldModelMap: Record<AITableFieldType | string, FieldOperable<unknown, unknown>> = {
     ...FieldModelBaseMap,
@@ -28,5 +29,6 @@ export const FieldModelMap: Record<AITableFieldType | string, FieldOperable<unkn
     [AITableFieldType.progress]: new ProgressField(),
     [AITableFieldType.createdBy]: new MemberField(),
     [AITableFieldType.updatedBy]: new MemberField(),
-    [AITableFieldType.attachment]: new AttachmentField()
+    [AITableFieldType.attachment]: new AttachmentField(),
+    [AITableFieldType.checkbox]: new CheckboxField()
 };

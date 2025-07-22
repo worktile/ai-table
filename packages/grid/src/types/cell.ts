@@ -2,6 +2,7 @@ import Konva from 'konva';
 import { AITableLinearRowRecord } from './row';
 import { AITable, Coordinate } from '../core';
 import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions } from '@ai-table/utils';
+import { Colors } from '../constants';
 
 export interface AITableCellsConfig {
     aiTable: AITable;
@@ -35,6 +36,8 @@ export interface AITableRender<TR extends AITableReferences = AITableReferences>
     isActive: boolean;
     style: AITableRenderStyle;
     references?: TR;
+    isCoverCell?: boolean;
+    colors?: typeof Colors;
     zIndex?: number;
 }
 

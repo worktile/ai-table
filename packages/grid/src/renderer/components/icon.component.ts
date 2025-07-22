@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoContainer } from '../../angular-konva';
+import { KoContainer, KoEventObject } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import { Check, Colors, DEFAULT_ICON_SIZE, RowDragPath, Unchecked } from '../../constants';
 import { AITableCheckType, AITableIconConfig } from '../../types';
@@ -9,7 +9,7 @@ import { DragType } from '@ai-table/utils';
 @Component({
     selector: 'ai-table-icon',
     template: `
-        <ko-group [config]="groupConfig()">
+        <ko-group [config]="groupConfig()" (koClick)="koClick.emit($event)">
             <ko-rect [config]="squareShapeConfig()"></ko-rect>
             <ko-path [config]="iconConfig()"></ko-path>
         </ko-group>
@@ -19,6 +19,8 @@ import { DragType } from '@ai-table/utils';
 })
 export class AITableIcon {
     config = input.required<AITableIconConfig>();
+
+    koClick = output<KoEventObject<MouseEvent>>();
 
     groupConfig = computed<Partial<StageConfig>>(() => {
         const { x, y, listening } = this.config();

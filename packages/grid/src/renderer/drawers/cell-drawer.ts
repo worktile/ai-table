@@ -48,10 +48,13 @@ import {
     FONT_SIZE_SM,
     AI_TABLE_RATE_MAX,
     StarFill,
-    AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
+    AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
+    AI_TABLE_ICON_COMMON_SIZE,
+    Check,
+    Unchecked
 } from '../../constants';
 import { AITable } from '../../core';
-import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isUndefinedOrNull } from '@ai-table/utils';
+import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isEmpty, isUndefinedOrNull } from '@ai-table/utils';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
 import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
@@ -119,9 +122,29 @@ export class CellDrawer extends Drawer {
                 return this.renderCellMember(render, ctx);
             case AITableFieldType.attachment:
                 return this.renderCellAttachment(render, ctx);
+            case AITableFieldType.checkbox:
+                return this.renderCellCheckbox(render, ctx);
             default:
                 return null;
         }
+    }
+
+    private renderCellCheckbox(render: AITableRender, ctx?: any) {
+        const { x, y, field, columnWidth, transformValue, isCoverCell } = render;
+        if (isCoverCell) {
+            return;
+        }
+        const isChecked = !isEmpty(transformValue) && !!transformValue;
+        const checkboxSize = AI_TABLE_ICON_COMMON_SIZE;
+        const checkboxX = x + (columnWidth - checkboxSize) / 2;
+        const checkboxY = y + (AI_TABLE_ROW_BLANK_HEIGHT - checkboxSize) / 2;
+        this.path({
+            x: checkboxX,
+            y: checkboxY,
+            size: 22,
+            data: isChecked ? Check : Unchecked,
+            fill: isChecked ? Colors.success : Colors.gray300
+        });
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {

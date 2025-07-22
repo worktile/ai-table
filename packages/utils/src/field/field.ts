@@ -1,6 +1,7 @@
 import { AITableFieldType } from '../types';
 import {
     AttachmentFieldBase,
+    CheckboxFieldBase,
     DateFieldBase,
     FieldBase,
     LinkFieldBase,
@@ -27,5 +28,6 @@ export const FieldModelBaseMap: Record<AITableFieldType, FieldBase> = {
     [AITableFieldType.progress]: new ProgressFieldBase(),
     [AITableFieldType.createdBy]: new MemberFieldBase(),
     [AITableFieldType.updatedBy]: new MemberFieldBase(),
-    [AITableFieldType.attachment]: new AttachmentFieldBase()
+    [AITableFieldType.attachment]: new AttachmentFieldBase(),
+    [AITableFieldType.checkbox]: new CheckboxFieldBase()
 };

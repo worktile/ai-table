@@ -56,6 +56,13 @@ export const getDefaultFieldOptions = () => {
             group: AITableFieldGroup.base
         },
         {
+            type: AITableFieldType.checkbox,
+            name: AITableGridI18nKey.fieldTypeCheckbox,
+            icon: 'check-square',
+            width: AI_TABLE_FIELD_MINI_WIDTH,
+            group: AITableFieldGroup.base
+        },
+        {
             type: AITableFieldType.member,
             name: AITableGridI18nKey.fieldTypeMember,
             icon: 'user',
