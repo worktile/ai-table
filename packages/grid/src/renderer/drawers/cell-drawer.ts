@@ -50,7 +50,8 @@ import {
     StarFill,
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
-    CheckboxCheckedSvgString
+    Check,
+    Unchecked
 } from '../../constants';
 import { AITable } from '../../core';
 import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isEmpty, isUndefinedOrNull } from '@ai-table/utils';
@@ -137,27 +138,34 @@ export class CellDrawer extends Drawer {
         const checkboxSize = AI_TABLE_ICON_COMMON_SIZE;
         const checkboxX = x + (columnWidth - checkboxSize) / 2;
         const checkboxY = y + (AI_TABLE_ROW_BLANK_HEIGHT - checkboxSize) / 2;
-        if (isChecked) {
-            const img = new Image();
-            img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(CheckboxCheckedSvgString)}`;
-            this.image({
-                name: img.src,
-                x: checkboxX,
-                y: checkboxY,
-                url: img.src,
-                width: checkboxSize,
-                height: checkboxSize
-            });
-        } else {
-            this.rect({
-                x: checkboxX,
-                y: checkboxY,
-                width: checkboxSize,
-                height: checkboxSize,
-                radius: 2,
-                stroke: Colors.gray300
-            });
-        }
+        this.path({
+            x: checkboxX,
+            y: checkboxY,
+            size: 22,
+            data: isChecked ? Check : Unchecked,
+            fill: isChecked ? Colors.success : Colors.gray300
+        });
+        // if (isChecked) {
+        //     const img = new Image();
+        //     img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(CheckboxCheckedSvgString)}`;
+        //     this.image({
+        //         name: img.src,
+        //         x: checkboxX,
+        //         y: checkboxY,
+        //         url: img.src,
+        //         width: checkboxSize,
+        //         height: checkboxSize
+        //     });
+        // } else {
+        //     this.rect({
+        //         x: checkboxX,
+        //         y: checkboxY,
+        //         width: checkboxSize,
+        //         height: checkboxSize,
+        //         radius: 2,
+        //         stroke: Colors.gray300
+        //     });
+        // }
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {

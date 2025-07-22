@@ -1,30 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoShape } from '../../../angular-konva/components/shape.component';
-import {
-    AI_TABLE_CELL,
-    AI_TABLE_ICON_COMMON_SIZE,
-    AI_TABLE_OFFSET,
-    AI_TABLE_ROW_BLANK_HEIGHT,
-    CheckboxCheckedSvgString,
-    Colors
-} from '../../../constants';
+import { AI_TABLE_CELL, AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_OFFSET, AI_TABLE_ROW_BLANK_HEIGHT, Colors } from '../../../constants';
 import { generateTargetName } from '../../../utils';
 import { AITableFieldType, isEmpty } from '@ai-table/utils';
 import { CoverCellBase } from './cover-cell-base';
 import { KoContainer } from '../../../angular-konva';
+import { AITableIcon } from '../icon.component';
+import { AITableCheckType } from '../../../types';
 
 @Component({
     selector: 'ai-table-checkbox',
     template: `
         <ko-group>
-            @if (isChecked()) {
-                <ko-image [config]="checkbox()" (koClick)="setChecked(false)"></ko-image>
-            } @else {
-                <ko-rect [config]="emptyCheckbox()" (koClick)="setChecked(true)"></ko-rect>
-            }
+            <ai-table-icon [config]="checkbox()" (koClick)="switchChecked()"></ai-table-icon>
         </ko-group>
     `,
-    imports: [KoShape, KoContainer],
+    imports: [KoContainer, AITableIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellCheckbox extends CoverCellBase {
@@ -38,13 +29,10 @@ export class AITableCellCheckbox extends CoverCellBase {
 
     checkbox = computed<any>(() => {
         const { render, field, recordId, readonly } = this.config()!;
-
         if (render) {
             const { columnWidth } = render;
             const currentX = AI_TABLE_OFFSET + (columnWidth - AI_TABLE_ICON_COMMON_SIZE) / 2;
             let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_ICON_COMMON_SIZE) / 2 + AI_TABLE_OFFSET;
-            const image = new Image();
-            image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(CheckboxCheckedSvgString)}`;
             return {
                 name: generateTargetName({
                     targetName: AI_TABLE_CELL,
@@ -54,9 +42,10 @@ export class AITableCellCheckbox extends CoverCellBase {
                 }),
                 x: currentX,
                 y: currentY,
+                type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
+                fill: this.isChecked() ? Colors.success : Colors.gray300,
                 width: AI_TABLE_ICON_COMMON_SIZE,
                 height: AI_TABLE_ICON_COMMON_SIZE,
-                image,
                 listening: true
             };
         }
@@ -93,11 +82,11 @@ export class AITableCellCheckbox extends CoverCellBase {
         return null;
     });
 
-    setChecked(isChecked: boolean) {
+    switchChecked() {
         const { actions } = this.config()!;
         actions.updateFieldValues([
             {
-                value: isChecked,
+                value: !this.isChecked(),
                 path: [this.config()!.recordId!, this.config()!.field._id]
             }
         ]);

@@ -8,7 +8,7 @@ import {
     isDateValid,
     AITableField,
     AITableFieldType,
-    DateFieldValue,
+    CheckboxFieldValue,
     FieldValue,
     isEmpty,
     isUndefinedOrNull,
@@ -22,7 +22,7 @@ import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
 import { transformToCellText } from '../../cell';
 
-export class CheckboxField extends CheckboxFieldBase implements FieldOperable<string, DateFieldValue> {
+export class CheckboxField extends CheckboxFieldBase implements FieldOperable<string, CheckboxFieldValue> {
     constructor() {
         super([
             DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.None]!,
@@ -39,7 +39,7 @@ export class CheckboxField extends CheckboxFieldBase implements FieldOperable<st
         return transformToCellText(cellValue, options);
     }
 
-    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: DateFieldValue) {
+    isMeetFilter(condition: AITableFilterCondition<string>, cellValue: CheckboxFieldValue) {
         if (cellValue === null) {
             if (condition.operation === AITableFilterOperation.empty) {
                 return true;
@@ -58,7 +58,7 @@ export class CheckboxField extends CheckboxFieldBase implements FieldOperable<st
         }
     }
 
-    compare(cellValue1: DateFieldValue, cellValue2: DateFieldValue): number {
+    compare(cellValue1: CheckboxFieldValue, cellValue2: CheckboxFieldValue): number {
         const value1 = cellValueToSortValue(cellValue1);
         const value2 = cellValueToSortValue(cellValue2);
         return compareNumber(value1, value2);
@@ -73,9 +73,9 @@ export class CheckboxField extends CheckboxFieldBase implements FieldOperable<st
     }
 }
 
-function cellValueToSortValue(cellValue: DateFieldValue): number {
-    if (isUndefinedOrNull(cellValue) || !isDateValid(cellValue)) {
+function cellValueToSortValue(cellValue: CheckboxFieldValue): number {
+    if (isUndefinedOrNull(cellValue)) {
         return 0;
     }
-    return cellValue?.timestamp ?? 0;
+    return cellValue ? 1 : 0;
 }
