@@ -59,7 +59,9 @@ import _ from 'lodash';
                     @for (textConfig of textsConfig(); track $index) {
                         <ai-table-text [config]="textConfig"></ai-table-text>
                     }
-                    <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+                    @if (!isShowSelectedCount) {
+                        <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+                    }
                 }
             </ko-group>
         </ko-group>
@@ -77,6 +79,8 @@ export class AITableFieldStat {
     isActive = signal(false);
 
     isHover = signal(false);
+
+    isShowSelectedCount = false;
 
     availableTextWidth = computed(() => {
         const { width } = this.config();
@@ -179,9 +183,11 @@ export class AITableFieldStat {
             } else {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedCellsCount);
             }
+            this.isShowSelectedCount = true;
             resultString = formatString.replace('{count}', `${selectedInfo.selectedCount.toString()}`);
             statValue = selectedInfo.selectedCount.toString();
         } else {
+            this.isShowSelectedCount = false;
             statValue = fieldModel.stat(records, this.options());
             if (!isUndefinedOrNull(statValue)) {
                 formatString = fieldModel.getFormat(this.field(), this.aiTable());
@@ -260,7 +266,12 @@ export class AITableFieldStat {
                 });
                 previousColor = fill;
             }
-            let startX = width - AI_TABLE_ACTION_COMMON_SIZE - totalWidth;
+            let startX = width - totalWidth;
+            if (!this.isShowSelectedCount) {
+                startX -= AI_TABLE_ACTION_COMMON_SIZE;
+            } else {
+                startX -= AI_TABLE_CELL_PADDING;
+            }
             result.forEach((item) => {
                 item.x = startX;
                 startX += item.width;
