@@ -190,7 +190,7 @@ export function getCanvasDefaultValue() {
                         '66b31d0c8097a908f74bcd8c',
                         '66b31d0c8097a908f74bcd8d'
                     ],
-                    'column-3': 100,
+                    'column-3': 120000000,
                     'column-4': { timestamp: 1682235946 },
                     'column-5': [],
                     'column-566': ['member_01'],

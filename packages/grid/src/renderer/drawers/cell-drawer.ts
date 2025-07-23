@@ -54,7 +54,15 @@ import {
     Unchecked
 } from '../../constants';
 import { AITable } from '../../core';
-import { AITableField, AITableFieldType, AITableSelectOptionStyle, MemberSettings, isEmpty, isUndefinedOrNull } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableSelectOptionStyle,
+    MemberSettings,
+    isEmpty,
+    isUndefinedOrNull,
+    numberFormat
+} from '@ai-table/utils';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
 import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
 import { Drawer } from './drawer';
@@ -175,9 +183,9 @@ export class CellDrawer extends Drawer {
         const textDecoration = DEFAULT_TEXT_DECORATION;
 
         if (isNumberField) {
-            renderText = String(renderText);
+            renderText = numberFormat(Number(renderText));
             const { text } = this.textEllipsis({
-                text: renderText,
+                text: renderText!,
                 maxWidth: columnWidth && textMaxWidth,
                 fontWeight
             });
