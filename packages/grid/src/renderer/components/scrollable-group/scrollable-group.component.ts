@@ -25,6 +25,7 @@ export interface ScrollableGroupConfig {
     y?: number;
     scrollbarSize?: number;
     scrollbarColor?: string;
+    scrollbarOpacity?: number;
     scrollbarTrackColor?: string;
     verticalScrollbar?: boolean;
     horizontalScrollbar?: boolean;
@@ -294,7 +295,7 @@ export class AITableScrollableGroup implements AfterViewInit {
         if (this.isDraggingVertical()) {
             return null;
         }
-        const { scrollbarSize = 12, scrollbarColor = '#c0c0c0' } = this.config();
+        const { scrollbarSize = 12, scrollbarColor = Colors.black, scrollbarOpacity = 0.8 } = this.config();
         const { height, contentHeight } = this.config();
         const thumbHeight = this.verticalThumbHeight();
         const thumbY = (this.scrollY() / (contentHeight - height)) * (this.verticalScrollbarHeight() - thumbHeight);
@@ -305,6 +306,7 @@ export class AITableScrollableGroup implements AfterViewInit {
             width: scrollbarSize - 2,
             height: thumbHeight,
             fill: scrollbarColor,
+            opacity: scrollbarOpacity,
             cornerRadius: 6,
             draggable: true,
             dragBoundFunc: (pos: Vector2d) => {
@@ -336,7 +338,7 @@ export class AITableScrollableGroup implements AfterViewInit {
         if (this.isDraggingHorizontal()) {
             return null;
         }
-        const { scrollbarSize = 12, scrollbarColor = '#c0c0c0' } = this.config();
+        const { scrollbarSize = 12, scrollbarColor = Colors.black, scrollbarOpacity = 0.8 } = this.config();
         const { width, contentWidth } = this.config();
         const thumbWidth = this.horizontalThumbWidth();
         const thumbX = (this.scrollX() / (contentWidth - width)) * (this.horizontalScrollbarHeight() - thumbWidth);
@@ -347,6 +349,7 @@ export class AITableScrollableGroup implements AfterViewInit {
             width: thumbWidth,
             height: scrollbarSize - 2,
             fill: scrollbarColor,
+            opacity: scrollbarOpacity,
             cornerRadius: 6,
             draggable: true,
             dragBoundFunc: (pos: Vector2d) => {

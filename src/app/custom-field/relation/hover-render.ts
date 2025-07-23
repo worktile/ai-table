@@ -16,7 +16,16 @@ import {
     aiTableImageConfigToKonvaConfig,
     AI_TABLE_CELL_BORDER,
     AITableScrollableGroup,
-    ScrollableGroupConfig
+    ScrollableGroupConfig,
+    AI_TABLE_CELL_PADDING,
+    DEFAULT_FONT_WEIGHT,
+    AI_TABLE_ROW_BLANK_HEIGHT,
+    DEFAULT_TEXT_ALIGN_LEFT,
+    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+    DEFAULT_TEXT_DECORATION,
+    AI_TABLE_TEXT_LINE_HEIGHT,
+    AI_TABLE_COMMON_FONT_SIZE,
+    AI_TABLE_CELL_LINE_BORDER
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
@@ -39,12 +48,16 @@ import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationI
                                 <ko-text [config]="textConfig()"></ko-text>
                             </ko-group>
                         </ai-table-scrollable-group>
+                    } @else if (cellTextConfig()) {
+                        <ko-group>
+                            <ai-table-text [config]="cellTextConfig()!"></ai-table-text>
+                        </ko-group>
                     }
                 </ko-group>
             }
         </ko-group>
     `,
-    imports: [KoShape, KoContainer, AITableScrollableGroup, KoShape],
+    imports: [KoShape, KoContainer, AITableScrollableGroup, KoShape, AITableTextComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableCellRelationTicket extends CoverCellBase {
@@ -93,8 +106,8 @@ export class AITableCellRelationTicket extends CoverCellBase {
         return {
             width: columnWidth,
             height: this.maxHeight,
-            contentWidth: columnWidth, // 内容宽度大于容器宽度，会显示横向滚动条
-            contentHeight: 500, // 内容高度大于容器高度，会显示竖向滚动条
+            contentWidth: columnWidth + 50, // 内容宽度大于容器宽度，会显示横向滚动条
+            contentHeight: 260, // 内容高度大于容器高度，会显示竖向滚动条
             scrollbarSize: 10,
             scrollbarColor: Colors.gray700,
             x: 0,
@@ -108,14 +121,71 @@ export class AITableCellRelationTicket extends CoverCellBase {
 
     textConfig = computed(() => {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
-        const transformValue = render.transformValue;
+        const { transformValue, x, y, rowHeight } = render;
         return {
-            x: 20,
-            y: 20,
+            x,
+            y:
+                y +
+                (rowHeight - AI_TABLE_COMMON_FONT_SIZE) / 2 -
+                (AI_TABLE_COMMON_FONT_SIZE * (AI_TABLE_TEXT_LINE_HEIGHT - 1)) / 2 +
+                AI_TABLE_CELL_LINE_BORDER,
+
             text: transformValue,
-            fontSize: 16,
-            fill: '#333333',
-            width: 760
+            wrap: 'none',
+            fillStyle: Colors.gray800,
+            fill: Colors.gray800,
+            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+            fontSize: AI_TABLE_COMMON_FONT_SIZE,
+            listening: true,
+            ellipsis: false
         };
+    });
+
+    containerGroupConfig = computed(() => {
+        const { render, field, recordId, readonly, isExpand } = this.config()!;
+        const { columnWidth, rowHeight } = render;
+        return {
+            width: columnWidth,
+            height: rowHeight
+        };
+    });
+
+    cellTextConfig = computed(() => {
+        const { render, field, recordId, readonly, isExpand } = this.config()!;
+        const { transformValue, columnWidth, rowHeight, x, y } = render;
+        if (!transformValue) {
+            return null;
+        }
+
+        const textMaxWidth = columnWidth - AI_TABLE_CELL_PADDING * 2;
+        const { text } = drawer.textEllipsis({
+            text: transformValue.replace(/\n/g, ' '),
+            maxWidth: textMaxWidth,
+            fontWeight: DEFAULT_FONT_WEIGHT,
+            fontSize: AI_TABLE_COMMON_FONT_SIZE
+        });
+
+        const tmpTextConfig = {
+            x,
+            y: y + AI_TABLE_CELL_LINE_BORDER,
+            text,
+            name: generateTargetName({
+                targetName: AI_TABLE_CELL,
+                fieldId: field._id,
+                recordId,
+                mouseStyle: readonly ? 'default' : 'pointer'
+            }),
+            wrap: 'none',
+            width: textMaxWidth,
+            fillStyle: Colors.gray800,
+            fill: Colors.gray800,
+            height: rowHeight,
+            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+            fontSize: AI_TABLE_COMMON_FONT_SIZE,
+            listening: true,
+            ellipsis: true
+        };
+
+        return tmpTextConfig;
     });
 }
