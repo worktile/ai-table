@@ -151,7 +151,7 @@ export class CellDrawer extends Drawer {
             y: checkboxY,
             size: 22,
             data: isChecked ? Check : Unchecked,
-            fill: isChecked ? Colors.success : Colors.gray300
+            fill: isChecked ? Colors.primary : Colors.gray300
         });
     }
 
