@@ -43,38 +43,9 @@ export class AITableCellCheckbox extends CoverCellBase {
                 x: currentX,
                 y: currentY,
                 type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
-                fill: this.isChecked() ? Colors.success : Colors.gray300,
+                fill: this.isChecked() ? Colors.primary : Colors.gray300,
                 width: AI_TABLE_ICON_COMMON_SIZE,
                 height: AI_TABLE_ICON_COMMON_SIZE,
-                listening: true
-            };
-        }
-
-        return null;
-    });
-
-    emptyCheckbox = computed<any>(() => {
-        const { render, field, recordId, readonly } = this.config()!;
-
-        if (render) {
-            const { columnWidth } = render;
-            const currentX = AI_TABLE_OFFSET + (columnWidth - AI_TABLE_ICON_COMMON_SIZE) / 2;
-            let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_ICON_COMMON_SIZE) / 2 + AI_TABLE_OFFSET;
-
-            return {
-                name: generateTargetName({
-                    targetName: AI_TABLE_CELL,
-                    fieldId: field._id,
-                    recordId,
-                    mouseStyle: readonly ? 'default' : 'pointer'
-                }),
-                x: currentX,
-                y: currentY,
-                width: AI_TABLE_ICON_COMMON_SIZE,
-                height: AI_TABLE_ICON_COMMON_SIZE,
-                stroke: Colors.gray300,
-                strokeWidth: 1,
-                cornerRadius: 2,
                 listening: true
             };
         }
