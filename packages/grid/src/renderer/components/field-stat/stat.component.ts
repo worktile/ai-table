@@ -168,8 +168,18 @@ export class AITableFieldStat {
         return this.isActive() || this.isHover();
     });
 
+    containerBoxHeight = computed(() => {
+        const { height } = this.config();
+        return height;
+    });
+
+    containerBoxWidth = computed(() => {
+        const { width } = this.config();
+        return width;
+    });
+
     renderTexts = computed(() => {
-        const { height, width } = this.containerBox();
+        const width = this.containerBoxWidth();
         const field = this.field();
         const records = this.records();
         const fieldModel = FieldModelMap[field.type];
@@ -218,13 +228,9 @@ export class AITableFieldStat {
         };
     });
 
-    containerBox = computed(() => {
-        const { height, width } = this.config();
-        return { height, width };
-    });
-
     textsConfig = computed(() => {
-        const { height, width } = this.containerBox();
+        const height = this.containerBoxHeight();
+        const width = this.containerBoxWidth();
         const renderTexts = this.renderTexts();
         const result = [];
         let previousColor = Colors.gray700;
