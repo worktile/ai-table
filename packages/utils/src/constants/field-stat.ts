@@ -1,13 +1,17 @@
 import {
     statAverage,
     statCountAll,
+    statCountChecked,
     statCountEmpty,
     statCountFilled,
+    statCountUnChecked,
     statCountUnique,
     statMax,
     statMin,
+    statPercentChecked,
     statPercentEmpty,
     statPercentFilled,
+    statPercentUnChecked,
     statPercentUnique,
     statSum
 } from '../helps/field-stat';
@@ -91,25 +95,25 @@ export const DEFAULT_FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITabl
         name: AITableUtilsI18nKey.checked,
         type: AITableStatType.Checked,
         format: AITableUtilsI18nKey.checkedResult,
-        exec: statCountFilled
+        exec: statCountChecked
     },
     [AITableStatType.UnChecked]: {
         name: AITableUtilsI18nKey.unChecked,
         type: AITableStatType.UnChecked,
         format: AITableUtilsI18nKey.unCheckedResult,
-        exec: statCountEmpty
+        exec: statCountUnChecked
     },
     [AITableStatType.PercentChecked]: {
         name: AITableUtilsI18nKey.percentChecked,
         type: AITableStatType.PercentChecked,
         format: AITableUtilsI18nKey.percentCheckedResult,
-        exec: statPercentFilled
+        exec: statPercentChecked
     },
     [AITableStatType.PercentUnChecked]: {
         name: AITableUtilsI18nKey.percentUnChecked,
         type: AITableStatType.PercentUnChecked,
         format: AITableUtilsI18nKey.percentUnCheckedResult,
-        exec: statPercentEmpty
+        exec: statPercentUnChecked
     }
 };
 
