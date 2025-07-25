@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.31](https://github.com/worktile/ai-table/compare/0.1.30...0.1.31) (2025-07-23)
+
+
+### Bug Fixes
+
+* #WIK-18467 【aitable】数字达到一定级别用简化显示，如显示1e+x ，参考组件，同理底部的计算也需要如此 ([#590](https://github.com/worktile/ai-table/issues/590)) ([5b90bc2](https://github.com/worktile/ai-table/commit/5b90bc2ccdecc6f3b835e39c4b1ebd564e61f7e7)), closes [#WIK-18467](https://github.com/worktile/ai-table/issues/WIK-18467)
+* #WIK-18570 【aitable】当显示已选中 xx 记录时，后面的下拉箭头不需要展示 ([#591](https://github.com/worktile/ai-table/issues/591)) ([3e9edfc](https://github.com/worktile/ai-table/commit/3e9edfcf37dc5f379764619cebd7f39693915167)), closes [#WIK-18570](https://github.com/worktile/ai-table/issues/WIK-18570)
+
+
+### Features
+
+* #WIK-18563 AItable-增加复选框属性 ([#586](https://github.com/worktile/ai-table/issues/586)) ([d178ba4](https://github.com/worktile/ai-table/commit/d178ba4e9a91bf64deaf04eb8c1e9e32acec8e89)), closes [#WIK-18563](https://github.com/worktile/ai-table/issues/WIK-18563)
+* #WIK-18582 完善自定义字段示例 ([#589](https://github.com/worktile/ai-table/issues/589)) ([a896907](https://github.com/worktile/ai-table/commit/a8969071681699d837f3da4e2732ce648fb12e2f)), closes [#WIK-18582](https://github.com/worktile/ai-table/issues/WIK-18582)
+* #WIK-18587 AItable-复选框修改选中状态主色 ([910fbdc](https://github.com/worktile/ai-table/commit/910fbdc4adcfc66ca0f71ab3fb205f1d2118706c)), closes [#WIK-18587](https://github.com/worktile/ai-table/issues/WIK-18587)
+* #WIK-18587 AItable-复选框修改选中状态主色 ([#592](https://github.com/worktile/ai-table/issues/592)) ([5051ab2](https://github.com/worktile/ai-table/commit/5051ab2221c59bdf252e21369d1de4bdce25bf7a)), closes [#WIK-18587](https://github.com/worktile/ai-table/issues/WIK-18587)
+
+
+
 ## [0.1.30](https://github.com/worktile/ai-table/compare/0.1.29...0.1.30) (2025-07-22)
 
 
