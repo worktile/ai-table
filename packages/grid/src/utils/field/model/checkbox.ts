@@ -23,18 +23,6 @@ import { compareNumber, isMeetFilter } from '../operate';
 import { transformToCellText } from '../../cell';
 
 export class CheckboxField extends CheckboxFieldBase implements FieldOperable<string, CheckboxFieldValue> {
-    constructor() {
-        super([
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.None]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.CountAll]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Filled]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Empty]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Unique]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.PercentFilled]!,
-            DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.PercentEmpty]!
-        ]);
-    }
-
     override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
         return transformToCellText(cellValue, options);
     }

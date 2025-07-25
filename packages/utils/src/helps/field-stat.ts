@@ -41,6 +41,18 @@ export function statCountFilled(records: AITableRecords, options: FieldStatOptio
     }).length;
 }
 
+export function statCountChecked(records: AITableRecords, options: FieldStatOptions) {
+    return records.filter((record) => {
+        return !!getFieldValue(record, options);
+    }).length;
+}
+
+export function statCountUnChecked(records: AITableRecords, options: FieldStatOptions) {
+    return records.filter((record) => {
+        return !getFieldValue(record, options);
+    }).length;
+}
+
 export function statCountUnique(records: AITableRecords, options: FieldStatOptions) {
     records = records.filter((record) => {
         const fieldValue = getFieldValue(record, options);
@@ -64,10 +76,22 @@ export function statPercentFilled(records: AITableRecords, options: FieldStatOpt
     return numberFormat((filledCount / allCount) * 100);
 }
 
+export function statPercentChecked(records: AITableRecords, options: FieldStatOptions) {
+    const checkedCount = statCountChecked(records, options);
+    const allCount = statCountAll(records, options);
+    return numberFormat((checkedCount / allCount) * 100);
+}
+
 export function statPercentEmpty(records: AITableRecords, options: FieldStatOptions) {
     const emptyCount = statCountEmpty(records, options);
     const allCount = statCountAll(records, options);
     return numberFormat((emptyCount / allCount) * 100);
+}
+
+export function statPercentUnChecked(records: AITableRecords, options: FieldStatOptions) {
+    const uncheckedCount = statCountUnChecked(records, options);
+    const allCount = statCountAll(records, options);
+    return numberFormat((uncheckedCount / allCount) * 100);
 }
 
 export function statPercentUnique(records: AITableRecords, options: FieldStatOptions) {
