@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.32](https://github.com/worktile/ai-table/compare/0.1.31...0.1.32) (2025-07-25)
+
+
+### Bug Fixes
+
+* #WIK-18532 【Prod 前】鼠标在表格移动时-频繁触发统计计算 ([#595](https://github.com/worktile/ai-table/issues/595)) ([8f62b0f](https://github.com/worktile/ai-table/commit/8f62b0f212c4628fa47d3f761b0d1d8ad1dec46c)), closes [#WIK-18532](https://github.com/worktile/ai-table/issues/WIK-18532)
+
+
+### Features
+
+* #WIK-18599 AITable-复选框统计调整 ([#594](https://github.com/worktile/ai-table/issues/594)) ([4a2ce6f](https://github.com/worktile/ai-table/commit/4a2ce6fbc52c04371b1f380c0e287933029ecab0)), closes [#WIK-18599](https://github.com/worktile/ai-table/issues/WIK-18599)
+
+
+
 ## [0.1.31](https://github.com/worktile/ai-table/compare/0.1.30...0.1.31) (2025-07-23)
 
 
