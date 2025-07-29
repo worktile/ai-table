@@ -40,15 +40,15 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
         <ko-group (koDblclick)="stageDblclick($event)">
             @if (isExpand()) {
                 <ko-group>
-                    <ko-group>
-                        <ko-rect [config]="expandBorderConfig()!"></ko-rect>
-                    </ko-group>
                     <ko-group #rootGroup (koClick)="koClick($event)">
                         <ai-table-scrollable-group [config]="scrollConfig()" [contentTemplate]="contentGroup" [parentContainer]="rootGroup">
                             <ko-group #contentGroup>
                                 <ai-table-text (koClick)="koClick($event)" [config]="expandTextConfig()!"></ai-table-text>
                             </ko-group>
                         </ai-table-scrollable-group>
+                    </ko-group>
+                    <ko-group>
+                        <ko-rect [config]="expandBorderConfig()!"></ko-rect>
                     </ko-group>
                 </ko-group>
             } @else {
@@ -88,7 +88,7 @@ export class AITableCellText extends CoverCellBase {
                 height: this.renderHeight(),
                 stroke: Colors.primary,
                 strokeWidth: 2,
-                listening: true
+                listening: false
             };
         }
         return null;
