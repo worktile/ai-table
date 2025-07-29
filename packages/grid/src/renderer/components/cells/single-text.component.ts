@@ -85,7 +85,6 @@ export class AITableCellText extends CoverCellBase {
                     recordId
                 }),
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
-                fill: Colors.white,
                 height: this.renderHeight(),
                 stroke: Colors.primary,
                 strokeWidth: 2,
