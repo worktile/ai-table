@@ -166,7 +166,6 @@ export const buildFreezeToThisColumnItem = (aiTable: AITable) => {
                 }
                 return false;
             } catch (error) {
-                console.error('Failed to check freeze status:', error);
                 return false;
             }
         }
