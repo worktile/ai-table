@@ -53,12 +53,6 @@ export class AITableTextComponent {
             fontFamily = DEFAULT_FONT_FAMILY,
             ...rest
         } = this.config();
-        const tmpText = new Konva.Text({
-            text,
-            fontSize,
-            fontFamily
-        });
-        const textBounds = tmpText.getClientRect();
         return {
             x,
             y,
