@@ -18,6 +18,5 @@ export function buildRecordsByView(
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {
     const sortFields = getSortFields(aiTable, fields as AITableViewFields, activeView);
-    buildFieldStatType(sortFields, activeView);
-    return sortFields;
+    return buildFieldStatType(sortFields, activeView);
 }
