@@ -12,7 +12,13 @@
         <select-option [field]="field()" [displayOption]="option"></select-option>
     </ng-template>
     @for (option of selectOptions(); track option._id) {
-        <thy-option [thyValue]="option._id" [thyRawValue]="option" [thyShowOptionCustom]="true" [thyLabelText]="option.text">
+        <thy-option
+            [thyValue]="option._id"
+            [hidden]="!!option.is_disabled"
+            [thyRawValue]="option"
+            [thyShowOptionCustom]="true"
+            [thyLabelText]="option.text"
+        >
             <select-option [field]="field()" [displayOption]="option"></select-option>
         </thy-option>
     }

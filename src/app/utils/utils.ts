@@ -293,7 +293,8 @@ export function getCanvasDefaultValue() {
                         {
                             _id: '_id_1',
                             text: '开始',
-                            color: '#5dcfff'
+                            color: '#5dcfff',
+                            is_disabled: 1
                         },
                         {
                             _id: '_id_2',
