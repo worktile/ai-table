@@ -37,13 +37,13 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
 @Component({
     selector: 'ai-table-single-text',
     template: `
-        <ko-group (koDblclick)="stageDblclick($event)">
+        <ko-group>
             @if (isExpand()) {
                 <ko-group>
-                    <ko-group #rootGroup (koClick)="koClick($event)">
+                    <ko-group #rootGroup>
                         <ai-table-scrollable-group [config]="scrollConfig()" [contentTemplate]="contentGroup" [parentContainer]="rootGroup">
                             <ko-group #contentGroup>
-                                <ai-table-text (koClick)="koClick($event)" [config]="expandTextConfig()!"></ai-table-text>
+                                <ai-table-text [config]="expandTextConfig()!"></ai-table-text>
                             </ko-group>
                         </ai-table-scrollable-group>
                     </ko-group>
@@ -64,26 +64,11 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
 export class AITableCellText extends CoverCellBase {
     static override fieldType = AITableFieldType.text;
 
-    koClick(e: KoEventObject<MouseEvent>) {
-        console.log('============ koClick =============');
-        console.log(e);
-    }
-
-    stageDblclick(e: KoEventObject<MouseEvent>) {
-        console.log('============ e111 =============');
-        console.log(e);
-    }
-
     expandBorderConfig = computed(() => {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
         if (isExpand) {
             return {
-                name: generateTargetName({
-                    targetName: AI_TABLE_CELL,
-                    fieldId: field._id,
-                    recordId
-                }),
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
                 height: this.renderHeight(),
                 stroke: Colors.primary,
@@ -150,7 +135,7 @@ export class AITableCellText extends CoverCellBase {
 
     renderHeight = computed(() => {
         const { height } = this.expandTextBounds() || { height: 0 };
-        return Math.min(Math.max(height, this.config()?.render.rowHeight || AI_TABLE_FIELD_HEAD_HEIGHT), 148);
+        return Math.min(Math.max(height, this.config()?.render.rowHeight || AI_TABLE_FIELD_HEAD_HEIGHT), 147);
     });
 
     startY = computed(() => {

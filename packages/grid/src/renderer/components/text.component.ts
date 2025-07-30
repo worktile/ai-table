@@ -77,12 +77,6 @@ export class AITableTextComponent {
             transformsEnabled,
             listening,
             fontFamily,
-            hitFunc: function (context: Context) {
-                context.beginPath();
-                context.rect(AI_TABLE_OFFSET, (height! - textBounds.height) / 2 - AI_TABLE_OFFSET, textBounds.width, textBounds.height);
-                context.closePath();
-                context.fillStrokeShape(this as any);
-            },
             ...rest
         };
     });
