@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.31-0](https://github.com/worktile/ai-table/compare/0.1.30...0.1.31-0) (2025-07-30)
+
+
+### Bug Fixes
+
+* #WIK-18612 【aitable】表格又出现白屏，出现多次 ([4b9cf7c](https://github.com/worktile/ai-table/commit/4b9cf7ca030ec6339ad61f080a756b083a77b770)), closes [#WIK-18612](https://github.com/worktile/ai-table/issues/WIK-18612)
+
+
+
 ## [0.1.30](https://github.com/worktile/ai-table/compare/0.1.29...0.1.30) (2025-07-22)
 
 
