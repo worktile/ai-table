@@ -147,7 +147,6 @@ export class AITableCellText extends CoverCellBase {
 
     expandTextConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
-        this.isExpand();
         if (render) {
             const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
             let textRender: string | undefined = this.textString();
