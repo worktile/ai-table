@@ -18,6 +18,10 @@ import {
     AIViewTable,
     applyActionOps,
     buildRemoveFieldItem,
+    buildFreezeToThisColumnItem,
+    buildRestoreDefaultFrozenColumnItem,
+    buildFrozenDividerItem,
+    calculateAdaptiveFrozenCount,
     CopyCellsItem,
     DividerMenuItem,
     EditFieldPropertyItem,
@@ -210,6 +214,9 @@ export class DemoTableContent {
                         }),
                         hidden: () => readonly
                     } as any,
+                    { ...buildFrozenDividerItem(), hidden: () => readonly },
+                    buildFreezeToThisColumnItem(this.aiTable),
+                    buildRestoreDefaultFrozenColumnItem(this.aiTable),
                     { ...DividerMenuItem, hidden: () => readonly },
                     {
                         type: 'sortByAsc',
@@ -286,6 +293,10 @@ export class DemoTableContent {
     canRedo = computed(() => {
         return this.canRedoCount() > 0;
     });
+
+    calculateFrozenCount = (containerWidth: number) => {
+        return calculateAdaptiveFrozenCount(this.aiTable, containerWidth, 200);
+    };
 
     actions: AITableActions = {
         updateFieldValues: (data: UpdateFieldValueOptions[]) => {

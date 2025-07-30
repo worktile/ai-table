@@ -131,6 +131,7 @@ export interface AITableOpenEditOptions {
 }
 
 export interface AITableContext {
+    containerRect: Signal<{ width: number; height: number }>;
     rowHeadWidth: Signal<number>;
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
