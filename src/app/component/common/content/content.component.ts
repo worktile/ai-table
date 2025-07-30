@@ -20,7 +20,6 @@ import {
     buildRemoveFieldItem,
     buildFreezeToThisColumnItem,
     buildRestoreDefaultFrozenColumnItem,
-    buildFrozenDividerItem,
     calculateAdaptiveFrozenCount,
     CopyCellsItem,
     DividerMenuItem,
@@ -214,7 +213,7 @@ export class DemoTableContent {
                         }),
                         hidden: () => readonly
                     } as any,
-                    { ...buildFrozenDividerItem(), hidden: () => readonly },
+                    { ...DividerMenuItem, hidden: () => readonly },
                     buildFreezeToThisColumnItem(this.aiTable),
                     buildRestoreDefaultFrozenColumnItem(this.aiTable),
                     { ...DividerMenuItem, hidden: () => readonly },

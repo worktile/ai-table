@@ -198,9 +198,3 @@ export const buildRestoreDefaultFrozenColumnItem = (aiTable: AITable) => {
         }
     };
 };
-
-export const buildFrozenDividerItem = () => {
-    return {
-        type: 'divider'
-    };
-};
