@@ -30,7 +30,8 @@ export class AITableGridSelectionService {
             activeCell: null,
             expandCell: null,
             editingCell: null,
-            selectAllState: AITableSelectAllState.none
+            selectAllState: AITableSelectAllState.none,
+            expandCellInfo: null
         });
     }
 

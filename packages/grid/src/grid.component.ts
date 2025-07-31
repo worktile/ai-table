@@ -507,6 +507,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (expandRecordId !== recordId || expandFieldId !== fieldId) {
                     const field = this.aiTable.fieldsMap()[fieldId];
                     if (field.type === AITableFieldType.text) {
+                        this.aiTableGridSelectionService.clearSelection();
                         expandCell(this.aiTable, [recordId, fieldId]);
                     } else {
                         this.aiTableGridSelectionService.selectCells(startCell);
