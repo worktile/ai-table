@@ -22,7 +22,6 @@ function calculateAdaptiveFrozenColumnCountCore(config: {
     visibleFields: AITableField[];
     columnIndicesSizeMap: AITableSizeMap;
     frozenFieldId?: string;
-    desiredFrozenCount?: number;
     minUnfrozenWidth?: number;
 }): number {
     const {
@@ -31,7 +30,6 @@ function calculateAdaptiveFrozenColumnCountCore(config: {
         visibleFields,
         columnIndicesSizeMap,
         frozenFieldId,
-        desiredFrozenCount,
         minUnfrozenWidth = AI_TABLE_DEFAULT_MIN_UNFROZEN_WIDTH
     } = config;
 
@@ -48,8 +46,6 @@ function calculateAdaptiveFrozenColumnCountCore(config: {
         } else {
             targetFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
         }
-    } else if (desiredFrozenCount !== undefined) {
-        targetFrozenCount = desiredFrozenCount;
     } else {
         targetFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     }
