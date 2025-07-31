@@ -5,3 +5,4 @@ export * from './rich-text.component';
 export * from './rate.component';
 export * from './progress.component';
 export * from './checkbox.component';
+export * from './single-text.component';

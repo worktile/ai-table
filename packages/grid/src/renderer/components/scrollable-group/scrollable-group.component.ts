@@ -171,6 +171,7 @@ export class AITableScrollableGroup implements AfterViewInit {
         return {
             x: 0,
             y: 0,
+            fill: Colors.white,
             width,
             height,
             listening: true

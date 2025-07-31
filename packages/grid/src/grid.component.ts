@@ -76,7 +76,8 @@ import {
     setMouseStyle,
     dragFillHighlightArea,
     performFill,
-    AITableDragFillState
+    AITableDragFillState,
+    expandCell
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -504,7 +505,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.updateDragSelectState(true, startCell);
                 const [expandRecordId, expandFieldId] = this.aiTable.selection().expandCell || [null, null];
                 if (expandRecordId !== recordId || expandFieldId !== fieldId) {
-                    this.aiTableGridSelectionService.selectCells(startCell);
+                    const field = this.aiTable.fieldsMap()[fieldId];
+                    if (field.type === AITableFieldType.text) {
+                        expandCell(this.aiTable, [recordId, fieldId]);
+                    } else {
+                        this.aiTableGridSelectionService.selectCells(startCell);
+                    }
                 }
                 return;
             case AI_TABLE_FILL_HANDLE:

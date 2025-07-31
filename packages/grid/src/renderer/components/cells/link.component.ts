@@ -4,7 +4,8 @@ import {
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_MORE,
     AI_TABLE_TEXT_LINE_HEIGHT,
-    Colors
+    Colors,
+    DEFAULT_FONT_SIZE
 } from '../../../constants';
 import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableTextComponent } from '../text.component';
@@ -56,13 +57,12 @@ export class AITableCellLink extends CoverCellBase {
 
             return {
                 x,
-                y,
+                y: (rowHeight - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
                 text,
                 wrap: 'none',
                 width: textWidth,
                 fillStyle: Colors.primary,
                 fill: Colors.primary,
-                height: rowHeight + 2,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: true,
                 ellipsis: true,
