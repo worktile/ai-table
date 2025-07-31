@@ -12,7 +12,7 @@ import {
     Renderer2,
     Signal
 } from '@angular/core';
-import { DragEndData, DragType } from '@ai-table/utils';
+import { DragDirection, DragEndData, DragType } from '@ai-table/utils';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 import {
@@ -169,9 +169,15 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         this.containerHeight = this.elementRef.nativeElement.offsetHeight;
         const moveX = e.x - (this.mouseStartPosition?.x || 0);
         const moveY = e.y - (this.mouseStartPosition?.y || 0);
+        let direction: DragDirection = DragDirection.none;
         switch (drag.type) {
             case DragType.field:
-                this.movingColumn(drag, moveX);
+                if (e.movementX > 0) {
+                    direction = DragDirection.right;
+                } else if (e.movementX < 0) {
+                    direction = DragDirection.left;
+                }
+                this.movingColumn(drag, moveX, direction);
                 break;
             case DragType.record:
                 this.movingRecord(drag, moveY);
@@ -182,13 +188,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         }
     }
 
-    private movingColumn(drag: AITableDragState, moveX: number) {
+    private movingColumn(drag: AITableDragState, moveX: number, direction: DragDirection) {
         const aiTable = this.aiTableGridSelectionService.aiTable;
         const scroll = { x: this.horizontalBarElement?.scrollLeft || 0, y: 0 };
         const coordinate = drag.coordinate!;
         const fields = aiTable.gridData().fields;
         const width = this.calculateDragWidth(fields, coordinate, drag);
         const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
+        const rowHeadWidth = aiTable.context!.rowHeadWidth();
         const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
         const sourceColumnStartX = coordinate.getColumnOffset(sourceColumnIndex);
         const sourceColumnWidth = coordinate.getColumnWidth(sourceColumnIndex);
@@ -236,8 +243,8 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 isLastColumn
             ) {
                 let lineLeft = targetColumnStartX - scrollPosition.x;
-                const lineForFrozenX = lineLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
-                const rectDistanceFrozenX = rectLeft - frozenColumnWidth - aiTable.context!.rowHeadWidth();
+                const lineForFrozenX = lineLeft - frozenColumnWidth - rowHeadWidth;
+                const rectDistanceFrozenX = rectLeft - frozenColumnWidth - rowHeadWidth;
 
                 if (lineForFrozenX < 0) {
                     if (Math.abs(rectDistanceFrozenX) < dragCenter) {
@@ -252,6 +259,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                             fieldIds: drag.sourceIds,
                             fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
                         };
+                        return;
+                    }
+                    if (isSourceColumnFrozen) {
+                        // 拖拽的列是冻结列，且目标列在冻结列左侧，不显示辅助线
+                        this.resetAuxiliaryLine();
+                        this.draggedData = null;
                         return;
                     }
                 }
@@ -282,6 +295,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
         updateTargetAndLine(currentRectLeft, newScrollPosition);
 
+        if (
+            isSourceColumnFrozen &&
+            (direction === DragDirection.right || direction === DragDirection.none) &&
+            currentRectLeft < frozenColumnWidth + rowHeadWidth + AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
+        ) {
+            // 拖拽的列是冻结列，方向是向右，且当前列在冻结列左侧，不滚动
+            return;
+        }
         this.scrollControllerService.scroll({
             container: {
                 width: this.containerWidth,
@@ -298,7 +319,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 horizontalElement: this.horizontalBarElement
             },
             frozenArea: {
-                left: frozenColumnWidth + aiTable.context!.rowHeadWidth()
+                left: frozenColumnWidth + rowHeadWidth
             },
             edgeThreshold: {
                 left: AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD,
