@@ -43,6 +43,7 @@
             (aiTableInitialized)="aiTableInitialized($event)"
             [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
             [aiGetI18nTextByKey]="getI18nTextByKey"
+            [aiFrozenColumnCountFn]="calculateFrozenCount"
             (aiClick)="onClick($event)"
             (aiDbClick)="onDbClick($event)"
         ></ai-table-grid>

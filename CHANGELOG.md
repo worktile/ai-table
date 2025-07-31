@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.33](https://github.com/worktile/ai-table/compare/0.1.32...0.1.33) (2025-07-31)
+
+
+### Bug Fixes
+
+* #WIK-18612 【aitable】表格又出现白屏，出现多次 ([#600](https://github.com/worktile/ai-table/issues/600)) ([5d72f87](https://github.com/worktile/ai-table/commit/5d72f873509db662405aefd9eec271d5787579fb)), closes [#WIK-18612](https://github.com/worktile/ai-table/issues/WIK-18612)
+
+
+### Features
+
+* #WIK-18607 单行文本支持选中cover展示全部内容 ([#597](https://github.com/worktile/ai-table/issues/597)) ([e3dd51c](https://github.com/worktile/ai-table/commit/e3dd51c932eb38d9c284d44ff7673a06f6b5df6f)), closes [#WIK-18607](https://github.com/worktile/ai-table/issues/WIK-18607)
+* #WIK-18617 AITable-支持单选、多选禁用隐藏 ([#598](https://github.com/worktile/ai-table/issues/598)) ([10a0019](https://github.com/worktile/ai-table/commit/10a00192f3450d193c61cd67953d170339b2c944)), closes [#WIK-18617](https://github.com/worktile/ai-table/issues/WIK-18617)
+
+
+
 ## [0.1.32](https://github.com/worktile/ai-table/compare/0.1.31...0.1.32) (2025-07-25)
 
 
