@@ -76,6 +76,8 @@ export class AITableGridBase implements OnInit {
 
     aiKeywords = input<string>();
 
+    aiFrozenColumnCountFn = input<(containerWidth: number) => number>();
+
     AITableFieldType = AITableFieldType;
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;

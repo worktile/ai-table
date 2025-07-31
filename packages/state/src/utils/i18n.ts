@@ -15,7 +15,9 @@ export enum AITableStateI18nKey {
     insertUpward = 'insertUpward',
     insertDownward = 'insertDownward',
     upward = 'upward',
-    downward = 'downward'
+    downward = 'downward',
+    freezeToThisColumn = 'freezeToThisColumn',
+    restoreDefaultFrozenColumn = 'restoreDefaultFrozenColumn'
 }
 
 export const AITableStateI18nText = {
@@ -33,7 +35,9 @@ export const AITableStateI18nText = {
     [AITableStateI18nKey.insertUpward]: '向上插入',
     [AITableStateI18nKey.insertDownward]: '向下插入',
     [AITableStateI18nKey.upward]: '行',
-    [AITableStateI18nKey.downward]: '行'
+    [AITableStateI18nKey.downward]: '行',
+    [AITableStateI18nKey.freezeToThisColumn]: '冻结至此列',
+    [AITableStateI18nKey.restoreDefaultFrozenColumn]: '恢复默认冻结列'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableStateI18nKey): string => {
