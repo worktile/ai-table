@@ -3,6 +3,7 @@ import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, 
 import { AITableFieldOption, AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
+    containerRect: Signal<{ width: number; height: number }>;
     rowHeadWidth: Signal<number>;
     linearRows: Signal<AITableLinearRow[]>;
     pointPosition: WritableSignal<AITablePointPosition>;
@@ -22,6 +23,7 @@ export class RendererContext {
 
     constructor(options: AITableContext) {
         const {
+            containerRect,
             rowHeadWidth,
             linearRows,
             pointPosition,
@@ -39,6 +41,7 @@ export class RendererContext {
             fieldOptionMap,
             readonly
         } = options;
+        this.containerRect = containerRect;
         this.rowHeadWidth = rowHeadWidth;
         this.linearRows = linearRows;
         this.pointPosition = pointPosition;

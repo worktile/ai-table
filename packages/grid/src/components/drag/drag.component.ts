@@ -194,9 +194,13 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
         const sourceColumnStartX = coordinate.getColumnOffset(sourceColumnIndex);
         const sourceColumnWidth = coordinate.getColumnWidth(sourceColumnIndex);
-        // TODO: 目前默认第一列为冻结列，后期支持设置冻结列需要处理
-        const isSourceColumnFrozen = sourceColumnIndex === 0;
-        const frozenColumnWidth = coordinate.getColumnWidth(0);
+
+        const frozenColumnCount = aiTable.context!.frozenColumnCount();
+        const isSourceColumnFrozen = sourceColumnIndex === frozenColumnCount - 1;
+        const frozenColumnWidth = Array.from({ length: frozenColumnCount }).reduce(
+            (acc: number, _, index) => acc + coordinate.getColumnWidth(index),
+            0
+        );
         const pointerX = moveX + sourceColumnStartX;
         // 拖拽中心点
         const dragCenter = sourceColumnWidth / 2;
