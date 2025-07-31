@@ -18,9 +18,9 @@ import {
     AIViewTable,
     applyActionOps,
     buildRemoveFieldItem,
-    buildFreezeToThisColumnItem,
-    buildRestoreDefaultFrozenColumnItem,
-    calculateAdaptiveFrozenCount,
+    freezeToThisColumn,
+    restoreDefaultFrozenColumn,
+    calculateAdaptiveFrozenColumnCount,
     CopyCellsItem,
     DividerMenuItem,
     EditFieldPropertyItem,
@@ -214,8 +214,8 @@ export class DemoTableContent {
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
-                    buildFreezeToThisColumnItem(this.aiTable),
-                    buildRestoreDefaultFrozenColumnItem(this.aiTable),
+                    freezeToThisColumn(this.aiTable),
+                    restoreDefaultFrozenColumn(this.aiTable),
                     { ...DividerMenuItem, hidden: () => readonly },
                     {
                         type: 'sortByAsc',
@@ -294,7 +294,7 @@ export class DemoTableContent {
     });
 
     calculateFrozenCount = (containerWidth: number) => {
-        return calculateAdaptiveFrozenCount(this.aiTable, containerWidth, 200);
+        return calculateAdaptiveFrozenColumnCount(this.aiTable, containerWidth, 200);
     };
 
     actions: AITableActions = {

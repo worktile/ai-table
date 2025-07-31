@@ -86,7 +86,7 @@ import { isNumber } from 'lodash';
 import {
     AddFieldOptions,
     AddRecordOptions,
-    AI_TABLE_MIN_FROZEN_COUNT,
+    AI_TABLE_MIN_FROZEN_COLUMN_COUNT,
     AIRecordFieldIdPath,
     AITableField,
     AITableFieldOption,
@@ -149,12 +149,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     frozenColumnCount = computed(() => {
         const containerWidth = this.containerRect().width;
 
-        const calculateFrozenCount = this.aiCalculateFrozenCount();
-        if (calculateFrozenCount) {
-            return calculateFrozenCount(containerWidth);
+        const aiFrozenColumnCountFn = this.aiFrozenColumnCountFn();
+        if (aiFrozenColumnCountFn) {
+            return aiFrozenColumnCountFn(containerWidth);
         }
 
-        return AI_TABLE_MIN_FROZEN_COUNT;
+        return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     });
 
     hasContainerRect = computed(() => {

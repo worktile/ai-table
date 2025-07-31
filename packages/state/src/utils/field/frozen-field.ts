@@ -2,7 +2,7 @@ import { AITable, getColumnIndicesSizeMap } from '@ai-table/grid';
 import { Signal } from '@angular/core';
 import { AIViewTable } from '../../types';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../../utils/i18n';
-import { AITableField, AITableSizeMap, AI_TABLE_DEFAULT_MIN_UNFROZEN_WIDTH, AI_TABLE_MIN_FROZEN_COUNT } from '@ai-table/utils';
+import { AITableField, AITableSizeMap, AI_TABLE_DEFAULT_MIN_UNFROZEN_WIDTH, AI_TABLE_MIN_FROZEN_COLUMN_COUNT } from '@ai-table/utils';
 import { setViewFrozenField } from '../../action/view';
 
 export function getFrozenFieldId(aiTable: AITable): string | undefined {
@@ -16,7 +16,7 @@ export function getFrozenFieldId(aiTable: AITable): string | undefined {
     }
 }
 
-function calculateAdaptiveFrozenCountCore(config: {
+function calculateAdaptiveFrozenColumnCountCore(config: {
     containerWidth: number;
     rowHeadWidth: number;
     visibleFields: AITableField[];
@@ -36,7 +36,7 @@ function calculateAdaptiveFrozenCountCore(config: {
     } = config;
 
     if (visibleFields.length === 0) {
-        return AI_TABLE_MIN_FROZEN_COUNT;
+        return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     }
 
     let targetFrozenCount: number;
@@ -46,12 +46,12 @@ function calculateAdaptiveFrozenCountCore(config: {
         if (frozenFieldIndex >= 0) {
             targetFrozenCount = frozenFieldIndex + 1;
         } else {
-            targetFrozenCount = AI_TABLE_MIN_FROZEN_COUNT;
+            targetFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
         }
     } else if (desiredFrozenCount !== undefined) {
         targetFrozenCount = desiredFrozenCount;
     } else {
-        targetFrozenCount = AI_TABLE_MIN_FROZEN_COUNT;
+        targetFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     }
 
     const availableWidth = containerWidth - rowHeadWidth;
@@ -69,7 +69,7 @@ function calculateAdaptiveFrozenCountCore(config: {
         if (newFrozenWidth > maxFrozenWidth) {
             if (i === 0) {
                 currentFrozenWidth = newFrozenWidth;
-                actualFrozenCount = AI_TABLE_MIN_FROZEN_COUNT;
+                actualFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
             }
             break;
         }
@@ -79,8 +79,8 @@ function calculateAdaptiveFrozenCountCore(config: {
     }
 
     // 至少有一列冻结
-    if (actualFrozenCount < AI_TABLE_MIN_FROZEN_COUNT) {
-        actualFrozenCount = AI_TABLE_MIN_FROZEN_COUNT;
+    if (actualFrozenCount < AI_TABLE_MIN_FROZEN_COLUMN_COUNT) {
+        actualFrozenCount = AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
         if (visibleFields.length > 0) {
             currentFrozenWidth = columnIndicesSizeMap[0];
         }
@@ -89,10 +89,10 @@ function calculateAdaptiveFrozenCountCore(config: {
     return actualFrozenCount;
 }
 
-export function calculateAdaptiveFrozenCount(aiTable: AITable, containerWidth: number, minUnfrozenWidth: number = 200): number {
+export function calculateAdaptiveFrozenColumnCount(aiTable: AITable, containerWidth: number, minUnfrozenWidth: number = 200): number {
     try {
         if (containerWidth <= 0) {
-            return AI_TABLE_MIN_FROZEN_COUNT;
+            return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
         }
 
         const frozenFieldId = getFrozenFieldId(aiTable);
@@ -100,7 +100,7 @@ export function calculateAdaptiveFrozenCount(aiTable: AITable, containerWidth: n
         const visibleFields = AITable.getVisibleFields(aiTable);
         const columnIndicesSizeMap = getColumnIndicesSizeMap(aiTable, visibleFields);
         const rowHeadWidth = aiTable.context?.rowHeadWidth?.() || 0;
-        return calculateAdaptiveFrozenCountCore({
+        return calculateAdaptiveFrozenColumnCountCore({
             containerWidth,
             rowHeadWidth,
             visibleFields,
@@ -109,11 +109,11 @@ export function calculateAdaptiveFrozenCount(aiTable: AITable, containerWidth: n
             minUnfrozenWidth
         });
     } catch (error) {
-        return AI_TABLE_MIN_FROZEN_COUNT;
+        return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     }
 }
 
-export const buildFreezeToThisColumnItem = (aiTable: AITable) => {
+export const freezeToThisColumn = (aiTable: AITable) => {
     return {
         type: 'freezeToThisColumn',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.freezeToThisColumn),
@@ -144,7 +144,7 @@ export const buildFreezeToThisColumnItem = (aiTable: AITable) => {
                 const columnIndicesSizeMap = getColumnIndicesSizeMap(aiTable, visibleFields);
                 const containerWidth = aiTable.context?.containerRect()?.width || 0;
                 const rowHeadWidth = aiTable.context?.rowHeadWidth?.() || 0;
-                const actualFrozenCount = calculateAdaptiveFrozenCountCore({
+                const actualFrozenCount = calculateAdaptiveFrozenColumnCountCore({
                     containerWidth,
                     rowHeadWidth,
                     visibleFields,
@@ -172,7 +172,7 @@ export const buildFreezeToThisColumnItem = (aiTable: AITable) => {
     };
 };
 
-export const buildRestoreDefaultFrozenColumnItem = (aiTable: AITable) => {
+export const restoreDefaultFrozenColumn = (aiTable: AITable) => {
     return {
         type: 'restoreDefaultFrozenColumn',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.restoreDefaultFrozenColumn),
