@@ -12,7 +12,7 @@ import {
     Renderer2,
     Signal
 } from '@angular/core';
-import { DragEndData, DragType } from '@ai-table/utils';
+import { DragDirection, DragEndData, DragType } from '@ai-table/utils';
 import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 import {
@@ -169,9 +169,14 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         this.containerHeight = this.elementRef.nativeElement.offsetHeight;
         const moveX = e.x - (this.mouseStartPosition?.x || 0);
         const moveY = e.y - (this.mouseStartPosition?.y || 0);
-        const direction = e.movementX >= 0 ? 'right' : 'left';
+        let direction: DragDirection = DragDirection.none;
         switch (drag.type) {
             case DragType.field:
+                if (e.movementX > 0) {
+                    direction = DragDirection.right;
+                } else if (e.movementX < 0) {
+                    direction = DragDirection.left;
+                }
                 this.movingColumn(drag, moveX, direction);
                 break;
             case DragType.record:
@@ -183,7 +188,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         }
     }
 
-    private movingColumn(drag: AITableDragState, moveX: number, direction: 'left' | 'right') {
+    private movingColumn(drag: AITableDragState, moveX: number, direction: DragDirection) {
         const aiTable = this.aiTableGridSelectionService.aiTable;
         const scroll = { x: this.horizontalBarElement?.scrollLeft || 0, y: 0 };
         const coordinate = drag.coordinate!;
@@ -292,7 +297,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
         if (
             isSourceColumnFrozen &&
-            direction === 'right' &&
+            (direction === DragDirection.right || direction === DragDirection.none) &&
             currentRectLeft < frozenColumnWidth + rowHeadWidth + AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
         ) {
             // 拖拽的列是冻结列，方向是向右，且当前列在冻结列左侧，不滚动

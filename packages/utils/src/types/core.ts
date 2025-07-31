@@ -278,3 +278,11 @@ export interface TransactionOriginInfo {
 export interface AITable {
     getI18nTextByKey?: (key: string) => string;
 }
+
+export enum DragDirection {
+    left = 'left',
+    right = 'right',
+    top = 'top',
+    bottom = 'bottom',
+    none = 'none'
+}
