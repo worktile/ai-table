@@ -104,6 +104,7 @@ export interface AITableSelectOption {
     icon?: string;
     color?: string;
     bg_color?: string;
+    is_disabled?: 0 | 1 | undefined;
 }
 
 export enum AITableSelectOptionStyle {
