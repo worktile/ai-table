@@ -20,10 +20,8 @@ export class AITableFillHandle {
         const { aiTable, readonly } = this.config();
         const selection = aiTable.selection();
         const hasSelectedCells = selection.selectedCells.size > 0;
-        const isExpandCell = selection.expandCell;
         const isEditingCell = selection.editingCell;
-
-        return hasSelectedCells && !readonly && !isEditingCell && !isExpandCell;
+        return hasSelectedCells && !readonly && !isEditingCell;
     });
 
     readonly handleConfig = computed(() => {
@@ -42,9 +40,10 @@ export class AITableFillHandle {
         const width = 6;
         const height = 6;
 
+        const cellHeight = aiTable.selection().expandCellInfo?.height ?? AI_TABLE_ROW_HEIGHT;
         return {
             x: columnOffset + columnWidth - width / 2 + AI_TABLE_OFFSET,
-            y: rowOffset + AI_TABLE_ROW_HEIGHT - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
+            y: rowOffset + cellHeight - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width,
             height,
             fill: Colors.primary,

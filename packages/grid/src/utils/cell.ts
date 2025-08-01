@@ -89,6 +89,15 @@ export function expandCell(aiTable: AITable, path: AIRecordFieldIdPath) {
     const [recordId, fieldId] = path;
     aiTable.selection.set({
         ...aiTable.selection(),
+        activeCell: [recordId, fieldId],
+        selectedCells: new Set([`${recordId}:${fieldId}`]),
         expandCell: [recordId, fieldId]
+    });
+}
+
+export function setExpandCellInfo(aiTable: AITable, expandCellInfo?: { width?: number; height?: number }) {
+    aiTable.selection.set({
+        ...aiTable.selection(),
+        expandCellInfo: expandCellInfo
     });
 }

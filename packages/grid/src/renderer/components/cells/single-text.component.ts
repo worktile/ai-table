@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, untracked } from '@angular/core';
 import {
     AI_TABLE_ACTION_COMMON_RADIUS,
     AI_TABLE_ACTION_COMMON_RIGHT_PADDING,
@@ -9,6 +9,7 @@ import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_FAMILY,
@@ -22,7 +23,7 @@ import {
     DEFAULT_TEXT_WRAP,
     EditPath
 } from '../../../constants';
-import { generateTargetName } from '../../../utils';
+import { generateTargetName, setExpandCellInfo } from '../../../utils';
 import { AITableActionIconConfig } from '../../../types';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
@@ -70,7 +71,7 @@ export class AITableCellText extends CoverCellBase {
         if (isExpand) {
             return {
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
-                height: this.renderHeight(),
+                height: this.height(),
                 stroke: Colors.primary,
                 strokeWidth: 2,
                 listening: false
@@ -86,9 +87,9 @@ export class AITableCellText extends CoverCellBase {
 
         return {
             width: columnWidth,
-            height: this.renderHeight(),
+            height: this.height(),
             contentWidth: columnWidth, // 内容宽度大于容器宽度，会显示横向滚动条
-            contentHeight: height + this.startY() * 2, // 内容高度大于容器高度，会显示竖向滚动条
+            contentHeight: height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER, // 内容高度大于容器高度，会显示竖向滚动条
             scrollbarSize: 9,
             scrollbarColor: Colors.gray700,
             x: 0,
@@ -133,9 +134,9 @@ export class AITableCellText extends CoverCellBase {
         return textRender.replace(/\r|\n/g, ' ');
     });
 
-    renderHeight = computed(() => {
+    override height = computed(() => {
         const { height } = this.expandTextBounds() || { height: 0 };
-        return Math.min(Math.max(height, this.config()?.render.rowHeight || AI_TABLE_FIELD_HEAD_HEIGHT), 147);
+        return Math.min(Math.max(height, this.config()!.render.rowHeight - AI_TABLE_CELL_LINE_BORDER || AI_TABLE_ROW_BLANK_HEIGHT), 146);
     });
 
     startY = computed(() => {
@@ -176,9 +177,7 @@ export class AITableCellText extends CoverCellBase {
     });
 
     textConfig = computed<TextConfig | undefined>(() => {
-        const { isExpand } = this.config()!;
         const render = this.config()?.render;
-        this.isExpand();
         if (render) {
             const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
             let textRender: string | undefined = this.textString();
@@ -200,10 +199,5 @@ export class AITableCellText extends CoverCellBase {
             };
         }
         return;
-    });
-
-    isExpand = computed(() => {
-        const { isExpand } = this.config()!;
-        return isExpand;
     });
 }

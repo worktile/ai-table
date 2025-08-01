@@ -80,6 +80,10 @@ export class AITableCellRelationTicket extends CoverCellBase {
         return null;
     });
 
+    override height = computed(() => {
+        return this.maxHeight;
+    });
+
     expandContainer = computed(() => {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
