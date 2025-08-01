@@ -22,11 +22,10 @@ export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValu
     (options || []).forEach((option) => {
         const field = AITableQueries.getField(aiTable, [option.path[1]]);
         const fieldModel = field && FieldModelMap[field.type];
-        const value = option.value === '' ? null : option.value;
-        if (fieldModel && fieldModel.isValid(value)) {
+        if (fieldModel && fieldModel.isValid(option.value)) {
             const operation: UpdateFieldValueAction = {
                 type: ActionName.UpdateFieldValue,
-                newFieldValue: value,
+                newFieldValue: option.value,
                 path: option.path
             };
 
