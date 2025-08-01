@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.34](https://github.com/worktile/ai-table/compare/0.1.33...0.1.34) (2025-08-01)
+
+
+### Bug Fixes
+
+* **grid:** #WIK-18620 表格有滚动条拖动冻结列，滚条自动往前跳 ([#606](https://github.com/worktile/ai-table/issues/606)) ([e5fe01a](https://github.com/worktile/ai-table/commit/e5fe01a3fb53d5ccae1bdb82491cdb245c751bd5)), closes [#WIK-18620](https://github.com/worktile/ai-table/issues/WIK-18620) [#WIK-18620](https://github.com/worktile/ai-table/issues/WIK-18620)
+* **state:** #WIK-18472 数字类型清除回车后数字还原 ([#609](https://github.com/worktile/ai-table/issues/609)) ([5e9da47](https://github.com/worktile/ai-table/commit/5e9da47da4c70f391bc5458d98c3183d7007d248)), closes [#WIK-18472](https://github.com/worktile/ai-table/issues/WIK-18472)
+
+
+### Features
+
+* #WIK-18220 supports frozen column settings ([#599](https://github.com/worktile/ai-table/issues/599)) ([5dcf31d](https://github.com/worktile/ai-table/commit/5dcf31d52d4f1f3788c79ca039ca8da261722173)), closes [#WIK-18220](https://github.com/worktile/ai-table/issues/WIK-18220)
+* #WIK-18634 cover渲染的cell展开后，拖拽赋值的按钮跟随展开的边框 ([#607](https://github.com/worktile/ai-table/issues/607)) ([1505125](https://github.com/worktile/ai-table/commit/1505125fcf8a59a136bbdc4fa8e7f4e559261960)), closes [#WIK-18634](https://github.com/worktile/ai-table/issues/WIK-18634)
+
+
+
 ## [0.1.33](https://github.com/worktile/ai-table/compare/0.1.32...0.1.33) (2025-07-31)
 
 
