@@ -22,7 +22,7 @@ export class AITableGridSelectionService {
         this.aiTable = aiTable;
     }
 
-    clearSelection() {
+    clearSelection(options?: { retainExpandCellInfo?: boolean }) {
         this.aiTable.selection.set({
             selectedRecords: new Set(),
             selectedFields: new Set(),
@@ -31,7 +31,7 @@ export class AITableGridSelectionService {
             expandCell: null,
             editingCell: null,
             selectAllState: AITableSelectAllState.none,
-            expandCellInfo: null
+            expandCellInfo: options?.retainExpandCellInfo ? this.aiTable.selection().expandCellInfo : null
         });
     }
 

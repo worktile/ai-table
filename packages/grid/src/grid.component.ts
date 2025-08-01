@@ -476,8 +476,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
 
                     if (startCell && !!startCell.length) {
-                        this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
-                        this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
+                        const lastItem = Array.from(this.aiTable.selection().selectedCells).pop();
+
+                        if (endCell.join(':') !== lastItem) {
+                            this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
+                            this.scrollViewToCell(
+                                pos,
+                                startCell,
+                                endCell,
+                                this.coordinate(),
+                                this.horizontalBarRef(),
+                                this.verticalBarRef()
+                            );
+                        }
                     }
                 }
             }
@@ -518,7 +529,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (expandRecordId !== recordId || expandFieldId !== fieldId) {
                     const field = this.aiTable.fieldsMap()[fieldId];
                     if (field.type === AITableFieldType.text) {
-                        this.aiTableGridSelectionService.clearSelection();
+                        this.aiTableGridSelectionService.clearSelection({ retainExpandCellInfo: true });
                         expandCell(this.aiTable, [recordId, fieldId]);
                     } else {
                         this.aiTableGridSelectionService.selectCells(startCell);

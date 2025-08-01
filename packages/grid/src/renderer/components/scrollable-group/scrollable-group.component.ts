@@ -35,13 +35,7 @@ export interface ScrollableGroupConfig {
 @Component({
     selector: 'ai-table-scrollable-group',
     template: `
-        <ko-group
-            #rootGroup
-            [config]="containerConfig()"
-            (koWheel)="stageWheel($event)"
-            (koMousedown)="stopBubble($event)"
-            (koMouseup)="stopBubble($event)"
-        >
+        <ko-group #rootGroup [config]="containerConfig()" (koWheel)="stageWheel($event)">
             <ko-group>
                 <ko-rect [config]="bgConfig()"></ko-rect>
             </ko-group>
