@@ -476,19 +476,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
 
                     if (startCell && !!startCell.length) {
-                        const lastItem = Array.from(this.aiTable.selection().selectedCells).pop();
-
-                        if (endCell.join(':') !== lastItem) {
-                            this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
-                            this.scrollViewToCell(
-                                pos,
-                                startCell,
-                                endCell,
-                                this.coordinate(),
-                                this.horizontalBarRef(),
-                                this.verticalBarRef()
-                            );
-                        }
+                        this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
+                        this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
                     }
                 }
             }

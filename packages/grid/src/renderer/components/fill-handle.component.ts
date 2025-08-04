@@ -1,7 +1,14 @@
 import { KoShape } from '../../angular-konva';
 import { Component, computed, input } from '@angular/core';
 import { AITableFillHandleConfig } from '../../types';
-import { AI_TABLE_CELL_BORDER, AI_TABLE_FILL_HANDLE, AI_TABLE_OFFSET, AI_TABLE_ROW_HEIGHT, Colors } from '../../constants';
+import {
+    AI_TABLE_CELL_BORDER,
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FILL_HANDLE,
+    AI_TABLE_OFFSET,
+    AI_TABLE_ROW_HEIGHT,
+    Colors
+} from '../../constants';
 import { generateTargetName } from '../../utils';
 
 @Component({
@@ -40,7 +47,9 @@ export class AITableFillHandle {
         const width = 6;
         const height = 6;
 
-        const cellHeight = aiTable.selection().expandCellInfo?.height ?? AI_TABLE_ROW_HEIGHT;
+        const cellHeight = aiTable.selection().expandCellInfo?.height
+            ? aiTable.selection()!.expandCellInfo!.height! + AI_TABLE_CELL_LINE_BORDER
+            : AI_TABLE_ROW_HEIGHT;
         return {
             x: columnOffset + columnWidth - width / 2 + AI_TABLE_OFFSET,
             y: rowOffset + cellHeight - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,

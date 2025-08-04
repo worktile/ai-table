@@ -15,26 +15,8 @@ export class CoverCellBase {
 
     onlyDisplayBorder = input<boolean>(false);
 
-    height = computed<number>(() => {
-        const { render } = this.config()!;
-        return render.rowHeight;
-    });
-
     isExpand = computed(() => {
         const { isExpand } = this.config()!;
         return isExpand;
     });
-
-    constructor() {
-        effect(() => {
-            const height = this.height();
-            if (this.isExpand()) {
-                untracked(() => {
-                    const { render, aiTable } = this.config()!;
-                    const { columnWidth } = render;
-                    setExpandCellInfo(aiTable, { width: columnWidth, height });
-                });
-            }
-        });
-    }
 }

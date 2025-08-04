@@ -136,6 +136,11 @@ export class AITableGridSelectionService {
         if (!endCell) {
             selectedCells.add(`${startRecordId}:${startFieldId}`);
         } else {
+            const lastItem = Array.from(this.aiTable.selection().selectedCells).pop();
+            if (endCell.join(':') === lastItem) {
+                return;
+            }
+
             const [endRecordId, endFieldId] = endCell;
 
             const startRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(startRecordId)!;
@@ -156,7 +161,10 @@ export class AITableGridSelectionService {
         }
 
         this.clearSelection();
-        this.setActiveCell(activeCell || startCell);
-        this.aiTable.selection().selectedCells = selectedCells;
+        this.aiTable.selection.set({
+            ...this.aiTable.selection(),
+            activeCell: activeCell || startCell,
+            selectedCells: selectedCells
+        });
     }
 }

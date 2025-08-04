@@ -382,10 +382,6 @@ export class AITableScrollableGroup implements AfterViewInit {
         return width;
     });
 
-    stopBubble(e: KoEventObject<MouseEvent>) {
-        e.event.cancelBubble = true;
-    }
-
     verticalScrollbarClick(e: KoEventObject<MouseEvent>) {
         e.event.cancelBubble = true;
         const { contentHeight, height } = this.config();

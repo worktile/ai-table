@@ -65,6 +65,20 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
 export class AITableCellText extends CoverCellBase {
     static override fieldType = AITableFieldType.text;
 
+    constructor() {
+        super();
+        effect(() => {
+            const height = this.height();
+            if (this.isExpand()) {
+                untracked(() => {
+                    const { render, aiTable } = this.config()!;
+                    const { columnWidth } = render;
+                    setExpandCellInfo(aiTable, { width: columnWidth, height });
+                });
+            }
+        });
+    }
+
     expandBorderConfig = computed(() => {
         const { render, field, recordId, readonly, isExpand } = this.config()!;
         const { columnWidth } = render;
@@ -134,7 +148,7 @@ export class AITableCellText extends CoverCellBase {
         return textRender.replace(/\r|\n/g, ' ');
     });
 
-    override height = computed(() => {
+    height = computed(() => {
         const { height } = this.expandTextBounds() || { height: 0 };
         return Math.min(Math.max(height, this.config()!.render.rowHeight - AI_TABLE_CELL_LINE_BORDER || AI_TABLE_ROW_BLANK_HEIGHT), 146);
     });
