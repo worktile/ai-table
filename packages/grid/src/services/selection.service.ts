@@ -136,6 +136,7 @@ export class AITableGridSelectionService {
         if (!endCell) {
             selectedCells.add(`${startRecordId}:${startFieldId}`);
         } else {
+            // 数据的存储设计结构，决定了最后一条就是endCell
             const lastItem = Array.from(this.aiTable.selection().selectedCells).pop();
             if (endCell.join(':') === lastItem) {
                 return;
