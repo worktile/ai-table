@@ -22,7 +22,7 @@ export class AITableGridSelectionService {
         this.aiTable = aiTable;
     }
 
-    clearSelection() {
+    clearSelection(options?: { retainExpandCellInfo?: boolean }) {
         this.aiTable.selection.set({
             selectedRecords: new Set(),
             selectedFields: new Set(),
@@ -31,7 +31,7 @@ export class AITableGridSelectionService {
             expandCell: null,
             editingCell: null,
             selectAllState: AITableSelectAllState.none,
-            expandCellInfo: null
+            expandCellInfo: options?.retainExpandCellInfo ? this.aiTable.selection().expandCellInfo : null
         });
     }
 
@@ -136,6 +136,12 @@ export class AITableGridSelectionService {
         if (!endCell) {
             selectedCells.add(`${startRecordId}:${startFieldId}`);
         } else {
+            // 数据的存储设计结构，决定了最后一条就是endCell
+            const lastItem = Array.from(this.aiTable.selection().selectedCells).pop();
+            if (endCell.join(':') === lastItem) {
+                return;
+            }
+
             const [endRecordId, endFieldId] = endCell;
 
             const startRowIndex = this.aiTable.context!.visibleRowsIndexMap().get(startRecordId)!;
@@ -156,7 +162,10 @@ export class AITableGridSelectionService {
         }
 
         this.clearSelection();
-        this.setActiveCell(activeCell || startCell);
-        this.aiTable.selection().selectedCells = selectedCells;
+        this.aiTable.selection.set({
+            ...this.aiTable.selection(),
+            activeCell: activeCell || startCell,
+            selectedCells: selectedCells
+        });
     }
 }

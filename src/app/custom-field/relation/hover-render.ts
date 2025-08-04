@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, untracked } from '@angular/core';
 import {
     KoShape,
     AI_TABLE_CELL,
@@ -25,7 +25,8 @@ import {
     DEFAULT_TEXT_DECORATION,
     AI_TABLE_TEXT_LINE_HEIGHT,
     AI_TABLE_COMMON_FONT_SIZE,
-    AI_TABLE_CELL_LINE_BORDER
+    AI_TABLE_CELL_LINE_BORDER,
+    setExpandCellInfo
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
@@ -63,6 +64,20 @@ import { AITableCustomFieldType, AITableRelationConfig, MoreCountItem, RelationI
 export class AITableCellRelationTicket extends CoverCellBase {
     static override fieldType = AITableCustomFieldType.customDemo;
 
+    constructor() {
+        super();
+        effect(() => {
+            const height = this.height();
+            if (this.isExpand()) {
+                untracked(() => {
+                    const { render, aiTable } = this.config()!;
+                    const { columnWidth } = render;
+                    setExpandCellInfo(aiTable, { width: columnWidth, height });
+                });
+            }
+        });
+    }
+
     maxHeight = 200;
 
     expandBorderConfig = computed(() => {
@@ -80,7 +95,7 @@ export class AITableCellRelationTicket extends CoverCellBase {
         return null;
     });
 
-    override height = computed(() => {
+    height = computed(() => {
         return this.maxHeight;
     });
 
