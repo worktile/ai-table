@@ -13,7 +13,6 @@ import {
     Signal
 } from '@angular/core';
 import { DragDirection, DragEndData, DragType } from '@ai-table/utils';
-import { AITableGridSelectionService } from '../../services/selection.service';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 import {
     AI_TABLE_AUTO_SCROLL_BOTTOM_THRESHOLD,
@@ -27,6 +26,7 @@ import {
 } from '../../constants/table';
 import { AITableDragState } from '../../core';
 import { AITableScrollControllerService } from '../../services/scroll-controller.service';
+import { AITableGridEventService } from '../../services';
 
 @Component({
     selector: 'ai-table-drag',
@@ -43,7 +43,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     dragEnd = output<DragEndData>();
 
-    private aiTableGridSelectionService = inject(AITableGridSelectionService);
+    private aiTableGridEventService = inject(AITableGridEventService);
 
     private render2 = inject(Renderer2);
 
@@ -146,7 +146,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private handleDragStateChange(): void {
-        const drag = this.aiTableGridSelectionService.aiTable.dragState?.();
+        const drag = this.aiTableGridEventService.aiTable.dragState?.();
 
         if (!drag) {
             this.aiTableDrag = null;
@@ -189,7 +189,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private movingColumn(drag: AITableDragState, moveX: number, direction: DragDirection) {
-        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const aiTable = this.aiTableGridEventService.aiTable;
         const scroll = { x: this.horizontalBarElement?.scrollLeft || 0, y: 0 };
         const coordinate = drag.coordinate!;
         const fields = aiTable.gridData().fields;
@@ -336,7 +336,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
     private movingColumnWidth(drag: AITableDragState, moveX: number) {
         this.setCursorStyle('col-resize');
-        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const aiTable = this.aiTableGridEventService.aiTable;
         const visibleColumnIndexMap = aiTable.context!.visibleColumnsIndexMap();
         const sourceColumnIndex = visibleColumnIndexMap.get(drag.sourceIds.values().next().value!) || 0;
         const sourceColumnStartX = drag.coordinate!.getColumnOffset(sourceColumnIndex);
@@ -367,7 +367,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
     }
 
     private movingRecord(drag: AITableDragState, moveY: number) {
-        const aiTable = this.aiTableGridSelectionService.aiTable;
+        const aiTable = this.aiTableGridEventService.aiTable;
         const scroll = { x: 0, y: this.verticalBarElement?.scrollTop || 0 };
         const coordinate = drag.coordinate!;
 

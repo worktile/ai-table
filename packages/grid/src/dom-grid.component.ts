@@ -18,7 +18,6 @@ import { AITableGridBase } from './grid-base.component';
 import { IsSelectRecordPipe, MemberSettingPipe, SelectOptionPipe, SelectOptionsPipe, SelectSettingPipe, UserPipe } from './pipes/grid.pipe';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.service';
 
 @Component({
     selector: 'ai-table-dom-grid',
@@ -50,7 +49,7 @@ import { AITableGridSelectionService } from './services/selection.service';
         SelectSettingPipe,
         MemberSettingPipe
     ],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService]
+    providers: [AITableGridEventService, AITableGridFieldService]
 })
 export class AITableDomGrid extends AITableGridBase implements OnInit {
     override ngOnInit(): void {

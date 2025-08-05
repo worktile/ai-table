@@ -1,4 +1,4 @@
-import { AITableSelectAllState, getDefaultFieldValue, idsCreator, shortIdsCreator } from '@ai-table/grid';
+import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
@@ -44,14 +44,20 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
     const activeRecordId = recentAddRecord._id;
     const activeFieldId = aiTable.gridData().fields[0]._id;
-    aiTable.selection.set({
-        selectedRecords: new Set(),
-        selectedFields: new Set(),
+    // aiTable.selection.set({
+    //     selectedRecords: new Set(),
+    //     selectedFields: new Set(),
+    //     selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
+    //     activeCell: [activeRecordId, activeFieldId],
+    //     expandCell: null,
+    //     editingCell: null,
+    //     selectAllState: AITableSelectAllState.none
+    // });
+    setSelection(aiTable, {
+        selectedRecords: new Set([]),
+        selectedFields: new Set([]),
         selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
-        activeCell: [activeRecordId, activeFieldId],
-        expandCell: null,
-        editingCell: null,
-        selectAllState: AITableSelectAllState.none
+        activeCell: [activeRecordId, activeFieldId]
     });
 }
 

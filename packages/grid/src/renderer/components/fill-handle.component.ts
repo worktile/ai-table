@@ -27,7 +27,7 @@ export class AITableFillHandle {
         const { aiTable, readonly } = this.config();
         const selection = aiTable.selection();
         const hasSelectedCells = selection.selectedCells.size > 0;
-        const isEditingCell = selection.editingCell;
+        const isEditingCell = !!aiTable.editingCell()?.path;
         return hasSelectedCells && !readonly && !isEditingCell;
     });
 
@@ -47,9 +47,14 @@ export class AITableFillHandle {
         const width = 6;
         const height = 6;
 
-        const cellHeight = aiTable.selection().expandCellInfo?.height
-            ? aiTable.selection()!.expandCellInfo!.height! + AI_TABLE_CELL_LINE_BORDER
-            : AI_TABLE_ROW_HEIGHT;
+        const [expandRecordId, expandFieldId] = aiTable.expendCell()?.path || [null, null];
+
+        const cellHeight =
+            expandRecordId === recordId && expandFieldId === fieldId && aiTable.expendCell()?.height
+                ? aiTable.expendCell()?.height
+                    ? aiTable.expendCell()!.height! + AI_TABLE_CELL_LINE_BORDER
+                    : AI_TABLE_ROW_HEIGHT
+                : AI_TABLE_ROW_HEIGHT;
         return {
             x: columnOffset + columnWidth - width / 2 + AI_TABLE_OFFSET,
             y: rowOffset + cellHeight - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,

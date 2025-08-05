@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, input, untracked } from '@angular/core';
 import { AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
-import { setExpandCellInfo } from '../../../utils';
 
 @Component({
     selector: 'ai-table-cover-cell-base',

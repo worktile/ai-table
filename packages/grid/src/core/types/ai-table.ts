@@ -1,6 +1,6 @@
 import { Signal, WritableSignal } from '@angular/core';
 import { Colors } from '../../constants/colors';
-import { AITableSelection } from '../../types';
+import { AITableCellInfo, AITableSelection } from '../../types';
 import { RendererContext } from '../context';
 import { AITableGridI18nKey } from '../../utils/i18n';
 import { AITableRecords, AITableFields, AITableField, AITableValue, AITableRecord, AIRecordFieldIdPath, DragType } from '@ai-table/utils';
@@ -12,6 +12,8 @@ export interface AITable {
     gridData: Signal<AITableValue>;
     context?: RendererContext;
     selection: WritableSignal<AITableSelection>;
+    expendCell: WritableSignal<AITableCellInfo>;
+    editingCell: WritableSignal<AITableCellInfo>;
     keywordsMatchedCells: WritableSignal<Set<string>>; // [`${recordId}:${fieldId}`]
     recordsMap: Signal<{ [key: string]: AITableRecord }>;
     fieldsMap: Signal<{ [key: string]: AITableField }>;

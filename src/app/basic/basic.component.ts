@@ -1,16 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import {
-    AIFieldConfig,
-    AITable,
-    AITableGrid,
-    AITableActions,
-    AI_TABLE_CELL,
-    AI_TABLE_CELL_ATTACHMENT_ADD,
-    AI_TABLE_CELL_EDIT,
-    KoEventObjectOutput,
-    AITableContextMenuItem,
-    AITableGridSelectionService
-} from '@ai-table/grid';
+import { AITableGrid } from '@ai-table/grid';
 
 import { AITableFieldType, AITableRecord } from '@ai-table/utils';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
@@ -58,7 +47,7 @@ export class BasicTableExample implements OnInit {
             updated_at: 3,
             updated_by: '1',
             values: {
-                name: '李四',
+                name: '李四'
                 // created_at: {
                 //     timestamp: 1747900029
                 // }

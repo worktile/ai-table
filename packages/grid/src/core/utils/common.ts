@@ -16,11 +16,10 @@ export function createAITable(
             selectedRecords: new Set(),
             selectedFields: new Set(),
             selectedCells: new Set(),
-            activeCell: null,
-            expandCell: null,
-            editingCell: null,
-            selectAllState: AITableSelectAllState.none
+            activeCell: null
         }),
+        expendCell: signal({ path: null }),
+        editingCell: signal({ path: null }),
         keywordsMatchedCells: signal(new Set()),
         recordsMap: computed(() => {
             return records().reduce(

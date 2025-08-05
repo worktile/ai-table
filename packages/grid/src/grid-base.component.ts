@@ -35,12 +35,12 @@ import {
 } from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.service';
 import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
 import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
+import { selectRecord, toggleSelectAllRecords, updateSelect } from './utils';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -137,7 +137,6 @@ export class AITableGridBase implements OnInit {
     protected destroyRef = inject(DestroyRef);
     protected aiTableGridFieldService = inject(AITableGridFieldService);
     protected aiTableGridEventService = inject(AITableGridEventService);
-    protected aiTableGridSelectionService = inject(AITableGridSelectionService);
 
     ngOnInit(): void {
         this.initAITable();
@@ -157,7 +156,7 @@ export class AITableGridBase implements OnInit {
 
     initService() {
         this.aiTableGridEventService.initialize(this.aiTable, this.aiFieldConfig()?.fieldRenderers);
-        this.aiTableGridSelectionService.initialize(this.aiTable);
+        // this.aiTableGridSelectionService.initialize(this.aiTable);
         this.aiTableGridEventService.registerEvents(this.elementRef.nativeElement);
         this.aiTableGridFieldService.initAIFieldConfig(this.aiFieldConfig());
         AI_TABLE_GRID_FIELD_SERVICE_MAP.set(this.aiTable, this.aiTableGridFieldService);
@@ -173,11 +172,11 @@ export class AITableGridBase implements OnInit {
     }
 
     selectRecord(recordId: string) {
-        this.aiTableGridSelectionService.selectRecord(recordId);
+        selectRecord(this.aiTable, recordId);
     }
 
     toggleSelectAll(checked: boolean) {
-        this.aiTableGridSelectionService.toggleSelectAll(checked);
+        toggleSelectAllRecords(this.aiTable, checked);
     }
 
     addField(gridColumnBlank?: HTMLElement, position?: { x: number; y: number }) {
@@ -212,7 +211,7 @@ export class AITableGridBase implements OnInit {
             this.aiTableGridEventService.mousedownEvent$
                 .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
                 .subscribe((event) => {
-                    this.aiTableGridSelectionService.updateSelect(event);
+                    updateSelect(event, this.aiTable);
                 });
         });
     }

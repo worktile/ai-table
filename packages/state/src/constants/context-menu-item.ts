@@ -2,11 +2,11 @@ import {
     AITable,
     AITableContextMenuItem,
     AITableGridI18nKey,
-    AITableGridSelectionService,
     AITableActions,
     getI18nTextByKey,
     isMac,
-    writeToAITable
+    writeToAITable,
+    clearSelection
 } from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
@@ -19,17 +19,12 @@ export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AI
         type: 'removeRecords',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.removeRecords),
         icon: 'trash',
-        exec: (
-            aiTable: AITable,
-            targetName: string,
-            position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService
-        ) => {
+        exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => {
             let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
             selectedRecordIds.forEach((id: string) => {
                 Actions.removeRecord(aiTable as AIViewTable, [id]);
             });
-            aiTableGridSelectionService.clearSelection();
+            clearSelection(aiTable);
         }
     };
 };
@@ -42,14 +37,7 @@ export const InsertUpwardRecords = (aiTable: AITable, actions: AITableActions): 
         icon: 'table-insert-rows-top',
         isInputNumber: true,
         count: 1,
-        exec: (
-            aiTable: AITable,
-            targetName: string,
-            position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService,
-            notifyService: ThyNotifyService,
-            count: any
-        ) => {
+        exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService, count: any) => {
             let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
             actions.addRecord({
                 targetId: selectedRecordIds[0],
@@ -68,14 +56,7 @@ export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions)
         icon: 'table-insert-rows-down',
         count: 1,
         isInputNumber: true,
-        exec: (
-            aiTable: AITable,
-            targetName: string,
-            position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService,
-            notifyService: ThyNotifyService,
-            count: any
-        ) => {
+        exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService, count: any) => {
             let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
             actions.addRecord({
                 targetId: selectedRecordIds[0],
@@ -91,13 +72,7 @@ export const CopyCellsItem = (aiTable: AITable, actions: AITableActions): AITabl
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.copy),
         shortcutKey: isMac() ? `⌘ + C` : `Ctrl + C`,
         icon: 'copy',
-        exec: (
-            aiTable: AITable,
-            targetName: string,
-            position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService,
-            notifyService: ThyNotifyService
-        ) => {
+        exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
             const clipboardData = buildClipboardData(aiTable);
             if (clipboardData) {
                 writeToClipboard(clipboardData).then(() => {
@@ -124,13 +99,7 @@ export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITa
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.paste),
         shortcutKey: isMac() ? `⌘ + V` : `Ctrl + V`,
         icon: 'paste',
-        exec: async (
-            aiTable: AITable,
-            targetName: string,
-            position: { x: number; y: number },
-            aiTableGridSelectionService: AITableGridSelectionService,
-            notifyService: ThyNotifyService
-        ) => {
+        exec: async (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
             writeToAITable(aiTable, actions).then((result) => {
                 if (result.isPasteOverMaxRecords || result.isPasteOverMaxFields) {
                     return;

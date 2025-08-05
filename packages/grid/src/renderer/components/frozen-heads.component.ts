@@ -77,7 +77,15 @@ export class AITableFrozenColumnHeads {
     isChecked = computed(() => {
         const config = this.config();
         if (!config) return false;
-        return config.aiTable.selection().selectAllState === AITableSelectAllState.all;
+
+        const selectedRecords = config.aiTable.selection().selectedRecords;
+        const selectedAllState =
+            selectedRecords.size === config.aiTable.records().length
+                ? AITableSelectAllState.all
+                : selectedRecords.size === 0
+                  ? AITableSelectAllState.none
+                  : AITableSelectAllState.partial;
+        return selectedAllState === AITableSelectAllState.all;
     });
 
     fieldHeadHeight = computed(() => {

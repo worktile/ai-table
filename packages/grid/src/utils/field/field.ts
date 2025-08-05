@@ -1,6 +1,7 @@
 import { AITableFieldType, FieldModelBaseMap } from '@ai-table/utils';
 import { FieldOperable } from './field-operable';
 import {
+    AITable,
     AttachmentField,
     DateField,
     LinkField,
@@ -32,3 +33,15 @@ export const FieldModelMap: Record<AITableFieldType | string, FieldOperable<unkn
     [AITableFieldType.attachment]: new AttachmentField(),
     [AITableFieldType.checkbox]: new CheckboxField()
 };
+
+export function selectField(aiTable: AITable, fieldId: string) {
+    if (aiTable.selection().selectedFields.has(fieldId)) {
+        return;
+    }
+    aiTable.selection.set({
+        selectedRecords: new Set(),
+        selectedFields: new Set([fieldId]),
+        selectedCells: new Set(),
+        activeCell: null
+    });
+}

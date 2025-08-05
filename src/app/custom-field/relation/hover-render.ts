@@ -26,7 +26,7 @@ import {
     AI_TABLE_TEXT_LINE_HEIGHT,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_CELL_LINE_BORDER,
-    setExpandCellInfo
+    setExpandCell
 } from '@ai-table/grid';
 
 import { AITableFieldType } from '@ai-table/utils';
@@ -72,7 +72,7 @@ export class AITableCellRelationTicket extends CoverCellBase {
                 untracked(() => {
                     const { render, aiTable } = this.config()!;
                     const { columnWidth } = render;
-                    setExpandCellInfo(aiTable, { width: columnWidth, height });
+                    setExpandCell(aiTable, { width: columnWidth, height });
                 });
             }
         });

@@ -21,7 +21,7 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
         !!activeCell.length &&
         aiTable.context!.visibleRowsIndexMap().has(activeCell[0]) &&
         aiTable.context!.visibleColumnsIndexMap().has(activeCell[1]) &&
-        !aiTable.selection().expandCell
+        !aiTable.expendCell()?.path
     ) {
         const fieldId = activeCell[1];
         const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, activeCell)!;

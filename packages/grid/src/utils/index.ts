@@ -19,3 +19,4 @@ export * from './file';
 export * from './transform';
 export * from './field-stat';
 export * from './drag-fill';
+export * from './record';
