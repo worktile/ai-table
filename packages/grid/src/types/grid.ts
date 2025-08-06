@@ -40,13 +40,6 @@ export interface AITableSelection {
     selectedFields: Set<string>; // `${fieldId}`
     selectedCells: Set<string>; // `${recordId}:${fieldId}`
     activeCell: AIRecordFieldIdPath | null;
-    // expandCell: AIRecordFieldIdPath | null;
-    // expandCellInfo?: {
-    //     width?: number;
-    //     height?: number;
-    // } | null;
-    // editingCell: AIRecordFieldIdPath | null;
-    // selectAllState: AITableSelectAllState; // 'all','partial','none'
 }
 
 export interface AITableCustomFieldConfig<TR extends AITableReferences = AITableReferences> {
