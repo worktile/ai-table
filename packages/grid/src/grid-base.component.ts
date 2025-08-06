@@ -40,7 +40,7 @@ import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
 import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
-import { selectRecord, toggleSelectAllRecords } from './utils';
+import { toggleSelectRecord, toggleSelectAllRecords } from './utils';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -170,8 +170,8 @@ export class AITableGridBase implements OnInit {
         this.aiAddRecord.emit(options || {});
     }
 
-    selectRecord(recordId: string) {
-        selectRecord(this.aiTable, recordId);
+    toggleSelectRecord(recordId: string) {
+        toggleSelectRecord(this.aiTable, recordId);
     }
 
     toggleSelectAll(checked: boolean) {

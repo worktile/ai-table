@@ -348,7 +348,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return {
                         ...item,
                         selectedRecords
-                        // selectAllState: this.aiTableGridSelectionService.selectAllState()
                     };
                 });
             });
@@ -672,7 +671,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
                 const { rowIndex: pointRowIndex } = context!.pointPosition();
                 const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
-                this.selectRecord(pointRecordId);
+                this.toggleSelectRecord(pointRecordId);
                 break;
             }
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {

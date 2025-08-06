@@ -1,7 +1,7 @@
 import { clearSelection, setSelection } from './cell';
 import { AITable } from './field';
 
-export function selectRecord(aiTable: AITable, recordId: string) {
+export function toggleSelectRecord(aiTable: AITable, recordId: string) {
     if (aiTable.selection().selectedRecords.has(recordId)) {
         aiTable.selection().selectedRecords.delete(recordId);
     } else {

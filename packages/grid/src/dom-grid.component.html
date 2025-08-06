@@ -37,7 +37,7 @@
                     thyCheckbox
                     thyLabelText=""
                     [ngModel]="record._id | isSelectRecord: aiTable.selection()"
-                    (ngModelChange)="selectRecord(record._id)"
+                    (ngModelChange)="toggleSelectRecord(record._id)"
                 ></label>
                 <span [ngClass]="(record._id | isSelectRecord: aiTable.selection()) ? 'grid-row-no-number' : 'grid-row-number'">
                     {{ index + 1 }}
