@@ -6,10 +6,10 @@ export function getCoverCell(aiTable: AITable) {
     const pointPosition = aiTable.context!.pointPosition();
     let fieldId;
     let recordId;
-    const expandCell = aiTable.selection().expandCell;
-    if (expandCell) {
-        fieldId = expandCell[1];
-        recordId = expandCell[0];
+    const expandCellPath = aiTable.expendCell()?.path;
+    if (expandCellPath) {
+        fieldId = expandCellPath[1];
+        recordId = expandCellPath[0];
     } else {
         const { fieldId: fieldIdDetail, recordId: recordIdDetail } = getDetailByTargetName(pointPosition.realTargetName!) ?? {};
         if (fieldIdDetail) {
@@ -37,7 +37,7 @@ export function getCoverCell(aiTable: AITable) {
         field,
         recordId,
         fieldId,
-        isExpand: !!expandCell,
+        isExpand: !!expandCellPath,
         renderComponentDefinition
     };
 }

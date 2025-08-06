@@ -11,7 +11,6 @@ import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { AITable } from '../../core';
 import { AITableContextMenuItem } from '../../types';
-import { AITableGridSelectionService } from '../../services/selection.service';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { FormsModule } from '@angular/forms';
@@ -39,8 +38,6 @@ import { ThyPopoverRef } from 'ngx-tethys/popover';
     ]
 })
 export class AITableContextMenu extends ThyDropdownAbstractMenu {
-    aiTableGridSelectionService = inject(AITableGridSelectionService);
-
     notifyService = inject(ThyNotifyService);
 
     thyPopoverRef = inject(ThyPopoverRef);
@@ -57,15 +54,7 @@ export class AITableContextMenu extends ThyDropdownAbstractMenu {
 
     execute(menu: AITableContextMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable(), this.targetName(), this.position())) || !menu.disabled) {
-            menu.exec &&
-                menu.exec(
-                    this.aiTable(),
-                    this.targetName(),
-                    this.position(),
-                    this.aiTableGridSelectionService,
-                    this.notifyService,
-                    menu.count
-                );
+            menu.exec && menu.exec(this.aiTable(), this.targetName(), this.position(), this.notifyService, menu.count);
         }
     }
 

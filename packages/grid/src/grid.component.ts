@@ -52,7 +52,6 @@ import { AITableGridBase } from './grid-base.component';
 import { AITableRenderer } from './renderer/renderer.component';
 import { AITableGridEventService } from './services/event.service';
 import { AITableGridFieldService } from './services/field.service';
-import { AITableGridSelectionService } from './services/selection.service';
 import {
     AITableAreaType,
     AITableContextMenuItem,
@@ -77,7 +76,13 @@ import {
     dragFillHighlightArea,
     performFill,
     AITableDragFillState,
-    expandCell
+    expandCell,
+    selectCells,
+    selectField,
+    clearSelection,
+    closeEditingCell,
+    closeExpendCell,
+    clearCoverCell
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -112,7 +117,7 @@ import _ from 'lodash';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableGridSelectionService, AITableScrollControllerService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
@@ -342,8 +347,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.aiTable.selection.update((item) => {
                     return {
                         ...item,
-                        selectedRecords,
-                        selectAllState: this.aiTableGridSelectionService.selectAllState()
+                        selectedRecords
                     };
                 });
             });
@@ -458,7 +462,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     let startCell: AIRecordFieldIdPath;
                     let endCell: AIRecordFieldIdPath;
                     let activeCell: AIRecordFieldIdPath | null = null;
-
                     if (this.dragFillState.isDragging) {
                         setMouseStyle('crosshair', this.containerElement());
                         const { highlightStartCell, highlightEndCell } = dragFillHighlightArea(
@@ -466,7 +469,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             this.dragFillState.sourceCells,
                             recordId
                         );
-
                         activeCell = this.dragFillState.activeCell;
                         startCell = highlightStartCell;
                         endCell = highlightEndCell;
@@ -474,9 +476,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         startCell = this.dragSelectState.startCell!;
                         endCell = [recordId, fieldId];
                     }
-
                     if (startCell && !!startCell.length) {
-                        this.aiTableGridSelectionService.selectCells(startCell, endCell, activeCell);
+                        selectCells(this.aiTable, startCell, endCell, activeCell);
                         this.scrollViewToCell(pos, startCell, endCell, this.coordinate(), this.horizontalBarRef(), this.verticalBarRef());
                     }
                 }
@@ -502,7 +503,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_FIELD_HEAD:
                 mouseEvent.preventDefault();
                 if (!fieldId) return;
-                this.aiTableGridSelectionService.selectField(fieldId);
+                selectField(this.aiTable, fieldId);
                 this.handleFieldDragStart();
                 return;
             case AI_TABLE_FIELD_HEAD_OPACITY_LINE:
@@ -514,14 +515,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (!recordId || !fieldId) return;
                 const startCell: AIRecordFieldIdPath = [recordId, fieldId];
                 this.updateDragSelectState(true, startCell);
-                const [expandRecordId, expandFieldId] = this.aiTable.selection().expandCell || [null, null];
+                const [expandRecordId, expandFieldId] = this.aiTable.expendCell()?.path || [null, null];
                 if (expandRecordId !== recordId || expandFieldId !== fieldId) {
                     const field = this.aiTable.fieldsMap()[fieldId];
+                    closeEditingCell(this.aiTable);
+                    selectCells(this.aiTable, startCell);
+                    closeExpendCell(this.aiTable);
                     if (field.type === AITableFieldType.text) {
-                        this.aiTableGridSelectionService.clearSelection({ retainExpandCellInfo: true });
                         expandCell(this.aiTable, [recordId, fieldId]);
-                    } else {
-                        this.aiTableGridSelectionService.selectCells(startCell);
                     }
                 }
                 return;
@@ -553,7 +554,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX:
                 return;
             default:
-                this.aiTableGridSelectionService.clearSelection();
+                clearCoverCell(this.aiTable);
         }
     }
 
@@ -663,23 +664,23 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
-                this.aiTableGridSelectionService.clearSelection();
+                clearCoverCell(this.aiTable);
                 this.addRecord();
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
                 const { rowIndex: pointRowIndex } = context!.pointPosition();
                 const pointRecordId = context!.linearRows()[pointRowIndex]?._id;
-                this.selectRecord(pointRecordId);
+                this.toggleSelectRecord(pointRecordId);
                 break;
             }
             case AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX: {
-                const isChecked = this.aiTable.selection().selectAllState === AITableSelectAllState.all;
+                const isChecked = this.aiTable.selection().selectedRecords.size === this.aiTable.records().length;
                 this.toggleSelectAll(!isChecked);
                 break;
             }
             case AI_TABLE_FIELD_ADD_BUTTON: {
-                this.aiTableGridSelectionService.clearSelection();
+                clearCoverCell(this.aiTable);
                 const fieldGroupRect = e.event.target.getParent()?.getClientRect()!;
                 const containerRect = this.containerElement().getBoundingClientRect();
                 this.addField(this.containerElement(), {
@@ -816,7 +817,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             )
             .subscribe(() => {
                 this.updateDragSelectState(false, null);
-                this.aiTableGridSelectionService.clearSelection();
+                clearCoverCell(this.aiTable);
             });
     }
 
@@ -970,10 +971,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private handleFieldDragStart() {
-        if (!this.aiReadonly() && this.aiTableGridSelectionService.selectedFields.size > 0) {
+        if (!this.aiReadonly() && this.aiTable.selection().selectedFields.size > 0) {
             this.setDragState({
                 type: DragType.field,
-                sourceIds: this.aiTableGridSelectionService.selectedFields,
+                sourceIds: this.aiTable.selection().selectedFields,
                 coordinate: this.coordinate()
             });
         }
@@ -1116,7 +1117,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             newActiveCell = null;
                         }
 
-                        this.aiTableGridSelectionService.selectCells(newStartCell, newEndCell, newActiveCell);
+                        selectCells(this.aiTable, newStartCell, newEndCell, newActiveCell);
                     }
                 }
             },

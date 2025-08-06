@@ -1,7 +1,7 @@
 import Konva from 'konva';
 import { AITableLinearRowRecord } from './row';
 import { AITable, Coordinate } from '../core';
-import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions, AIRecordFieldIdPath } from '@ai-table/utils';
 import { Colors } from '../constants';
 
 export interface AITableCellsConfig {
@@ -55,6 +55,12 @@ export interface AITableCell {
     isCheckedRow: boolean;
     width?: number;
     isDisabled?: boolean;
+}
+
+export interface AITableCellInfo {
+    path: AIRecordFieldIdPath | null;
+    width?: number;
+    height?: number;
 }
 
 export interface AITableCellStyle {

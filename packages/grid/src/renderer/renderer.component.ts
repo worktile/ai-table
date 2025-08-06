@@ -364,7 +364,7 @@ export class AITableRenderer {
         let expandCellBorder = false;
         let frozenExpandCellBorder = false;
         const { aiTable } = this.config();
-        const expandCellPath = aiTable.selection().expandCell;
+        const expandCellPath = aiTable.expendCell()?.path;
         if (expandCellPath) {
             const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, expandCellPath)!;
             const isFrozenColumn = columnIndex < aiTable.context!.frozenColumnCount();
