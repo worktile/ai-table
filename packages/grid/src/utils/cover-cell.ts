@@ -7,7 +7,7 @@ export function getCoverCell(aiTable: AITable) {
     let fieldId;
     let recordId;
     const expandCellPath = aiTable.expendCell()?.path;
-    if (expandCellPath && expandCellPath) {
+    if (expandCellPath) {
         fieldId = expandCellPath[1];
         recordId = expandCellPath[0];
     } else {

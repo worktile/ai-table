@@ -120,7 +120,7 @@ export function clearSelectedCells(aiTable: AITable) {
     });
 }
 
-export function setExpandCell(aiTable: AITable, expandCellInfo: Partial<AITableCellInfo>) {
+export function setExpandCellInfo(aiTable: AITable, expandCellInfo: Partial<AITableCellInfo>) {
     aiTable.expendCell.set({
         ...aiTable.expendCell(),
         ...expandCellInfo
@@ -128,11 +128,11 @@ export function setExpandCell(aiTable: AITable, expandCellInfo: Partial<AITableC
 }
 
 export function expandCell(aiTable: AITable, cellPath: AIRecordFieldIdPath) {
-    setExpandCell(aiTable, { path: cellPath });
+    setExpandCellInfo(aiTable, { path: cellPath });
 }
 
 export function closeExpendCell(aiTable: AITable) {
-    setExpandCell(aiTable, { path: null, width: 0, height: 0 });
+    setExpandCellInfo(aiTable, { path: null, width: undefined, height: undefined });
 }
 
 export function setSelection(aiTable: AITable, selection: Partial<AITableSelection>) {
@@ -204,27 +204,4 @@ export function selectCells(
         activeCell: activeCell || startCell,
         selectedCells: selectedCells
     });
-}
-
-export function updateSelect(event: MouseEvent, aiTable: AITable) {
-    const target = event?.target as HTMLElement;
-    if (!target) {
-        return;
-    }
-    const cellDom = target.closest('.grid-cell');
-    const colDom = target.closest('.grid-field');
-    const checkbox = target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox' && target.closest('.grid-checkbox');
-    const fieldAction = target.closest('.grid-field-action');
-    if (cellDom) {
-        const fieldId = cellDom.getAttribute('fieldId');
-        const recordId = cellDom.getAttribute('recordId');
-        fieldId && recordId && selectCells(aiTable, [recordId, fieldId]);
-    }
-    if (colDom && !fieldAction) {
-        const fieldId = colDom.getAttribute('fieldId');
-        fieldId && selectField(aiTable, fieldId);
-    }
-    if (!cellDom && !colDom && !checkbox) {
-        clearSelection(aiTable);
-    }
 }

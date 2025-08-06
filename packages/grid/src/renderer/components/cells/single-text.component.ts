@@ -23,7 +23,7 @@ import {
     DEFAULT_TEXT_WRAP,
     EditPath
 } from '../../../constants';
-import { generateTargetName, setExpandCell } from '../../../utils';
+import { generateTargetName, setExpandCellInfo } from '../../../utils';
 import { AITableActionIconConfig } from '../../../types';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
@@ -73,7 +73,7 @@ export class AITableCellText extends CoverCellBase {
                 untracked(() => {
                     const { render, aiTable } = this.config()!;
                     const { columnWidth } = render;
-                    setExpandCell(aiTable, { width: columnWidth, height });
+                    setExpandCellInfo(aiTable, { width: columnWidth, height });
                 });
             }
         });

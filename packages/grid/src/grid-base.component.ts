@@ -40,7 +40,7 @@ import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
 import { AIPlugin, AITable, createAITable, createDefaultField } from './core';
-import { selectRecord, toggleSelectAllRecords, updateSelect } from './utils';
+import { selectRecord, toggleSelectAllRecords } from './utils';
 
 @Component({
     selector: 'ai-table-grid-base',
@@ -208,11 +208,6 @@ export class AITableGridBase implements OnInit {
             this.aiTableGridEventService.dblClickEvent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
                 this.dblClick(event);
             });
-            this.aiTableGridEventService.mousedownEvent$
-                .pipe(mergeWith(this.aiTableGridEventService.globalMousedownEvent$), takeUntilDestroyed(this.destroyRef))
-                .subscribe((event) => {
-                    updateSelect(event, this.aiTable);
-                });
         });
     }
 
