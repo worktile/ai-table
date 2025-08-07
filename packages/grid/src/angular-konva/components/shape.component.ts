@@ -123,6 +123,8 @@ export class KoShape implements OnInit, AfterViewInit, OnDestroy, KoComponent {
         effect(() => {
             if (this.config()) {
                 this.updateNode(this.config()!);
+            } else {
+                this.updateNode({});
             }
         });
     }
@@ -180,10 +182,6 @@ export class KoShape implements OnInit, AfterViewInit, OnDestroy, KoComponent {
                 });
             }, 200);
         };
-
-        if (this.config()) {
-            this.updateNode(this.config()!);
-        }
     }
 
     private updateNode(config: KoShapeConfigTypes): void {
