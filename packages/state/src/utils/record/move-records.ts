@@ -1,7 +1,6 @@
 import { getMaxPosition } from '../view';
-import { sortByViewPosition } from '../common';
 import { Actions } from '../../action';
-import { AITableRecordUpdatedInfo, AITableView, AITableViewRecord, AITableViewRecords, MoveRecordOptions } from '@ai-table/utils';
+import { AITableRecordUpdatedInfo, AITableView, AITableViewRecord, AITableViewRecords, MoveRecordOptions, sortByViewPosition } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import _ from 'lodash';
 
