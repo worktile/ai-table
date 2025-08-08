@@ -98,7 +98,8 @@ export function clearSelection(aiTable: AITable) {
         selectedRecords: new Set(),
         selectedFields: new Set(),
         selectedCells: new Set(),
-        activeCell: null
+        activeCell: null,
+        selectedEndCell: null
     });
 }
 
@@ -142,10 +143,10 @@ export function setSelection(aiTable: AITable, selection: Partial<AITableSelecti
     });
 }
 
-export function setActiveCell(aiTable: AITable, activeCell: Partial<AITableCellInfo>) {
+export function setActiveCell(aiTable: AITable, activeCellPath: AIRecordFieldIdPath | null) {
     aiTable.selection.set({
         ...aiTable.selection(),
-        ...activeCell
+        activeCell: activeCellPath
     });
 }
 
@@ -174,12 +175,9 @@ export function selectCells(
     if (!endCell) {
         selectedCells.add(`${startRecordId}:${startFieldId}`);
     } else {
-        // 数据的存储设计结构，决定了最后一条就是endCell
-        const lastItem = Array.from(aiTable.selection().selectedCells).pop();
-        if (endCell.join(':') === lastItem) {
+        if (endCell && endCell.join(':') === aiTable.selection().selectedEndCell?.join(':')) {
             return;
         }
-
         const [endRecordId, endFieldId] = endCell;
 
         const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId)!;
@@ -202,6 +200,7 @@ export function selectCells(
     clearSelection(aiTable);
     setSelection(aiTable, {
         activeCell: activeCell || startCell,
+        selectedEndCell: endCell || null,
         selectedCells: selectedCells
     });
 }

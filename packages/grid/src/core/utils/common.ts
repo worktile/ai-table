@@ -16,7 +16,8 @@ export function createAITable(
             selectedRecords: new Set(),
             selectedFields: new Set(),
             selectedCells: new Set(),
-            activeCell: null
+            activeCell: null,
+            selectedEndCell: null
         }),
         expendCell: signal({ path: null }),
         editingCell: signal({ path: null }),

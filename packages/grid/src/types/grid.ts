@@ -40,6 +40,7 @@ export interface AITableSelection {
     selectedFields: Set<string>; // `${fieldId}`
     selectedCells: Set<string>; // `${recordId}:${fieldId}`
     activeCell: AIRecordFieldIdPath | null;
+    selectedEndCell: AIRecordFieldIdPath | null;
 }
 
 export interface AITableCustomFieldConfig<TR extends AITableReferences = AITableReferences> {

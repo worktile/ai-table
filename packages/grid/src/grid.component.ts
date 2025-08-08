@@ -82,7 +82,11 @@ import {
     clearSelection,
     closeEditingCell,
     closeExpendCell,
-    clearCoverCell
+    clearCoverCell,
+    setActiveCell,
+    setSelection,
+    setExpandCellInfo,
+    getVisibleRangeInfo
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';
@@ -267,6 +271,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     coordinate = computed(() => {
         return this.rendererConfig().coordinate;
+    });
+
+    scrollState = computed(() => {
+        return this.aiTable!.context!.scrollState();
     });
 
     scrollTotalHeight = computed(() => {
@@ -876,6 +884,28 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
+    private getNextCell(currentCell: AIRecordFieldIdPath, event: KeyboardEvent) {
+        const { rowIndex, columnIndex } = AITable.getCellIndex(this.aiTable, currentCell) || {};
+        let nextCellPath: AIRecordFieldIdPath | null = null;
+        if (event.key === 'ArrowUp' && rowIndex) {
+            nextCellPath = [this.aiTable.gridData().records[rowIndex - 1]._id, currentCell[1]];
+        }
+        if (event.key === 'ArrowDown' && rowIndex! < this.gridData().records.length - 1) {
+            nextCellPath = [this.aiTable.gridData().records[rowIndex! + 1]._id, currentCell[1]];
+        }
+        if (event.key === 'ArrowLeft' && columnIndex) {
+            nextCellPath = [currentCell[0], this.aiTable.gridData().fields[columnIndex - 1]._id];
+        }
+        if (event.key === 'ArrowRight' && columnIndex! < this.aiTable.gridData().fields.length - 1) {
+            nextCellPath = [currentCell[0], this.aiTable.gridData().fields[columnIndex! + 1]._id];
+        }
+        return {
+            path: nextCellPath,
+            rowIndex,
+            columnIndex
+        };
+    }
+
     private bindShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -904,6 +934,52 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
                 const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
                 const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
+
+                const isDirectionKey =
+                    event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight';
+
+                const isShiftDirectionKey =
+                    event.shiftKey &&
+                    (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight');
+
+                if (isDirectionKey) {
+                    let startCell = this.aiTable.selection().activeCell;
+                    if (isShiftDirectionKey) {
+                        startCell = this.aiTable.selection().selectedEndCell || startCell;
+                    }
+                    if (startCell) {
+                        let { path: nextCellPath } = this.getNextCell(startCell, event);
+                        if (nextCellPath) {
+                            const newField = this.aiTable.fieldsMap()[nextCellPath[1]];
+                            if (isShiftDirectionKey) {
+                                closeExpendCell(this.aiTable);
+                                selectCells(this.aiTable, this.aiTable.selection().activeCell!, nextCellPath!);
+                            } else {
+                                clearCoverCell(this.aiTable);
+                                if (newField.type === AITableFieldType.text) {
+                                    setExpandCellInfo(this.aiTable, {
+                                        path: nextCellPath
+                                    });
+                                }
+                                setSelection(this.aiTable, {
+                                    selectedCells: new Set([nextCellPath.join(':')]),
+                                    activeCell: nextCellPath
+                                });
+                            }
+
+                            const cellIsFullRenderInfo = this.coordinate().getCellIsFullRenderInfo(this.aiTable, nextCellPath);
+                            if (cellIsFullRenderInfo.offsetY !== 0 || cellIsFullRenderInfo.offsetX !== 0) {
+                                this.scrollAction({
+                                    deltaX: cellIsFullRenderInfo.offsetX,
+                                    deltaY: cellIsFullRenderInfo.offsetY,
+                                    shiftKey: false
+                                });
+                            }
+                        }
+                    }
+
+                    return;
+                }
 
                 if (isCopyOrPaste) {
                     if (event.key === 'c') {
