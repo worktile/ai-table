@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.36](https://github.com/worktile/ai-table/compare/0.1.35...0.1.36) (2025-08-08)
+
+
+### Features
+
+* #WIK-18651 angular-konva 优化 ([#613](https://github.com/worktile/ai-table/issues/613)) ([95b8869](https://github.com/worktile/ai-table/commit/95b88692eb2d11a5f13fc7b1a8542dc7b56d481a)), closes [#WIK-18651](https://github.com/worktile/ai-table/issues/WIK-18651)
+* #WIK-18652 selection 状态拆分 ([#612](https://github.com/worktile/ai-table/issues/612)) ([1042d64](https://github.com/worktile/ai-table/commit/1042d64973282b00457e295653b7ade52cd45b28)), closes [#WIK-18652](https://github.com/worktile/ai-table/issues/WIK-18652)
+
+
+
 ## [0.1.35](https://github.com/worktile/ai-table/compare/0.1.34...0.1.35) (2025-08-05)
 
 
