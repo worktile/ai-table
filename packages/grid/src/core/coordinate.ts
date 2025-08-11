@@ -1,6 +1,7 @@
-import { AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
+import { AIRecordFieldIdPath, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
 import { AITableCellMetaData } from '../types';
-import { AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT } from '../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT } from '../constants';
+import { AITable } from './types';
 
 /**
  * 用于构建 Canvas 基础坐标系，后续的绘制工作以此为基础
@@ -262,6 +263,64 @@ export class Coordinate {
             y,
             width,
             height
+        };
+    }
+
+    /**
+     * 判断单元格是否在冻结区域
+     */
+    public isCellInFrozen(aiTable: AITable, cell: AIRecordFieldIdPath): boolean {
+        const cellIndex = AITable.getCellIndex(aiTable, cell);
+        if (!cellIndex) {
+            return false;
+        }
+        return cellIndex.columnIndex! < this.frozenColumnCount;
+    }
+
+    /**
+     * 获取单元格是否可以完整渲染
+     * 如果可以完整渲染，则返回 { isCellCanFullRender: true, offsetX: 0, offsetY: 0 }
+     * 如果不能完整渲染，则返回 { isCellCanFullRender: false, offsetX: 需要偏移的 x 值, offsetY: 需要偏移的 y 值 }
+     */
+    public getCellIsFullRenderInfo(aiTable: AITable, cell: AIRecordFieldIdPath) {
+        let offsetX = 0;
+        let offsetY = 0;
+        const cellIndex = AITable.getCellIndex(aiTable, cell);
+        const { rowIndex, columnIndex } = cellIndex!;
+        const isCellInFrozen = columnIndex < this.frozenColumnCount;
+
+        const frozenWidth = this.getColumnOffset(this.frozenColumnCount);
+
+        const { x, y, width, height } = this.getCellRect(rowIndex, columnIndex);
+        const { scrollLeft, scrollTop } = aiTable.context!.scrollState();
+        const containerStartPointXY = [frozenWidth + scrollLeft, scrollTop + AI_TABLE_FIELD_HEAD_HEIGHT];
+        const containerEndPointXY = [
+            aiTable.context!.containerRect()!.width + scrollLeft - AI_TABLE_CELL_LINE_BORDER * 4,
+            aiTable.context!.containerRect()!.height + scrollTop - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT - AI_TABLE_CELL_LINE_BORDER * 4
+        ];
+
+        const cellStartPointXY = [x, y];
+        const cellEndPointXY = [x + width, y + height];
+        // 不在左侧固定列时，才需要判断 x 坐标是否超出
+        if (!isCellInFrozen && cellStartPointXY[0] < containerStartPointXY[0]) {
+            offsetX = cellStartPointXY[0] - containerStartPointXY[0];
+        }
+        if (cellStartPointXY[1] < containerStartPointXY[1]) {
+            offsetY = cellStartPointXY[1] - containerStartPointXY[1];
+        }
+        // 不在左侧固定列时，才需要判断 x 坐标是否超出
+        if (!isCellInFrozen && cellEndPointXY[0] > containerEndPointXY[0]) {
+            offsetX = cellEndPointXY[0] - containerEndPointXY[0];
+        }
+        if (cellEndPointXY[1] > containerEndPointXY[1]) {
+            offsetY = cellEndPointXY[1] - containerEndPointXY[1];
+        }
+
+        const isCellCanFullRender = offsetX === 0 && offsetY === 0;
+        return {
+            isCellCanFullRender,
+            offsetX,
+            offsetY
         };
     }
 }

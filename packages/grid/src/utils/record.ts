@@ -12,7 +12,8 @@ export function toggleSelectRecord(aiTable: AITable, recordId: string) {
         selectedRecords: selectedRecords,
         selectedFields: new Set(),
         selectedCells: new Set(),
-        activeCell: null
+        activeCell: null,
+        selectedEndCell: null
     });
 }
 

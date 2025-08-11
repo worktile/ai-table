@@ -42,6 +42,7 @@ export function selectField(aiTable: AITable, fieldId: string) {
         selectedRecords: new Set(),
         selectedFields: new Set([fieldId]),
         selectedCells: new Set(),
-        activeCell: null
+        activeCell: null,
+        selectedEndCell: null
     });
 }
