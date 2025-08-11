@@ -13,8 +13,12 @@
                     (click)="execute(menu)"
                     [thyDisabled]="disabled"
                 >
-                    <thy-icon [thyIconName]="menu.icon!"></thy-icon>
-                    <span>{{ getMenuName(menu, field()) }}</span>
+                    @if (menu.customComponent && field().type === 'checkbox') {
+                        <ng-container *ngComponentOutlet="menu.customComponent; inputs: { field: field(), menu: menu }"> </ng-container>
+                    } @else {
+                        <thy-icon [thyIconName]="menu.icon!"></thy-icon>
+                        <span>{{ getMenuName(menu, field()) }}</span>
+                    }
                 </a>
             }
         }

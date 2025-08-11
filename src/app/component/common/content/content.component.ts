@@ -82,6 +82,7 @@ import { AITableCustomFieldType } from '../../../types/field';
 import { RelationTicketField } from '../../../custom-field/relation/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
 import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
+import { CheckboxMenuSort } from '../../menu-sort/menu-sort.component';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
@@ -108,7 +109,7 @@ export class MenuAddRecordsComponent {
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, CheckboxMenuSort],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -234,6 +235,7 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort',
+                        customComponent: CheckboxMenuSort,
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {
@@ -253,6 +255,7 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort-reverse',
+                        customComponent: CheckboxMenuSort,
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {

@@ -4,7 +4,7 @@ import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethy
 import { ThyIcon } from 'ngx-tethys/icon';
 import { AITableField } from '@ai-table/utils';
 import { AITableFieldMenuItem } from '../../types/field';
-import { NgClass } from '@angular/common';
+import { NgClass, NgComponentOutlet } from '@angular/common';
 import { AITable } from '../../core';
 
 @Component({
@@ -14,7 +14,7 @@ import { AITable } from '../../core';
     host: {
         class: 'field-menu'
     },
-    imports: [ThyIcon, ThyDivider, ThyDropdownMenuItemDirective, NgClass]
+    imports: [ThyIcon, ThyDivider, ThyDropdownMenuItemDirective, NgClass, NgComponentOutlet]
 })
 export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     @Input({ required: true }) fieldId!: string;

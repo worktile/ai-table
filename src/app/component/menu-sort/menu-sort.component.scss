@@ -1,0 +1,25 @@
+@use 'ngx-tethys/styles/variables.scss';
+
+.checkbox-menu-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+
+    .sort-icon {
+        color: #aaa;
+    }
+
+    .sort-state {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-right: 8px;
+
+        .sort-checkbox {
+            margin-bottom: 0px;
+            pointer-events: none; /* 禁用鼠标事件 */
+            user-select: none; /* 禁用文本选择 */
+        }
+    }
+}
