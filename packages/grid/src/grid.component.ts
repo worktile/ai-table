@@ -899,11 +899,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (event.key === 'ArrowRight' && columnIndex! < this.aiTable.gridData().fields.length - 1) {
             nextCellPath = [currentCell[0], this.aiTable.gridData().fields[columnIndex! + 1]._id];
         }
-        return {
-            path: nextCellPath,
-            rowIndex,
-            columnIndex
-        };
+        return nextCellPath;
     }
 
     private bindShortcuts() {
@@ -943,12 +939,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight');
 
                 if (isDirectionKey) {
-                    let startCell = this.aiTable.selection().activeCell;
+                    let endCell = this.aiTable.selection().activeCell;
                     if (isShiftDirectionKey) {
-                        startCell = this.aiTable.selection().selectedEndCell || startCell;
+                        endCell = this.aiTable.selection().selectedEndCell || endCell;
                     }
-                    if (startCell) {
-                        let { path: nextCellPath } = this.getNextCell(startCell, event);
+                    if (endCell) {
+                        const nextCellPath = this.getNextCell(endCell, event);
                         if (nextCellPath) {
                             const newField = this.aiTable.fieldsMap()[nextCellPath[1]];
                             if (isShiftDirectionKey) {
