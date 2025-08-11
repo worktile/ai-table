@@ -9,7 +9,8 @@ import {
     KoEventObjectOutput,
     AI_TABLE_FIELD_MAX_WIDTH,
     expandCell,
-    AITableGridI18nText
+    AITableGridI18nText,
+    CheckboxMenuSort
 } from '@ai-table/grid';
 import {
     Actions,
@@ -82,7 +83,6 @@ import { AITableCustomFieldType } from '../../../types/field';
 import { RelationTicketField } from '../../../custom-field/relation/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
 import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
-import { CheckboxMenuSort } from '../../menu-sort/menu-sort.component';
 
 const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
 const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';

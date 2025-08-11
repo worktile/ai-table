@@ -1,7 +1,5 @@
 @use 'ngx-tethys/styles/variables.scss';
 
-@forward './menu-sort/menu-sort.component.scss';
-
 .remove-icon {
     &:hover {
         color: variables.$danger !important;

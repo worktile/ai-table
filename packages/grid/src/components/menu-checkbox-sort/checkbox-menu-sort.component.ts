@@ -31,7 +31,7 @@ import { AITableFieldMenuItem } from '@ai-table/grid';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ThyIcon, ThyCheckbox, FormsModule, FormsModule]
 })
-export class CheckboxMenuSort implements OnInit {
+export class CheckboxMenuSort {
     field = input.required<AITableField>();
 
     menu = input.required<AITableFieldMenuItem>();
@@ -40,10 +40,6 @@ export class CheckboxMenuSort implements OnInit {
         ascending: 'ascending',
         descending: 'descending'
     };
-
-    ngOnInit(): void {
-        // throw new Error("Method not implemented.");
-    }
 
     getSortText(): string {
         if (this.menu() && this.field()) {
