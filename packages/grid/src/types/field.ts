@@ -1,11 +1,13 @@
 import { ElementRef, Signal } from '@angular/core';
 import { AITable } from '../core';
 import { AITableField, AITableReferences, SelectSettings } from '@ai-table/utils';
+import { Constructor } from 'ngx-tethys/core';
 
 export interface AITableFieldMenuItem {
     type: string;
     name?: string | ((field: AITableField) => string);
     icon?: string;
+    customComponent?: (aiTable: AITable, field: AITableField) => Constructor<any>;
     exec?: (
         aiTable: AITable,
         field: Signal<AITableField>,

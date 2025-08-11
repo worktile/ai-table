@@ -9,7 +9,8 @@ import {
     KoEventObjectOutput,
     AI_TABLE_FIELD_MAX_WIDTH,
     expandCell,
-    AITableGridI18nText
+    AITableGridI18nText,
+    CheckboxMenuSort
 } from '@ai-table/grid';
 import {
     Actions,
@@ -108,7 +109,7 @@ export class MenuAddRecordsComponent {
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, CheckboxMenuSort],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -234,6 +235,12 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort',
+                        customComponent: (aiTable: AITable, field: AITableField) => {
+                            if (field.type === AITableFieldType.checkbox) {
+                                return CheckboxMenuSort;
+                            }
+                            return null;
+                        },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {
@@ -253,6 +260,12 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort-reverse',
+                        customComponent: (aiTable: AITable, field: AITableField) => {
+                            if (field.type === AITableFieldType.checkbox) {
+                                return CheckboxMenuSort;
+                            }
+                            return null;
+                        },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {

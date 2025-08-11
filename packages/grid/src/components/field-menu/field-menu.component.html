@@ -6,6 +6,7 @@
             } @else {
                 @let disabled = !!(menu.disabled && menu.disabled(aiTable, field));
                 @let isRemoveField = menu.type === 'removeField';
+                @let customComponent = getCustomComponent(menu);
                 <a
                     thyDropdownMenuItem
                     href="javascript:;"
@@ -13,8 +14,12 @@
                     (click)="execute(menu)"
                     [thyDisabled]="disabled"
                 >
-                    <thy-icon [thyIconName]="menu.icon!"></thy-icon>
-                    <span>{{ getMenuName(menu, field()) }}</span>
+                    @if (customComponent) {
+                        <ng-container *ngComponentOutlet="customComponent; inputs: { field: field(), menu: menu }"> </ng-container>
+                    } @else {
+                        <thy-icon [thyIconName]="menu.icon!"></thy-icon>
+                        <span>{{ getMenuName(menu, field()) }}</span>
+                    }
                 </a>
             }
         }
