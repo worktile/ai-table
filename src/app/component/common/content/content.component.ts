@@ -235,7 +235,12 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort',
-                        customComponent: CheckboxMenuSort,
+                        customComponent: (aiTable: AITable, field: AITableField) => {
+                            if (field.type === AITableFieldType.checkbox) {
+                                return CheckboxMenuSort;
+                            }
+                            return null;
+                        },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {
@@ -255,7 +260,12 @@ export class DemoTableContent {
                             }
                         },
                         icon: 'sort-reverse',
-                        customComponent: CheckboxMenuSort,
+                        customComponent: (aiTable: AITable, field: AITableField) => {
+                            if (field.type === AITableFieldType.checkbox) {
+                                return CheckboxMenuSort;
+                            }
+                            return null;
+                        },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {

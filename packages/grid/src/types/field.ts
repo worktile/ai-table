@@ -7,7 +7,7 @@ export interface AITableFieldMenuItem {
     type: string;
     name?: string | ((field: AITableField) => string);
     icon?: string;
-    customComponent?: Constructor<any>;
+    customComponent?: (aiTable: AITable, field: AITableField) => Constructor<any>;
     exec?: (
         aiTable: AITable,
         field: Signal<AITableField>,

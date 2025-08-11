@@ -31,6 +31,9 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
         return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
     });
 
+    getCustomComponent(menu: AITableFieldMenuItem) {
+        return menu.customComponent?.(this.aiTable, this.field()!);
+    }
     execute(menu: AITableFieldMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
             menu.exec && menu.exec(this.aiTable, this.field, this.origin, this.position);
