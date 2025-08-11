@@ -7,7 +7,7 @@ import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThySegmentItem } from 'ngx-tethys/segment';
 import { AITableField } from '@ai-table/utils';
-import { AITableFieldMenuItem } from '@ai-table/grid';
+import { AITableFieldMenuItem } from '../../types';
 
 @Component({
     selector: 'checkbox-menu-sort',
