@@ -8,7 +8,7 @@ import { AbstractEditCellEditor } from '../components';
 import { GRID_CELL_EDITOR_MAP } from '../components/cell-editors';
 import { AITable } from '../core';
 import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEditOptions } from '../types';
-import { closeEditingCell, getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, setEditingCell } from '../utils';
+import { closeEditingCell, closeExpendCell, getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, setEditingCell } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
 import { AITableFieldType, AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
 
@@ -162,6 +162,7 @@ export class AITableGridEventService {
         const offsetOriginPosition = this.getOriginPosition(aiTable, options);
 
         setEditingCell(aiTable, { path: [recordId, fieldId] });
+        closeExpendCell(this.aiTable);
         this.cellEditorPopoverRef = this.thyPopover.open(component, {
             viewContainerRef: isInternalComponent ? undefined : options?.viewContainerRef,
             origin: container!,
