@@ -815,12 +815,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private bindGlobalMousedown() {
         fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
             .pipe(
-                filter(
-                    (e) =>
-                        e.target instanceof Element &&
-                        !this.containerElement().contains(e.target) &&
-                        !e.target.closest(AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS)
-                ),
+                filter((e) => {
+                    // 检查点击事件的目标元素是否在 container 内
+                    const isInContainer = e.target instanceof Element && this.containerElement().contains(e.target);
+
+                    // 检查点击事件的目标元素是否在 prevent-clear-selection 元素内
+                    const isInPreventClearSelection =
+                        e.target instanceof Element && e.target.closest(AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS);
+
+                    // 检查点击事件的目标元素是否在 popover 弹窗内
+                    const isInPopover = e.target instanceof Element && e.target.closest('.cdk-overlay-container');
+
+                    return e.target instanceof Element && !isInContainer && !isInPreventClearSelection && !isInPopover;
+                }),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
