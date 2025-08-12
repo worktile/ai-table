@@ -22,16 +22,9 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const hiddenRecordIds: string[] = [];
     newRecordIds.forEach((id, index) => {
         const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        if (activeView.settings?.conditions?.length) {
-            const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
-            const conditionLogical = aiTable.viewsMap()[aiTable.activeViewId()].settings?.condition_logical;
-            const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record, {
-                conditions,
-                condition_logical: conditionLogical
-            });
-            if (!checkResult) {
-                hiddenRecordIds.push(id);
-            }
+        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
+        if (!checkResult) {
+            hiddenRecordIds.push(id);
         }
         newRecords.push(record);
     });
@@ -44,15 +37,6 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
     const activeRecordId = recentAddRecord._id;
     const activeFieldId = aiTable.gridData().fields[0]._id;
-    // aiTable.selection.set({
-    //     selectedRecords: new Set(),
-    //     selectedFields: new Set(),
-    //     selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
-    //     activeCell: [activeRecordId, activeFieldId],
-    //     expandCell: null,
-    //     editingCell: null,
-    //     selectAllState: AITableSelectAllState.none
-    // });
     setSelection(aiTable, {
         selectedRecords: new Set([]),
         selectedFields: new Set([]),

@@ -109,7 +109,7 @@ export class MenuAddRecordsComponent {
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, CheckboxMenuSort],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

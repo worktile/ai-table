@@ -11,8 +11,6 @@ export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValu
         return !_.isEqual(oldValue, option.value);
     });
 
-    const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
-    const conditionLogical = aiTable.viewsMap()[aiTable.activeViewId()].settings?.condition_logical;
     const hiddenRecordIds: string[] = [];
     const removeHiddenRecordIds: string[] = [];
     needUpdateOptions.forEach((option) => {
@@ -25,10 +23,7 @@ export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValu
                 ...updatedInfo
             };
         }
-        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record, {
-            conditions,
-            condition_logical: conditionLogical
-        });
+        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
         if (!checkResult) {
             hiddenRecordIds.push(recordId);
         } else {
