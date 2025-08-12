@@ -5,14 +5,13 @@ import { AIViewTable } from '../../types';
 import { UpdateFieldValueOptions, AITableRecordUpdatedInfo, AITableSystemFieldValueOption, AITableViewFields } from '@ai-table/utils';
 import { checkConditions } from './filter';
 
-export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[], updatedInfo?: AITableRecordUpdatedInfo) {
-    const needUpdateOptions = options.filter((option) => {
-        const oldValue = AITableQueries.getFieldValue(aiTable, option.path);
-        return !_.isEqual(oldValue, option.value);
-    });
-
-    const hiddenRecordIds: string[] = [];
-    const removeHiddenRecordIds: string[] = [];
+function updateWillHiddenRecordIds(
+    aiTable: AIViewTable,
+    needUpdateOptions: UpdateFieldValueOptions<unknown>[],
+    updatedInfo?: AITableRecordUpdatedInfo
+) {
+    const willHiddenRecordIds: string[] = [];
+    const removeWillHiddenRecordIds: string[] = [];
     needUpdateOptions.forEach((option) => {
         const [recordId, fieldId] = option.path;
         let record = _.cloneDeep(aiTable.recordsMap()[recordId]);
@@ -24,17 +23,26 @@ export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValu
             };
         }
         const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
-        if (!checkResult) {
-            hiddenRecordIds.push(recordId);
+        if (checkResult) {
+            removeWillHiddenRecordIds.push(recordId);
         } else {
-            removeHiddenRecordIds.push(recordId);
+            willHiddenRecordIds.push(recordId);
         }
     });
     aiTable.recordsWillHidden.update((value) => {
-        value = value.filter((id) => !removeHiddenRecordIds.includes(id));
-        value.push(...hiddenRecordIds);
+        value = value.filter((id) => !removeWillHiddenRecordIds.includes(id));
+        value.push(...willHiddenRecordIds);
         return value;
     });
+}
+
+export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[], updatedInfo?: AITableRecordUpdatedInfo) {
+    const needUpdateOptions = options.filter((option) => {
+        const oldValue = AITableQueries.getFieldValue(aiTable, option.path);
+        return !_.isEqual(oldValue, option.value);
+    });
+
+    updateWillHiddenRecordIds(aiTable, needUpdateOptions, updatedInfo);
 
     Actions.updateFieldValues(aiTable, needUpdateOptions);
 
