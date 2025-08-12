@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.37](https://github.com/worktile/ai-table/compare/0.1.36...0.1.37) (2025-08-12)
+
+
+### Bug Fixes
+
+* #WIK-18678 【复选框】列更多菜单的复选框排序的文案不对 ([#618](https://github.com/worktile/ai-table/issues/618)) ([6394111](https://github.com/worktile/ai-table/commit/6394111e66ea1dd6a6ac1948313c4977ac27b8e5)), closes [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678)
+* #WIK-18691 【aitable】在一个长文本中键盘随便快速输入，快速输入过程中按一次回车，出现单元格跑版，跑版后，内容只剩下最后一行，其他的没了,见附件 ([#620](https://github.com/worktile/ai-table/issues/620)) ([041aa82](https://github.com/worktile/ai-table/commit/041aa825b547f7d8831bf2b311888ce0008dad81)), closes [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691) [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691) [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691)
+
+
+### Features
+
+* #WIK-17836 【AItable】支持键盘切换单元格 ([#617](https://github.com/worktile/ai-table/issues/617)) ([5eb9b03](https://github.com/worktile/ai-table/commit/5eb9b0388df26c3ee70e12fcefd3c1aaed1fb606)), closes [#WIK-17836](https://github.com/worktile/ai-table/issues/WIK-17836)
+* #WIK-18695 在有筛选时，编辑cell后，不符合条件需要有tooltip提示，整行失焦后才会被过滤。 ([#619](https://github.com/worktile/ai-table/issues/619)) ([6a5c668](https://github.com/worktile/ai-table/commit/6a5c66831bd3c33634b9b19d8878610b1d9bb8f8)), closes [#WIK-18695](https://github.com/worktile/ai-table/issues/WIK-18695)
+
+
+
 ## [0.1.36](https://github.com/worktile/ai-table/compare/0.1.35...0.1.36) (2025-08-08)
 
 
