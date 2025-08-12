@@ -997,6 +997,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const field = activeCell && this.aiTable.fieldsMap()[activeCell[1]];
                 if (isKeyForInput && activeCell && field && field.type === AITableFieldType.text) {
                     const [recordId, fieldId] = activeCell;
+                    closeExpendCell(this.aiTable);
                     this.aiTableGridEventService.openCellEditor(this.aiTable, {
                         viewContainerRef: this.viewContainerRef,
                         container: this.containerElement(),
