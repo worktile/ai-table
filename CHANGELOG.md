@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.38](https://github.com/worktile/ai-table/compare/0.1.37...0.1.38) (2025-08-13)
+
+
+### Features
+
+* #WIK-18701 ai-talbe，复选框排序顺序调整 ([#622](https://github.com/worktile/ai-table/issues/622)) ([177d545](https://github.com/worktile/ai-table/commit/177d5452254b88aaa548738b14785066924c394a)), closes [#WIK-18701](https://github.com/worktile/ai-table/issues/WIK-18701)
+
+
+
 ## [0.1.37](https://github.com/worktile/ai-table/compare/0.1.36...0.1.37) (2025-08-12)
 
 
