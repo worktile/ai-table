@@ -46,7 +46,7 @@ export class AITableCellCheckbox extends CoverCellBase {
                 fill: this.isChecked() ? Colors.primary : Colors.gray300,
                 width: AI_TABLE_ICON_COMMON_SIZE,
                 height: AI_TABLE_ICON_COMMON_SIZE,
-                listening: true
+                listening: readonly ? false : true
             };
         }
 
