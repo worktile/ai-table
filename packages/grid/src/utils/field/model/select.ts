@@ -227,6 +227,6 @@ function copyOption(
 
 function getValidCellValue(cellValue: SelectFieldValue, options: AITableSelectOption[]) {
     const optionsMap = helpers.keyBy(options, '_id');
-    const validCellValue = cellValue.filter((optionId) => !!optionsMap[optionId]);
+    const validCellValue = cellValue?.filter((optionId) => !!optionsMap[optionId]);
     return validCellValue;
 }
