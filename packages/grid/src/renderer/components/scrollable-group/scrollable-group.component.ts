@@ -35,7 +35,7 @@ export interface ScrollableGroupConfig {
 @Component({
     selector: 'ai-table-scrollable-group',
     template: `
-        <ko-group #rootGroup [config]="containerConfig()" (koWheel)="stageWheel($event)">
+        <ko-group #rootGroup [config]="containerConfig()" (koWheel)="stageWheel($event)" (koMousedown)="stopBubble($event)">
             <ko-group>
                 <ko-rect [config]="bgConfig()"></ko-rect>
             </ko-group>
@@ -110,10 +110,6 @@ export class AITableScrollableGroup implements AfterViewInit {
     // 滚动位置信号
     scrollX = signal(0);
     scrollY = signal(0);
-
-    // 滚动条拖拽状态
-    isDraggingVertical = signal(false);
-    isDraggingHorizontal = signal(false);
 
     constructor() {
         // 滚动条延迟隐藏
@@ -287,9 +283,6 @@ export class AITableScrollableGroup implements AfterViewInit {
 
     // 竖向滚动条滑块配置
     verticalConfig = computed<RectConfig | any>(() => {
-        if (this.isDraggingVertical()) {
-            return null;
-        }
         const { scrollbarSize = 12, scrollbarColor = Colors.black, scrollbarOpacity = 0.8 } = this.config();
         const { height, contentHeight } = this.config();
         const thumbHeight = this.verticalThumbHeight();
@@ -305,7 +298,6 @@ export class AITableScrollableGroup implements AfterViewInit {
             cornerRadius: 6,
             draggable: true,
             dragBoundFunc: (pos: Vector2d) => {
-                this.isDraggingVertical.set(true);
                 this.displayScrollbarTime.set(new Date());
 
                 // 限定垂直滚动条的拖拽范围，并更新newScrollY
@@ -317,9 +309,6 @@ export class AITableScrollableGroup implements AfterViewInit {
                 this.scrollY.set(newScrollY);
 
                 const x = this.verticalTrack.getNode().getAbsolutePosition().x + 1;
-                setTimeout(() => {
-                    this.isDraggingVertical.set(false);
-                }, 100);
                 return {
                     x: x,
                     y: newThumbY
@@ -330,9 +319,6 @@ export class AITableScrollableGroup implements AfterViewInit {
 
     // 横向滚动条滑块配置
     horizontalThumbConfig = computed<RectConfig | any>(() => {
-        if (this.isDraggingHorizontal()) {
-            return null;
-        }
         const { scrollbarSize = 12, scrollbarColor = Colors.black, scrollbarOpacity = 0.8 } = this.config();
         const { width, contentWidth } = this.config();
         const thumbWidth = this.horizontalThumbWidth();
@@ -348,7 +334,6 @@ export class AITableScrollableGroup implements AfterViewInit {
             cornerRadius: 6,
             draggable: true,
             dragBoundFunc: (pos: Vector2d) => {
-                this.isDraggingHorizontal.set(true);
                 this.displayScrollbarTime.set(new Date());
                 // 限定横向滚动条的拖拽范围,并更新scrollX
                 const maxThumbX = this.horizontalThumbMaxX();
@@ -359,9 +344,6 @@ export class AITableScrollableGroup implements AfterViewInit {
                 this.scrollX.set(newScrollX);
 
                 const y = this.horizontalTrack.getNode().getAbsolutePosition().y + 1;
-                setTimeout(() => {
-                    this.isDraggingHorizontal.set(false);
-                }, 100);
                 return {
                     x: newThumbX,
                     y: y
@@ -381,6 +363,10 @@ export class AITableScrollableGroup implements AfterViewInit {
         const { width } = this.config();
         return width;
     });
+
+    stopBubble(e: KoEventObject<MouseEvent>) {
+        e.event.cancelBubble = true;
+    }
 
     verticalScrollbarClick(e: KoEventObject<MouseEvent>) {
         e.event.cancelBubble = true;
