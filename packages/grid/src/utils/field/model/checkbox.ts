@@ -57,6 +57,12 @@ export class CheckboxField extends CheckboxFieldBase implements FieldOperable<st
         targetField: AITableField,
         originData?: { field: AITableField; cellValue: FieldValue }
     ): FieldValue | null {
+        if (originData) {
+            const { field, cellValue } = originData;
+            if (field.type === AITableFieldType.checkbox) {
+                return cellValue;
+            }
+        }
         return null;
     }
 }
