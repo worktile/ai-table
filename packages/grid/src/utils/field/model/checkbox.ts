@@ -38,9 +38,9 @@ export class CheckboxField extends CheckboxFieldBase implements FieldOperable<st
         const cellTextValue = cellValue;
         switch (condition.operation) {
             case AITableFilterOperation.empty:
-                return isEmpty(cellTextValue);
+                return !cellTextValue;
             case AITableFilterOperation.exists:
-                return !isEmpty(cellTextValue);
+                return !!cellTextValue;
             default:
                 return isMeetFilter(condition, cellTextValue);
         }
