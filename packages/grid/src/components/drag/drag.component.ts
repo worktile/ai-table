@@ -177,7 +177,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 } else if (e.movementX < 0) {
                     direction = DragDirection.left;
                 }
-                this.movingColumn(drag, moveX, direction);
+                if (direction !== DragDirection.none) {
+                    this.movingColumn(drag, moveX, direction);
+                }
                 break;
             case DragType.record:
                 this.movingRecord(drag, moveY);
@@ -201,7 +203,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const sourceColumnWidth = coordinate.getColumnWidth(sourceColumnIndex);
 
         const frozenColumnCount = aiTable.context!.frozenColumnCount();
-        const isSourceColumnFrozen = sourceColumnIndex === frozenColumnCount - 1;
+        const isSourceColumnFrozen = sourceColumnIndex <= frozenColumnCount - 1;
         const frozenColumnWidth = Array.from({ length: frozenColumnCount }).reduce(
             (acc: number, _, index) => acc + coordinate.getColumnWidth(index),
             0
@@ -221,8 +223,21 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             left: `${currentRectLeft}px`
         });
 
+        // 是否在冻结列区域内拖拽
+        const isFrozenColumnAreaDrag =
+            isSourceColumnFrozen &&
+            currentRectLeft <
+                frozenColumnWidth +
+                    rowHeadWidth +
+                    (direction === DragDirection.left || direction === DragDirection.none
+                        ? -AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
+                        : AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD);
         // 计算目标列和辅助线
         const updateTargetAndLine = (rectLeft: number, scrollPosition: { x: number; y: number }) => {
+            if (isFrozenColumnAreaDrag) {
+                // 冻结列区域内滚动，清空滚动位置
+                scrollPosition.x = 0;
+            }
             let targetColumnIndex = coordinate.getColumnStartIndex(rectLeft + scrollPosition.x + dragCenter);
             const lastColumnOffset = coordinate.getColumnOffset(coordinate.columnCount - 1);
             const lastColumnWidth = coordinate.getColumnWidth(coordinate.columnCount - 1);
@@ -247,7 +262,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 const rectDistanceFrozenX = rectLeft - frozenColumnWidth - rowHeadWidth;
 
                 if (lineForFrozenX < 0) {
-                    if (Math.abs(rectDistanceFrozenX) < dragCenter) {
+                    if (Math.abs(rectDistanceFrozenX) < dragCenter || (isSourceColumnFrozen && !isFrozenColumnAreaDrag)) {
                         // 滚动中保持上一个位置
                         const nextColumnStartX = coordinate.getColumnOffset(targetColumnIndex + 1);
                         this.setAuxiliaryLineStyles({
@@ -259,12 +274,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                             fieldIds: drag.sourceIds,
                             fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
                         };
-                        return;
-                    }
-                    if (isSourceColumnFrozen) {
-                        // 拖拽的列是冻结列，且目标列在冻结列左侧，不显示辅助线
-                        this.resetAuxiliaryLine();
-                        this.draggedData = null;
                         return;
                     }
                 }
@@ -295,12 +304,9 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
         updateTargetAndLine(currentRectLeft, newScrollPosition);
 
-        if (
-            isSourceColumnFrozen &&
-            (direction === DragDirection.right || direction === DragDirection.none) &&
-            currentRectLeft < frozenColumnWidth + rowHeadWidth + AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
-        ) {
-            // 拖拽的列是冻结列，方向是向右，且当前列在冻结列左侧，不滚动
+        if (isFrozenColumnAreaDrag) {
+            // 冻结列区域内拖拽取消滚动
+            this.scrollControllerService.stopAutoScroll();
             return;
         }
         this.scrollControllerService.scroll({

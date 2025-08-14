@@ -58,12 +58,12 @@ export class AITableScrollControllerService {
     constructor(private ngZone: NgZone) {
         this.ngZone.runOutsideAngular(() => {
             this.mouseUpSubscription = fromEvent(document, 'mouseup').subscribe(() => {
-                this.handleMouseUp();
+                this.clearAutoScroll();
             });
         });
     }
 
-    scroll(options: AITableScrollControllerOptions) {
+    public scroll(options: AITableScrollControllerOptions) {
         const { needScroll } = this.calculateScrollDistance(options);
         if (!needScroll) {
             this.isAutoScrolling = false;
@@ -75,7 +75,11 @@ export class AITableScrollControllerService {
         }
     }
 
-    private handleMouseUp(): void {
+    public stopAutoScroll() {
+        this.clearAutoScroll();
+    }
+
+    private clearAutoScroll(): void {
         this.isAutoScrolling = false;
         if (this.autoScrollSub) {
             this.autoScrollSub.unsubscribe();
