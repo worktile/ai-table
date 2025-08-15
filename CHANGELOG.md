@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.39](https://github.com/worktile/ai-table/compare/0.1.38...0.1.39) (2025-08-15)
+
+
+### Bug Fixes
+
+* #WIK-18706 复选框筛选结果不正确 ([#624](https://github.com/worktile/ai-table/issues/624)) ([9ef63cb](https://github.com/worktile/ai-table/commit/9ef63cb2be59c0d4e0571752e0d3ad71d22df05f)), closes [#WIK-18706](https://github.com/worktile/ai-table/issues/WIK-18706)
+* #WIK-18711 【复选框】同类型粘贴至复制框应该可以成功 ([#626](https://github.com/worktile/ai-table/issues/626)) ([b7374f0](https://github.com/worktile/ai-table/commit/b7374f0530ff7fe04e69a107d287eb77366b91c6)), closes [#WIK-18711](https://github.com/worktile/ai-table/issues/WIK-18711)
+* #WIK-18712 没有权限、锁定的不能继续勾选、反勾选 ([#625](https://github.com/worktile/ai-table/issues/625)) ([816aeb9](https://github.com/worktile/ai-table/commit/816aeb9b43da6be3f6fb527c8f43909a356b756e)), closes [#WIK-18712](https://github.com/worktile/ai-table/issues/WIK-18712)
+* #WIK-18717 展开文本后无法拖动滚动条 ([#629](https://github.com/worktile/ai-table/issues/629)) ([438d17e](https://github.com/worktile/ai-table/commit/438d17e32c40b7796f11220a2457182245bf71c6)), closes [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717) [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717) [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717)
+* #WIK-18718 表格空白，页面崩溃，排查下原因 ([#627](https://github.com/worktile/ai-table/issues/627)) ([97693c0](https://github.com/worktile/ai-table/commit/97693c0894869686eeb826e84a8a3487183bcc94)), closes [#WIK-18718](https://github.com/worktile/ai-table/issues/WIK-18718)
+* #WIK-18719 【AItable】序号的线变细了 ([#631](https://github.com/worktile/ai-table/issues/631)) ([2b3d436](https://github.com/worktile/ai-table/commit/2b3d436b7a41a25787bb48ee041ce4d793a4236e)), closes [#WIK-18719](https://github.com/worktile/ai-table/issues/WIK-18719)
+* #WIK-18720 文字展开的高度不正确（高度没到指定值是，不应该出现滚动条） ([#628](https://github.com/worktile/ai-table/issues/628)) ([7fd3112](https://github.com/worktile/ai-table/commit/7fd31123708a8bec3d6165417544b4cdcce6f306)), closes [#WIK-18720](https://github.com/worktile/ai-table/issues/WIK-18720)
+* **grid:** #WIK-18714 冻结列拖拽拖拽滚动问题 ([#630](https://github.com/worktile/ai-table/issues/630)) ([391e7f6](https://github.com/worktile/ai-table/commit/391e7f60d83bae520d81de5775def229e793367b)), closes [#WIK-18714](https://github.com/worktile/ai-table/issues/WIK-18714)
+
+
+
 ## [0.1.38](https://github.com/worktile/ai-table/compare/0.1.37...0.1.38) (2025-08-13)
 
 
