@@ -1,6 +1,11 @@
 import { AIRecordFieldIdPath, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
 import { AITableCellMetaData } from '../types';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT } from '../constants';
+import {
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
+    AI_TABLE_ROW_HEIGHT
+} from '../constants';
 import { AITable } from './types';
 
 /**
@@ -320,6 +325,33 @@ export class Coordinate {
         return {
             isCellCanFullRender,
             offsetX,
+            offsetY
+        };
+    }
+
+    /**
+     * 获取添加行按钮是否可以完整渲染
+     * 如果可以完整渲染，则返回 { isCanFullRender: true, offsetY: 0 }
+     * 如果不能完整渲染，则返回 { isCanFullRender: false, offsetY: 需要偏移的 y 值 }
+     */
+    public getAddRowButtonIsFullRenderInfo(aiTable: AITable) {
+        let offsetY = 0;
+        const gridData = aiTable.gridData();
+        const lastRowIndex = gridData.records.length - 1;
+        const { size: height, offset: y } = this.getCellMetaData(lastRowIndex, AITableRowColumnType.row);
+        const { scrollTop } = aiTable.context!.scrollState();
+
+        const addButtonMaxY = y + height + AI_TABLE_ROW_HEIGHT;
+
+        const containerMaxY =
+            aiTable.context!.containerRect()!.height + scrollTop - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT - AI_TABLE_CELL_LINE_BORDER * 4;
+
+        if (addButtonMaxY > containerMaxY) {
+            offsetY = addButtonMaxY - containerMaxY;
+        }
+
+        return {
+            isCanFullRender: offsetY === 0,
             offsetY
         };
     }
