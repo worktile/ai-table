@@ -204,3 +204,7 @@ export function selectCells(
         selectedCells: selectedCells
     });
 }
+
+export function scrollToMatchedCell(aiTable: AITable, index: number = 1) {
+    aiTable.keywordsMatchedCellIndex.set(index);
+}

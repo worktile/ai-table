@@ -25,6 +25,7 @@ import {
     AITableViewRecords,
     SharedType
 } from '@ai-table/utils';
+import { scrollToMatchedCell } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -107,9 +108,7 @@ export class TableService {
         return sortViews(this.views());
     });
 
-    keywords = computed(() => {
-        return this.activeView().settings?.keywords;
-    });
+    keywords = signal('');
 
     aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
@@ -229,5 +228,11 @@ export class TableService {
 
     redo() {
         this.undoManagerService.redo();
+    }
+
+    setSearchKeywords(keywords: string) {
+        this.keywords.set(keywords);
+        scrollToMatchedCell(this.aiTable, 0);
+        scrollToMatchedCell(this.aiTable, 1);
     }
 }

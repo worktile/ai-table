@@ -1,5 +1,5 @@
 @if (tableService.activeView()) {
-    <div (mousedown)="prevent($event)">
+    <div class="d-flex align-items-center">
         <thy-segment
             class="mb-2 mr-2"
             thyMode="inline"
@@ -10,6 +10,14 @@
             <thy-segment-item thyValue="default" thyIcon="bars">默认</thy-segment-item>
             <thy-segment-item thyValue="big-data" thyIcon="trend">大数据量</thy-segment-item>
         </thy-segment>
+        <input
+            class="mx-2 mb-2"
+            thyInput
+            [(ngModel)]="searchKeywords"
+            (blur)="tableService.setSearchKeywords(searchKeywords)"
+            placeholder="搜索"
+            style="width: 150px"
+        />
         <a thyAction class="mb-2" thyIcon="undo" href="javascript:;" (click)="undo()" [thyDisabled]="!canUndo()"
             >撤销 {{ canUndoCount() }}</a
         >

@@ -45,6 +45,7 @@ import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
+import { ThyInputDirective } from 'ngx-tethys/input';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils/utils';
@@ -109,7 +110,7 @@ export class MenuAddRecordsComponent {
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, ThyInputDirective],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -118,6 +119,8 @@ export class MenuAddRecordsComponent {
 })
 export class DemoTableContent {
     private datePickerFormatPipe = new ThyDatePickerFormatPipe();
+
+    searchKeywords = '';
 
     aiTable!: AIViewTable;
 
