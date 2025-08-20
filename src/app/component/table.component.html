@@ -29,6 +29,9 @@
         ><span class="pr-1 pt-1">最大行数</span
         ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxRecords" (change)="handleMaxRecordsChange()"
     /></label>
+    <label class="mb-0 ml-2 d-flex align-items-center"
+        ><input type="checkbox" [checked]="hiddenRowDrag" (change)="handleGroupChange($event)" /><span class="pl-1 pt-1">分组</span></label
+    >
 </div>
 <thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.sortedViews(); let index = $index; track $index) {

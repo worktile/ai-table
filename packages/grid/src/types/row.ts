@@ -4,7 +4,9 @@ import { ThyNotifyService } from 'ngx-tethys/notify';
 
 export enum AITableRowType {
     add = 'add',
-    record = 'record'
+    record = 'record',
+    groupTab = 'groupTab',
+    blank = 'blank'
 }
 
 export type AITableCellMetaData = {
@@ -19,13 +21,30 @@ export type AITableLinearRowAdd = {
     type: AITableRowType.add;
 };
 
-export type AITableLinearRowRecord = {
+export type AITableLinearRowBase = {
     _id: string;
+    depth?: number;
+};
+
+export type AITableLinearRowRecord = AITableLinearRowBase & {
     type: AITableRowType.record;
     displayIndex: number;
 };
 
-export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord;
+export type AITableLinearRowGroupTab = AITableLinearRowBase & {
+    type: AITableRowType.groupTab;
+    fieldId: string;
+    groupValue: any;
+    isCollapsed: boolean;
+    recordCount: number;
+    groupId: string;
+};
+
+export type AITableLinearRowBlank = AITableLinearRowBase & {
+    type: AITableRowType.blank;
+};
+
+export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord | AITableLinearRowGroupTab | AITableLinearRowBlank;
 
 export interface AITableRowHeadsConfig {
     coordinate: Coordinate;

@@ -29,7 +29,7 @@ export enum AITableFilterLogical {
     or = 'or'
 }
 
-export type ViewSettings = AITableSearchOptions & AITableFilterConditions & AITableSortOptions & AITableFrozenOptions;
+export type ViewSettings = AITableSearchOptions & AITableFilterConditions & AITableSortOptions & AITableFrozenOptions & AITableGroupOptions;
 
 export interface AITableView {
     _id: string;
@@ -60,6 +60,18 @@ export interface AITableSearchOptions {
 
 export interface AITableFrozenOptions {
     frozen_field_id?: Id;
+}
+
+export interface AITableGroupField {
+    fieldId: string;
+    desc: boolean;
+}
+
+export type AITableGroupInfo = AITableGroupField[];
+
+export interface AITableGroupOptions {
+    groups?: AITableGroupInfo;
+    groupCollapse?: string[]; // 折叠的分组ID列表
 }
 
 export type AITableViews = AITableView[];

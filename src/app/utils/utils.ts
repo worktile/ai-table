@@ -178,7 +178,7 @@ export function getCanvasDefaultValue() {
                     view2: 0
                 },
                 values: {
-                    'column-1': '文本 3-1 column-1',
+                    'column-1': '文本 3-1 column-2',
                     'column-13': '文本 3-1 column-13',
                     'column-2': ['_id_3'],
                     'column-110': ['dot_3'],
@@ -206,6 +206,97 @@ export function getCanvasDefaultValue() {
                     'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
                     'column-24': ['676e3e9b5660cd68d7f49e60'],
                     'column-25': []
+                }
+            },
+            {
+                _id: 'row-4',
+                short_id: `row-short-id-${4}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 3,
+                    view2: 3
+                },
+                values: {
+                    'column-1': '文本 2-1 column-1',
+                    'column-13': '文本 2-1 column-13',
+                    'column-2': ['_id_2'],
+                    'column-110': ['dot_2'],
+                    'column-111': ['piece_2'],
+                    'column-112': ['tag_2'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-3': 10,
+                    'column-4': { timestamp: 1682235946 },
+                    'column-5': ['member_01', 'member_02', 'member_03', 'member_04', 'member_05', 'member_06', 'member_07', 'member_08'],
+                    'column-566': ['member_01'],
+                    'column-6': 50,
+                    'column-7': 4,
+                    'column-8': {},
+                    // 'column-9': ['member_01'],
+                    // 'column-10': { timestamp: 1682235946 },
+                    // 'column-11': ['member_02'],
+                    // 'column-12': { timestamp: 1720490727 },
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    // 'column-24': ['676e3e9b5660cd68d7f49e60']
+                    'column-24': [
+                        '676e3e9b5660cd68d7f49e60',
+                        '67da7c119675bccb963cc524',
+                        '67da7c319675bccb963cc52b',
+                        '67da7c419675bccb963cc52d',
+                        '67da7c599675bccb963cc52f',
+                        '67da80d89675bccb963cc588',
+                        '67da80f09675bccb963cc58a',
+                        '67da81429675bccb963cc596'
+                    ],
+                    'column-25': [
+                        {
+                            type: 'paragraph',
+                            key: 'YSzXW',
+                            children: [
+                                {
+                                    text: '多行文本实例'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'jtnfi',
+                            children: [
+                                {
+                                    text: '第一行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'NPdNb',
+                            children: [
+                                {
+                                    text: '第二行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'bGdar',
+                            children: [
+                                {
+                                    text: '第三行数据。'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'paragraph',
+                            key: 'bPSBF',
+                            children: [
+                                {
+                                    text: ''
+                                }
+                            ]
+                        }
+                    ],
+                    'column-custom_demo': null
                 }
             }
         ],

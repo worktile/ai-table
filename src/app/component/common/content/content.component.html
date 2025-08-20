@@ -42,6 +42,7 @@
             (aiMoveRecords)="dragMoveRecords($event)"
             (aiTableInitialized)="aiTableInitialized($event)"
             [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
+            [aiBuildGroupLinearRowsFn]="tableService.aiBuildGroupLinearRowsFn()"
             [aiGetI18nTextByKey]="getI18nTextByKey"
             [aiFrozenColumnCountFn]="calculateFrozenCount"
             (aiClick)="onClick($event)"

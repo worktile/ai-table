@@ -178,7 +178,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     horizontalBarRef = viewChild<ElementRef>('horizontalBar');
 
     linearRows = computed(() => {
-        return buildGridLinearRows(this.gridData().records, !this.aiReadonly());
+        return buildGridLinearRows(this.gridData().records, !this.aiReadonly(), this.aiTable, this.aiBuildGroupLinearRowsFn?.());
     });
 
     domToolTips = computed(() => {

@@ -65,6 +65,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     hiddenRowDrag = false;
 
+    group = false;
+
     activeViewName!: string;
 
     maxRecords = 500;
@@ -115,6 +117,33 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     handleMaxFieldsChange() {
         this.tableService.setMaxFields(this.maxFields);
+    }
+
+    handleGroupChange(e: any) {
+        this.group = e.target.checked;
+        const view = this.tableService.views();
+        if (this.group) {
+            view[0].settings = {
+                groups: [
+                    {
+                        fieldId: 'column-1',
+                        desc: false
+                    },
+                    {
+                        fieldId: 'column-2',
+                        desc: false
+                    },
+                    {
+                        fieldId: 'column-4',
+                        desc: false
+                    }
+                ]
+            };
+        } else {
+            view[0].settings = {};
+        }
+        this.tableService.setActiveView('view1');
+        this.tableService.views.set([...view]);
     }
 
     updateValue() {

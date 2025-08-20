@@ -8,3 +8,4 @@ export * from './record/move-records';
 export * from './i18n';
 export * from './field';
 export * from './record';
+export * from './group';

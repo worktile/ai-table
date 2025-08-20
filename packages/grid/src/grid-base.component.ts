@@ -35,7 +35,7 @@ import {
 } from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableLinearRow } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
@@ -71,6 +71,8 @@ export class AITableGridBase implements OnInit {
     aiReferences = input.required<AITableReferences>();
 
     aiBuildRenderDataFn = input<(aiTable: AITable) => AITableValue>();
+
+    aiBuildGroupLinearRowsFn = input<(aiTable: AITable) => AITableLinearRow[] | null>();
 
     aiGetI18nTextByKey = input<(key: AITableGridI18nKey | string) => string | undefined>();
 
