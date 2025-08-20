@@ -332,6 +332,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
 
         effect(() => {
+            if (this.aiKeywords() && this.aiTable.keywordsMatchedCellIndex() > -1) {
+                untracked(() => {
+                    this.scrollToMatchedCell();
+                });
+            }
+        });
+
+        effect(() => {
             // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
             const activeCellPath = this.aiTable.selection().activeCell;
             untracked(() => {
@@ -434,6 +442,27 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
 
         this.aiTable.keywordsMatchedCells.set(matchedCells);
+    }
+
+    private scrollToMatchedCell() {
+        const index = this.aiTable.keywordsMatchedCellIndex();
+        if (index < 0) {
+            return;
+        }
+        const matchCell = Array.from(this.aiTable.keywordsMatchedCells())[index];
+        if (!matchCell) {
+            return;
+        }
+        const matchCellPath: AIRecordFieldIdPath = matchCell.split(':') as AIRecordFieldIdPath;
+        const { isCellCanFullRender, offsetY, offsetX } = this.coordinate().getCellIsFullRenderInfo(this.aiTable, matchCellPath);
+        setActiveCell(this.aiTable, matchCellPath);
+        if (!isCellCanFullRender) {
+            this.scrollAction({
+                deltaX: offsetX,
+                deltaY: offsetY,
+                shiftKey: false
+            });
+        }
     }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
