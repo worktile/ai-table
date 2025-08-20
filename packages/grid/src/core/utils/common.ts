@@ -22,6 +22,7 @@ export function createAITable(
         expendCell: signal({ path: null }),
         editingCell: signal({ path: null }),
         keywordsMatchedCells: signal(new Set()),
+        keywordsMatchedCellIndex: signal(0),
         recordsMap: computed(() => {
             return records().reduce(
                 (object, item) => {

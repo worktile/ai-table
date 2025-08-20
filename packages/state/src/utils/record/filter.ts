@@ -40,20 +40,28 @@ export function checkConditions(
     aiTable: AIViewTable,
     fields: AITableViewFields,
     record: AITableRecord,
-    filterConditions: AITableFilterConditions
+    filterConditions?: AITableFilterConditions
 ) {
     if (!record) {
         return false;
     }
     if (!filterConditions?.conditions) {
-        return true;
+        const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
+        const conditionLogical = aiTable.viewsMap()[aiTable.activeViewId()].settings?.condition_logical;
+        filterConditions = {
+            conditions,
+            condition_logical: conditionLogical
+        };
+        if (!conditions || !conditions?.length) {
+            return true;
+        }
     }
     const { condition_logical, conditions } = filterConditions;
     if (condition_logical === AITableFilterLogical.and) {
-        return conditions.every((condition) => doFilterOperations(aiTable, fields, record, condition));
+        return conditions!.every((condition) => doFilterOperations(aiTable, fields, record, condition));
     }
     if (!condition_logical || condition_logical === AITableFilterLogical.or) {
-        return conditions.some((condition) => doFilterOperations(aiTable, fields, record, condition));
+        return conditions!.some((condition) => doFilterOperations(aiTable, fields, record, condition));
     }
     return false;
 }

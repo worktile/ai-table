@@ -103,7 +103,7 @@ export class AITableCellText extends CoverCellBase {
             width: columnWidth,
             height: this.height(),
             contentWidth: columnWidth, // 内容宽度大于容器宽度，会显示横向滚动条
-            contentHeight: height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER, // 内容高度大于容器高度，会显示竖向滚动条
+            contentHeight: height, // 内容高度大于容器高度，会显示竖向滚动条
             scrollbarSize: 9,
             scrollbarColor: Colors.gray700,
             x: 0,
@@ -131,7 +131,10 @@ export class AITableCellText extends CoverCellBase {
             transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
             listening: false
         });
-        return tmpText.getClientRect();
+        return {
+            ...tmpText.getClientRect(),
+            height: tmpText.getClientRect().height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER
+        };
     });
 
     textMaxWidth = computed(() => {

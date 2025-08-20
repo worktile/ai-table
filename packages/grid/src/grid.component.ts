@@ -332,6 +332,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
 
         effect(() => {
+            if (this.aiKeywords() && this.aiTable.keywordsMatchedCellIndex() > -1) {
+                untracked(() => {
+                    this.scrollToMatchedCell();
+                });
+            }
+        });
+
+        effect(() => {
             // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
             const activeCellPath = this.aiTable.selection().activeCell;
             untracked(() => {
@@ -434,6 +442,27 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
 
         this.aiTable.keywordsMatchedCells.set(matchedCells);
+    }
+
+    private scrollToMatchedCell() {
+        const index = this.aiTable.keywordsMatchedCellIndex();
+        if (index < 0) {
+            return;
+        }
+        const matchCell = Array.from(this.aiTable.keywordsMatchedCells())[index];
+        if (!matchCell) {
+            return;
+        }
+        const matchCellPath: AIRecordFieldIdPath = matchCell.split(':') as AIRecordFieldIdPath;
+        const { isCellCanFullRender, offsetY, offsetX } = this.coordinate().getCellIsFullRenderInfo(this.aiTable, matchCellPath);
+        setActiveCell(this.aiTable, matchCellPath);
+        if (!isCellCanFullRender) {
+            this.scrollAction({
+                deltaX: offsetX,
+                deltaY: offsetY,
+                shiftKey: false
+            });
+        }
     }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
@@ -674,6 +703,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);
                 this.addRecord();
+                const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable);
+                if (!isCanFullRender) {
+                    this.scrollAction({
+                        deltaX: 0,
+                        deltaY: offsetY,
+                        shiftKey: false
+                    });
+                }
                 break;
             }
             case AI_TABLE_ROW_SELECT_CHECKBOX: {
@@ -815,12 +852,19 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private bindGlobalMousedown() {
         fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
             .pipe(
-                filter(
-                    (e) =>
-                        e.target instanceof Element &&
-                        !this.containerElement().contains(e.target) &&
-                        !e.target.closest(AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS)
-                ),
+                filter((e) => {
+                    // 检查点击事件的目标元素是否在 container 内
+                    const isInContainer = e.target instanceof Element && this.containerElement().contains(e.target);
+
+                    // 检查点击事件的目标元素是否在 prevent-clear-selection 元素内
+                    const isInPreventClearSelection =
+                        e.target instanceof Element && e.target.closest(AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS);
+
+                    // 检查点击事件的目标元素是否在 popover 弹窗内
+                    const isInPopover = e.target instanceof Element && e.target.closest('.cdk-overlay-container');
+
+                    return e.target instanceof Element && !isInContainer && !isInPreventClearSelection && !isInPopover;
+                }),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {

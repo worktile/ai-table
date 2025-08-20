@@ -18,7 +18,10 @@ const initViews: AITableView[] = [
         _id: 'view1',
         short_id: 'view-short-id-1',
         name: '表格视图',
-        position: 0
+        position: 0,
+        settings: {
+            frozen_field_id: 'column-110'
+        }
     },
     { _id: 'view2', short_id: 'view-short-id-2', name: '表格视图 2', position: 1 }
 ];

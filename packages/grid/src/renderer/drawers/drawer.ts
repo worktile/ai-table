@@ -208,7 +208,6 @@ export class Drawer {
     public customRect(options: AITableRect) {
         const { x, y, width, height, fill, strokes } = options;
         if (fill) this.setStyle({ fillStyle: fill });
-        this.ctx.fillRect(x, y, width, height);
         if (strokes) {
             const { top, right, bottom, left } = strokes;
             // 上边框
@@ -235,6 +234,8 @@ export class Drawer {
             this.ctx.moveTo(x, y);
             this.ctx.lineTo(x, y + height);
             this.ctx.stroke();
+        } else {
+            this.ctx.fillRect(x, y, width, height);
         }
     }
 

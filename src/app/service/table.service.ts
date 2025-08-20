@@ -10,6 +10,7 @@ import {
     getFieldsSizeMap,
     UndoManagerService,
     sortViews,
+    Actions,
     buildGroupLinearRows
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
@@ -20,13 +21,16 @@ import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
 import {
     AITableFieldsSizeMap,
     AITableFieldType,
+    AITableFilterConditions,
+    AITableSearchOptions,
+    AITableSortOptions,
     AITableValue,
     AITableView,
     AITableViewFields,
     AITableViewRecords,
     SharedType
 } from '@ai-table/utils';
-import { AITableLinearRow } from '@ai-table/grid';
+import { scrollToMatchedCell, AITableLinearRow } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -109,9 +113,7 @@ export class TableService {
         return sortViews(this.views());
     });
 
-    keywords = computed(() => {
-        return this.activeView().settings?.keywords;
-    });
+    keywords = signal('');
 
     aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
@@ -242,5 +244,17 @@ export class TableService {
 
     redo() {
         this.undoManagerService.redo();
+    }
+
+    setSearchKeywords(keywords: string) {
+        const settings: Partial<AITableSearchOptions & AITableFilterConditions & AITableSortOptions> = {
+            ...(this.activeView().settings || {}),
+            keywords: keywords
+        };
+        Actions.setView(this.aiTable, { settings }, [this.activeViewId()]);
+
+        this.keywords.set(keywords);
+        scrollToMatchedCell(this.aiTable, -1);
+        scrollToMatchedCell(this.aiTable, 0);
     }
 }

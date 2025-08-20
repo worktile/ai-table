@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.40](https://github.com/worktile/ai-table/compare/0.1.39...0.1.40) (2025-08-20)
+
+
+### Features
+
+* #WIK-16925 【AITable】添加行始终在底部展示，最新行始终展示在可视区域 ([#633](https://github.com/worktile/ai-table/issues/633)) ([7632133](https://github.com/worktile/ai-table/commit/7632133a990e3b846d30ae48d9279bd61b40967c)), closes [#WIK-16925](https://github.com/worktile/ai-table/issues/WIK-16925)
+* #WIK-18756 ai-table支持滚动到匹配的cell ([#634](https://github.com/worktile/ai-table/issues/634)) ([66e3d30](https://github.com/worktile/ai-table/commit/66e3d309a37351e9019eba30bddfa271182b2432)), closes [#WIK-18756](https://github.com/worktile/ai-table/issues/WIK-18756)
+
+
+
+## [0.1.39](https://github.com/worktile/ai-table/compare/0.1.38...0.1.39) (2025-08-15)
+
+
+### Bug Fixes
+
+* #WIK-18706 复选框筛选结果不正确 ([#624](https://github.com/worktile/ai-table/issues/624)) ([9ef63cb](https://github.com/worktile/ai-table/commit/9ef63cb2be59c0d4e0571752e0d3ad71d22df05f)), closes [#WIK-18706](https://github.com/worktile/ai-table/issues/WIK-18706)
+* #WIK-18711 【复选框】同类型粘贴至复制框应该可以成功 ([#626](https://github.com/worktile/ai-table/issues/626)) ([b7374f0](https://github.com/worktile/ai-table/commit/b7374f0530ff7fe04e69a107d287eb77366b91c6)), closes [#WIK-18711](https://github.com/worktile/ai-table/issues/WIK-18711)
+* #WIK-18712 没有权限、锁定的不能继续勾选、反勾选 ([#625](https://github.com/worktile/ai-table/issues/625)) ([816aeb9](https://github.com/worktile/ai-table/commit/816aeb9b43da6be3f6fb527c8f43909a356b756e)), closes [#WIK-18712](https://github.com/worktile/ai-table/issues/WIK-18712)
+* #WIK-18717 展开文本后无法拖动滚动条 ([#629](https://github.com/worktile/ai-table/issues/629)) ([438d17e](https://github.com/worktile/ai-table/commit/438d17e32c40b7796f11220a2457182245bf71c6)), closes [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717) [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717) [#WIK-18717](https://github.com/worktile/ai-table/issues/WIK-18717)
+* #WIK-18718 表格空白，页面崩溃，排查下原因 ([#627](https://github.com/worktile/ai-table/issues/627)) ([97693c0](https://github.com/worktile/ai-table/commit/97693c0894869686eeb826e84a8a3487183bcc94)), closes [#WIK-18718](https://github.com/worktile/ai-table/issues/WIK-18718)
+* #WIK-18719 【AItable】序号的线变细了 ([#631](https://github.com/worktile/ai-table/issues/631)) ([2b3d436](https://github.com/worktile/ai-table/commit/2b3d436b7a41a25787bb48ee041ce4d793a4236e)), closes [#WIK-18719](https://github.com/worktile/ai-table/issues/WIK-18719)
+* #WIK-18720 文字展开的高度不正确（高度没到指定值是，不应该出现滚动条） ([#628](https://github.com/worktile/ai-table/issues/628)) ([7fd3112](https://github.com/worktile/ai-table/commit/7fd31123708a8bec3d6165417544b4cdcce6f306)), closes [#WIK-18720](https://github.com/worktile/ai-table/issues/WIK-18720)
+* **grid:** #WIK-18714 冻结列拖拽拖拽滚动问题 ([#630](https://github.com/worktile/ai-table/issues/630)) ([391e7f6](https://github.com/worktile/ai-table/commit/391e7f60d83bae520d81de5775def229e793367b)), closes [#WIK-18714](https://github.com/worktile/ai-table/issues/WIK-18714)
+
+
+
+## [0.1.38](https://github.com/worktile/ai-table/compare/0.1.37...0.1.38) (2025-08-13)
+
+
+### Features
+
+* #WIK-18701 ai-talbe，复选框排序顺序调整 ([#622](https://github.com/worktile/ai-table/issues/622)) ([177d545](https://github.com/worktile/ai-table/commit/177d5452254b88aaa548738b14785066924c394a)), closes [#WIK-18701](https://github.com/worktile/ai-table/issues/WIK-18701)
+
+
+
+## [0.1.37](https://github.com/worktile/ai-table/compare/0.1.36...0.1.37) (2025-08-12)
+
+
+### Bug Fixes
+
+* #WIK-18678 【复选框】列更多菜单的复选框排序的文案不对 ([#618](https://github.com/worktile/ai-table/issues/618)) ([6394111](https://github.com/worktile/ai-table/commit/6394111e66ea1dd6a6ac1948313c4977ac27b8e5)), closes [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678) [#WIK-18678](https://github.com/worktile/ai-table/issues/WIK-18678)
+* #WIK-18691 【aitable】在一个长文本中键盘随便快速输入，快速输入过程中按一次回车，出现单元格跑版，跑版后，内容只剩下最后一行，其他的没了,见附件 ([#620](https://github.com/worktile/ai-table/issues/620)) ([041aa82](https://github.com/worktile/ai-table/commit/041aa825b547f7d8831bf2b311888ce0008dad81)), closes [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691) [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691) [#WIK-18691](https://github.com/worktile/ai-table/issues/WIK-18691)
+
+
+### Features
+
+* #WIK-17836 【AItable】支持键盘切换单元格 ([#617](https://github.com/worktile/ai-table/issues/617)) ([5eb9b03](https://github.com/worktile/ai-table/commit/5eb9b0388df26c3ee70e12fcefd3c1aaed1fb606)), closes [#WIK-17836](https://github.com/worktile/ai-table/issues/WIK-17836)
+* #WIK-18695 在有筛选时，编辑cell后，不符合条件需要有tooltip提示，整行失焦后才会被过滤。 ([#619](https://github.com/worktile/ai-table/issues/619)) ([6a5c668](https://github.com/worktile/ai-table/commit/6a5c66831bd3c33634b9b19d8878610b1d9bb8f8)), closes [#WIK-18695](https://github.com/worktile/ai-table/issues/WIK-18695)
+
+
+
 ## [0.1.36](https://github.com/worktile/ai-table/compare/0.1.35...0.1.36) (2025-08-08)
 
 

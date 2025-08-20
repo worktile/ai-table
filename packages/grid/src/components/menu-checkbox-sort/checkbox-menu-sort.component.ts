@@ -15,13 +15,13 @@ import { AITableFieldMenuItem } from '../../types';
         <thy-icon class="sort-icon" [thyIconName]="menu().icon!"></thy-icon>
         <div class="sort-state">
             @if (menu().type === 'sortByAsc') {
-                <label thyCheckbox [ngModel]="true" class="sort-checkbox"></label>
-                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
                 <label thyCheckbox [ngModel]="false" class="sort-checkbox"></label>
+                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                <label thyCheckbox [ngModel]="true" class="sort-checkbox"></label>
             } @else {
-                <label thyCheckbox [ngModel]="false" class="sort-checkbox"></label>
-                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
                 <label thyCheckbox [ngModel]="true" class="sort-checkbox"></label>
+                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                <label thyCheckbox [ngModel]="false" class="sort-checkbox"></label>
             }
         </div>
     `,
