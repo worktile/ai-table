@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.40](https://github.com/worktile/ai-table/compare/0.1.39...0.1.40) (2025-08-20)
+
+
+### Features
+
+* #WIK-16925 【AITable】添加行始终在底部展示，最新行始终展示在可视区域 ([#633](https://github.com/worktile/ai-table/issues/633)) ([7632133](https://github.com/worktile/ai-table/commit/7632133a990e3b846d30ae48d9279bd61b40967c)), closes [#WIK-16925](https://github.com/worktile/ai-table/issues/WIK-16925)
+* #WIK-18756 ai-table支持滚动到匹配的cell ([#634](https://github.com/worktile/ai-table/issues/634)) ([66e3d30](https://github.com/worktile/ai-table/commit/66e3d309a37351e9019eba30bddfa271182b2432)), closes [#WIK-18756](https://github.com/worktile/ai-table/issues/WIK-18756)
+
+
+
 ## [0.1.39](https://github.com/worktile/ai-table/compare/0.1.38...0.1.39) (2025-08-15)
 
 
