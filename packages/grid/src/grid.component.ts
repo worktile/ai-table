@@ -334,7 +334,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         effect(() => {
             if (this.aiKeywords() && this.aiTable.keywordsMatchedCellIndex() > -1) {
                 untracked(() => {
-                    this.scrollToMatchedCell(this.aiTable.keywordsMatchedCellIndex());
+                    this.scrollToMatchedCell();
                 });
             }
         });
@@ -444,7 +444,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.aiTable.keywordsMatchedCells.set(matchedCells);
     }
 
-    private scrollToMatchedCell(index: number) {
+    private scrollToMatchedCell() {
+        const index = this.aiTable.keywordsMatchedCellIndex();
         if (index < 0) {
             return;
         }
