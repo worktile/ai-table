@@ -15,6 +15,7 @@
             thyInput
             [(ngModel)]="searchKeywords"
             (blur)="tableService.setSearchKeywords(searchKeywords)"
+            (thyEnter)="tableService.setSearchKeywords(searchKeywords)"
             placeholder="搜索"
             style="width: 150px"
         />

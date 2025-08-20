@@ -76,7 +76,7 @@ import {
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
-import { ThyStopPropagationDirective } from 'ngx-tethys/shared';
+import { ThyEnterDirective, ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { renderRelationCell } from '../../../custom-field/relation/render';
 import { AITableCellRelationTicket } from '../../../custom-field/relation/hover-render';
 import { AITableCustomReferences } from '../../../types/grid';
@@ -110,7 +110,7 @@ export class MenuAddRecordsComponent {
 
 @Component({
     selector: 'demo-table-content',
-    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, ThyInputDirective],
+    imports: [ThyPopoverModule, ThyAction, FormsModule, ThySegment, ThySegmentItem, AITableGrid, ThyInputDirective, ThyEnterDirective],
     templateUrl: './content.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

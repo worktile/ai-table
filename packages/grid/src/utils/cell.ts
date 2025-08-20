@@ -205,6 +205,6 @@ export function selectCells(
     });
 }
 
-export function scrollToMatchedCell(aiTable: AITable, index: number = 1) {
+export function scrollToMatchedCell(aiTable: AITable, index: number = 0) {
     aiTable.keywordsMatchedCellIndex.set(index);
 }

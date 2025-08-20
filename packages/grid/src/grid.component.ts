@@ -332,7 +332,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
 
         effect(() => {
-            if (this.aiKeywords() && this.aiTable.keywordsMatchedCellIndex()) {
+            if (this.aiKeywords() && this.aiTable.keywordsMatchedCellIndex() > -1) {
                 untracked(() => {
                     this.scrollToMatchedCell(this.aiTable.keywordsMatchedCellIndex());
                 });
@@ -445,10 +445,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private scrollToMatchedCell(index: number) {
-        if (index - 1 < 0) {
+        if (index < 0) {
             return;
         }
-        const matchCell = Array.from(this.aiTable.keywordsMatchedCells())[index - 1];
+        const matchCell = Array.from(this.aiTable.keywordsMatchedCells())[index];
         if (!matchCell) {
             return;
         }

@@ -9,7 +9,8 @@ import {
     YjsAITable,
     getFieldsSizeMap,
     UndoManagerService,
-    sortViews
+    sortViews,
+    Actions
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -19,6 +20,9 @@ import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
 import {
     AITableFieldsSizeMap,
     AITableFieldType,
+    AITableFilterConditions,
+    AITableSearchOptions,
+    AITableSortOptions,
     AITableValue,
     AITableView,
     AITableViewFields,
@@ -231,8 +235,14 @@ export class TableService {
     }
 
     setSearchKeywords(keywords: string) {
+        const settings: Partial<AITableSearchOptions & AITableFilterConditions & AITableSortOptions> = {
+            ...(this.activeView().settings || {}),
+            keywords: keywords
+        };
+        Actions.setView(this.aiTable, { settings }, [this.activeViewId()]);
+
         this.keywords.set(keywords);
+        scrollToMatchedCell(this.aiTable, -1);
         scrollToMatchedCell(this.aiTable, 0);
-        scrollToMatchedCell(this.aiTable, 1);
     }
 }
