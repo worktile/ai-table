@@ -452,10 +452,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (!matchCell) {
             return;
         }
-        const { isCellCanFullRender, offsetY, offsetX } = this.coordinate().getCellIsFullRenderInfo(
-            this.aiTable,
-            matchCell.split(':') as AIRecordFieldIdPath
-        );
+        const matchCellPath: AIRecordFieldIdPath = matchCell.split(':') as AIRecordFieldIdPath;
+        const { isCellCanFullRender, offsetY, offsetX } = this.coordinate().getCellIsFullRenderInfo(this.aiTable, matchCellPath);
+        setActiveCell(this.aiTable, matchCellPath);
         if (!isCellCanFullRender) {
             this.scrollAction({
                 deltaX: offsetX,
