@@ -468,6 +468,21 @@ export class DemoTableContent {
         }
     }
 
+    onRowGroupCollapseClick(groupId: string) {
+        const view = this.tableService.activeView();
+        if (!view?.settings?.groupCollapse) {
+            view.settings!.groupCollapse = [groupId];
+        } else {
+            if (view.settings!.groupCollapse.includes(groupId)) {
+                view.settings!.groupCollapse.splice(view!.settings!.groupCollapse.indexOf(groupId), 1);
+            } else {
+                view.settings!.groupCollapse.push(groupId);
+            }
+        }
+
+        this.tableService.views.set([...this.tableService.views()]);
+    }
+
     setValue() {
         const value = this.dataMode() === 'default' ? getCanvasDefaultValue() : getBigData();
         this.tableService.buildRenderRecords(value.records);

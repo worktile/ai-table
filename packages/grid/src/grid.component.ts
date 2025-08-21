@@ -36,6 +36,7 @@ import {
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
+    AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
@@ -55,6 +56,7 @@ import { AITableGridFieldService } from './services/field.service';
 import {
     AITableAreaType,
     AITableContextMenuItem,
+    AITableLinearRowGroupTab,
     AITableMouseDownType,
     AITableRendererConfig,
     AITableSelectAllState,
@@ -770,6 +772,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     }
                 }
                 break;
+            case AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON: {
+                const { rowIndex: pointRowIndex } = context!.pointPosition();
+                const pointLinearRows = context!.linearRows()[pointRowIndex] as AITableLinearRowGroupTab;
+                this.aiRowGroupCollapseClick.emit(pointLinearRows.groupId);
+                break;
+            }
         }
         return;
     }

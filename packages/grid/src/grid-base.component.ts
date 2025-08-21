@@ -112,6 +112,8 @@ export class AITableGridBase implements OnInit {
 
     aiDbClick = output<KoEventObjectOutput<MouseEvent>>();
 
+    aiRowGroupCollapseClick = output<string>();
+
     fieldMenus: Signal<AITableFieldMenuItem[]> = computed(() => {
         const fieldMenusFn = this.aiFieldConfig()?.fieldMenus;
         if (fieldMenusFn && this.aiTable) {
