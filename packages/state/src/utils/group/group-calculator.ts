@@ -52,6 +52,7 @@ export class GroupCalculator {
         });
     }
 
+    // 检测断点
     private detectGroupBreakpoints(records: AITableViewRecords, fields: AITableViewFields): void {
         this.groupBreakpoints.clear();
 
@@ -97,6 +98,7 @@ export class GroupCalculator {
         });
     }
 
+    // 添加断点
     private addBreakpoint(fieldId: string, recordIndex: number, _depth: number): void {
         if (!this.groupBreakpoints.has(fieldId)) {
             this.groupBreakpoints.set(fieldId, []);
@@ -104,6 +106,7 @@ export class GroupCalculator {
         this.groupBreakpoints.get(fieldId)!.push(recordIndex);
     }
 
+    // 生成GroupLinearRows
     private generateLinearRows(records: AITableViewRecords, fields: AITableViewFields): AITableLinearRow[] {
         const linearRows: AITableLinearRow[] = [];
         const fieldsMap = new Map(fields.map((field) => [field._id, field]));
@@ -112,7 +115,7 @@ export class GroupCalculator {
         let currentGroupIds: string[] = [];
         let currentGroupRecordIndices: number[] = []; // 记录当前分组中每个记录的原始索引
 
-        // 添加空白行开始
+        // 开始添加一个空白行
         linearRows.push({
             type: AITableRowType.blank,
             _id: nanoid(),
@@ -204,6 +207,7 @@ export class GroupCalculator {
         }
     }
 
+    // 生成分组标签
     private generateGroupTabRows(
         record: AITableViewRecord,
         recordIndex: number,
@@ -239,13 +243,14 @@ export class GroupCalculator {
         return groupTabRows;
     }
 
+    // 生成分组ID
     private generateGroupId(fieldId: string, depth: number, breakpointIndex: number): string {
+        // 通过字段ID、深度和断点索引确保唯一
         return `${fieldId}_${depth}_${breakpointIndex}`;
     }
 
     private calculateGroupRecordCount(_record: AITableViewRecord, _recordIndex: number, _depth: number): number {
         // TODO: 实现精确的分组记录数计算
-        // 这里需要计算从当前断点到下一个同级分组断点之间的记录数
         return 1;
     }
 
@@ -290,10 +295,7 @@ export class GroupCalculator {
         return true;
     }
 
-    getCollapseState(): string[] {
-        return Array.from(this.groupCollapseState);
-    }
-
+    // 过滤可见的分组标签
     private filterVisibleGroupTabs(groupTabRows: AITableLinearRowGroupTab[]): AITableLinearRowGroupTab[] {
         const visibleRows: AITableLinearRowGroupTab[] = [];
 
