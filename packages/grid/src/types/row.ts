@@ -16,14 +16,13 @@ export type AITableCellMetaData = {
 
 export type AITableCellMetaDataMap = Record<number, AITableCellMetaData>;
 
-export type AITableLinearRowAdd = {
-    _id: string;
-    type: AITableRowType.add;
-};
-
 export type AITableLinearRowBase = {
     _id: string;
     depth?: number;
+};
+
+export type AITableLinearRowAdd = AITableLinearRowBase & {
+    type: AITableRowType.add;
 };
 
 export type AITableLinearRowRecord = AITableLinearRowBase & {

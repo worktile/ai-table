@@ -141,6 +141,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
                         desc: false
                     }
                 ]
+                // groupCollapse: ['column-1_0_0'] // 折叠组测试
             };
         } else {
             view[0].settings = {};
