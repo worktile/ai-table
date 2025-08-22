@@ -74,7 +74,7 @@ import { getFileThumbnailSvgString } from '../../utils/file';
  */
 export class CellDrawer extends Drawer {
     // 样式初始化
-    public initStyle(field: AITableField, styleProps: { fontWeight: any }): void | null {
+    public initStyle(field: AITableField, styleProps: { fontWeight?: any }): void | null {
         const { type: fieldType } = field;
         const { fontWeight = DEFAULT_FONT_WEIGHT } = styleProps;
 

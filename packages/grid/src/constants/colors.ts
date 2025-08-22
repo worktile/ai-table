@@ -3,9 +3,12 @@ export const Colors = {
     gray100: '#f5f5f5',
     gray200: '#eee',
     gray300: '#ddd',
-    gray800: '#333',
+    gray400: '#cacaca',
+    gray500: '#aaa',
     gray600: '#999',
     gray700: '#666',
+    gray800: '#333',
+    gray900: '#212529',
     white: '#fff',
     black: '#000',
     transparent: 'transparent',
@@ -17,3 +20,5 @@ export const Colors = {
     success: '#73d897',
     danger: '#ff5b57'
 };
+// #DDDDDD;
+// #F7F7F7;

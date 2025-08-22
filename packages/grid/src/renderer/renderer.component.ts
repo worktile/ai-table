@@ -38,6 +38,7 @@ import {
     AI_TABLE_OFFSET,
     Colors
 } from '../constants';
+import { AITableFrozenGroups } from './components/group/frozen-groups.component';
 
 Konva.pixelRatio = 2;
 
@@ -61,7 +62,8 @@ Konva.pixelRatio = 2;
         AITableFillHandle,
         AITableFieldStats,
         AITableBackground,
-        AITableFrozenFieldShadow
+        AITableFrozenFieldShadow,
+        AITableFrozenGroups
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

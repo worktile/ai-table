@@ -1,6 +1,6 @@
 import { AI_TABLE_CELL, AI_TABLE_OFFSET, Colors } from '../constants';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableRowType } from '../types';
+import { AITableCellsConfig, AITableLinearRow, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
 import { generateTargetName } from './common';
 
@@ -35,7 +35,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
             }
 
             const row = linearRows()[rowIndex];
-            const { _id: recordId, type } = row;
+            const { _id: recordId, type, depth = 0 } = row;
             if (type !== AITableRowType.record) {
                 continue;
             }
@@ -45,7 +45,8 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
             const { width, offset } = getCellHorizontalPosition({
                 columnWidth,
                 columnIndex,
-                columnCount
+                columnCount,
+                depth
             });
 
             const height = rowHeight - AI_TABLE_OFFSET * 4;

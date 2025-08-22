@@ -24,6 +24,8 @@ export class Layout extends Drawer {
 
     protected containerWidth = 0;
 
+    protected frozenColumnCount = 0;
+
     protected rowHeadWidth = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
 
     protected hiddenIndexColumn = false;
@@ -45,7 +47,8 @@ export class Layout extends Drawer {
         rowHeadWidth,
         hiddenIndexColumn,
         hiddenRowDrag,
-        readonly
+        readonly,
+        frozenColumnCount
     }: AITableLayout) {
         this.x = x;
         this.y = y;
@@ -59,11 +62,17 @@ export class Layout extends Drawer {
         this.hiddenIndexColumn = hiddenIndexColumn;
         this.hiddenRowDrag = hiddenRowDrag;
         this.readonly = readonly;
+        this.frozenColumnCount = frozenColumnCount;
     }
 
     // 当前单元格是否是行的第一列
     protected get isFirst() {
         return this.columnIndex === 0;
+    }
+
+    // 当前单元格是否是行的第一列
+    protected get isLastFrozenColumn() {
+        return this.columnIndex === this.frozenColumnCount - 1;
     }
 
     // 当前单元格是否是行的最后一列
