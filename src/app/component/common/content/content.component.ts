@@ -470,13 +470,13 @@ export class DemoTableContent {
 
     onRowGroupCollapseClick(groupId: string) {
         const view = this.tableService.activeView();
-        if (!view?.settings?.groupCollapse) {
-            view.settings!.groupCollapse = [groupId];
+        if (!view?.settings?.collapsedGroupIds) {
+            view.settings!.collapsedGroupIds = [groupId];
         } else {
-            if (view.settings!.groupCollapse.includes(groupId)) {
-                view.settings!.groupCollapse.splice(view!.settings!.groupCollapse.indexOf(groupId), 1);
+            if (view.settings!.collapsedGroupIds.includes(groupId)) {
+                view.settings!.collapsedGroupIds.splice(view!.settings!.collapsedGroupIds.indexOf(groupId), 1);
             } else {
-                view.settings!.groupCollapse.push(groupId);
+                view.settings!.collapsedGroupIds.push(groupId);
             }
         }
 

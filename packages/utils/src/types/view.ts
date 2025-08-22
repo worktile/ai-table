@@ -67,11 +67,11 @@ export interface AITableGroupField {
     desc: boolean;
 }
 
-export type AITableGroupInfo = AITableGroupField[];
+export type AITableGroups = AITableGroupField[];
 
 export interface AITableGroupOptions {
-    groups?: AITableGroupInfo;
-    groupCollapse?: string[]; // 折叠的分组ID列表
+    groups?: AITableGroups;
+    collapsedGroupIds?: string[]; // 折叠的分组ID列表
 }
 
 export type AITableViews = AITableView[];

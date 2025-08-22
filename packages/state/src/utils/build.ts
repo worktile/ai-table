@@ -31,10 +31,11 @@ export function buildGroupLinearRows(
     if (activeView?.settings?.groups?.length && fields && aiTable) {
         try {
             const groupInfo = activeView.settings?.groups!;
-            const collapseState = activeView.settings?.groupCollapse;
+            const collapseState = activeView.settings?.collapsedGroupIds;
 
             const calculator = new GroupCalculator(groupInfo, aiTable, collapseState);
-            return calculator.calculateLinearRows(records, fields);
+            const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
+            return calculator.calculateLinearRows(filteredRecords, fields);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
         }
