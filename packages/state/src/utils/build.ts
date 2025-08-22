@@ -34,9 +34,7 @@ export function buildGroupLinearRows(
             const collapseState = activeView.settings?.groupCollapse;
 
             const calculator = new GroupCalculator(groupInfo, aiTable, collapseState);
-            const linearRows = calculator.calculateLinearRows(records, fields);
-            console.log('buildGroupLinearRows=', linearRows);
-            return linearRows;
+            return calculator.calculateLinearRows(records, fields);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
         }
