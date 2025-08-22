@@ -70,7 +70,7 @@ export class Layout extends Drawer {
         return this.columnIndex === 0;
     }
 
-    // 当前单元格是否是行的第一列
+    // 当前单元格是否是锁定列的最后一列
     protected get isLastFrozenColumn() {
         return this.columnIndex === this.frozenColumnCount - 1;
     }
