@@ -30,10 +30,10 @@ export function buildGroupLinearRows(
 ) {
     if (activeView?.settings?.groups?.length && fields && aiTable) {
         try {
-            const groupInfo = activeView.settings?.groups!;
-            const collapseState = activeView.settings?.collapsedGroupIds;
+            const groups = activeView.settings?.groups!;
+            const collapsedGroupIds = activeView.settings?.collapsedGroupIds;
 
-            const calculator = new GroupCalculator(groupInfo, aiTable, collapseState);
+            const calculator = new GroupCalculator(groups, aiTable, collapsedGroupIds);
             const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
             return calculator.calculateLinearRows(filteredRecords, fields);
         } catch (error) {

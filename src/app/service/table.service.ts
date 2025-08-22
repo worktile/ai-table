@@ -129,9 +129,7 @@ export class TableService {
 
     aiBuildGroupLinearRowsFn: Signal<() => AITableLinearRow[] | null> = computed(() => {
         return () => {
-            console.log('buildGroupLinearRows111');
             if (this.isGrouping()) {
-                console.log('buildGroupLinearRows222');
                 const records = this.records();
                 const fields = this.fields();
                 const activeView = this.activeView();

@@ -4,13 +4,13 @@ import { AITableLinearRow, AITableLinearRowGroup, AITableRowType } from '@ai-tab
 import { nanoid } from 'nanoid';
 
 export class GroupCalculator {
-    private group: AITableGroups;
+    private groups: AITableGroups;
     private groupBreakpoints: Map<string, number[]>;
     private groupCollapseState: Set<string>;
     private aiTable: AITable;
 
-    constructor(groupInfo: AITableGroups, aiTable: AITable, collapseState?: string[]) {
-        this.group = groupInfo;
+    constructor(groups: AITableGroups, aiTable: AITable, collapseState?: string[]) {
+        this.groups = groups;
         this.groupBreakpoints = new Map();
         this.groupCollapseState = new Set(collapseState || []);
         this.aiTable = aiTable;
@@ -29,7 +29,7 @@ export class GroupCalculator {
 
         return [...records].sort((record1, record2) => {
             return (
-                this.group.reduce((result, groupField) => {
+                this.groups.reduce((result, groupField) => {
                     if (result !== 0) return result;
 
                     const field = fieldsMap.get(groupField.fieldId);
@@ -64,12 +64,12 @@ export class GroupCalculator {
         records.forEach((record, index) => {
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
-                this.group.forEach((groupField, groupIndex) => {
+                this.groups.forEach((groupField, groupIndex) => {
                     this.addBreakpoint(groupField.fieldId, index, groupIndex);
                 });
             } else {
                 // 检查每个分组字段是否发生变化
-                this.group.forEach((groupField, groupIndex) => {
+                this.groups.forEach((groupField, groupIndex) => {
                     const field = fieldsMap.get(groupField.fieldId);
                     if (!field) return;
 
@@ -86,8 +86,8 @@ export class GroupCalculator {
 
                     if (compareResult !== 0) {
                         // 值发生变化，从当前层级开始的所有层级都是断点
-                        for (let i = groupIndex; i < this.group.length; i++) {
-                            this.addBreakpoint(this.group[i].fieldId, index, i);
+                        for (let i = groupIndex; i < this.groups.length; i++) {
+                            this.addBreakpoint(this.groups[i].fieldId, index, i);
                         }
                         return;
                     }
@@ -192,7 +192,7 @@ export class GroupCalculator {
                     type: AITableRowType.record,
                     _id: record._id,
                     displayIndex: groupDisplayRowIndex,
-                    depth: this.group.length
+                    depth: this.groups.length
                 });
             }
         });
@@ -202,7 +202,7 @@ export class GroupCalculator {
             linearRows.push({
                 type: AITableRowType.add,
                 _id: '',
-                depth: this.group.length
+                depth: this.groups.length
             });
         }
     }
@@ -215,7 +215,7 @@ export class GroupCalculator {
     ): AITableLinearRowGroup[] {
         const groupTabRows: AITableLinearRowGroup[] = [];
 
-        this.group.forEach((groupField, depth) => {
+        this.groups.forEach((groupField, depth) => {
             const breakpoints = this.groupBreakpoints.get(groupField.fieldId) || [];
 
             if (breakpoints.includes(recordIndex)) {
@@ -255,8 +255,8 @@ export class GroupCalculator {
     }
 
     private shouldShowRecord(_record: AITableViewRecord, recordIndex: number): boolean {
-        for (let depth = 0; depth < this.group.length; depth++) {
-            const groupField = this.group[depth];
+        for (let depth = 0; depth < this.groups.length; depth++) {
+            const groupField = this.groups[depth];
             const breakpoints = this.groupBreakpoints.get(groupField.fieldId) || [];
 
             // 找到当前记录所属的分组断点
