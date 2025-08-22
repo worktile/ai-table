@@ -51,10 +51,12 @@
             (aiMoveRecords)="dragMoveRecords($event)"
             (aiTableInitialized)="aiTableInitialized($event)"
             [aiBuildRenderDataFn]="tableService.aiBuildRenderDataFn()"
+            [aiBuildGroupLinearRowsFn]="tableService.aiBuildGroupLinearRowsFn()"
             [aiGetI18nTextByKey]="getI18nTextByKey"
             [aiFrozenColumnCountFn]="calculateFrozenCount"
             (aiClick)="onClick($event)"
             (aiDbClick)="onDbClick($event)"
+            (aiRowGroupCollapseClick)="onRowGroupCollapseClick($event)"
         ></ai-table-grid>
     </div>
 }

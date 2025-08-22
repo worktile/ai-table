@@ -10,7 +10,8 @@ import {
     getFieldsSizeMap,
     UndoManagerService,
     sortViews,
-    Actions
+    Actions,
+    buildGroupLinearRows
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -29,7 +30,7 @@ import {
     AITableViewRecords,
     SharedType
 } from '@ai-table/utils';
-import { scrollToMatchedCell } from '@ai-table/grid';
+import { scrollToMatchedCell, AITableLinearRow } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -72,6 +73,8 @@ export class TableService {
     sharedType!: SharedType | null;
 
     activeViewId: WritableSignal<string> = signal('');
+
+    isGrouping: WritableSignal<boolean> = signal(false);
 
     router = inject(Router);
 
@@ -121,6 +124,19 @@ export class TableService {
                 fields: this.renderFields(),
                 fieldsSizeMap: this.renderFieldsSizeMap()
             };
+        };
+    });
+
+    aiBuildGroupLinearRowsFn: Signal<() => AITableLinearRow[] | null> = computed(() => {
+        return () => {
+            if (this.isGrouping()) {
+                const records = this.records();
+                const fields = this.fields();
+                const activeView = this.activeView();
+
+                return buildGroupLinearRows(this.aiTable, records, fields, activeView as AITableView);
+            }
+            return null;
         };
     });
 

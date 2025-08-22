@@ -3,8 +3,19 @@ import { AITableGridData, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/row';
 import { AITableFields, AITableRecords } from '@ai-table/utils';
 
-export const buildGridLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
-    const linearRows: AITableLinearRow[] = [];
+export const buildGridLinearRows = (
+    visibleRecords: AITableRecords,
+    isAddingVisible: boolean = true,
+    aiTable?: AITable,
+    aiBuildGroupLinearRowsFn?: (aiTable: AITable) => AITableLinearRow[] | null
+): AITableLinearRow[] => {
+    let linearRows: AITableLinearRow[] = [];
+    if (aiBuildGroupLinearRowsFn) {
+        const groupLinearRows = aiBuildGroupLinearRowsFn(aiTable!);
+        if (groupLinearRows) {
+            return groupLinearRows;
+        }
+    }
     let displayRowIndex = 0;
     [...visibleRecords, { _id: '' }].forEach((row) => {
         if (row._id) {
