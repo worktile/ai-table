@@ -1,5 +1,6 @@
 import { AITableGroups, ActionName, SetViewAction, AITableView } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
+import { AI_TABLE_GROUP_MAX_LEVEL } from '@ai-table/grid';
 
 function setViewGroup(aiTable: AIViewTable, groups: AITableGroups | null) {
     const viewId = aiTable.activeViewId();
@@ -22,7 +23,7 @@ function setViewGroup(aiTable: AIViewTable, groups: AITableGroups | null) {
     aiTable.apply(operation);
 }
 
-function setGroupCollapse(aiTable: AIViewTable, collapseState: string[]) {
+function setCollapsedGroup(aiTable: AIViewTable, collapseState: string[]) {
     const viewId = aiTable.activeViewId();
     const view = aiTable.views().find((v) => v._id === viewId);
     if (!view) return;
@@ -51,7 +52,7 @@ function toggleGroupCollapse(aiTable: AIViewTable, groupId: string) {
     const currentCollapse = view.settings?.collapsedGroupIds || [];
     const newCollapse = currentCollapse.includes(groupId) ? currentCollapse.filter((id) => id !== groupId) : [...currentCollapse, groupId];
 
-    setGroupCollapse(aiTable, newCollapse);
+    setCollapsedGroup(aiTable, newCollapse);
 }
 
 // 添加分组
@@ -67,8 +68,8 @@ function addGroupField(aiTable: AIViewTable, fieldId: string, desc: boolean = fa
     }
 
     // 层级限制
-    if (currentGroups.length >= 3) {
-        throw new Error('The maximum number of groups is 3.');
+    if (currentGroups.length >= AI_TABLE_GROUP_MAX_LEVEL) {
+        throw new Error(`The maximum number of groups is ${AI_TABLE_GROUP_MAX_LEVEL}.`);
     }
 
     const newGroups = [...currentGroups, { fieldId, desc }];
@@ -122,7 +123,7 @@ function clearAllGroups(aiTable: AIViewTable) {
 
 export const GroupActions = {
     setViewGroup,
-    setGroupCollapse,
+    setCollapsedGroup,
     toggleGroupCollapse,
     addGroupField,
     removeGroupField,
