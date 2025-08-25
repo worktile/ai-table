@@ -124,36 +124,13 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     handleGroupChange(e: any) {
         this.group = e.target.checked;
-        const activeView = this.tableService.activeView();
-        // TODO: 测试代码，实现action后删除
         if (this.group) {
-            activeView.settings = {
-                ...activeView.settings,
-                groups: [
-                    {
-                        fieldId: 'column-1',
-                        desc: false
-                    },
-                    {
-                        fieldId: 'column-2',
-                        desc: false
-                    },
-                    {
-                        fieldId: 'column-4',
-                        desc: false
-                    }
-                ]
-                // groupCollapse: ['column-1_0_0'] // 折叠组测试
-            };
+            Actions.addGroupField(this.tableService.aiTable, 'column-1', false);
+            Actions.addGroupField(this.tableService.aiTable, 'column-2', false);
+            Actions.addGroupField(this.tableService.aiTable, 'column-4', false);
         } else {
-            activeView.settings = {
-                ...activeView.settings,
-                groups: []
-            };
+            Actions.clearAllGroups(this.tableService.aiTable);
         }
-        this.tableService.setActiveView('view1');
-        this.tableService.views.set([...this.tableService.views()]);
-        this.tableService.isGrouping.set(this.group);
     }
 
     updateValue() {

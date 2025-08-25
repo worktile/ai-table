@@ -74,8 +74,6 @@ export class TableService {
 
     activeViewId: WritableSignal<string> = signal('');
 
-    isGrouping: WritableSignal<boolean> = signal(false);
-
     router = inject(Router);
 
     activeView = computed(() => {
@@ -129,10 +127,10 @@ export class TableService {
 
     aiBuildGroupLinearRowsFn: Signal<() => AITableLinearRow[] | null> = computed(() => {
         return () => {
-            if (this.isGrouping()) {
+            const activeView = this.activeView();
+            if (activeView?.settings?.groups?.length) {
                 const records = this.records();
                 const fields = this.fields();
-                const activeView = this.activeView();
 
                 return buildGroupLinearRows(this.aiTable, records, fields, activeView as AITableView);
             }
