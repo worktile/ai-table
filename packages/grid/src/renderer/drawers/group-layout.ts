@@ -16,7 +16,7 @@ import { cellDrawer } from './cell-drawer';
 import { AITable } from '../../utils';
 import { hexToRgb } from 'ngx-tethys/util';
 
-export class GroupTabLayout extends Layout {
+export class GroupLayout extends Layout {
     protected override renderAddFieldBlank({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>): void {
         super.renderAddFieldBlank({ isHoverRow, isCheckedRow });
         const rowHeight = this.rowHeight;
@@ -121,4 +121,4 @@ export class GroupTabLayout extends Layout {
     }
 }
 
-export const groupTabLayout = new GroupTabLayout();
+export const groupLayout = new GroupLayout();

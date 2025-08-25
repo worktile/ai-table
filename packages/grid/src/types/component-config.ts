@@ -82,7 +82,7 @@ export interface AITableFieldStatConfig {
     field: AITableField;
 }
 
-export interface AITableGroupOptionConfig {
+export interface AITableGroupConfig {
     aiTable: AITable;
     coordinate: Coordinate;
     columnIndex: number;

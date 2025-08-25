@@ -9,7 +9,7 @@ import {
     AITableFieldStatsConfig,
     AITableFieldStatConfig,
     AITableGroupOptionsConfig,
-    AITableGroupOptionConfig,
+    AITableGroupConfig,
     AITableRowType,
     AITableCellsConfig
 } from '../../types';
@@ -19,7 +19,7 @@ export const createGroupCells = (config: AITableCellsConfig) => {
     const { coordinate, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, aiTable, actions, readonly } = config;
     const linearRows = aiTable.context?.linearRows()!;
     const { columnCount } = coordinate;
-    const groupOptions: AITableGroupOptionConfig[] = [];
+    const groupOptions: AITableGroupConfig[] = [];
     for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         if (rowIndex > columnCount - 1) break;
         if (rowIndex < 0) continue;
@@ -40,7 +40,7 @@ export const createGroupCells = (config: AITableCellsConfig) => {
                 depth
             });
             const x = coordinate.getColumnOffset(columnIndex);
-            const groupOption: AITableGroupOptionConfig = {
+            const groupOption: AITableGroupConfig = {
                 aiTable,
                 coordinate,
                 columnIndex,

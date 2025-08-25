@@ -20,5 +20,3 @@ export const Colors = {
     success: '#73d897',
     danger: '#ff5b57'
 };
-// #DDDDDD;
-// #F7F7F7;

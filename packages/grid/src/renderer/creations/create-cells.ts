@@ -13,7 +13,7 @@ import { FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../ut
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
-import { groupTabLayout } from '../drawers/group_tab_layout';
+import { groupLayout } from '../drawers/group-layout';
 
 /**
  * 绘制单元格内容的函数
@@ -33,9 +33,11 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
-    groupTabLayout.initCtx(ctx as CanvasRenderingContext2D);
+    groupLayout.initCtx(ctx as CanvasRenderingContext2D);
 
     const coverCell = getCoverCell(aiTable);
+
+    const frozenColumnCount = aiTable.context?.frozenColumnCount() || 1;
 
     // 遍历列, 确定在哪些列上绘制单元格
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
@@ -80,7 +82,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
                         readonly: aiTable.context?.readonly?.(),
-                        frozenColumnCount: aiTable.context?.frozenColumnCount() || 1
+                        frozenColumnCount
                     });
                     addRowLayout.render({
                         isHoverRow,
@@ -109,7 +111,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
                         readonly: aiTable.context?.readonly?.(),
-                        frozenColumnCount: aiTable.context?.frozenColumnCount() || 1
+                        frozenColumnCount
                     });
                     recordRowLayout.render({
                         row,
@@ -176,7 +178,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                 case AITableRowType.group: {
                     const fieldId = row.fieldId;
                     const field = aiTable.fieldsMap()[fieldId];
-                    groupTabLayout.init({
+                    groupLayout.init({
                         x,
                         y,
                         rowIndex,
@@ -189,7 +191,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
                         readonly: aiTable.context?.readonly?.(),
-                        frozenColumnCount: aiTable.context?.frozenColumnCount() || 1
+                        frozenColumnCount
                     });
 
                     const { width, offset } = getCellHorizontalPosition({
@@ -221,7 +223,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         isCoverCell: false
                     };
 
-                    groupTabLayout.render(render as AITableRender, {
+                    groupLayout.render(render as AITableRender, {
                         row: row as AITableLinearRowGroup,
                         isHoverRow: isHoverRecord(isHover, targetName),
                         isCheckedRow: isSelectedRecord(recordId, aiTable)

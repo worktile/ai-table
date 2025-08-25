@@ -1,19 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import _ from 'lodash';
-import { KoContainer } from '../../../angular-konva';
-import { AITableCellsConfig, AITableGroupOptionsConfig, AITableIconConfig } from '../../../types';
+import { AITableCellsConfig, AITableIconConfig } from '../../../types';
 import { createGroupCells } from '../../creations/create-group-options';
 import { generateTargetName } from '../../../utils';
-import {
-    AI_TABLE_ACTION_COMMON_SIZE,
-    AI_TABLE_FIELD_HEAD_MORE,
-    AI_TABLE_ICON_COMMON_SIZE,
-    AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
-    AngleDownPath,
-    AngleRightPath,
-    Colors
-} from '../../../constants';
+import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON, AngleDownPath, AngleRightPath } from '../../../constants';
 import { AITableIcon } from '../icon.component';
 
 @Component({
