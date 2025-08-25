@@ -65,12 +65,6 @@ export class GroupLayout extends Layout {
                 radius: 2
             });
         }
-        // this.path({
-        //     data: isCollapsed ? AngleRightPath : AngleDownPath,
-        //     x: render.x + AI_TABLE_CELL_PADDING,
-        //     y: this.y + (this.rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
-        //     fill: this.colors.gray600
-        // });
         const iconContainerWidth = AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
         if (!isEmpty(groupValue)) {
             cellDrawer.initStyle(field, style);
@@ -87,8 +81,6 @@ export class GroupLayout extends Layout {
     }
 
     private renderCommonCellBorder({ style }: Pick<AITableCell, 'style'>) {
-        // if (this.isFirst || this.isLast) return;
-
         const { fill, stroke } = style || {};
         const colors = AITable.getColors();
 

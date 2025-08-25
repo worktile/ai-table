@@ -19,7 +19,7 @@ export const createGroupCells = (config: AITableCellsConfig) => {
     const { coordinate, rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, aiTable, actions, readonly } = config;
     const linearRows = aiTable.context?.linearRows()!;
     const { columnCount } = coordinate;
-    const groupOptions: AITableGroupConfig[] = [];
+    const groups: AITableGroupConfig[] = [];
     for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         if (rowIndex > columnCount - 1) break;
         if (rowIndex < 0) continue;
@@ -40,7 +40,7 @@ export const createGroupCells = (config: AITableCellsConfig) => {
                 depth
             });
             const x = coordinate.getColumnOffset(columnIndex);
-            const groupOption: AITableGroupConfig = {
+            const group: AITableGroupConfig = {
                 aiTable,
                 coordinate,
                 columnIndex,
@@ -52,8 +52,8 @@ export const createGroupCells = (config: AITableCellsConfig) => {
                 readonly
             };
 
-            groupOptions.push(groupOption);
+            groups.push(group);
         }
     }
-    return groupOptions;
+    return groups;
 };
