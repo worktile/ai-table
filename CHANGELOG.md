@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.40-0](https://github.com/worktile/ai-table/compare/0.1.39...0.1.40-0) (2025-08-25)
+
+
+### Bug Fixes
+
+* #WIK-18795 【rc】多维表格，文字输入框，基本写不进去内容 ([7dd631a](https://github.com/worktile/ai-table/commit/7dd631a05c68253063afa68da39c617e335db36e)), closes [#WIK-18795](https://github.com/worktile/ai-table/issues/WIK-18795)
+
+
+
 ## [0.1.39](https://github.com/worktile/ai-table/compare/0.1.38...0.1.39) (2025-08-15)
 
 
