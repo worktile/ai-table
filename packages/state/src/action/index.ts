@@ -3,13 +3,15 @@ import { GeneralActions } from './general';
 import { PositionsActions } from './position';
 import { RecordActions } from './record';
 import { ViewActions } from './view';
+import { GroupActions } from './group';
 
 export const Actions = {
     ...GeneralActions,
     ...RecordActions,
     ...FieldActions,
     ...ViewActions,
-    ...PositionsActions
+    ...PositionsActions,
+    ...GroupActions
 };
 
 export { buildSetRecordPositionsActon } from './position';
