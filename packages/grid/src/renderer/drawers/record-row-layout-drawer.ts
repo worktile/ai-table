@@ -7,7 +7,7 @@ import {
 } from '../../constants';
 import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from '../../constants/text';
 import { AITable } from '../../core';
-import { AITableCell } from '../../types';
+import { AITableCell, AITableLinearRowRecord } from '../../types';
 import { Layout } from './layout-drawer';
 
 /**
@@ -57,7 +57,7 @@ export class RecordRowLayout extends Layout {
                 this.text({
                     x: (this.rowHeadWidth + dragOccupyWidth) / 2,
                     y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
-                    text: String(row.displayIndex),
+                    text: String((row as AITableLinearRowRecord).displayIndex),
                     textAlign: DEFAULT_TEXT_ALIGN_CENTER,
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
                 });

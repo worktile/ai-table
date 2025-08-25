@@ -2,16 +2,18 @@ import { AIRecordFieldIdPath } from '@ai-table/utils';
 import {
     AI_TABLE_FIELD_HEAD,
     AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_ADD_BUTTON,
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableCellsDrawerConfig, AITableRender, AITableRenderStyle, AITableRowType } from '../../types';
+import { AITableCellsDrawerConfig, AITableLinearRowGroup, AITableRender, AITableRenderStyle, AITableRowType } from '../../types';
 import { FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';
 import { recordRowLayout } from '../drawers/record-row-layout-drawer';
+import { groupLayout } from '../drawers/group-layout';
 
 /**
  * 绘制单元格内容的函数
@@ -25,12 +27,17 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     const colors = AITable.getColors();
     const visibleColumns = AITable.getVisibleFields(aiTable);
 
+    const linearRows = aiTable.context?.linearRows();
+
     // 初始化绘图上下文, 为后续的绘制操作做准备
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
     recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
+    groupLayout.initCtx(ctx as CanvasRenderingContext2D);
 
     const coverCell = getCoverCell(aiTable);
+
+    const frozenColumnCount = aiTable.context?.frozenColumnCount() || 1;
 
     // 遍历列, 确定在哪些列上绘制单元格
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
@@ -53,7 +60,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > rowCount - 1) break;
             const row = context.linearRows()[rowIndex];
-            const { _id: recordId, type } = row;
+            const { _id: recordId, type, depth = 0 } = row;
             const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
             const { rowIndex: pointRowIndex, targetName } = context.pointPosition();
             const isHover = pointRowIndex === rowIndex;
@@ -74,7 +81,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
-                        readonly: aiTable.context?.readonly?.()
+                        readonly: aiTable.context?.readonly?.(),
+                        frozenColumnCount
                     });
                     addRowLayout.render({
                         isHoverRow,
@@ -83,6 +91,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     });
                     break;
                 }
+
                 case AITableRowType.record: {
                     const fieldId = field._id;
                     const cell: AIRecordFieldIdPath = [recordId, fieldId];
@@ -101,7 +110,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
-                        readonly: aiTable.context?.readonly?.()
+                        readonly: aiTable.context?.readonly?.(),
+                        frozenColumnCount
                     });
                     recordRowLayout.render({
                         row,
@@ -110,12 +120,18 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         isHoverRow: isHoverRecord(isHover, targetName),
                         isCheckedRow: isSelectedRecord(recordId, aiTable)
                     });
+                    const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
                     const { width, offset } = getCellHorizontalPosition({
                         columnIndex,
-                        columnWidth,
-                        columnCount
+                        columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
+                        // columnWidth,
+                        columnCount,
+                        depth
                     });
-                    const realX = x + offset + AI_TABLE_OFFSET;
+                    let realX = x + offset + AI_TABLE_OFFSET;
+                    if (isGroupAndFirstColumn) {
+                        realX += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+                    }
                     const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
                     const cellValue = AITableQueries.getFieldValue(aiTable, [recordId, fieldId]);
@@ -156,6 +172,62 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     } else {
                         cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D, columnWidth);
                     }
+                    break;
+                }
+
+                case AITableRowType.group: {
+                    const fieldId = row.fieldId;
+                    const field = aiTable.fieldsMap()[fieldId];
+                    groupLayout.init({
+                        x,
+                        y,
+                        rowIndex,
+                        columnIndex,
+                        columnWidth,
+                        rowHeight,
+                        columnCount,
+                        containerWidth: coordinate.containerWidth,
+                        rowHeadWidth: context.rowHeadWidth(),
+                        hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
+                        hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        readonly: aiTable.context?.readonly?.(),
+                        frozenColumnCount
+                    });
+
+                    const { width, offset } = getCellHorizontalPosition({
+                        columnIndex,
+                        columnWidth,
+                        columnCount,
+                        depth
+                    });
+                    const realX = x + offset + AI_TABLE_OFFSET;
+                    const realY = y + AI_TABLE_OFFSET;
+                    const style = { fontWeight: DEFAULT_FONT_STYLE };
+                    const cellValue = row.groupValue;
+                    const fieldModel = FieldModelMap[field.type];
+                    const transformValue = fieldModel.transformCellValue(cellValue, { aiTable, field });
+                    const render = {
+                        aiTable,
+                        x: realX,
+                        y: realY,
+                        columnWidth: width,
+                        rowHeight,
+                        recordId: recordId,
+                        field,
+                        cellValue,
+                        transformValue,
+                        references,
+                        isActive: isSelectedField(fieldId, aiTable),
+                        style,
+                        colors,
+                        isCoverCell: false
+                    };
+
+                    groupLayout.render(render as AITableRender, {
+                        row: row as AITableLinearRowGroup,
+                        isHoverRow: isHoverRecord(isHover, targetName),
+                        isCheckedRow: isSelectedRecord(recordId, aiTable)
+                    });
                 }
             }
         }

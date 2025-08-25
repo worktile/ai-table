@@ -59,7 +59,9 @@ import {
     AITableLinearRowGroup,
     AITableMouseDownType,
     AITableRendererConfig,
+    AITableRowType,
     AITableSelectAllState,
+    IndicesMap,
     ScrollActionOptions
 } from './types';
 import {
@@ -251,7 +253,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             columnCount: fields.length,
             rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
             columnInitSize: this.aiTable.context!.rowHeadWidth(),
-            rowIndicesSizeMap: {},
+            rowIndicesSizeMap: this.rowIndicesMap(),
             columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
             frozenColumnCount: this.frozenColumnCount()
         });
@@ -294,6 +296,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         };
     });
     // rowAddFilterTooltip = getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip);
+
+    rowIndicesMap = computed(() => {
+        const rowIndicesMap: IndicesMap = {};
+        this.linearRows().forEach((row, index) => {
+            if (row.type === AITableRowType.blank) {
+                rowIndicesMap[index] = 0;
+            }
+        });
+        return rowIndicesMap;
+    });
 
     private actions: AITableActions = {
         updateFieldValues: (data: UpdateFieldValueOptions[]) => {
@@ -773,9 +785,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON: {
-                const { rowIndex: pointRowIndex } = context!.pointPosition();
-                const pointLinearRows = context!.linearRows()[pointRowIndex] as AITableLinearRowGroup;
-                this.aiRowGroupCollapseClick.emit(pointLinearRows.groupId);
+                const groupId = targetNameDetail.source;
+                if (groupId) {
+                    this.aiRowGroupCollapseClick.emit(groupId!);
+                }
                 break;
             }
         }

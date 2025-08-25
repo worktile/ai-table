@@ -16,32 +16,32 @@ export type AITableCellMetaData = {
 
 export type AITableCellMetaDataMap = Record<number, AITableCellMetaData>;
 
-export type AITableLinearRowBase = {
+export interface AITableLinearRowBase {
     _id: string;
     depth?: number;
-};
+}
 
-export type AITableLinearRowAdd = AITableLinearRowBase & {
+export interface AITableLinearRowAdd extends AITableLinearRowBase {
     type: AITableRowType.add;
-};
+}
 
-export type AITableLinearRowRecord = AITableLinearRowBase & {
+export interface AITableLinearRowRecord extends AITableLinearRowBase {
     type: AITableRowType.record;
     displayIndex: number;
-};
+}
 
-export type AITableLinearRowGroup = AITableLinearRowBase & {
+export interface AITableLinearRowGroup extends AITableLinearRowBase {
     type: AITableRowType.group;
     fieldId: string;
     groupValue: any;
     isCollapsed: boolean;
     recordCount: number;
     groupId: string;
-};
+}
 
-export type AITableLinearRowBlank = AITableLinearRowBase & {
+export interface AITableLinearRowBlank extends AITableLinearRowBase {
     type: AITableRowType.blank;
-};
+}
 
 export type AITableLinearRow = AITableLinearRowAdd | AITableLinearRowRecord | AITableLinearRowGroup | AITableLinearRowBlank;
 
@@ -80,3 +80,5 @@ export interface AITableContextMenuOptions {
     targetName: string;
     viewContainerRef: ViewContainerRef;
 }
+
+export type IndicesMap = Record<number, number>;

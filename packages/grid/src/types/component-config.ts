@@ -4,6 +4,7 @@ import { AITableAttachmentInfo, AITableField, UpdateFieldValueOptions } from '@a
 import { AITableRender } from './cell';
 import { AITablePointPosition } from './grid';
 import { AITableActions } from '../utils';
+import { AITableLinearRowGroup } from './row';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;
@@ -79,6 +80,18 @@ export interface AITableFieldStatConfig {
     width: number;
     height: number;
     field: AITableField;
+}
+
+export interface AITableGroupConfig {
+    aiTable: AITable;
+    coordinate: Coordinate;
+    columnIndex: number;
+    x?: number;
+    y?: number;
+    readonly?: boolean;
+    width: number;
+    height: number;
+    row: AITableLinearRowGroup;
 }
 
 export interface AITableColumnHeadsConfig {

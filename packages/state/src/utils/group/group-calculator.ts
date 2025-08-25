@@ -1,6 +1,6 @@
-import { AITable, AITableQueries, FieldModelMap } from '@ai-table/grid';
+import { AITable, AITableLinearRowGroup, AITableQueries, FieldModelMap } from '@ai-table/grid';
 import { AITableGroups, AITableViewRecords, AITableViewFields, AITableViewField, AITableViewRecord } from '@ai-table/utils';
-import { AITableLinearRow, AITableLinearRowGroup, AITableRowType } from '@ai-table/grid';
+import { AITableLinearRow, AITableRowType } from '@ai-table/grid';
 import { nanoid } from 'nanoid';
 
 export class GroupCalculator {
