@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { AITableLinearRowRecord } from './row';
+import { AITableLinearRow, AITableLinearRowGroup, AITableLinearRowRecord } from './row';
 import { AITable, Coordinate } from '../core';
 import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions, AIRecordFieldIdPath } from '@ai-table/utils';
 import { Colors } from '../constants';
@@ -21,6 +21,13 @@ export interface AITableCellsConfig {
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
     ctx: Konva.Context | CanvasRenderingContext2D;
+}
+
+export interface AITableGroupOptionsConfig extends AITableCellsConfig {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
 
 export interface AITableRender<TR extends AITableReferences = AITableReferences> {
@@ -47,8 +54,8 @@ export interface AITableRenderStyle {
     fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter';
 }
 
-export interface AITableCell {
-    row: AITableLinearRowRecord;
+export interface AITableCell<T extends AITableLinearRow = AITableLinearRow> {
+    row: T;
     style?: AITableCellStyle;
     indexStyle?: AITableCellStyle;
     isHoverRow: boolean;

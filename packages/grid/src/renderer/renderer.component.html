@@ -17,6 +17,7 @@
                 @if (!hiddenIndexColumn()) {
                     <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
                 }
+                <ai-table-frozen-groups [config]="cellsConfig()"></ai-table-frozen-groups>
                 <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
             </ko-group>
 
