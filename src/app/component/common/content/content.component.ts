@@ -469,18 +469,7 @@ export class DemoTableContent {
     }
 
     onRowGroupCollapseClick(groupId: string) {
-        const view = this.tableService.activeView();
-        if (!view?.settings?.collapsedGroupIds) {
-            view.settings!.collapsedGroupIds = [groupId];
-        } else {
-            if (view.settings!.collapsedGroupIds.includes(groupId)) {
-                view.settings!.collapsedGroupIds.splice(view!.settings!.collapsedGroupIds.indexOf(groupId), 1);
-            } else {
-                view.settings!.collapsedGroupIds.push(groupId);
-            }
-        }
-
-        this.tableService.views.set([...this.tableService.views()]);
+        Actions.toggleGroupCollapse(this.aiTable, groupId);
     }
 
     setValue() {

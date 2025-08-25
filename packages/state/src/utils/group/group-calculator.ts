@@ -64,8 +64,8 @@ export class GroupCalculator {
         records.forEach((record, index) => {
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
-                this.groups.forEach((groupField, groupIndex) => {
-                    this.addBreakpoint(groupField.fieldId, index, groupIndex);
+                this.groups.forEach((groupField) => {
+                    this.addBreakpoint(groupField.fieldId, index);
                 });
             } else {
                 // 检查每个分组字段是否发生变化
@@ -87,7 +87,7 @@ export class GroupCalculator {
                     if (compareResult !== 0) {
                         // 值发生变化，从当前层级开始的所有层级都是断点
                         for (let i = groupIndex; i < this.groups.length; i++) {
-                            this.addBreakpoint(this.groups[i].fieldId, index, i);
+                            this.addBreakpoint(this.groups[i].fieldId, index);
                         }
                         return;
                     }
@@ -99,11 +99,14 @@ export class GroupCalculator {
     }
 
     // 添加断点
-    private addBreakpoint(fieldId: string, recordIndex: number, _depth: number): void {
+    private addBreakpoint(fieldId: string, recordIndex: number): void {
         if (!this.groupBreakpoints.has(fieldId)) {
             this.groupBreakpoints.set(fieldId, []);
         }
-        this.groupBreakpoints.get(fieldId)!.push(recordIndex);
+        const breakpoints = this.groupBreakpoints.get(fieldId)!;
+        if (!breakpoints.includes(recordIndex)) {
+            breakpoints.push(recordIndex);
+        }
     }
 
     // 生成GroupLinearRows
