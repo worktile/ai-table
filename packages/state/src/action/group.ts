@@ -23,7 +23,7 @@ function setViewGroup(aiTable: AIViewTable, groups: AITableGroups | null) {
     aiTable.apply(operation);
 }
 
-function setCollapsedGroup(aiTable: AIViewTable, collapseState: string[]) {
+function setCollapsedGroup(aiTable: AIViewTable, collapsedGroupIds: string[]) {
     const viewId = aiTable.activeViewId();
     const view = aiTable.views().find((v) => v._id === viewId);
     if (!view) return;
@@ -31,7 +31,7 @@ function setCollapsedGroup(aiTable: AIViewTable, collapseState: string[]) {
     const currentSettings = view.settings || {};
     const newSettings = {
         ...currentSettings,
-        collapsedGroupIds: collapseState
+        collapsedGroupIds
     };
 
     const operation: SetViewAction = {
