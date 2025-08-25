@@ -922,8 +922,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
-                const hasEditingCell = !!this.aiTableGridEventService.getCurrentEditCell();
-                if (hasEditingCell) {
+                const editingCell = this.aiTable.editingCell();
+                if (editingCell && editingCell.path) {
                     return;
                 }
 
