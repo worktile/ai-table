@@ -51,8 +51,7 @@ export class AITableOtherRows {
                     }),
                     width: coordinate.containerWidth,
                     height: curHeight - 1,
-                    fill: 'transparent',
-                    source: recordId
+                    fill: 'transparent'
                 }
             });
         }
