@@ -611,7 +611,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
         this.updateDragSelectState(false, null);
-
         if (this.dragFillState.isDragging) {
             this.performFill(e);
         }
@@ -949,14 +948,45 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
+    private getNextRecordRowId(currentRowIndex: number, event: KeyboardEvent) {
+        const linearRows = this.aiTable.context!.linearRows();
+        if (event.key === 'ArrowUp') {
+            let nextRowIndex = currentRowIndex - 1;
+            let findFlag = false;
+            while (nextRowIndex > 0 && !findFlag) {
+                const row = linearRows[nextRowIndex];
+                if (row.type === AITableRowType.record) {
+                    findFlag = true;
+                } else {
+                    nextRowIndex--;
+                }
+            }
+            return findFlag ? linearRows[nextRowIndex]._id : null;
+        }
+        if (event.key === 'ArrowDown') {
+            let nextRowIndex = currentRowIndex + 1;
+            let findFlag = false;
+            while (nextRowIndex < linearRows.length && !findFlag) {
+                const row = linearRows[nextRowIndex];
+                if (row.type === AITableRowType.record) {
+                    findFlag = true;
+                } else {
+                    nextRowIndex++;
+                }
+            }
+            return findFlag ? linearRows[nextRowIndex]._id : null;
+        }
+        return null;
+    }
+
     private getNextCell(currentCell: AIRecordFieldIdPath, event: KeyboardEvent) {
         const { rowIndex, columnIndex } = AITable.getCellIndex(this.aiTable, currentCell) || {};
         let nextCellPath: AIRecordFieldIdPath | null = null;
-        if (event.key === 'ArrowUp' && rowIndex) {
-            nextCellPath = [this.aiTable.gridData().records[rowIndex - 1]._id, currentCell[1]];
-        }
-        if (event.key === 'ArrowDown' && rowIndex! < this.gridData().records.length - 1) {
-            nextCellPath = [this.aiTable.gridData().records[rowIndex! + 1]._id, currentCell[1]];
+        if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && rowIndex) {
+            const nextRowId = this.getNextRecordRowId(rowIndex, event);
+            if (nextRowId) {
+                nextCellPath = [nextRowId, currentCell[1]];
+            }
         }
         if (event.key === 'ArrowLeft' && columnIndex) {
             nextCellPath = [currentCell[0], this.aiTable.gridData().fields[columnIndex - 1]._id];
