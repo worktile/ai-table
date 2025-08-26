@@ -1,37 +1,52 @@
-import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
+import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdCreator, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
+import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, idCreator, TrackableEntity } from '@ai-table/utils';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
-    let { originId, isDuplicate, count = 1 } = options;
-    const recordCount = aiTable.records().length;
-    const maxRecordCount = aiTable.context?.maxRecords();
-    if (maxRecordCount && recordCount + count > maxRecordCount) {
-        count = maxRecordCount! - recordCount;
-        options.count = count;
-    }
-    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-    const newRecordIds = idsCreator(count);
-    const newRecordShortIds = shortIdsCreator(count);
-    const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
     const newRecords: AITableRecord[] = [];
-    const hiddenRecordIds: string[] = [];
-    newRecordIds.forEach((id, index) => {
-        const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
-        if (!checkResult) {
-            hiddenRecordIds.push(id);
+    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
+    const groups = activeView.settings?.groups;
+    if (!groups?.length) {
+        let { originId, isDuplicate, count = 1 } = options;
+        const recordCount = aiTable.records().length;
+        const maxRecordCount = aiTable.context?.maxRecords();
+        if (maxRecordCount && recordCount + count > maxRecordCount) {
+            count = maxRecordCount! - recordCount;
+            options.count = count;
         }
-        newRecords.push(record);
-    });
-    if (hiddenRecordIds.length) {
-        aiTable.recordsWillHidden?.update((value) => {
-            return [...value, ...hiddenRecordIds];
+        const newRecordIds = idsCreator(count);
+        const newRecordShortIds = shortIdsCreator(count);
+        const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
+        const hiddenRecordIds: string[] = [];
+        newRecordIds.forEach((id, index) => {
+            const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
+            const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
+            if (!checkResult) {
+                hiddenRecordIds.push(id);
+            }
+            newRecords.push(record);
         });
+        if (hiddenRecordIds.length) {
+            aiTable.recordsWillHidden?.update((value) => {
+                return [...value, ...hiddenRecordIds];
+            });
+        }
+    } else {
+        if (options.recordId) {
+            const originRecord = getDefaultRecordValues(aiTable, true, options.recordId);
+            const newValues: Record<string, FieldValue> = {};
+            groups.forEach((group) => {
+                newValues[group.fieldId] = originRecord[group.fieldId];
+            });
+            const newRecord = { _id: idCreator(), short_id: shortIdCreator(), values: newValues, ...trackableEntity };
+            newRecords.push(newRecord);
+        } else {
+            return;
+        }
     }
     Actions.addRecords(aiTable, newRecords, options);
     const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];

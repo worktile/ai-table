@@ -201,11 +201,12 @@ export class GroupCalculator {
         });
 
         // 分组未折叠，为每个分组添加add新增行
-        if (currentGroupRecords.length > 0 && this.shouldShowAddRow(currentGroupIds)) {
+        if (currentGroupRecords.length > 0 && this.shouldShowAddRowForGroup(currentGroupIds)) {
             linearRows.push({
                 type: AITableRowType.add,
                 _id: '',
-                depth: this.groups.length
+                depth: this.groups.length,
+                recordId: currentGroupRecords[0]._id
             });
         }
     }
@@ -283,7 +284,7 @@ export class GroupCalculator {
     }
 
     // 检查当前分组是否应该显示添加行
-    private shouldShowAddRow(currentGroupIds?: string[]): boolean {
+    private shouldShowAddRowForGroup(currentGroupIds?: string[]): boolean {
         if (!currentGroupIds || currentGroupIds.length === 0) {
             return true; // 默认显示
         }
