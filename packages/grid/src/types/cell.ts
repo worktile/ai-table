@@ -3,6 +3,7 @@ import { AITableLinearRow, AITableLinearRowGroup, AITableLinearRowRecord } from 
 import { AITable, Coordinate } from '../core';
 import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions, AIRecordFieldIdPath } from '@ai-table/utils';
 import { Colors } from '../constants';
+import { AITableActions } from '../utils';
 
 export interface AITableCellsConfig {
     aiTable: AITable;
@@ -12,9 +13,7 @@ export interface AITableCellsConfig {
     columnStartIndex: number;
     columnStopIndex: number;
     readonly: boolean;
-    actions: {
-        updateFieldValues: (options: UpdateFieldValueOptions[]) => void;
-    };
+    actions: AITableActions;
     references?: AITableReferences;
     maxRecords?: number;
 }

@@ -19,12 +19,12 @@ import {
     AITableFrozenCells,
     AITableFrozenColumnHeads,
     AITableFrozenFieldShadow,
+    AITableFrozenGroups,
     AITableFrozenPlaceholderCells,
+    AITableGroups,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells,
-    AITableScrollableGroup,
-    ScrollableGroupConfig
+    AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
@@ -38,7 +38,6 @@ import {
     AI_TABLE_OFFSET,
     Colors
 } from '../constants';
-import { AITableFrozenGroups } from './components/group/frozen-groups.component';
 
 Konva.pixelRatio = 2;
 
@@ -63,7 +62,8 @@ Konva.pixelRatio = 2;
         AITableFieldStats,
         AITableBackground,
         AITableFrozenFieldShadow,
-        AITableFrozenGroups
+        AITableFrozenGroups,
+        AITableGroups
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

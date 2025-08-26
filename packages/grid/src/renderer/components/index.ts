@@ -17,3 +17,4 @@ export * from './cells/cover-cell-base';
 export * from './background.component';
 export * from './frozen-field-shadow.component';
 export * from './scrollable-group';
+export * from './group';

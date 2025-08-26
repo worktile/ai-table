@@ -17,7 +17,7 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT
 } from '../../../constants';
-import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
+import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableRowType } from '../../../types';
 import {
     AITableField,
     AITableFieldStatTypeItemInfo,
@@ -72,7 +72,7 @@ import _ from 'lodash';
 export class AITableFieldStat {
     thyPopover = inject(ThyPopover);
 
-    config = input.required<AITableFieldStatConfig>();
+    config = input.required<AITableGroupStatConfig | AITableFieldStatConfig>();
 
     hover = output<boolean>();
 
@@ -94,8 +94,13 @@ export class AITableFieldStat {
         };
     });
 
+    isGroupStat = computed(() => {
+        return (this.config() as AITableGroupStatConfig).isGroupStat;
+    });
+
     bgConfig = computed(() => {
-        const { field, width, height, coordinate, readonly, aiTable } = this.config();
+        const { field, width, height, coordinate, readonly, aiTable, isGroupStat, columnIndex } = this.config() as AITableGroupStatConfig;
+
         const rowHeadWidth = aiTable.context!.rowHeadWidth();
         const config: AITableBackgroundConfig = {
             coordinate,
@@ -113,20 +118,35 @@ export class AITableFieldStat {
             opacity: 1,
             listening: !readonly
         };
-        if (this.renderTexts()) {
-            config.borders = [false, true, false, true];
-            config.stroke = Colors.gray200;
-            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
-        }
 
-        if (this.isFirstColumn()) {
-            if (rowHeadWidth === 0) {
-                config.borders = [false, true, false, false];
-            } else {
-                config.borders = [false, true, false, true];
+        if (isGroupStat) {
+            if (columnIndex === 0) {
+                const textsConfig = this.textsConfig();
+                if (textsConfig) {
+                    config.x = textsConfig[0].x - AI_TABLE_CELL_PADDING;
+                    config.width = config.width - config.x;
+                } else {
+                    config.width = this.noneStatWidth();
+                    config.x = width - this.noneStatWidth();
+                    config.fill = Colors.transparent;
+                }
             }
-            config.stroke = Colors.gray200;
-            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+        } else {
+            if (this.renderTexts()) {
+                config.borders = [false, true, false, true];
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            }
+
+            if (this.isFirstColumn()) {
+                if (rowHeadWidth === 0) {
+                    config.borders = [false, true, false, false];
+                } else {
+                    config.borders = [false, true, false, true];
+                }
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            }
         }
         return config;
     });
@@ -136,9 +156,44 @@ export class AITableFieldStat {
         return field;
     });
 
-    records = computed(() => {
+    linearRows = computed(() => {
         const { aiTable } = this.config();
-        return aiTable.gridData().records;
+        return aiTable.context?.linearRows();
+    });
+
+    recordsMap = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.recordsMap();
+    });
+
+    groupRow = computed(() => (this.config() as AITableGroupStatConfig).groupRow);
+
+    gridData = computed(() => this.config().aiTable!.gridData());
+
+    records = computed(() => {
+        let records: AITableRecord[] = [];
+        const groupRow = this.groupRow();
+        if (this.isGroupStat()) {
+            const linearRows = this.linearRows() || [];
+            let i = groupRow.rowIndex + 1;
+            let stopFlag = false;
+            while (i < linearRows.length && !stopFlag) {
+                const row = linearRows[i];
+                if (row) {
+                    if (row.type === AITableRowType.group && row.depth <= groupRow.depth) {
+                        stopFlag = true;
+                    }
+                    if (row.type === AITableRowType.record) {
+                        const record = this.recordsMap()[row._id];
+                        records.push(record);
+                    }
+                }
+                i++;
+            }
+        } else {
+            records = this.gridData().records;
+        }
+        return records;
     });
 
     aiFieldConfig = computed(() => {
@@ -178,6 +233,16 @@ export class AITableFieldStat {
         return width;
     });
 
+    noneStatWidth = computed(() => {
+        const noneStatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
+        const { text, textWidth } = drawer.textEllipsis({
+            text: noneStatString,
+            fontSize: DEFAULT_FONT_SIZE,
+            fontWeight: DEFAULT_FONT_WEIGHT
+        });
+        return textWidth + AI_TABLE_ACTION_COMMON_SIZE + AI_TABLE_OFFSET;
+    });
+
     renderTexts = computed(() => {
         const width = this.containerBoxWidth();
         const field = this.field();
@@ -187,7 +252,7 @@ export class AITableFieldStat {
         let resultString = null;
         let formatString = null;
         let statValue = '';
-        if (this.isFirstColumn() && selectedInfo.isSelected) {
+        if (this.isFirstColumn() && selectedInfo.isSelected && !this.isGroupStat()) {
             if (selectedInfo.selectedType === 'records') {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
             } else {

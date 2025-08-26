@@ -18,7 +18,7 @@ export type AITableCellMetaDataMap = Record<number, AITableCellMetaData>;
 
 export interface AITableLinearRowBase {
     _id: string;
-    depth?: number;
+    depth: number;
 }
 
 export interface AITableLinearRowAdd extends AITableLinearRowBase {
@@ -37,6 +37,10 @@ export interface AITableLinearRowGroup extends AITableLinearRowBase {
     isCollapsed: boolean;
     recordCount: number;
     groupId: string;
+}
+
+export interface AITableGroupStatRow extends AITableLinearRowGroup {
+    rowIndex: number;
 }
 
 export interface AITableLinearRowBlank extends AITableLinearRowBase {
