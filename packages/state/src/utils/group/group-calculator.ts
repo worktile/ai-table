@@ -97,7 +97,7 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            const groupTabRows = this.generateGroupTabRows(record, index);
+            const groupTabRows = this.generateGroupTabRows(record, index, records.length);
 
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
@@ -159,7 +159,7 @@ export class GroupCalculator {
 
         currentGroupRecords.forEach((record, i) => {
             const recordIndex = currentGroupRecordIndices?.[i] ?? 0;
-            if (this.shouldShowRecord(record, recordIndex)) {
+            if (this.shouldShowRecord(recordIndex)) {
                 groupDisplayRowIndex++;
                 linearRows.push({
                     type: AITableRowType.record,
@@ -172,16 +172,24 @@ export class GroupCalculator {
 
         // 分组未折叠，为每个分组添加add新增行
         if (currentGroupRecords.length > 0 && this.shouldShowAddRow(currentGroupIds)) {
+            let startRecordIndex = 0;
+            let endRecordIndex = 0;
+            if (currentGroupRecordIndices) {
+                // 当前添加按钮对于的记录范围
+                startRecordIndex = Math.min(...currentGroupRecordIndices);
+                endRecordIndex = Math.max(...currentGroupRecordIndices);
+            }
             linearRows.push({
                 type: AITableRowType.add,
                 _id: '',
-                depth: this.groups.length
+                depth: this.groups.length,
+                range: [startRecordIndex, endRecordIndex]
             });
         }
     }
 
     // 生成分组标签
-    private generateGroupTabRows(record: AITableViewRecord, recordIndex: number): AITableLinearRowGroup[] {
+    private generateGroupTabRows(record: AITableViewRecord, recordIndex: number, totalRecords: number): AITableLinearRowGroup[] {
         const groupTabRows: AITableLinearRowGroup[] = [];
 
         this.groups.forEach((groupField, depth) => {
@@ -194,7 +202,7 @@ export class GroupCalculator {
                 const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
                 const breakpointIndex = breakpoints.indexOf(recordIndex);
                 const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
-                const recordCount = this.calculateGroupRecordCount(record, recordIndex, depth);
+                const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
 
                 groupTabRows.push({
                     type: AITableRowType.group,
@@ -203,7 +211,7 @@ export class GroupCalculator {
                     fieldId: groupField.field_id,
                     groupValue,
                     isCollapsed: this.groupCollapseState.has(groupId),
-                    recordCount,
+                    range: recordRange,
                     groupId
                 });
             }
@@ -212,18 +220,29 @@ export class GroupCalculator {
         return groupTabRows;
     }
 
+    private calculateGroupRecordRange(fieldId: string, breakpointIndex: number, totalRecords: number): [number, number] {
+        const breakpoints = this.groupBreakpoints.get(fieldId) || [];
+        const startIndex = breakpoints[breakpointIndex] || 0;
+
+        let endIndex: number;
+        if (breakpointIndex + 1 < breakpoints.length) {
+            // 如果不是最后一个分组，结束位置是下一个断点的前一个位置
+            endIndex = breakpoints[breakpointIndex + 1] - 1;
+        } else {
+            // 如果是最后一个分组，结束位置是最后一条记录
+            endIndex = totalRecords - 1;
+        }
+
+        return [startIndex, endIndex];
+    }
+
     // 生成分组ID
     private generateGroupId(fieldId: string, depth: number, breakpointIndex: number): string {
         // 通过字段ID、深度和断点索引确保唯一
         return `${fieldId}_${depth}_${breakpointIndex}`;
     }
 
-    private calculateGroupRecordCount(_record: AITableViewRecord, _recordIndex: number, _depth: number): number {
-        // TODO: 实现精确的分组记录数计算
-        return 1;
-    }
-
-    private shouldShowRecord(_record: AITableViewRecord, recordIndex: number): boolean {
+    private shouldShowRecord(recordIndex: number): boolean {
         for (let depth = 0; depth < this.groups.length; depth++) {
             const groupField = this.groups[depth];
             const breakpoints = this.groupBreakpoints.get(groupField.field_id) || [];
