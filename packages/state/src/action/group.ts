@@ -1,4 +1,4 @@
-import { ActionName, SetViewAction, AITableView, AITableGroupField, SortDirection } from '@ai-table/utils';
+import { ActionName, SetViewAction, AITableView, AITableGroupField, SortDirection, ViewSettings } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { AI_TABLE_GROUP_MAX_LEVEL } from '@ai-table/grid';
 
@@ -8,7 +8,7 @@ function setViewGroup(aiTable: AIViewTable, groups: AITableGroupField[] | null) 
     if (!view) return;
 
     const currentSettings = view.settings || {};
-    const newSettings = {
+    const newSettings: ViewSettings = {
         ...currentSettings,
         groups: groups || [],
         collapsed_group_ids: [] // 重置折叠
@@ -29,7 +29,7 @@ function setCollapsedGroup(aiTable: AIViewTable, collapsedGroupIds: string[]) {
     if (!view) return;
 
     const currentSettings = view.settings || {};
-    const newSettings = {
+    const newSettings: ViewSettings = {
         ...currentSettings,
         collapsed_group_ids: collapsedGroupIds
     };
