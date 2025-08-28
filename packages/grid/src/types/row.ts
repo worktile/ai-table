@@ -24,7 +24,6 @@ export interface AITableLinearRowBase {
 
 export interface AITableLinearRowAdd extends AITableLinearRowBase {
     type: AITableRowType.add;
-    recordId?: string;
 }
 
 export interface AITableLinearRowRecord extends AITableLinearRowBase {

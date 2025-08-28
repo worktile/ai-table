@@ -10,43 +10,39 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const newRecords: AITableRecord[] = [];
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
     const groups = activeView.settings?.groups;
-    if (!groups?.length) {
-        let { originId, isDuplicate, count = 1 } = options;
-        const recordCount = aiTable.records().length;
-        const maxRecordCount = aiTable.context?.maxRecords();
-        if (maxRecordCount && recordCount + count > maxRecordCount) {
-            count = maxRecordCount! - recordCount;
-            options.count = count;
+    let { originId, isDuplicate, count = 1 } = options;
+    const recordCount = aiTable.records().length;
+    const maxRecordCount = aiTable.context?.maxRecords();
+    if (maxRecordCount && recordCount + count > maxRecordCount) {
+        count = maxRecordCount! - recordCount;
+        options.count = count;
+    }
+    const newRecordIds = idsCreator(count);
+    const newRecordShortIds = shortIdsCreator(count);
+    const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
+    const hiddenRecordIds: string[] = [];
+    let needCopyRecordForGroup: Record<string, any> | null = null;
+    if (groups?.length && options.recordId) {
+        needCopyRecordForGroup = getDefaultRecordValues(aiTable, true, options.recordId);
+    }
+    newRecordIds.forEach((id, index) => {
+        const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
+        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
+        if (!checkResult) {
+            hiddenRecordIds.push(id);
         }
-        const newRecordIds = idsCreator(count);
-        const newRecordShortIds = shortIdsCreator(count);
-        const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
-        const hiddenRecordIds: string[] = [];
-        newRecordIds.forEach((id, index) => {
-            const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-            const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
-            if (!checkResult) {
-                hiddenRecordIds.push(id);
-            }
-            newRecords.push(record);
+        if (needCopyRecordForGroup) {
+            groups?.forEach((group) => {
+                // 复制分组字段值
+                record.values[group.field_id] = needCopyRecordForGroup[group.field_id];
+            });
+        }
+        newRecords.push(record);
+    });
+    if (hiddenRecordIds.length) {
+        aiTable.recordsWillHidden?.update((value) => {
+            return [...value, ...hiddenRecordIds];
         });
-        if (hiddenRecordIds.length) {
-            aiTable.recordsWillHidden?.update((value) => {
-                return [...value, ...hiddenRecordIds];
-            });
-        }
-    } else {
-        if (options.recordId) {
-            const originRecord = getDefaultRecordValues(aiTable, true, options.recordId);
-            const newValues: Record<string, FieldValue> = {};
-            groups.forEach((group) => {
-                newValues[group.fieldId] = originRecord[group.fieldId];
-            });
-            const newRecord = { _id: idCreator(), short_id: shortIdCreator(), values: newValues, ...trackableEntity };
-            newRecords.push(newRecord);
-        } else {
-            return;
-        }
     }
     Actions.addRecords(aiTable, newRecords, options);
     const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
