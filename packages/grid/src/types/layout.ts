@@ -12,4 +12,5 @@ export interface AITableLayout {
     frozenColumnCount: number;
     hiddenRowDrag?: boolean;
     readonly?: boolean;
+    xIsScroll?: boolean;
 }

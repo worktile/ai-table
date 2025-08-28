@@ -15,5 +15,5 @@ export * from './cells';
 export * from './action-icon.component';
 export * from './cells/cover-cell-base';
 export * from './background.component';
-export * from './frozen-field-shadow.component';
+export * from './shadow.component';
 export * from './scrollable-group';

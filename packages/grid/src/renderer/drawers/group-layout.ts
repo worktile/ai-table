@@ -110,6 +110,7 @@ export class GroupLayout extends Layout {
         this.renderFirstCell(render, config);
         this.renderCommonCellBorder({ style });
         this.renderLastCell({ style, isHoverRow, isCheckedRow });
+        this.renderFrozenShadow();
     }
 }
 
