@@ -1,8 +1,8 @@
-import { AITableGroups, ActionName, SetViewAction, AITableView } from '@ai-table/utils';
+import { ActionName, SetViewAction, AITableView, AITableGroupField, SortDirection } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { AI_TABLE_GROUP_MAX_LEVEL } from '@ai-table/grid';
 
-function setViewGroup(aiTable: AIViewTable, groups: AITableGroups | null) {
+function setViewGroup(aiTable: AIViewTable, groups: AITableGroupField[] | null) {
     const viewId = aiTable.activeViewId();
     const view = aiTable.views().find((v) => v._id === viewId);
     if (!view) return;
@@ -11,7 +11,7 @@ function setViewGroup(aiTable: AIViewTable, groups: AITableGroups | null) {
     const newSettings = {
         ...currentSettings,
         groups: groups || [],
-        collapsedGroupIds: [] // 重置折叠
+        collapsed_group_ids: [] // 重置折叠
     };
 
     const operation: SetViewAction = {
@@ -31,7 +31,7 @@ function setCollapsedGroup(aiTable: AIViewTable, collapsedGroupIds: string[]) {
     const currentSettings = view.settings || {};
     const newSettings = {
         ...currentSettings,
-        collapsedGroupIds
+        collapsed_group_ids: collapsedGroupIds
     };
 
     const operation: SetViewAction = {
@@ -49,21 +49,21 @@ function toggleGroupCollapse(aiTable: AIViewTable, groupId: string) {
     const view = aiTable.views().find((v) => v._id === viewId);
     if (!view) return;
 
-    const currentCollapse = view.settings?.collapsedGroupIds || [];
+    const currentCollapse = view.settings?.collapsed_group_ids || [];
     const newCollapse = currentCollapse.includes(groupId) ? currentCollapse.filter((id) => id !== groupId) : [...currentCollapse, groupId];
 
     setCollapsedGroup(aiTable, newCollapse);
 }
 
 // 添加分组
-function addGroupField(aiTable: AIViewTable, fieldId: string, desc: boolean = false) {
+function addGroupField(aiTable: AIViewTable, fieldId: string, direction: SortDirection = SortDirection.ascending) {
     const view = aiTable.views().find((v) => v._id === aiTable.activeViewId());
     if (!view) return;
 
     const currentGroups = view.settings?.groups || [];
 
     // 是否已存在
-    if (currentGroups.some((group) => group.fieldId === fieldId)) {
+    if (currentGroups.some((group) => group.field_id === fieldId)) {
         throw new Error('The field has been used for grouping.');
     }
 
@@ -72,7 +72,7 @@ function addGroupField(aiTable: AIViewTable, fieldId: string, desc: boolean = fa
         throw new Error(`The maximum number of groups is ${AI_TABLE_GROUP_MAX_LEVEL}.`);
     }
 
-    const newGroups = [...currentGroups, { fieldId, desc }];
+    const newGroups: AITableGroupField[] = [...currentGroups, { field_id: fieldId, direction }];
     setViewGroup(aiTable, newGroups);
 }
 
@@ -82,18 +82,18 @@ function removeGroupField(aiTable: AIViewTable, fieldId: string) {
     if (!view) return;
 
     const currentGroups = view.settings?.groups || [];
-    const newGroups = currentGroups.filter((group) => group.fieldId !== fieldId);
+    const newGroups = currentGroups.filter((group) => group.field_id !== fieldId);
 
     setViewGroup(aiTable, newGroups.length > 0 ? newGroups : null);
 }
 
 // 更新排序方向
-function updateGroupFieldDirection(aiTable: AIViewTable, fieldId: string, desc: boolean) {
+function updateGroupFieldDirection(aiTable: AIViewTable, fieldId: string, direction: SortDirection) {
     const view = aiTable.views().find((v) => v._id === aiTable.activeViewId());
     if (!view) return;
 
     const currentGroups = view.settings?.groups || [];
-    const newGroups = currentGroups.map((group) => (group.fieldId === fieldId ? { ...group, desc } : group));
+    const newGroups = currentGroups.map((group) => (group.field_id === fieldId ? { ...group, direction } : group));
 
     setViewGroup(aiTable, newGroups);
 }

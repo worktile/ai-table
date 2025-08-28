@@ -22,20 +22,14 @@ export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewField
     return buildFieldStatType(sortFields, activeView);
 }
 
-export function buildGroupLinearRows(
-    aiTable: AIViewTable,
-    records: AITableViewRecords,
-    fields: AITableViewFields,
-    activeView: AITableView
-) {
-    if (activeView?.settings?.groups?.length && fields && aiTable) {
+export function buildGroupLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
+    if (aiTable && activeView?.settings?.groups?.length) {
         try {
             const groups = activeView.settings?.groups!;
-            const collapsedGroupIds = activeView.settings?.collapsedGroupIds;
+            const collapsedGroupIds = activeView.settings?.collapsed_group_ids;
 
-            const calculator = new GroupCalculator(groups, aiTable, collapsedGroupIds);
-            const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
-            return calculator.calculateLinearRows(filteredRecords, fields);
+            const calculator = new GroupCalculator(aiTable, groups, collapsedGroupIds);
+            return calculator.calculateLinearRows(records);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
         }

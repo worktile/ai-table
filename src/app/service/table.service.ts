@@ -129,10 +129,9 @@ export class TableService {
         return () => {
             const activeView = this.activeView();
             if (activeView?.settings?.groups?.length) {
-                const records = this.records();
-                const fields = this.fields();
+                const records = this.renderRecords();
 
-                return buildGroupLinearRows(this.aiTable, records, fields, activeView as AITableView);
+                return buildGroupLinearRows(this.aiTable, activeView, records);
             }
             return null;
         };
