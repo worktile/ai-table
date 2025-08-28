@@ -1,9 +1,9 @@
-import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdCreator, shortIdsCreator } from '@ai-table/grid';
+import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, idCreator, TrackableEntity } from '@ai-table/utils';
+import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
