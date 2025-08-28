@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.41](https://github.com/worktile/ai-table/compare/0.1.40...0.1.41) (2025-08-28)
+
+
+### Bug Fixes
+
+* #WIK-18795 【rc】多维表格，文字输入框，基本写不进去内容 ([#639](https://github.com/worktile/ai-table/issues/639)) ([465bc7f](https://github.com/worktile/ai-table/commit/465bc7f8ca7349fa3b63ff2197bf0404914a9006)), closes [#WIK-18795](https://github.com/worktile/ai-table/issues/WIK-18795)
+
+
+### Features
+
+* #WIK-18730 支持分组 LinearRow 数据生成 ([#636](https://github.com/worktile/ai-table/issues/636)) ([fc976e3](https://github.com/worktile/ai-table/commit/fc976e3906b5bf85745f58ee2c84cfdc9ede03dd)), closes [#WIK-18730](https://github.com/worktile/ai-table/issues/WIK-18730)
+* #WIK-18770 分组静态渲染 ([#637](https://github.com/worktile/ai-table/issues/637)) ([1c25951](https://github.com/worktile/ai-table/commit/1c259513f0eb9e81e37ae97c4eeb758fadc085d8)), closes [#WIK-18770](https://github.com/worktile/ai-table/issues/WIK-18770) [#WIK-18770](https://github.com/worktile/ai-table/issues/WIK-18770) [#WIK-18770](https://github.com/worktile/ai-table/issues/WIK-18770) [#WIK-18770](https://github.com/worktile/ai-table/issues/WIK-18770) [#WIK-18770](https://github.com/worktile/ai-table/issues/WIK-18770)
+* #WIK-18775 分组展开收起 ([#642](https://github.com/worktile/ai-table/issues/642)) ([6a48ccb](https://github.com/worktile/ai-table/commit/6a48ccb80420f8d28aa6fa506f9afb384d186af3)), closes [#WIK-18775](https://github.com/worktile/ai-table/issues/WIK-18775)
+* #WIK-18783 完善分组 Action 支持协同 ([#638](https://github.com/worktile/ai-table/issues/638)) ([fc4cae2](https://github.com/worktile/ai-table/commit/fc4cae20254865f132849195b0b261e7e956c4a9)), closes [#WIK-18783](https://github.com/worktile/ai-table/issues/WIK-18783)
+
+
+
 ## [0.1.40](https://github.com/worktile/ai-table/compare/0.1.39...0.1.40) (2025-08-20)
 
 
