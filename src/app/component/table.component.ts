@@ -1,5 +1,5 @@
 import { Actions, addView, removeView } from '@ai-table/state';
-import { AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AITableView, AITableViewFields, AITableViewRecords, SortDirection } from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -125,9 +125,9 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleGroupChange(e: any) {
         this.group = e.target.checked;
         if (this.group) {
-            Actions.addGroupField(this.tableService.aiTable, 'column-1', false);
-            Actions.addGroupField(this.tableService.aiTable, 'column-2', false);
-            Actions.addGroupField(this.tableService.aiTable, 'column-4', false);
+            Actions.addGroupField(this.tableService.aiTable, 'column-1', SortDirection.ascending);
+            Actions.addGroupField(this.tableService.aiTable, 'column-2', SortDirection.ascending);
+            Actions.addGroupField(this.tableService.aiTable, 'column-4', SortDirection.ascending);
         } else {
             Actions.clearAllGroups(this.tableService.aiTable);
         }

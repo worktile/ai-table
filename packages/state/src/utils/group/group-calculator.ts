@@ -1,76 +1,47 @@
 import { AITable, AITableLinearRowGroup, AITableQueries, FieldModelMap } from '@ai-table/grid';
-import { AITableGroups, AITableViewRecords, AITableViewFields, AITableViewField, AITableViewRecord } from '@ai-table/utils';
+import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField } from '@ai-table/utils';
 import { AITableLinearRow, AITableRowType } from '@ai-table/grid';
 import { nanoid } from 'nanoid';
 
 export class GroupCalculator {
-    private groups: AITableGroups;
+    private groups: AITableGroupField[];
     private groupBreakpoints: Map<string, number[]>;
     private groupCollapseState: Set<string>;
     private aiTable: AITable;
+    private fieldsMap: Record<string, AITableField>;
 
-    constructor(groups: AITableGroups, aiTable: AITable, collapseState?: string[]) {
+    constructor(aiTable: AITable, groups: AITableGroupField[], collapseState?: string[]) {
+        this.aiTable = aiTable;
         this.groups = groups;
         this.groupBreakpoints = new Map();
         this.groupCollapseState = new Set(collapseState || []);
-        this.aiTable = aiTable;
+        this.fieldsMap = this.aiTable.fieldsMap();
     }
 
-    calculateLinearRows(records: AITableViewRecords, fields: AITableViewFields): AITableLinearRow[] {
-        const sortedRecords = this.sortRecordsByGroup(records, fields);
+    calculateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
+        this.detectGroupBreakpoints(records);
 
-        this.detectGroupBreakpoints(sortedRecords, fields);
-
-        return this.generateLinearRows(sortedRecords, fields);
-    }
-
-    private sortRecordsByGroup(records: AITableViewRecords, fields: AITableViewFields): AITableViewRecords {
-        const fieldsMap = new Map(fields.map((field) => [field._id, field]));
-
-        return [...records].sort((record1, record2) => {
-            return (
-                this.groups.reduce((result, groupField) => {
-                    if (result !== 0) return result;
-
-                    const field = fieldsMap.get(groupField.fieldId);
-                    if (!field) return 0;
-
-                    const value1 = AITableQueries.getFieldValue(this.aiTable, [record1._id, field._id]);
-                    const value2 = AITableQueries.getFieldValue(this.aiTable, [record2._id, field._id]);
-
-                    const fieldModel = FieldModelMap[field.type];
-                    if (!fieldModel) return 0;
-
-                    const compareResult = fieldModel.compare(value1, value2, this.aiTable.context!.references(), undefined, {
-                        aiTable: this.aiTable,
-                        field
-                    });
-
-                    return compareResult * (groupField.desc ? -1 : 1);
-                }, 0) || 1
-            );
-        });
+        return this.generateLinearRows(records);
     }
 
     // 检测断点
-    private detectGroupBreakpoints(records: AITableViewRecords, fields: AITableViewFields): void {
+    private detectGroupBreakpoints(records: AITableViewRecords): void {
         this.groupBreakpoints.clear();
 
         if (records.length === 0) return;
 
-        const fieldsMap = new Map(fields.map((field) => [field._id, field]));
         let previousRecord: AITableViewRecord | null = null;
 
         records.forEach((record, index) => {
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
                 this.groups.forEach((groupField) => {
-                    this.addBreakpoint(groupField.fieldId, index);
+                    this.addBreakpoint(groupField.field_id, index);
                 });
             } else {
                 // 检查每个分组字段是否发生变化
                 this.groups.forEach((groupField, groupIndex) => {
-                    const field = fieldsMap.get(groupField.fieldId);
+                    const field = this.fieldsMap[groupField.field_id];
                     if (!field) return;
 
                     const prevValue = AITableQueries.getFieldValue(this.aiTable, [previousRecord!._id, field._id]);
@@ -87,7 +58,7 @@ export class GroupCalculator {
                     if (compareResult !== 0) {
                         // 值发生变化，从当前层级开始的所有层级都是断点
                         for (let i = groupIndex; i < this.groups.length; i++) {
-                            this.addBreakpoint(this.groups[i].fieldId, index);
+                            this.addBreakpoint(this.groups[i].field_id, index);
                         }
                         return;
                     }
@@ -110,9 +81,8 @@ export class GroupCalculator {
     }
 
     // 生成GroupLinearRows
-    private generateLinearRows(records: AITableViewRecords, fields: AITableViewFields): AITableLinearRow[] {
+    private generateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
         const linearRows: AITableLinearRow[] = [];
-        const fieldsMap = new Map(fields.map((field) => [field._id, field]));
         let lastGroupDepth = -1;
         let currentGroupRecords: AITableViewRecord[] = [];
         let currentGroupIds: string[] = [];
@@ -127,7 +97,7 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            const groupTabRows = this.generateGroupTabRows(record, index, fieldsMap);
+            const groupTabRows = this.generateGroupTabRows(record, index, records.length);
 
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
@@ -189,7 +159,7 @@ export class GroupCalculator {
 
         currentGroupRecords.forEach((record, i) => {
             const recordIndex = currentGroupRecordIndices?.[i] ?? 0;
-            if (this.shouldShowRecord(record, recordIndex)) {
+            if (this.shouldShowRecord(recordIndex)) {
                 groupDisplayRowIndex++;
                 linearRows.push({
                     type: AITableRowType.record,
@@ -201,44 +171,47 @@ export class GroupCalculator {
         });
 
         // 分组未折叠，为每个分组添加add新增行
-        if (currentGroupRecords.length > 0 && this.shouldShowAddRowForGroup(currentGroupIds)) {
+        if (currentGroupRecords.length > 0 && this.shouldShowAddRow(currentGroupIds)) {
+            let startRecordIndex = 0;
+            let endRecordIndex = 0;
+            if (currentGroupRecordIndices) {
+                // 当前添加按钮对于的记录范围
+                startRecordIndex = Math.min(...currentGroupRecordIndices);
+                endRecordIndex = Math.max(...currentGroupRecordIndices);
+            }
             linearRows.push({
                 type: AITableRowType.add,
                 _id: '',
                 depth: this.groups.length,
-                recordId: currentGroupRecords[0]._id
+                range: [startRecordIndex, endRecordIndex]
             });
         }
     }
 
     // 生成分组标签
-    private generateGroupTabRows(
-        record: AITableViewRecord,
-        recordIndex: number,
-        fieldsMap: Map<string, AITableViewField>
-    ): AITableLinearRowGroup[] {
+    private generateGroupTabRows(record: AITableViewRecord, recordIndex: number, totalRecords: number): AITableLinearRowGroup[] {
         const groupTabRows: AITableLinearRowGroup[] = [];
 
         this.groups.forEach((groupField, depth) => {
-            const breakpoints = this.groupBreakpoints.get(groupField.fieldId) || [];
+            const breakpoints = this.groupBreakpoints.get(groupField.field_id) || [];
 
             if (breakpoints.includes(recordIndex)) {
-                const field = fieldsMap.get(groupField.fieldId);
+                const field = this.fieldsMap[groupField.field_id];
                 if (!field) return;
 
                 const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
                 const breakpointIndex = breakpoints.indexOf(recordIndex);
-                const groupId = this.generateGroupId(groupField.fieldId, depth, breakpointIndex);
-                const recordCount = this.calculateGroupRecordCount(record, recordIndex, depth);
+                const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
+                const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
 
                 groupTabRows.push({
                     type: AITableRowType.group,
                     _id: nanoid(),
                     depth,
-                    fieldId: groupField.fieldId,
+                    fieldId: groupField.field_id,
                     groupValue,
                     isCollapsed: this.groupCollapseState.has(groupId),
-                    recordCount,
+                    range: recordRange,
                     groupId
                 });
             }
@@ -247,21 +220,32 @@ export class GroupCalculator {
         return groupTabRows;
     }
 
+    private calculateGroupRecordRange(fieldId: string, breakpointIndex: number, totalRecords: number): [number, number] {
+        const breakpoints = this.groupBreakpoints.get(fieldId) || [];
+        const startIndex = breakpoints[breakpointIndex] || 0;
+
+        let endIndex: number;
+        if (breakpointIndex + 1 < breakpoints.length) {
+            // 如果不是最后一个分组，结束位置是下一个断点的前一个位置
+            endIndex = breakpoints[breakpointIndex + 1] - 1;
+        } else {
+            // 如果是最后一个分组，结束位置是最后一条记录
+            endIndex = totalRecords - 1;
+        }
+
+        return [startIndex, endIndex];
+    }
+
     // 生成分组ID
     private generateGroupId(fieldId: string, depth: number, breakpointIndex: number): string {
         // 通过字段ID、深度和断点索引确保唯一
         return `${fieldId}_${depth}_${breakpointIndex}`;
     }
 
-    private calculateGroupRecordCount(_record: AITableViewRecord, _recordIndex: number, _depth: number): number {
-        // TODO: 实现精确的分组记录数计算
-        return 1;
-    }
-
-    private shouldShowRecord(_record: AITableViewRecord, recordIndex: number): boolean {
+    private shouldShowRecord(recordIndex: number): boolean {
         for (let depth = 0; depth < this.groups.length; depth++) {
             const groupField = this.groups[depth];
-            const breakpoints = this.groupBreakpoints.get(groupField.fieldId) || [];
+            const breakpoints = this.groupBreakpoints.get(groupField.field_id) || [];
 
             // 找到当前记录所属的分组断点
             let belongsToBreakpointIndex = -1;
@@ -273,7 +257,7 @@ export class GroupCalculator {
             }
 
             if (belongsToBreakpointIndex >= 0) {
-                const groupId = this.generateGroupId(groupField.fieldId, depth, belongsToBreakpointIndex);
+                const groupId = this.generateGroupId(groupField.field_id, depth, belongsToBreakpointIndex);
                 if (this.groupCollapseState.has(groupId)) {
                     return false; // 父级分组被折叠，不显示记录
                 }
@@ -284,7 +268,7 @@ export class GroupCalculator {
     }
 
     // 检查当前分组是否应该显示添加行
-    private shouldShowAddRowForGroup(currentGroupIds?: string[]): boolean {
+    private shouldShowAddRow(currentGroupIds?: string[]): boolean {
         if (!currentGroupIds || currentGroupIds.length === 0) {
             return true; // 默认显示
         }
