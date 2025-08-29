@@ -63,15 +63,13 @@ export interface AITableFrozenOptions {
 }
 
 export interface AITableGroupField {
-    fieldId: string;
-    desc: boolean;
+    field_id: Id;
+    direction: SortDirection;
 }
 
-export type AITableGroups = AITableGroupField[];
-
 export interface AITableGroupOptions {
-    groups?: AITableGroups;
-    collapsedGroupIds?: string[]; // 折叠的分组ID列表
+    groups?: AITableGroupField[];
+    collapsed_group_ids?: string[]; // 折叠的分组ID列表
 }
 
 export type AITableViews = AITableView[];

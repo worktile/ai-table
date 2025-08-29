@@ -1,6 +1,6 @@
 {
     "name": "@ai-table/grid",
-    "version": "0.1.40",
+    "version": "0.1.41",
     "peerDependencies": {
         "@angular/common": "^19.0.0",
         "@angular/core": "^19.0.0",
