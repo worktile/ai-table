@@ -717,7 +717,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);
                 this.addRecord({
-                    recordId: targetNameDetail.source
+                    forGroupId: targetNameDetail.source
                 });
                 const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable);
                 if (!isCanFullRender) {

@@ -36,7 +36,7 @@ export class AITableOtherRows {
             if (maxRecords && aiTable.records().length >= maxRecords) break;
             const linearRow = (aiTable.context as RendererContext).linearRows()[rowIndex];
             if (linearRow.type === AITableRowType.record) continue;
-            const { _id, type, range } = linearRow as AITableLinearRowAdd;
+            const { _id, type } = linearRow as AITableLinearRowAdd;
             const y = coordinate.getRowOffset(rowIndex);
             const curHeight = coordinate.getRowHeight(rowIndex);
 
@@ -47,7 +47,7 @@ export class AITableOtherRows {
                     y: y + 1,
                     name: generateTargetName({
                         targetName: AI_TABLE_ROW_ADD_BUTTON,
-                        source: range ? aiTable.gridData().records[range[0]]._id : undefined
+                        source: _id
                     }),
                     width: coordinate.containerWidth,
                     height: curHeight - 1,

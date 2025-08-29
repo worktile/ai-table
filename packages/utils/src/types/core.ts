@@ -205,7 +205,7 @@ export interface AddRecordOptions {
     targetIndex?: number;
     targetId?: string;
     isInsertBefore?: boolean;
-    recordId?: string | null;
+    forGroupId?: string | null;
 }
 
 export interface AddFieldOptions {

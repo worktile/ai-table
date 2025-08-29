@@ -1,14 +1,17 @@
-import { AITableSelectAllState, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
+import { AITableLinearRowGroup, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
+import { AddRecordOptions, AITableRecord, AITableViewFields, AITableViewRecords, FieldValue, TrackableEntity } from '@ai-table/utils';
+import { getParentLinearRowGroups } from '../group/utils';
+import { getMaxPosition } from '../view';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
     const newRecords: AITableRecord[] = [];
-    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
+    const activeViewId = aiTable.activeViewId();
+    const activeView = aiTable.viewsMap()[activeViewId];
     const groups = activeView.settings?.groups;
     let { originId, isDuplicate, count = 1 } = options;
     const recordCount = aiTable.records().length;
@@ -21,16 +24,32 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const newRecordShortIds = shortIdsCreator(count);
     const newRecordValues = getDefaultRecordValues(aiTable, isDuplicate, originId);
     const hiddenRecordIds: string[] = [];
-    let needCopyRecordForGroup: Record<string, any> | null = null;
-    if (groups?.length && options.recordId) {
-        needCopyRecordForGroup = getDefaultRecordValues(aiTable, true, options.recordId);
+    let needCopyGroupValuesMap: Record<string, any> | null = null;
+    if (groups?.length && options.forGroupId) {
+        const parentGroups = getParentLinearRowGroups(aiTable, options.forGroupId);
+        needCopyGroupValuesMap = parentGroups.reduce(
+            (pre, cur) => {
+                pre[cur.fieldId] = cur.groupValue;
+                return pre;
+            },
+            {} as Record<string, any>
+        );
     }
+    const records = aiTable.gridData().records as AITableViewRecords;
     newRecordIds.forEach((id, index) => {
-        const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        if (needCopyRecordForGroup) {
+        const record = {
+            _id: id,
+            short_id: newRecordShortIds[index],
+            values: newRecordValues,
+            ...trackableEntity,
+            positions: {
+                [activeViewId]: getMaxPosition(records, activeViewId) + 1
+            }
+        };
+        if (needCopyGroupValuesMap) {
             groups?.forEach((group) => {
                 // 复制分组字段值
-                record.values[group.field_id] = needCopyRecordForGroup[group.field_id];
+                record.values[group.field_id] = needCopyGroupValuesMap[group.field_id];
             });
         }
         const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
