@@ -11,34 +11,39 @@
 >
     <ko-layer>
         <ko-group [config]="gridGroupConfig()">
-            <ko-group [config]="offsetYConfig()">
-                <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
-                <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
-                @if (!hiddenIndexColumn()) {
-                    <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
-                }
-                <ai-table-frozen-groups [config]="cellsConfig()"></ai-table-frozen-groups>
-                <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
-            </ko-group>
-
-            <ko-group>
-                <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
-            </ko-group>
+            <!-- 右侧非固定列的区域 -->
             <ko-group [config]="commonGroupConfig()">
+                <!-- 右侧x,y滚动区域的 cell -->
                 <ko-group #commonOffsetGroup [config]="offsetConfig()">
                     <ai-table-cells [config]="cellsConfig()"></ai-table-cells>
                     <ai-table-placeholder-cells [config]="cellsConfig()"></ai-table-placeholder-cells>
                     <ai-table-cover-cell-entry [config]="cellsConfig()"></ai-table-cover-cell-entry>
                 </ko-group>
 
+                <!-- 右侧表头head 和 新增列 + 区域 -->
                 <ko-group [config]="offsetXConfig()">
                     <ai-table-column-heads [config]="columnHeadFieldConfig()"></ai-table-column-heads>
                     <ai-table-add-field [config]="columnHeadFieldConfig()"></ai-table-add-field>
                 </ko-group>
             </ko-group>
 
-            <ko-group [config]="offsetYConfig()">
-                <ai-table-frozen-field-shadow [config]="config()"></ai-table-frozen-field-shadow>
+            <!-- 左侧固定列 y滚动区域的cell -->
+            <ko-group [config]="frozenCommonGroupConfig()">
+                <ko-group [config]="offsetYConfig()">
+                    <ai-table-frozen-cells [config]="cellsConfig()"></ai-table-frozen-cells>
+                    <ai-table-other-rows [config]="cellsConfig()"></ai-table-other-rows>
+                    @if (!hiddenIndexColumn()) {
+                        <ai-table-hover-row-heads [config]="cellsConfig()"></ai-table-hover-row-heads>
+                    }
+                    <ai-table-frozen-groups [config]="cellsConfig()"></ai-table-frozen-groups>
+                    <ai-table-frozen-placeholder-cells [config]="cellsConfig()"></ai-table-frozen-placeholder-cells>
+                </ko-group>
+            </ko-group>
+
+            <!-- 左侧固定列 表头 + 表头右侧分割阴影 -->
+            <ko-group>
+                <ai-table-frozen-column-heads [config]="columnFrozenHeadFieldConfig()"></ai-table-frozen-column-heads>
+                <ai-table-shadow [config]="fieldHeadShadowConfig()"></ai-table-shadow>
             </ko-group>
 
             <ko-group [config]="attachGroupConfig()">
@@ -92,7 +97,7 @@
                 </ko-group>
             </ko-group>
             <ko-group>
-                <ai-table-frozen-field-shadow [config]="columnFieldStatsConfig()" position="fieldStats"></ai-table-frozen-field-shadow>
+                <ai-table-shadow [config]="statShadowConfig()"></ai-table-shadow>
             </ko-group>
         </ko-group>
     </ko-layer>

@@ -1,4 +1,9 @@
-import { AI_TABLE_FIELD_ADD_BUTTON_WIDTH, AI_TABLE_OFFSET, AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH } from '../../constants/table';
+import {
+    AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
+    AI_TABLE_OFFSET,
+    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+    AI_TABLE_SHADOW_DEFAULT_WIDTH
+} from '../../constants/table';
 import { AITableCell, AITableLayout } from '../../types';
 import { Drawer } from './drawer';
 
@@ -34,6 +39,8 @@ export class Layout extends Drawer {
 
     protected readonly?: boolean = false;
 
+    protected xIsScroll?: boolean = false;
+
     // 用于初始化或重置布局的基本属性。这个方法通常在每次渲染新的一行或单元格时调用，确保布局信息是最新的
     init({
         x,
@@ -48,7 +55,8 @@ export class Layout extends Drawer {
         hiddenIndexColumn,
         hiddenRowDrag,
         readonly,
-        frozenColumnCount
+        frozenColumnCount,
+        xIsScroll
     }: AITableLayout) {
         this.x = x;
         this.y = y;
@@ -63,6 +71,7 @@ export class Layout extends Drawer {
         this.hiddenRowDrag = hiddenRowDrag;
         this.readonly = readonly;
         this.frozenColumnCount = frozenColumnCount;
+        this.xIsScroll = xIsScroll;
     }
 
     // 当前单元格是否是行的第一列
@@ -94,5 +103,28 @@ export class Layout extends Drawer {
             height: rowHeight,
             fill
         });
+    }
+
+    protected renderFrozenShadow() {
+        if (this.isLastFrozenColumn && this.xIsScroll) {
+            const shadowWidth = AI_TABLE_SHADOW_DEFAULT_WIDTH;
+            const shadowGradient = this.ctx.createLinearGradient(
+                this.x + this.columnWidth + 0,
+                this.y,
+                this.x + this.columnWidth + 0 + shadowWidth,
+                this.y
+            );
+            // 阴影从分割线处最深，逐渐变浅
+            shadowGradient.addColorStop(0, 'rgba(0,0,0,0.05)');
+            shadowGradient.addColorStop(1, this.colors.transparent);
+
+            this.rect({
+                x: this.x + this.columnWidth + 0,
+                y: this.y,
+                width: shadowWidth,
+                height: this.rowHeight,
+                fill: shadowGradient as any
+            });
+        }
     }
 }
