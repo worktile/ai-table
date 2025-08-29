@@ -174,21 +174,8 @@ export class AITableFieldStat {
         let records: AITableRecord[] = [];
         const groupRow = this.groupRow();
         if (this.isGroupStat()) {
-            const linearRows = this.linearRows() || [];
-            let i = groupRow.rowIndex + 1;
-            let stopFlag = false;
-            while (i < linearRows.length && !stopFlag) {
-                const row = linearRows[i];
-                if (row) {
-                    if (row.type === AITableRowType.group && row.depth <= groupRow.depth) {
-                        stopFlag = true;
-                    }
-                    if (row.type === AITableRowType.record) {
-                        const record = this.recordsMap()[row._id];
-                        records.push(record);
-                    }
-                }
-                i++;
+            if (groupRow.range?.length === 2) {
+                records = this.gridData().records.slice(groupRow.range[0], groupRow.range[1] + 1);
             }
         } else {
             records = this.gridData().records;
