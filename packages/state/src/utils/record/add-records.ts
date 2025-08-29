@@ -27,15 +27,15 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     }
     newRecordIds.forEach((id, index) => {
         const record = { _id: id, short_id: newRecordShortIds[index], values: newRecordValues, ...trackableEntity };
-        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
-        if (!checkResult) {
-            hiddenRecordIds.push(id);
-        }
         if (needCopyRecordForGroup) {
             groups?.forEach((group) => {
                 // 复制分组字段值
                 record.values[group.field_id] = needCopyRecordForGroup[group.field_id];
             });
+        }
+        const checkResult = checkConditions(aiTable, aiTable.fields() as AITableViewFields, record);
+        if (!checkResult) {
+            hiddenRecordIds.push(id);
         }
         newRecords.push(record);
     });
