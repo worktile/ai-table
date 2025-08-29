@@ -1,5 +1,5 @@
 import { AITableLinearRowGroup, AITableRowType } from '@ai-table/grid';
-import { AIViewTable } from '@ai-table/state';
+import { AIViewTable } from '../../types';
 
 export function getParentLinearRowGroups(aiTable: AIViewTable, groupId: string) {
     const parentGroups: AITableLinearRowGroup[] = [];
