@@ -303,13 +303,17 @@ export class AITableRenderer {
         };
     });
 
+    xIsScroll = computed(() => {
+        return this.scrollState().scrollLeft > 0;
+    });
+
     statShadowConfig = computed<NodeConfig>(() => {
         return {
             width: 8,
             x: this.frozenAreaWidth() + 1,
             y: AI_TABLE_OFFSET,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
-            visible: this.scrollState().scrollLeft > 0
+            visible: this.xIsScroll()
         };
     });
 
@@ -319,7 +323,7 @@ export class AITableRenderer {
             x: this.frozenAreaWidth() + 1,
             y: AI_TABLE_OFFSET,
             height: AI_TABLE_FIELD_HEAD_HEIGHT,
-            visible: this.scrollState().scrollLeft > 0
+            visible: this.xIsScroll()
         };
     });
 
