@@ -28,7 +28,6 @@ import { AITableDragState } from '../../core';
 import { AITableScrollControllerService } from '../../services/scroll-controller.service';
 import { AITableGridEventService } from '../../services';
 import { AITableLinearRowRecord, AITableRowType } from '../../types/row';
-import { getGridDataRecordIndexByLinearRowIndex } from '../../utils';
 
 @Component({
     selector: 'ai-table-drag',
@@ -380,7 +379,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const coordinate = drag.coordinate!;
 
         const linearRows = aiTable.context!.linearRows();
-        console.log('linearRows==', linearRows);
         const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
         const sourceRowId = drag.sourceIds.values().next().value!;
         const sourceRowIndex = visibleRowIndexMap.get(sourceRowId) || 0;
@@ -418,7 +416,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     };
                     return;
                 }
-                console.log('targetRowIndex11=', targetRowIndex);
                 const currentLinearRow = linearRows[targetRowIndex];
                 const rowType = currentLinearRow.type;
                 if (rowType === AITableRowType.record || rowType === AITableRowType.add) {
@@ -428,14 +425,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                         top: `${lineTop}px`,
                         left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
                     });
-                    const isGroup = !!currentLinearRow.depth && currentLinearRow.depth > 0;
-                    targetRowIndex = isGroup ? getGridDataRecordIndexByLinearRowIndex(aiTable, targetRowIndex) : targetRowIndex;
-                    console.log('targetRowIndex22=', targetRowIndex);
                     this.draggedData = {
                         type: DragType.record,
                         recordIds: drag.sourceIds,
-                        targetIndex: targetRowIndex,
-                        isGroup
+                        targetIndex: targetRowIndex
                     };
                 }
             } else {

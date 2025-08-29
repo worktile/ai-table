@@ -27,16 +27,3 @@ export function toggleSelectAllRecords(aiTable: AITable, checked: boolean) {
         clearSelection(aiTable);
     }
 }
-
-export function getGridDataRecordIndexByLinearRowIndex(aiTable: AITable, targetRowIndex: number) {
-    const linearRows = aiTable.context!.linearRows();
-    const records = aiTable.gridData().records;
-    const linearRowRecord = linearRows[targetRowIndex];
-    if (linearRowRecord.type === AITableRowType.record) {
-        return records.findIndex((record) => record._id === linearRowRecord._id);
-    }
-    if (linearRowRecord.type === AITableRowType.add) {
-        return linearRowRecord.range ? linearRowRecord.range[1] + 1 : targetRowIndex;
-    }
-    return targetRowIndex;
-}

@@ -243,7 +243,6 @@ export interface SetFieldStatTypeOptions {
 export interface MoveRecordOptions {
     recordIds: IdPath[];
     newPath: NumberPath;
-    isGroup?: boolean;
 }
 
 export type NumberPath = [number];
@@ -269,7 +268,6 @@ export interface DragEndData {
     recordIds?: Set<string>;
     recordsIndex?: number[];
     width?: number;
-    isGroup?: boolean;
 }
 
 export interface TransactionOriginInfo {
