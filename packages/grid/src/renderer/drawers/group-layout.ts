@@ -2,10 +2,12 @@ import { isEmpty } from '@ai-table/utils';
 import {
     AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AngleDownPath,
     AngleRightPath
@@ -13,7 +15,7 @@ import {
 import { AITableCell, AITableLinearRowGroup, AITableRender } from '../../types';
 import { Layout } from './layout-drawer';
 import { cellDrawer } from './cell-drawer';
-import { AITable } from '../../utils';
+import { AITable, AITableGridI18nKey, getI18nTextByKey } from '../../utils';
 import { hexToRgb } from 'ngx-tethys/util';
 
 export class GroupLayout extends Layout {
@@ -57,7 +59,7 @@ export class GroupLayout extends Layout {
             // 第一列单元格
             this.rect({
                 x: AI_TABLE_CELL_PADDING + dragOccupyWidth + 2,
-                y: this.y + (this.rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
+                y: this.y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
                 width: AI_TABLE_ICON_COMMON_SIZE,
                 height: AI_TABLE_ICON_COMMON_SIZE,
                 fill: hexToRgb(this.colors.gray400, 0.2),
@@ -77,6 +79,13 @@ export class GroupLayout extends Layout {
                 this.ctx as CanvasRenderingContext2D,
                 columnWidth
             );
+        } else {
+            const emptyGroupString = getI18nTextByKey(aiTable, AITableGridI18nKey.emptyGroup);
+            this.text({
+                x: render.x + iconContainerWidth + AI_TABLE_CELL_PADDING,
+                y: this.y + (rowHeight - AI_TABLE_COMMON_FONT_SIZE) / 2,
+                text: emptyGroupString
+            });
         }
     }
 
