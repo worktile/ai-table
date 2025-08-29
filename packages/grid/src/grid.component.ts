@@ -1162,7 +1162,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 if (data.recordIds && isNumber(data.targetIndex)) {
                     this.aiMoveRecords.emit({
                         recordIds: Array.from(data.recordIds).map((id) => [id] as IdPath),
-                        newPath: [data.targetIndex]
+                        newPath: [data.targetIndex],
+                        isGroup: data.isGroup
                     });
                 }
                 return;

@@ -27,6 +27,8 @@ import {
 import { AITableDragState } from '../../core';
 import { AITableScrollControllerService } from '../../services/scroll-controller.service';
 import { AITableGridEventService } from '../../services';
+import { AITableLinearRowRecord, AITableRowType } from '../../types/row';
+import { getGridDataRecordIndexByLinearRowIndex } from '../../utils';
 
 @Component({
     selector: 'ai-table-drag',
@@ -377,6 +379,8 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const scroll = { x: 0, y: this.verticalBarElement?.scrollTop || 0 };
         const coordinate = drag.coordinate!;
 
+        const linearRows = aiTable.context!.linearRows();
+        console.log('linearRows==', linearRows);
         const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
         const sourceRowId = drag.sourceIds.values().next().value!;
         const sourceRowIndex = visibleRowIndexMap.get(sourceRowId) || 0;
@@ -393,7 +397,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         let newScrollPosition = { x: scroll.x, y: scroll.y };
         const updateTargetAndLine = (rectTop: number, scrollPosition: { x: number; y: number }) => {
             const dragCenter = sourceRowHeight / 2;
-            const targetRowIndex = coordinate.getRowStartIndex(rectTop + scrollPosition.y + dragCenter);
+            let targetRowIndex = coordinate.getRowStartIndex(rectTop + scrollPosition.y + dragCenter);
             const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
             const lineHeight = 2;
             if (
@@ -414,17 +418,26 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     };
                     return;
                 }
-                this.setAuxiliaryLineStyles({
-                    width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
-                    height: `${lineHeight}px`,
-                    top: `${lineTop}px`,
-                    left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
-                });
-                this.draggedData = {
-                    type: DragType.record,
-                    recordIds: drag.sourceIds,
-                    targetIndex: targetRowIndex
-                };
+                console.log('targetRowIndex11=', targetRowIndex);
+                const currentLinearRow = linearRows[targetRowIndex];
+                const rowType = currentLinearRow.type;
+                if (rowType === AITableRowType.record || rowType === AITableRowType.add) {
+                    this.setAuxiliaryLineStyles({
+                        width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
+                        height: `${lineHeight}px`,
+                        top: `${lineTop}px`,
+                        left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
+                    });
+                    const isGroup = !!currentLinearRow.depth && currentLinearRow.depth > 0;
+                    targetRowIndex = isGroup ? getGridDataRecordIndexByLinearRowIndex(aiTable, targetRowIndex) : targetRowIndex;
+                    console.log('targetRowIndex22=', targetRowIndex);
+                    this.draggedData = {
+                        type: DragType.record,
+                        recordIds: drag.sourceIds,
+                        targetIndex: targetRowIndex,
+                        isGroup
+                    };
+                }
             } else {
                 this.resetAuxiliaryLine();
                 this.draggedData = null;
