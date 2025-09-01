@@ -943,7 +943,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
-                const hasContentEditable = target.contentEditable === 'true' || !!target.querySelector('[contenteditable="true"]');
+                const hasContentEditable = target.contentEditable === 'true';
                 if (hasContentEditable) {
                     return;
                 }
