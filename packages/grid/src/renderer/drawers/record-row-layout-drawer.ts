@@ -133,6 +133,7 @@ export class RecordRowLayout extends Layout {
         this.renderFirstCell({ row, style, indexStyle, isCheckedRow, isHoverRow });
         this.renderCommonCell({ style });
         this.renderLastCell({ style, isCheckedRow, isHoverRow });
+        this.renderFrozenShadow();
     }
 }
 
