@@ -1007,6 +1007,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
+                const focused = document.activeElement;
+                if (!focused) {
+                    return;
+                }
+
+                const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
+                if (!hasAITableGrid) {
+                    return;
+                }
+
                 const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
                 if (!hasSelectedCells) {
                     return;
@@ -1019,7 +1029,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
                 // 检查事件目标是否是输入框或文本区域
                 const target = event.target as HTMLElement;
-                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SLATE-EDITABLE') {
+                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                    return;
+                }
+
+                const hasContentEditable = target.contentEditable === 'true' || !!target.querySelector('[contenteditable="true"]');
+                if (hasContentEditable) {
                     return;
                 }
 
