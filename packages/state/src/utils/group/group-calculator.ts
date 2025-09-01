@@ -181,7 +181,7 @@ export class GroupCalculator {
             }
             linearRows.push({
                 type: AITableRowType.add,
-                _id: '',
+                _id: nanoid(),
                 depth: this.groups.length,
                 range: [startRecordIndex, endRecordIndex]
             });
