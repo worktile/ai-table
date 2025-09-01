@@ -17,7 +17,7 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT
 } from '../../../constants';
-import { AITableBackgroundConfig, AITableFieldStatConfig } from '../../../types';
+import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableRowType } from '../../../types';
 import {
     AITableField,
     AITableFieldStatTypeItemInfo,
@@ -72,7 +72,7 @@ import _ from 'lodash';
 export class AITableFieldStat {
     thyPopover = inject(ThyPopover);
 
-    config = input.required<AITableFieldStatConfig>();
+    config = input.required<AITableGroupStatConfig | AITableFieldStatConfig>();
 
     hover = output<boolean>();
 
@@ -94,8 +94,13 @@ export class AITableFieldStat {
         };
     });
 
+    isGroupStat = computed(() => {
+        return (this.config() as AITableGroupStatConfig).isGroupStat;
+    });
+
     bgConfig = computed(() => {
-        const { field, width, height, coordinate, readonly, aiTable } = this.config();
+        const { field, width, height, coordinate, readonly, aiTable, isGroupStat, columnIndex } = this.config() as AITableGroupStatConfig;
+
         const rowHeadWidth = aiTable.context!.rowHeadWidth();
         const config: AITableBackgroundConfig = {
             coordinate,
@@ -106,27 +111,48 @@ export class AITableFieldStat {
                 fieldId: field._id,
                 mouseStyle: 'pointer'
             }),
-            width: this.isFirstColumn() ? width + AI_TABLE_OFFSET : width,
+            width: width,
             height: height,
             fill: Colors.white,
             hoverFill: Colors.gray100,
             opacity: 1,
             listening: !readonly
         };
-        if (this.renderTexts()) {
-            config.borders = [false, true, false, true];
-            config.stroke = Colors.gray200;
-            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
-        }
 
-        if (this.isFirstColumn()) {
-            if (rowHeadWidth === 0) {
-                config.borders = [false, true, false, false];
-            } else {
-                config.borders = [false, true, false, true];
+        if (isGroupStat) {
+            if (columnIndex === 0) {
+                const textsConfig = this.textsConfig();
+                if (textsConfig) {
+                    config.x = textsConfig[0].x - AI_TABLE_CELL_PADDING;
+                    config.width = config.width - config.x;
+                } else {
+                    config.width = this.noneStatWidth();
+                    config.x = width - this.noneStatWidth();
+                    config.fill = Colors.transparent;
+                }
             }
-            config.stroke = Colors.gray200;
-            config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+        } else {
+            if (this.renderTexts()) {
+                config.borders = [false, true, false, true];
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            } else if (this.isLastFrozenColumn()) {
+                config.borders = [false, true, false, false];
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            }
+
+            if (this.isFirstColumn()) {
+                if (rowHeadWidth === 0) {
+                    config.borders = [false, true, false, false];
+                } else {
+                    config.x = -AI_TABLE_OFFSET;
+                    config.width = config.width + AI_TABLE_OFFSET;
+                    config.borders = [false, true, false, true];
+                }
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            }
         }
         return config;
     });
@@ -136,9 +162,31 @@ export class AITableFieldStat {
         return field;
     });
 
-    records = computed(() => {
+    linearRows = computed(() => {
         const { aiTable } = this.config();
-        return aiTable.gridData().records;
+        return aiTable.context?.linearRows();
+    });
+
+    recordsMap = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.recordsMap();
+    });
+
+    groupRow = computed(() => (this.config() as AITableGroupStatConfig).groupRow);
+
+    gridData = computed(() => this.config().aiTable!.gridData());
+
+    records = computed(() => {
+        let records: AITableRecord[] = [];
+        const groupRow = this.groupRow();
+        if (this.isGroupStat()) {
+            if (groupRow.range?.length === 2) {
+                records = this.gridData().records.slice(groupRow.range[0], groupRow.range[1] + 1);
+            }
+        } else {
+            records = this.gridData().records;
+        }
+        return records;
     });
 
     aiFieldConfig = computed(() => {
@@ -178,6 +226,16 @@ export class AITableFieldStat {
         return width;
     });
 
+    noneStatWidth = computed(() => {
+        const noneStatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
+        const { text, textWidth } = drawer.textEllipsis({
+            text: noneStatString,
+            fontSize: DEFAULT_FONT_SIZE,
+            fontWeight: DEFAULT_FONT_WEIGHT
+        });
+        return textWidth + AI_TABLE_ACTION_COMMON_SIZE + AI_TABLE_OFFSET;
+    });
+
     renderTexts = computed(() => {
         const width = this.containerBoxWidth();
         const field = this.field();
@@ -187,7 +245,7 @@ export class AITableFieldStat {
         let resultString = null;
         let formatString = null;
         let statValue = '';
-        if (this.isFirstColumn() && selectedInfo.isSelected) {
+        if (this.isFirstColumn() && selectedInfo.isSelected && !this.isGroupStat()) {
             if (selectedInfo.selectedType === 'records') {
                 formatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.selectedRecordsCount);
             } else {
@@ -317,6 +375,11 @@ export class AITableFieldStat {
     isFirstColumn = computed(() => {
         const { columnIndex } = this.config();
         return columnIndex === 0;
+    });
+
+    isLastFrozenColumn = computed(() => {
+        const { columnIndex, coordinate } = this.config();
+        return columnIndex === coordinate.frozenColumnCount - 1;
     });
 
     iconConfig = computed(() => {

@@ -23,13 +23,15 @@ export const buildGridLinearRows = (
             linearRows.push({
                 type: AITableRowType.record,
                 _id: row._id,
-                displayIndex: displayRowIndex
+                displayIndex: displayRowIndex,
+                depth: 0
             });
         }
         if (isAddingVisible && !row._id) {
             linearRows.push({
                 type: AITableRowType.add,
-                _id: ''
+                _id: '',
+                depth: 0
             });
         }
     });

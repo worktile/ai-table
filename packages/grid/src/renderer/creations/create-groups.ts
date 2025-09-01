@@ -25,35 +25,33 @@ export const createGroupCells = (config: AITableCellsConfig) => {
         if (rowIndex < 0) continue;
         const row = linearRows[rowIndex];
         const { depth } = row;
-
         if (row == null) continue;
         if (row.type !== AITableRowType.group) continue;
         const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
         const rowHeight = coordinate.getRowHeight(rowIndex);
+        const columnWidth = coordinate.getColumnWidth(columnStartIndex);
+        const { offset } = getCellHorizontalPosition({
+            columnIndex: columnStartIndex,
+            columnWidth,
+            columnCount,
+            depth
+        });
+        const x = coordinate.getColumnOffset(columnStartIndex);
+        const group: AITableGroupConfig = {
+            aiTable,
+            coordinate,
+            rowIndex,
+            x: x + offset + AI_TABLE_CELL_PADDING,
+            y,
+            height: rowHeight,
+            row: {
+                ...row,
+                rowIndex
+            },
+            readonly
+        };
 
-        for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
-            const columnWidth = coordinate.getColumnWidth(columnIndex);
-            const { width, offset } = getCellHorizontalPosition({
-                columnIndex,
-                columnWidth,
-                columnCount,
-                depth
-            });
-            const x = coordinate.getColumnOffset(columnIndex);
-            const group: AITableGroupConfig = {
-                aiTable,
-                coordinate,
-                columnIndex,
-                x: x + offset + AI_TABLE_CELL_PADDING,
-                y,
-                width,
-                height: rowHeight,
-                row,
-                readonly
-            };
-
-            groups.push(group);
-        }
+        groups.push(group);
     }
     return groups;
 };

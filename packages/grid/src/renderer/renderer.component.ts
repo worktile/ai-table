@@ -18,13 +18,13 @@ import {
     AITableColumnHeads,
     AITableFrozenCells,
     AITableFrozenColumnHeads,
+    AITableFrozenGroups,
     AITableShadow,
     AITableFrozenPlaceholderCells,
+    AITableGroups,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells,
-    AITableScrollableGroup,
-    ScrollableGroupConfig
+    AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
@@ -39,7 +39,6 @@ import {
     AI_TABLE_SHADOW_DEFAULT_WIDTH,
     Colors
 } from '../constants';
-import { AITableFrozenGroups } from './components/group/frozen-groups.component';
 import { NodeConfig } from 'konva/lib/Node';
 
 Konva.pixelRatio = 2;
@@ -64,6 +63,8 @@ Konva.pixelRatio = 2;
         AITableFillHandle,
         AITableFieldStats,
         AITableBackground,
+        AITableFrozenGroups,
+        AITableGroups,
         AITableShadow,
         AITableFrozenGroups
     ],
@@ -297,7 +298,7 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: AI_TABLE_OFFSET,
+            y: 0,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             isHoverStatContainer: this.isHoverStatContainer()
         };
@@ -348,7 +349,7 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.frozenAreaWidth(),
             x: 0,
-            y: AI_TABLE_OFFSET,
+            y: 0,
             columnStartIndex: 0,
             columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
