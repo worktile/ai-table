@@ -18,15 +18,16 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
     }
 
     const parentGroups: AITableLinearRowGroup[] = [];
-    for (let i = targetIndex - 1; i >= 0 && parentGroups.length <= maxParentDepth; i--) {
+    let parentDepthPointer = targetRow.depth! - 1;
+    for (let i = targetIndex - 1; i >= 0 && parentDepthPointer >= 0; i--) {
         const row = linearRows[i];
 
         if (row.type === AITableRowType.group) {
             const rowDepth = row.depth || 0;
 
-            // 如果是需要的父级深度，且还没有找到该深度的分组
-            if (rowDepth <= maxParentDepth && !parentGroups.some((g) => (g.depth || 0) === rowDepth)) {
+            if (rowDepth <= parentDepthPointer) {
                 parentGroups.push(row);
+                parentDepthPointer--;
             }
         }
     }
