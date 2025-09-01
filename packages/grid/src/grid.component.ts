@@ -917,6 +917,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
+                const focused = document.activeElement;
+                if (!focused) {
+                    return;
+                }
+
+                const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
+                if (!hasAITableGrid) {
+                    return;
+                }
+
                 const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
                 if (!hasSelectedCells) {
                     return;
@@ -933,7 +943,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
-                event.preventDefault();
+                const hasContentEditable = target.contentEditable === 'true' || !!target.querySelector('[contenteditable="true"]');
+                if (hasContentEditable) {
+                    return;
+                }
 
                 const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
                 const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
@@ -981,6 +994,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         }
                     }
 
+                    event.preventDefault();
                     return;
                 }
 
@@ -990,11 +1004,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     } else if (event.key === 'v') {
                         this.pasteCells();
                     }
+                    event.preventDefault();
                     return;
                 }
 
                 if (isDeleteOrBackspace) {
                     clearCells(this.aiTable, this.actions);
+                    event.preventDefault();
                     return;
                 }
 
@@ -1016,6 +1032,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             this.aiUpdateFieldValues.emit(value);
                         }
                     });
+                    event.preventDefault();
                 }
             });
     }
