@@ -10,12 +10,6 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
     }
 
     const targetRow = linearRows[targetIndex];
-    const maxParentDepth = targetRow.depth || 0;
-
-    // 没有需要查找的父级深度，直接返回
-    if (maxParentDepth < 1) {
-        return [];
-    }
 
     const parentGroups: AITableLinearRowGroup[] = [];
     let parentDepthPointer = targetRow.depth! - 1;
