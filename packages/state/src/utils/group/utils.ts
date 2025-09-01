@@ -3,7 +3,7 @@ import { AIViewTable } from '../../types';
 
 export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string) {
     const linearRows = aiTable.context!.linearRows();
-    const targetIndex = linearRows.findIndex((row) => row._id === targetId);
+    const targetIndex = aiTable.context!.visibleRowsIndexMap().get(targetId)!;
 
     if (targetIndex === -1) {
         return [];
