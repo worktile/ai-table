@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.40-1](https://github.com/worktile/ai-table/compare/0.1.40-0...0.1.40-1) (2025-09-01)
+
+
+### Bug Fixes
+
+* #WIK-18878 SLATE-EDITABLE类型dom的keydown事件过滤 ([#652](https://github.com/worktile/ai-table/issues/652)) ([2fef093](https://github.com/worktile/ai-table/commit/2fef093dea9e45a4d424ea1bc8d09048cf9ba843)), closes [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878) [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878) [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878)
+* #WIK-18878 SLATE-EDITABLE类型dom的keydown事件过滤 ([#653](https://github.com/worktile/ai-table/issues/653)) ([8629ca5](https://github.com/worktile/ai-table/commit/8629ca5abf03eb81d341d974724fe67a564f4da3)), closes [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878)
+
+
+
 ## [0.1.40-0](https://github.com/worktile/ai-table/compare/0.1.39...0.1.40-0) (2025-08-25)
 
 
