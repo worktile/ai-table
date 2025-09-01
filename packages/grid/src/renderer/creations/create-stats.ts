@@ -1,4 +1,4 @@
-import { AI_TABLE_FIELD_STAT_INNER_HEIGHT, AI_TABLE_OFFSET, AI_TABLE_ROW_BLANK_HEIGHT, Colors } from '../../constants';
+import { AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT, AI_TABLE_OFFSET, Colors } from '../../constants';
 import { AITableFieldStatsConfig, AITableFieldStatConfig, AITableGroupStatConfig } from '../../types';
 
 export const createFieldStats = (config: AITableFieldStatsConfig) => {
@@ -23,7 +23,7 @@ export const createFieldStats = (config: AITableFieldStatsConfig) => {
             x,
             y,
             width: columnWidth,
-            height: AI_TABLE_FIELD_STAT_INNER_HEIGHT,
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             field,
             stroke: columnIndex === 0 ? colors.transparent : undefined,
             isHoverStatContainer: isHoverStatContainer,
@@ -55,9 +55,9 @@ export const createGroupFieldStats = (config: AITableFieldStatsConfig) => {
             actions,
             columnIndex,
             x,
-            y: y + AI_TABLE_OFFSET,
-            width: columnWidth - AI_TABLE_OFFSET,
-            height: height ?? AI_TABLE_ROW_BLANK_HEIGHT,
+            y: y,
+            width: columnWidth,
+            height: height ?? AI_TABLE_FIELD_HEAD_HEIGHT,
             field,
             isHoverStatContainer: isHoverStatContainer,
             readonly,

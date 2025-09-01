@@ -298,7 +298,7 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: AI_TABLE_OFFSET,
+            y: 0,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             isHoverStatContainer: this.isHoverStatContainer()
         };
@@ -349,7 +349,7 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.frozenAreaWidth(),
             x: 0,
-            y: AI_TABLE_OFFSET,
+            y: 0,
             columnStartIndex: 0,
             columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,

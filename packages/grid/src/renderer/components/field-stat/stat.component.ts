@@ -111,7 +111,7 @@ export class AITableFieldStat {
                 fieldId: field._id,
                 mouseStyle: 'pointer'
             }),
-            width: this.isFirstColumn() ? width + AI_TABLE_OFFSET : width,
+            width: width,
             height: height,
             fill: Colors.white,
             hoverFill: Colors.gray100,
@@ -136,12 +136,18 @@ export class AITableFieldStat {
                 config.borders = [false, true, false, true];
                 config.stroke = Colors.gray200;
                 config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            } else if (this.isLastFrozenColumn()) {
+                config.borders = [false, true, false, false];
+                config.stroke = Colors.gray200;
+                config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
             }
 
             if (this.isFirstColumn()) {
                 if (rowHeadWidth === 0) {
                     config.borders = [false, true, false, false];
                 } else {
+                    config.x = -AI_TABLE_OFFSET;
+                    config.width = config.width + AI_TABLE_OFFSET;
                     config.borders = [false, true, false, true];
                 }
                 config.stroke = Colors.gray200;
@@ -369,6 +375,11 @@ export class AITableFieldStat {
     isFirstColumn = computed(() => {
         const { columnIndex } = this.config();
         return columnIndex === 0;
+    });
+
+    isLastFrozenColumn = computed(() => {
+        const { columnIndex, coordinate } = this.config();
+        return columnIndex === coordinate.frozenColumnCount - 1;
     });
 
     iconConfig = computed(() => {
