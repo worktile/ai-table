@@ -1019,11 +1019,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
                 // 检查事件目标是否是输入框或文本区域
                 const target = event.target as HTMLElement;
-                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SLATE-EDITABLE') {
                     return;
                 }
-
-                event.preventDefault();
 
                 const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
                 const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
@@ -1071,6 +1069,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         }
                     }
 
+                    event.preventDefault();
                     return;
                 }
 
@@ -1080,11 +1079,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     } else if (event.key === 'v') {
                         this.pasteCells();
                     }
+                    event.preventDefault();
                     return;
                 }
 
                 if (isDeleteOrBackspace) {
                     clearCells(this.aiTable, this.actions);
+                    event.preventDefault();
                     return;
                 }
 
@@ -1106,6 +1107,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             this.aiUpdateFieldValues.emit(value);
                         }
                     });
+                    event.preventDefault();
                 }
             });
     }
