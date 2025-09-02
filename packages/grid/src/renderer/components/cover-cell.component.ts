@@ -3,7 +3,13 @@ import { KoContainer } from '../../angular-konva';
 import { AITableCellsConfig, AITableCoverCellConfig } from '../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
-import { AI_TABLE_CELL_PADDING, AI_TABLE_OFFSET, DEFAULT_TEXT_ALIGN_LEFT, DEFAULT_TEXT_ALIGN_RIGHT } from '../../constants';
+import {
+    AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
+    AI_TABLE_OFFSET,
+    DEFAULT_TEXT_ALIGN_LEFT,
+    DEFAULT_TEXT_ALIGN_RIGHT
+} from '../../constants';
 import { AITableQueries, FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
 import { isSelectedField } from '../creations/create-cells';
 import _ from 'lodash';
@@ -58,16 +64,23 @@ export class AITableCoverCellEntry {
 
         const columnIndex = aiTable.context?.visibleColumnsIndexMap().get(field._id) ?? 0;
         const rowIndex = aiTable.context?.visibleRowsIndexMap().get(recordId) ?? 0;
+        const row = aiTable.context?.linearRows()[rowIndex];
+        const depth = row?.depth ?? 0;
 
         const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-        const { width } = getCellHorizontalPosition({
-            columnWidth,
+        const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
+        const { width, offset } = getCellHorizontalPosition({
             columnIndex,
-            columnCount
+            columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
+            columnCount,
+            depth
         });
-
+        let realX = x + offset;
+        if (isGroupAndFirstColumn) {
+            realX += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+        }
         const style = {
             textAlign: DEFAULT_TEXT_ALIGN_LEFT
         } as any;
@@ -82,7 +95,7 @@ export class AITableCoverCellEntry {
             recordId,
             aiTable,
             coordinate,
-            x,
+            x: realX,
             y,
             readonly,
             actions,
