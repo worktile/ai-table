@@ -10,15 +10,11 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
     }
 
     const targetRow = linearRows[targetIndex];
-    console.log('============ targetRow =============');
-    console.log(targetRow);
 
     const parentGroups: AITableLinearRowGroup[] = [];
     let parentDepthPointer = targetRow.depth! - 1;
     for (let i = targetIndex - 1; i >= 0 && parentDepthPointer >= 0; i--) {
         const row = linearRows[i];
-        console.log('============ row =============');
-        console.log(row);
 
         if (row.type === AITableRowType.group) {
             const rowDepth = row.depth || 0;
