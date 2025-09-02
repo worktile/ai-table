@@ -243,7 +243,8 @@ export interface SetFieldStatTypeOptions {
 
 export interface MoveRecordOptions {
     recordIds: IdPath[];
-    newPath: NumberPath;
+    afterRecordId?: string;
+    beforeRecordId?: string;
 }
 
 export type NumberPath = [number];
@@ -268,6 +269,8 @@ export interface DragEndData {
     fieldsIndex?: number[];
     recordIds?: Set<string>;
     recordsIndex?: number[];
+    afterRecordId?: string;
+    beforeRecordId?: string;
     width?: number;
 }
 
