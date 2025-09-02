@@ -125,7 +125,6 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const { width, offset } = getCellHorizontalPosition({
                         columnIndex,
                         columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
-                        // columnWidth,
                         columnCount,
                         depth
                     });
