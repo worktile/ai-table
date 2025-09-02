@@ -133,8 +133,9 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
                     });
                     if (sourceRowIndexPointer <= 0) {
                         sourceRowIndexPointer = sourceRowCount - 1;
+                    } else {
+                        sourceRowIndexPointer--;
                     }
-                    sourceRowIndexPointer--;
                 }
             }
         }
