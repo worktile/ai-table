@@ -955,7 +955,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (event.key === 'ArrowUp') {
             let nextRowIndex = currentRowIndex - 1;
             let findFlag = false;
-            while (nextRowIndex > 0 && !findFlag) {
+            while (nextRowIndex > -1 && !findFlag) {
                 const row = linearRows[nextRowIndex];
                 if (row.type === AITableRowType.record) {
                     findFlag = true;
@@ -984,8 +984,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private getNextCell(currentCell: AIRecordFieldIdPath, event: KeyboardEvent) {
         const { rowIndex, columnIndex } = AITable.getCellIndex(this.aiTable, currentCell) || {};
         let nextCellPath: AIRecordFieldIdPath | null = null;
-        if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && rowIndex) {
-            const nextRowId = this.getNextRecordRowId(rowIndex, event);
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            const nextRowId = this.getNextRecordRowId(rowIndex!, event);
             if (nextRowId) {
                 nextCellPath = [nextRowId, currentCell[1]];
             }
