@@ -186,14 +186,14 @@ export function selectCells(
     if (!endCell) {
         selectedCells.add(`${startRecordId}:${startFieldId}`);
     } else {
-        const startCellString = startCell.join(':');
-        const endCellString = endCell.join(':');
+        const startCellPath: string = startCell.join(':');
+        const endCellPath: string = endCell.join(':');
         const selectCells = Array.from(aiTable.selection().selectedCells);
-        const startSelectedCellString = selectCells[0];
-        const endSelectedCellString = selectCells[selectCells.length - 1];
+        const startSelectedCellPath: string = selectCells[0];
+        const endSelectedCellPath: string = selectCells[selectCells.length - 1];
         if (
-            (startCellString === startSelectedCellString || startCellString === endSelectedCellString) &&
-            (endCellString === startSelectedCellString || endCellString === endSelectedCellString)
+            (startCellPath === startSelectedCellPath || startCellPath === endSelectedCellPath) &&
+            (endCellPath === startSelectedCellPath || endCellPath === endSelectedCellPath)
         ) {
             return;
         }
