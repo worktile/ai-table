@@ -119,7 +119,7 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
                 }
             }
         } else {
-            let sourceRowIndexPointer = sourceRowCount * 10000 - 1;
+            let sourceRowIndexPointer = sourceRowCount - 1;
             for (let rowIndex = targetEndRowIndex; rowIndex >= targetStartRowIndex; rowIndex--) {
                 const row = linearRows[rowIndex];
                 if (row.type === AITableRowType.record) {
@@ -131,6 +131,9 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
                         path: [targetRecordId, fieldId],
                         value: sourceValue
                     });
+                    if (sourceRowIndexPointer <= 0) {
+                        sourceRowIndexPointer = sourceRowCount - 1;
+                    }
                     sourceRowIndexPointer--;
                 }
             }
