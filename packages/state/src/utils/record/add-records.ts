@@ -41,10 +41,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
             _id: id,
             short_id: newRecordShortIds[index],
             values: newRecordValues,
-            ...trackableEntity,
-            positions: {
-                [activeViewId]: getMaxPosition(records, activeViewId) + 1
-            }
+            ...trackableEntity
         };
         if (needCopyGroupValuesMap) {
             groups?.forEach((group) => {

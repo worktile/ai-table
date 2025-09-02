@@ -14,7 +14,7 @@ import {
     AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { createMultiplePositions, getSortRecords } from '../utils';
+import { createMultiplePositions, getSortRecords, getSortRecordsByViewPosition } from '../utils';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
     let operations: UpdateFieldValueAction[] = [];
@@ -68,12 +68,7 @@ export function addRecords(
     const invalidFieldValues: string[] = [];
 
     const sortRecords =
-        options?.sortRecords ||
-        (getSortRecords(
-            aiTable,
-            aiTable.records() as AITableViewRecords,
-            aiTable.views().find((item) => item._id === aiTable.activeViewId())!
-        ) as AITableViewRecords);
+        options?.sortRecords || getSortRecordsByViewPosition(aiTable.records() as AITableViewRecords, aiTable.activeViewId());
     const targetIndex = options?.targetId
         ? sortRecords.findIndex((item) => item._id === options.targetId)
         : options?.targetIndex || sortRecords.length - 1;

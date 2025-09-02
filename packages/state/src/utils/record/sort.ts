@@ -1,5 +1,6 @@
 import { AITableFieldType, AITableView, AITableViewRecords, AITableViewRecord, AITableGroupField, SortDirection } from '@ai-table/utils';
 import { AITable, AITableQueries, FieldModelMap } from '@ai-table/grid';
+import _ from 'lodash';
 
 export function getSortRecords(
     aiTable: AITable,
@@ -39,6 +40,10 @@ export function getSortRecords(
         }
         return compareByPosition(record1, record2, activeView);
     });
+}
+
+export function getSortRecordsByViewPosition(records: AITableViewRecords, activeViewId: string) {
+    return _.sortBy(records, (record) => record.positions[activeViewId]);
 }
 
 export function sortRecordsBySortInfo(
