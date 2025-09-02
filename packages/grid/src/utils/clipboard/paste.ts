@@ -1,4 +1,4 @@
-import { AITableContent } from '../../types';
+import { AITableContent, AITableRowType } from '../../types';
 import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { processPastedValueForSelect } from '../field/model/select';
@@ -71,7 +71,6 @@ function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
             })
             .filter((row) => row.length > 0);
     } catch (error) {
-        console.warn('Failed to extract content from HTML:', error);
         return [];
     }
 }
@@ -212,14 +211,28 @@ export const writeToAITable = async (
     const maxRecords = aiTable.context!.maxRecords();
 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
-    const lastRowIndex = aiTable.context!.linearRows().length - 1;
-    const recordsCount = aiTable.records().length;
-    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
-    if (maxRecords && recordsCount + appendRowCount > maxRecords) {
-        appendRowCount = maxRecords - recordsCount;
-        result.isPasteOverMaxRecords = true;
+
+    let appendRowCount = 0;
+    const originLinearRows = aiTable.context!.linearRows();
+    for (let i = startRowIndex; i < startRowIndex + clipboardContent.length; i++) {
+        if (i >= originLinearRows.length) {
+            appendRowCount += startRowIndex + clipboardContent.length - i;
+            break;
+        } else {
+            const row = originLinearRows[i];
+            if (row.type !== AITableRowType.record) {
+                appendRowCount += startRowIndex + clipboardContent.length - i;
+                break;
+            }
+        }
     }
-    actions.addRecord({ count: appendRowCount });
+    actions.addRecord({
+        count: appendRowCount,
+        targetId: startRecordId,
+        forGroupId: startRecordId
+    });
+
+    const newLinearRows = aiTable.context!.linearRows();
 
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
@@ -237,7 +250,6 @@ export const writeToAITable = async (
         }
     }
 
-    const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
     let visibleFields = AITable.getVisibleFields(aiTable);
     clipboardContent.forEach((row, i) => {
@@ -245,12 +257,13 @@ export const writeToAITable = async (
         if (maxRecords && targetRowIndex >= maxRecords) {
             return;
         }
+        const targetRecord = newLinearRows[targetRowIndex];
+
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
             if (maxFields && targetColIndex >= maxFields) {
                 return;
             }
-            const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;
