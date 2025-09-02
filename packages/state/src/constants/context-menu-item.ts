@@ -13,7 +13,7 @@ import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
-import { AddRecordOptions } from '../../../utils/src';
+import { AddRecordOptions } from '@ai-table/utils';
 
 export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
