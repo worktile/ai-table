@@ -2,7 +2,7 @@ import { AITableViewRecord, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { getMaxPosition } from '../view';
 
-export function findNextRecordByOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
+export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
     const records = aiTable.records() as AITableViewRecords;
     const recordsMap = aiTable.recordsMap();
@@ -22,7 +22,7 @@ export function findNextRecordByOriginalRecords(aiTable: AIViewTable, targetReco
     return nextRecord;
 }
 
-export function findPrevRecordByOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
+export function findPrevRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
     const records = aiTable.records() as AITableViewRecords;
     const recordsMap = aiTable.recordsMap();
@@ -61,7 +61,7 @@ export function getPositionByAfterOrBeforeRecordId(
         }
 
         prevPosition = targetRecord.positions[activeViewId] || 0;
-        const nextPosition = findNextRecordByOriginalRecords(aiTable, afterRecordId);
+        const nextPosition = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
         if (nextPosition !== null) {
             targetPosition = nextPosition.positions[activeViewId] || 0;
         } else {
@@ -76,7 +76,7 @@ export function getPositionByAfterOrBeforeRecordId(
         }
 
         targetPosition = targetRecord.positions[activeViewId] || 0;
-        const previousPosition = findPrevRecordByOriginalRecords(aiTable, beforeRecordId);
+        const previousPosition = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
         if (previousPosition !== null) {
             prevPosition = previousPosition.positions[activeViewId] || 0;
         } else {
