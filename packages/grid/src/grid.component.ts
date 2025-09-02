@@ -1208,10 +1208,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.record:
-                if (data.recordIds && isNumber(data.targetIndex)) {
+                if (data.recordIds && (data.beforeRecordId || data.afterRecordId)) {
                     this.aiMoveRecords.emit({
-                        recordIds: Array.from(data.recordIds).map((id) => [id] as IdPath),
-                        newPath: [data.targetIndex]
+                        recordIds: Array.from(data.recordIds),
+                        beforeRecordId: data.beforeRecordId,
+                        afterRecordId: data.afterRecordId
                     });
                 }
                 return;
