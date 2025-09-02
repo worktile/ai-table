@@ -242,7 +242,7 @@ export interface SetFieldStatTypeOptions {
 }
 
 export interface MoveRecordOptions {
-    recordIds: IdPath[];
+    recordIds: string[];
     afterRecordId?: string;
     beforeRecordId?: string;
 }

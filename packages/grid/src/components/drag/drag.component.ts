@@ -466,10 +466,8 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         };
         if (targetIndex === 0) {
             this.draggedData.beforeRecordId = linearRows[0]._id;
-        } else if (linearRows[targetIndex].type === AITableRowType.add) {
-            this.draggedData.afterRecordId = linearRows[targetIndex - 1]._id;
         } else {
-            this.draggedData.afterRecordId = linearRows[targetIndex]._id;
+            this.draggedData.afterRecordId = linearRows[targetIndex - 1]._id;
         }
     }
 
