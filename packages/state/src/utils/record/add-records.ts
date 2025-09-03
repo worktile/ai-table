@@ -64,7 +64,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
         });
     }
     Actions.addRecords(aiTable, newRecords, options);
-    const recentAddRecord = options.isInsertBefore ? newRecords[newRecords.length - 1] : newRecords[0];
+    const recentAddRecord = options.beforeRecordId ? newRecords[newRecords.length - 1] : newRecords[0];
     const activeRecordId = recentAddRecord._id;
     const activeFieldId = aiTable.gridData().fields[0]._id;
     closeExpendCell(aiTable);

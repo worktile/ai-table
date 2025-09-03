@@ -43,9 +43,8 @@ export const InsertUpwardRecords = (aiTable: AITable, actions: AITableActions): 
             const aiViewTable = aiTable as AIViewTable;
             const activeView = aiViewTable.viewsMap()[aiViewTable.activeViewId()];
             const addRecordOptions: AddRecordOptions = {
-                targetId: selectedRecordIds[0],
-                count,
-                isInsertBefore: true
+                beforeRecordId: selectedRecordIds[0],
+                count
             };
             if (activeView?.settings?.groups?.length) {
                 addRecordOptions.forGroupId = selectedRecordIds[0];
@@ -68,7 +67,7 @@ export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions)
             const aiViewTable = aiTable as AIViewTable;
             const activeView = aiViewTable.viewsMap()[aiViewTable.activeViewId()];
             const addRecordOptions: AddRecordOptions = {
-                targetId: selectedRecordIds[0],
+                afterRecordId: selectedRecordIds[0],
                 count
             };
             if (activeView?.settings?.groups?.length) {
