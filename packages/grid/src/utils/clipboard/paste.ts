@@ -16,8 +16,7 @@ import {
     idCreator,
     SetFieldStatTypeOptions
 } from '@ai-table/utils';
-import { getGroupLastRecordIndex } from '@ai-table/state';
-
+import { getGroupLastRecordIndex } from '../group';
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
 const decodeClipboardJsonData = (encoded: string) => {
@@ -223,7 +222,7 @@ export const writeToAITable = async (
     }
     actions.addRecord({
         count: appendRowCount,
-        targetId: startRecordId,
+        afterRecordId: startRecordId,
         forGroupId: startRecordId
     });
 
