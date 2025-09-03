@@ -213,18 +213,20 @@ export const writeToAITable = async (
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
 
     const lastRowIndex = getGroupLastRecordIndex(aiTable, startRowIndex);
-    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
+    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex) - 1;
 
     const recordsCount = aiTable.records().length;
     if (maxRecords && recordsCount + appendRowCount > maxRecords) {
         appendRowCount = maxRecords - recordsCount;
         result.isPasteOverMaxRecords = true;
     }
-    actions.addRecord({
-        count: appendRowCount,
-        afterRecordId: startRecordId,
-        forGroupId: startRecordId
-    });
+    if (appendRowCount > 0) {
+        actions.addRecord({
+            count: appendRowCount,
+            afterRecordId: startRecordId,
+            forGroupId: startRecordId
+        });
+    }
 
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
@@ -275,9 +277,7 @@ export const writeToAITable = async (
                         }
                     ]);
                     result.isPasteSuccess = true;
-                } catch (error) {
-                    console.error('Failed to paste value:', error);
-                }
+                } catch (error) {}
             }
         });
     });
