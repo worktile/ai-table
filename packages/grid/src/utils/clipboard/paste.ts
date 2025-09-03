@@ -16,6 +16,7 @@ import {
     idCreator,
     SetFieldStatTypeOptions
 } from '@ai-table/utils';
+import { getGroupLastRecordIndex } from '@ai-table/state';
 
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
@@ -212,19 +213,13 @@ export const writeToAITable = async (
 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
 
-    let appendRowCount = 0;
-    const originLinearRows = aiTable.context!.linearRows();
-    for (let i = startRowIndex; i < startRowIndex + clipboardContent.length; i++) {
-        if (i >= originLinearRows.length) {
-            appendRowCount += startRowIndex + clipboardContent.length - i;
-            break;
-        } else {
-            const row = originLinearRows[i];
-            if (row.type !== AITableRowType.record) {
-                appendRowCount += startRowIndex + clipboardContent.length - i;
-                break;
-            }
-        }
+    const lastRowIndex = getGroupLastRecordIndex(aiTable, startRowIndex);
+    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
+
+    const recordsCount = aiTable.records().length;
+    if (maxRecords && recordsCount + appendRowCount > maxRecords) {
+        appendRowCount = maxRecords - recordsCount;
+        result.isPasteOverMaxRecords = true;
     }
     actions.addRecord({
         count: appendRowCount,
@@ -232,8 +227,7 @@ export const writeToAITable = async (
         forGroupId: startRecordId
     });
 
-    const newLinearRows = aiTable.context!.linearRows();
-
+    const linearRows = aiTable.context!.linearRows();
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
     const copiedFieldLength = clipboardContent[0].length;
@@ -257,7 +251,7 @@ export const writeToAITable = async (
         if (maxRecords && targetRowIndex >= maxRecords) {
             return;
         }
-        const targetRecord = newLinearRows[targetRowIndex];
+        const targetRecord = linearRows[targetRowIndex];
 
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
