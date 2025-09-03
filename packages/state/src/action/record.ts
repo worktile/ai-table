@@ -14,7 +14,7 @@ import {
     AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { createMultiplePositions, getSortRecords } from '../utils';
+import { getNewRecordsPosition } from '../utils';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
     let operations: UpdateFieldValueAction[] = [];
@@ -58,33 +58,10 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord) {
     addRecords(aiTable, [record]);
 }
 
-export function addRecords(
-    aiTable: AIViewTable,
-    records: AITableRecord[],
-    options?: AddRecordOptions & {
-        sortRecords?: AITableViewRecords;
-    }
-) {
+export function addRecords(aiTable: AIViewTable, records: AITableRecord[], options?: AddRecordOptions) {
     const invalidFieldValues: string[] = [];
 
-    const sortRecords =
-        options?.sortRecords ||
-        (getSortRecords(
-            aiTable,
-            aiTable.records() as AITableViewRecords,
-            aiTable.views().find((item) => item._id === aiTable.activeViewId())!
-        ) as AITableViewRecords);
-    const targetIndex = options?.targetId
-        ? sortRecords.findIndex((item) => item._id === options.targetId)
-        : options?.targetIndex || sortRecords.length - 1;
-    const positions = createMultiplePositions(
-        aiTable.views(),
-        aiTable.activeViewId(),
-        sortRecords,
-        targetIndex,
-        records.length,
-        options?.isInsertBefore
-    );
+    const positions = getNewRecordsPosition(aiTable, options);
     records.forEach((record, index) => {
         Object.entries(record.values).every(([fieldId, value]) => {
             const field = AITableQueries.getField(aiTable, [fieldId]);
@@ -100,7 +77,6 @@ export function addRecords(
         console.error(`Invalid field values at add records. invalidFieldValues: ${invalidFieldValues}`);
         return;
     }
-
     records.forEach((record, index) => {
         (record as AITableViewRecord).positions = positions[index];
         const operation: AddRecordAction = {
