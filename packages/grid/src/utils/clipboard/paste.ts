@@ -227,7 +227,6 @@ export const writeToAITable = async (
         forGroupId: startRecordId
     });
 
-    const linearRows = aiTable.context!.linearRows();
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
     const copiedFieldLength = clipboardContent[0].length;
@@ -244,6 +243,7 @@ export const writeToAITable = async (
         }
     }
 
+    const linearRows = aiTable.context!.linearRows();
     const references = aiTable.context!.references();
     let visibleFields = AITable.getVisibleFields(aiTable);
     clipboardContent.forEach((row, i) => {
