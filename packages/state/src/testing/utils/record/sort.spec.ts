@@ -195,7 +195,7 @@ describe('Record sort test', () => {
         expect(result2[0].values['field1']).toBe('D');
     });
 
-    // 开启自动排序后插入空行默认放到最前面，关闭后在最前面
+    // 开启自动排序后插入空行默认放到最前，关闭后在保持在前
     it('When automatic sorting is enabled, inserting a blank row is placed at the beginning by default, and it remains at the beginning when automatic sorting is disabled', () => {
         const recordsWithEmpty = [
             { ...mockRecords[0], values: { field1: 'B' }, positions: { view1: 1 } },
@@ -221,7 +221,7 @@ describe('Record sort test', () => {
 
         const autoSortResult = getSortRecords(mockAITable, recordsWithEmpty, mockActiveView);
 
-        expect(autoSortResult[0].values['field1']).toBe(''); // 空值在前面
+        expect(autoSortResult[0].values['field1']).toBe(''); // 空值在前
         expect(autoSortResult[1].values['field1']).toBe('A');
         expect(autoSortResult[2].values['field1']).toBe('B');
 
@@ -237,7 +237,7 @@ describe('Record sort test', () => {
         };
 
         const manualSortResult = getSortRecords(mockAITable, recordsWithEmpty, mockActiveView);
-        expect(manualSortResult[0].values['field1']).toBe(''); // 空值在前面
+        expect(manualSortResult[0].values['field1']).toBe(''); // 空值在前
     });
 
     // 开启自动排序后，清除自动排序后要恢复到上一次手动拖拽顺序
