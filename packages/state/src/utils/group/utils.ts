@@ -28,8 +28,3 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
 
     return parentGroups;
 }
-
-export function getLinearRowTypeByLinerRowIndex(aiTable: AIViewTable, index: number) {
-    const linearRows = aiTable.context!.linearRows();
-    return linearRows[index].type;
-}
