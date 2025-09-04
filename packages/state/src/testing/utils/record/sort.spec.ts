@@ -721,7 +721,7 @@ describe('Grouping sorting test', () => {
         expect(scores[scores.length - 1]).toBe(78); // 最低分
     });
 
-    // 删除分组后，如果没有其他排序条件，应该恢复到位置排序
+    // 删除分组后，应该恢复到位置排序
     it('Delete grouping, if no other sorting conditions, should restore to position sorting', () => {
         const recordsWithPosition = mockRecords.map((record, index) => ({
             ...record,
