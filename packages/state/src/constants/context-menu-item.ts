@@ -13,6 +13,7 @@ import { AIViewTable } from '../types';
 import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
+import { AddRecordOptions } from '@ai-table/utils';
 
 export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
@@ -39,11 +40,16 @@ export const InsertUpwardRecords = (aiTable: AITable, actions: AITableActions): 
         count: 1,
         exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService, count: any) => {
             let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
-            actions.addRecord({
-                targetId: selectedRecordIds[0],
-                count,
-                isInsertBefore: true
-            });
+            const aiViewTable = aiTable as AIViewTable;
+            const activeView = aiViewTable.viewsMap()[aiViewTable.activeViewId()];
+            const addRecordOptions: AddRecordOptions = {
+                beforeRecordId: selectedRecordIds[0],
+                count
+            };
+            if (activeView?.settings?.groups?.length) {
+                addRecordOptions.forGroupId = selectedRecordIds[0];
+            }
+            actions.addRecord(addRecordOptions);
         }
     };
 };
@@ -58,10 +64,16 @@ export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions)
         isInputNumber: true,
         exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService, count: any) => {
             let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
-            actions.addRecord({
-                targetId: selectedRecordIds[0],
+            const aiViewTable = aiTable as AIViewTable;
+            const activeView = aiViewTable.viewsMap()[aiViewTable.activeViewId()];
+            const addRecordOptions: AddRecordOptions = {
+                afterRecordId: selectedRecordIds[0],
                 count
-            });
+            };
+            if (activeView?.settings?.groups?.length) {
+                addRecordOptions.forGroupId = selectedRecordIds[0];
+            }
+            actions.addRecord(addRecordOptions);
         }
     };
 };

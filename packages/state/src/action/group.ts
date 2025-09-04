@@ -45,11 +45,9 @@ function setCollapsedGroup(aiTable: AIViewTable, collapsedGroupIds: string[]) {
 
 // 折叠
 function toggleGroupCollapse(aiTable: AIViewTable, groupId: string) {
-    const viewId = aiTable.activeViewId();
-    const view = aiTable.views().find((v) => v._id === viewId);
-    if (!view) return;
-
-    const currentCollapse = view.settings?.collapsed_group_ids || [];
+    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
+    if (!activeView) return;
+    const currentCollapse = activeView.settings?.collapsed_group_ids || [];
     const newCollapse = currentCollapse.includes(groupId) ? currentCollapse.filter((id) => id !== groupId) : [...currentCollapse, groupId];
 
     setCollapsedGroup(aiTable, newCollapse);
@@ -57,10 +55,10 @@ function toggleGroupCollapse(aiTable: AIViewTable, groupId: string) {
 
 // 添加分组
 function addGroupField(aiTable: AIViewTable, fieldId: string, direction: SortDirection = SortDirection.ascending) {
-    const view = aiTable.views().find((v) => v._id === aiTable.activeViewId());
-    if (!view) return;
+    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
+    if (!activeView) return;
 
-    const currentGroups = view.settings?.groups || [];
+    const currentGroups = activeView.settings?.groups || [];
 
     // 是否已存在
     if (currentGroups.some((group) => group.field_id === fieldId)) {

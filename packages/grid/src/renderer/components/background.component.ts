@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, EventEmitter, input, mode
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShapeConfigTypes } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
-import { Colors } from '../../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_OFFSET, Colors } from '../../constants';
 import { AITableBackgroundConfig } from '../../types';
 import { setMouseStyle } from '../../utils';
 import _ from 'lodash';
@@ -127,14 +127,18 @@ export class AITableBackground {
     });
 
     bgConfig = computed(() => {
-        const { name, width, height, fill = Colors.transparent, cornerRadius, opacity, hoverFill, hoverOpacity, listening } = this.config();
+        const { name, width, height, fill = Colors.transparent, opacity, hoverFill, hoverOpacity, listening, borders } = this.config();
+        const [top, right, bottom, left] = borders || [false, false, false, false];
+
         const active = this.isHover() || this.isActive();
+        const strokeWidth = this.strokeWidth() || AI_TABLE_OFFSET;
         const result: KoShapeConfigTypes = {
+            x: left ? 0 : strokeWidth,
+            y: top ? 0 : strokeWidth,
+            width: width - (left ? 0 : strokeWidth) - (right ? 0 : strokeWidth),
+            height: height - (top ? 0 : strokeWidth) - (bottom ? 0 : strokeWidth),
             name,
-            width,
-            height,
             fill: active ? hoverFill || fill : fill,
-            cornerRadius,
             opacity: active ? hoverOpacity || opacity : opacity,
             listening
         };

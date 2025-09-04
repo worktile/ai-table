@@ -446,7 +446,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
         if (keywords) {
             const references = this.aiReferences();
-            this.aiTable.records().forEach((record) => {
+            this.aiTable.gridData().records.forEach((record) => {
                 this.aiTable.fields().forEach((field) => {
                     if (isCellMatchKeywords(this.aiTable, field, record._id, keywords, references)) {
                         matchedCells.add(`${record._id}:${field._id}`);
@@ -611,7 +611,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
         this.updateDragSelectState(false, null);
-
         if (this.dragFillState.isDragging) {
             this.performFill(e);
         }
@@ -716,7 +715,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);
-                this.addRecord();
+                this.addRecord({
+                    forGroupId: targetNameDetail.source
+                });
                 const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable);
                 if (!isCanFullRender) {
                     this.scrollAction({
@@ -949,14 +950,45 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.resizeObserver.observe(this.containerElement());
     }
 
+    private getNextRecordRowId(currentRowIndex: number, event: KeyboardEvent) {
+        const linearRows = this.aiTable.context!.linearRows();
+        if (event.key === 'ArrowUp') {
+            let nextRowIndex = currentRowIndex - 1;
+            let findFlag = false;
+            while (nextRowIndex > -1 && !findFlag) {
+                const row = linearRows[nextRowIndex];
+                if (row.type === AITableRowType.record) {
+                    findFlag = true;
+                } else {
+                    nextRowIndex--;
+                }
+            }
+            return findFlag ? linearRows[nextRowIndex]._id : null;
+        }
+        if (event.key === 'ArrowDown') {
+            let nextRowIndex = currentRowIndex + 1;
+            let findFlag = false;
+            while (nextRowIndex < linearRows.length && !findFlag) {
+                const row = linearRows[nextRowIndex];
+                if (row.type === AITableRowType.record) {
+                    findFlag = true;
+                } else {
+                    nextRowIndex++;
+                }
+            }
+            return findFlag ? linearRows[nextRowIndex]._id : null;
+        }
+        return null;
+    }
+
     private getNextCell(currentCell: AIRecordFieldIdPath, event: KeyboardEvent) {
         const { rowIndex, columnIndex } = AITable.getCellIndex(this.aiTable, currentCell) || {};
         let nextCellPath: AIRecordFieldIdPath | null = null;
-        if (event.key === 'ArrowUp' && rowIndex) {
-            nextCellPath = [this.aiTable.gridData().records[rowIndex - 1]._id, currentCell[1]];
-        }
-        if (event.key === 'ArrowDown' && rowIndex! < this.gridData().records.length - 1) {
-            nextCellPath = [this.aiTable.gridData().records[rowIndex! + 1]._id, currentCell[1]];
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            const nextRowId = this.getNextRecordRowId(rowIndex!, event);
+            if (nextRowId) {
+                nextCellPath = [nextRowId, currentCell[1]];
+            }
         }
         if (event.key === 'ArrowLeft' && columnIndex) {
             nextCellPath = [currentCell[0], this.aiTable.gridData().fields[columnIndex - 1]._id];
@@ -972,6 +1004,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async (event: KeyboardEvent) => {
                 if (this.aiReadonly()) {
+                    return;
+                }
+
+                const focused = document.activeElement;
+                if (!focused) {
+                    return;
+                }
+
+                const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
+                if (!hasAITableGrid) {
                     return;
                 }
 
@@ -991,7 +1033,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     return;
                 }
 
-                event.preventDefault();
+                const hasContentEditable = target.contentEditable === 'true';
+                if (hasContentEditable) {
+                    return;
+                }
 
                 const isCopyOrPaste = (event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v');
                 const isDeleteOrBackspace = event.key === 'Backspace' || event.key === 'Delete';
@@ -1039,6 +1084,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                         }
                     }
 
+                    event.preventDefault();
                     return;
                 }
 
@@ -1048,11 +1094,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     } else if (event.key === 'v') {
                         this.pasteCells();
                     }
+                    event.preventDefault();
                     return;
                 }
 
                 if (isDeleteOrBackspace) {
                     clearCells(this.aiTable, this.actions);
+                    event.preventDefault();
                     return;
                 }
 
@@ -1074,6 +1122,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                             this.aiUpdateFieldValues.emit(value);
                         }
                     });
+                    event.preventDefault();
                 }
             });
     }
@@ -1159,10 +1208,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 }
                 break;
             case DragType.record:
-                if (data.recordIds && isNumber(data.targetIndex)) {
+                if (data.recordIds && (data.beforeRecordId || data.afterRecordId)) {
                     this.aiMoveRecords.emit({
-                        recordIds: Array.from(data.recordIds).map((id) => [id] as IdPath),
-                        newPath: [data.targetIndex]
+                        recordIds: Array.from(data.recordIds),
+                        beforeRecordId: data.beforeRecordId,
+                        afterRecordId: data.afterRecordId
                     });
                 }
                 return;

@@ -1,6 +1,6 @@
 import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, FieldValue, FieldOptions } from '@ai-table/utils';
 import { AITable, getFieldOptionByField } from '../core';
-import { AITableCellInfo, AITableSelection } from '../types';
+import { AITableCellInfo, AITableRowType, AITableSelection } from '../types';
 import { selectField } from './field';
 import { AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
 
@@ -186,7 +186,15 @@ export function selectCells(
     if (!endCell) {
         selectedCells.add(`${startRecordId}:${startFieldId}`);
     } else {
-        if (endCell && endCell.join(':') === aiTable.selection().selectedEndCell?.join(':')) {
+        const startCellPath: string = startCell.join(':');
+        const endCellPath: string = endCell.join(':');
+        const selectCells = Array.from(aiTable.selection().selectedCells);
+        const startSelectedCellPath: string = selectCells[0];
+        const endSelectedCellPath: string = selectCells[selectCells.length - 1];
+        if (
+            (startCellPath === startSelectedCellPath || startCellPath === endSelectedCellPath) &&
+            (endCellPath === startSelectedCellPath || endCellPath === endSelectedCellPath)
+        ) {
             return;
         }
         const [endRecordId, endFieldId] = endCell;
@@ -202,8 +210,11 @@ export function selectCells(
         const maxColIndex = Math.max(startColIndex, endColIndex);
 
         for (let i = minRowIndex; i <= maxRowIndex; i++) {
-            for (let j = minColIndex; j <= maxColIndex; j++) {
-                selectedCells.add(`${records[i]._id}:${fields[j]._id}`);
+            const row = records[i];
+            if (row && row.type === AITableRowType.record) {
+                for (let j = minColIndex; j <= maxColIndex; j++) {
+                    selectedCells.add(`${row._id}:${fields[j]._id}`);
+                }
             }
         }
     }

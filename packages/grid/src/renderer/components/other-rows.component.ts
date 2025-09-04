@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { KoShape } from '../../angular-konva';
 import { AI_TABLE_ROW_ADD_BUTTON } from '../../constants';
 import { RendererContext } from '../../core';
-import { AITableRowHeadsConfig, AITableRowType } from '../../types';
+import { AITableLinearRowAdd, AITableRowHeadsConfig, AITableRowType } from '../../types';
+import { generateTargetName } from '../../utils';
 
 @Component({
     selector: 'ai-table-other-rows',
@@ -33,8 +34,9 @@ export class AITableOtherRows {
         for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
             if (rowIndex > coordinate.rowCount - 1) break;
             if (maxRecords && aiTable.records().length >= maxRecords) break;
-            const { _id, type } = (aiTable.context as RendererContext).linearRows()[rowIndex];
-            if (type === AITableRowType.record) continue;
+            const linearRow = (aiTable.context as RendererContext).linearRows()[rowIndex];
+            if (linearRow.type === AITableRowType.record) continue;
+            const { _id, type } = linearRow as AITableLinearRowAdd;
             const y = coordinate.getRowOffset(rowIndex);
             const curHeight = coordinate.getRowHeight(rowIndex);
 
@@ -43,7 +45,10 @@ export class AITableOtherRows {
                 addBtnConfig: {
                     key: `row-add-${_id}`,
                     y: y + 1,
-                    name: AI_TABLE_ROW_ADD_BUTTON,
+                    name: generateTargetName({
+                        targetName: AI_TABLE_ROW_ADD_BUTTON,
+                        source: _id
+                    }),
                     width: coordinate.containerWidth,
                     height: curHeight - 1,
                     fill: 'transparent'

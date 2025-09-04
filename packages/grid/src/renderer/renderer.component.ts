@@ -18,13 +18,13 @@ import {
     AITableColumnHeads,
     AITableFrozenCells,
     AITableFrozenColumnHeads,
-    AITableFrozenFieldShadow,
+    AITableFrozenGroups,
+    AITableShadow,
     AITableFrozenPlaceholderCells,
+    AITableGroups,
     AITableHoverRowHeads,
     AITableOtherRows,
-    AITablePlaceholderCells,
-    AITableScrollableGroup,
-    ScrollableGroupConfig
+    AITablePlaceholderCells
 } from './components';
 import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
@@ -36,9 +36,10 @@ import {
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
     AI_TABLE_OFFSET,
+    AI_TABLE_SHADOW_DEFAULT_WIDTH,
     Colors
 } from '../constants';
-import { AITableFrozenGroups } from './components/group/frozen-groups.component';
+import { NodeConfig } from 'konva/lib/Node';
 
 Konva.pixelRatio = 2;
 
@@ -62,7 +63,9 @@ Konva.pixelRatio = 2;
         AITableFillHandle,
         AITableFieldStats,
         AITableBackground,
-        AITableFrozenFieldShadow,
+        AITableFrozenGroups,
+        AITableGroups,
+        AITableShadow,
         AITableFrozenGroups
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -177,6 +180,15 @@ export class AITableRenderer {
         return this.coordinate().totalWidth + AI_TABLE_FIELD_ADD_BUTTON_WIDTH;
     });
 
+    frozenCommonGroupConfig = computed<Partial<StageConfig>>(() => {
+        return {
+            clipX: 0,
+            clipY: AI_TABLE_FIELD_HEAD_HEIGHT,
+            clipWidth: this.frozenAreaWidth() + AI_TABLE_SHADOW_DEFAULT_WIDTH,
+            clipHeight: this.gridContainerHeight()
+        };
+    });
+
     commonGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: this.frozenAreaWidth() + 1,
@@ -286,9 +298,33 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.cellGroupClipWidth(),
             x: this.frozenAreaWidth(),
-            y: AI_TABLE_OFFSET,
+            y: 0,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
             isHoverStatContainer: this.isHoverStatContainer()
+        };
+    });
+
+    xIsScroll = computed(() => {
+        return this.scrollState().scrollLeft > 0;
+    });
+
+    statShadowConfig = computed<NodeConfig>(() => {
+        return {
+            width: 8,
+            x: this.frozenAreaWidth() + 1,
+            y: AI_TABLE_OFFSET,
+            height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
+            visible: this.xIsScroll()
+        };
+    });
+
+    fieldHeadShadowConfig = computed<NodeConfig>(() => {
+        return {
+            width: AI_TABLE_SHADOW_DEFAULT_WIDTH,
+            x: this.frozenAreaWidth() + 1,
+            y: AI_TABLE_OFFSET,
+            height: AI_TABLE_FIELD_HEAD_HEIGHT,
+            visible: this.xIsScroll()
         };
     });
 
@@ -313,7 +349,7 @@ export class AITableRenderer {
             ...this.columnHeadFieldConfig(),
             width: this.frozenAreaWidth(),
             x: 0,
-            y: AI_TABLE_OFFSET,
+            y: 0,
             columnStartIndex: 0,
             columnStopIndex: this.coordinate()!.frozenColumnCount - 1,
             height: AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,

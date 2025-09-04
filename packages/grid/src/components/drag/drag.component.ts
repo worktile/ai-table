@@ -27,7 +27,7 @@ import {
 import { AITableDragState } from '../../core';
 import { AITableScrollControllerService } from '../../services/scroll-controller.service';
 import { AITableGridEventService } from '../../services';
-import { AITableLinearRowRecord, AITableRowType } from '../../types/row';
+import { AITableRowType } from '../../types/row';
 
 @Component({
     selector: 'ai-table-drag',
@@ -409,11 +409,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     this.setAuxiliaryLineStyles({
                         top: `${nextColumnStartY - scrollPosition.y}px`
                     });
-                    this.draggedData = {
-                        type: DragType.record,
-                        recordIds: drag.sourceIds,
-                        targetIndex: targetRowIndex + 1
-                    };
+                    this.setDragData(DragType.record, drag.sourceIds, targetRowIndex + 1);
                     return;
                 }
                 const currentLinearRow = linearRows[targetRowIndex];
@@ -425,11 +421,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                         top: `${lineTop}px`,
                         left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
                     });
-                    this.draggedData = {
-                        type: DragType.record,
-                        recordIds: drag.sourceIds,
-                        targetIndex: targetRowIndex
-                    };
+                    this.setDragData(DragType.record, drag.sourceIds, targetRowIndex);
                 }
             } else {
                 this.resetAuxiliaryLine();
@@ -467,6 +459,21 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 }
             }
         });
+    }
+
+    private setDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
+        const aiTable = this.aiTableGridEventService.aiTable;
+        const linearRows = aiTable.context!.linearRows();
+        this.draggedData = {
+            type,
+            recordIds: sourceIds,
+            targetIndex
+        };
+        if (targetIndex === 0) {
+            this.draggedData.beforeRecordId = linearRows[0]._id;
+        } else {
+            this.draggedData.afterRecordId = linearRows[targetIndex - 1]._id;
+        }
     }
 
     private handleDragEnd() {

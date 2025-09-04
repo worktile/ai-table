@@ -1,6 +1,7 @@
 import { AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
 import { AITable, isSystemField } from '../../core';
 import { AITableActions } from '../../utils';
+import { AITableRowType } from '../../types';
 
 export interface AITableDragFillState {
     isDragging: boolean;
@@ -75,12 +76,15 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
         targetEndRowIndex = sourceStartRowIndex - 1;
     }
 
-    const sourceRowCount = sourceEndRowIndex - sourceStartRowIndex + 1;
     const sourceRows: string[] = [];
     const linearRows = aiTable.context!.linearRows();
     for (let i = sourceStartRowIndex; i <= sourceEndRowIndex; i++) {
-        sourceRows.push(linearRows[i]._id);
+        const row = linearRows[i];
+        if (row.type === AITableRowType.record) {
+            sourceRows.push(row._id);
+        }
     }
+    const sourceRowCount = sourceRows.length;
 
     const updateData: UpdateFieldValueOptions[] = [];
 
@@ -98,20 +102,42 @@ export function performFill(aiTable: AITable, sourceCells: Set<string>, mouseUpR
         if (isSystemField(field)) {
             continue;
         }
-
-        for (let rowIndex = targetStartRowIndex; rowIndex <= targetEndRowIndex; rowIndex++) {
-            const targetRecordId = linearRows[rowIndex]._id;
-
-            const relativeRowIndex = direction === 'downward' ? rowIndex - targetStartRowIndex : targetEndRowIndex - rowIndex;
-            const mod = relativeRowIndex % sourceRowCount;
-            const sourceRowIndex = direction === 'downward' ? mod : sourceRowCount - 1 - mod;
-            const sourceRecordId = sourceRows[sourceRowIndex];
-            const sourceValue = recordsMap[sourceRecordId]?.values[fieldId];
-
-            updateData.push({
-                path: [targetRecordId, fieldId],
-                value: sourceValue
-            });
+        if (direction === 'downward') {
+            let sourceRowIndexPointer = 0;
+            for (let rowIndex = targetStartRowIndex; rowIndex <= targetEndRowIndex; rowIndex++) {
+                const row = linearRows[rowIndex];
+                if (row.type === AITableRowType.record) {
+                    const targetRecordId = linearRows[rowIndex]._id;
+                    const mod = sourceRowIndexPointer % sourceRowCount;
+                    const sourceRecordId = sourceRows[mod];
+                    const sourceValue = recordsMap[sourceRecordId]?.values[fieldId];
+                    updateData.push({
+                        path: [targetRecordId, fieldId],
+                        value: sourceValue
+                    });
+                    sourceRowIndexPointer++;
+                }
+            }
+        } else {
+            let sourceRowIndexPointer = sourceRowCount - 1;
+            for (let rowIndex = targetEndRowIndex; rowIndex >= targetStartRowIndex; rowIndex--) {
+                const row = linearRows[rowIndex];
+                if (row.type === AITableRowType.record) {
+                    const targetRecordId = linearRows[rowIndex]._id;
+                    const mod = sourceRowIndexPointer % sourceRowCount;
+                    const sourceRecordId = sourceRows[mod];
+                    const sourceValue = recordsMap[sourceRecordId]?.values[fieldId];
+                    updateData.push({
+                        path: [targetRecordId, fieldId],
+                        value: sourceValue
+                    });
+                    if (sourceRowIndexPointer <= 0) {
+                        sourceRowIndexPointer = sourceRowCount - 1;
+                    } else {
+                        sourceRowIndexPointer--;
+                    }
+                }
+            }
         }
     }
 

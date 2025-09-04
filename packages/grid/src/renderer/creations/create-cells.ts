@@ -27,7 +27,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
     const colors = AITable.getColors();
     const visibleColumns = AITable.getVisibleFields(aiTable);
 
-    const linearRows = aiTable.context?.linearRows();
+    const xIsScroll = aiTable!.context!.scrollState().scrollLeft > 0;
 
     // 初始化绘图上下文, 为后续的绘制操作做准备
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
@@ -111,7 +111,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
                         readonly: aiTable.context?.readonly?.(),
-                        frozenColumnCount
+                        frozenColumnCount,
+                        xIsScroll
                     });
                     recordRowLayout.render({
                         row,
@@ -124,7 +125,6 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const { width, offset } = getCellHorizontalPosition({
                         columnIndex,
                         columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
-                        // columnWidth,
                         columnCount,
                         depth
                     });
@@ -191,7 +191,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
                         readonly: aiTable.context?.readonly?.(),
-                        frozenColumnCount
+                        frozenColumnCount,
+                        xIsScroll
                     });
 
                     const { width, offset } = getCellHorizontalPosition({
