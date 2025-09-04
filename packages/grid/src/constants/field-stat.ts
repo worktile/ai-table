@@ -1,5 +1,6 @@
 import { AITableFieldStatTypeItemInfo, AITableStatType, statCountAll } from '@ai-table/utils';
-import { AITableGridI18nKey, statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils';
+import { AITableGridI18nKey } from '../utils/i18n';
+import { statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils/field-stat';
 
 export const FIELD_STAT_TYPE_MAP: Partial<Record<AITableStatType, AITableFieldStatTypeItemInfo>> = {
     [AITableStatType.EarliestTime]: {

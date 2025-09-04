@@ -22,7 +22,9 @@
         "pub-next": "wpm publish && npm run pub-next-only",
         "pub-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts",
         "pub-next-only": "ts-node --project ./scripts/tsconfig.json ./scripts/npm-publish.ts --next",
-        "test": "ng test grid"
+        "test": "npm run test:state",
+        "test:grid": "ng test grid",
+        "test:state": "ng test state"
     },
     "repository": {
         "type": "git",
