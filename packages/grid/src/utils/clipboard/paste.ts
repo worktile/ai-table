@@ -71,6 +71,7 @@ function extractContentFromClipboardHtml(clipboardHtml: string): string[][] {
             })
             .filter((row) => row.length > 0);
     } catch (error) {
+        console.warn('Failed to extract content from HTML:', error);
         return [];
     }
 }
