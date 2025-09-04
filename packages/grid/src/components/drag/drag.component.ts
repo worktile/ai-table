@@ -409,7 +409,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     this.setAuxiliaryLineStyles({
                         top: `${nextColumnStartY - scrollPosition.y}px`
                     });
-                    this.setDragData(DragType.record, drag.sourceIds, targetRowIndex + 1);
+                    this.setMovingRecordDragData(DragType.record, drag.sourceIds, targetRowIndex + 1);
                     return;
                 }
                 const currentLinearRow = linearRows[targetRowIndex];
@@ -421,7 +421,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                         top: `${lineTop}px`,
                         left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
                     });
-                    this.setDragData(DragType.record, drag.sourceIds, targetRowIndex);
+                    this.setMovingRecordDragData(DragType.record, drag.sourceIds, targetRowIndex);
                 }
             } else {
                 this.resetAuxiliaryLine();
@@ -461,7 +461,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
     }
 
-    private setDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
+    private setMovingRecordDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
         const aiTable = this.aiTableGridEventService.aiTable;
         const linearRows = aiTable.context!.linearRows();
         this.draggedData = {
@@ -472,7 +472,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         if (targetIndex === 0) {
             this.draggedData.beforeRecordId = linearRows[0]._id;
         } else {
-            this.draggedData.afterRecordId = linearRows[targetIndex - 1]._id;
+            const targetLinearRow = linearRows[targetIndex - 1];
+            if (targetLinearRow.type === AITableRowType.group) {
+                this.draggedData.beforeRecordId = linearRows[targetIndex]._id;
+            } else {
+                this.draggedData.afterRecordId = targetLinearRow._id;
+            }
         }
     }
 

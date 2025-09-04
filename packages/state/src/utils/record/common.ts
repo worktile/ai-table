@@ -2,6 +2,7 @@ import { AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/util
 import { AIViewTable } from '../../types';
 import { getMaxPosition } from '../view';
 import _ from 'lodash';
+import { getParentLinearRowGroups } from '../group/utils';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -121,4 +122,15 @@ export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRec
         return viewPositions;
     });
     return viewPositions;
+}
+
+export function getParentGroupValuesByGroupId(aiTable: AIViewTable, groupId: string): Record<string, any> | null {
+    const parentGroups = getParentLinearRowGroups(aiTable, groupId);
+    return parentGroups.reduce(
+        (pre, cur) => {
+            pre[cur.fieldId] = cur.groupValue;
+            return pre;
+        },
+        {} as Record<string, any>
+    );
 }

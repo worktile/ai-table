@@ -6,6 +6,7 @@ import { checkConditions, getDefaultRecordDataByFilter } from './filter';
 import { AddRecordOptions, AITableRecord, AITableViewFields, AITableViewRecords, FieldValue, TrackableEntity } from '@ai-table/utils';
 import { getParentLinearRowGroups } from '../group/utils';
 import { getMaxPosition } from '../view';
+import { getParentGroupValuesByGroupId } from './common';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
@@ -26,14 +27,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const hiddenRecordIds: string[] = [];
     let needCopyGroupValuesMap: Record<string, any> | null = null;
     if (groups?.length && options.forGroupId) {
-        const parentGroups = getParentLinearRowGroups(aiTable, options.forGroupId);
-        needCopyGroupValuesMap = parentGroups.reduce(
-            (pre, cur) => {
-                pre[cur.fieldId] = cur.groupValue;
-                return pre;
-            },
-            {} as Record<string, any>
-        );
+        needCopyGroupValuesMap = getParentGroupValuesByGroupId(aiTable, options.forGroupId);
     }
     const records = aiTable.gridData().records as AITableViewRecords;
     newRecordIds.forEach((id, index) => {
