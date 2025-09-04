@@ -1,4 +1,4 @@
-import { AITableContent } from '../../types';
+import { AITableContent, AITableRowType } from '../../types';
 import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { processPastedValueForSelect } from '../field/model/select';
@@ -16,7 +16,7 @@ import {
     idCreator,
     SetFieldStatTypeOptions
 } from '@ai-table/utils';
-
+import { getGroupLastRecordIndex } from '../group';
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
 
 const decodeClipboardJsonData = (encoded: string) => {
@@ -212,14 +212,22 @@ export const writeToAITable = async (
     const maxRecords = aiTable.context!.maxRecords();
 
     const startRowIndex = aiTable.context!.visibleRowsIndexMap().get(startRecordId) ?? 0;
-    const lastRowIndex = aiTable.context!.linearRows().length - 1;
+
+    const lastRowIndex = getGroupLastRecordIndex(aiTable, startRowIndex);
+    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex) - 1;
+
     const recordsCount = aiTable.records().length;
-    let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex);
     if (maxRecords && recordsCount + appendRowCount > maxRecords) {
         appendRowCount = maxRecords - recordsCount;
         result.isPasteOverMaxRecords = true;
     }
-    actions.addRecord({ count: appendRowCount });
+    if (appendRowCount > 0) {
+        actions.addRecord({
+            count: appendRowCount,
+            afterRecordId: startRecordId,
+            forGroupId: startRecordId
+        });
+    }
 
     const startColIndex = aiTable.context!.visibleColumnsIndexMap().get(startFieldId) ?? 0;
     const lastColIndex = aiTable.context!.visibleColumnsIndexMap().size - 1;
@@ -245,12 +253,13 @@ export const writeToAITable = async (
         if (maxRecords && targetRowIndex >= maxRecords) {
             return;
         }
+        const targetRecord = linearRows[targetRowIndex];
+
         row.forEach((plainText, j) => {
             const targetColIndex = startColIndex + j;
             if (maxFields && targetColIndex >= maxFields) {
                 return;
             }
-            const targetRecord = linearRows[targetRowIndex];
             const targetField = visibleFields[targetColIndex];
             const recordIndex = i;
             const fieldIndex = j;

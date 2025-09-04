@@ -20,3 +20,4 @@ export * from './transform';
 export * from './field-stat';
 export * from './drag-fill';
 export * from './record';
+export * from './group';
