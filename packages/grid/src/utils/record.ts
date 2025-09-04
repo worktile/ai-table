@@ -1,3 +1,4 @@
+import { AITableRowType } from '../types';
 import { clearSelection, setSelection } from './cell';
 import { AITable } from './field';
 
