@@ -278,7 +278,9 @@ export const writeToAITable = async (
                         }
                     ]);
                     result.isPasteSuccess = true;
-                } catch (error) {}
+                } catch (error) {
+                    console.error('Failed to paste value:', error);
+                }
             }
         });
     });
