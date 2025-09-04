@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.42](https://github.com/worktile/ai-table/compare/0.1.41...0.1.42) (2025-09-04)
+
+
+### Bug Fixes
+
+* #WIK-18878 SLATE-EDITABLE类型dom的keydown事件过滤 ([#652](https://github.com/worktile/ai-table/issues/652)) ([d8e4623](https://github.com/worktile/ai-table/commit/d8e4623834163d9c5a8fc9a141cdd7c4afcb23d5)), closes [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878) [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878) [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878)
+* #WIK-18878 SLATE-EDITABLE类型dom的keydown事件过滤 ([#653](https://github.com/worktile/ai-table/issues/653)) ([3c20d5b](https://github.com/worktile/ai-table/commit/3c20d5b57932c3971968f3dfba3cf5f67e5e2737)), closes [#WIK-18878](https://github.com/worktile/ai-table/issues/WIK-18878)
+
+
+### Features
+
+* #WIK-18771 分组统计 ([#643](https://github.com/worktile/ai-table/issues/643)) ([9298f0a](https://github.com/worktile/ai-table/commit/9298f0a8a2e66b88aedc973266b62ef1cdc89fac)), closes [#WIK-18771](https://github.com/worktile/ai-table/issues/WIK-18771) [#WIK-18771](https://github.com/worktile/ai-table/issues/WIK-18771) [#WIK-18771](https://github.com/worktile/ai-table/issues/WIK-18771) [#WIK-18771](https://github.com/worktile/ai-table/issues/WIK-18771)
+* #WIK-18776 方向键切换cell ([#646](https://github.com/worktile/ai-table/issues/646)) ([a3c4589](https://github.com/worktile/ai-table/commit/a3c458903f5ed3c6114f8f6b2f8eeb0b188ab4a5)), closes [#WIK-18776](https://github.com/worktile/ai-table/issues/WIK-18776)
+* #WIK-18777 左侧固定列与非固定列边缘阴影 ([#649](https://github.com/worktile/ai-table/issues/649)) ([a520462](https://github.com/worktile/ai-table/commit/a5204627b7d4c323f7d53c1d3e1e434b91d5a66d)), closes [#WIK-18777](https://github.com/worktile/ai-table/issues/WIK-18777) [#WIK-18777](https://github.com/worktile/ai-table/issues/WIK-18777) [#WIK-18777](https://github.com/worktile/ai-table/issues/WIK-18777)
+* #WIK-18778 分组下的新增行支持 ([#644](https://github.com/worktile/ai-table/issues/644)) ([126a5dc](https://github.com/worktile/ai-table/commit/126a5dc9d6a554613fd754e45eaa8c2dcf50b63f)), closes [#WIK-18778](https://github.com/worktile/ai-table/issues/WIK-18778)
+* #WIK-18794 空数据分组渲染 ([#645](https://github.com/worktile/ai-table/issues/645)) ([812e9b3](https://github.com/worktile/ai-table/commit/812e9b320964db8b8d29dcb05e980b041035bc64)), closes [#WIK-18794](https://github.com/worktile/ai-table/issues/WIK-18794)
+* #WIK-18812 鼠标拖拽选中cell，右下角 点 拖拽填充数据 ([#657](https://github.com/worktile/ai-table/issues/657)) ([20df3ca](https://github.com/worktile/ai-table/commit/20df3cad529ce5cf8d3dcf96a59651ce8475aa46)), closes [#WIK-18812](https://github.com/worktile/ai-table/issues/WIK-18812)
+* #WIK-18825 统一分组排序和普通排序逻辑 ([#648](https://github.com/worktile/ai-table/issues/648)) ([2c52c7f](https://github.com/worktile/ai-table/commit/2c52c7f2c817ca83bac10ba077d80f3e0a61baef)), closes [#WIK-18825](https://github.com/worktile/ai-table/issues/WIK-18825)
+* #WIK-18826 构建 LinearRows 添加 range记录分组对应记录范围 ([#650](https://github.com/worktile/ai-table/issues/650)) ([d478fd1](https://github.com/worktile/ai-table/commit/d478fd14a36f5fda6fc03c71ae9814dc4ae7749c)), closes [#WIK-18826](https://github.com/worktile/ai-table/issues/WIK-18826)
+* #WIK-18882 分组后，复制，粘贴 ([#661](https://github.com/worktile/ai-table/issues/661)) ([aec57e1](https://github.com/worktile/ai-table/commit/aec57e1937f23557d44f516fa25a7ceb2e83da4c)), closes [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18883](https://github.com/worktile/ai-table/issues/WIK-18883) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882) [#WIK-18882](https://github.com/worktile/ai-table/issues/WIK-18882)
+* #WIK-18883 分组后，右键批量添加新行 ([#656](https://github.com/worktile/ai-table/issues/656)) ([1980f82](https://github.com/worktile/ai-table/commit/1980f820a9056b6d03902537f3a49841bbffa232)), closes [#WIK-18883](https://github.com/worktile/ai-table/issues/WIK-18883)
+* #WIK-18884 分组首列hover后cover组件渲染缩进 ([#658](https://github.com/worktile/ai-table/issues/658)) ([e796fd4](https://github.com/worktile/ai-table/commit/e796fd44e8738887e3c30f35fc9f479d357aba8a)), closes [#WIK-18884](https://github.com/worktile/ai-table/issues/WIK-18884)
+* #WIK-18886 分组，选中多行，右键 删除 ([#664](https://github.com/worktile/ai-table/issues/664)) ([7273205](https://github.com/worktile/ai-table/commit/7273205589c24f549aa8b89592426341ebceba9e)), closes [#WIK-18886](https://github.com/worktile/ai-table/issues/WIK-18886)
+* #WIK-18895 新增行position计算调整 ([#662](https://github.com/worktile/ai-table/issues/662)) ([8ac6fe9](https://github.com/worktile/ai-table/commit/8ac6fe96bb03848eeb4366fb4a73a6b15a5e8f31)), closes [#WIK-18895](https://github.com/worktile/ai-table/issues/WIK-18895)
+* 调整拖拽行 options 参数，使用 afterRecordId 或 beforeRecordId 表达目标 ([#659](https://github.com/worktile/ai-table/issues/659)) ([cd9f9e7](https://github.com/worktile/ai-table/commit/cd9f9e7639524ce4f34437a42571e835b09a3ce7))
+
+
+
 ## [0.1.41](https://github.com/worktile/ai-table/compare/0.1.40...0.1.41) (2025-08-28)
 
 
