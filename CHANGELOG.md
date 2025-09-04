@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.43](https://github.com/worktile/ai-table/compare/0.1.42...0.1.43) (2025-09-04)
+
+
+### Bug Fixes
+
+* #WIK-18916 搜索匹配，列顺序不对 ([#667](https://github.com/worktile/ai-table/issues/667)) ([1a7a488](https://github.com/worktile/ai-table/commit/1a7a488d7feb378d6c32c2f70adf2a1bd7d64f04)), closes [#WIK-18916](https://github.com/worktile/ai-table/issues/WIK-18916)
+
+
+### Features
+
+* #WIK-18785 分组行拖拽实现 ([#666](https://github.com/worktile/ai-table/issues/666)) ([1250031](https://github.com/worktile/ai-table/commit/12500318da6178ac663a0aec2a8ba28e8e4d6062)), closes [#WIK-18785](https://github.com/worktile/ai-table/issues/WIK-18785) [#WIK-18785](https://github.com/worktile/ai-table/issues/WIK-18785)
+
+
+
 ## [0.1.42](https://github.com/worktile/ai-table/compare/0.1.41...0.1.42) (2025-09-04)
 
 
