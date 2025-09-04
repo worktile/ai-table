@@ -404,12 +404,15 @@ export class AITableRenderer {
         const { aiTable } = this.config();
         const expandCellPath = aiTable.expendCell()?.path;
         if (expandCellPath) {
-            const { rowIndex, columnIndex } = AITable.getCellIndex(aiTable, expandCellPath)!;
-            const isFrozenColumn = columnIndex < aiTable.context!.frozenColumnCount();
-            if (isFrozenColumn) {
-                frozenExpandCellBorder = true;
-            } else {
-                expandCellBorder = true;
+            const cellIndex = AITable.getCellIndex(aiTable, expandCellPath);
+            if (cellIndex) {
+                const { columnIndex } = cellIndex;
+                const isFrozenColumn = columnIndex < aiTable.context!.frozenColumnCount();
+                if (isFrozenColumn) {
+                    frozenExpandCellBorder = true;
+                } else {
+                    expandCellBorder = true;
+                }
             }
         }
         return {
