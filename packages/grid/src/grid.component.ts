@@ -447,7 +447,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         if (keywords) {
             const references = this.aiReferences();
             this.aiTable.gridData().records.forEach((record) => {
-                this.aiTable.fields().forEach((field) => {
+                this.aiTable.gridData().fields.forEach((field) => {
                     if (isCellMatchKeywords(this.aiTable, field, record._id, keywords, references)) {
                         matchedCells.add(`${record._id}:${field._id}`);
                     }
