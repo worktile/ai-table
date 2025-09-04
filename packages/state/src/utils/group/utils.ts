@@ -29,19 +29,6 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
     return parentGroups;
 }
 
-export function getGridDataRecordIndexByLinearRowIndex(aiTable: AIViewTable, targetRowIndex: number) {
-    const linearRows = aiTable.context!.linearRows();
-    const records = aiTable.gridData().records;
-    const linearRowRecord = linearRows[targetRowIndex];
-    if (linearRowRecord.type === AITableRowType.record) {
-        return records.findIndex((record) => record._id === linearRowRecord._id);
-    }
-    if (linearRowRecord.type === AITableRowType.add) {
-        return linearRowRecord.range ? linearRowRecord.range[1] + 1 : targetRowIndex;
-    }
-    return targetRowIndex;
-}
-
 export function getLinearRowTypeByLinerRowIndex(aiTable: AIViewTable, index: number) {
     const linearRows = aiTable.context!.linearRows();
     return linearRows[index].type;

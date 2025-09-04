@@ -395,7 +395,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         let newScrollPosition = { x: scroll.x, y: scroll.y };
         const updateTargetAndLine = (rectTop: number, scrollPosition: { x: number; y: number }) => {
             const dragCenter = sourceRowHeight / 2;
-            let targetRowIndex = coordinate.getRowStartIndex(rectTop + scrollPosition.y + dragCenter);
+            const targetRowIndex = coordinate.getRowStartIndex(rectTop + scrollPosition.y + dragCenter);
             const targetRowStartY = coordinate.getRowOffset(targetRowIndex);
             const lineHeight = 2;
             if (
