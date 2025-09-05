@@ -70,10 +70,9 @@ export class AITableCoverCellEntry {
         const x = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
         const columnWidth = coordinate.getColumnWidth(columnIndex);
         const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
-        const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
-        const { width, offset } = getCellHorizontalPosition({
+        const { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
             columnIndex,
-            columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
+            columnWidth,
             columnCount,
             depth
         });

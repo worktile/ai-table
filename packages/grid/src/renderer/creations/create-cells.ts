@@ -121,10 +121,9 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         isHoverRow: isHoverRecord(isHover, targetName),
                         isCheckedRow: isSelectedRecord(recordId, aiTable)
                     });
-                    const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
-                    const { width, offset } = getCellHorizontalPosition({
+                    const { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
                         columnIndex,
-                        columnWidth: isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth,
+                        columnWidth,
                         columnCount,
                         depth
                     });
@@ -195,12 +194,15 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         xIsScroll
                     });
 
-                    const { width, offset } = getCellHorizontalPosition({
+                    let { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
                         columnIndex,
                         columnWidth,
                         columnCount,
                         depth
                     });
+                    if (isGroupAndFirstColumn) {
+                        width += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+                    }
                     const realX = x + offset + AI_TABLE_OFFSET;
                     const realY = y + AI_TABLE_OFFSET;
                     const style = { fontWeight: DEFAULT_FONT_STYLE };
