@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.44](https://github.com/worktile/ai-table/compare/0.1.43...0.1.44) (2025-09-08)
+
+
+### Bug Fixes
+
+* #WIK-18927 分组展开收起错误 ([#673](https://github.com/worktile/ai-table/issues/673)) ([a1ce99c](https://github.com/worktile/ai-table/commit/a1ce99ca5ef32b9a1a184c8a42d58a9de68a38f8)), closes [#WIK-18927](https://github.com/worktile/ai-table/issues/WIK-18927)
+* #WIK-18928 有些分组没有渲染展开收起按钮 ([#669](https://github.com/worktile/ai-table/issues/669)) ([774dedb](https://github.com/worktile/ai-table/commit/774dedb04db4582ca04e996f29e769d5ec9bbcf7)), closes [#WIK-18928](https://github.com/worktile/ai-table/issues/WIK-18928)
+* #WIK-18932 表格中的日期无法清除 ([#672](https://github.com/worktile/ai-table/issues/672)) ([6137685](https://github.com/worktile/ai-table/commit/6137685c7b7853d3fa457a9a28e8fac8717022e6)), closes [#WIK-18932](https://github.com/worktile/ai-table/issues/WIK-18932)
+* #WIK-18940 分组后，在有筛选条件时，更改筛选条件的字段导致的隐藏tooltip提示位置不对 ([#671](https://github.com/worktile/ai-table/issues/671)) ([873f783](https://github.com/worktile/ai-table/commit/873f783af1acddf85dd6e65be010a8e71ba392de)), closes [#WIK-18940](https://github.com/worktile/ai-table/issues/WIK-18940)
+* #WIK-18947 【分组】有分组后第一列的单元格选中边框和双击编辑的边框范围不一致 ([#670](https://github.com/worktile/ai-table/issues/670)) ([07dbaf1](https://github.com/worktile/ai-table/commit/07dbaf1718986c10fcea1c5ea5abc608ac2a9cb9)), closes [#WIK-18947](https://github.com/worktile/ai-table/issues/WIK-18947)
+* #WIK-18960 【分组】复选框作为分组后，未选中分组用空框展示，不用文字空，且作为分组后要左对齐，不是居中 ([#675](https://github.com/worktile/ai-table/issues/675)) ([d4adb41](https://github.com/worktile/ai-table/commit/d4adb411097690b10ede1a454305cd0fab3843f4)), closes [#WIK-18960](https://github.com/worktile/ai-table/issues/WIK-18960)
+
+
+
 ## [0.1.43](https://github.com/worktile/ai-table/compare/0.1.42...0.1.43) (2025-09-04)
 
 
