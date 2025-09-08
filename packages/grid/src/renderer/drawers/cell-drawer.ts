@@ -51,7 +51,8 @@ import {
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
-    Unchecked
+    Unchecked,
+    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE
 } from '../../constants';
 import { AITable } from '../../core';
 import {
@@ -138,13 +139,13 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellCheckbox(render: AITableRender, ctx?: any) {
-        const { x, y, field, columnWidth, transformValue, isCoverCell } = render;
+        const { x, y, field, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
         if (isCoverCell) {
             return;
         }
         const isChecked = !isEmpty(transformValue) && !!transformValue;
         const checkboxSize = AI_TABLE_ICON_COMMON_SIZE;
-        const checkboxX = x + (columnWidth - checkboxSize) / 2;
+        const checkboxX = isGroupFirstRender ? x + AI_TABLE_CELL_PADDING : x + (columnWidth - checkboxSize) / 2;
         const checkboxY = y + (AI_TABLE_ROW_BLANK_HEIGHT - checkboxSize) / 2;
         this.path({
             x: checkboxX,
@@ -156,7 +157,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, field, columnWidth, style } = render;
+        const { x, y, transformValue, field, columnWidth, style, isGroupFirstRender } = render;
         if (isUndefinedOrNull(transformValue)) {
             return;
         }
@@ -212,7 +213,7 @@ export class CellDrawer extends Drawer {
                 lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
                 textAlign,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-                fillStyle: fieldType === AITableFieldType.link ? Colors.primary : color,
+                fillStyle: fieldType === AITableFieldType.link && !isGroupFirstRender ? Colors.primary : color,
                 fontWeight,
                 textDecoration,
                 fieldType,
