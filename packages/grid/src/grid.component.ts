@@ -189,8 +189,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const scrollTop = this.aiTable.context!.scrollState().scrollTop;
         const rowIndices = this.toolTipRowIndices();
         return rowIndices.map((rowIndex) => {
+            const offset = this.coordinate().getRowOffset(rowIndex);
             return {
-                top: rowIndex * AI_TABLE_ROW_HEIGHT - scrollTop,
+                top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
                 left: 0
             };
         });
