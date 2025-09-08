@@ -42,7 +42,7 @@ export function createAITable(
             );
         }),
         recordsWillHidden: signal([]),
-        recordsWillMove: signal([]),
+        recordsWillMove: signal(new Map()),
         dragState: signal({
             type: DragType.none,
             sourceIds: new Set()

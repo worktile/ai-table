@@ -2,8 +2,16 @@ import { AITableQueries } from '@ai-table/grid';
 import * as _ from 'lodash';
 import { Actions } from '../../action';
 import { AIViewTable } from '../../types';
-import { UpdateFieldValueOptions, AITableRecordUpdatedInfo, AITableSystemFieldValueOption, AITableViewFields } from '@ai-table/utils';
+import {
+    UpdateFieldValueOptions,
+    AITableRecordUpdatedInfo,
+    AITableSystemFieldValueOption,
+    AITableViewFields,
+    AITableRecord,
+    AITableViewRecord
+} from '@ai-table/utils';
 import { checkConditions } from './filter';
+import { getSortRecords, sortRecordsBySortInfo } from './sort';
 
 function updateWillHiddenRecordIds(
     aiTable: AIViewTable,
@@ -36,6 +44,73 @@ function updateWillHiddenRecordIds(
     });
 }
 
+function updateWillMoveRecords(
+    aiTable: AIViewTable,
+    needUpdateOptions: UpdateFieldValueOptions<unknown>[],
+    updatedInfo?: AITableRecordUpdatedInfo
+) {
+    const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
+    const groups = activeView.settings?.groups ?? [];
+    const sorts = activeView.settings?.sorts ?? [];
+    const sortFieldSet = new Set<string>();
+    sorts.forEach((sort) => {
+        sortFieldSet.add(sort.sort_by);
+    });
+    groups.forEach((group) => {
+        sortFieldSet.add(group.field_id);
+    });
+
+    const updateRecordsMap = new Map<string, AITableRecord>();
+    needUpdateOptions.forEach((option) => {
+        const [recordId, fieldId] = option.path;
+        if (sortFieldSet.has(fieldId)) {
+            let record = updateRecordsMap.get(recordId) || _.cloneDeep(aiTable.recordsMap()[recordId]);
+            record.values[fieldId] = option.value;
+            if (updatedInfo) {
+                record = {
+                    ...record,
+                    ...updatedInfo
+                };
+            }
+            updateRecordsMap.set(recordId, record);
+        }
+    });
+    if (updateRecordsMap.size === 0) {
+        return;
+    }
+    const originalRecordsIndexMap = new Map<string, number>();
+    const tmpRecords = aiTable.gridData().records.map((record, index) => {
+        const newRecord = updateRecordsMap.get(record._id);
+        if (newRecord) {
+            originalRecordsIndexMap.set(record._id, index);
+            return newRecord;
+        }
+        return record;
+    });
+
+    const willMoveRecordMap = new Map<string, AITableRecord>();
+    console.log('============ aiTable.gridData().records =============');
+    console.log(aiTable.gridData().records);
+    console.log(tmpRecords);
+    const tmpSortedRecords = getSortRecords(aiTable, tmpRecords as AITableViewRecord[], activeView, { skipMoveRecordPosition: true });
+    console.log('============ sortedRecordssortedRecords =============');
+    console.log(tmpSortedRecords);
+
+    updateRecordsMap.forEach((updateSortFieldRecord, recordId) => {
+        const originalRecordIndex = originalRecordsIndexMap.get(recordId);
+        const newRecordOfIndex = tmpSortedRecords[originalRecordIndex!];
+        if (recordId !== newRecordOfIndex._id) {
+            const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
+            console.log('============ originalRecord =============');
+            console.log(originalRecord);
+            willMoveRecordMap.set(recordId, originalRecord);
+        }
+    });
+    console.log('============ willMoveRecords =============');
+    console.log(willMoveRecordMap);
+    aiTable.recordsWillMove.set(willMoveRecordMap);
+}
+
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[], updatedInfo?: AITableRecordUpdatedInfo) {
     const needUpdateOptions = options.filter((option) => {
         const oldValue = AITableQueries.getFieldValue(aiTable, option.path);
@@ -43,7 +118,7 @@ export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValu
     });
 
     updateWillHiddenRecordIds(aiTable, needUpdateOptions, updatedInfo);
-
+    updateWillMoveRecords(aiTable, needUpdateOptions, updatedInfo);
     Actions.updateFieldValues(aiTable, needUpdateOptions);
 
     if (updatedInfo) {

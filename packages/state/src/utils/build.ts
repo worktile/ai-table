@@ -14,7 +14,7 @@ export function buildRecordsByView(
     sortKeysMap?: Partial<Record<AITableFieldType, string>>
 ) {
     const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
-    return getSortRecords(aiTable, filteredRecords, activeView, sortKeysMap);
+    return getSortRecords(aiTable, filteredRecords, activeView, { sortKeysMap });
 }
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {

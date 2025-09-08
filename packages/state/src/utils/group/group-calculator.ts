@@ -33,6 +33,8 @@ export class GroupCalculator {
         let previousRecord: AITableViewRecord | null = null;
 
         records.forEach((record, index) => {
+            record = (this.aiTable.recordsWillMove().get(record._id) as AITableViewRecord) || record;
+
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
                 this.groups.forEach((groupField) => {
@@ -44,8 +46,8 @@ export class GroupCalculator {
                     const field = this.fieldsMap[groupField.field_id];
                     if (!field) return;
 
-                    const prevValue = AITableQueries.getFieldValue(this.aiTable, [previousRecord!._id, field._id]);
-                    const currValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                    const prevValue = AITableQueries.getFieldValue(this.aiTable, [previousRecord!._id, field._id], previousRecord!);
+                    const currValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id], record);
 
                     const fieldModel = FieldModelMap[field.type];
                     if (!fieldModel) return;
@@ -97,7 +99,8 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            const groupTabRows = this.generateGroupTabRows(record, index, records.length);
+            const tmpRecord = this.aiTable.recordsWillMove().get(record._id) || record;
+            const groupTabRows = this.generateGroupTabRows(tmpRecord as AITableViewRecord, index, records.length);
 
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
@@ -199,7 +202,7 @@ export class GroupCalculator {
                 const field = this.fieldsMap[groupField.field_id];
                 if (!field) return;
 
-                const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id], record);
                 const breakpointIndex = breakpoints.indexOf(recordIndex);
                 const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
                 const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);

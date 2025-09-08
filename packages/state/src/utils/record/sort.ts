@@ -5,13 +5,22 @@ export function getSortRecords(
     aiTable: AITable,
     records: AITableViewRecords,
     activeView: AITableView,
-    sortKeysMap?: Partial<Record<AITableFieldType, string>>
+    options?: {
+        sortKeysMap?: Partial<Record<AITableFieldType, string>>;
+        skipMoveRecordPosition?: boolean;
+    }
 ) {
+    let { skipMoveRecordPosition = false, sortKeysMap } = options || {};
+    sortKeysMap = sortKeysMap || aiTable.getSortKeysMap;
     const shallowRecords = [...records];
     const groups = activeView.settings?.groups;
-
+    const willMoveRecordsMap = aiTable.recordsWillMove();
     return shallowRecords.sort((record1, record2) => {
         // 分组排序（高优先级）
+        if (!skipMoveRecordPosition) {
+            record1 = (willMoveRecordsMap.get(record1._id) as AITableViewRecord) || record1;
+            record2 = (willMoveRecordsMap.get(record2._id) as AITableViewRecord) || record2;
+        }
         if (groups && groups.length > 0) {
             const groupCompareResult = compareByGroups(aiTable, record1, record2, groups);
             if (groupCompareResult !== 0) {
@@ -58,8 +67,8 @@ export function sortRecordsBySortInfo(
                 const fieldMethod = FieldModelMap[field.type];
                 const sortKey = sortKeysMap?.[field.type];
 
-                const cellValue1 = AITableQueries.getFieldValue(aiTable, [prev._id, field._id]);
-                const cellValue2 = AITableQueries.getFieldValue(aiTable, [current._id, field._id]);
+                const cellValue1 = AITableQueries.getFieldValue(aiTable, [prev._id, field._id], prev);
+                const cellValue2 = AITableQueries.getFieldValue(aiTable, [current._id, field._id], current);
                 const references = aiTable.context!.references();
                 const res = fieldMethod.compare(cellValue1, cellValue2, references, sortKey, {
                     aiTable,
@@ -80,8 +89,8 @@ function compareByGroups(aiTable: AITable, record1: AITableViewRecord, record2: 
         const field = aiTable.fieldsMap()[groupField.field_id];
         if (!field) return 0;
 
-        const value1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id]);
-        const value2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id]);
+        const value1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id], record1);
+        const value2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id], record2);
 
         const fieldModel = FieldModelMap[field.type];
         if (!fieldModel) return 0;
@@ -110,8 +119,8 @@ function compareBySorts(
         const fieldMethod = FieldModelMap[field.type];
         const sortKey = sortKeysMap?.[field.type];
 
-        const cellValue1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id]);
-        const cellValue2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id]);
+        const cellValue1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id], record1);
+        const cellValue2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id], record2);
         const references = aiTable.context!.references();
         const res = fieldMethod.compare(cellValue1, cellValue2, references, sortKey, {
             aiTable,

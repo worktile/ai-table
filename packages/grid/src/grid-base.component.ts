@@ -74,6 +74,8 @@ export class AITableGridBase implements OnInit {
 
     aiBuildGroupLinearRowsFn = input<(aiTable: AITable) => AITableLinearRow[] | null>();
 
+    aiSortKeysMap = input<Partial<Record<AITableFieldType, string>>>();
+
     aiGetI18nTextByKey = input<(key: AITableGridI18nKey | string) => string | undefined>();
 
     aiKeywords = input<string>();
@@ -151,6 +153,9 @@ export class AITableGridBase implements OnInit {
         this.aiTable = createAITable(this.aiRecords, this.aiFields, this.gridData);
         if (this.aiGetI18nTextByKey()) {
             this.aiTable.getI18nTextByKey = this.aiGetI18nTextByKey() as (key: AITableGridI18nKey | string) => string;
+        }
+        if (this.aiSortKeysMap()) {
+            this.aiTable.getSortKeysMap = this.aiSortKeysMap();
         }
         this.aiPlugins()?.forEach((plugin) => {
             this.aiTable = plugin(this.aiTable);
