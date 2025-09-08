@@ -298,6 +298,53 @@ export function getCanvasDefaultValue() {
                     ],
                     'column-custom_demo': null
                 }
+            },
+            {
+                _id: 'row-5',
+                short_id: `row-short-id-${5}`,
+                ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
+                positions: {
+                    view1: 4,
+                    view2: 1
+                },
+                values: {
+                    'column-1':
+                        '文本 1-1 column-1 - 超级长的文本，用来测试文本省略或折行，当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。',
+                    'column-13':
+                        '文本 1-1 column-13 - 超级长的文本，用来测试文本省略或折行，当超出允许打最大高度时，将形成内部滚动条。KonvaJS 是一个功能强大且富有创意的 JavaScript 库，为前端开发者带来了全新的图形绘制和交互体验。KonvaJS 开启了一扇通往绚丽视觉世界的大门。它提供了丰富的工具和功能，使开发者能够轻松地在网页上创建复杂而精美的图形。无论是简单的几何形状，如矩形、圆形和三角形，还是复杂的自定义图形，KonvaJS 都能胜任。它支持多种图形操作，包括缩放、旋转和移动，让你可以轻松地变换图形的外观和位置。通过直观的 API，开发者可以快速上手，轻松地控制图形的属性和行为。',
+                    'column-2': ['_id_1'],
+                    'column-110': ['dot_1'],
+                    'column-111': ['piece_1'],
+                    'column-112': ['tag_1'],
+                    'column-20': ['66b31d0c8097a908f74bcd8a'],
+                    'column-3': 0,
+                    'column-4': { timestamp: 1757070500 },
+                    'column-5': ['member_02'],
+                    'column-566': ['member_02'],
+                    'column-6': 10,
+                    'column-7': 5,
+                    'column-8': {
+                        url: 'https://www.baidu.com',
+                        text: '百度链接'
+                    },
+                    // 'column-9': ['member_01'],
+                    // 'column-10': { timestamp: 1682235946 },
+                    // 'column-11': ['member_02'],
+                    // 'column-12': { timestamp: 1720490727 },
+                    'column-21': ['66b31d0c8097a908f74bcd8a'],
+                    'column-22': ['66b31d0c8097a908f74bcd8b', '66b31d0c8097a908f74bcd8a'],
+                    'column-23': ['66b31d0c8097a908f74bcd8e', '66b31d0c8097a908f74bcd8a', '66b31d0c8097a908f74bcd8b'],
+                    'column-24': [
+                        '67da7c119675bccb963cc524',
+                        '67da7c319675bccb963cc52b',
+                        '67da7c419675bccb963cc52d',
+                        '67da7c599675bccb963cc52f'
+                    ],
+                    'column-25': [],
+                    'column-custom_demo':
+                        '这是一个可滚动的容器示例\n内容区域比容器大，所以会显示滚动条 00000\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条\n内容区域比容器大，所以会显示滚动条',
+                    'column-checkbox': true
+                }
             }
         ],
         fields: [
