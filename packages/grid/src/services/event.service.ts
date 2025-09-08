@@ -11,6 +11,7 @@ import { AITableContextMenuOptions, AITableGridCellRenderSchema, AITableOpenEdit
 import { closeEditingCell, closeExpendCell, getCellHorizontalPosition, getEditorBoxOffset, getEditorSpace, setEditingCell } from '../utils';
 import { AITableContextMenu } from '../components/context-menu/context-menu.component';
 import { AITableFieldType, AIRecordFieldIdPath, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE } from '../constants';
 
 @Injectable()
 export class AITableGridEventService {
@@ -127,11 +128,19 @@ export class AITableGridEventService {
         const originX = coordinate.getColumnOffset(columnIndex);
         const originY = coordinate.getRowOffset(rowIndex);
         const columnWidth = coordinate.getColumnWidth(columnIndex);
-        const { width: originWidth, offset: originOffset } = getCellHorizontalPosition({
+
+        const row = aiTable.context?.linearRows()[rowIndex];
+        const depth = row?.depth ?? 0;
+        const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
+        let { width: originWidth, offset: originOffset } = getCellHorizontalPosition({
             columnWidth,
             columnIndex,
-            columnCount
+            columnCount,
+            depth
         });
+        if (isGroupAndFirstColumn) {
+            originOffset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+        }
         const originRect = container!.getBoundingClientRect();
         const isFrozenColumn = AITable.isFrozenColumn(aiTable, columnIndex);
         const scrollLeft = isFrozenColumn ? 0 : scrollState().scrollLeft;
