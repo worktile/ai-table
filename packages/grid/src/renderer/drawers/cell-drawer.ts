@@ -589,7 +589,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellProgress(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, columnWidth, style } = render;
+        const { x, y, transformValue, columnWidth, style, isGroupFirstRender } = render;
         const colors = AITable.getColors();
         let validateTransformValue = transformValue;
         if (isUndefinedOrNull(validateTransformValue)) {
@@ -602,33 +602,42 @@ export class CellDrawer extends Drawer {
         const offsetY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PROGRESS_BAR_HEIGHT) / 2;
         const textOffsetY = (AI_TABLE_ROW_BLANK_HEIGHT - textHeight) / 2;
 
-        // 绘制背景
-        this.rect({
-            x: x + offsetX,
-            y: y + offsetY,
-            width,
-            height,
-            radius: AI_TABLE_PROGRESS_BAR_RADIUS,
-            fill: colors.gray200
-        });
+        if (isGroupFirstRender) {
+            this.text({
+                x: x + offsetX,
+                y: y + textOffsetY,
+                text: `${validateTransformValue}%`,
+                fillStyle: colors.gray800
+            });
+        } else {
+            // 绘制背景
+            this.rect({
+                x: x + offsetX,
+                y: y + offsetY,
+                width,
+                height,
+                radius: AI_TABLE_PROGRESS_BAR_RADIUS,
+                fill: colors.gray200
+            });
 
-        // 计算并绘制进度
-        const progressWidth = (validateTransformValue / 100) * width;
-        this.rect({
-            x: x + offsetX,
-            y: y + offsetY,
-            width: progressWidth,
-            height,
-            radius: AI_TABLE_PROGRESS_BAR_RADIUS,
-            fill: colors.success
-        });
+            // 计算并绘制进度
+            const progressWidth = (validateTransformValue / 100) * width;
+            this.rect({
+                x: x + offsetX,
+                y: y + offsetY,
+                width: progressWidth,
+                height,
+                radius: AI_TABLE_PROGRESS_BAR_RADIUS,
+                fill: colors.success
+            });
 
-        this.text({
-            x: x + offsetX + width + AI_TABLE_TEXT_GAP,
-            y: y + textOffsetY,
-            text: `${validateTransformValue}%`,
-            fillStyle: colors.gray800
-        });
+            this.text({
+                x: x + offsetX + width + AI_TABLE_TEXT_GAP,
+                y: y + textOffsetY,
+                text: `${validateTransformValue}%`,
+                fillStyle: colors.gray800
+            });
+        }
     }
 
     private renderCellMember(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
