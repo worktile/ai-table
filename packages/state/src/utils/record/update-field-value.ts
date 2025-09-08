@@ -89,25 +89,16 @@ function updateWillMoveRecords(
     });
 
     const willMoveRecordMap = new Map<string, AITableRecord>();
-    console.log('============ aiTable.gridData().records =============');
-    console.log(aiTable.gridData().records);
-    console.log(tmpRecords);
     const tmpSortedRecords = getSortRecords(aiTable, tmpRecords as AITableViewRecord[], activeView, { skipMoveRecordPosition: true });
-    console.log('============ sortedRecordssortedRecords =============');
-    console.log(tmpSortedRecords);
 
     updateRecordsMap.forEach((updateSortFieldRecord, recordId) => {
         const originalRecordIndex = originalRecordsIndexMap.get(recordId);
         const newRecordOfIndex = tmpSortedRecords[originalRecordIndex!];
         if (recordId !== newRecordOfIndex._id) {
             const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
-            console.log('============ originalRecord =============');
-            console.log(originalRecord);
             willMoveRecordMap.set(recordId, originalRecord);
         }
     });
-    console.log('============ willMoveRecords =============');
-    console.log(willMoveRecordMap);
     aiTable.recordsWillMove.set(willMoveRecordMap);
 }
 
