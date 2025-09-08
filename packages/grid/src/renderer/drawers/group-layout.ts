@@ -1,4 +1,4 @@
-import { isEmpty } from '@ai-table/utils';
+import { AITableFieldType, isEmpty } from '@ai-table/utils';
 import {
     AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_PADDING,
@@ -68,13 +68,14 @@ export class GroupLayout extends Layout {
             });
         }
         const iconContainerWidth = AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
-        if (!isEmpty(groupValue)) {
+        if (!isEmpty(groupValue) || field.type === AITableFieldType.checkbox) {
             cellDrawer.initStyle(field, style);
             cellDrawer.renderCell(
                 {
                     ...render,
                     x: render.x + iconContainerWidth,
-                    columnWidth: render.columnWidth - iconContainerWidth
+                    columnWidth: render.columnWidth - iconContainerWidth,
+                    isGroupFirstRender: true
                 } as AITableRender,
                 this.ctx as CanvasRenderingContext2D,
                 columnWidth

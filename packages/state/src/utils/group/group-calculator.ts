@@ -85,7 +85,6 @@ export class GroupCalculator {
         const linearRows: AITableLinearRow[] = [];
         let lastGroupDepth = -1;
         let currentGroupRecords: AITableViewRecord[] = [];
-        let currentGroupIds: string[] = [];
         let currentGroupRecordIndices: number[] = []; // 记录当前分组中每个记录的原始索引
 
         // 开始添加一个空白行
@@ -102,11 +101,10 @@ export class GroupCalculator {
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
                 if (currentGroupRecords.length > 0) {
-                    this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupIds, currentGroupRecordIndices);
+                    this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupRecordIndices);
                     currentGroupRecords = [];
                     currentGroupRecordIndices = [];
                 }
-                currentGroupIds = groupTabRows.map((row) => row.groupId);
 
                 const depths = groupTabRows.filter((d) => d.depth !== undefined).map((d) => d.depth) as number[];
                 const minDepth = depths.length > 0 ? Math.min(...depths) : 0;
@@ -120,9 +118,7 @@ export class GroupCalculator {
                     });
                 }
 
-                // 只添加未被父级折叠的分组
-                const visibleGroupTabRows = this.filterVisibleGroupTabs(groupTabRows);
-                linearRows.push(...visibleGroupTabRows);
+                linearRows.push(...groupTabRows);
                 lastGroupDepth = depths.length > 0 ? Math.max(...depths) : 0;
             }
 
@@ -133,7 +129,7 @@ export class GroupCalculator {
 
         // 处理最后一个分组
         if (currentGroupRecords.length > 0) {
-            this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupIds, currentGroupRecordIndices);
+            this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupRecordIndices);
         }
 
         // 添加分组结束的空白行
@@ -151,15 +147,13 @@ export class GroupCalculator {
     private handleGroupEnd(
         currentGroupRecords: AITableViewRecord[],
         linearRows: AITableLinearRow[],
-        currentGroupIds?: string[],
         currentGroupRecordIndices?: number[]
     ): void {
-        // 分组结束时添加该分组的记录和add行
         let groupDisplayRowIndex = 0;
+        const lastLinearRow = linearRows[linearRows.length - 1];
 
         currentGroupRecords.forEach((record, i) => {
-            const recordIndex = currentGroupRecordIndices?.[i] ?? 0;
-            if (this.shouldShowRecord(recordIndex)) {
+            if (lastLinearRow?.type === AITableRowType.group && !lastLinearRow.isCollapsed) {
                 groupDisplayRowIndex++;
                 linearRows.push({
                     type: AITableRowType.record,
@@ -171,7 +165,7 @@ export class GroupCalculator {
         });
 
         // 分组未折叠，为每个分组添加add新增行
-        if (currentGroupRecords.length > 0 && this.shouldShowAddRow(currentGroupIds)) {
+        if (currentGroupRecords.length > 0 && lastLinearRow?.type === AITableRowType.group && !lastLinearRow.isCollapsed) {
             let startRecordIndex = 0;
             let endRecordIndex = 0;
             if (currentGroupRecordIndices) {
@@ -199,21 +193,24 @@ export class GroupCalculator {
                 const field = this.fieldsMap[groupField.field_id];
                 if (!field) return;
 
-                const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
                 const breakpointIndex = breakpoints.indexOf(recordIndex);
                 const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
-                const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
+                const isParentCollapsed = this.isParentGroupCollapsed(depth, recordIndex);
+                if (!isParentCollapsed) {
+                    const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                    const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
 
-                groupTabRows.push({
-                    type: AITableRowType.group,
-                    _id: nanoid(),
-                    depth,
-                    fieldId: groupField.field_id,
-                    groupValue,
-                    isCollapsed: this.groupCollapseState.has(groupId),
-                    range: recordRange,
-                    groupId
-                });
+                    groupTabRows.push({
+                        type: AITableRowType.group,
+                        _id: nanoid(),
+                        depth,
+                        fieldId: groupField.field_id,
+                        groupValue,
+                        isCollapsed: this.groupCollapseState.has(groupId),
+                        range: recordRange,
+                        groupId
+                    });
+                }
             }
         });
 
@@ -242,71 +239,29 @@ export class GroupCalculator {
         return `${fieldId}_${depth}_${breakpointIndex}`;
     }
 
-    private shouldShowRecord(recordIndex: number): boolean {
-        for (let depth = 0; depth < this.groups.length; depth++) {
-            const groupField = this.groups[depth];
-            const breakpoints = this.groupBreakpoints.get(groupField.field_id) || [];
+    // 检查所有父级分组是否被折叠
+    private isParentGroupCollapsed(currentDepth: number, recordIndex: number): boolean {
+        for (let parentDepth = 0; parentDepth < currentDepth; parentDepth++) {
+            const parentGroupField = this.groups[parentDepth];
+            const parentBreakpoints = this.groupBreakpoints.get(parentGroupField.field_id) || [];
 
-            // 找到当前记录所属的分组断点
-            let belongsToBreakpointIndex = -1;
-            for (let i = breakpoints.length - 1; i >= 0; i--) {
-                if (breakpoints[i] <= recordIndex) {
-                    belongsToBreakpointIndex = i;
+            let parentBreakpointIndex = -1;
+            for (let i = parentBreakpoints.length - 1; i >= 0; i--) {
+                if (parentBreakpoints[i] <= recordIndex) {
+                    parentBreakpointIndex = i;
                     break;
                 }
             }
 
-            if (belongsToBreakpointIndex >= 0) {
-                const groupId = this.generateGroupId(groupField.field_id, depth, belongsToBreakpointIndex);
-                if (this.groupCollapseState.has(groupId)) {
-                    return false; // 父级分组被折叠，不显示记录
+            if (parentBreakpointIndex > -1) {
+                const parentGroupId = this.generateGroupId(parentGroupField.field_id, parentDepth, parentBreakpointIndex);
+                const isParentCollapsed = this.groupCollapseState.has(parentGroupId);
+                if (isParentCollapsed) {
+                    return true;
                 }
             }
         }
 
-        return true;
-    }
-
-    // 检查当前分组是否应该显示添加行
-    private shouldShowAddRow(currentGroupIds?: string[]): boolean {
-        if (!currentGroupIds || currentGroupIds.length === 0) {
-            return true; // 默认显示
-        }
-
-        // 检查当前组的所有分组层级是否都展开
-        for (const groupId of currentGroupIds) {
-            if (this.groupCollapseState.has(groupId)) {
-                return false; // 有层级被折叠，不显示添加行
-            }
-        }
-
-        return true;
-    }
-
-    // 过滤可见的分组标签
-    private filterVisibleGroupTabs(groupTabRows: AITableLinearRowGroup[]): AITableLinearRowGroup[] {
-        const visibleRows: AITableLinearRowGroup[] = [];
-
-        for (let i = 0; i < groupTabRows.length; i++) {
-            const currentRow = groupTabRows[i];
-            let show = true;
-
-            // 检查当前分组标签的所有父级是否都展开
-            const currentDepth = currentRow.depth ?? 0;
-            for (let parentDepth = 0; parentDepth < currentDepth; parentDepth++) {
-                // 找到同一记录索引下的父级分组ID
-                const parentRow = groupTabRows.find((row) => row.depth === parentDepth);
-                if (parentRow && this.groupCollapseState.has(parentRow.groupId)) {
-                    show = false;
-                    break;
-                }
-            }
-
-            if (show) {
-                visibleRows.push(currentRow);
-            }
-        }
-
-        return visibleRows;
+        return false;
     }
 }
