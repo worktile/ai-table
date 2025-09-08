@@ -48,10 +48,11 @@ export class DateCellEditorComponent extends AbstractEditCellEditor<DateFieldVal
         this.placeholder = getI18nTextByKey(this.aiTable, AITableGridI18nKey.dataPickerPlaceholder);
     }
 
-    updateValue(value: number) {
+    updateValue(timestamp: number) {
+        const value = timestamp ? { timestamp: timestamp } : null;
         this.updateFieldValues.emit([
             {
-                value: { timestamp: value },
+                value,
                 path: [this.record()._id, this.field()._id]
             }
         ]);
