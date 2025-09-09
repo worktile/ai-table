@@ -18,7 +18,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         case ActionName.UpdateFieldValue: {
             const [recordId, fieldId] = action.path;
             if (recordId && fieldId) {
-                const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
+                const recordIndex = records.findIndex((item) => item._id === recordId);
                 records[recordIndex].values[fieldId] = action.newFieldValue;
             }
             break;
@@ -26,7 +26,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         case ActionName.UpdateSystemFieldValue: {
             const [recordId] = action.path;
             if (recordId && action.updatedInfo) {
-                const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
+                const recordIndex = records.findIndex((item) => item._id === recordId);
                 if (action.updatedInfo.updated_at) {
                     records[recordIndex].updated_at = action.updatedInfo.updated_at;
                 }
@@ -51,7 +51,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.RemoveField: {
             const [fieldId] = action.path;
-            const fieldIndex = aiTable.fields().findIndex((item) => item._id === fieldId);
+            const fieldIndex = fields.findIndex((item) => item._id === fieldId);
             if (fieldIndex > -1) {
                 fields.splice(fieldIndex, 1);
                 records.forEach((item) => {
@@ -62,7 +62,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         }
         case ActionName.RemoveRecord: {
             const [recordId] = action.path;
-            const recordIndex = aiTable.records().findIndex((item) => item._id === recordId);
+            const recordIndex = records.findIndex((item) => item._id === recordId);
             if (recordIndex > -1) {
                 records.splice(recordIndex, 1);
             }
