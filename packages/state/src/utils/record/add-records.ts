@@ -1,12 +1,10 @@
-import { AITableLinearRowGroup, closeExpendCell, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
+import { closeExpendCell, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, AITableViewRecords, FieldValue, TrackableEntity } from '@ai-table/utils';
-import { getParentLinearRowGroups } from '../group/utils';
-import { getMaxPosition } from '../view';
-import { getParentGroupValuesByGroupId } from './common';
+import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
+import { getParentGroupValuesByGroupId, getRecordRangeByGroupId } from './common';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
@@ -27,18 +25,20 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     const hiddenRecordIds: string[] = [];
     let needCopyGroupValuesMap: Record<string, any> | null = null;
     if (groups?.length && options.forGroupId) {
+        if (!options.afterRecordId && !options.beforeRecordId) {
+            const range = getRecordRangeByGroupId(aiTable, options.forGroupId);
+            if (range) {
+                options.afterRecordId = aiTable.records()[range[1]]._id;
+            }
+        }
         needCopyGroupValuesMap = getParentGroupValuesByGroupId(aiTable, options.forGroupId);
     }
-    const records = aiTable.gridData().records as AITableViewRecords;
     newRecordIds.forEach((id, index) => {
         const record = {
             _id: id,
             short_id: newRecordShortIds[index],
             values: newRecordValues,
-            ...trackableEntity,
-            positions: {
-                [activeViewId]: getMaxPosition(records, activeViewId) + 1
-            }
+            ...trackableEntity
         };
         if (needCopyGroupValuesMap) {
             groups?.forEach((group) => {
