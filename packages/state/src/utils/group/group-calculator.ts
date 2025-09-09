@@ -9,6 +9,7 @@ export class GroupCalculator {
     private groupCollapseState: Set<string>;
     private aiTable: AITable;
     private fieldsMap: Record<string, AITableField>;
+    private recordsIndexMap: Map<string, number> = new Map();
 
     constructor(aiTable: AITable, groups: AITableGroupField[], collapseState?: string[]) {
         this.aiTable = aiTable;
@@ -16,6 +17,7 @@ export class GroupCalculator {
         this.groupBreakpoints = new Map();
         this.groupCollapseState = new Set(collapseState || []);
         this.fieldsMap = this.aiTable.fieldsMap();
+        this.recordsIndexMap = new Map(this.aiTable.records().map((row, index) => [row._id, index]));
     }
 
     calculateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
@@ -85,7 +87,6 @@ export class GroupCalculator {
         const linearRows: AITableLinearRow[] = [];
         let lastGroupDepth = -1;
         let currentGroupRecords: AITableViewRecord[] = [];
-        let currentGroupRecordIndices: number[] = []; // 记录当前分组中每个记录的原始索引
 
         // 开始添加一个空白行
         linearRows.push({
@@ -101,9 +102,8 @@ export class GroupCalculator {
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
                 if (currentGroupRecords.length > 0) {
-                    this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupRecordIndices);
+                    this.handleGroupEnd(currentGroupRecords, linearRows);
                     currentGroupRecords = [];
-                    currentGroupRecordIndices = [];
                 }
 
                 const depths = groupTabRows.filter((d) => d.depth !== undefined).map((d) => d.depth) as number[];
@@ -124,12 +124,11 @@ export class GroupCalculator {
 
             // 将记录添加到当前分组
             currentGroupRecords.push(record);
-            currentGroupRecordIndices.push(index);
         });
 
         // 处理最后一个分组
         if (currentGroupRecords.length > 0) {
-            this.handleGroupEnd(currentGroupRecords, linearRows, currentGroupRecordIndices);
+            this.handleGroupEnd(currentGroupRecords, linearRows);
         }
 
         // 添加分组结束的空白行
@@ -144,11 +143,7 @@ export class GroupCalculator {
         return linearRows;
     }
 
-    private handleGroupEnd(
-        currentGroupRecords: AITableViewRecord[],
-        linearRows: AITableLinearRow[],
-        currentGroupRecordIndices?: number[]
-    ): void {
+    private handleGroupEnd(currentGroupRecords: AITableViewRecord[], linearRows: AITableLinearRow[]): void {
         let groupDisplayRowIndex = 0;
         const lastLinearRow = linearRows[linearRows.length - 1];
 
@@ -166,13 +161,9 @@ export class GroupCalculator {
 
         // 分组未折叠，为每个分组添加add新增行
         if (currentGroupRecords.length > 0 && lastLinearRow?.type === AITableRowType.group && !lastLinearRow.isCollapsed) {
-            let startRecordIndex = 0;
-            let endRecordIndex = 0;
-            if (currentGroupRecordIndices) {
-                // 当前添加按钮对于的记录范围
-                startRecordIndex = Math.min(...currentGroupRecordIndices);
-                endRecordIndex = Math.max(...currentGroupRecordIndices);
-            }
+            const startRecordIndex = this.recordsIndexMap.get(currentGroupRecords[0]._id) || 0;
+            const endRecordIndex = this.recordsIndexMap.get(currentGroupRecords[currentGroupRecords.length - 1]._id) || 0;
+
             linearRows.push({
                 type: AITableRowType.add,
                 _id: nanoid(),
