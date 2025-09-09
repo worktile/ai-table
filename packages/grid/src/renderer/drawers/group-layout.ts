@@ -68,7 +68,7 @@ export class GroupLayout extends Layout {
             });
         }
         const iconContainerWidth = AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
-        if (!isEmpty(groupValue) || field.type === AITableFieldType.checkbox) {
+        if (!isEmpty(groupValue) || [AITableFieldType.checkbox, AITableFieldType.progress].includes(field.type as AITableFieldType)) {
             cellDrawer.initStyle(field, style);
             cellDrawer.renderCell(
                 {
