@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.45](https://github.com/worktile/ai-table/compare/0.1.44...0.1.45) (2025-09-10)
+
+
+### Bug Fixes
+
+* #WIK-18957 【AITable】在最后新增列，有时候顺序不对 ([#678](https://github.com/worktile/ai-table/issues/678)) ([17c0fa3](https://github.com/worktile/ai-table/commit/17c0fa316746fd2de7f68ab1da6f30f22a58fcbe)), closes [#WIK-18957](https://github.com/worktile/ai-table/issues/WIK-18957)
+* #WIK-18967 【AITable】水平滚动表格，统计hover状态异常 ([#681](https://github.com/worktile/ai-table/issues/681)) ([2fb4575](https://github.com/worktile/ai-table/commit/2fb457502c21839d65163cd623806dddb41cb1e8)), closes [#WIK-18967](https://github.com/worktile/ai-table/issues/WIK-18967)
+* #WIK-18970 【AITable】进度作为分组，不要展示进度条，改成展示 xx% ([#677](https://github.com/worktile/ai-table/issues/677)) ([c65e73b](https://github.com/worktile/ai-table/commit/c65e73b64fa43878d67723a050f71df994f59216)), closes [#WIK-18970](https://github.com/worktile/ai-table/issues/WIK-18970)
+* #WIK-19000 分组后-新增按钮只有左侧固定列才能点击 ([#679](https://github.com/worktile/ai-table/issues/679)) ([70f8304](https://github.com/worktile/ai-table/commit/70f83045a5665f5d3ead1e06bd70d677518d245d)), closes [#WIK-19000](https://github.com/worktile/ai-table/issues/WIK-19000)
+* 还原range计算以排序后数据为准，新增行通过获取add行下标-1获取当前分组最后record ([#683](https://github.com/worktile/ai-table/issues/683)) ([ecacddf](https://github.com/worktile/ai-table/commit/ecacddf17e877bbd291a0e11ce8a7a36b0ffa538))
+* 新增行配置问题 ([#680](https://github.com/worktile/ai-table/issues/680)) ([178bfb5](https://github.com/worktile/ai-table/commit/178bfb5747eff25465bcdbb5da139be3f0b7ab16))
+* **action:** apply action by draft data #WIK-18976 ([#682](https://github.com/worktile/ai-table/issues/682)) ([d22cf84](https://github.com/worktile/ai-table/commit/d22cf8455b9f494ee3c23e1d95ddd9f3dc376193)), closes [#WIK-18976](https://github.com/worktile/ai-table/issues/WIK-18976)
+
+
+
 ## [0.1.44](https://github.com/worktile/ai-table/compare/0.1.43...0.1.44) (2025-09-08)
 
 
