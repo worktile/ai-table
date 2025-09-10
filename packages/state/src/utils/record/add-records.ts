@@ -4,7 +4,7 @@ import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
 import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
-import { getParentGroupValuesByGroupId, getRecordRangeByGroupId } from './common';
+import { getParentGroupValuesByGroupId, getPrevRecordIdByAddGroupId } from './common';
 
 export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
     options = options || {};
@@ -26,9 +26,9 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
     let needCopyGroupValuesMap: Record<string, any> | null = null;
     if (groups?.length && options.forGroupId) {
         if (!options.afterRecordId && !options.beforeRecordId) {
-            const range = getRecordRangeByGroupId(aiTable, options.forGroupId);
-            if (range) {
-                options.afterRecordId = aiTable.records()[range[1]]._id;
+            const prevRecordId = getPrevRecordIdByAddGroupId(aiTable, options.forGroupId);
+            if (prevRecordId) {
+                options.afterRecordId = prevRecordId;
             }
         }
         needCopyGroupValuesMap = getParentGroupValuesByGroupId(aiTable, options.forGroupId);
