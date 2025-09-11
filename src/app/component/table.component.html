@@ -29,8 +29,8 @@
         ><span class="pr-1 pt-1">最大行数</span
         ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxRecords" (change)="handleMaxRecordsChange()"
     /></label>
-    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateSortDialog">排序</button>
     <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateGroupDialog">分组</button>
+    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateSortDialog">排序</button>
 </div>
 <thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" thySize="sm" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.sortedViews(); let index = $index; track $index) {
