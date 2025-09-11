@@ -32,8 +32,9 @@
     <label class="mb-0 ml-2 d-flex align-items-center"
         ><input type="checkbox" [checked]="hiddenRowDrag" (change)="handleGroupChange($event)" /><span class="pl-1 pt-1">分组</span></label
     >
+    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateSortDialog">排序</button>
 </div>
-<thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" [thyActiveTab]="tableService.activeViewId()">
+<thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" thySize="sm" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.sortedViews(); let index = $index; track $index) {
         <thy-tab [thyTitle]="item.name" [id]="item._id">
             @if (item._id === tableService.activeViewId()) {
@@ -82,4 +83,33 @@
     @if (!readonly) {
         <thy-action thyIcon="plus" class="cursor-pointer" (click)="addView('add')"></thy-action>
     }
+</ng-template>
+
+<ng-template #templateSortDialog>
+    <thy-popover-header thyTitle="排序"></thy-popover-header>
+    <thy-popover-body style="width: 400px">
+        <label style="width: 100%; text-align: right">
+            开启自动排序 <thy-switch [(ngModel)]="tableSorts.is_keep_sort" (ngModelChange)="autoSortChange($event)"></thy-switch>
+        </label>
+        @for (sort of tableSorts.sorts; track $index) {
+            <div style="display: flex">
+                <thy-select [(ngModel)]="sort.sort_by" style="width: 140px">
+                    @for (option of tableFields; track option._id) {
+                        <thy-option [thyValue]="option._id" [thyLabelText]="option.name"> </thy-option>
+                    }
+                </thy-select>
+                <thy-radio-group thySize="md" [(ngModel)]="sort.direction" (ngModelChange)="changeDirection($event, $index)">
+                    <label thyRadioButton thyLabelText="升序" thyValue="1"></label>
+                    <label thyRadioButton thyLabelText="降序" thyValue="-1"></label>
+                </thy-radio-group>
+                <a thyAction thyIcon="trash" href="javascript:;" (click)="deleteSort($index)"></a>
+            </div>
+        }
+        <div style="text-align: center">
+            <a thyAction thyIcon="plus" href="javascript:;" (click)="addSort()">添加</a>
+        </div>
+        <div style="text-align: right; margin-top: 10px">
+            <button thyButton="primary" thySize="sm" (click)="enterSort()">确定</button>
+        </div>
+    </thy-popover-body>
 </ng-template>

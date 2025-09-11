@@ -1,5 +1,5 @@
 import { Actions, addView, removeView } from '@ai-table/state';
-import { AITableView, AITableViewFields, AITableViewRecords, SortDirection } from '@ai-table/utils';
+import { AITableSortOptions, AITableView, AITableViewFields, AITableViewRecords, Id, SortDirection } from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -7,11 +7,15 @@ import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
+import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyAutofocusDirective, ThyEnterDirective, ThyOption } from 'ngx-tethys/shared';
 import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
 import { WebsocketProvider } from 'y-websocket';
 import { LOCAL_STORAGE_KEY, TableService } from '../service/table.service';
+import { ThyButton } from 'ngx-tethys/button';
+import { ThySelect } from 'ngx-tethys/select';
+import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
+import { ThySwitch } from 'ngx-tethys/switch';
 
 const initViews: AITableView[] = [
     {
@@ -40,7 +44,13 @@ const initViews: AITableView[] = [
         ThyAction,
         ThyDropdownModule,
         ThyEnterDirective,
-        ThyAutofocusDirective
+        ThyAutofocusDirective,
+        ThyButton,
+        ThySelect,
+        ThyOption,
+        ThyRadioGroup,
+        ThyRadioButton,
+        ThySwitch
     ],
     templateUrl: './table.component.html',
     providers: [TableService],
@@ -75,6 +85,17 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     maxRecords = 500;
 
     maxFields = 500;
+
+    get tableFields() {
+        return this.tableService.aiTable.fields();
+    }
+
+    tableSorts: AITableSortOptions = {
+        is_keep_sort: false,
+        sorts: []
+    };
+
+    private thyPopover = inject(ThyPopover);
 
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
@@ -160,6 +181,40 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const records = this.tableService.aiTable.records() as AITableViewRecords;
         const fields = this.tableService.aiTable.fields() as AITableViewFields;
         removeView(this.tableService.aiTable, records, fields, this.tableService.activeViewId());
+    }
+
+    enterSort() {
+        const sorts = this.tableSorts.sorts?.map((sort) => ({ ...sort, direction: parseInt(sort.direction as any) }));
+        Actions.setView(
+            this.tableService.aiTable,
+            { settings: { ...this.tableService.activeView().settings, is_keep_sort: this.tableSorts.is_keep_sort, sorts } },
+            [this.tableService.activeViewId()]
+        );
+        this.thyPopover.close();
+    }
+
+    addSort() {
+        this.tableSorts.sorts!.push({
+            sort_by: '',
+            direction: SortDirection.ascending
+        });
+    }
+
+    changeDirection(e: string, index: number) {
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
+    deleteSort(index: number) {
+        this.tableSorts.sorts!.splice(index, 1);
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
+    autoSortChange(e: boolean) {
+        Actions.setView(this.tableService.aiTable, { is_keep_sort: e }, [this.tableService.activeViewId()]);
     }
 
     ngOnDestroy(): void {
