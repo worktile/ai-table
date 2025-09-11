@@ -1,5 +1,13 @@
 import { Actions, addView, removeView } from '@ai-table/state';
-import { AITableSortOptions, AITableView, AITableViewFields, AITableViewRecords, Id, SortDirection } from '@ai-table/utils';
+import {
+    AITableGroupOptions,
+    AITableSortOptions,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    Id,
+    SortDirection
+} from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -95,6 +103,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         sorts: []
     };
 
+    tableGroups: AITableGroupOptions = {
+        groups: [],
+        collapsed_group_ids: []
+    };
+
     private thyPopover = inject(ThyPopover);
 
     ngOnInit(): void {
@@ -143,17 +156,6 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setMaxFields(this.maxFields);
     }
 
-    handleGroupChange(e: any) {
-        this.group = e.target.checked;
-        if (this.group) {
-            Actions.addGroupField(this.tableService.aiTable, 'column-1', SortDirection.ascending);
-            Actions.addGroupField(this.tableService.aiTable, 'column-2', SortDirection.ascending);
-            Actions.addGroupField(this.tableService.aiTable, 'column-4', SortDirection.ascending);
-        } else {
-            Actions.clearAllGroups(this.tableService.aiTable);
-        }
-    }
-
     updateValue() {
         this.isEdit = false;
         if (this.activeViewName !== this.tableService.activeView().name) {
@@ -200,17 +202,38 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    changeDirection(e: string, index: number) {
+    changeSortDirection(e: string, index: number) {
         if (this.tableSorts.is_keep_sort) {
             this.enterSort();
         }
     }
 
+    changeGroupDirection(e: string, index: number) {
+        this.enterGroup();
+    }
+
+    addGroup() {
+        this.tableGroups.groups!.push({
+            field_id: '',
+            direction: SortDirection.ascending
+        });
+    }
+
     deleteSort(index: number) {
         this.tableSorts.sorts!.splice(index, 1);
-        if (this.tableSorts.is_keep_sort) {
-            this.enterSort();
-        }
+        this.enterSort();
+    }
+
+    deleteGroup(index: number) {
+        this.tableGroups.groups!.splice(index, 1);
+        this.enterGroup();
+    }
+
+    enterGroup() {
+        const groups = this.tableGroups.groups?.map((group) => ({ ...group, direction: parseInt(group.direction as any) }));
+        Actions.setView(this.tableService.aiTable, { settings: { ...this.tableService.activeView().settings, groups } }, [
+            this.tableService.activeViewId()
+        ]);
     }
 
     autoSortChange(e: boolean) {
