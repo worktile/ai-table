@@ -249,6 +249,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     }
 
     autoSortChange(e: boolean) {
+        this.hiddenRowDrag = e;
+        this.tableService.setHiddenRowDrag(e);
         Actions.setView(this.tableService.aiTable, { is_keep_sort: e }, [this.tableService.activeViewId()]);
     }
 
