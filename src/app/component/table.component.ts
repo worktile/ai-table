@@ -227,7 +227,9 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     deleteSort(index: number) {
         this.tableSorts.sorts!.splice(index, 1);
-        this.enterSort();
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
     }
 
     deleteGroup(index: number) {
