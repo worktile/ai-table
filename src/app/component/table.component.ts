@@ -212,6 +212,12 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.enterGroup();
     }
 
+    changeSortField() {
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
     addGroup() {
         this.tableGroups.groups!.push({
             field_id: '',
@@ -234,6 +240,10 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         Actions.setView(this.tableService.aiTable, { settings: { ...this.tableService.activeView().settings, groups } }, [
             this.tableService.activeViewId()
         ]);
+    }
+
+    changeGroupField() {
+        this.enterGroup();
     }
 
     autoSortChange(e: boolean) {

@@ -91,7 +91,7 @@
         </label>
         @for (sort of tableSorts.sorts; track $index) {
             <div style="display: flex">
-                <thy-select [(ngModel)]="sort.sort_by" style="width: 140px">
+                <thy-select [(ngModel)]="sort.sort_by" (ngModelChange)="changeSortField()" style="width: 140px">
                     @for (option of tableFields; track option._id) {
                         <thy-option [thyValue]="option._id" [thyLabelText]="option.name"> </thy-option>
                     }
@@ -117,7 +117,7 @@
     <thy-popover-body style="width: 400px">
         @for (group of tableGroups.groups; track $index) {
             <div style="display: flex">
-                <thy-select [(ngModel)]="group.field_id" style="width: 140px">
+                <thy-select [(ngModel)]="group.field_id" (ngModelChange)="changeGroupField()" style="width: 140px">
                     @for (option of tableFields; track option._id) {
                         <thy-option [thyValue]="option._id" [thyLabelText]="option.name"> </thy-option>
                     }
