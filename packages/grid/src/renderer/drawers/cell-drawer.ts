@@ -96,8 +96,8 @@ export class CellDrawer extends Drawer {
     }
 
     // 单元格渲染
-    public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined, columnWidth: number) {
-        const { field, cellValue, aiTable } = render;
+    public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined) {
+        const { field, cellValue, aiTable, columnWidth } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
         if (!fieldMethod.isValid(cellValue)) {
