@@ -63,6 +63,14 @@ export class AITableCellProgress extends CoverCellBase {
 
     private progressOffsetY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_PROGRESS_BAR_HEIGHT) / 2 + AI_TABLE_OFFSET;
 
+    private leftOffset = computed(() => {
+        const { aiTable, render, coordinate } = this.config()!;
+        const pointPosition = aiTable.context!.pointPosition();
+        const { columnWidth } = render;
+        const { columnIndex } = pointPosition;
+        return coordinate.getColumnWidth(columnIndex) - columnWidth;
+    });
+
     private dragProgressValue = signal<number | null>(null);
 
     private progressValue = computed(() => {
@@ -93,7 +101,7 @@ export class AITableCellProgress extends CoverCellBase {
         const bgColor = hasSelectedArea ? null : Colors.white;
 
         return {
-            x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
+            x: x - this.leftOffset() - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2 + AI_TABLE_CELL_BORDER / 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
@@ -245,11 +253,11 @@ export class AITableCellProgress extends CoverCellBase {
         const point = stage.getPointerPosition();
         if (!point) return;
 
-        const dragX = point.x - columnLeftX - x;
+        const dragX = point.x - columnLeftX - x - this.leftOffset();
         const minX = x;
         const maxX = x + this.railWidth();
 
-        let dragPointerX = point.x - columnLeftX;
+        let dragPointerX = point.x - columnLeftX - this.leftOffset();
         if (dragPointerX < minX) {
             dragPointerX = minX;
         } else if (dragPointerX > maxX) {
@@ -285,7 +293,7 @@ export class AITableCellProgress extends CoverCellBase {
         const point = stage.getPointerPosition();
         if (!point) return;
 
-        const dragX = point.x - columnLeftX - x;
+        const dragX = point.x - columnLeftX - x - this.leftOffset();
         const percentage = this.calculatePercentage(dragX);
 
         if (!this.readonly() && actions && actions.updateFieldValues) {
