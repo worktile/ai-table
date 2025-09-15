@@ -225,8 +225,12 @@ function copyOption(
     return newOption;
 }
 
-function getValidCellValue(cellValue: SelectFieldValue, options: AITableSelectOption[]) {
-    const optionsMap = helpers.keyBy(options, '_id');
-    const validCellValue = cellValue?.filter((optionId) => !!optionsMap[optionId]);
-    return validCellValue;
+function getValidCellValue(cellValue: SelectFieldValue, options: AITableSelectOption[]): SelectFieldValue {
+    if (Array.isArray(cellValue)) {
+        const optionsMap = helpers.keyBy(options, '_id');
+        const validCellValue = cellValue.filter((optionId) => !!optionsMap[optionId]);
+        return validCellValue;
+    } else {
+        return [];
+    }
 }
