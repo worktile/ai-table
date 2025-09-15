@@ -280,7 +280,7 @@ export class AITableFieldStat {
         });
 
         return {
-            texts: text.split(' '),
+            texts: text.split(/\s+/),
             totalWidth: textWidth,
             statValue: statValue || ''
         };
