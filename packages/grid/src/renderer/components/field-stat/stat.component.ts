@@ -15,7 +15,8 @@ import {
     AngleDownPath,
     Colors,
     DEFAULT_FONT_SIZE,
-    DEFAULT_FONT_WEIGHT
+    DEFAULT_FONT_WEIGHT,
+    GROUP_STAT_DEFAULT_FONT_SIZE
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableRowType } from '../../../types';
 import {
@@ -230,7 +231,7 @@ export class AITableFieldStat {
         const noneStatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
         const { text, textWidth } = drawer.textEllipsis({
             text: noneStatString,
-            fontSize: DEFAULT_FONT_SIZE,
+            fontSize: this.fontSize(),
             fontWeight: DEFAULT_FONT_WEIGHT
         });
         return textWidth + AI_TABLE_ACTION_COMMON_SIZE + AI_TABLE_OFFSET;
@@ -275,7 +276,7 @@ export class AITableFieldStat {
         const { text, textWidth } = drawer.textEllipsis({
             text: resultString,
             maxWidth: width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING,
-            fontSize: DEFAULT_FONT_SIZE,
+            fontSize: this.fontSize(),
             fontWeight: DEFAULT_FONT_WEIGHT
         });
 
@@ -286,12 +287,17 @@ export class AITableFieldStat {
         };
     });
 
+    fontSize = computed(() => {
+        return this.isGroupStat() ? GROUP_STAT_DEFAULT_FONT_SIZE : DEFAULT_FONT_SIZE;
+    });
+
     textsConfig = computed(() => {
         const height = this.containerBoxHeight();
         const width = this.containerBoxWidth();
         const renderTexts = this.renderTexts();
         const result = [];
         let previousColor = Colors.gray700;
+        const fontSize = this.fontSize();
         if (renderTexts) {
             const { texts, totalWidth, statValue } = renderTexts;
             let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
@@ -305,7 +311,7 @@ export class AITableFieldStat {
                 const { text: renderText, textWidth } = drawer.textEllipsis({
                     text: isLast ? text : `${text} `,
                     maxWidth: remainingWidth,
-                    fontSize: DEFAULT_FONT_SIZE,
+                    fontSize,
                     fontWeight: DEFAULT_FONT_WEIGHT
                 });
                 remainingWidth -= textWidth;
@@ -324,6 +330,7 @@ export class AITableFieldStat {
                     width: textWidth,
                     height: height,
                     fill,
+                    fontSize,
                     text: renderText,
                     lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                     listening: false
