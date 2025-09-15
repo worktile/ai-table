@@ -267,6 +267,7 @@ export const writeToAITable = async (
 
             if (newField) {
                 actions.setField(newField);
+                visibleFields[targetColIndex] = newField;
             }
 
             if (value !== null) {

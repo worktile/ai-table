@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.46](https://github.com/worktile/ai-table/compare/0.1.45...0.1.46) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-18961 日期字段排序值只需精确到日 ([#685](https://github.com/worktile/ai-table/issues/685)) ([4ece5cb](https://github.com/worktile/ai-table/commit/4ece5cbb88c61b0520b37154751c68adbdfd72f3)), closes [#WIK-18961](https://github.com/worktile/ai-table/issues/WIK-18961)
+* #WIK-19030 分组：分组下新增行会触发意外滚动 ([#689](https://github.com/worktile/ai-table/issues/689)) ([a5368a1](https://github.com/worktile/ai-table/commit/a5368a1183d5239e250a5205762d86c777175d94)), closes [#WIK-19030](https://github.com/worktile/ai-table/issues/WIK-19030)
+* **grid:** when copying and pasting into the drop-down selection column, the appended options are not fully appended successfully ([#686](https://github.com/worktile/ai-table/issues/686)) ([9a7b694](https://github.com/worktile/ai-table/commit/9a7b694a0fb8ce16100c4d1ddd6de95dd398f97b))
+
+
+### Features
+
+* **grid:** render progress and rate normally when grouping #WIK-19034 ([#690](https://github.com/worktile/ai-table/issues/690)) ([a6bee25](https://github.com/worktile/ai-table/commit/a6bee256d688d73415e872c9bf61390a6656a2df)), closes [#WIK-19034](https://github.com/worktile/ai-table/issues/WIK-19034)
+
+
+
 ## [0.1.45](https://github.com/worktile/ai-table/compare/0.1.44...0.1.45) (2025-09-10)
 
 

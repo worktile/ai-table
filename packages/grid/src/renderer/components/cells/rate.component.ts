@@ -46,7 +46,7 @@ export class AITableCellRate extends CoverCellBase {
     readonly whiteBgConfig = computed(() => {
         const { aiTable, render, field, recordId, coordinate } = this.config()!;
         const pointPosition = aiTable.context!.pointPosition();
-        const { x, y } = render;
+        const { x, y, groupOffset = 0 } = render;
         const { columnIndex } = pointPosition;
 
         const hasSelectedArea =
@@ -57,7 +57,7 @@ export class AITableCellRate extends CoverCellBase {
         const bgColor = hasSelectedArea ? null : Colors.white;
 
         return {
-            x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
+            x: x - groupOffset - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
@@ -74,7 +74,7 @@ export class AITableCellRate extends CoverCellBase {
 
     readonly starConfigs = computed(() => {
         const { render, field, recordId, readonly, aiTable, coordinate } = this.config()!;
-        const { x, transformValue } = render;
+        const { x, columnWidth, transformValue } = render;
         const max = AI_TABLE_RATE_MAX;
         const starY = (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_EMOJI_SIZE) / 2 + AI_TABLE_OFFSET;
 
@@ -95,7 +95,7 @@ export class AITableCellRate extends CoverCellBase {
             this.pointerY() >= startTopY &&
             this.pointerY() <= startBottomY;
 
-        const renderWidth = coordinate.getColumnWidth(columnIndex) - AI_TABLE_CELL_PADDING;
+        const renderWidth = columnWidth - AI_TABLE_CELL_PADDING;
         const starWidth = AI_TABLE_CELL_EMOJI_SIZE + AI_TABLE_CELL_EMOJI_PADDING;
         const maxStar = Math.min(max, Math.floor(renderWidth / starWidth));
 
@@ -142,7 +142,9 @@ export class AITableCellRate extends CoverCellBase {
         const pos = e.event.target.getStage()?.getPointerPosition();
         if (!pos) return;
         const { x, y } = pos;
-        this.pointerX.set(x);
+        const { render } = this.config()!;
+        const { groupOffset = 0 } = render;
+        this.pointerX.set(x - groupOffset);
         this.pointerY.set(y);
     }
 
