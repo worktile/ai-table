@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.1](https://github.com/worktile/ai-table/compare/0.2.0...0.2.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-18981 【AITable】有筛选条件下，点击顶部的勾选所有，右键行，删除。 应该只删除用户看到的勾选行的删除，而不是删除整个表格的所有记录 ([#696](https://github.com/worktile/ai-table/issues/696)) ([6e87433](https://github.com/worktile/ai-table/commit/6e87433a7488bfc81e9b3b9d42c306b8efd6bc5f)), closes [#WIK-18981](https://github.com/worktile/ai-table/issues/WIK-18981)
+* correct manual sort logic ([#695](https://github.com/worktile/ai-table/issues/695)) ([d412adc](https://github.com/worktile/ai-table/commit/d412adc3148ec27bbb5cb59066c5882ea527ae06))
+
+
+
 # [0.2.0](https://github.com/worktile/ai-table/compare/0.1.46...0.2.0) (2025-09-15)
 
 
