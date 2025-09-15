@@ -77,8 +77,7 @@ export class GroupLayout extends Layout {
                     columnWidth: render.columnWidth - iconContainerWidth,
                     isGroupFirstRender: true
                 } as AITableRender,
-                this.ctx as CanvasRenderingContext2D,
-                columnWidth
+                this.ctx as CanvasRenderingContext2D
             );
         } else {
             const emptyGroupString = getI18nTextByKey(aiTable, AITableGridI18nKey.emptyGroup);

@@ -166,10 +166,10 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         ctx.save();
                         ctx.rect(realX, realY, width, rowHeight);
                         ctx.clip();
-                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D, columnWidth);
+                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
                         ctx.restore();
                     } else {
-                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D, columnWidth);
+                        cellDrawer.renderCell(render as AITableRender, ctx as CanvasRenderingContext2D);
                     }
                     break;
                 }

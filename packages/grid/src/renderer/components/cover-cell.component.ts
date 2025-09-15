@@ -106,6 +106,7 @@ export class AITableCoverCellEntry {
                 isActive: isSelectedField(field._id, aiTable),
                 x: renderX,
                 y: renderY,
+                groupOffset: columnWidth - width,
                 columnWidth: width,
                 rowHeight,
                 cellValue,
