@@ -46,7 +46,7 @@ export class AITableCellRate extends CoverCellBase {
     readonly whiteBgConfig = computed(() => {
         const { aiTable, render, field, recordId, coordinate } = this.config()!;
         const pointPosition = aiTable.context!.pointPosition();
-        const { x, y, groupIconOffset = 0 } = render;
+        const { x, y, groupOffset = 0 } = render;
         const { columnIndex } = pointPosition;
 
         const hasSelectedArea =
@@ -57,7 +57,7 @@ export class AITableCellRate extends CoverCellBase {
         const bgColor = hasSelectedArea ? null : Colors.white;
 
         return {
-            x: x - groupIconOffset - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
+            x: x - groupOffset - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
@@ -143,8 +143,8 @@ export class AITableCellRate extends CoverCellBase {
         if (!pos) return;
         const { x, y } = pos;
         const { render } = this.config()!;
-        const { groupIconOffset = 0 } = render;
-        this.pointerX.set(x - groupIconOffset);
+        const { groupOffset = 0 } = render;
+        this.pointerX.set(x - groupOffset);
         this.pointerY.set(y);
     }
 
