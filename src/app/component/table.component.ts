@@ -1,5 +1,13 @@
 import { Actions, addView, removeView } from '@ai-table/state';
-import { AITableView, AITableViewFields, AITableViewRecords, SortDirection } from '@ai-table/utils';
+import {
+    AITableGroupOptions,
+    AITableSortOptions,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    Id,
+    SortDirection
+} from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -7,11 +15,15 @@ import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
+import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyAutofocusDirective, ThyEnterDirective, ThyOption } from 'ngx-tethys/shared';
 import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
 import { WebsocketProvider } from 'y-websocket';
 import { LOCAL_STORAGE_KEY, TableService } from '../service/table.service';
+import { ThyButton } from 'ngx-tethys/button';
+import { ThySelect } from 'ngx-tethys/select';
+import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
+import { ThySwitch } from 'ngx-tethys/switch';
 
 const initViews: AITableView[] = [
     {
@@ -40,7 +52,13 @@ const initViews: AITableView[] = [
         ThyAction,
         ThyDropdownModule,
         ThyEnterDirective,
-        ThyAutofocusDirective
+        ThyAutofocusDirective,
+        ThyButton,
+        ThySelect,
+        ThyOption,
+        ThyRadioGroup,
+        ThyRadioButton,
+        ThySwitch
     ],
     templateUrl: './table.component.html',
     providers: [TableService],
@@ -75,6 +93,22 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     maxRecords = 500;
 
     maxFields = 500;
+
+    get tableFields() {
+        return this.tableService.aiTable.fields();
+    }
+
+    tableSorts: AITableSortOptions = {
+        is_keep_sort: false,
+        sorts: []
+    };
+
+    tableGroups: AITableGroupOptions = {
+        groups: [],
+        collapsed_group_ids: []
+    };
+
+    private thyPopover = inject(ThyPopover);
 
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
@@ -122,17 +156,6 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setMaxFields(this.maxFields);
     }
 
-    handleGroupChange(e: any) {
-        this.group = e.target.checked;
-        if (this.group) {
-            Actions.addGroupField(this.tableService.aiTable, 'column-1', SortDirection.ascending);
-            Actions.addGroupField(this.tableService.aiTable, 'column-2', SortDirection.ascending);
-            Actions.addGroupField(this.tableService.aiTable, 'column-4', SortDirection.ascending);
-        } else {
-            Actions.clearAllGroups(this.tableService.aiTable);
-        }
-    }
-
     updateValue() {
         this.isEdit = false;
         if (this.activeViewName !== this.tableService.activeView().name) {
@@ -160,6 +183,75 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const records = this.tableService.aiTable.records() as AITableViewRecords;
         const fields = this.tableService.aiTable.fields() as AITableViewFields;
         removeView(this.tableService.aiTable, records, fields, this.tableService.activeViewId());
+    }
+
+    enterSort() {
+        const sorts = this.tableSorts.sorts?.map((sort) => ({ ...sort, direction: parseInt(sort.direction as any) }));
+        Actions.setView(
+            this.tableService.aiTable,
+            { settings: { ...this.tableService.activeView().settings, is_keep_sort: this.tableSorts.is_keep_sort, sorts } },
+            [this.tableService.activeViewId()]
+        );
+        this.thyPopover.close();
+    }
+
+    addSort() {
+        this.tableSorts.sorts!.push({
+            sort_by: '',
+            direction: SortDirection.ascending
+        });
+    }
+
+    changeSortDirection(e: string, index: number) {
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
+    changeGroupDirection(e: string, index: number) {
+        this.enterGroup();
+    }
+
+    changeSortField() {
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
+    addGroup() {
+        this.tableGroups.groups!.push({
+            field_id: '',
+            direction: SortDirection.ascending
+        });
+    }
+
+    deleteSort(index: number) {
+        this.tableSorts.sorts!.splice(index, 1);
+        if (this.tableSorts.is_keep_sort) {
+            this.enterSort();
+        }
+    }
+
+    deleteGroup(index: number) {
+        this.tableGroups.groups!.splice(index, 1);
+        this.enterGroup();
+    }
+
+    enterGroup() {
+        const groups = this.tableGroups.groups?.map((group) => ({ ...group, direction: parseInt(group.direction as any) }));
+        Actions.setView(this.tableService.aiTable, { settings: { ...this.tableService.activeView().settings, groups } }, [
+            this.tableService.activeViewId()
+        ]);
+    }
+
+    changeGroupField() {
+        this.enterGroup();
+    }
+
+    autoSortChange(e: boolean) {
+        this.hiddenRowDrag = e;
+        this.tableService.setHiddenRowDrag(e);
+        Actions.setView(this.tableService.aiTable, { is_keep_sort: e }, [this.tableService.activeViewId()]);
     }
 
     ngOnDestroy(): void {
