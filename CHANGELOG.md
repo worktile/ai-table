@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.2.0](https://github.com/worktile/ai-table/compare/0.1.46...0.2.0) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-19007 【分组】统计指标的英文文字和中文文字数字的部分颜色不统一，英文颜色没换 ([#693](https://github.com/worktile/ai-table/issues/693)) ([7eaf57e](https://github.com/worktile/ai-table/commit/7eaf57e4d0b500af9abb351ffa178d8f4cab81c0)), closes [#WIK-19007](https://github.com/worktile/ai-table/issues/WIK-19007)
+
+
+### Features
+
+* #WIK-19045 排序 + 分组 + 位置方案完善 ([#692](https://github.com/worktile/ai-table/issues/692)) ([814f0aa](https://github.com/worktile/ai-table/commit/814f0aab1b350550f8b6827e33c329516b9bb5a7)), closes [#WIK-19045](https://github.com/worktile/ai-table/issues/WIK-19045) [#WIK-19045](https://github.com/worktile/ai-table/issues/WIK-19045)
+* demo 添加排序功能 ([#687](https://github.com/worktile/ai-table/issues/687)) ([c5c1cd7](https://github.com/worktile/ai-table/commit/c5c1cd72b1cc089644788d640d02c8a4b85c28d5))
+
+
+
 ## [0.1.46](https://github.com/worktile/ai-table/compare/0.1.45...0.1.46) (2025-09-15)
 
 
