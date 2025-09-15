@@ -193,7 +193,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
             { settings: { ...this.tableService.activeView().settings, is_keep_sort: this.tableSorts.is_keep_sort, sorts } },
             [this.tableService.activeViewId()]
         );
-        if (!this.tableSorts.is_keep_sort) {
+        if (!this.tableSorts.is_keep_sort && this.tableSorts.sorts?.length) {
             this.manualSortRecords();
         }
         this.thyPopover.close();
@@ -205,7 +205,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const sortKeysMap = this.tableService.sortKeysMap;
         const records = this.tableService.records();
         const recordsIndexMap = new Map(records?.map((item, index) => [item._id, index]));
-        const sorts = mergeSorts(activeView);
+        const sorts = activeView.settings?.sorts!;
         const newSortedRecords = sortRecordsByConditions(aiTable, records, activeView, sorts, sortKeysMap);
         const actions: AITableAction[] = [];
         newSortedRecords.forEach((record, index) => {
