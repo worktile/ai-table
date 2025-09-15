@@ -1,12 +1,4 @@
-import {
-    AITableFieldType,
-    AITableView,
-    AITableViewRecords,
-    AITableViewRecord,
-    AITableGroupField,
-    SortDirection,
-    AITableSort
-} from '@ai-table/utils';
+import { AITableFieldType, AITableView, AITableViewRecords, AITableViewRecord, AITableSort } from '@ai-table/utils';
 import { AITable, AITableQueries, FieldModelMap } from '@ai-table/grid';
 
 export function sortRecordsByConditions(
@@ -28,38 +20,6 @@ export function sortRecordsByConditions(
 
         return compareByPosition(record1, record2, activeView);
     });
-}
-
-export function sortRecordsBySortInfo(
-    aiTable: AITable,
-    records: AITableViewRecords,
-    activeView: AITableView,
-    sortKeysMap?: Partial<Record<AITableFieldType | string, string>>
-) {
-    const shallowRows = [...records];
-    if (activeView.settings?.sorts?.length) {
-        shallowRows.sort((prev, current) => {
-            return activeView.settings!.sorts!.reduce((acc, rule) => {
-                const field = aiTable.fieldsMap()[rule.sort_by];
-                if (!field || acc !== 0) {
-                    return acc;
-                }
-                const fieldMethod = FieldModelMap[field.type];
-                const sortKey = sortKeysMap?.[field.type];
-
-                const cellValue1 = AITableQueries.getFieldValue(aiTable, [prev._id, field._id]);
-                const cellValue2 = AITableQueries.getFieldValue(aiTable, [current._id, field._id]);
-                const references = aiTable.context!.references();
-                const res = fieldMethod.compare(cellValue1, cellValue2, references, sortKey, {
-                    aiTable,
-                    field
-                });
-                return res * rule.direction;
-            }, 0);
-        });
-        return shallowRows;
-    }
-    return shallowRows;
 }
 
 function compareBySorts(
