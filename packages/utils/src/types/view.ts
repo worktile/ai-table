@@ -46,12 +46,14 @@ export interface AITableFilterConditions<TValue = unknown> {
     conditions?: AITableFilterCondition<TValue>[];
 }
 
+export interface AITableSort {
+    sort_by: Id;
+    direction: SortDirection;
+}
+
 export interface AITableSortOptions {
     is_keep_sort?: boolean;
-    sorts?: {
-        sort_by: Id;
-        direction: SortDirection;
-    }[];
+    sorts?: AITableSort[];
 }
 
 export interface AITableSearchOptions {

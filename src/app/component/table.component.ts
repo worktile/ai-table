@@ -1,5 +1,6 @@
-import { Actions, addView, removeView } from '@ai-table/state';
+import { Actions, addView, buildSetRecordPositionsActon, mergeSorts, removeView, sortRecordsByConditions } from '@ai-table/state';
 import {
+    AITableAction,
     AITableGroupOptions,
     AITableSortOptions,
     AITableView,
@@ -192,7 +193,26 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
             { settings: { ...this.tableService.activeView().settings, is_keep_sort: this.tableSorts.is_keep_sort, sorts } },
             [this.tableService.activeViewId()]
         );
+        if (!this.tableSorts.is_keep_sort) {
+            this.manualSortRecords();
+        }
         this.thyPopover.close();
+    }
+
+    manualSortRecords() {
+        const aiTable = this.tableService.aiTable;
+        const activeView = this.tableService.activeView();
+        const sortKeysMap = this.tableService.sortKeysMap;
+        const records = this.tableService.records();
+        const recordsIndexMap = new Map(records?.map((item, index) => [item._id, index]));
+        const sorts = mergeSorts(activeView);
+        const newSortedRecords = sortRecordsByConditions(aiTable, records, activeView, sorts, sortKeysMap);
+        const actions: AITableAction[] = [];
+        newSortedRecords.forEach((record, index) => {
+            const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: index }, [recordsIndexMap.get(record._id)!]);
+            actions.push(action);
+        });
+        aiTable.apply(actions);
     }
 
     addSort() {
