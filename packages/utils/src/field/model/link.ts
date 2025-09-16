@@ -18,4 +18,8 @@ export class LinkFieldBase extends FieldBase {
         }
         return texts;
     }
+
+    getDefaultValue() {
+        return null;
+    }
 }

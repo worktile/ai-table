@@ -71,7 +71,6 @@ import {
     AITableFieldGroup,
     FieldValue,
     AITableUtilsI18nText,
-    AITableViewField,
     SetFieldStatTypeOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
@@ -145,10 +144,7 @@ export class DemoTableContent {
                     },
                     fieldModel: new RelationTicketField(),
                     render: renderRelationCell,
-                    coverRender: AITableCellRelationTicket,
-                    getDefaultFieldValue: (field: AITableField) => {
-                        return null;
-                    }
+                    coverRender: AITableCellRelationTicket
                 }
             },
             fieldRenderers: {

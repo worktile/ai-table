@@ -20,4 +20,8 @@ export class NumberFieldBase extends FieldBase {
     override isValid(cellValue: NumberFieldValue): boolean {
         return isNumberValid(cellValue);
     }
+
+    getDefaultValue() {
+        return null;
+    }
 }

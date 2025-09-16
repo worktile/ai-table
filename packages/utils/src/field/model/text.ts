@@ -5,4 +5,8 @@ export class TextFieldBase extends FieldBase {
     override isValid(cellValue: TextFieldValue): boolean {
         return typeof cellValue === 'string' || cellValue === null;
     }
+
+    getDefaultValue() {
+        return '';
+    }
 }

@@ -5,7 +5,6 @@ import {
     AITableField,
     AITableRecords,
     AITableReferences,
-    AITableStatType,
     FieldOptions,
     FieldValue,
     AITableFieldStatTypeItemInfo,
@@ -19,6 +18,8 @@ export abstract class FieldBase {
     public statTypes: AITableFieldStatTypeItemInfo[] = [];
 
     abstract isValid(cellValue: FieldValue): boolean;
+
+    abstract getDefaultValue(): FieldValue;
 
     constructor(statTypes: AITableFieldStatTypeItemInfo[] = DEFAULT_FIELD_STAT_TYPE_ITEMS) {
         this.statTypes = statTypes;
