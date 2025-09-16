@@ -3,40 +3,11 @@ import { AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberS
 import { generateNewName } from './common';
 import { AITable } from '../types';
 
-export const isArrayField = (field: AITableField) => {
-    return [
-        AITableFieldType.member,
-        AITableFieldType.createdBy,
-        AITableFieldType.updatedBy,
-        AITableFieldType.select,
-        AITableFieldType.attachment,
-        AITableFieldType.richText
-    ].includes(field.type as AITableFieldType);
-};
-
 export const isSystemField = (field: AITableField) => {
     return [AITableFieldType.createdAt, AITableFieldType.createdBy, AITableFieldType.updatedAt, AITableFieldType.updatedBy].includes(
         field.type as AITableFieldType
     );
 };
-
-export const isNumberFiled = (field: AITableField) => {
-    return [AITableFieldType.number, AITableFieldType.progress, AITableFieldType.rate].includes(field.type as AITableFieldType);
-};
-
-export const isDateFiled = (field: AITableField) => {
-    return [AITableFieldType.date, AITableFieldType.createdAt, AITableFieldType.updatedAt].includes(field.type as AITableFieldType);
-};
-
-export function getDefaultFieldValue(field: AITableField) {
-    if (isArrayField(field)) {
-        return [];
-    }
-    if (isNumberFiled(field) || isDateFiled(field) || field.type === AITableFieldType.link || field.type === AITableFieldType.checkbox) {
-        return null;
-    }
-    return '';
-}
 
 export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOption) {
     const fieldOption = getFieldOptionByField(aiTable, field);

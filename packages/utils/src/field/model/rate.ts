@@ -11,7 +11,12 @@ export class RateFieldBase extends FieldBase {
             DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Min]!
         ]);
     }
+
     override isValid(cellValue: RateFieldValue): boolean {
         return isNumberValid(cellValue);
+    }
+
+    getDefaultValue() {
+        return null;
     }
 }
