@@ -18,7 +18,13 @@ import {
     DEFAULT_FONT_WEIGHT,
     GROUP_STAT_DEFAULT_FONT_SIZE
 } from '../../../constants';
-import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableRowType } from '../../../types';
+import {
+    AITableBackgroundConfig,
+    AITableFieldStatConfig,
+    AITableGroupStatConfig,
+    AITableMouseDownType,
+    AITableRowType
+} from '../../../types';
 import {
     AITableField,
     AITableFieldStatTypeItemInfo,
@@ -411,6 +417,7 @@ export class AITableFieldStat {
     }
 
     clickStat(e: KoEventObject<MouseEvent>) {
+        if (e.event.evt.button !== AITableMouseDownType.Left) return;
         e.event.evt.stopPropagation();
         this.isActive.set(true);
         const { aiTable, coordinate, field, actions } = this.config();
