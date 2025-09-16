@@ -137,6 +137,7 @@ export interface AITableContext {
     scrollAction: (options: ScrollActionOptions) => void;
     visibleColumnsIndexMap: Signal<Map<string, number>>;
     visibleRowsIndexMap: Signal<Map<string, number>>;
+    groupStatContainerWidthMap: WritableSignal<Map<string, number>>;
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;

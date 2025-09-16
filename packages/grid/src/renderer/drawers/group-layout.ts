@@ -70,11 +70,13 @@ export class GroupLayout extends Layout {
         const iconContainerWidth = AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
         if (!isEmpty(groupValue) || [AITableFieldType.checkbox, AITableFieldType.progress].includes(field.type as AITableFieldType)) {
             cellDrawer.initStyle(field, style);
+            const statContainerWidth = aiTable.context?.groupStatContainerWidthMap()?.get(`${config.row.groupId}:${fieldId}`);
+            const widthOffset = statContainerWidth ? statContainerWidth - AI_TABLE_CELL_PADDING : 0;
             cellDrawer.renderCell(
                 {
                     ...render,
                     x: render.x + iconContainerWidth,
-                    columnWidth: render.columnWidth - iconContainerWidth,
+                    columnWidth: render.columnWidth - iconContainerWidth - widthOffset,
                     isGroupFirstRender: true
                 } as AITableRender,
                 this.ctx as CanvasRenderingContext2D
