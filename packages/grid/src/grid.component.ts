@@ -409,6 +409,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
+            groupStatContainerWidthMap: signal(new Map()),
             pointPosition: signal(DEFAULT_POINT_POSITION),
             scrollState: signal(DEFAULT_SCROLL_STATE),
             frozenColumnCount: this.frozenColumnCount,

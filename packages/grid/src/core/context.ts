@@ -10,6 +10,7 @@ export class RendererContext {
     scrollState: WritableSignal<AITableScrollState>;
     visibleColumnsIndexMap: Signal<Map<string, number>>;
     visibleRowsIndexMap: Signal<Map<string, number>>;
+    groupStatContainerWidthMap: WritableSignal<Map<string, number>>;
     frozenColumnCount: Signal<number>;
     references: Signal<AITableReferences>;
     aiFieldConfig: Signal<AIFieldConfig | undefined>;
@@ -30,6 +31,7 @@ export class RendererContext {
             scrollState,
             visibleColumnsIndexMap,
             visibleRowsIndexMap,
+            groupStatContainerWidthMap,
             frozenColumnCount,
             references,
             aiFieldConfig,
@@ -58,6 +60,7 @@ export class RendererContext {
         this.fieldOptions = fieldOptions;
         this.fieldOptionMap = fieldOptionMap;
         this.readonly = readonly;
+        this.groupStatContainerWidthMap = groupStatContainerWidthMap;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {
