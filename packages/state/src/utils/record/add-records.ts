@@ -1,4 +1,4 @@
-import { closeExpendCell, getDefaultFieldValue, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
+import { closeExpendCell, FieldModelMap, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
@@ -78,12 +78,8 @@ export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false
         const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
         const fields = getSortFields(aiTable, aiTable.fields() as AITableViewFields, activeView);
         fields.map((field) => {
-            const customGetDefaultFieldValue = aiTable.context?.aiFieldConfig()?.customFields?.[field.type]?.getDefaultFieldValue;
-            if (customGetDefaultFieldValue) {
-                newRecordValues[field._id] = customGetDefaultFieldValue(field);
-            } else {
-                newRecordValues[field._id] = getDefaultFieldValue(field);
-            }
+            const defaultValue = FieldModelMap[field.type].getDefaultValue();
+            newRecordValues[field._id] = defaultValue;
         });
         const { conditions, condition_logical } = activeView.settings || {};
         if (conditions && conditions.length) {

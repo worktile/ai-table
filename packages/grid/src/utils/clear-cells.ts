@@ -1,5 +1,6 @@
-import { AITable, getDefaultFieldValue, isSystemField } from '../core';
+import { AITable, isSystemField } from '../core';
 import { AITableActions } from './clipboard/paste';
+import { FieldModelMap } from './field';
 
 export function clearCells(aiTable: AITable, actions: AITableActions): void {
     const selectedCells = aiTable.selection().selectedCells;
@@ -20,10 +21,11 @@ export function clearCells(aiTable: AITable, actions: AITableActions): void {
             continue;
         }
 
+        const defaultValue = FieldModelMap[field.type].getDefaultValue();
         actions.updateFieldValues([
             {
                 path: [recordId, fieldId],
-                value: getDefaultFieldValue(field)
+                value: defaultValue
             }
         ]);
     }

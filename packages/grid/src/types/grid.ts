@@ -10,7 +10,6 @@ import {
     AITableFieldType,
     UpdateFieldValueOptions,
     AITableReferences,
-    AddRecordOptions,
     AITableFieldOption
 } from '@ai-table/utils';
 import { AITable, Coordinate } from '../core';
@@ -48,7 +47,6 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
     fieldModel?: FieldOperable<unknown, unknown>;
     render?: (render: AITableRender<TR>, drawer: CellDrawer) => any;
     coverRender?: Constructor<CoverCellBase>;
-    getDefaultFieldValue?: (field: AITableField) => FieldValue;
 }
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
@@ -58,7 +56,6 @@ export interface AIFieldConfig<TR extends AITableReferences = AITableReferences>
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
-    // fieldOptionKeys?: string[];
     filterFieldOptions?: (fieldOptions: AITableFieldOption[]) => AITableFieldOption[];
 }
 

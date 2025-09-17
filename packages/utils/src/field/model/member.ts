@@ -21,4 +21,8 @@ export class MemberFieldBase extends FieldBase {
         }
         return fullText;
     }
+
+    getDefaultValue() {
+        return [];
+    }
 }

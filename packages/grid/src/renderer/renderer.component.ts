@@ -184,6 +184,7 @@ export class AITableRenderer {
         return {
             clipX: 0,
             clipY: AI_TABLE_FIELD_HEAD_HEIGHT,
+            clipWidth: this.containerWidth(),
             clipHeight: this.gridContainerHeight()
         };
     });

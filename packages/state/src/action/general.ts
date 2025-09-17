@@ -1,6 +1,6 @@
 import { AIViewTable } from '../types';
 import { createDraft, finishDraft } from 'immer';
-import { getDefaultFieldValue } from '@ai-table/grid';
+import { FieldModelMap } from '@ai-table/grid';
 import {
     ActionName,
     AITableAction,
@@ -43,9 +43,9 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
         case ActionName.AddField: {
             const newField = action.field;
             fields.push(newField as AITableViewField);
+            const defaultValue = FieldModelMap[newField.type].getDefaultValue();
             records.forEach((item) => {
-                item.values[newField._id] =
-                    action.isDuplicate && action.originId ? item.values[action.originId] : getDefaultFieldValue(action.field);
+                item.values[newField._id] = action.isDuplicate && action.originId ? item.values[action.originId] : defaultValue;
             });
             break;
         }

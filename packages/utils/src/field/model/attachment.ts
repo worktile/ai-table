@@ -21,4 +21,8 @@ export class AttachmentFieldBase extends FieldBase {
         }
         return fullText;
     }
+
+    getDefaultValue() {
+        return [];
+    }
 }

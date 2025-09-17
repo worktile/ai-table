@@ -1,6 +1,6 @@
 import { FieldBase } from './field';
 import { AITableFieldStatTypeItemInfo, AITableStatType, DateFieldValue } from '../../types';
-import { DEFAULT_FIELD_STAT_TYPE_ITEMS, DEFAULT_FIELD_STAT_TYPE_MAP } from '../../constants';
+import { DEFAULT_FIELD_STAT_TYPE_MAP } from '../../constants';
 import _ from 'lodash';
 
 export class CheckboxFieldBase extends FieldBase {
@@ -19,5 +19,9 @@ export class CheckboxFieldBase extends FieldBase {
 
     override isValid(cellValue: DateFieldValue): boolean {
         return _.isNull(cellValue) || _.isUndefined(cellValue) || _.isBoolean(cellValue);
+    }
+
+    getDefaultValue() {
+        return null;
     }
 }
