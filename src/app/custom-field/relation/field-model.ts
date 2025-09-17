@@ -57,7 +57,7 @@ export class RelationTicketField extends FieldBase implements FieldOperable<stri
     }
 
     getDefaultValue() {
-        return [];
+        return '';
     }
 }
 
