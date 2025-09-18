@@ -425,21 +425,12 @@ export class DemoTableContent {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
-                if (event.key === 'z') {
-                    if (event.shiftKey) {
-                        // 重做操作
-                        this.tableService.redo();
-                    } else {
-                        // 撤销操作
-                        this.tableService.undo();
-                    }
-                } else if (event.key === 'f') {
-                    // 打开查找弹窗
-                    event.preventDefault();
-                    const findButton = document.querySelector('[thyIcon="search"]') as HTMLElement;
-                    if (findButton) {
-                        findButton.click();
-                    }
+                if (event.shiftKey) {
+                    // 重做操作
+                    this.tableService.redo();
+                } else {
+                    // 撤销操作
+                    this.tableService.undo();
                 }
             });
     }

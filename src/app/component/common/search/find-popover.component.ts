@@ -122,10 +122,6 @@ export class FindPopoverComponent {
 
     findResult = signal<FindResult>({ total: 0, current: 0, hasResults: false });
 
-    // currentIndex = input<number>(0);
-
-    // searchTotal = input<number>(0);
-
     onSearch = output<string>();
 
     onFindNext = output<void>();
@@ -146,7 +142,7 @@ export class FindPopoverComponent {
     });
 
     showIndex = computed(() => {
-        return this.findResult().current; // 直接使用 current，因为已经在 updateFindResult 中处理了 +1
+        return this.findResult().current;
     });
 
     constructor() {}
