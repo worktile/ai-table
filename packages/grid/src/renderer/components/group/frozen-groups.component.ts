@@ -7,13 +7,14 @@ import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON, AngleDow
 import { AITableIcon } from '../icon.component';
 import { createGroupFieldStats } from '../../creations/create-stats';
 import { AITableFieldStat } from '../field-stat/stat.component';
+import { KoEventObject } from '../../../angular-konva';
 
 @Component({
     selector: 'ai-table-frozen-groups',
     template: `
         @for (groupCell of groupCells(); track $index) {
             @if (groupCell.collapsedIcon) {
-                <ai-table-icon [config]="groupCell.collapsedIcon"></ai-table-icon>
+                <ai-table-icon [config]="groupCell.collapsedIcon" (koClick)="collapseClick($event)"></ai-table-icon>
             }
             <ai-table-field-stat [config]="groupCell.groupStat!"></ai-table-field-stat>
         }
@@ -41,6 +42,17 @@ export class AITableFrozenGroups {
         });
     });
 
+    collapseDisabled = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.context!.collapseDisabled();
+    });
+
+    collapseClick(e: KoEventObject<MouseEvent>) {
+        if (this.collapseDisabled()) {
+            e.event.cancelBubble = true;
+        }
+    }
+
     groupCells = computed(() => {
         const groups = this.groups();
         const groupCells: {
@@ -56,7 +68,7 @@ export class AITableFrozenGroups {
                     targetName: AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
                     fieldId: fieldId,
                     source: groupId,
-                    mouseStyle: readonly ? 'default' : 'pointer'
+                    mouseStyle: readonly ? 'default' : this.collapseDisabled() ? 'not-allowed' : 'pointer'
                 }),
                 x,
                 y: y! + (height - AI_TABLE_ICON_COMMON_SIZE) / 2,

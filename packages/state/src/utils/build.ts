@@ -28,7 +28,10 @@ export function buildGroupLinearRows(aiTable: AIViewTable, activeView: AITableVi
     if (aiTable && activeView?.settings?.groups?.length) {
         try {
             const groups = activeView.settings?.groups!;
-            const collapsedGroupIds = activeView.settings?.collapsed_group_ids;
+            let collapsedGroupIds: string[] = [];
+            if (!aiTable.context!.collapseDisabled()) {
+                collapsedGroupIds = activeView.settings?.collapsed_group_ids || [];
+            }
 
             const calculator = new GroupCalculator(aiTable, groups, collapsedGroupIds);
             return calculator.calculateLinearRows(records);
