@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.2](https://github.com/worktile/ai-table/compare/0.2.1...0.2.2) (2025-09-18)
+
+
+### Bug Fixes
+
+* #WIK-18968 【AITable】以多选作为分组，选中项过多时，需要做处理 ([#701](https://github.com/worktile/ai-table/issues/701)) ([f7a3866](https://github.com/worktile/ai-table/commit/f7a3866df1659e317e790ec76eb6efd583659413)), closes [#WIK-18968](https://github.com/worktile/ai-table/issues/WIK-18968)
+* #WIK-19040 分组统计文字，字号调整，分组的字号改成12px，最下面的统计不变 ([#698](https://github.com/worktile/ai-table/issues/698)) ([5d9f7cb](https://github.com/worktile/ai-table/commit/5d9f7cbfbc069e3aaae086493df12bffdf658eec)), closes [#WIK-19040](https://github.com/worktile/ai-table/issues/WIK-19040)
+* #WIK-19057 垂直滚动时，固定列与非固定列表头遮罩部分样式有问题 ([#700](https://github.com/worktile/ai-table/issues/700)) ([1aac120](https://github.com/worktile/ai-table/commit/1aac1205dea98ee93ae32fe51ac3a63575314287)), closes [#WIK-19057](https://github.com/worktile/ai-table/issues/WIK-19057)
+* **state:** fix filter error for select when cellValue is empty #WIK-19049 ([#699](https://github.com/worktile/ai-table/issues/699)) ([dc45c8c](https://github.com/worktile/ai-table/commit/dc45c8c4b73e3b4f5ecb309ec302daf4effec8b6)), closes [#WIK-19049](https://github.com/worktile/ai-table/issues/WIK-19049)
+
+
+
 ## [0.2.1](https://github.com/worktile/ai-table/compare/0.2.0...0.2.1) (2025-09-15)
 
 
