@@ -22,7 +22,7 @@ export interface FindResult {
         <div class="find-popover">
             <div class="find-header">
                 <span class="find-title">查找</span>
-                <!-- <thy-icon thyIconName="close" class="close-icon" (click)="close()"></thy-icon> -->
+                <thy-icon thyIconName="close" class="close-icon" (click)="close()"></thy-icon>
             </div>
 
             <div class="find-content">
@@ -38,7 +38,6 @@ export interface FindResult {
                     >
                         <ng-template #append>
                             <span class="text-muted">{{ showIndex() }}/{{ findResult().total }}</span>
-                            <!-- <span class="text-muted"> 0/0</span> -->
                         </ng-template>
                     </thy-input>
                 </div>

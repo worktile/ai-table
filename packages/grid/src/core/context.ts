@@ -20,7 +20,7 @@ export class RendererContext {
     maxSelectOptions: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
-    collapseDisabled: WritableSignal<boolean>;
+    groupCollapseDisabled: WritableSignal<boolean>;
     readonly?: Signal<boolean>;
 
     constructor(options: AITableContext) {
@@ -42,7 +42,7 @@ export class RendererContext {
             maxSelectOptions,
             fieldOptions,
             fieldOptionMap,
-            collapseDisabled,
+            groupCollapseDisabled,
             readonly
         } = options;
         this.containerRect = containerRect;
@@ -61,7 +61,7 @@ export class RendererContext {
         this.maxSelectOptions = maxSelectOptions;
         this.fieldOptions = fieldOptions;
         this.fieldOptionMap = fieldOptionMap;
-        this.collapseDisabled = collapseDisabled;
+        this.groupCollapseDisabled = groupCollapseDisabled;
         this.readonly = readonly;
         this.groupStatContainerWidthMap = groupStatContainerWidthMap;
     }

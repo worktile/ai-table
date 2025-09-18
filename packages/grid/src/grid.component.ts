@@ -421,7 +421,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             maxSelectOptions: this.aiMaxSelectOptions,
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
-            collapseDisabled: signal(false),
+            groupCollapseDisabled: signal(false),
             readonly: this.aiReadonly
         });
     }
