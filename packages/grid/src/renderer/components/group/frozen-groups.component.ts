@@ -42,13 +42,13 @@ export class AITableFrozenGroups {
         });
     });
 
-    collapseDisabled = computed(() => {
+    groupCollapseDisabled = computed(() => {
         const { aiTable } = this.config();
-        return aiTable.context!.collapseDisabled();
+        return aiTable.context!.groupCollapseDisabled();
     });
 
     collapseClick(e: KoEventObject<MouseEvent>) {
-        if (this.collapseDisabled()) {
+        if (this.groupCollapseDisabled()) {
             e.event.cancelBubble = true;
         }
     }
@@ -68,7 +68,7 @@ export class AITableFrozenGroups {
                     targetName: AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
                     fieldId: fieldId,
                     source: groupId,
-                    mouseStyle: readonly ? 'default' : this.collapseDisabled() ? 'not-allowed' : 'pointer'
+                    mouseStyle: readonly ? 'default' : this.groupCollapseDisabled() ? 'not-allowed' : 'pointer'
                 }),
                 x,
                 y: y! + (height - AI_TABLE_ICON_COMMON_SIZE) / 2,

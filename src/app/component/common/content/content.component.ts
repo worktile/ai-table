@@ -669,6 +669,8 @@ export class DemoTableContent {
         this.findPopoverRef = this.thyPopover.open(FindPopoverComponent, {
             origin: event.target as HTMLElement,
             placement: 'bottomLeft',
+            backdropClosable: false,
+            hasBackdrop: false,
             offset: 8,
             manualClosure: true
         });
