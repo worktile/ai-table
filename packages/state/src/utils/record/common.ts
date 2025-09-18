@@ -3,6 +3,7 @@ import { AIViewTable } from '../../types';
 import { getMaxPosition } from '../view';
 import _ from 'lodash';
 import { getParentLinearRowGroups } from '../group/utils';
+import { AITableRowType } from '@ai-table/grid';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -133,4 +134,24 @@ export function getParentGroupValuesByGroupId(aiTable: AIViewTable, groupId: str
         },
         {} as Record<string, any>
     );
+}
+
+export function getPrevRecordIdByAddGroupId(aiTable: AIViewTable, groupId: string) {
+    const activeViewId = aiTable.activeViewId();
+    const activeView = aiTable.viewsMap()[activeViewId];
+
+    if (!activeView.settings?.groups?.length) return null;
+
+    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap();
+    const rowIndex = visibleRowsIndexMap.get(groupId) ?? -1;
+    if (rowIndex > -1) {
+        const linearRows = aiTable.context!.linearRows();
+        const current = linearRows[rowIndex];
+        const prev = linearRows[rowIndex - 1];
+        if (current.type === AITableRowType.add && prev.type === AITableRowType.record) {
+            return prev._id;
+        }
+        return null;
+    }
+    return null;
 }

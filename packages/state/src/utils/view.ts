@@ -9,7 +9,7 @@ import { AIViewTable } from '../types';
 import _ from 'lodash';
 import { buildSetFieldAction } from '../action/field';
 
-export function createPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index: number) {
+export function createPositions(views: AITableView[], activeId: string, data: AITableViewRecords | AITableViewFields, index?: number) {
     return createMultiplePositions(views, activeId, data, index)[0];
 }
 
@@ -48,7 +48,7 @@ export function getPositions(
     count: number = 1,
     isInsertBefore: boolean = false
 ) {
-    let startPosition = data.length - 1;
+    let startPosition = data[data.length - 1].positions[activeId!];
     let endPosition = startPosition + count + 1;
     if (data[targetIndex]) {
         if (isInsertBefore) {

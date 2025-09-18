@@ -6,18 +6,21 @@ import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_TEXT_LINE_HEIGHT,
-    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
-    AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_FIELD_STAT_BG,
-    AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
-    AI_TABLE_POPOVER_LEFT_OFFSET,
     AngleDownPath,
     Colors,
     DEFAULT_FONT_SIZE,
-    DEFAULT_FONT_WEIGHT
+    DEFAULT_FONT_WEIGHT,
+    GROUP_STAT_DEFAULT_FONT_SIZE
 } from '../../../constants';
-import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableRowType } from '../../../types';
+import {
+    AITableBackgroundConfig,
+    AITableFieldStatConfig,
+    AITableGroupStatConfig,
+    AITableMouseDownType,
+    AITableRowType
+} from '../../../types';
 import {
     AITableField,
     AITableFieldStatTypeItemInfo,
@@ -98,8 +101,14 @@ export class AITableFieldStat {
         return (this.config() as AITableGroupStatConfig).isGroupStat;
     });
 
+    groupStatContainerWidthMap = computed(() => {
+        const { aiTable } = this.config();
+        return aiTable.context?.groupStatContainerWidthMap()!;
+    });
+
     bgConfig = computed(() => {
-        const { field, width, height, coordinate, readonly, aiTable, isGroupStat, columnIndex } = this.config() as AITableGroupStatConfig;
+        const { field, width, height, coordinate, readonly, aiTable, isGroupStat, columnIndex, groupRow } =
+            this.config() as AITableGroupStatConfig;
 
         const rowHeadWidth = aiTable.context!.rowHeadWidth();
         const config: AITableBackgroundConfig = {
@@ -120,7 +129,7 @@ export class AITableFieldStat {
         };
 
         if (isGroupStat) {
-            if (columnIndex === 0) {
+            if (this.isFirstColumn()) {
                 const textsConfig = this.textsConfig();
                 if (textsConfig) {
                     config.x = textsConfig[0].x - AI_TABLE_CELL_PADDING;
@@ -152,6 +161,16 @@ export class AITableFieldStat {
                 }
                 config.stroke = Colors.gray200;
                 config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
+            }
+        }
+
+        if (isGroupStat && this.isFirstColumn()) {
+            const groupStatContainerWidthMap = this.groupStatContainerWidthMap();
+            const groupStatCellKey = `${groupRow.groupId}:${field._id}`;
+            const originGroupStatContainerWidth = groupStatContainerWidthMap.get(groupStatCellKey);
+            const width = this.renderTexts() ? config.width : 0;
+            if (!originGroupStatContainerWidth || originGroupStatContainerWidth !== width) {
+                groupStatContainerWidthMap.set(groupStatCellKey, width);
             }
         }
         return config;
@@ -230,7 +249,7 @@ export class AITableFieldStat {
         const noneStatString = getI18nTextByKey(this.aiTable(), AITableGridI18nKey.stat);
         const { text, textWidth } = drawer.textEllipsis({
             text: noneStatString,
-            fontSize: DEFAULT_FONT_SIZE,
+            fontSize: this.fontSize(),
             fontWeight: DEFAULT_FONT_WEIGHT
         });
         return textWidth + AI_TABLE_ACTION_COMMON_SIZE + AI_TABLE_OFFSET;
@@ -275,15 +294,19 @@ export class AITableFieldStat {
         const { text, textWidth } = drawer.textEllipsis({
             text: resultString,
             maxWidth: width - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_CELL_PADDING,
-            fontSize: DEFAULT_FONT_SIZE,
+            fontSize: this.fontSize(),
             fontWeight: DEFAULT_FONT_WEIGHT
         });
 
         return {
-            texts: text.split(' '),
+            texts: text.split(/\s+/),
             totalWidth: textWidth,
             statValue: statValue || ''
         };
+    });
+
+    fontSize = computed(() => {
+        return this.isGroupStat() ? GROUP_STAT_DEFAULT_FONT_SIZE : DEFAULT_FONT_SIZE;
     });
 
     textsConfig = computed(() => {
@@ -292,6 +315,7 @@ export class AITableFieldStat {
         const renderTexts = this.renderTexts();
         const result = [];
         let previousColor = Colors.gray700;
+        const fontSize = this.fontSize();
         if (renderTexts) {
             const { texts, totalWidth, statValue } = renderTexts;
             let remainingWidth = width - AI_TABLE_ACTION_COMMON_SIZE;
@@ -305,7 +329,7 @@ export class AITableFieldStat {
                 const { text: renderText, textWidth } = drawer.textEllipsis({
                     text: isLast ? text : `${text} `,
                     maxWidth: remainingWidth,
-                    fontSize: DEFAULT_FONT_SIZE,
+                    fontSize,
                     fontWeight: DEFAULT_FONT_WEIGHT
                 });
                 remainingWidth -= textWidth;
@@ -324,6 +348,7 @@ export class AITableFieldStat {
                     width: textWidth,
                     height: height,
                     fill,
+                    fontSize,
                     text: renderText,
                     lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                     listening: false

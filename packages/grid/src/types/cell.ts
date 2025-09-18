@@ -45,6 +45,8 @@ export interface AITableRender<TR extends AITableReferences = AITableReferences>
     isCoverCell?: boolean;
     colors?: typeof Colors;
     zIndex?: number;
+    isGroupFirstRender?: boolean;
+    groupOffset?: number;
 }
 
 export interface AITableRenderStyle {

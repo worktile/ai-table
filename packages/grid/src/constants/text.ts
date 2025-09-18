@@ -1,6 +1,7 @@
 import { Colors } from '../constants';
 
 export const DEFAULT_FONT_SIZE = 14;
+export const GROUP_STAT_DEFAULT_FONT_SIZE = 12;
 export const DEFAULT_FONT_FAMILY =
     '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Helvetica Neue,Noto Sans,Noto Sans CJK SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif';
 export const DEFAULT_FONT_STYLE = 'normal';

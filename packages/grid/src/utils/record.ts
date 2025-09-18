@@ -21,7 +21,7 @@ export function toggleSelectRecord(aiTable: AITable, recordId: string) {
 export function toggleSelectAllRecords(aiTable: AITable, checked: boolean) {
     if (checked) {
         setSelection(aiTable, {
-            selectedRecords: new Set(aiTable.records().map((item) => item._id))
+            selectedRecords: new Set(aiTable.gridData().records.map((item) => item._id))
         });
     } else {
         clearSelection(aiTable);

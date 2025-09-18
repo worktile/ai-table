@@ -82,7 +82,7 @@ export class AITableCellProgress extends CoverCellBase {
     readonly whiteBgConfig = computed(() => {
         const { aiTable, render, field, recordId, coordinate } = this.config()!;
         const pointPosition = aiTable.context!.pointPosition();
-        const { x, y } = render;
+        const { x, y, groupOffset = 0 } = render;
         const { columnIndex } = pointPosition;
 
         const hasSelectedArea =
@@ -93,7 +93,7 @@ export class AITableCellProgress extends CoverCellBase {
         const bgColor = hasSelectedArea ? null : Colors.white;
 
         return {
-            x: x - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
+            x: x - groupOffset - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2 + AI_TABLE_CELL_BORDER / 2,
             height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
@@ -233,7 +233,7 @@ export class AITableCellProgress extends CoverCellBase {
         }
 
         const { render, aiTable, coordinate } = this.config()!;
-        const { x } = render;
+        const { x, groupOffset = 0 } = render;
         const { scrollLeft } = aiTable.context!.scrollState();
         const pointPosition = aiTable.context!.pointPosition();
         const { columnIndex } = pointPosition;
@@ -245,11 +245,11 @@ export class AITableCellProgress extends CoverCellBase {
         const point = stage.getPointerPosition();
         if (!point) return;
 
-        const dragX = point.x - columnLeftX - x;
+        const dragX = point.x - columnLeftX - x - groupOffset;
         const minX = x;
         const maxX = x + this.railWidth();
 
-        let dragPointerX = point.x - columnLeftX;
+        let dragPointerX = point.x - columnLeftX - groupOffset;
         if (dragPointerX < minX) {
             dragPointerX = minX;
         } else if (dragPointerX > maxX) {
@@ -273,7 +273,7 @@ export class AITableCellProgress extends CoverCellBase {
 
     private updateProgressValue(e: KoEventObject<MouseEvent>): void {
         const { render, aiTable, coordinate, actions, field, recordId } = this.config()!;
-        const { x } = render;
+        const { x, groupOffset = 0 } = render;
         const { scrollLeft } = aiTable.context!.scrollState();
         const pointPosition = aiTable.context!.pointPosition();
         const { columnIndex } = pointPosition;
@@ -285,7 +285,7 @@ export class AITableCellProgress extends CoverCellBase {
         const point = stage.getPointerPosition();
         if (!point) return;
 
-        const dragX = point.x - columnLeftX - x;
+        const dragX = point.x - columnLeftX - x - groupOffset;
         const percentage = this.calculatePercentage(dragX);
 
         if (!this.readonly() && actions && actions.updateFieldValues) {

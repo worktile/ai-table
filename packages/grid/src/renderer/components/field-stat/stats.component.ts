@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
-import { AITableColumnHeadsConfig, AITableFieldStatsConfig } from '../../../types';
+import { AITableColumnHeadsConfig, AITableFieldStatConfig, AITableFieldStatsConfig } from '../../../types';
 import { createFieldStats } from '../../creations/create-stats';
 import { AITableFieldStat } from './stat.component';
 import { Colors } from '../../../constants';
@@ -10,7 +10,7 @@ import { generateTargetName } from '../../../utils';
     selector: 'ai-table-column-stats',
     template: `
         <ko-group>
-            @for (config of statConfigs(); track $index) {
+            @for (config of statConfigs(); track trackBy(config)) {
                 <ai-table-field-stat [config]="config" (hover)="hover.emit($event)"></ai-table-field-stat>
             }
         </ko-group>
@@ -24,6 +24,10 @@ export class AITableFieldStats {
     hover = output<boolean>();
 
     isHover = signal(false);
+
+    trackBy = (groupStat: AITableFieldStatConfig) => {
+        return groupStat.columnIndex;
+    };
 
     onMouseenter(e: KoEventObject<MouseEvent>) {
         this.isHover.set(true);

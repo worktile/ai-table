@@ -2,6 +2,88 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.2](https://github.com/worktile/ai-table/compare/0.2.1...0.2.2) (2025-09-18)
+
+
+### Bug Fixes
+
+* #WIK-18968 【AITable】以多选作为分组，选中项过多时，需要做处理 ([#701](https://github.com/worktile/ai-table/issues/701)) ([f7a3866](https://github.com/worktile/ai-table/commit/f7a3866df1659e317e790ec76eb6efd583659413)), closes [#WIK-18968](https://github.com/worktile/ai-table/issues/WIK-18968)
+* #WIK-19040 分组统计文字，字号调整，分组的字号改成12px，最下面的统计不变 ([#698](https://github.com/worktile/ai-table/issues/698)) ([5d9f7cb](https://github.com/worktile/ai-table/commit/5d9f7cbfbc069e3aaae086493df12bffdf658eec)), closes [#WIK-19040](https://github.com/worktile/ai-table/issues/WIK-19040)
+* #WIK-19057 垂直滚动时，固定列与非固定列表头遮罩部分样式有问题 ([#700](https://github.com/worktile/ai-table/issues/700)) ([1aac120](https://github.com/worktile/ai-table/commit/1aac1205dea98ee93ae32fe51ac3a63575314287)), closes [#WIK-19057](https://github.com/worktile/ai-table/issues/WIK-19057)
+* **state:** fix filter error for select when cellValue is empty #WIK-19049 ([#699](https://github.com/worktile/ai-table/issues/699)) ([dc45c8c](https://github.com/worktile/ai-table/commit/dc45c8c4b73e3b4f5ecb309ec302daf4effec8b6)), closes [#WIK-19049](https://github.com/worktile/ai-table/issues/WIK-19049)
+
+
+
+## [0.2.1](https://github.com/worktile/ai-table/compare/0.2.0...0.2.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-18981 【AITable】有筛选条件下，点击顶部的勾选所有，右键行，删除。 应该只删除用户看到的勾选行的删除，而不是删除整个表格的所有记录 ([#696](https://github.com/worktile/ai-table/issues/696)) ([6e87433](https://github.com/worktile/ai-table/commit/6e87433a7488bfc81e9b3b9d42c306b8efd6bc5f)), closes [#WIK-18981](https://github.com/worktile/ai-table/issues/WIK-18981)
+* correct manual sort logic ([#695](https://github.com/worktile/ai-table/issues/695)) ([d412adc](https://github.com/worktile/ai-table/commit/d412adc3148ec27bbb5cb59066c5882ea527ae06))
+
+
+
+# [0.2.0](https://github.com/worktile/ai-table/compare/0.1.46...0.2.0) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-19007 【分组】统计指标的英文文字和中文文字数字的部分颜色不统一，英文颜色没换 ([#693](https://github.com/worktile/ai-table/issues/693)) ([7eaf57e](https://github.com/worktile/ai-table/commit/7eaf57e4d0b500af9abb351ffa178d8f4cab81c0)), closes [#WIK-19007](https://github.com/worktile/ai-table/issues/WIK-19007)
+
+
+### Features
+
+* #WIK-19045 排序 + 分组 + 位置方案完善 ([#692](https://github.com/worktile/ai-table/issues/692)) ([814f0aa](https://github.com/worktile/ai-table/commit/814f0aab1b350550f8b6827e33c329516b9bb5a7)), closes [#WIK-19045](https://github.com/worktile/ai-table/issues/WIK-19045) [#WIK-19045](https://github.com/worktile/ai-table/issues/WIK-19045)
+* demo 添加排序功能 ([#687](https://github.com/worktile/ai-table/issues/687)) ([c5c1cd7](https://github.com/worktile/ai-table/commit/c5c1cd72b1cc089644788d640d02c8a4b85c28d5))
+
+
+
+## [0.1.46](https://github.com/worktile/ai-table/compare/0.1.45...0.1.46) (2025-09-15)
+
+
+### Bug Fixes
+
+* #WIK-18961 日期字段排序值只需精确到日 ([#685](https://github.com/worktile/ai-table/issues/685)) ([4ece5cb](https://github.com/worktile/ai-table/commit/4ece5cbb88c61b0520b37154751c68adbdfd72f3)), closes [#WIK-18961](https://github.com/worktile/ai-table/issues/WIK-18961)
+* #WIK-19030 分组：分组下新增行会触发意外滚动 ([#689](https://github.com/worktile/ai-table/issues/689)) ([a5368a1](https://github.com/worktile/ai-table/commit/a5368a1183d5239e250a5205762d86c777175d94)), closes [#WIK-19030](https://github.com/worktile/ai-table/issues/WIK-19030)
+* **grid:** when copying and pasting into the drop-down selection column, the appended options are not fully appended successfully ([#686](https://github.com/worktile/ai-table/issues/686)) ([9a7b694](https://github.com/worktile/ai-table/commit/9a7b694a0fb8ce16100c4d1ddd6de95dd398f97b))
+
+
+### Features
+
+* **grid:** render progress and rate normally when grouping #WIK-19034 ([#690](https://github.com/worktile/ai-table/issues/690)) ([a6bee25](https://github.com/worktile/ai-table/commit/a6bee256d688d73415e872c9bf61390a6656a2df)), closes [#WIK-19034](https://github.com/worktile/ai-table/issues/WIK-19034)
+
+
+
+## [0.1.45](https://github.com/worktile/ai-table/compare/0.1.44...0.1.45) (2025-09-10)
+
+
+### Bug Fixes
+
+* #WIK-18957 【AITable】在最后新增列，有时候顺序不对 ([#678](https://github.com/worktile/ai-table/issues/678)) ([17c0fa3](https://github.com/worktile/ai-table/commit/17c0fa316746fd2de7f68ab1da6f30f22a58fcbe)), closes [#WIK-18957](https://github.com/worktile/ai-table/issues/WIK-18957)
+* #WIK-18967 【AITable】水平滚动表格，统计hover状态异常 ([#681](https://github.com/worktile/ai-table/issues/681)) ([2fb4575](https://github.com/worktile/ai-table/commit/2fb457502c21839d65163cd623806dddb41cb1e8)), closes [#WIK-18967](https://github.com/worktile/ai-table/issues/WIK-18967)
+* #WIK-18970 【AITable】进度作为分组，不要展示进度条，改成展示 xx% ([#677](https://github.com/worktile/ai-table/issues/677)) ([c65e73b](https://github.com/worktile/ai-table/commit/c65e73b64fa43878d67723a050f71df994f59216)), closes [#WIK-18970](https://github.com/worktile/ai-table/issues/WIK-18970)
+* #WIK-19000 分组后-新增按钮只有左侧固定列才能点击 ([#679](https://github.com/worktile/ai-table/issues/679)) ([70f8304](https://github.com/worktile/ai-table/commit/70f83045a5665f5d3ead1e06bd70d677518d245d)), closes [#WIK-19000](https://github.com/worktile/ai-table/issues/WIK-19000)
+* 还原range计算以排序后数据为准，新增行通过获取add行下标-1获取当前分组最后record ([#683](https://github.com/worktile/ai-table/issues/683)) ([ecacddf](https://github.com/worktile/ai-table/commit/ecacddf17e877bbd291a0e11ce8a7a36b0ffa538))
+* 新增行配置问题 ([#680](https://github.com/worktile/ai-table/issues/680)) ([178bfb5](https://github.com/worktile/ai-table/commit/178bfb5747eff25465bcdbb5da139be3f0b7ab16))
+* **action:** apply action by draft data #WIK-18976 ([#682](https://github.com/worktile/ai-table/issues/682)) ([d22cf84](https://github.com/worktile/ai-table/commit/d22cf8455b9f494ee3c23e1d95ddd9f3dc376193)), closes [#WIK-18976](https://github.com/worktile/ai-table/issues/WIK-18976)
+
+
+
+## [0.1.44](https://github.com/worktile/ai-table/compare/0.1.43...0.1.44) (2025-09-08)
+
+
+### Bug Fixes
+
+* #WIK-18927 分组展开收起错误 ([#673](https://github.com/worktile/ai-table/issues/673)) ([a1ce99c](https://github.com/worktile/ai-table/commit/a1ce99ca5ef32b9a1a184c8a42d58a9de68a38f8)), closes [#WIK-18927](https://github.com/worktile/ai-table/issues/WIK-18927)
+* #WIK-18928 有些分组没有渲染展开收起按钮 ([#669](https://github.com/worktile/ai-table/issues/669)) ([774dedb](https://github.com/worktile/ai-table/commit/774dedb04db4582ca04e996f29e769d5ec9bbcf7)), closes [#WIK-18928](https://github.com/worktile/ai-table/issues/WIK-18928)
+* #WIK-18932 表格中的日期无法清除 ([#672](https://github.com/worktile/ai-table/issues/672)) ([6137685](https://github.com/worktile/ai-table/commit/6137685c7b7853d3fa457a9a28e8fac8717022e6)), closes [#WIK-18932](https://github.com/worktile/ai-table/issues/WIK-18932)
+* #WIK-18940 分组后，在有筛选条件时，更改筛选条件的字段导致的隐藏tooltip提示位置不对 ([#671](https://github.com/worktile/ai-table/issues/671)) ([873f783](https://github.com/worktile/ai-table/commit/873f783af1acddf85dd6e65be010a8e71ba392de)), closes [#WIK-18940](https://github.com/worktile/ai-table/issues/WIK-18940)
+* #WIK-18947 【分组】有分组后第一列的单元格选中边框和双击编辑的边框范围不一致 ([#670](https://github.com/worktile/ai-table/issues/670)) ([07dbaf1](https://github.com/worktile/ai-table/commit/07dbaf1718986c10fcea1c5ea5abc608ac2a9cb9)), closes [#WIK-18947](https://github.com/worktile/ai-table/issues/WIK-18947)
+* #WIK-18960 【分组】复选框作为分组后，未选中分组用空框展示，不用文字空，且作为分组后要左对齐，不是居中 ([#675](https://github.com/worktile/ai-table/issues/675)) ([d4adb41](https://github.com/worktile/ai-table/commit/d4adb411097690b10ede1a454305cd0fab3843f4)), closes [#WIK-18960](https://github.com/worktile/ai-table/issues/WIK-18960)
+
+
+
 ## [0.1.43](https://github.com/worktile/ai-table/compare/0.1.42...0.1.43) (2025-09-04)
 
 

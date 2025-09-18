@@ -2,7 +2,7 @@ import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, 
 import { AITable, getFieldOptionByField } from '../core';
 import { AITableCellInfo, AITableRowType, AITableSelection } from '../types';
 import { selectField } from './field';
-import { AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
+import { AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
@@ -19,16 +19,19 @@ export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]
  */
 export function getCellHorizontalPosition(options: { columnWidth: number; columnIndex: number; columnCount: number; depth?: number }) {
     let { columnWidth, columnIndex, columnCount, depth = 0 } = options;
+    const isGroupAndFirstColumn = depth > 0 && columnIndex === 0;
+    columnWidth = isGroupAndFirstColumn ? columnWidth - AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE : columnWidth;
     depth += 1;
     if (!depth) return { width: columnWidth, offset: 0 };
     const firstIndent = columnIndex === 0 && depth;
     const lastIndent = columnIndex === columnCount - 1 && depth === 3;
-    const offset = firstIndent ? (depth - 1) * AI_TABLE_ROW_GROUP_OFFSET + 0.5 : 0;
+    let offset = firstIndent ? (depth - 1) * AI_TABLE_ROW_GROUP_OFFSET + 0.5 : 0;
     const width = lastIndent && !firstIndent ? columnWidth - AI_TABLE_ROW_GROUP_OFFSET : columnWidth - offset;
 
     return {
         width,
-        offset
+        offset,
+        isGroupAndFirstColumn
     };
 }
 

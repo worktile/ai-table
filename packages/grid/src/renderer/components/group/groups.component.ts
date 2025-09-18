@@ -9,7 +9,7 @@ import { AITableFieldStat } from '../field-stat/stat.component';
 @Component({
     selector: 'ai-table-groups',
     template: `
-        @for (groupCell of groupCells(); track $index) {
+        @for (groupCell of groupCells(); track trackBy(groupCell.groupStat!)) {
             <ai-table-field-stat [config]="groupCell.groupStat!"></ai-table-field-stat>
         }
     `,
@@ -18,6 +18,10 @@ import { AITableFieldStat } from '../field-stat/stat.component';
 })
 export class AITableGroups {
     config = input.required<AITableCellsConfig>();
+
+    trackBy = (groupStat: AITableGroupStatConfig) => {
+        return groupStat.groupRow._id + groupStat.columnIndex;
+    };
 
     frozenColumnCount = computed(() => {
         const { coordinate } = this.config();

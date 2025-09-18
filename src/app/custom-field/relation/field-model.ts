@@ -55,6 +55,10 @@ export class RelationTicketField extends FieldBase implements FieldOperable<stri
     ): AttachmentFieldValue | null {
         return toAttachmentFieldValue(plainText, targetField, originData, references);
     }
+
+    getDefaultValue() {
+        return '';
+    }
 }
 
 export function toAttachmentFieldValue(

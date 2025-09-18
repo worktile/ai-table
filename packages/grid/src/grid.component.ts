@@ -188,11 +188,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     domToolTips = computed(() => {
         const scrollTop = this.aiTable.context!.scrollState().scrollTop;
         const rowIndices = this.toolTipRowIndices();
-        return rowIndices.map(({ rowIndex, tooltip }) => {
+        return rowIndices.map(({ rowIndex }) => {
+            const offset = this.coordinate().getRowOffset(rowIndex);
             return {
-                top: rowIndex * AI_TABLE_ROW_HEIGHT - scrollTop,
-                left: 0,
-                tooltip
+                top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: 0
             };
         });
     });
@@ -427,6 +427,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
+            groupStatContainerWidthMap: signal(new Map()),
             pointPosition: signal(DEFAULT_POINT_POSITION),
             scrollState: signal(DEFAULT_SCROLL_STATE),
             frozenColumnCount: this.frozenColumnCount,
@@ -734,10 +735,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);
+
+                const addRowIndex =
+                    (targetNameDetail.source
+                        ? this.aiTable.context!.visibleRowsIndexMap().get(targetNameDetail.source)
+                        : this.aiTable.context!.linearRows().length - 1) ?? -1;
+
                 this.addRecord({
                     forGroupId: targetNameDetail.source
                 });
-                const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable);
+                const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable, addRowIndex + 1);
                 if (!isCanFullRender) {
                     this.scrollAction({
                         deltaX: 0,

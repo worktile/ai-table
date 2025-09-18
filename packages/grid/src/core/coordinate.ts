@@ -334,14 +334,12 @@ export class Coordinate {
      * 如果可以完整渲染，则返回 { isCanFullRender: true, offsetY: 0 }
      * 如果不能完整渲染，则返回 { isCanFullRender: false, offsetY: 需要偏移的 y 值 }
      */
-    public getAddRowButtonIsFullRenderInfo(aiTable: AITable) {
+    public getAddRowButtonIsFullRenderInfo(aiTable: AITable, addRowIndex: number) {
         let offsetY = 0;
-        const gridData = aiTable.gridData();
-        const lastRowIndex = gridData.records.length - 1;
-        const { size: height, offset: y } = this.getCellMetaData(lastRowIndex, AITableRowColumnType.row);
+        const { size: height, offset: y } = this.getCellMetaData(addRowIndex, AITableRowColumnType.row);
         const { scrollTop } = aiTable.context!.scrollState();
 
-        const addButtonMaxY = y + height + AI_TABLE_ROW_HEIGHT;
+        const addButtonMaxY = y + height;
 
         const containerMaxY =
             aiTable.context!.containerRect()!.height + scrollTop - AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT - AI_TABLE_CELL_LINE_BORDER * 4;
