@@ -16,6 +16,7 @@ export interface AITable {
     editingCell: WritableSignal<AITableCellInfo>;
     keywordsMatchedCells: WritableSignal<Set<string>>; // [`${recordId}:${fieldId}`]
     keywordsMatchedCellIndex: WritableSignal<number>;
+    keywords: WritableSignal<string | null>;
     recordsMap: Signal<{ [key: string]: AITableRecord }>;
     fieldsMap: Signal<{ [key: string]: AITableField }>;
     recordsWillHidden: WritableSignal<string[]>;
