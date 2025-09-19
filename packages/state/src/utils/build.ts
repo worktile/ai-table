@@ -6,6 +6,7 @@ import { AIViewTable } from '../types';
 import { buildFieldStatType } from './field/stat-field';
 import { GroupCalculator } from './group';
 import { unionBy, map } from 'lodash';
+import { buildDefaultGridLinearRows } from '@ai-table/grid';
 
 export function buildRecordsByView(
     aiTable: AIViewTable,
@@ -42,9 +43,11 @@ export function buildGroupLinearRows(
             return calculator.calculateLinearRows(records, options);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
+            return null;
         }
+    } else {
+        return buildDefaultGridLinearRows(records);
     }
-    return null;
 }
 
 export function buildSorts(activeView: AITableView) {

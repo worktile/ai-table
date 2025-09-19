@@ -9,13 +9,17 @@ export const buildGridLinearRows = (
     aiTable?: AITable,
     aiBuildGroupLinearRowsFn?: (aiTable: AITable) => AITableLinearRow[] | null
 ): AITableLinearRow[] => {
-    let linearRows: AITableLinearRow[] = [];
     if (aiBuildGroupLinearRowsFn) {
         const groupLinearRows = aiBuildGroupLinearRowsFn(aiTable!);
         if (groupLinearRows) {
             return groupLinearRows;
         }
     }
+    return buildDefaultGridLinearRows(visibleRecords, isAddingVisible);
+};
+
+export const buildDefaultGridLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
+    let linearRows: AITableLinearRow[] = [];
     let displayRowIndex = 0;
     [...visibleRecords, { _id: '' }].forEach((row) => {
         if (row._id) {
