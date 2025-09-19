@@ -143,6 +143,7 @@ export interface AITableContext {
     maxSelectOptions: Signal<number | undefined>;
     fieldOptions: Signal<AITableFieldOption[]>;
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
+    groupCollapseDisabled: WritableSignal<boolean>;
     readonly?: Signal<boolean>;
 }
 

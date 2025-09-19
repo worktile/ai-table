@@ -10,7 +10,9 @@ import {
     AI_TABLE_FIELD_MAX_WIDTH,
     expandCell,
     AITableGridI18nText,
-    CheckboxMenuSort
+    CheckboxMenuSort,
+    scrollToMatchedCell,
+    setCollapseDisabled
 } from '@ai-table/grid';
 import {
     Actions,
@@ -43,7 +45,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
 import { ThyIconRegistry } from 'ngx-tethys/icon';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyPopoverModule, ThyPopover } from 'ngx-tethys/popover';
+import { FindPopoverComponent, FindResult } from '../search/find-popover.component';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { withRemoveView } from '../../../plugins/view.plugin';
@@ -122,6 +125,11 @@ export class DemoTableContent {
     searchKeywords = '';
 
     aiTable!: AIViewTable;
+
+    // 查找相关属性
+    findResults: Array<{ recordId: string; fieldId: string; text: string; index: number }> = [];
+    currentFindIndex = 0;
+    findPopoverRef: any = null;
 
     plugins = [withState, withRemoveView];
 
@@ -385,6 +393,8 @@ export class DemoTableContent {
 
     destroyRef = inject(DestroyRef);
 
+    thyPopover = inject(ThyPopover);
+
     references = signal(getReferences());
 
     dataMode = signal<'default' | 'big-data'>('default');
@@ -411,7 +421,7 @@ export class DemoTableContent {
     private bindUndoShortcuts() {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(
-                filter((event) => (event.ctrlKey || event.metaKey) && event.key === 'z'),
+                filter((event) => (event.ctrlKey || event.metaKey) && (event.key === 'z' || event.key === 'f')),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
@@ -586,5 +596,111 @@ export class DemoTableContent {
 
     redo() {
         this.tableService.redo();
+    }
+
+    // 查找相关方法
+
+    currentIndex = computed<number>(() => {
+        return this.tableService.aiTable.keywordsMatchedCellIndex() || 0;
+    });
+
+    searchTotal = computed<number>(() => {
+        return this.tableService.aiTable.keywordsMatchedCells().size || 0;
+    });
+
+    private updateFindResult() {
+        // 更新 popover 组件中的 findResult
+        if (this.findPopoverRef && this.findPopoverRef.componentInstance) {
+            setTimeout(() => {
+                const total = this.searchTotal();
+                const currentIndex = this.currentIndex();
+                const findResult = {
+                    total: total,
+                    current: total > 0 ? currentIndex + 1 : 0, // 显示时从1开始
+                    hasResults: total > 0
+                };
+
+                this.findPopoverRef.componentInstance.findResult.set(findResult);
+            }, 0);
+        }
+    }
+
+    onFindSearch(searchText: string) {
+        this.tableService.setSearchKeywords(searchText);
+        this.updateFindResult();
+    }
+
+    onFindNext() {
+        const currentIndex = this.currentIndex();
+        const searchTotal = this.searchTotal();
+        if (searchTotal > 0) {
+            const index = (currentIndex + 1) % searchTotal;
+            scrollToMatchedCell(this.aiTable, index);
+        }
+        this.updateFindResult();
+    }
+
+    onFindPrevious() {
+        const currentIndex = this.currentIndex();
+        const searchTotal = this.searchTotal();
+        if (searchTotal > 0) {
+            const index = (currentIndex + searchTotal - 1) % searchTotal;
+            scrollToMatchedCell(this.aiTable, index);
+        }
+        this.updateFindResult();
+    }
+
+    onFindClose() {
+        this.findResults = [];
+        this.currentFindIndex = 0;
+
+        if (this.findPopoverRef) {
+            this.findPopoverRef.close();
+            this.findPopoverRef = null;
+        }
+        setCollapseDisabled(this.tableService.aiTable, false);
+    }
+
+    openFindPopover(event: Event) {
+        if (this.findPopoverRef) {
+            this.findPopoverRef.close();
+        }
+
+        this.findPopoverRef = this.thyPopover.open(FindPopoverComponent, {
+            origin: event.target as HTMLElement,
+            placement: 'bottomLeft',
+            backdropClosable: false,
+            hasBackdrop: false,
+            offset: 8,
+            manualClosure: true
+        });
+        if (this.findPopoverRef) {
+            const componentInstance = this.findPopoverRef.componentInstance;
+
+            // 订阅事件
+            componentInstance.onSearch.subscribe((event: string) => this.onFindSearch(event));
+            componentInstance.onFindNext.subscribe(() => this.onFindNext());
+            componentInstance.onFindPrevious.subscribe(() => this.onFindPrevious());
+
+            // 设置初始的 findResult
+            this.updateFindResult();
+        }
+
+        // 监听关闭事件
+        this.findPopoverRef.afterClosed().subscribe(() => {
+            this.onFindClose();
+        });
+
+        this.findPopoverRef.afterOpened().subscribe(() => {
+            setCollapseDisabled(this.tableService.aiTable, true);
+        });
+    }
+
+    getFindResult(): FindResult {
+        return {
+            total: this.findResults.length,
+            current: this.findResults.length > 0 ? this.currentFindIndex + 1 : 0,
+            hasResults: this.findResults.length > 0
+        };
     }
 }

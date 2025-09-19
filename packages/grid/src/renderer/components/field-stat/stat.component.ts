@@ -429,6 +429,7 @@ export class AITableFieldStat {
     }
 
     clickStat(e: KoEventObject<MouseEvent>) {
+        if (e.event.evt.button !== AITableMouseDownType.Left) return;
         e.event.evt.stopPropagation();
         this.isActive.set(true);
         const { aiTable, coordinate, field, actions } = this.config();

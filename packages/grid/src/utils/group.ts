@@ -15,3 +15,7 @@ export function getGroupLastRecordIndex(aiTable: AITable, startRowIndex: number)
     }
     return linearRows.length - 1;
 }
+
+export function setCollapseDisabled(aiTable: AITable, groupCollapseDisabled: boolean) {
+    aiTable.context!.groupCollapseDisabled.set(groupCollapseDisabled);
+}

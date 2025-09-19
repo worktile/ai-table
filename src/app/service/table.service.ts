@@ -22,7 +22,6 @@ import {
     AITableFieldsSizeMap,
     AITableFieldType,
     AITableFilterConditions,
-    AITableSearchOptions,
     AITableSortOptions,
     AITableValue,
     AITableView,
@@ -250,14 +249,7 @@ export class TableService {
     }
 
     setSearchKeywords(keywords: string) {
-        const settings: Partial<AITableSearchOptions & AITableFilterConditions & AITableSortOptions> = {
-            ...(this.activeView().settings || {}),
-            keywords: keywords
-        };
-        Actions.setView(this.aiTable, { settings }, [this.activeViewId()]);
-
         this.keywords.set(keywords);
-        scrollToMatchedCell(this.aiTable, -1);
         scrollToMatchedCell(this.aiTable, 0);
     }
 }

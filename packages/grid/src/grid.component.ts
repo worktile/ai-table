@@ -440,6 +440,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             maxSelectOptions: this.aiMaxSelectOptions,
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
+            groupCollapseDisabled: signal(false),
             readonly: this.aiReadonly
         });
     }
@@ -462,8 +463,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private setKeywordsMatchedCells() {
-        const keywords = this.aiKeywords();
+        const keywords = this.aiKeywords() || '';
         let matchedCells = new Set<string>();
+        this.aiTable.keywords.set(keywords);
 
         if (keywords) {
             const references = this.aiReferences();
