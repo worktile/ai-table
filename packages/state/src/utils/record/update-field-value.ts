@@ -11,7 +11,9 @@ import {
     AITableViewRecord
 } from '@ai-table/utils';
 import { checkConditions } from './filter';
-import { getSortRecords, sortRecordsBySortInfo } from './sort';
+import { sortRecordsByConditions } from './sort';
+import { buildGroupLinearRows, buildSorts } from '../build';
+import { getParentLinearRowGroups } from '../group';
 
 function updateWillHiddenRecordIds(
     aiTable: AIViewTable,
@@ -78,25 +80,59 @@ function updateWillMoveRecords(
     if (updateRecordsMap.size === 0) {
         return;
     }
-    const originalRecordsIndexMap = new Map<string, number>();
-    const tmpRecords = aiTable.gridData().records.map((record, index) => {
+    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap();
+    const tmpNewRecords = aiTable.gridData().records.map((record) => {
         const newRecord = updateRecordsMap.get(record._id);
         if (newRecord) {
-            originalRecordsIndexMap.set(record._id, index);
             return newRecord;
         }
         return record;
     });
 
     const willMoveRecordMap = new Map<string, AITableRecord>();
-    const tmpSortedRecords = getSortRecords(aiTable, tmpRecords as AITableViewRecord[], activeView, { skipMoveRecordPosition: true });
+    const allSorts = buildSorts(activeView);
+    const tmpNewSortedRecords = sortRecordsByConditions(aiTable, tmpNewRecords as AITableViewRecord[], activeView, allSorts, {
+        skipMoveRecordPosition: true
+    });
+
+    let originGroupLinearRows = aiTable.context!.linearRows();
+    const recordsWillMoveMap = aiTable.recordsWillMove();
+    if (recordsWillMoveMap.size > 0) {
+        const tmpOriginRecords = aiTable.gridData().records.map((record) => {
+            const originRecord = recordsWillMoveMap.get(record._id);
+            if (originRecord) {
+                return originRecord;
+            }
+            return record;
+        });
+        const tmpOriginSortedRecords = sortRecordsByConditions(aiTable, tmpOriginRecords as AITableViewRecord[], activeView, allSorts, {
+            skipMoveRecordPosition: true
+        });
+
+        originGroupLinearRows =
+            buildGroupLinearRows(aiTable, activeView, tmpOriginSortedRecords, { attachRecordsMap: recordsWillMoveMap }) ?? [];
+    }
+
+    const tmpNewGroupLinearRows = buildGroupLinearRows(aiTable, activeView, tmpNewSortedRecords) ?? [];
 
     updateRecordsMap.forEach((updateSortFieldRecord, recordId) => {
-        const originalRecordIndex = originalRecordsIndexMap.get(recordId);
-        const newRecordOfIndex = tmpSortedRecords[originalRecordIndex!];
+        const originalRecordIndex = visibleRowsIndexMap.get(recordId);
+        const newRecordOfIndex = tmpNewGroupLinearRows[originalRecordIndex!];
         if (recordId !== newRecordOfIndex._id) {
             const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
             willMoveRecordMap.set(recordId, originalRecord);
+        } else {
+            const originalParentLinearRowGroups = getParentLinearRowGroups(aiTable, recordId, originGroupLinearRows);
+            const newParentLinearRowGroups = getParentLinearRowGroups(aiTable, recordId, tmpNewGroupLinearRows);
+            if (
+                _.join(_.map(originalParentLinearRowGroups, 'groupValue'), ':') !==
+                _.join(_.map(newParentLinearRowGroups, 'groupValue'), ':')
+            ) {
+                const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
+                willMoveRecordMap.set(recordId, originalRecord);
+            } else {
+                willMoveRecordMap.delete(recordId);
+            }
         }
     });
     aiTable.recordsWillMove.set(willMoveRecordMap);

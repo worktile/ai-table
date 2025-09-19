@@ -1,8 +1,8 @@
-import { AITableLinearRowGroup, AITableRowType } from '@ai-table/grid';
+import { AITableLinearRow, AITableLinearRowGroup, AITableRowType } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 
-export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string) {
-    const linearRows = aiTable.context!.linearRows();
+export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string, linearRows?: AITableLinearRow[]) {
+    linearRows = linearRows || aiTable.context!.linearRows();
     const targetIndex = aiTable.context!.visibleRowsIndexMap().get(targetId)!;
 
     if (targetIndex === -1) {
@@ -26,5 +26,5 @@ export function getParentLinearRowGroups(aiTable: AIViewTable, targetId: string)
         }
     }
 
-    return parentGroups;
+    return parentGroups.reverse();
 }

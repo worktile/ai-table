@@ -1,7 +1,7 @@
 import { sortRecordsByConditions } from './record/sort';
 import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
-import { AITableFieldType, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AITableFieldType, AITableRecord, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../types';
 import { buildFieldStatType } from './field/stat-field';
 import { GroupCalculator } from './group';
@@ -24,14 +24,19 @@ export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewField
     return buildFieldStatType(sortFields, activeView);
 }
 
-export function buildGroupLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
+export function buildGroupLinearRows(
+    aiTable: AIViewTable,
+    activeView: AITableView,
+    records: AITableViewRecords,
+    options?: { attachRecordsMap?: Map<string, AITableRecord> }
+) {
     if (aiTable && activeView?.settings?.groups?.length) {
         try {
             const groups = activeView.settings?.groups!;
             const collapsedGroupIds = activeView.settings?.collapsed_group_ids;
 
             const calculator = new GroupCalculator(aiTable, groups, collapsedGroupIds);
-            return calculator.calculateLinearRows(records);
+            return calculator.calculateLinearRows(records, options);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
         }

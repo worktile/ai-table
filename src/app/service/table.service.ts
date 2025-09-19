@@ -131,7 +131,9 @@ export class TableService {
             if (activeView?.settings?.groups?.length) {
                 const records = this.renderRecords();
 
-                return buildGroupLinearRows(this.aiTable, activeView, records);
+                return buildGroupLinearRows(this.aiTable, activeView, records, {
+                    attachRecordsMap: this.aiTable.recordsWillMove()
+                });
             }
             return null;
         };

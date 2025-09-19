@@ -1,5 +1,5 @@
 import { AITable, AITableLinearRowGroup, AITableQueries, FieldModelMap } from '@ai-table/grid';
-import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField } from '@ai-table/utils';
+import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField, AITableRecord } from '@ai-table/utils';
 import { AITableLinearRow, AITableRowType } from '@ai-table/grid';
 import { nanoid } from 'nanoid';
 
@@ -18,14 +18,14 @@ export class GroupCalculator {
         this.fieldsMap = this.aiTable.fieldsMap();
     }
 
-    calculateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
-        this.detectGroupBreakpoints(records);
+    calculateLinearRows(records: AITableViewRecords, options?: { attachRecordsMap?: Map<string, AITableRecord> }): AITableLinearRow[] {
+        this.detectGroupBreakpoints(records, options);
 
-        return this.generateLinearRows(records);
+        return this.generateLinearRows(records, options);
     }
 
     // 检测断点
-    private detectGroupBreakpoints(records: AITableViewRecords): void {
+    private detectGroupBreakpoints(records: AITableViewRecords, options?: { attachRecordsMap?: Map<string, AITableRecord> }): void {
         this.groupBreakpoints.clear();
 
         if (records.length === 0) return;
@@ -33,7 +33,9 @@ export class GroupCalculator {
         let previousRecord: AITableViewRecord | null = null;
 
         records.forEach((record, index) => {
-            record = (this.aiTable.recordsWillMove().get(record._id) as AITableViewRecord) || record;
+            if (options?.attachRecordsMap) {
+                record = (options.attachRecordsMap.get(record._id) as AITableViewRecord) ?? record;
+            }
 
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
@@ -83,7 +85,10 @@ export class GroupCalculator {
     }
 
     // 生成GroupLinearRows
-    private generateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
+    private generateLinearRows(
+        records: AITableViewRecords,
+        options?: { attachRecordsMap?: Map<string, AITableRecord> }
+    ): AITableLinearRow[] {
         const linearRows: AITableLinearRow[] = [];
         let lastGroupDepth = -1;
         let currentGroupRecords: AITableViewRecord[] = [];
@@ -98,8 +103,10 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            const tmpRecord = this.aiTable.recordsWillMove().get(record._id) || record;
-            const groupTabRows = this.generateGroupTabRows(tmpRecord as AITableViewRecord, index, records.length);
+            if (options?.attachRecordsMap) {
+                record = (options.attachRecordsMap.get(record._id) as AITableViewRecord) ?? record;
+            }
+            const groupTabRows = this.generateGroupTabRows(record as AITableViewRecord, index, records.length);
 
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
@@ -200,7 +207,7 @@ export class GroupCalculator {
                 const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
                 const isParentCollapsed = this.isParentGroupCollapsed(depth, recordIndex);
                 if (!isParentCollapsed) {
-                    const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                    const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id], record);
                     const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
 
                     groupTabRows.push({

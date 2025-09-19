@@ -206,7 +206,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const records = this.tableService.records();
         const recordsIndexMap = new Map(records?.map((item, index) => [item._id, index]));
         const sorts = activeView.settings?.sorts!;
-        const newSortedRecords = sortRecordsByConditions(aiTable, records, activeView, sorts, sortKeysMap);
+        const newSortedRecords = sortRecordsByConditions(aiTable, records, activeView, sorts, { sortKeysMap });
         const actions: AITableAction[] = [];
         newSortedRecords.forEach((record, index) => {
             const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: index }, [recordsIndexMap.get(record._id)!]);
