@@ -1,4 +1,12 @@
-import { Actions, addView, buildSetRecordPositionsActon, mergeSorts, removeView, sortRecordsByConditions } from '@ai-table/state';
+import {
+    Actions,
+    addView,
+    buildRecordsWithWillMoveRecords,
+    buildSetRecordPositionsActon,
+    mergeSorts,
+    removeView,
+    sortRecordsByConditions
+} from '@ai-table/state';
 import {
     AITableAction,
     AITableGroupOptions,
@@ -206,7 +214,12 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const records = this.tableService.records();
         const recordsIndexMap = new Map(records?.map((item, index) => [item._id, index]));
         const sorts = activeView.settings?.sorts!;
-        const newSortedRecords = sortRecordsByConditions(aiTable, records, activeView, sorts, sortKeysMap);
+        const newSortedRecords = sortRecordsByConditions(
+            aiTable,
+            buildRecordsWithWillMoveRecords(records, aiTable.recordsWillMove()),
+            activeView,
+            sorts
+        );
         const actions: AITableAction[] = [];
         newSortedRecords.forEach((record, index) => {
             const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: index }, [recordsIndexMap.get(record._id)!]);

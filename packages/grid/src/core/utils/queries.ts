@@ -46,7 +46,7 @@ export const AITableQueries = {
         }
         throw new Error(`can not find the field path: ${JSON.stringify({ ...(field || {}) })}`);
     },
-    getFieldValue(aiTable: AITable, path: AIRecordFieldIdPath): any {
+    getFieldValue(aiTable: AITable, path: AIRecordFieldIdPath, record?: AITableRecord): any {
         if (!aiTable) {
             throw new Error(`aiTable does not exist`);
         }
@@ -59,7 +59,7 @@ export const AITableQueries = {
         if (!path) {
             throw new Error(`path does not exist as path [${path}]`);
         }
-        const record = aiTable.recordsMap()[path[0]];
+        record = record || aiTable.recordsMap()[path[0]];
         if (!record) {
             throw new Error(`can not find record at path [${path}]`);
         }

@@ -1,15 +1,9 @@
 import { AITableFieldType, AITableView, AITableViewRecords, AITableViewRecord, AITableSort } from '@ai-table/utils';
 import { AITable, AITableQueries, FieldModelMap } from '@ai-table/grid';
 
-export function sortRecordsByConditions(
-    aiTable: AITable,
-    records: AITableViewRecords,
-    activeView: AITableView,
-    sorts: AITableSort[],
-    sortKeysMap?: Partial<Record<AITableFieldType, string>>
-) {
+export function sortRecordsByConditions(aiTable: AITable, records: AITableViewRecords, activeView: AITableView, sorts: AITableSort[]) {
+    const sortKeysMap = aiTable.sortKeysMap;
     const shallowRecords = [...records];
-
     return shallowRecords.sort((record1, record2) => {
         if (sorts.length) {
             const sortsCompareResult = compareBySorts(record1, record2, sorts, aiTable, sortKeysMap);
@@ -37,8 +31,8 @@ function compareBySorts(
         const fieldMethod = FieldModelMap[field.type];
         const sortKey = sortKeysMap?.[field.type];
 
-        const cellValue1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id]);
-        const cellValue2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id]);
+        const cellValue1 = AITableQueries.getFieldValue(aiTable, [record1._id, field._id], record1);
+        const cellValue2 = AITableQueries.getFieldValue(aiTable, [record2._id, field._id], record2);
         const references = aiTable.context!.references();
         const res = fieldMethod.compare(cellValue1, cellValue2, references, sortKey, {
             aiTable,

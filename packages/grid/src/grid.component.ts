@@ -188,19 +188,30 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     domToolTips = computed(() => {
         const scrollTop = this.aiTable.context!.scrollState().scrollTop;
         const rowIndices = this.toolTipRowIndices();
-        return rowIndices.map((rowIndex) => {
+        return rowIndices.map(({ rowIndex, tooltip }) => {
             const offset = this.coordinate().getRowOffset(rowIndex);
             return {
                 top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
-                left: 0
+                left: 0,
+                tooltip
             };
         });
     });
 
     toolTipRowIndices = computed(() => {
         const hiddenRows = this.aiTable.recordsWillHidden() || [];
-        const toolTipRowIndices: number[] = hiddenRows.map((rowId) => {
-            return this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0;
+        const moveRows = this.aiTable.recordsWillMove() || [];
+        const toolTipRowIndices: { tooltip: string; rowIndex: number }[] = hiddenRows.map((rowId) => {
+            return {
+                tooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip),
+                rowIndex: this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0
+            };
+        });
+        moveRows.forEach((record) => {
+            toolTipRowIndices.push({
+                tooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowWillMoveTooltip),
+                rowIndex: this.aiTable.context?.visibleRowsIndexMap().get(record._id) || 0
+            });
         });
         return toolTipRowIndices;
     });
@@ -358,10 +369,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
             const activeCellPath = this.aiTable.selection().activeCell;
             untracked(() => {
-                if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
-                    if (this.aiTable.recordsWillHidden().length > 0) {
-                        this.aiTable.recordsWillHidden.set([]);
-                    }
+                if (
+                    (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) &&
+                    this.aiTable.recordsWillHidden().length > 0
+                ) {
+                    this.aiTable.recordsWillHidden.set([]);
+                }
+
+                if (
+                    (!activeCellPath || !this.aiTable.recordsWillMove().has(activeCellPath[0])) &&
+                    this.aiTable.recordsWillMove().size > 0
+                ) {
+                    this.aiTable.recordsWillMove.set(new Map());
                 }
             });
         });

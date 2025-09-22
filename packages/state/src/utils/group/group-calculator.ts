@@ -1,5 +1,5 @@
 import { AITable, AITableLinearRowGroup, AITableQueries, FieldModelMap } from '@ai-table/grid';
-import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField } from '@ai-table/utils';
+import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField, AITableRecord } from '@ai-table/utils';
 import { AITableLinearRow, AITableRowType } from '@ai-table/grid';
 import { nanoid } from 'nanoid';
 
@@ -44,8 +44,8 @@ export class GroupCalculator {
                     const field = this.fieldsMap[groupField.field_id];
                     if (!field) return;
 
-                    const prevValue = AITableQueries.getFieldValue(this.aiTable, [previousRecord!._id, field._id]);
-                    const currValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                    const prevValue = AITableQueries.getFieldValue(this.aiTable, [previousRecord!._id, field._id], previousRecord!);
+                    const currValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id], record);
 
                     const fieldModel = FieldModelMap[field.type];
                     if (!fieldModel) return;
@@ -96,7 +96,7 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            const groupTabRows = this.generateGroupTabRows(record, index, records.length);
+            const groupTabRows = this.generateGroupTabRows(record as AITableViewRecord, index, records.length);
 
             if (groupTabRows.length > 0) {
                 // 如果有新的分组标签，先处理上一个分组的结束
@@ -193,12 +193,11 @@ export class GroupCalculator {
             if (breakpoints.includes(recordIndex)) {
                 const field = this.fieldsMap[groupField.field_id];
                 if (!field) return;
-
                 const breakpointIndex = breakpoints.indexOf(recordIndex);
                 const groupId = this.generateGroupId(groupField.field_id, depth, breakpointIndex);
                 const isParentCollapsed = this.isParentGroupCollapsed(depth, recordIndex);
                 if (!isParentCollapsed) {
-                    const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id]);
+                    const groupValue = AITableQueries.getFieldValue(this.aiTable, [record._id, field._id], record);
                     const recordRange = this.calculateGroupRecordRange(groupField.field_id, breakpointIndex, totalRecords);
 
                     groupTabRows.push({

@@ -1,11 +1,13 @@
 import { sortRecordsByConditions } from './record/sort';
 import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
-import { AITableFieldType, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AITableFieldType, AITableRecord, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../types';
 import { buildFieldStatType } from './field/stat-field';
 import { GroupCalculator } from './group';
 import { unionBy, map } from 'lodash';
+import { buildNormalLinearRows } from '@ai-table/grid';
+import { buildRecordsWithWillMoveRecords } from './record';
 
 export function buildRecordsByView(
     aiTable: AIViewTable,
@@ -16,7 +18,8 @@ export function buildRecordsByView(
 ) {
     const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
     const sorts = buildSorts(activeView);
-    return sortRecordsByConditions(aiTable, filteredRecords, activeView, sorts, sortKeysMap);
+    const renderRecords = buildRecordsWithWillMoveRecords(filteredRecords, aiTable.recordsWillMove());
+    return sortRecordsByConditions(aiTable, renderRecords, activeView, sorts);
 }
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {
@@ -24,7 +27,7 @@ export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewField
     return buildFieldStatType(sortFields, activeView);
 }
 
-export function buildGroupLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
+export function buildLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
     if (aiTable && activeView?.settings?.groups?.length) {
         try {
             const groups = activeView.settings?.groups!;
@@ -37,9 +40,11 @@ export function buildGroupLinearRows(aiTable: AIViewTable, activeView: AITableVi
             return calculator.calculateLinearRows(records);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
+            return null;
         }
+    } else {
+        return buildNormalLinearRows(records);
     }
-    return null;
 }
 
 export function buildSorts(activeView: AITableView) {
