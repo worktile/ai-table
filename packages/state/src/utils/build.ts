@@ -27,12 +27,7 @@ export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewField
     return buildFieldStatType(sortFields, activeView);
 }
 
-export function buildLinearRows(
-    aiTable: AIViewTable,
-    activeView: AITableView,
-    records: AITableViewRecords,
-    options?: { attachRecordsMap?: Map<string, AITableRecord> }
-) {
+export function buildLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
     if (aiTable && activeView?.settings?.groups?.length) {
         try {
             const groups = activeView.settings?.groups!;
@@ -42,7 +37,7 @@ export function buildLinearRows(
             }
 
             const calculator = new GroupCalculator(aiTable, groups, collapsedGroupIds);
-            return calculator.calculateLinearRows(records, options);
+            return calculator.calculateLinearRows(records);
         } catch (error) {
             console.warn('Grouped build failed, using the default build method:', error);
             return null;

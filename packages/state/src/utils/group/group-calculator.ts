@@ -18,14 +18,14 @@ export class GroupCalculator {
         this.fieldsMap = this.aiTable.fieldsMap();
     }
 
-    calculateLinearRows(records: AITableViewRecords, options?: { attachRecordsMap?: Map<string, AITableRecord> }): AITableLinearRow[] {
-        this.detectGroupBreakpoints(records, options);
+    calculateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
+        this.detectGroupBreakpoints(records);
 
-        return this.generateLinearRows(records, options);
+        return this.generateLinearRows(records);
     }
 
     // 检测断点
-    private detectGroupBreakpoints(records: AITableViewRecords, options?: { attachRecordsMap?: Map<string, AITableRecord> }): void {
+    private detectGroupBreakpoints(records: AITableViewRecords): void {
         this.groupBreakpoints.clear();
 
         if (records.length === 0) return;
@@ -33,10 +33,6 @@ export class GroupCalculator {
         let previousRecord: AITableViewRecord | null = null;
 
         records.forEach((record, index) => {
-            if (options?.attachRecordsMap) {
-                record = (options.attachRecordsMap.get(record._id) as AITableViewRecord) ?? record;
-            }
-
             if (previousRecord === null) {
                 // 第一条记录，所有分组字段都是断点
                 this.groups.forEach((groupField) => {
@@ -85,10 +81,7 @@ export class GroupCalculator {
     }
 
     // 生成GroupLinearRows
-    private generateLinearRows(
-        records: AITableViewRecords,
-        options?: { attachRecordsMap?: Map<string, AITableRecord> }
-    ): AITableLinearRow[] {
+    private generateLinearRows(records: AITableViewRecords): AITableLinearRow[] {
         const linearRows: AITableLinearRow[] = [];
         let lastGroupDepth = -1;
         let currentGroupRecords: AITableViewRecord[] = [];
@@ -103,9 +96,6 @@ export class GroupCalculator {
 
         records.forEach((record, index) => {
             // 生成分组标签
-            if (options?.attachRecordsMap) {
-                record = (options.attachRecordsMap.get(record._id) as AITableViewRecord) ?? record;
-            }
             const groupTabRows = this.generateGroupTabRows(record as AITableViewRecord, index, records.length);
 
             if (groupTabRows.length > 0) {

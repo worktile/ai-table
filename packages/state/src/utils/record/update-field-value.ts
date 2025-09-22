@@ -85,7 +85,7 @@ function updateWillMoveRecords(
         return;
     }
     const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap();
-    const tmpNewRecords = aiTable.gridData().records.map((record) => {
+    const tmpNewRecords = aiTable.records().map((record) => {
         const newRecord = updateRecordsMap.get(record._id);
         if (newRecord) {
             return newRecord;
