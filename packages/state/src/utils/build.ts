@@ -6,7 +6,8 @@ import { AIViewTable } from '../types';
 import { buildFieldStatType } from './field/stat-field';
 import { GroupCalculator } from './group';
 import { unionBy, map } from 'lodash';
-import { buildDefaultGridLinearRows } from '@ai-table/grid';
+import { buildNormalLinearRows } from '@ai-table/grid';
+import { buildRecordsWithWillMoveRecords } from './record';
 
 export function buildRecordsByView(
     aiTable: AIViewTable,
@@ -17,7 +18,8 @@ export function buildRecordsByView(
 ) {
     const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
     const sorts = buildSorts(activeView);
-    return sortRecordsByConditions(aiTable, filteredRecords, activeView, sorts, { sortKeysMap });
+    const renderRecords = buildRecordsWithWillMoveRecords(filteredRecords, aiTable.recordsWillMove());
+    return sortRecordsByConditions(aiTable, renderRecords, activeView, sorts);
 }
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {
@@ -25,7 +27,7 @@ export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewField
     return buildFieldStatType(sortFields, activeView);
 }
 
-export function buildGroupLinearRows(
+export function buildLinearRows(
     aiTable: AIViewTable,
     activeView: AITableView,
     records: AITableViewRecords,
@@ -46,7 +48,7 @@ export function buildGroupLinearRows(
             return null;
         }
     } else {
-        return buildDefaultGridLinearRows(records);
+        return buildNormalLinearRows(records);
     }
 }
 

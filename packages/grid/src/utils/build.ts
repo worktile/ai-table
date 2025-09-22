@@ -15,10 +15,10 @@ export const buildGridLinearRows = (
             return groupLinearRows;
         }
     }
-    return buildDefaultGridLinearRows(visibleRecords, isAddingVisible);
+    return buildNormalLinearRows(visibleRecords, isAddingVisible);
 };
 
-export const buildDefaultGridLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
+export const buildNormalLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
     let linearRows: AITableLinearRow[] = [];
     let displayRowIndex = 0;
     [...visibleRecords, { _id: '' }].forEach((row) => {

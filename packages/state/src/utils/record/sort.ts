@@ -1,25 +1,10 @@
 import { AITableFieldType, AITableView, AITableViewRecords, AITableViewRecord, AITableSort } from '@ai-table/utils';
 import { AITable, AITableQueries, FieldModelMap } from '@ai-table/grid';
 
-export function sortRecordsByConditions(
-    aiTable: AITable,
-    records: AITableViewRecords,
-    activeView: AITableView,
-    sorts: AITableSort[],
-    options?: {
-        sortKeysMap?: Partial<Record<AITableFieldType, string>>;
-        skipMoveRecordPosition?: boolean;
-    }
-) {
-    let { skipMoveRecordPosition = false, sortKeysMap } = options || {};
-    sortKeysMap = sortKeysMap || aiTable.getSortKeysMap;
+export function sortRecordsByConditions(aiTable: AITable, records: AITableViewRecords, activeView: AITableView, sorts: AITableSort[]) {
+    const sortKeysMap = aiTable.sortKeysMap;
     const shallowRecords = [...records];
-    const willMoveRecordsMap = aiTable.recordsWillMove();
     return shallowRecords.sort((record1, record2) => {
-        if (!skipMoveRecordPosition) {
-            record1 = (willMoveRecordsMap.get(record1._id) as AITableViewRecord) || record1;
-            record2 = (willMoveRecordsMap.get(record2._id) as AITableViewRecord) || record2;
-        }
         if (sorts.length) {
             const sortsCompareResult = compareBySorts(record1, record2, sorts, aiTable, sortKeysMap);
             if (sortsCompareResult !== 0) {

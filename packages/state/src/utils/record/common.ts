@@ -1,4 +1,4 @@
-import { AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/utils';
+import { AITableRecord, AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { getMaxPosition } from '../view';
 import _ from 'lodash';
@@ -154,4 +154,10 @@ export function getPrevRecordIdByAddGroupId(aiTable: AIViewTable, groupId: strin
         return null;
     }
     return null;
+}
+
+export function buildRecordsWithWillMoveRecords(records: AITableRecord[], willMoveRecordsMap: Map<string, AITableRecord>) {
+    return records.map((record) => {
+        return (willMoveRecordsMap.get(record._id) || record) as unknown as AITableViewRecord;
+    });
 }

@@ -155,7 +155,7 @@ export class AITableGridBase implements OnInit {
             this.aiTable.getI18nTextByKey = this.aiGetI18nTextByKey() as (key: AITableGridI18nKey | string) => string;
         }
         if (this.aiSortKeysMap()) {
-            this.aiTable.getSortKeysMap = this.aiSortKeysMap();
+            this.aiTable.sortKeysMap = this.aiSortKeysMap();
         }
         this.aiPlugins()?.forEach((plugin) => {
             this.aiTable = plugin(this.aiTable);

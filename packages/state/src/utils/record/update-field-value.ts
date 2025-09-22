@@ -12,8 +12,8 @@ import {
 } from '@ai-table/utils';
 import { checkConditions } from './filter';
 import { sortRecordsByConditions } from './sort';
-import { buildGroupLinearRows, buildSorts } from '../build';
-import { getParentLinearRowGroups } from '../group';
+import { buildLinearRows, buildSorts } from '../build';
+import { getGroupRecordLength, getParentLinearRowGroups, isSameParentGroup } from '../group';
 
 function updateWillHiddenRecordIds(
     aiTable: AIViewTable,
@@ -55,9 +55,13 @@ function updateWillMoveRecords(
     const groups = activeView.settings?.groups ?? [];
     const sorts = activeView.settings?.sorts ?? [];
     const sortFieldSet = new Set<string>();
-    sorts.forEach((sort) => {
-        sortFieldSet.add(sort.sort_by);
-    });
+    const isKeepSort = activeView.settings?.is_keep_sort;
+    if (isKeepSort) {
+        sorts.forEach((sort) => {
+            sortFieldSet.add(sort.sort_by);
+        });
+    }
+
     groups.forEach((group) => {
         sortFieldSet.add(group.field_id);
     });
@@ -91,42 +95,42 @@ function updateWillMoveRecords(
 
     const willMoveRecordMap = new Map<string, AITableRecord>();
     const allSorts = buildSorts(activeView);
-    const tmpNewSortedRecords = sortRecordsByConditions(aiTable, tmpNewRecords as AITableViewRecord[], activeView, allSorts, {
-        skipMoveRecordPosition: true
-    });
+    const tmpNewSortedRecords = sortRecordsByConditions(aiTable, tmpNewRecords as AITableViewRecord[], activeView, allSorts);
 
     let originGroupLinearRows = aiTable.context!.linearRows();
-    const recordsWillMoveMap = aiTable.recordsWillMove();
-    if (recordsWillMoveMap.size > 0) {
-        const tmpOriginRecords = aiTable.gridData().records.map((record) => {
-            const originRecord = recordsWillMoveMap.get(record._id);
-            if (originRecord) {
-                return originRecord;
-            }
-            return record;
-        });
-        const tmpOriginSortedRecords = sortRecordsByConditions(aiTable, tmpOriginRecords as AITableViewRecord[], activeView, allSorts, {
-            skipMoveRecordPosition: true
-        });
 
-        originGroupLinearRows =
-            buildGroupLinearRows(aiTable, activeView, tmpOriginSortedRecords, { attachRecordsMap: recordsWillMoveMap }) ?? [];
-    }
-
-    const tmpNewGroupLinearRows = buildGroupLinearRows(aiTable, activeView, tmpNewSortedRecords) ?? [];
+    const tmpNewGroupLinearRows = buildLinearRows(aiTable, activeView, tmpNewSortedRecords) ?? [];
 
     updateRecordsMap.forEach((updateSortFieldRecord, recordId) => {
         const originalRecordIndex = visibleRowsIndexMap.get(recordId);
         const newRecordOfIndex = tmpNewGroupLinearRows[originalRecordIndex!];
-        if (recordId !== newRecordOfIndex._id) {
+        if (recordId !== newRecordOfIndex?._id) {
             const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
             willMoveRecordMap.set(recordId, originalRecord);
         } else {
-            const originalParentLinearRowGroups = getParentLinearRowGroups(aiTable, recordId, originGroupLinearRows);
-            const newParentLinearRowGroups = getParentLinearRowGroups(aiTable, recordId, tmpNewGroupLinearRows);
+            /**
+             * 处理以下场景
+             * group1 - true
+             *  group2 - 1
+             *    record1    true   1
+             *    record2    true   1
+             *
+             * record1 true --> false 变更后的实际分组为
+             *
+             * group3 - false
+             *  group4 - 1
+             *    record1    false   1
+             * group1 - true
+             *  group2 - 1
+             *    record2    true   1
+             *
+             * 或者由下变为上面的数据时同理（ record1 false --> true）
+             */
+            const originParentGroupRecordsCount = getGroupRecordLength(aiTable, recordId, originGroupLinearRows);
+            const tmpNewParentGroupRecordsCount = getGroupRecordLength(aiTable, recordId, tmpNewGroupLinearRows);
             if (
-                _.join(_.map(originalParentLinearRowGroups, 'groupValue'), ':') !==
-                _.join(_.map(newParentLinearRowGroups, 'groupValue'), ':')
+                (originParentGroupRecordsCount > 1 || tmpNewParentGroupRecordsCount > 1) &&
+                isSameParentGroup(aiTable, recordId, originGroupLinearRows, tmpNewGroupLinearRows)
             ) {
                 const originalRecord = aiTable.recordsWillMove().get(recordId) || aiTable.recordsMap()[recordId];
                 willMoveRecordMap.set(recordId, originalRecord);

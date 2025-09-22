@@ -32,7 +32,7 @@ export interface AITable {
     recordsWillMove: WritableSignal<Map<string, AITableRecord>>;
     dragState?: WritableSignal<AITableDragState>;
     getI18nTextByKey?: (key: AITableGridI18nKey | string) => string;
-    getSortKeysMap?: Partial<Record<AITableFieldType, string>>;
+    sortKeysMap?: Partial<Record<AITableFieldType, string>>;
 }
 
 export type AIPlugin = (aiTable: AITable) => AITable;
