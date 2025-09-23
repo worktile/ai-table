@@ -359,6 +359,7 @@ export class AITableRenderer {
 
     cellsConfig = computed<AITableCellsConfig>(() => {
         const { aiTable, readonly, coordinate, references, actions, maxRecords } = this.config();
+        const keywordsMatchedCells = aiTable.keywordsMatchedCells();
         const { rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex } = this.visibleRangeInfo();
         return {
             aiTable,
@@ -370,7 +371,8 @@ export class AITableRenderer {
             columnStartIndex,
             columnStopIndex,
             actions,
-            maxRecords
+            maxRecords,
+            keywordsMatchedCells
         };
     });
 
