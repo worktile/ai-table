@@ -16,6 +16,7 @@ export interface AITableCellsConfig {
     actions: AITableActions;
     references?: AITableReferences;
     maxRecords?: number;
+    keywordsMatchedCells: Set<string>;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
