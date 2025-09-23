@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.3](https://github.com/worktile/ai-table/compare/0.2.2...0.2.3) (2025-09-23)
+
+
+### Bug Fixes
+
+* #WIK-19002 【AItable】统计指标鼠标左键点击出现，不要鼠标右键点击也出现 ([6dec59e](https://github.com/worktile/ai-table/commit/6dec59e664d3bd9d9ab1b9c1918b37aed7a47db3)), closes [#WIK-19002](https://github.com/worktile/ai-table/issues/WIK-19002)
+* #WIK-19098 ai-table在去除关键字匹配时，匹配背景没有更新 ([#707](https://github.com/worktile/ai-table/issues/707)) ([9f1ca8c](https://github.com/worktile/ai-table/commit/9f1ca8cdc76e12e7a7a112e190840683443586ff)), closes [#WIK-19098](https://github.com/worktile/ai-table/issues/WIK-19098)
+
+
+### Features
+
+* #WIK-18930 有排序、分组排序时，在更改到涉及到排序字段的cell导致顺序变更弹出tooltip提示，整行失焦时再变更位置 ([#674](https://github.com/worktile/ai-table/issues/674)) ([0fa0d92](https://github.com/worktile/ai-table/commit/0fa0d92adeb71042b7b6b1c1cada1c38396a27c8)), closes [#WIK-18930](https://github.com/worktile/ai-table/issues/WIK-18930)
+* #WIK-19078 ai-table-关键字匹配取消协同，支持分组禁止折叠 ([78683ee](https://github.com/worktile/ai-table/commit/78683ee351d7209619fe4e00eb3c2b64919e4229)), closes [#WIK-19078](https://github.com/worktile/ai-table/issues/WIK-19078)
+* #WIK-19078 ai-table-关键字匹配取消协同，支持分组禁止折叠 ([49fbb48](https://github.com/worktile/ai-table/commit/49fbb489e5d216e33e5bb5dc6a7500b1fa5df03d)), closes [#WIK-19078](https://github.com/worktile/ai-table/issues/WIK-19078)
+* #WIK-19078 ai-table-关键字匹配取消协同，支持分组禁止折叠 ([e0be3b7](https://github.com/worktile/ai-table/commit/e0be3b7b45737a3cee372ac99617a54917c97d92)), closes [#WIK-19078](https://github.com/worktile/ai-table/issues/WIK-19078)
+
+
+
 ## [0.2.2](https://github.com/worktile/ai-table/compare/0.2.1...0.2.2) (2025-09-18)
 
 
