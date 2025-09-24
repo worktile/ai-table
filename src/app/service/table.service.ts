@@ -11,7 +11,8 @@ import {
     UndoManagerService,
     sortViews,
     Actions,
-    buildGroupLinearRows
+    buildLinearRows,
+    buildRecordsWithWillMoveRecords
 } from '@ai-table/state';
 import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -22,7 +23,6 @@ import {
     AITableFieldsSizeMap,
     AITableFieldType,
     AITableFilterConditions,
-    AITableSearchOptions,
     AITableSortOptions,
     AITableValue,
     AITableView,
@@ -131,7 +131,7 @@ export class TableService {
             if (activeView?.settings?.groups?.length) {
                 const records = this.renderRecords();
 
-                return buildGroupLinearRows(this.aiTable, activeView, records);
+                return buildLinearRows(this.aiTable, activeView, buildRecordsWithWillMoveRecords(records, this.aiTable.recordsWillMove()));
             }
             return null;
         };
@@ -248,14 +248,7 @@ export class TableService {
     }
 
     setSearchKeywords(keywords: string) {
-        const settings: Partial<AITableSearchOptions & AITableFilterConditions & AITableSortOptions> = {
-            ...(this.activeView().settings || {}),
-            keywords: keywords
-        };
-        Actions.setView(this.aiTable, { settings }, [this.activeViewId()]);
-
         this.keywords.set(keywords);
-        scrollToMatchedCell(this.aiTable, -1);
         scrollToMatchedCell(this.aiTable, 0);
     }
 }

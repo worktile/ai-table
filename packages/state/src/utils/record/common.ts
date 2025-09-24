@@ -1,6 +1,9 @@
-import { AITableViewRecord, AITableViewRecords } from '@ai-table/utils';
+import { AITableRecord, AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { getMaxPosition } from '../view';
+import _ from 'lodash';
+import { getParentLinearRowGroups } from '../group/utils';
+import { AITableRowType } from '@ai-table/grid';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -90,4 +93,71 @@ export function getPositionByAfterOrBeforeRecordId(
         targetPosition,
         prevPosition
     };
+}
+
+export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
+    options = options || {};
+    if (!options.afterRecordId && !options.beforeRecordId) {
+        options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
+    }
+    options.count = options.count || 1;
+    const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId(aiTable, options);
+    const interval = (targetPosition - prevPosition) / ((options.count! || 1) + 1);
+    const positionsOfItems = _.range(prevPosition + interval, targetPosition, interval);
+    const views = aiTable.views();
+    const activeViewId = aiTable.activeViewId();
+    const viewsMaxPosition: Record<string, number> = {};
+    views.forEach((view) => {
+        viewsMaxPosition[view._id] = getMaxPosition(aiTable.records() as AITableViewRecord[], view._id);
+    });
+    const viewPositions = positionsOfItems.map((itemPositions) => {
+        const viewPositions: Positions = {};
+        views.forEach((view) => {
+            if (view._id === activeViewId) {
+                viewPositions[view._id] = itemPositions;
+            } else {
+                viewsMaxPosition[view._id] += 1;
+                viewPositions[view._id] = viewsMaxPosition[view._id];
+            }
+        });
+        return viewPositions;
+    });
+    return viewPositions;
+}
+
+export function getParentGroupValuesByGroupId(aiTable: AIViewTable, groupId: string): Record<string, any> | null {
+    const parentGroups = getParentLinearRowGroups(aiTable, groupId);
+    return parentGroups.reduce(
+        (pre, cur) => {
+            pre[cur.fieldId] = cur.groupValue;
+            return pre;
+        },
+        {} as Record<string, any>
+    );
+}
+
+export function getPrevRecordIdByAddGroupId(aiTable: AIViewTable, groupId: string) {
+    const activeViewId = aiTable.activeViewId();
+    const activeView = aiTable.viewsMap()[activeViewId];
+
+    if (!activeView.settings?.groups?.length) return null;
+
+    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap();
+    const rowIndex = visibleRowsIndexMap.get(groupId) ?? -1;
+    if (rowIndex > -1) {
+        const linearRows = aiTable.context!.linearRows();
+        const current = linearRows[rowIndex];
+        const prev = linearRows[rowIndex - 1];
+        if (current.type === AITableRowType.add && prev.type === AITableRowType.record) {
+            return prev._id;
+        }
+        return null;
+    }
+    return null;
+}
+
+export function buildRecordsWithWillMoveRecords(records: AITableRecord[], willMoveRecordsMap: Map<string, AITableRecord>) {
+    return records.map((record) => {
+        return (willMoveRecordsMap.get(record._id) || record) as unknown as AITableViewRecord;
+    });
 }

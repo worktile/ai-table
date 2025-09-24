@@ -1,7 +1,7 @@
 import { FieldBase } from './field';
-import { AITableFieldStatTypeItemInfo, AITableStatType, DateFieldValue } from '../../types';
+import { AITableFieldStatTypeItemInfo, DateFieldValue } from '../../types';
 import { isEmpty } from '../../helps/is';
-import { DEFAULT_FIELD_STAT_TYPE_ITEMS, DEFAULT_FIELD_STAT_TYPE_MAP } from '../../constants';
+import { DEFAULT_FIELD_STAT_TYPE_ITEMS } from '../../constants';
 
 export const isDateValid = (cellValue: DateFieldValue): cellValue is DateFieldValue => {
     return (
@@ -17,6 +17,10 @@ export class DateFieldBase extends FieldBase {
 
     override isValid(cellValue: DateFieldValue): boolean {
         return isDateValid(cellValue);
+    }
+
+    getDefaultValue() {
+        return null;
     }
 }
 

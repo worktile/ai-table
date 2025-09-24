@@ -29,7 +29,7 @@ export enum AITableFilterLogical {
     or = 'or'
 }
 
-export type ViewSettings = AITableSearchOptions & AITableFilterConditions & AITableSortOptions & AITableFrozenOptions & AITableGroupOptions;
+export type ViewSettings = AITableFilterConditions & AITableSortOptions & AITableFrozenOptions & AITableGroupOptions;
 
 export interface AITableView {
     _id: string;
@@ -46,16 +46,14 @@ export interface AITableFilterConditions<TValue = unknown> {
     conditions?: AITableFilterCondition<TValue>[];
 }
 
-export interface AITableSortOptions {
-    is_keep_sort?: boolean;
-    sorts?: {
-        sort_by: Id;
-        direction: SortDirection;
-    }[];
+export interface AITableSort {
+    sort_by: Id;
+    direction: SortDirection;
 }
 
-export interface AITableSearchOptions {
-    keywords?: string;
+export interface AITableSortOptions {
+    is_keep_sort?: boolean;
+    sorts?: AITableSort[];
 }
 
 export interface AITableFrozenOptions {

@@ -188,18 +188,30 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     domToolTips = computed(() => {
         const scrollTop = this.aiTable.context!.scrollState().scrollTop;
         const rowIndices = this.toolTipRowIndices();
-        return rowIndices.map((rowIndex) => {
+        return rowIndices.map(({ rowIndex, tooltip }) => {
+            const offset = this.coordinate().getRowOffset(rowIndex);
             return {
-                top: rowIndex * AI_TABLE_ROW_HEIGHT - scrollTop,
-                left: 0
+                top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
+                left: 0,
+                tooltip
             };
         });
     });
 
     toolTipRowIndices = computed(() => {
         const hiddenRows = this.aiTable.recordsWillHidden() || [];
-        const toolTipRowIndices: number[] = hiddenRows.map((rowId) => {
-            return this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0;
+        const moveRows = this.aiTable.recordsWillMove() || [];
+        const toolTipRowIndices: { tooltip: string; rowIndex: number }[] = hiddenRows.map((rowId) => {
+            return {
+                tooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowAddFilterTooltip),
+                rowIndex: this.aiTable.context?.visibleRowsIndexMap().get(rowId) || 0
+            };
+        });
+        moveRows.forEach((record) => {
+            toolTipRowIndices.push({
+                tooltip: getI18nTextByKey(this.aiTable, AITableGridI18nKey.rowWillMoveTooltip),
+                rowIndex: this.aiTable.context?.visibleRowsIndexMap().get(record._id) || 0
+            });
         });
         return toolTipRowIndices;
     });
@@ -357,10 +369,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             // 当新增行选中的cell,编辑后，activeCell 不在新增的行中时，根据筛选 过滤行数据,触发重新渲染
             const activeCellPath = this.aiTable.selection().activeCell;
             untracked(() => {
-                if (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) {
-                    if (this.aiTable.recordsWillHidden().length > 0) {
-                        this.aiTable.recordsWillHidden.set([]);
-                    }
+                if (
+                    (!activeCellPath || !this.aiTable.recordsWillHidden().includes(activeCellPath[0])) &&
+                    this.aiTable.recordsWillHidden().length > 0
+                ) {
+                    this.aiTable.recordsWillHidden.set([]);
+                }
+
+                if (
+                    (!activeCellPath || !this.aiTable.recordsWillMove().has(activeCellPath[0])) &&
+                    this.aiTable.recordsWillMove().size > 0
+                ) {
+                    this.aiTable.recordsWillMove.set(new Map());
                 }
             });
         });
@@ -408,6 +428,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
             visibleRowsIndexMap: this.visibleRowsIndexMap,
+            groupStatContainerWidthMap: signal(new Map()),
             pointPosition: signal(DEFAULT_POINT_POSITION),
             scrollState: signal(DEFAULT_SCROLL_STATE),
             frozenColumnCount: this.frozenColumnCount,
@@ -419,6 +440,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             maxSelectOptions: this.aiMaxSelectOptions,
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
+            groupCollapseDisabled: signal(false),
             readonly: this.aiReadonly
         });
     }
@@ -441,13 +463,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private setKeywordsMatchedCells() {
-        const keywords = this.aiKeywords();
+        const keywords = this.aiKeywords() || '';
         let matchedCells = new Set<string>();
+        this.aiTable.keywords.set(keywords);
 
         if (keywords) {
             const references = this.aiReferences();
-            this.aiTable.records().forEach((record) => {
-                this.aiTable.fields().forEach((field) => {
+            this.aiTable.gridData().records.forEach((record) => {
+                this.aiTable.gridData().fields.forEach((field) => {
                     if (isCellMatchKeywords(this.aiTable, field, record._id, keywords, references)) {
                         matchedCells.add(`${record._id}:${field._id}`);
                     }
@@ -715,10 +738,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);
+
+                const addRowIndex =
+                    (targetNameDetail.source
+                        ? this.aiTable.context!.visibleRowsIndexMap().get(targetNameDetail.source)
+                        : this.aiTable.context!.linearRows().length - 1) ?? -1;
+
                 this.addRecord({
                     forGroupId: targetNameDetail.source
                 });
-                const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable);
+                const { isCanFullRender, offsetY } = this.coordinate().getAddRowButtonIsFullRenderInfo(this.aiTable, addRowIndex + 1);
                 if (!isCanFullRender) {
                     this.scrollAction({
                         deltaX: 0,

@@ -18,11 +18,7 @@
                     [style.top.px]="fieldHeadHeight"
                 >
                     @for (domToolTip of domToolTips(); track trackBy(idx, domToolTip); let idx = $index) {
-                        <div
-                            class="ai-table-left-background"
-                            [thyTooltip]="i18nTexts().rowAddFilterTooltip"
-                            [style.--scroll-top.px]="domToolTip.top"
-                        >
+                        <div class="ai-table-left-background" [thyTooltip]="domToolTip.tooltip" [style.--scroll-top.px]="domToolTip.top">
                             <thy-icon class="text-white" thyIconName="filter-line"></thy-icon>
                         </div>
                     }

@@ -1,5 +1,5 @@
 import { RectConfig } from 'konva/lib/shapes/Rect';
-import { AI_TABLE_CELL_BORDER, AI_TABLE_OFFSET } from '../../constants';
+import { AI_TABLE_CELL_BORDER, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET } from '../../constants';
 import { AITable } from '../../core';
 import { AITableCellsConfig, AITableRowType } from '../../types';
 import { getCellHorizontalPosition } from '../../utils';
@@ -51,11 +51,18 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                 const y = coordinate.getRowOffset(rowIndex);
                 const columnWidth = coordinate.getColumnWidth(columnIndex);
                 const isFrozenColumn = columnIndex < frozenColumnCount;
-                const { offset, width } = getCellHorizontalPosition({
+                const row = aiTable.context?.linearRows()[rowIndex];
+                const depth = row?.depth ?? 0;
+                let { offset, width, isGroupAndFirstColumn } = getCellHorizontalPosition({
                     columnWidth,
                     columnIndex,
-                    columnCount: totalColumnCount
+                    columnCount: totalColumnCount,
+                    depth
                 });
+                if (isGroupAndFirstColumn) {
+                    offset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+                }
+
                 const currentConfig = {
                     x: x + offset + AI_TABLE_OFFSET,
                     y: y + AI_TABLE_OFFSET,

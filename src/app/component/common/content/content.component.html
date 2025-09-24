@@ -26,6 +26,7 @@
             >重做 {{ canRedoCount() }}</a
         >
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
+        <a thyAction class="mb-2" thyIcon="search" href="javascript:;" (click)="openFindPopover($event)"> 查找 </a>
     </div>
     <div class="table-content">
         <ai-table-grid
@@ -54,6 +55,7 @@
             [aiBuildGroupLinearRowsFn]="tableService.aiBuildGroupLinearRowsFn()"
             [aiGetI18nTextByKey]="getI18nTextByKey"
             [aiFrozenColumnCountFn]="calculateFrozenCount"
+            [aiSortKeysMap]="tableService.sortKeysMap"
             (aiClick)="onClick($event)"
             (aiDbClick)="onDbClick($event)"
             (aiRowGroupCollapseClick)="onRowGroupCollapseClick($event)"

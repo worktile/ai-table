@@ -378,6 +378,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         const scroll = { x: 0, y: this.verticalBarElement?.scrollTop || 0 };
         const coordinate = drag.coordinate!;
 
+        const linearRows = aiTable.context!.linearRows();
         const visibleRowIndexMap = aiTable.context!.visibleRowsIndexMap();
         const sourceRowId = drag.sourceIds.values().next().value!;
         const sourceRowIndex = visibleRowIndexMap.get(sourceRowId) || 0;
@@ -408,16 +409,20 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     this.setAuxiliaryLineStyles({
                         top: `${nextColumnStartY - scrollPosition.y}px`
                     });
-                    this.setDragData(DragType.record, drag.sourceIds, targetRowIndex + 1);
+                    this.setMovingRecordDragData(DragType.record, drag.sourceIds, targetRowIndex + 1);
                     return;
                 }
-                this.setAuxiliaryLineStyles({
-                    width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
-                    height: `${lineHeight}px`,
-                    top: `${lineTop}px`,
-                    left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
-                });
-                this.setDragData(DragType.record, drag.sourceIds, targetRowIndex);
+                const currentLinearRow = linearRows[targetRowIndex];
+                const rowType = currentLinearRow.type;
+                if (rowType === AITableRowType.record || rowType === AITableRowType.add) {
+                    this.setAuxiliaryLineStyles({
+                        width: `calc(100% - ${AI_TABLE_ROW_DRAG_ICON_WIDTH}px)`,
+                        height: `${lineHeight}px`,
+                        top: `${lineTop}px`,
+                        left: `${AI_TABLE_ROW_DRAG_ICON_WIDTH}px`
+                    });
+                    this.setMovingRecordDragData(DragType.record, drag.sourceIds, targetRowIndex);
+                }
             } else {
                 this.resetAuxiliaryLine();
                 this.draggedData = null;
@@ -456,7 +461,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         });
     }
 
-    private setDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
+    private setMovingRecordDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
         const aiTable = this.aiTableGridEventService.aiTable;
         const linearRows = aiTable.context!.linearRows();
         this.draggedData = {
@@ -467,7 +472,12 @@ export class AITableDragComponent implements OnInit, OnDestroy {
         if (targetIndex === 0) {
             this.draggedData.beforeRecordId = linearRows[0]._id;
         } else {
-            this.draggedData.afterRecordId = linearRows[targetIndex - 1]._id;
+            const targetLinearRow = linearRows[targetIndex - 1];
+            if (targetLinearRow.type === AITableRowType.group) {
+                this.draggedData.beforeRecordId = linearRows[targetIndex]._id;
+            } else {
+                this.draggedData.afterRecordId = targetLinearRow._id;
+            }
         }
     }
 

@@ -16,6 +16,7 @@ export interface AITableCellsConfig {
     actions: AITableActions;
     references?: AITableReferences;
     maxRecords?: number;
+    keywordsMatchedCells: Set<string>;
 }
 
 export interface AITableCellsDrawerConfig extends AITableCellsConfig {
@@ -45,6 +46,8 @@ export interface AITableRender<TR extends AITableReferences = AITableReferences>
     isCoverCell?: boolean;
     colors?: typeof Colors;
     zIndex?: number;
+    isGroupFirstRender?: boolean;
+    groupOffset?: number;
 }
 
 export interface AITableRenderStyle {

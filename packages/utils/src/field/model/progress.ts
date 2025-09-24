@@ -11,6 +11,7 @@ export class ProgressFieldBase extends FieldBase {
             DEFAULT_FIELD_STAT_TYPE_MAP[AITableStatType.Min]!
         ]);
     }
+
     override isValid(cellValue: ProgressFieldValue): boolean {
         return typeof cellValue === 'number' || cellValue === null;
     }
@@ -22,7 +23,12 @@ export class ProgressFieldBase extends FieldBase {
         }
         return fullText;
     }
+
+    getDefaultValue() {
+        return null;
+    }
 }
+
 export function isProgressAndReturnValue(input: string, isMustIncludePercent: boolean = false) {
     let value;
     const progressRegex = /^(?:100|[1-9]?\d(?:\.\d+)?)\s*%$/;

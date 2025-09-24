@@ -1,5 +1,6 @@
 import {
     AddOutlinedPath,
+    AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
@@ -97,7 +98,7 @@ export class AddRowLayout extends Layout {
     private renderCommonCell({ isHoverRow }: Pick<AITableCell, 'isHoverRow'>) {
         if (this.isFirst || this.isLast) return;
         this.renderCell({
-            width: this.columnWidth,
+            width: this.columnWidth + AI_TABLE_CELL_LINE_BORDER,
             isHoverRow
         });
     }

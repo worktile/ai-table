@@ -20,12 +20,7 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
             [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex)
         };
     } else {
-        newField.positions = createPositions(
-            aiTable.views(),
-            aiTable.activeViewId(),
-            aiTable.gridData().fields as AITableViewFields,
-            fields.length
-        );
+        newField.positions = createPositions(aiTable.views(), aiTable.activeViewId(), aiTable.gridData().fields as AITableViewFields);
     }
     Actions.addField(aiTable, newField, originId, isDuplicate);
 }

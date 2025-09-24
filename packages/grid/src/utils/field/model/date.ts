@@ -131,11 +131,16 @@ export function toDateFieldValue(
     return transformDateValue(value);
 }
 
+function getTimeDay(value: string | number | number[]) {
+    return new TinyDate(fromUnixTime(value as number)).startOfDay().getUnixTime();
+}
+
 function cellValueToSortValue(cellValue: DateFieldValue): number {
     if (isUndefinedOrNull(cellValue) || !isDateValid(cellValue)) {
         return 0;
     }
-    return cellValue?.timestamp ?? 0;
+    const value = cellValue?.timestamp ?? 0;
+    return value > 0 ? getTimeDay(value) : 0;
 }
 
 function transformDateValue(text: string): FieldValue | null {

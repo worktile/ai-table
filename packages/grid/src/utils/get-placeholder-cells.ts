@@ -1,4 +1,4 @@
-import { AI_TABLE_CELL, AI_TABLE_OFFSET, Colors } from '../constants';
+import { AI_TABLE_CELL, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET, Colors } from '../constants';
 import { AITable } from '../core';
 import { AITableCellsConfig, AITableLinearRow, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
@@ -42,12 +42,15 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
 
             // 当前行的 Y 轴偏移量，并根据列宽和列索引获取单元格的水平位置（宽度和偏移量）
             const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET * 2;
-            const { width, offset } = getCellHorizontalPosition({
+            let { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
                 columnWidth,
                 columnIndex,
                 columnCount,
                 depth
             });
+            if (isGroupAndFirstColumn) {
+                offset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
+            }
 
             const height = rowHeight - AI_TABLE_OFFSET * 4;
             configs.unshift({
