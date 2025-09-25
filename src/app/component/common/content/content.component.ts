@@ -491,6 +491,7 @@ export class DemoTableContent {
     }
 
     addRecord(options?: AddRecordOptions) {
+        console.log('addRecord', options);
         const member = 'member_01';
         const time = getUnixTime(new Date());
         const trackableEntity = { created_by: member, created_at: time, updated_by: member, updated_at: time };
@@ -508,6 +509,7 @@ export class DemoTableContent {
     }
 
     addField(data: AddFieldOptions) {
+        console.log('addField', data);
         addFields(this.aiTable, data);
     }
 

@@ -60,7 +60,6 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord) {
 
 export function addRecords(aiTable: AIViewTable, records: AITableRecord[], options?: AddRecordOptions) {
     const invalidFieldValues: string[] = [];
-
     const positions = getNewRecordsPosition(aiTable, options);
     records.forEach((record, index) => {
         Object.entries(record.values).every(([fieldId, value]) => {

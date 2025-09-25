@@ -4,6 +4,7 @@ import { getMaxPosition } from '../view';
 import _ from 'lodash';
 import { getParentLinearRowGroups } from '../group/utils';
 import { AITableRowType } from '@ai-table/grid';
+import { insertAtEnd, insertAtStart, insertBetween } from '../position';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -95,28 +96,82 @@ export function getPositionByAfterOrBeforeRecordId(
     };
 }
 
+export function getPositionByAfterOrBeforeRecordId2(
+    aiTable: AIViewTable,
+    options: { afterRecordId?: string; beforeRecordId?: string }
+): { targetPosition: number | null; prevPosition: number | null } {
+    const recordsMap = aiTable.recordsMap();
+    const activeViewId = aiTable.activeViewId();
+    const { afterRecordId, beforeRecordId } = options;
+    let targetPosition = null;
+    let prevPosition = null;
+
+    if (afterRecordId) {
+        // 移动到指定记录之后
+        const targetRecord = recordsMap[afterRecordId] as AITableViewRecord;
+        if (!targetRecord) {
+            throw new Error(`Target record with id ${afterRecordId} not found`);
+        }
+
+        prevPosition = targetRecord.positions[activeViewId] || 0;
+        const nextPosition = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
+        if (nextPosition !== null) {
+            targetPosition = nextPosition.positions[activeViewId] || 0;
+        }
+    } else if (beforeRecordId) {
+        // 移动到指定记录之前
+        const targetRecord = recordsMap[beforeRecordId] as AITableViewRecord;
+        if (!targetRecord) {
+            throw new Error(`Target record with id ${beforeRecordId} not found`);
+        }
+
+        targetPosition = targetRecord.positions[activeViewId] || 0;
+        const previousPosition = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
+        if (previousPosition !== null) {
+            prevPosition = previousPosition.positions[activeViewId] || 0;
+        }
+    } else {
+        throw new Error('Either afterRecordId or beforeRecordId must be provided');
+    }
+    return {
+        targetPosition,
+        prevPosition
+    };
+}
+
 export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
     options = options || {};
     if (!options.afterRecordId && !options.beforeRecordId) {
         options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
     }
-    options.count = options.count || 1;
-    const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId(aiTable, options);
-    const interval = (targetPosition - prevPosition) / ((options.count! || 1) + 1);
-    const positionsOfItems = _.range(prevPosition + interval, targetPosition, interval);
+    const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId2(aiTable, options);
+    const count = options.count || 1;
+
+    let positions = [];
+    if (options.beforeRecordId && prevPosition === null && targetPosition !== null) {
+        positions = insertAtStart(targetPosition, count).map((item) => item.position);
+    } else if (options.afterRecordId && targetPosition === null && prevPosition !== null) {
+        positions = insertAtEnd(prevPosition, count).map((item) => item.position);
+    } else {
+        positions = insertBetween(prevPosition!, targetPosition!, count).positions;
+    }
+
     const views = aiTable.views();
     const activeViewId = aiTable.activeViewId();
     const viewsMaxPosition: Record<string, number> = {};
     views.forEach((view) => {
         viewsMaxPosition[view._id] = getMaxPosition(aiTable.records() as AITableViewRecord[], view._id);
     });
-    const viewPositions = positionsOfItems.map((itemPositions) => {
+
+    const viewPositions = positions.map((itemPosition) => {
         const viewPositions: Positions = {};
         views.forEach((view) => {
             if (view._id === activeViewId) {
-                viewPositions[view._id] = itemPositions;
+                viewPositions[view._id] = itemPosition;
             } else {
-                viewsMaxPosition[view._id] += 1;
+                const maxPosition = viewsMaxPosition[view._id];
+                const newMaxPosition = insertAtEnd(maxPosition, 1);
+                viewsMaxPosition[view._id] += newMaxPosition[0].position;
                 viewPositions[view._id] = viewsMaxPosition[view._id];
             }
         });

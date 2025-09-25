@@ -26,6 +26,7 @@ export const getDefaultTrackableEntity = (options?: {
 };
 
 export function getCanvasDefaultValue() {
+    return getBasicData();
     const initValue: {
         records: AITableViewRecords;
         fields: AITableViewFields;
@@ -1077,4 +1078,106 @@ export function getReferences(): AITableCustomReferences {
             }
         }
     };
+}
+
+export function getBasicData() {
+    const initValue: {
+        records: AITableViewRecords;
+        fields: AITableViewFields;
+    } = {
+        records: [
+            {
+                _id: 'row-1',
+                short_id: `row-short-id-${1}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 0
+                },
+                values: {
+                    'column-text': '这是一个单行文本字段示例',
+                    'column-select': ['option_1'],
+                    'column-checkbox': true
+                }
+            },
+            {
+                _id: 'row-2',
+                short_id: `row-short-id-${2}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 65536
+                },
+                values: {
+                    'column-text': '第二行的文本内容',
+                    'column-select': ['option_2'],
+                    'column-checkbox': false
+                }
+            },
+            {
+                _id: 'row-3',
+                short_id: `row-short-id-${3}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 65536 * 2
+                },
+                values: {
+                    'column-text': '第三行的文本内容',
+                    'column-select': ['option_3'],
+                    'column-checkbox': true
+                }
+            }
+        ],
+        fields: [
+            {
+                _id: 'column-text',
+                type: AITableFieldType.text,
+                icon: 'text',
+                name: '单行文本',
+                settings: {},
+                positions: {
+                    view1: 0
+                }
+            },
+            {
+                _id: 'column-select',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '单选',
+                settings: {
+                    is_multiple: false,
+                    options: [
+                        {
+                            text: '选项一',
+                            bg_color: '#E48483',
+                            _id: 'option_1'
+                        },
+                        {
+                            text: '选项二',
+                            bg_color: '#E0B75D',
+                            _id: 'option_2'
+                        },
+                        {
+                            text: '选项三',
+                            bg_color: '#69B1E4',
+                            _id: 'option_3'
+                        }
+                    ]
+                },
+                positions: {
+                    view1: 65536
+                }
+            },
+            {
+                _id: 'column-checkbox',
+                type: AITableFieldType.checkbox,
+                icon: 'checkbox',
+                name: '复选框',
+                settings: {},
+                positions: {
+                    view1: 65536 * 2
+                }
+            }
+        ]
+    };
+
+    return initValue;
 }
