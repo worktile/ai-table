@@ -259,11 +259,10 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             ) {
                 let lineLeft = targetColumnStartX - scrollPosition.x;
                 const lineForFrozenX = lineLeft - frozenColumnWidth - rowHeadWidth;
-                const rectDistanceFrozenX = rectLeft - frozenColumnWidth - rowHeadWidth;
 
                 if (lineForFrozenX < 0) {
-                    if (Math.abs(rectDistanceFrozenX) < dragCenter) {
-                        // 滚动中保持上一个位置
+                    if (!currentRectLeftIsInFrozenArea && lineLeft < frozenColumnWidth + rowHeadWidth) {
+                        // 非冻结区拖拽需要控制辅助线不要显示到冻结区，需要保持在上个位置
                         const nextColumnStartX = coordinate.getColumnOffset(targetColumnIndex + 1);
                         this.setAuxiliaryLineStyles({
                             left: `${nextColumnStartX - scrollPosition.x}px`
