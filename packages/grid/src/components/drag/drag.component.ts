@@ -224,18 +224,17 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             left: `${currentRectLeft}px`
         });
 
-        // 是否在冻结列区域内拖拽
-        const isFrozenColumnAreaDrag =
-            isSourceColumnFrozen &&
+        const currentRectLeftIsInFrozenArea =
             currentRectLeft <
-                frozenColumnWidth +
-                    rowHeadWidth +
-                    (direction === DragDirection.left || direction === DragDirection.none
-                        ? -AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
-                        : AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD);
+            frozenColumnWidth +
+                rowHeadWidth +
+                (direction === DragDirection.left || direction === DragDirection.none
+                    ? -AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
+                    : AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD);
+
         // 计算目标列和辅助线
         const updateTargetAndLine = (rectLeft: number, scrollPosition: { x: number; y: number }) => {
-            if (isFrozenColumnAreaDrag) {
+            if (currentRectLeftIsInFrozenArea) {
                 // 冻结列区域内滚动，清空滚动位置
                 scrollPosition.x = 0;
             }
@@ -263,7 +262,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 const rectDistanceFrozenX = rectLeft - frozenColumnWidth - rowHeadWidth;
 
                 if (lineForFrozenX < 0) {
-                    if (Math.abs(rectDistanceFrozenX) < dragCenter || (isSourceColumnFrozen && !isFrozenColumnAreaDrag)) {
+                    if (Math.abs(rectDistanceFrozenX) < dragCenter) {
                         // 滚动中保持上一个位置
                         const nextColumnStartX = coordinate.getColumnOffset(targetColumnIndex + 1);
                         this.setAuxiliaryLineStyles({
@@ -305,7 +304,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
 
         updateTargetAndLine(currentRectLeft, newScrollPosition);
 
-        if (isFrozenColumnAreaDrag) {
+        if (currentRectLeftIsInFrozenArea) {
             // 冻结列区域内拖拽取消滚动
             this.scrollControllerService.stopAutoScroll();
             return;
