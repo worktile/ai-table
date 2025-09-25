@@ -232,8 +232,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     ? -AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD
                     : AI_TABLE_AUTO_SCROLL_LEFT_THRESHOLD);
 
-        // 是否在冻结列区域内拖拽
-        const isFrozenColumnAreaDrag = isSourceColumnFrozen || currentRectLeftIsInFrozenArea;
         // 计算目标列和辅助线
         const updateTargetAndLine = (rectLeft: number, scrollPosition: { x: number; y: number }) => {
             if (currentRectLeftIsInFrozenArea) {
