@@ -18,7 +18,7 @@ import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal
 import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
-import { getCanvasDefaultValue, sortDataByView } from '../utils/utils';
+import { getDefaultAITableValue, sortDataByView } from '../utils/utils';
 import {
     AITableFieldsSizeMap,
     AITableFieldType,
@@ -213,7 +213,7 @@ export class TableService {
         this.provider.once('sync', () => {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
                 console.log('init shared type');
-                const value = getCanvasDefaultValue();
+                const value = getDefaultAITableValue();
                 getSharedTypeByData(this.sharedType!.doc!, {
                     records: value.records,
                     fields: value.fields,

@@ -3,7 +3,7 @@ import {
     addView,
     buildRecordsWithWillMoveRecords,
     buildSetRecordPositionsActon,
-    mergeSorts,
+    insertAtEnd,
     removeView,
     sortRecordsByConditions
 } from '@ai-table/state';
@@ -14,7 +14,6 @@ import {
     AITableView,
     AITableViewFields,
     AITableViewRecords,
-    Id,
     SortDirection
 } from '@ai-table/utils';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
@@ -33,6 +32,7 @@ import { ThyButton } from 'ngx-tethys/button';
 import { ThySelect } from 'ngx-tethys/select';
 import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
 import { ThySwitch } from 'ngx-tethys/switch';
+import { getAITAbleDataLocalStorage } from '../utils/utils';
 
 const initViews: AITableView[] = [
     {
@@ -121,11 +121,13 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
-        if (!activeViewId || (activeViewId && initViews.findIndex((item) => item._id === activeViewId) < 0)) {
-            activeViewId = initViews[0]._id;
+        const aiTableData = getAITAbleDataLocalStorage();
+        const views = ((aiTableData && aiTableData.views) || initViews) as AITableView[];
+        if (!activeViewId || (activeViewId && views.findIndex((item) => item._id === activeViewId) < 0)) {
+            activeViewId = views[0]._id;
         }
         this.tableService.setActiveView(activeViewId);
-        this.tableService.initData(initViews);
+        this.tableService.initData(views);
         if (!this.activatedRoute.firstChild) {
             this.router.navigateByUrl(`/${this.tableService.activeViewShortId()}`);
         }
@@ -221,8 +223,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
             sorts
         );
         const actions: AITableAction[] = [];
+        const positions = insertAtEnd(0, newSortedRecords.length);
         newSortedRecords.forEach((record, index) => {
-            const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: index }, [recordsIndexMap.get(record._id)!]);
+            const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: positions[index].position }, [
+                recordsIndexMap.get(record._id)!
+            ]);
             actions.push(action);
         });
         aiTable.apply(actions);

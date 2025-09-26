@@ -25,7 +25,7 @@ export const getDefaultTrackableEntity = (options?: {
     };
 };
 
-export function getCanvasDefaultValue() {
+export function getDefaultAITableValue() {
     return getBasicData();
     const initValue: {
         records: AITableViewRecords;
@@ -905,7 +905,7 @@ export function getBigData() {
     };
 
     console.time('build data');
-    initValue.fields = getCanvasDefaultValue().fields;
+    initValue.fields = getDefaultAITableValue().fields;
     initValue.records = [];
     for (let index = 0; index < 500000; index++) {
         initValue.records.push({
@@ -1180,4 +1180,15 @@ export function getBasicData() {
     };
 
     return initValue;
+}
+
+export const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
+export const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
+
+export function getAITAbleDataLocalStorage() {
+    const data = localStorage.getItem(LOCAL_STORAGE_AI_TABLE_DATA);
+    if (data) {
+        return JSON.parse(data);
+    }
+    return null;
 }

@@ -139,14 +139,9 @@ export function getPositionByAfterOrBeforeRecordId2(
     };
 }
 
-export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
-    options = options || {};
-    if (!options.afterRecordId && !options.beforeRecordId) {
-        options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
-    }
+export function getCurrentViewPositions(aiTable: AIViewTable, options: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
     const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId2(aiTable, options);
     const count = options.count || 1;
-
     let positions = [];
     if (options.beforeRecordId && prevPosition === null && targetPosition !== null) {
         positions = insertAtStart(targetPosition, count).map((item) => item.position);
@@ -155,7 +150,15 @@ export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRec
     } else {
         positions = insertBetween(prevPosition!, targetPosition!, count).positions;
     }
+    return positions;
+}
 
+export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
+    options = options || {};
+    if (!options.afterRecordId && !options.beforeRecordId) {
+        options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
+    }
+    let positions = getCurrentViewPositions(aiTable, options);
     const views = aiTable.views();
     const activeViewId = aiTable.activeViewId();
     const viewsMaxPosition: Record<string, number> = {};
