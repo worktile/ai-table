@@ -439,7 +439,9 @@ export class AITableFieldStat {
 
         const position = {
             x: containerRect.x + statRect.x,
-            y: containerRect.y + statRect.y + statRect.height - 50
+            y: containerRect.y + statRect.y + statRect.height - 50,
+            width: this.containerBoxWidth(),
+            height: this.containerBoxHeight() + 10
         };
         const editFieldPosition = {
             x: containerRect.x + fieldGroupRect.x - AI_TABLE_CELL_PADDING,
