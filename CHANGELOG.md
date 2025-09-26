@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.4](https://github.com/worktile/ai-table/compare/0.2.3...0.2.4) (2025-09-26)
+
+
+### Bug Fixes
+
+* #WIK-19010 【分组】分组的统计指标弹出菜单不要遮挡当前已选择显示的指标（有的遮住有的没遮住，看下是否还有优化空间） ([#712](https://github.com/worktile/ai-table/issues/712)) ([fe7885f](https://github.com/worktile/ai-table/commit/fe7885f803000a7c85c5b53623eb0250f7176607)), closes [#WIK-19010](https://github.com/worktile/ai-table/issues/WIK-19010)
+* #WIK-19035 拖拽列到冻结列，滚动没有停止 ([#710](https://github.com/worktile/ai-table/issues/710)) ([b67bceb](https://github.com/worktile/ai-table/commit/b67bceb5696c190408a9421f50bc76f16f7264f8)), closes [#WIK-19035](https://github.com/worktile/ai-table/issues/WIK-19035)
+* 修复在非冻结区拖拽需要控制辅助线不要显示到冻结区 ([#711](https://github.com/worktile/ai-table/issues/711)) ([63c4e34](https://github.com/worktile/ai-table/commit/63c4e340fd6b2e31741afb6aaa97bf44a075cc7b))
+
+
+### Features
+
+* **state:** 添加 sort 单元测试 ([#663](https://github.com/worktile/ai-table/issues/663)) ([dd37ba2](https://github.com/worktile/ai-table/commit/dd37ba20d34ec64a19d5770d1e21836288f499c2))
+
+
+
 ## [0.2.3](https://github.com/worktile/ai-table/compare/0.2.2...0.2.3) (2025-09-23)
 
 
