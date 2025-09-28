@@ -1,5 +1,3 @@
-import { AIViewTable } from "../types";
-
 interface PositionResult {
     position: number;
     needsRebalance: boolean;
@@ -21,7 +19,7 @@ interface PositionInsertResult {
 }
 
 const DEFAULT_INITIAL_GAP = 65536;
-const DEFAULT_PRECISION_THRESHOLD = 1;
+const DEFAULT_PRECISION_THRESHOLD = Number.EPSILON;
 
 export function insertAtStart(firstPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): PositionResult[] {
     const positions: PositionResult[] = [];
@@ -45,7 +43,12 @@ export function insertAtEnd(lastPosition: number, count: number = 1, initialGap:
     return positions;
 }
 
-export function insertBetween(prevPosition: number, nextPosition: number, count: number = 1, precisionThreshold: number = DEFAULT_PRECISION_THRESHOLD): PositionInsertResult {
+export function insertBetween(
+    prevPosition: number,
+    nextPosition: number,
+    count: number = 1,
+    precisionThreshold: number = DEFAULT_PRECISION_THRESHOLD
+): PositionInsertResult {
     const gap = nextPosition - prevPosition;
 
     if (gap <= 0) {
