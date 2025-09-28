@@ -19,7 +19,7 @@ interface PositionInsertResult {
 }
 
 const DEFAULT_INITIAL_GAP = 65536;
-const DEFAULT_PRECISION_THRESHOLD = Number.EPSILON;
+const DEFAULT_PRECISION_THRESHOLD = 1;
 
 export function insertAtStart(firstPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): PositionResult[] {
     const positions: PositionResult[] = [];
@@ -67,7 +67,7 @@ export function insertBetween(
             success: false,
             positions: [],
             needsReorganization: true,
-            reason: `Insufficient precision: needed gap ${subGap}, but threshold is ${precisionThreshold}`
+            reason: `Insufficient precision: current gap ${subGap}, but threshold is ${precisionThreshold}`
         };
     }
 

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { getParentLinearRowGroups } from '../group/utils';
 import { AITableRowType } from '@ai-table/grid';
 import { insertAtEnd, insertAtStart, insertBetween } from '../position';
+import { PositionsActions } from '../../action/position';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -101,7 +102,11 @@ export function getCurrentViewPositions(
     } else if (options.afterRecordId && nextPosition === null && previousPosition !== null) {
         positions = insertAtEnd(previousPosition, count).map((item) => item.position);
     } else {
-        positions = insertBetween(previousPosition!, nextPosition!, count).positions;
+        const result = insertBetween(previousPosition!, nextPosition!, count);
+        positions = result.positions;
+        if (result.reason) {
+            console.log(result.reason);
+        }
     }
     return positions;
 }
@@ -112,13 +117,17 @@ export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRec
         options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
     }
     let positions = getCurrentViewPositions(aiTable, options);
+    if (positions.length === 0) {
+        PositionsActions.resetAllRecordsPositions(aiTable);
+        positions = getCurrentViewPositions(aiTable, { ...options, count: options.count || 1 });
+        console.log('Reset all records positions');
+    }
     const views = aiTable.views();
     const activeViewId = aiTable.activeViewId();
     const viewsMaxPosition: Record<string, number> = {};
     views.forEach((view) => {
         viewsMaxPosition[view._id] = getMaxPosition(aiTable.records() as AITableViewRecord[], view._id);
     });
-
     const viewPositions = positions.map((itemPosition) => {
         const viewPositions: Positions = {};
         views.forEach((view) => {

@@ -1,6 +1,5 @@
 import { Actions } from '../../action';
 import {
-    AITableRecordUpdatedInfo,
     AITableView,
     AITableViewRecord,
     AITableViewRecords,
@@ -11,8 +10,15 @@ import {
 import { AIViewTable } from '../../types';
 import _ from 'lodash';
 import { getCurrentViewPositions, getParentGroupValuesByGroupId } from './common';
+import { PositionsActions } from '../../action/position';
 
 export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions) {
+    let positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
+    if (positions.length === 0) {
+        PositionsActions.resetAllRecordsPositions(aiTable);
+        positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
+        console.log('Reset all records positions');
+    }
     const activeViewId = aiTable.activeViewId();
     const activeView = aiTable.views().find((view) => view._id === activeViewId) as AITableView;
     const { recordIds, afterRecordId, beforeRecordId } = options;
@@ -32,7 +38,6 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions) {
         needCopyGroupValuesMap = getParentGroupValuesByGroupId(aiTable, (afterRecordId || beforeRecordId)!);
     }
     const sortedSourceRecords = sortByViewPosition(sourceRecords, activeView) as AITableViewRecords;
-    const positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
     sortedSourceRecords.forEach((record, index) => {
         const sourceIndex = recordsIndexMap.get(record._id);
         if (sourceIndex === undefined) {
