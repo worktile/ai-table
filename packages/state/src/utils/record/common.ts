@@ -46,109 +46,62 @@ export function findPrevRecordForTargetInOriginalRecords(aiTable: AIViewTable, t
     return prevRecord;
 }
 
-export function getPositionByAfterOrBeforeRecordId(
+export function getPreviousAndNextPosition(
     aiTable: AIViewTable,
     options: { afterRecordId?: string; beforeRecordId?: string }
-): { targetPosition: number; prevPosition: number } {
+): { nextPosition: number | null; previousPosition: number | null } {
     const recordsMap = aiTable.recordsMap();
     const activeViewId = aiTable.activeViewId();
-    const originalRecords = aiTable.records() as AITableViewRecords;
     const { afterRecordId, beforeRecordId } = options;
-    let targetPosition = 0;
-    let prevPosition = 0;
+    let nextPosition = null;
+    let previousPosition = null;
 
     if (afterRecordId) {
         // 移动到指定记录之后
-        const targetRecord = recordsMap[afterRecordId] as AITableViewRecord;
-        if (!targetRecord) {
+        const previousRecord = recordsMap[afterRecordId] as AITableViewRecord;
+        if (!previousRecord) {
             throw new Error(`Target record with id ${afterRecordId} not found`);
         }
 
-        prevPosition = targetRecord.positions[activeViewId] || 0;
-        const nextPosition = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
-        if (nextPosition !== null) {
-            targetPosition = nextPosition.positions[activeViewId] || 0;
-        } else {
-            // 最后一个
-            targetPosition = getMaxPosition(originalRecords, activeViewId) + 1;
+        previousPosition = previousRecord.positions[activeViewId] || 0;
+        const nextRecord = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
+        if (nextRecord !== null) {
+            nextPosition = nextRecord.positions[activeViewId] || 0;
         }
     } else if (beforeRecordId) {
         // 移动到指定记录之前
-        const targetRecord = recordsMap[beforeRecordId] as AITableViewRecord;
-        if (!targetRecord) {
+        const nextRecord = recordsMap[beforeRecordId] as AITableViewRecord;
+        if (!nextRecord) {
             throw new Error(`Target record with id ${beforeRecordId} not found`);
         }
 
-        targetPosition = targetRecord.positions[activeViewId] || 0;
-        const previousPosition = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
-        if (previousPosition !== null) {
-            prevPosition = previousPosition.positions[activeViewId] || 0;
-        } else {
-            // 第一个
-            prevPosition = targetPosition - 1;
+        nextPosition = nextRecord.positions[activeViewId] || 0;
+        const previousRecord = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
+        if (previousRecord !== null) {
+            previousPosition = previousRecord.positions[activeViewId] || 0;
         }
     } else {
         throw new Error('Either afterRecordId or beforeRecordId must be provided');
     }
     return {
-        targetPosition,
-        prevPosition
+        nextPosition,
+        previousPosition
     };
 }
 
-export function getPositionByAfterOrBeforeRecordId2(
+export function getCurrentViewPositions(
     aiTable: AIViewTable,
-    options: { afterRecordId?: string; beforeRecordId?: string }
-): { targetPosition: number | null; prevPosition: number | null } {
-    const recordsMap = aiTable.recordsMap();
-    const activeViewId = aiTable.activeViewId();
-    const { afterRecordId, beforeRecordId } = options;
-    let targetPosition = null;
-    let prevPosition = null;
-
-    if (afterRecordId) {
-        // 移动到指定记录之后
-        const targetRecord = recordsMap[afterRecordId] as AITableViewRecord;
-        if (!targetRecord) {
-            throw new Error(`Target record with id ${afterRecordId} not found`);
-        }
-
-        prevPosition = targetRecord.positions[activeViewId] || 0;
-        const nextPosition = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
-        if (nextPosition !== null) {
-            targetPosition = nextPosition.positions[activeViewId] || 0;
-        }
-    } else if (beforeRecordId) {
-        // 移动到指定记录之前
-        const targetRecord = recordsMap[beforeRecordId] as AITableViewRecord;
-        if (!targetRecord) {
-            throw new Error(`Target record with id ${beforeRecordId} not found`);
-        }
-
-        targetPosition = targetRecord.positions[activeViewId] || 0;
-        const previousPosition = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
-        if (previousPosition !== null) {
-            prevPosition = previousPosition.positions[activeViewId] || 0;
-        }
-    } else {
-        throw new Error('Either afterRecordId or beforeRecordId must be provided');
-    }
-    return {
-        targetPosition,
-        prevPosition
-    };
-}
-
-export function getCurrentViewPositions(aiTable: AIViewTable, options: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
-    const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId2(aiTable, options);
+    options: { afterRecordId?: string; beforeRecordId?: string; count?: number }
+) {
+    const { previousPosition, nextPosition } = getPreviousAndNextPosition(aiTable, options);
     const count = options.count || 1;
     let positions = [];
-    if (options.beforeRecordId && prevPosition === null && targetPosition !== null) {
-        positions = insertAtStart(targetPosition, count).map((item) => item.position);
-    } else if (options.afterRecordId && targetPosition === null && prevPosition !== null) {
-        positions = insertAtEnd(prevPosition, count).map((item) => item.position);
+    if (options.beforeRecordId && previousPosition === null && nextPosition !== null) {
+        positions = insertAtStart(nextPosition, count).map((item) => item.position);
+    } else if (options.afterRecordId && nextPosition === null && previousPosition !== null) {
+        positions = insertAtEnd(previousPosition, count).map((item) => item.position);
     } else {
-        positions = insertBetween(prevPosition!, targetPosition!, count).positions;
+        positions = insertBetween(previousPosition!, nextPosition!, count).positions;
     }
     return positions;
 }

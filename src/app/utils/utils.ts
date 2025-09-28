@@ -26,7 +26,6 @@ export const getDefaultTrackableEntity = (options?: {
 };
 
 export function getDefaultAITableValue() {
-    return getBasicData();
     const initValue: {
         records: AITableViewRecords;
         fields: AITableViewFields;
@@ -38,7 +37,7 @@ export function getDefaultAITableValue() {
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
                     view1: 0,
-                    view2: 1
+                    view2: 0
                 },
                 values: {
                     'column-1':
@@ -84,8 +83,8 @@ export function getDefaultAITableValue() {
                 short_id: `row-short-id-${2}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 1,
-                    view2: 2
+                    view1: 65536,
+                    view2: 65536
                 },
                 values: {
                     'column-1': '文本 2-1 column-1',
@@ -175,8 +174,8 @@ export function getDefaultAITableValue() {
                 short_id: `row-short-id-${3}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 2,
-                    view2: 0
+                    view1: 65536 * 2,
+                    view2: 65536 * 2
                 },
                 values: {
                     'column-1': '文本 3-1 column-2',
@@ -214,8 +213,8 @@ export function getDefaultAITableValue() {
                 short_id: `row-short-id-${4}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 3,
-                    view2: 3
+                    view1: 65536 * 3,
+                    view2: 65536 * 3
                 },
                 values: {
                     'column-1': '文本 2-1 column-1',
@@ -305,8 +304,8 @@ export function getDefaultAITableValue() {
                 short_id: `row-short-id-${5}`,
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
-                    view1: 4,
-                    view2: 1
+                    view1: 65536 * 4,
+                    view2: 65536 * 4
                 },
                 values: {
                     'column-1':
@@ -352,8 +351,8 @@ export function getDefaultAITableValue() {
                 short_id: `row-short-id-${6}`,
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
-                    view1: 4,
-                    view2: 1
+                    view1: 65536 * 5,
+                    view2: 65536 * 5
                 },
                 values: {
                     'column-1':
@@ -1091,7 +1090,8 @@ export function getBasicData() {
                 short_id: `row-short-id-${1}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 0
+                    view1: 0,
+                    view2: 0
                 },
                 values: {
                     'column-text': '这是一个单行文本字段示例',
@@ -1104,7 +1104,8 @@ export function getBasicData() {
                 short_id: `row-short-id-${2}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 65536
+                    view1: 65536,
+                    view2: 65536
                 },
                 values: {
                     'column-text': '第二行的文本内容',
@@ -1117,7 +1118,8 @@ export function getBasicData() {
                 short_id: `row-short-id-${3}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 65536 * 2
+                    view1: 65536 * 2,
+                    view2: 65536 * 2
                 },
                 values: {
                     'column-text': '第三行的文本内容',

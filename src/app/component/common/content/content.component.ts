@@ -53,8 +53,8 @@ import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
 import {
     getAITAbleDataLocalStorage,
+    getBasicData,
     getBigData,
-    getDefaultAITableValue,
     getReferences,
     LOCAL_STORAGE_AI_TABLE_DATA,
     LOCAL_STORAGE_DATA_MODE
@@ -488,7 +488,7 @@ export class DemoTableContent {
             this.tableService.buildRenderRecords(localData.records);
             this.tableService.buildRenderFields(localData.fields);
         } else {
-            const value = this.dataMode() === 'default' ? getDefaultAITableValue() : getBigData();
+            const value = this.dataMode() === 'default' ? getBasicData() : getBigData();
             this.tableService.buildRenderRecords(value.records);
             this.tableService.buildRenderFields(value.fields);
         }
