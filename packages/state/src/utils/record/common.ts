@@ -4,6 +4,7 @@ import { getMaxPosition } from '../view';
 import _ from 'lodash';
 import { getParentLinearRowGroups } from '../group/utils';
 import { AITableRowType } from '@ai-table/grid';
+import { insertAtEnd, insertAtStart, insertBetween } from '../position';
 
 export function findNextRecordForTargetInOriginalRecords(aiTable: AIViewTable, targetRecordId: string): AITableViewRecord | null {
     const viewId = aiTable.activeViewId();
@@ -45,54 +46,64 @@ export function findPrevRecordForTargetInOriginalRecords(aiTable: AIViewTable, t
     return prevRecord;
 }
 
-export function getPositionByAfterOrBeforeRecordId(
+export function getPreviousAndNextPosition(
     aiTable: AIViewTable,
     options: { afterRecordId?: string; beforeRecordId?: string }
-): { targetPosition: number; prevPosition: number } {
+): { nextPosition: number | null; previousPosition: number | null } {
     const recordsMap = aiTable.recordsMap();
     const activeViewId = aiTable.activeViewId();
-    const originalRecords = aiTable.records() as AITableViewRecords;
     const { afterRecordId, beforeRecordId } = options;
-    let targetPosition = 0;
-    let prevPosition = 0;
+    let nextPosition = null;
+    let previousPosition = null;
 
     if (afterRecordId) {
         // 移动到指定记录之后
-        const targetRecord = recordsMap[afterRecordId] as AITableViewRecord;
-        if (!targetRecord) {
+        const previousRecord = recordsMap[afterRecordId] as AITableViewRecord;
+        if (!previousRecord) {
             throw new Error(`Target record with id ${afterRecordId} not found`);
         }
 
-        prevPosition = targetRecord.positions[activeViewId] || 0;
-        const nextPosition = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
-        if (nextPosition !== null) {
-            targetPosition = nextPosition.positions[activeViewId] || 0;
-        } else {
-            // 最后一个
-            targetPosition = getMaxPosition(originalRecords, activeViewId) + 1;
+        previousPosition = previousRecord.positions[activeViewId] || 0;
+        const nextRecord = findNextRecordForTargetInOriginalRecords(aiTable, afterRecordId);
+        if (nextRecord !== null) {
+            nextPosition = nextRecord.positions[activeViewId] || 0;
         }
     } else if (beforeRecordId) {
         // 移动到指定记录之前
-        const targetRecord = recordsMap[beforeRecordId] as AITableViewRecord;
-        if (!targetRecord) {
+        const nextRecord = recordsMap[beforeRecordId] as AITableViewRecord;
+        if (!nextRecord) {
             throw new Error(`Target record with id ${beforeRecordId} not found`);
         }
 
-        targetPosition = targetRecord.positions[activeViewId] || 0;
-        const previousPosition = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
-        if (previousPosition !== null) {
-            prevPosition = previousPosition.positions[activeViewId] || 0;
-        } else {
-            // 第一个
-            prevPosition = targetPosition - 1;
+        nextPosition = nextRecord.positions[activeViewId] || 0;
+        const previousRecord = findPrevRecordForTargetInOriginalRecords(aiTable, beforeRecordId);
+        if (previousRecord !== null) {
+            previousPosition = previousRecord.positions[activeViewId] || 0;
         }
     } else {
         throw new Error('Either afterRecordId or beforeRecordId must be provided');
     }
     return {
-        targetPosition,
-        prevPosition
+        nextPosition,
+        previousPosition
     };
+}
+
+export function getCurrentViewPositions(
+    aiTable: AIViewTable,
+    options: { afterRecordId?: string; beforeRecordId?: string; count?: number }
+) {
+    const { previousPosition, nextPosition } = getPreviousAndNextPosition(aiTable, options);
+    const count = options.count || 1;
+    let positions = [];
+    if (options.beforeRecordId && previousPosition === null && nextPosition !== null) {
+        positions = insertAtStart(nextPosition, count).map((item) => item.position);
+    } else if (options.afterRecordId && nextPosition === null && previousPosition !== null) {
+        positions = insertAtEnd(previousPosition, count).map((item) => item.position);
+    } else {
+        positions = insertBetween(previousPosition!, nextPosition!, count).positions;
+    }
+    return positions;
 }
 
 export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRecordId?: string; beforeRecordId?: string; count?: number }) {
@@ -100,23 +111,23 @@ export function getNewRecordsPosition(aiTable: AIViewTable, options?: { afterRec
     if (!options.afterRecordId && !options.beforeRecordId) {
         options.afterRecordId = aiTable.gridData().records[aiTable.gridData().records.length - 1]._id;
     }
-    options.count = options.count || 1;
-    const { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId(aiTable, options);
-    const interval = (targetPosition - prevPosition) / ((options.count! || 1) + 1);
-    const positionsOfItems = _.range(prevPosition + interval, targetPosition, interval);
+    let positions = getCurrentViewPositions(aiTable, options);
     const views = aiTable.views();
     const activeViewId = aiTable.activeViewId();
     const viewsMaxPosition: Record<string, number> = {};
     views.forEach((view) => {
         viewsMaxPosition[view._id] = getMaxPosition(aiTable.records() as AITableViewRecord[], view._id);
     });
-    const viewPositions = positionsOfItems.map((itemPositions) => {
+
+    const viewPositions = positions.map((itemPosition) => {
         const viewPositions: Positions = {};
         views.forEach((view) => {
             if (view._id === activeViewId) {
-                viewPositions[view._id] = itemPositions;
+                viewPositions[view._id] = itemPosition;
             } else {
-                viewsMaxPosition[view._id] += 1;
+                const maxPosition = viewsMaxPosition[view._id];
+                const newMaxPosition = insertAtEnd(maxPosition, 1);
+                viewsMaxPosition[view._id] += newMaxPosition[0].position;
                 viewPositions[view._id] = viewsMaxPosition[view._id];
             }
         });

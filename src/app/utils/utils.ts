@@ -25,7 +25,7 @@ export const getDefaultTrackableEntity = (options?: {
     };
 };
 
-export function getCanvasDefaultValue() {
+export function getDefaultAITableValue() {
     const initValue: {
         records: AITableViewRecords;
         fields: AITableViewFields;
@@ -37,7 +37,7 @@ export function getCanvasDefaultValue() {
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
                     view1: 0,
-                    view2: 1
+                    view2: 0
                 },
                 values: {
                     'column-1':
@@ -83,8 +83,8 @@ export function getCanvasDefaultValue() {
                 short_id: `row-short-id-${2}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 1,
-                    view2: 2
+                    view1: 65536,
+                    view2: 65536
                 },
                 values: {
                     'column-1': '文本 2-1 column-1',
@@ -174,8 +174,8 @@ export function getCanvasDefaultValue() {
                 short_id: `row-short-id-${3}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 2,
-                    view2: 0
+                    view1: 65536 * 2,
+                    view2: 65536 * 2
                 },
                 values: {
                     'column-1': '文本 3-1 column-2',
@@ -213,8 +213,8 @@ export function getCanvasDefaultValue() {
                 short_id: `row-short-id-${4}`,
                 ...getDefaultTrackableEntity(),
                 positions: {
-                    view1: 3,
-                    view2: 3
+                    view1: 65536 * 3,
+                    view2: 65536 * 3
                 },
                 values: {
                     'column-1': '文本 2-1 column-1',
@@ -304,8 +304,8 @@ export function getCanvasDefaultValue() {
                 short_id: `row-short-id-${5}`,
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
-                    view1: 4,
-                    view2: 1
+                    view1: 65536 * 4,
+                    view2: 65536 * 4
                 },
                 values: {
                     'column-1':
@@ -351,8 +351,8 @@ export function getCanvasDefaultValue() {
                 short_id: `row-short-id-${6}`,
                 ...getDefaultTrackableEntity({ updated_at: '2024-12-19' }),
                 positions: {
-                    view1: 4,
-                    view2: 1
+                    view1: 65536 * 5,
+                    view2: 65536 * 5
                 },
                 values: {
                     'column-1':
@@ -904,7 +904,7 @@ export function getBigData() {
     };
 
     console.time('build data');
-    initValue.fields = getCanvasDefaultValue().fields;
+    initValue.fields = getDefaultAITableValue().fields;
     initValue.records = [];
     for (let index = 0; index < 500000; index++) {
         initValue.records.push({
@@ -1077,4 +1077,120 @@ export function getReferences(): AITableCustomReferences {
             }
         }
     };
+}
+
+export function getBasicData() {
+    const initValue: {
+        records: AITableViewRecords;
+        fields: AITableViewFields;
+    } = {
+        records: [
+            {
+                _id: 'row-1',
+                short_id: `row-short-id-${1}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 0,
+                    view2: 0
+                },
+                values: {
+                    'column-text': '这是一个单行文本字段示例',
+                    'column-select': ['option_1'],
+                    'column-checkbox': true
+                }
+            },
+            {
+                _id: 'row-2',
+                short_id: `row-short-id-${2}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 65536,
+                    view2: 65536
+                },
+                values: {
+                    'column-text': '第二行的文本内容',
+                    'column-select': ['option_2'],
+                    'column-checkbox': false
+                }
+            },
+            {
+                _id: 'row-3',
+                short_id: `row-short-id-${3}`,
+                ...getDefaultTrackableEntity(),
+                positions: {
+                    view1: 65536 * 2,
+                    view2: 65536 * 2
+                },
+                values: {
+                    'column-text': '第三行的文本内容',
+                    'column-select': ['option_3'],
+                    'column-checkbox': true
+                }
+            }
+        ],
+        fields: [
+            {
+                _id: 'column-text',
+                type: AITableFieldType.text,
+                icon: 'text',
+                name: '单行文本',
+                settings: {},
+                positions: {
+                    view1: 0
+                }
+            },
+            {
+                _id: 'column-select',
+                type: AITableFieldType.select,
+                icon: 'list-check',
+                name: '单选',
+                settings: {
+                    is_multiple: false,
+                    options: [
+                        {
+                            text: '选项一',
+                            bg_color: '#E48483',
+                            _id: 'option_1'
+                        },
+                        {
+                            text: '选项二',
+                            bg_color: '#E0B75D',
+                            _id: 'option_2'
+                        },
+                        {
+                            text: '选项三',
+                            bg_color: '#69B1E4',
+                            _id: 'option_3'
+                        }
+                    ]
+                },
+                positions: {
+                    view1: 65536
+                }
+            },
+            {
+                _id: 'column-checkbox',
+                type: AITableFieldType.checkbox,
+                icon: 'checkbox',
+                name: '复选框',
+                settings: {},
+                positions: {
+                    view1: 65536 * 2
+                }
+            }
+        ]
+    };
+
+    return initValue;
+}
+
+export const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
+export const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
+
+export function getAITAbleDataLocalStorage() {
+    const data = localStorage.getItem(LOCAL_STORAGE_AI_TABLE_DATA);
+    if (data) {
+        return JSON.parse(data);
+    }
+    return null;
 }

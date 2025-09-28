@@ -51,7 +51,14 @@ import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment'
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { withRemoveView } from '../../../plugins/view.plugin';
 import { TABLE_SERVICE_MAP, TableService } from '../../../service/table.service';
-import { getBigData, getCanvasDefaultValue, getReferences } from '../../../utils/utils';
+import {
+    getAITAbleDataLocalStorage,
+    getBasicData,
+    getBigData,
+    getReferences,
+    LOCAL_STORAGE_AI_TABLE_DATA,
+    LOCAL_STORAGE_DATA_MODE
+} from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
 import { AITableGridI18nKey } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
@@ -86,9 +93,6 @@ import { AITableCustomFieldType } from '../../../types/field';
 import { RelationTicketField } from '../../../custom-field/relation/field-model';
 import { RelationIconPath } from '../../../icons/icon-path';
 import { AI_TABLE_CELL_MORE_COUNT, AI_TABLE_CELL_TICKET_ADD } from '../../../constants/field';
-
-const LOCAL_STORAGE_DATA_MODE = 'ai-table-demo-data-mode';
-const LOCAL_STORAGE_AI_TABLE_DATA = 'ai-table-demo-data';
 
 const AITableI18nText: Record<string, string> = {
     ...AITableUtilsI18nText,
@@ -479,9 +483,15 @@ export class DemoTableContent {
     }
 
     setValue() {
-        const value = this.dataMode() === 'default' ? getCanvasDefaultValue() : getBigData();
-        this.tableService.buildRenderRecords(value.records);
-        this.tableService.buildRenderFields(value.fields);
+        const localData = getAITAbleDataLocalStorage();
+        if (localData) {
+            this.tableService.buildRenderRecords(localData.records);
+            this.tableService.buildRenderFields(localData.fields);
+        } else {
+            const value = this.dataMode() === 'default' ? getBasicData() : getBigData();
+            this.tableService.buildRenderRecords(value.records);
+            this.tableService.buildRenderFields(value.fields);
+        }
     }
 
     changeDataMode(e: ThySegmentEvent<any>) {
@@ -491,6 +501,7 @@ export class DemoTableContent {
     }
 
     addRecord(options?: AddRecordOptions) {
+        console.log('addRecord', options);
         const member = 'member_01';
         const time = getUnixTime(new Date());
         const trackableEntity = { created_by: member, created_at: time, updated_by: member, updated_at: time };
@@ -508,6 +519,7 @@ export class DemoTableContent {
     }
 
     addField(data: AddFieldOptions) {
+        console.log('addField', data);
         addFields(this.aiTable, data);
     }
 
@@ -524,9 +536,7 @@ export class DemoTableContent {
     }
 
     dragMoveRecords(data: MoveRecordOptions) {
-        const member = 'member_02';
-        const time = new Date().getTime();
-        moveRecords(this.aiTable, data, { updated_by: member, updated_at: time });
+        moveRecords(this.aiTable, data);
     }
 
     prevent(event: Event) {
@@ -586,8 +596,8 @@ export class DemoTableContent {
         return value ? value : null;
     }
 
-    setLocalStorage(key: string, mode: string) {
-        localStorage.setItem(key, mode);
+    setLocalStorage(key: string, value: string) {
+        localStorage.setItem(key, value);
     }
 
     undo() {

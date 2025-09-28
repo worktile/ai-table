@@ -15,6 +15,7 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
     }
     if (isDuplicate) {
         const currentFieldIndex = fields.findIndex((item) => item._id === originId);
+        // TODO: 存在缺陷，其它视图下的 position 会出现重复
         newField.positions = {
             ...newField.positions,
             [activeViewId]: getPosition(fields, activeViewId, currentFieldIndex)

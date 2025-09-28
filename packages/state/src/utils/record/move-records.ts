@@ -10,16 +10,14 @@ import {
 } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import _ from 'lodash';
-import { getParentGroupValuesByGroupId, getPositionByAfterOrBeforeRecordId } from './common';
+import { getCurrentViewPositions, getParentGroupValuesByGroupId } from './common';
 
-export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, updatedInfo: AITableRecordUpdatedInfo) {
+export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions) {
     const activeViewId = aiTable.activeViewId();
     const activeView = aiTable.views().find((view) => view._id === activeViewId) as AITableView;
     const { recordIds, afterRecordId, beforeRecordId } = options;
-
     const originalRecords = aiTable.records() as AITableViewRecords;
     const recordsIndexMap = new Map(originalRecords.map((row, index) => [row._id, index]));
-
     const sourceRecords: AITableViewRecord[] = [];
     recordIds.forEach((id) => {
         const index = recordsIndexMap.get(id);
@@ -28,20 +26,14 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, up
         }
         sourceRecords.push(originalRecords[index] as AITableViewRecord);
     });
-
-    let { targetPosition, prevPosition } = getPositionByAfterOrBeforeRecordId(aiTable, {
-        afterRecordId,
-        beforeRecordId
-    });
     const groups = activeView.settings?.groups;
     let needCopyGroupValuesMap: Record<string, any> | null = null;
     if (groups?.length && (afterRecordId || beforeRecordId)) {
         needCopyGroupValuesMap = getParentGroupValuesByGroupId(aiTable, (afterRecordId || beforeRecordId)!);
     }
-    // 勾选多行顺序可能不一致，需要排序
     const sortedSourceRecords = sortByViewPosition(sourceRecords, activeView) as AITableViewRecords;
-    let nextPosition = (prevPosition + targetPosition) / 2;
-    sortedSourceRecords.forEach((record) => {
+    const positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
+    sortedSourceRecords.forEach((record, index) => {
         const sourceIndex = recordsIndexMap.get(record._id);
         if (sourceIndex === undefined) {
             throw new Error(`Record with id ${record._id} not found`);
@@ -56,8 +48,6 @@ export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions, up
             });
             Actions.updateFieldValues(aiTable, updateFieldValues);
         }
-        Actions.setRecordPositions(aiTable, { [activeViewId]: nextPosition }, [sourceIndex]);
-        prevPosition = nextPosition;
-        nextPosition = (prevPosition + targetPosition) / 2;
+        Actions.setRecordPositions(aiTable, { [activeViewId]: positions[index] }, [sourceIndex]);
     });
 }

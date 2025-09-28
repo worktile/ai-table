@@ -9,3 +9,4 @@ export * from './i18n';
 export * from './field';
 export * from './record';
 export * from './group';
+export * from './position';
