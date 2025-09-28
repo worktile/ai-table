@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShape } from '../../../angular-konva';
 import {
@@ -106,6 +106,34 @@ export class AITableFieldStat {
         return aiTable.context?.groupStatContainerWidthMap()!;
     });
 
+    constructor() {
+        effect(() => {
+            const isGroupStat = this.isGroupStat();
+            const bgConfigWidth = this.bgConfig().width;
+            const renderTexts = this.renderTexts();
+            untracked(() => {
+                if (isGroupStat && this.isFirstColumn()) {
+                    const config = this.config();
+                    const { aiTable, groupRow, field } = config as AITableGroupStatConfig;
+                    const groupStatContainerWidthMap = this.groupStatContainerWidthMap();
+                    const groupStatCellKey = `${groupRow.groupId}:${groupRow.fieldId}`;
+                    const originGroupStatContainerWidth = groupStatContainerWidthMap.get(groupStatCellKey);
+                    // 计算新的宽度
+                    const groupStatContainerWidth = renderTexts ? bgConfigWidth : 0;
+                    // 只有当值发生变化时才更新
+                    if (originGroupStatContainerWidth !== groupStatContainerWidth) {
+                        if (groupStatContainerWidth > 0) {
+                            groupStatContainerWidthMap.set(groupStatCellKey, groupStatContainerWidth);
+                        } else {
+                            groupStatContainerWidthMap.delete(groupStatCellKey);
+                        }
+                        aiTable.context?.groupStatContainerWidthMap.set(groupStatContainerWidthMap);
+                    }
+                }
+            });
+        });
+    }
+
     bgConfig = computed(() => {
         const { field, width, height, coordinate, readonly, aiTable, isGroupStat, columnIndex, groupRow } =
             this.config() as AITableGroupStatConfig;
@@ -164,15 +192,6 @@ export class AITableFieldStat {
             }
         }
 
-        if (isGroupStat && this.isFirstColumn()) {
-            const groupStatContainerWidthMap = this.groupStatContainerWidthMap();
-            const groupStatCellKey = `${groupRow.groupId}:${field._id}`;
-            const originGroupStatContainerWidth = groupStatContainerWidthMap.get(groupStatCellKey);
-            const width = this.renderTexts() ? config.width : 0;
-            if (!originGroupStatContainerWidth || originGroupStatContainerWidth !== width) {
-                groupStatContainerWidthMap.set(groupStatCellKey, width);
-            }
-        }
         return config;
     });
 
