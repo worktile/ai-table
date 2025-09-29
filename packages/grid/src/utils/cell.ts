@@ -147,7 +147,7 @@ export function expandCell(aiTable: AITable, cellPath: AIRecordFieldIdPath) {
 }
 
 export function closeExpendCell(aiTable: AITable) {
-    setExpandCellInfo(aiTable, { path: null, width: undefined, height: undefined });
+    setExpandCellInfo(aiTable, { path: null });
 }
 
 export function setSelection(aiTable: AITable, selection: Partial<AITableSelection>) {
