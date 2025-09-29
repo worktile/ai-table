@@ -77,7 +77,7 @@ export function getMaxPosition(data: AITableViewRecords | AITableViewFields, act
             maxPosition = item.positions[activeViewId];
         }
         return maxPosition;
-    }, 0);
+    }, Number.MIN_SAFE_INTEGER);
 }
 
 export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?: string) {
