@@ -2,6 +2,7 @@ import { AddFieldOptions, AITableViewField, AITableViewFields, idCreator } from 
 import { AIViewTable } from '../../types';
 import { Actions } from '../../action';
 import { getNewItemsPosition, ViewPositionOptions } from '../position-in-view';
+import { PositionsActions } from '../../action/position';
 
 export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
     const { defaultValue, isDuplicate, originId } = options;
@@ -22,7 +23,13 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
         aiTable.fieldsMap() as { [key: string]: AITableViewField }
     );
     if (positions.length === 0) {
-        // TODO: reset all fields positions
+        PositionsActions.resetAllFieldsPositions(aiTable);
+        positions = getNewItemsPosition(
+            aiTable,
+            viewPositionOptions,
+            aiTable.fields() as AITableViewFields,
+            aiTable.fieldsMap() as { [key: string]: AITableViewField }
+        );
     }
     newField.positions = positions[0];
     Actions.addField(aiTable, newField, originId, isDuplicate);

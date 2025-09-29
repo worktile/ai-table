@@ -1136,7 +1136,8 @@ export function getBasicData() {
                 name: '单行文本',
                 settings: {},
                 positions: {
-                    view1: 0
+                    view1: 0,
+                    view2: 0
                 }
             },
             {
@@ -1165,7 +1166,8 @@ export function getBasicData() {
                     ]
                 },
                 positions: {
-                    view1: 65536
+                    view1: 65536,
+                    view2: 65536
                 }
             },
             {
@@ -1175,7 +1177,8 @@ export function getBasicData() {
                 name: '复选框',
                 settings: {},
                 positions: {
-                    view1: 65536 * 2
+                    view1: 65536 * 2,
+                    view2: 65536 * 2
                 }
             }
         ]
