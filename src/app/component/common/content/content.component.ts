@@ -429,6 +429,10 @@ export class DemoTableContent {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(async (event) => {
+                const editingCell = this.aiTable.editingCell();
+                if (editingCell && editingCell.path) {
+                    return;
+                }
                 if (event.shiftKey) {
                     // 重做操作
                     this.tableService.redo();
