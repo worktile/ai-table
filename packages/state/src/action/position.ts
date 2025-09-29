@@ -28,9 +28,7 @@ export function resetAllRecordsPositions(aiTable: AIViewTable) {
     const actions: AITableAction[] = [];
     const positions = insertAtEnd(0, sortedRecords.length);
     sortedRecords.forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [activeView!._id]: positions[index].position }, [
-            recordsIndexMap.get(record._id)!
-        ]);
+        const action = buildSetRecordPositionsActon(aiTable, { [activeView!._id]: positions[index] }, [recordsIndexMap.get(record._id)!]);
         actions.push(action);
     });
     aiTable.apply(actions);

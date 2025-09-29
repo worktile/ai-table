@@ -9,14 +9,20 @@ import {
 } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import _ from 'lodash';
-import { getCurrentViewPositions, getParentGroupValuesByGroupId } from './common';
+import { getParentGroupValuesByGroupId } from './common';
 import { PositionsActions } from '../../action/position';
+import { getCurrentViewPositions, ViewPositionOptions } from '../position-in-view';
 
 export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions) {
-    let positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
+    const viewPositionOptions: ViewPositionOptions = {
+        afterItemId: options.afterRecordId,
+        beforeItemId: options.beforeRecordId,
+        count: options.recordIds.length
+    };
+    let positions = getCurrentViewPositions(aiTable, viewPositionOptions, aiTable.records() as AITableViewRecord[], aiTable.recordsMap());
     if (positions.length === 0) {
         PositionsActions.resetAllRecordsPositions(aiTable);
-        positions = getCurrentViewPositions(aiTable, { ...options, count: options.recordIds.length });
+        positions = getCurrentViewPositions(aiTable, viewPositionOptions, aiTable.records() as AITableViewRecord[], aiTable.recordsMap());
         console.log('Reset all records positions');
     }
     const activeViewId = aiTable.activeViewId();

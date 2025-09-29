@@ -14,7 +14,8 @@ import {
     AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { getNewRecordsPosition } from '../utils';
+import { getNewItemsPosition, ViewPositionOptions } from '../utils/position-in-view';
+import { PositionsActions } from './position';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
     let operations: UpdateFieldValueAction[] = [];
@@ -60,7 +61,17 @@ export function addRecord(aiTable: AIViewTable, record: AITableRecord) {
 
 export function addRecords(aiTable: AIViewTable, records: AITableRecord[], options?: AddRecordOptions) {
     const invalidFieldValues: string[] = [];
-    const positions = getNewRecordsPosition(aiTable, options);
+    const viewPositionOptions: ViewPositionOptions = {
+        afterItemId: options?.afterRecordId,
+        beforeItemId: options?.beforeRecordId,
+        count: options?.count
+    };
+    let positions = getNewItemsPosition(aiTable, viewPositionOptions, aiTable.records() as AITableViewRecord[], aiTable.recordsMap());
+    if (positions.length === 0) {
+        PositionsActions.resetAllRecordsPositions(aiTable);
+        positions = getNewItemsPosition(aiTable, viewPositionOptions, aiTable.records() as AITableViewRecord[], aiTable.recordsMap());
+        console.log('Reset all records positions');
+    }
     records.forEach((record, index) => {
         Object.entries(record.values).every(([fieldId, value]) => {
             const field = AITableQueries.getField(aiTable, [fieldId]);

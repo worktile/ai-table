@@ -1,9 +1,3 @@
-interface PositionResult {
-    position: number;
-    needsRebalance: boolean;
-    rebalanceReason?: string;
-}
-
 interface PositionInsertResult {
     success: boolean;
     positions: number[];
@@ -21,24 +15,18 @@ interface PositionInsertResult {
 const DEFAULT_INITIAL_GAP = 65536;
 const DEFAULT_PRECISION_THRESHOLD = 1;
 
-export function insertAtStart(firstPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): PositionResult[] {
-    const positions: PositionResult[] = [];
+export function insertAtStart(firstPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): number[] {
+    const positions: number[] = [];
     for (let i = 0; i < count; i++) {
-        positions.push({
-            position: firstPosition - (count - i) * initialGap,
-            needsRebalance: false
-        });
+        positions.push(firstPosition - (count - i) * initialGap);
     }
     return positions;
 }
 
-export function insertAtEnd(lastPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): PositionResult[] {
-    const positions: PositionResult[] = [];
+export function insertAtEnd(lastPosition: number, count: number = 1, initialGap: number = DEFAULT_INITIAL_GAP): number[] {
+    const positions: number[] = [];
     for (let i = 0; i < count; i++) {
-        positions.push({
-            position: lastPosition + (i + 1) * initialGap,
-            needsRebalance: false
-        });
+        positions.push(lastPosition + (i + 1) * initialGap);
     }
     return positions;
 }
