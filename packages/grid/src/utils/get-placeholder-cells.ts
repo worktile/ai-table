@@ -52,7 +52,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                 offset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
             }
 
-            const height = rowHeight - AI_TABLE_OFFSET * 4;
+            const height = rowHeight;
             configs.unshift({
                 key: `placeholder-cell-${fieldId}-${recordId}`,
                 name: generateTargetName({
@@ -62,7 +62,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                 }),
                 x: x + offset,
                 y,
-                width: width - AI_TABLE_OFFSET * 4,
+                width,
                 height,
                 fill: Colors.transparent,
                 strokeEnabled: false,
