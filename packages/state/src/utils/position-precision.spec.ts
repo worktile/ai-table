@@ -1,4 +1,4 @@
-import { insertBetween } from './position';
+import { insertBetween } from './position-precision';
 
 describe('Position utils', () => {
     describe('连续插入测试', () => {

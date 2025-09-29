@@ -1,6 +1,6 @@
 import { AITableRecord, AITableViewField, AITableViewFields, AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { insertAtEnd, insertAtStart, insertBetween } from './position';
+import { insertAtEnd, insertAtStart, insertBetween } from './position-precision';
 import { getMaxPosition } from './view';
 
 export type ViewPositionOptions = { afterItemId?: string; beforeItemId?: string; count?: number };
@@ -97,9 +97,9 @@ export function getCurrentViewPositions<T extends AITableViewRecord | AITableVie
     const count = options.count || 1;
     let positions = [];
     if (options.beforeItemId && previousPosition === null && nextPosition !== null) {
-        positions = insertAtStart(nextPosition, count).map((item) => item.position);
+        positions = insertAtStart(nextPosition, count);
     } else if (options.afterItemId && nextPosition === null && previousPosition !== null) {
-        positions = insertAtEnd(previousPosition, count).map((item) => item.position);
+        positions = insertAtEnd(previousPosition, count);
     } else {
         const result = insertBetween(previousPosition!, nextPosition!, count);
         positions = result.positions;
@@ -137,7 +137,7 @@ export function getNewItemsPosition<T extends AITableViewRecord | AITableViewFie
             } else {
                 const maxPosition = viewsMaxPosition[view._id];
                 const newMaxPosition = insertAtEnd(maxPosition, 1);
-                viewsMaxPosition[view._id] += newMaxPosition[0].position;
+                viewsMaxPosition[view._id] += newMaxPosition[0];
                 viewPositions[view._id] = viewsMaxPosition[view._id];
             }
         });

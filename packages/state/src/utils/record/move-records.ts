@@ -11,7 +11,7 @@ import { AIViewTable } from '../../types';
 import _ from 'lodash';
 import { getParentGroupValuesByGroupId } from './common';
 import { PositionsActions } from '../../action/position';
-import { getCurrentViewPositions, ViewPositionOptions } from '../view-position';
+import { getCurrentViewPositions, ViewPositionOptions } from '../position-in-view';
 
 export function moveRecords(aiTable: AIViewTable, options: MoveRecordOptions) {
     const viewPositionOptions: ViewPositionOptions = {

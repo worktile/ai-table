@@ -14,7 +14,7 @@ import {
     AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { getNewItemsPosition, ViewPositionOptions } from '../utils/view-position';
+import { getNewItemsPosition, ViewPositionOptions } from '../utils/position-in-view';
 import { PositionsActions } from './position';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
