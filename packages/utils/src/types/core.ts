@@ -226,8 +226,9 @@ export interface SetFieldOptions<T = unknown> {
 }
 
 export interface MoveFieldOptions {
-    path: NumberPath;
-    newPath: NumberPath;
+    fieldIds: string[];
+    afterFieldId?: string;
+    beforeFieldId?: string;
 }
 
 export interface SetFieldWidthOptions {
@@ -270,6 +271,8 @@ export interface DragEndData {
     recordsIndex?: number[];
     afterRecordId?: string;
     beforeRecordId?: string;
+    afterFieldId?: string;
+    beforeFieldId?: string;
     width?: number;
 }
 

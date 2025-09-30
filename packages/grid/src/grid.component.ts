@@ -1218,13 +1218,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     dragEnd(data: DragEndData) {
         switch (data.type) {
             case DragType.field:
-                if (data.fieldsIndex && isNumber(data.targetIndex)) {
-                    for (let i = 0; i < data.fieldsIndex.length; i++) {
-                        this.aiMoveField.emit({
-                            path: [data.fieldsIndex[i]],
-                            newPath: [data.targetIndex + i]
-                        });
-                    }
+                if (data.fieldIds && (data.beforeFieldId || data.afterFieldId)) {
+                    this.aiMoveField.emit({
+                        fieldIds: Array.from(data.fieldIds),
+                        beforeFieldId: data.beforeFieldId,
+                        afterFieldId: data.afterFieldId
+                    });
                 }
                 break;
             case DragType.columnWidth:
