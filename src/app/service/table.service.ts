@@ -10,7 +10,6 @@ import {
     getFieldsSizeMap,
     UndoManagerService,
     sortViews,
-    Actions,
     buildLinearRows,
     buildRecordsWithWillMoveRecords
 } from '@ai-table/state';
@@ -18,12 +17,10 @@ import { computed, inject, Injectable, isDevMode, Signal, signal, WritableSignal
 import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
-import { getDefaultAITableValue, sortDataByView } from '../utils/utils';
+import { getBasicData } from '../utils/utils';
 import {
     AITableFieldsSizeMap,
     AITableFieldType,
-    AITableFilterConditions,
-    AITableSortOptions,
     AITableValue,
     AITableView,
     AITableViewFields,
@@ -170,12 +167,12 @@ export class TableService {
         this.aiTable = aiTable;
     }
 
-    buildRenderRecords(records?: AITableViewRecords) {
-        this.records = signal(sortDataByView(records ?? this.records(), this.activeViewId()) as AITableViewRecords);
+    setRecords(records?: AITableViewRecords) {
+        this.records = signal(records ?? this.records());
     }
 
-    buildRenderFields(fields?: AITableViewFields) {
-        this.fields = signal(sortDataByView(fields ?? this.fields(), this.activeViewId()) as AITableViewFields);
+    setFields(fields?: AITableViewFields) {
+        this.fields = signal(fields ?? this.fields());
     }
 
     buildRenderFieldsSizeMap(fields?: AITableViewFields) {
@@ -197,8 +194,8 @@ export class TableService {
                     if (!isInitialized) {
                         const data = getDataBySharedType(this.sharedType!);
                         this.views.set(data.views);
-                        this.buildRenderFields(data.fields);
-                        this.buildRenderRecords(data.records);
+                        this.setRecords(data.records);
+                        this.setFields(data.fields);
                         this.buildRenderFieldsSizeMap(this.fields());
                         isInitialized = true;
                     } else {
@@ -213,7 +210,7 @@ export class TableService {
         this.provider.once('sync', () => {
             if (this.provider!.synced && [...this.sharedType!.doc!.store.clients.keys()].length === 0) {
                 console.log('init shared type');
-                const value = getDefaultAITableValue();
+                const value = getBasicData();
                 getSharedTypeByData(this.sharedType!.doc!, {
                     records: value.records,
                     fields: value.fields,
