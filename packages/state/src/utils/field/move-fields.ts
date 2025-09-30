@@ -1,4 +1,4 @@
-import { MoveFieldOptions, AITableViewField, sortByViewPosition } from '@ai-table/utils';
+import { MoveFieldOptions, AITableViewField, sortByViewPosition, AITableAction } from '@ai-table/utils';
 import { AIViewTable } from '../../types';
 import { PositionsActions } from '../../action/position';
 import { getCurrentViewPositions, ViewPositionOptions } from '../position-in-view';
@@ -35,20 +35,17 @@ export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
     fieldIds.forEach((id) => {
         const index = fieldsIndexMap.get(id);
         if (index === undefined) {
-            throw new Error(`Field with id ${id} not found`);
+            return;
         }
         sourceFields.push(originalFields[index] as AITableViewField);
     });
-
     const sortedSourceFields = sortByViewPosition(sourceFields, activeView!) as AITableViewField[];
+    const actions: AITableAction[] = [];
     sortedSourceFields.forEach((field, index) => {
-        const sourceIndex = fieldsIndexMap.get(field._id);
-        if (sourceIndex === undefined) {
-            throw new Error(`Field with id ${field._id} not found`);
-        }
         const action = buildSetFieldAction(aiTable, { positions: { ...field.positions, [activeViewId]: positions[index] } }, [field._id]);
         if (action) {
-            aiTable.apply(action);
+            actions.push(action);
         }
     });
+    aiTable.apply(actions);
 }
