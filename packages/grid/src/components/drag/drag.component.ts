@@ -267,12 +267,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                         this.setAuxiliaryLineStyles({
                             left: `${nextColumnStartX - scrollPosition.x}px`
                         });
-                        this.draggedData = {
-                            type: DragType.field,
-                            targetIndex: targetColumnIndex + 1,
-                            fieldIds: drag.sourceIds,
-                            fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
-                        };
+                        this.setMovingFieldDragData(DragType.field, drag.sourceIds, targetColumnIndex + 1);
                         return;
                     }
                 }
@@ -288,13 +283,7 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                 if (targetColumnIndex > sourceColumnIndex) {
                     targetColumnIndex -= 1;
                 }
-
-                this.draggedData = {
-                    type: DragType.field,
-                    targetIndex: targetColumnIndex,
-                    fieldIds: drag.sourceIds,
-                    fieldsIndex: Array.from(drag.sourceIds).map((id) => visibleColumnIndexMap.get(id) || 0)
-                };
+                this.setMovingFieldDragData(DragType.field, drag.sourceIds, targetColumnIndex);
             } else {
                 this.resetAuxiliaryLine();
                 this.draggedData = null;
@@ -476,6 +465,23 @@ export class AITableDragComponent implements OnInit, OnDestroy {
             } else {
                 this.draggedData.afterRecordId = targetLinearRow._id;
             }
+        }
+    }
+
+    private setMovingFieldDragData(type: DragType, sourceIds: Set<string>, targetIndex: number) {
+        const aiTable = this.aiTableGridEventService.aiTable;
+        const fields = aiTable.gridData().fields;
+        this.draggedData = {
+            type,
+            fieldIds: sourceIds,
+            targetIndex
+        };
+        if (targetIndex === 0) {
+            this.draggedData.beforeFieldId = fields[0]._id;
+        } else if (targetIndex >= fields.length) {
+            this.draggedData.afterFieldId = fields[fields.length - 1]._id;
+        } else {
+            this.draggedData.afterFieldId = fields[targetIndex - 1]._id;
         }
     }
 
