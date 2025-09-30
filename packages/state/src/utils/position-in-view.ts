@@ -24,6 +24,18 @@ export function findNextItemByPosition<T extends AITableViewRecord | AITableView
     return nextItem;
 }
 
+export function findMaxItemByPosition<T extends AITableViewRecord | AITableViewField>(aiTable: AIViewTable, items: T[]): T {
+    const viewId = aiTable.activeViewId();
+    let maxItem = items[0] as T;
+    for (const item of items) {
+        const pos = item.positions[viewId] || 0;
+        if (pos > maxItem.positions[viewId]) {
+            maxItem = item;
+        }
+    }
+    return maxItem;
+}
+
 export function findPrevItemByPosition<T extends AITableViewRecord | AITableViewField>(
     aiTable: AIViewTable,
     targetId: string,
@@ -55,19 +67,16 @@ export function getPreviousAndNextPosition<T extends AITableViewRecord | AITable
     let previousPosition = null;
 
     if (afterItemId) {
-        // 移动到指定项之后
         const previousItem = itemsMap[afterItemId] as T;
         if (!previousItem) {
             throw new Error(`Target item with id ${afterItemId} not found`);
         }
-
         previousPosition = previousItem.positions[activeViewId] || 0;
         const nextItem = findNextItemByPosition<T>(aiTable, afterItemId, items, itemsMap);
         if (nextItem !== null) {
             nextPosition = nextItem.positions[activeViewId] || 0;
         }
     } else if (beforeItemId) {
-        // 移动到指定项之前
         const nextItem = itemsMap[beforeItemId] as T;
         if (!nextItem) {
             throw new Error(`Target item with id ${beforeItemId} not found`);
@@ -79,7 +88,8 @@ export function getPreviousAndNextPosition<T extends AITableViewRecord | AITable
             previousPosition = previousItem.positions[activeViewId] || 0;
         }
     } else {
-        throw new Error('Either afterItemId or beforeItemId must be provided');
+        const maxItem = findMaxItemByPosition<T>(aiTable, items);
+        previousPosition = maxItem.positions[activeViewId] || 0;
     }
     return {
         nextPosition,
@@ -100,6 +110,8 @@ export function getCurrentViewPositions<T extends AITableViewRecord | AITableVie
         positions = insertAtStart(nextPosition, count);
     } else if (options.afterItemId && nextPosition === null && previousPosition !== null) {
         positions = insertAtEnd(previousPosition, count);
+    } else if (!options.afterItemId && !options.beforeItemId && nextPosition === null && previousPosition !== null) {
+        positions = insertAtEnd(previousPosition, count);
     } else {
         const result = insertBetween(previousPosition!, nextPosition!, count);
         positions = result.positions;
@@ -116,9 +128,6 @@ export function getNewItemsPosition<T extends AITableViewRecord | AITableViewFie
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ) {
-    if (!options.afterItemId && !options.beforeItemId && items.length > 0) {
-        options.afterItemId = items[items.length - 1]._id;
-    }
     let positions = getCurrentViewPositions(aiTable, options, items, itemsMap);
     if (positions.length === 0) {
         return [];

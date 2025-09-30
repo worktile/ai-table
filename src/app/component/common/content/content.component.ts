@@ -381,8 +381,6 @@ export class DemoTableContent {
 
     ngOnInit(): void {
         if (this.tableService.sharedType) {
-            this.tableService.buildRenderRecords();
-            this.tableService.buildRenderFields();
         } else {
             this.dataMode.set(this.getLocalDataMode(LOCAL_STORAGE_DATA_MODE) || 'default');
             this.setValue();
@@ -485,12 +483,12 @@ export class DemoTableContent {
     setValue() {
         const localData = getAITAbleDataLocalStorage();
         if (localData) {
-            this.tableService.buildRenderRecords(localData.records);
-            this.tableService.buildRenderFields(localData.fields);
+            this.tableService.setRecords(localData.records);
+            this.tableService.setFields(localData.fields);
         } else {
             const value = this.dataMode() === 'default' ? getBasicData() : getBigData();
-            this.tableService.buildRenderRecords(value.records);
-            this.tableService.buildRenderFields(value.fields);
+            this.tableService.setRecords(value.records);
+            this.tableService.setFields(value.fields);
         }
     }
 
