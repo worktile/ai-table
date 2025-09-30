@@ -279,10 +279,6 @@ export class AITableDragComponent implements OnInit, OnDestroy {
                     left: `${lineLeft}px`
                 });
 
-                // 向右移动目标在目标列的前一列
-                if (targetColumnIndex > sourceColumnIndex) {
-                    targetColumnIndex -= 1;
-                }
                 this.setMovingFieldDragData(DragType.field, drag.sourceIds, targetColumnIndex);
             } else {
                 this.resetAuxiliaryLine();
