@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.5](https://github.com/worktile/ai-table/compare/0.2.4...0.2.5) (2025-10-09)
+
+
+### Bug Fixes
+
+* #WIK-18817 【AITable】双击文本 Cell 如果点击的位置靠下一点，无法进入编辑，反而会切换选中状态 ([#718](https://github.com/worktile/ai-table/issues/718)) ([603d625](https://github.com/worktile/ai-table/commit/603d6256121b9810041ffee28aef429d159bfa1d)), closes [#WIK-18817](https://github.com/worktile/ai-table/issues/WIK-18817)
+* #WIK-18819 【AITable】文本内容编辑过程中，按 Ctrl + Z 撤回应当优先撤回文本内容，现在是撤回的表格新建行，交互有些不符合预期 ([0ac87aa](https://github.com/worktile/ai-table/commit/0ac87aaf1edb2865cab2a9fb1db73fe0a1e301ce)), closes [#WIK-18819](https://github.com/worktile/ai-table/issues/WIK-18819)
+* #WIK-18962 【AITable】关联产品需求/工单/工作项/测试用例/目标/页面等，展开后，拖拽手柄位置不对；滚动单元格内容或者滚动表格内容，控制台报错 ([#717](https://github.com/worktile/ai-table/issues/717)) ([e5284a8](https://github.com/worktile/ai-table/commit/e5284a8871c1d271f4ae669e78ac5bfa348d5a2e)), closes [#WIK-18962](https://github.com/worktile/ai-table/issues/WIK-18962)
+* #WIK-19116 当第一列字段是非分组字段时，分组内容过长时会被分组统计遮罩，没有出现... ([#714](https://github.com/worktile/ai-table/issues/714)) ([ba1b200](https://github.com/worktile/ai-table/commit/ba1b2008a9821a73cb784659b9bf6f8a7796884e)), closes [#WIK-19116](https://github.com/worktile/ai-table/issues/WIK-19116)
+* #WIK-19138 字段拖拽异常，afterItemId 异常，不是目标的 id ([ff81309](https://github.com/worktile/ai-table/commit/ff81309fb7cd08ad0bbd62c590c54648c920a932)), closes [#WIK-19138](https://github.com/worktile/ai-table/issues/WIK-19138)
+* find max position item when both afterItemId and beforeItemId are undefined ([#722](https://github.com/worktile/ai-table/issues/722)) ([0b8f3f0](https://github.com/worktile/ai-table/commit/0b8f3f014d82d03dacd8f249eee005856e3426b7))
+
+
+### Features
+
+* #WIK-19126 移动 Field 位置支持精度控制 ([#721](https://github.com/worktile/ai-table/issues/721)) ([efc6b81](https://github.com/worktile/ai-table/commit/efc6b81c3ccd93615c72f58fba5d28a14909b479)), closes [#WIK-19126](https://github.com/worktile/ai-table/issues/WIK-19126) [#WIK-19126](https://github.com/worktile/ai-table/issues/WIK-19126)
+* **action:** support reset all records position on precision is not enough #WIK-19122 ([#715](https://github.com/worktile/ai-table/issues/715)) ([1e958f7](https://github.com/worktile/ai-table/commit/1e958f784f07246c4e6e5381541f8fde3b9f9c18)), closes [#WIK-19122](https://github.com/worktile/ai-table/issues/WIK-19122)
+* add position utils and apply to record's adding, moving and sorting. ([#709](https://github.com/worktile/ai-table/issues/709)) ([46a53b9](https://github.com/worktile/ai-table/commit/46a53b904c0386a36f6edaeac1a2b8ef910d9d3f))
+* support reset all fields position ([#719](https://github.com/worktile/ai-table/issues/719)) ([2048514](https://github.com/worktile/ai-table/commit/204851461a4237f60091eae30356b36bea6380ff))
+
+
+
 ## [0.2.4](https://github.com/worktile/ai-table/compare/0.2.3...0.2.4) (2025-09-26)
 
 
