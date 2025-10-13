@@ -31,6 +31,7 @@ export const writeToClipboard = async (data: ClipboardContent, dataTransfer?: Da
         if (dataTransfer) {
             dataTransfer.setData(`text/html`, html!);
             dataTransfer.setData(`text/plain`, text!);
+            (window as any).dataTransfer = dataTransfer;
             return;
         }
 
