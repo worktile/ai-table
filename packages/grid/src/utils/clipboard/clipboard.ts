@@ -64,7 +64,9 @@ export const readFromClipboard = async (dataTransfer?: DataTransfer | null) => {
             }
 
             const { html, text } = clipboardData;
-            return html || text ? clipboardData : null;
+            if (html || text) {
+                return clipboardData;
+            }
         }
 
         if (dataTransfer) {
@@ -72,13 +74,18 @@ export const readFromClipboard = async (dataTransfer?: DataTransfer | null) => {
             const text = dataTransfer.getData(`text/plain`);
             html && (clipboardData.html = html);
             text && (clipboardData.text = text);
-            return html || text ? clipboardData : null;
+
+            if (html || text) {
+                return clipboardData;
+            }
         }
 
         if (isClipboardReadTextSupported()) {
             const text = await navigator.clipboard.readText();
             text && (clipboardData.text = text);
-            return text ? clipboardData : null;
+            if (text) {
+                return clipboardData;
+            }
         }
 
         return null;

@@ -77,7 +77,10 @@ export const CopyCellsItem = (aiTable: AITable, actions: AITableActions): AITabl
         exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
             document.dispatchEvent(
                 new ClipboardEvent('copy', {
-                    clipboardData: new DataTransfer()
+                    clipboardData: new DataTransfer(),
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true
                 })
             );
         }
@@ -96,7 +99,10 @@ export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITa
         exec: async (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
             document.dispatchEvent(
                 new ClipboardEvent('paste', {
-                    clipboardData: (window as any).dataTransfer
+                    clipboardData: (window as any).dataTransfer,
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true
                 })
             );
         }
