@@ -34,6 +34,7 @@ import { CoverCellBase } from './cover-cell-base';
 import { KoShape, KoContainer, KoEventObject } from '../../../angular-konva';
 import Konva from 'konva';
 import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-group';
+import { GroupConfig } from 'konva/lib/Group';
 
 @Component({
     selector: 'ai-table-single-text',
@@ -84,11 +85,16 @@ export class AITableCellText extends CoverCellBase {
         const { columnWidth } = render;
         if (isExpand) {
             return {
+                name: generateTargetName({
+                    targetName: AI_TABLE_CELL,
+                    fieldId: field._id,
+                    recordId
+                }),
                 width: columnWidth - AI_TABLE_CELL_BORDER / 2,
                 height: this.height(),
                 stroke: Colors.primary,
                 strokeWidth: 2,
-                listening: false
+                listening: true
             };
         }
         return null;
