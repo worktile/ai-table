@@ -1,4 +1,4 @@
-import { AITableContent, AITableRowType } from '../../types';
+import { AITableContent } from '../../types';
 import { AITable, createDefaultField, createDefaultFieldName, getFieldOptions, getFieldValue } from '../../core';
 import { readFromClipboard, aiTableFragmentAttribute, extractText } from '../clipboard';
 import { processPastedValueForSelect } from '../field/model/select';
@@ -84,8 +84,10 @@ function extractAITableContentFromClipboardHtml(clipboardHtml: string): AITableC
     return null;
 }
 
-const readClipboardData = async (): Promise<{ clipboardContent: string[][]; aiTableContent: AITableContent | null }> => {
-    const clipboardData = await readFromClipboard();
+const readClipboardData = async (
+    dataTransfer?: DataTransfer | null
+): Promise<{ clipboardContent: string[][]; aiTableContent: AITableContent | null }> => {
+    const clipboardData = await readFromClipboard(dataTransfer);
     let clipboardContent: string[][] = [];
     let aiTableContent: AITableContent | null = null;
 
@@ -189,7 +191,8 @@ function appendField(aiTable: AITable, originField: AITableField | null, actions
 
 export const writeToAITable = async (
     aiTable: AITable,
-    actions: AITableActions
+    actions: AITableActions,
+    dataTransfer?: DataTransfer | null
 ): Promise<{ isPasteSuccess: boolean; isPasteOverMaxRecords: boolean; isPasteOverMaxFields: boolean }> => {
     const selectedCells = Array.from(aiTable.selection().selectedCells);
     const result = {
@@ -200,7 +203,7 @@ export const writeToAITable = async (
     if (!selectedCells.length) {
         return result;
     }
-    const { clipboardContent, aiTableContent } = await readClipboardData();
+    const { clipboardContent, aiTableContent } = await readClipboardData(dataTransfer);
     if (!clipboardContent.length) {
         return result;
     }
