@@ -1,16 +1,6 @@
-import {
-    AITable,
-    AITableContextMenuItem,
-    AITableGridI18nKey,
-    AITableActions,
-    getI18nTextByKey,
-    isMac,
-    writeToAITable,
-    clearSelection
-} from '@ai-table/grid';
+import { AITable, AITableContextMenuItem, AITableActions, isMac, clearSelection } from '@ai-table/grid';
 import { Actions } from '../action';
 import { AIViewTable } from '../types';
-import { buildClipboardData, writeToClipboard } from '@ai-table/grid';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
 import { AddRecordOptions } from '@ai-table/utils';
@@ -85,19 +75,14 @@ export const CopyCellsItem = (aiTable: AITable, actions: AITableActions): AITabl
         shortcutKey: isMac() ? `⌘ + C` : `Ctrl + C`,
         icon: 'copy',
         exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
-            const clipboardData = buildClipboardData(aiTable);
-            if (clipboardData) {
-                writeToClipboard(clipboardData).then(() => {
-                    const copiedCellsCount = aiTable.selection().selectedCells.size;
-                    const message = getI18nTextByKey(aiTable, AITableGridI18nKey.copiedCells).replace(
-                        '{count}',
-                        copiedCellsCount.toString()
-                    );
-                    notifyService.success(message, undefined, {
-                        placement: 'bottomLeft'
-                    });
-                });
-            }
+            document.dispatchEvent(
+                new ClipboardEvent('copy', {
+                    clipboardData: new DataTransfer(),
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true
+                })
+            );
         }
     };
 };
@@ -112,16 +97,14 @@ export const PasteCellsItem: (aiTable: AITable, actions: AITableActions) => AITa
         shortcutKey: isMac() ? `⌘ + V` : `Ctrl + V`,
         icon: 'paste',
         exec: async (aiTable: AITable, targetName: string, position: { x: number; y: number }, notifyService: ThyNotifyService) => {
-            writeToAITable(aiTable, actions).then((result) => {
-                if (result.isPasteOverMaxRecords || result.isPasteOverMaxFields) {
-                    return;
-                }
-                if (!result.isPasteSuccess) {
-                    notifyService.error(getStateI18nTextByKey(aiTable, AITableStateI18nKey.invalidPasteContent), undefined, {
-                        placement: 'bottomLeft'
-                    });
-                }
-            });
+            document.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    clipboardData: (window as any).dataTransfer,
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true
+                })
+            );
         }
     };
 };

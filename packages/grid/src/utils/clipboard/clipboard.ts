@@ -16,7 +16,7 @@ export const isClipboardReadTextSupported = () => {
     return 'clipboard' in navigator && 'readText' in navigator.clipboard;
 };
 
-export const writeToClipboard = async (data: ClipboardContent) => {
+export const writeToClipboard = async (data: ClipboardContent, dataTransfer?: DataTransfer | null) => {
     try {
         const { text, html } = data;
         if (isClipboardWriteSupported()) {
@@ -25,24 +25,29 @@ export const writeToClipboard = async (data: ClipboardContent) => {
                 'text/html': new Blob([html!], { type: 'text/html' })
             });
             await navigator.clipboard.write([clipboardItem]);
-        } else if (isClipboardWriteTextSupported()) {
+            return;
+        }
+
+        if (dataTransfer) {
+            dataTransfer.setData(`text/html`, html!);
+            dataTransfer.setData(`text/plain`, text!);
+            (window as any).dataTransfer = dataTransfer;
+            return;
+        }
+
+        if (isClipboardWriteTextSupported()) {
             await navigator.clipboard.writeText(text!);
-        } else {
-            const textarea = document.createElement('textarea');
-            textarea.value = text!;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+            return;
         }
     } catch (error) {
         console.warn('Failed to write clipboard:', error);
     }
 };
 
-export const readFromClipboard = async () => {
+export const readFromClipboard = async (dataTransfer?: DataTransfer | null) => {
     try {
         let clipboardData: ClipboardContent = {};
+
         if (isClipboardReadSupported()) {
             const clipboardItems = await navigator.clipboard.read();
             if (Array.isArray(clipboardItems) && clipboardItems[0] instanceof ClipboardItem) {
@@ -57,32 +62,33 @@ export const readFromClipboard = async () => {
                     }
                 }
             }
-        } else if (isClipboardReadTextSupported()) {
-            const clipboardText = await navigator.clipboard.readText();
-            clipboardData.text = clipboardText;
-        } else {
-            const pastePromise = new Promise<ClipboardContent>((resolve) => {
-                const textarea = document.createElement('textarea');
-                document.body.appendChild(textarea);
-                const handlePaste = (e: ClipboardEvent) => {
-                    const text = e.clipboardData?.getData('text') || '';
-                    const html = e.clipboardData?.getData('text/html') || '';
 
-                    resolve({
-                        text,
-                        html: html || undefined
-                    });
-
-                    textarea.removeEventListener('paste', handlePaste);
-                };
-                textarea.addEventListener('paste', handlePaste);
-                textarea.focus();
-                document.execCommand('paste');
-                document.body.removeChild(textarea);
-            });
-            clipboardData = await pastePromise;
+            const { html, text } = clipboardData;
+            if (html || text) {
+                return clipboardData;
+            }
         }
-        return clipboardData;
+
+        if (dataTransfer) {
+            const html = dataTransfer.getData(`text/html`);
+            const text = dataTransfer.getData(`text/plain`);
+            html && (clipboardData.html = html);
+            text && (clipboardData.text = text);
+
+            if (html || text) {
+                return clipboardData;
+            }
+        }
+
+        if (isClipboardReadTextSupported()) {
+            const text = await navigator.clipboard.readText();
+            text && (clipboardData.text = text);
+            if (text) {
+                return clipboardData;
+            }
+        }
+
+        return null;
     } catch (error) {
         console.warn('Failed to read clipboard:', error);
         return null;
