@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.3.0](https://github.com/worktile/ai-table/compare/0.2.5...0.3.0) (2025-10-15)
+
+
+### Bug Fixes
+
+* #WIK-19161 【AITable】单行文本单击选中的框会取消cell的选中状态 ([9c5fb3b](https://github.com/worktile/ai-table/commit/9c5fb3b4fcd118d2e8a7046649f535d73b0562bc)), closes [#WIK-19161](https://github.com/worktile/ai-table/issues/WIK-19161)
+
+
+### Features
+
+* **grid:** support copy and paste under http ([#726](https://github.com/worktile/ai-table/issues/726)) ([c2eb4c6](https://github.com/worktile/ai-table/commit/c2eb4c6259c32d86989a5cdd1c2ec932aa2f6b02))
+
+
+
 ## [0.2.5](https://github.com/worktile/ai-table/compare/0.2.4...0.2.5) (2025-10-09)
 
 
