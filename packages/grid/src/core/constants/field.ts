@@ -1,5 +1,5 @@
 import { AITable } from '../types';
-import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
+import { AITableGridI18nKey } from '../../utils/i18n';
 import { AITableFieldGroup, AITableFieldOption, AITableFieldType } from '@ai-table/utils';
 import _ from 'lodash';
 

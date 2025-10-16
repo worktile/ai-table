@@ -1,4 +1,4 @@
-import { AITableField, AITableRecords, FieldOptions, getFieldValues } from '@ai-table/utils';
+import { AITableRecords, FieldOptions } from '@ai-table/utils';
 import _ from 'lodash';
 import { transformToCellText } from './cell';
 import { differenceInDays, differenceInMonths, fromUnixTime } from 'date-fns';

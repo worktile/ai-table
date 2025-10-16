@@ -1,22 +1,13 @@
-import { differenceInDays, differenceInMonths, fromUnixTime, subDays } from 'date-fns';
-import { isArray, TinyDate } from 'ngx-tethys/util';
 import {
     AITableFilterCondition,
     AITableFilterOperation,
-    DateFieldBase,
     FieldOptions,
-    isDateValid,
     AITableField,
     AITableFieldType,
     CheckboxFieldValue,
     FieldValue,
-    isEmpty,
     isUndefinedOrNull,
-    isDateAndReturnDate,
-    DEFAULT_FIELD_STAT_TYPE_ITEMS,
-    AITableStatType,
-    CheckboxFieldBase,
-    DEFAULT_FIELD_STAT_TYPE_MAP
+    CheckboxFieldBase
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';

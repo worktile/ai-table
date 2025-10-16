@@ -1,4 +1,3 @@
-import { Signal } from '@angular/core';
 import { AITableFieldsSizeMap } from './grid';
 import { AITableFieldStatType } from './field';
 

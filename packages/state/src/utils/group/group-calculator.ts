@@ -1,5 +1,5 @@
 import { AITable, AITableLinearRowGroup, AITableQueries, FieldModelMap } from '@ai-table/grid';
-import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField, AITableRecord } from '@ai-table/utils';
+import { AITableViewRecords, AITableViewRecord, AITableField, AITableGroupField } from '@ai-table/utils';
 import { AITableLinearRow, AITableRowType } from '@ai-table/grid';
 import { nanoid } from 'nanoid';
 

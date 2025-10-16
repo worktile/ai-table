@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThyPopoverRef } from 'ngx-tethys/popover';
-import { mergeWith } from 'rxjs';
 import { DBL_CLICK_EDIT_TYPE } from './constants';
 import {
     AddFieldOptions,

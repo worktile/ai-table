@@ -1,11 +1,7 @@
-import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyCheckbox } from 'ngx-tethys/checkbox';
-import { ThyDivider } from 'ngx-tethys/divider';
-import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { ThySegmentItem } from 'ngx-tethys/segment';
 import { AITableField } from '@ai-table/utils';
 import { AITableFieldMenuItem } from '../../types';
 

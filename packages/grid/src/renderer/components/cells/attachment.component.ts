@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KoShape } from '../../../angular-konva/components/shape.component';
 import {
     AddOutlinedPath,
@@ -15,7 +15,7 @@ import {
     Colors
 } from '../../../constants';
 import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
-import { AITableActionIconConfig, AITableAttachmentConfig, AITableCoverCellConfig } from '../../../types';
+import { AITableActionIconConfig, AITableAttachmentConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
 import { CoverCellBase } from './cover-cell-base';

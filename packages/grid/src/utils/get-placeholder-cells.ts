@@ -1,6 +1,6 @@
 import { AI_TABLE_CELL, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET, Colors } from '../constants';
 import { AITable } from '../core';
-import { AITableCellsConfig, AITableLinearRow, AITableRowType } from '../types';
+import { AITableCellsConfig, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
 import { generateTargetName } from './common';
 

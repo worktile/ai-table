@@ -88,13 +88,7 @@ export class TableService {
     };
 
     renderRecords = computed(() => {
-        return buildRecordsByView(
-            this.aiTable,
-            this.records(),
-            this.fields(),
-            this.activeView() as AITableView,
-            this.sortKeysMap
-        ) as AITableViewRecords;
+        return buildRecordsByView(this.aiTable, this.records(), this.fields(), this.activeView() as AITableView) as AITableViewRecords;
     });
 
     renderFields = computed(() => {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoContainer, KoShape, KoStage } from '../../angular-konva';
+import { KoContainer, KoShape } from '../../angular-konva';
 import {
     AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_PADDING,

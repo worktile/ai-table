@@ -51,8 +51,7 @@ import {
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
-    Unchecked,
-    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE
+    Unchecked
 } from '../../constants';
 import { AITable } from '../../core';
 import {

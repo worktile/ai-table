@@ -1,16 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    input,
-    signal,
-    effect,
-    ViewChild,
-    TemplateRef,
-    output,
-    AfterViewInit
-} from '@angular/core';
-import { KO_CONTAINER_TOKEN, KoContainer, KoEventObject } from '../../../angular-konva';
+import { ChangeDetectionStrategy, Component, computed, input, signal, effect, ViewChild, output, AfterViewInit } from '@angular/core';
+import { KoContainer, KoEventObject } from '../../../angular-konva';
 import { KoShape } from '../../../angular-konva/components/shape.component';
 import { Colors } from '../../../constants';
 import { RectConfig } from 'konva/lib/shapes/Rect';

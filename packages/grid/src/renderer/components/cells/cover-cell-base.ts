@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AITableCoverCellConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 

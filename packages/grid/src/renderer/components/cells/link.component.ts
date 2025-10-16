@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
@@ -9,7 +9,7 @@ import {
 } from '../../../constants';
 import { AITable, getMousePosition, handleMouseStyle } from '../../../utils';
 import { AITableTextComponent } from '../text.component';
-import { AITableCoverCellConfig, AITableRender } from '../../../types';
+import { AITableRender } from '../../../types';
 import { KoEventObject } from '../../../angular-konva';
 import { AITableFieldType } from '@ai-table/utils';
 import { TextConfig } from 'konva/lib/shapes/Text';

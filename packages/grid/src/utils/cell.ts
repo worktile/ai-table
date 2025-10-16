@@ -1,7 +1,6 @@
 import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, FieldValue, FieldOptions } from '@ai-table/utils';
 import { AITable, getFieldOptionByField } from '../core';
 import { AITableCellInfo, AITableRowType, AITableSelection } from '../types';
-import { selectField } from './field';
 import { AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {

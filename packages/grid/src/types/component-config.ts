@@ -4,7 +4,7 @@ import { AITableAttachmentInfo, AITableField, UpdateFieldValueOptions } from '@a
 import { AITableRender } from './cell';
 import { AITablePointPosition } from './grid';
 import { AITableActions } from '../utils';
-import { AITableGroupStatRow, AITableLinearRowGroup } from './row';
+import { AITableGroupStatRow } from './row';
 
 export interface AITableIconConfig extends Konva.ShapeConfig {
     size?: number;

@@ -1,15 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    Output,
-    EventEmitter,
-    computed,
-    input,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { AITableField, AITableFieldStatTypeItemInfo, AITableStatType } from '@ai-table/utils';
 import { AITable } from '../../core';
