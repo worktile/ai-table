@@ -219,8 +219,9 @@ export const writeToAITable = async (
     const lastRowIndex = getGroupLastRecordIndex(aiTable, startRowIndex);
     let appendRowCount = clipboardContent.length - (lastRowIndex - startRowIndex) - 1;
 
-    const recordsCount = aiTable.records().length;
-    if (maxRecords && recordsCount + appendRowCount > maxRecords) {
+    // 最后一行时 + 按钮，需要排除最后一行
+    const recordsCount = aiTable.records().length - 1;
+    if (maxRecords && recordsCount + appendRowCount >= maxRecords) {
         appendRowCount = maxRecords - recordsCount;
         result.isPasteOverMaxRecords = true;
     }
@@ -240,7 +241,7 @@ export const writeToAITable = async (
     const fieldsCount = aiTable.fields().length;
 
     for (let i = 0; i < appendColCount; i++) {
-        if (maxFields && fieldsCount + i + 1 < maxFields) {
+        if (maxFields && fieldsCount + i + 1 <= maxFields) {
             const originField = aiTableContent?.fields[appendOffset + i] || null;
             appendField(aiTable, originField, actions);
         } else {
