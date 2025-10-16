@@ -1188,10 +1188,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private pasteCells(dataTransfer?: DataTransfer | null) {
         writeToAITable(this.aiTable, this.actions, dataTransfer).then((result) => {
-            if (result.isPasteOverMaxRecords || result.isPasteOverMaxFields) {
+            const { isPasteOverMaxRecords, isPasteOverMaxFields, isPasteSuccess } = result;
+            if (isPasteOverMaxRecords || isPasteOverMaxFields) {
+                const message = getI18nTextByKey(
+                    this.aiTable,
+                    isPasteOverMaxRecords ? AITableGridI18nKey.pasteOverMaxRecords : AITableGridI18nKey.pasteOverMaxFields
+                );
+                this.notifyService.error(message, undefined, {
+                    placement: 'bottomLeft'
+                });
                 return;
             }
-            if (!result.isPasteSuccess) {
+            if (!isPasteSuccess) {
                 this.notifyService.error(getI18nTextByKey(this.aiTable, AITableGridI18nKey.invalidPasteContent), undefined, {
                     placement: 'bottomLeft'
                 });
