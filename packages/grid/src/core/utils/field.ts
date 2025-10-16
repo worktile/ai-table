@@ -1,7 +1,7 @@
 import { AI_TABLE_FIELD_MIDDLE_WIDTH, getFieldOptions } from '../constants/field';
 import { AITableField, AITableFieldOption, AITableFieldType, IsMultiple, MemberSettings, idCreator } from '@ai-table/utils';
-import { generateNewName } from './common';
 import { AITable } from '../types';
+import { generateNewFieldName } from './name-creator';
 
 export const isSystemField = (field: AITableField) => {
     return [AITableFieldType.createdAt, AITableFieldType.createdBy, AITableFieldType.updatedAt, AITableFieldType.updatedBy].includes(
@@ -12,11 +12,7 @@ export const isSystemField = (field: AITableField) => {
 export function createDefaultFieldName(aiTable: AITable, field: AITableFieldOption) {
     const fieldOption = getFieldOptionByField(aiTable, field);
     if (fieldOption) {
-        const allNames = aiTable.fields().map((item) => item.name);
-        const count = aiTable.fields().filter((item) => {
-            return isSameFieldOption(field, item);
-        }).length;
-        return generateNewName(allNames, count, fieldOption.name);
+        return generateNewFieldName(aiTable, field, fieldOption.name);
     }
     const fieldOptions = getFieldOptions(aiTable);
     return fieldOptions[0].name;
@@ -31,7 +27,7 @@ export function getFieldOptionByField(aiTable: AITable, field: Partial<AITableFi
     return fieldOption;
 }
 
-export function isSameFieldOption(fieldOption: AITableFieldOption, field: Partial<AITableField>): boolean {
+export function isSameFieldOption(fieldOption: Pick<AITableFieldOption, 'type' | 'settings'>, field: Partial<AITableField>): boolean {
     return (
         fieldOption.type === field.type &&
         (fieldOption.type === AITableFieldType.select

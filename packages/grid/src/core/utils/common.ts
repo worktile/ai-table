@@ -51,18 +51,3 @@ export function createAITable(
     };
     return aiTable;
 }
-
-export function generateNewName(existNames: string[], count: number, name: string) {
-    let newName = name;
-    let suffix = count;
-
-    if (count > 1) {
-        newName = `${name} ${suffix}`;
-    }
-
-    while (existNames.includes(newName)) {
-        suffix++;
-        newName = `${name} ${suffix}`;
-    }
-    return newName;
-}
