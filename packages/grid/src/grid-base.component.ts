@@ -88,6 +88,7 @@ export class AITableGridBase implements OnInit {
 
     aiTable!: AITable;
 
+    // TODO 列表为空时，不应该显示全选
     isSelectedAll = computed(() => {
         return this.aiTable.selection().selectedRecords.size === this.aiRecords().length;
     });
@@ -129,8 +130,12 @@ export class AITableGridBase implements OnInit {
     gridData = computed(() => {
         this.aiTable.recordsWillHidden();
         if (this.aiBuildRenderDataFn && this.aiBuildRenderDataFn() && this.aiTable) {
-            return this.aiBuildRenderDataFn()!(this.aiTable);
+            const gridData = this.aiBuildRenderDataFn()!(this.aiTable);
+
+            console.log('gridData computed：', gridData);
+            return gridData;
         }
+
         return {
             records: this.aiRecords(),
             fields: this.aiFields(),
@@ -145,6 +150,20 @@ export class AITableGridBase implements OnInit {
     protected aiTableGridEventService = inject(AITableGridEventService);
 
     ngOnInit(): void {
+        console.log('aiRecords', this.aiRecords());
+        console.log('aiFields', this.aiFields());
+        console.log('aiFieldsSizeMap', this.aiFieldsSizeMap());
+        console.log('aiKeywords', this.aiKeywords());
+        console.log('aiReferences', this.aiReferences());
+        console.log('aiFieldSizeMap', this.aiFieldsSizeMap());
+        console.log('aiSortKeysMap', this.aiSortKeysMap());
+        console.log('aiGetI18nTextByKey', this.aiGetI18nTextByKey());
+        console.log('aiPlugins', this.aiPlugins());
+        console.log('aiFieldConfig', this.aiFieldConfig());
+        console.log('aiMaxFields', this.aiMaxFields());
+        console.log('aiMaxRecords', this.aiMaxRecords());
+        console.log('aiMaxSelectOptions', this.aiMaxSelectOptions());
+
         this.initAITable();
         this.initService();
     }
@@ -161,6 +180,8 @@ export class AITableGridBase implements OnInit {
             this.aiTable = plugin(this.aiTable);
         });
         this.aiTableInitialized.emit(this.aiTable);
+        console.log('aiTable initialized', this.aiTable);
+        console.log('--------------------------------');
     }
 
     initService() {

@@ -2,6 +2,10 @@ import { AITableView, ActionName, AddViewAction, RemoveViewAction, SetViewAction
 import { AIViewTable } from '../types/ai-table';
 import { sortViews } from '../utils';
 
+// Actons.xxxView
+
+// addView、removeView、setView
+
 function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
     if (view) {

@@ -110,6 +110,7 @@ import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
 import _ from 'lodash';
+import { AITableLinearRow } from './types';
 
 @Component({
     selector: 'ai-table-grid',
@@ -157,6 +158,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     frozenColumnCount = computed(() => {
         const containerWidth = this.containerRect().width;
 
+        // 为啥支持 aiFrozenColumnCountFn ？ 外部其实也是直接调用 aiTable 的 calculateAdaptiveFrozenColumnCount
         const aiFrozenColumnCountFn = this.aiFrozenColumnCountFn();
         if (aiFrozenColumnCountFn) {
             return aiFrozenColumnCountFn(containerWidth);
@@ -175,8 +177,18 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     horizontalBarRef = viewChild<ElementRef>('horizontalBar');
 
-    linearRows = computed(() => {
-        return buildGridLinearRows(this.gridData().records, !this.aiReadonly(), this.aiTable, this.aiBuildGroupLinearRowsFn?.());
+    // TODO  很多 signal 变量没有显式指定类型  linearRows: Signal<AITableLinearRow[]>
+    linearRows: Signal<AITableLinearRow[]> = computed(() => {
+        const linearRows = buildGridLinearRows(
+            this.gridData().records,
+            !this.aiReadonly(),
+            this.aiTable,
+            this.aiBuildGroupLinearRowsFn?.()
+        );
+        console.log('--------------------------------');
+        console.log('linearRows computed：', linearRows);
+
+        return linearRows;
     });
 
     domToolTips = computed(() => {
@@ -212,7 +224,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     visibleColumnsIndexMap = computed(() => {
         const columns = AITable.getVisibleFields(this.aiTable);
-        return new Map(columns?.map((item, index) => [item._id, index]));
+        const visibleColumnsIndexMap = new Map(columns?.map((item, index) => [item._id, index]));
+        // console.log('visibleColumnsIndexMap computed：', visibleColumnsIndexMap);
+        return visibleColumnsIndexMap;
     });
 
     fieldOptions = computed<AITableFieldOption[]>(() => {
@@ -221,6 +235,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             return { ...fieldOption, name };
         });
 
+        // TODO 参考 select ，控制，什么变导致它变
         Object.entries(this.aiTable.context?.aiFieldConfig()?.customFields || {}).forEach(([fieldType, fieldConfig]) => {
             if (fieldConfig?.fieldOption) {
                 allFieldOptions.push(fieldConfig.fieldOption);
@@ -239,7 +254,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     });
 
     visibleRowsIndexMap = computed(() => {
-        return new Map(this.linearRows().map((row, index) => [row._id, index]));
+        const visibleRowsIndexMap = new Map(this.linearRows().map((row, index) => [row._id, index]));
+        // console.log('visibleRowsIndexMap computed：', visibleRowsIndexMap);
+        return visibleRowsIndexMap;
     });
 
     containerElement = computed(() => {
@@ -250,6 +267,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return item.sort_by ?? index;
     };
 
+    // TODO 返回的属性超出了 AITableRendererConfig 约束
     rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
         const coordinate = new Coordinate({
@@ -263,7 +281,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
             frozenColumnCount: this.frozenColumnCount()
         });
-        return {
+        const rendererConfig = {
             aiTable: this.aiTable,
             gridData: this.gridData(),
             container: this.containerElement(),
@@ -273,12 +291,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             references: this.aiReferences(),
             readonly: this.aiReadonly(),
             actions: this.actions,
-            maxFields: this.aiMaxFields(),
+            maxFields: this.aiMaxFields(), // 挂在这是为了判断是否绘制禁用按钮？
             maxRecords: this.aiMaxRecords(),
             maxSelectOptions: this.aiMaxSelectOptions()
         };
+        // console.log('rendererConfig computed：', rendererConfig);
+        return rendererConfig;
     });
 
+    // TODO  rendererConfig 中与 coordinate 无关的属性发生变化，也会触发这里 coordinate 的重新计算，不好
     coordinate = computed(() => {
         return this.rendererConfig().coordinate;
     });
@@ -310,6 +331,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 rowIndicesMap[index] = 0;
             }
         });
+        // console.log('rowIndicesMap computed：', rowIndicesMap);
         return rowIndicesMap;
     });
 
@@ -398,6 +420,59 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     };
                 });
             });
+        });
+
+        // ------------------------Observe aiTable changes--------------------------------------
+        effect(() => {
+            console.log('👉🏻 aiTable', this.aiTable);
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.records', this.aiTable.records());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.fields', this.aiTable.fields());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.gridData().records', this.aiTable.gridData().records);
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.gridData().fields', this.aiTable.gridData().fields);
+        });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.gridData().fieldsSizeMap', this.aiTable.gridData().fieldsSizeMap);
+        // });
+        effect(() => {
+            console.log('👉🏻 aiTable.recordsMap', this.aiTable.recordsMap());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.fieldsMap', this.aiTable.fieldsMap());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.context', this.aiTable.context);
+        });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.selection', this.aiTable.selection());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.expendCell', this.aiTable.expendCell());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.editingCell', this.aiTable.editingCell());
+        // });
+        effect(() => {
+            console.log('👉🏻 aiTable.keywords', this.aiTable.keywords());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.keywordsMatchedCells', this.aiTable.keywordsMatchedCells());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.keywordsMatchedCellIndex', this.aiTable.keywordsMatchedCellIndex());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.recordsWillHidden', this.aiTable.recordsWillHidden());
+        });
+        effect(() => {
+            console.log('👉🏻 aiTable.recordsWillMove', this.aiTable.recordsWillMove());
         });
     }
 

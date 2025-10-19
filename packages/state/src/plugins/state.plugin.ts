@@ -9,9 +9,13 @@ export const withState = (aiTable: AITable) => {
     viewTable.actions = [];
 
     viewTable.apply = (action: AITableAction | AITableAction[]) => {
+        console.log('🔧 aiTable.apply：', action);
         const actions = Array.isArray(action) ? action : [action];
         viewTable.actions.push(...actions);
+
+        // 批量执行 actions，变更检测更新 aiTable 的 views、fields、records
         Actions.transform(viewTable, actions);
+
         if (!FLUSHING.get(viewTable)) {
             FLUSHING.set(viewTable, true);
             Promise.resolve().then(() => {

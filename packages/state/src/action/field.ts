@@ -16,6 +16,8 @@ import { getFrozenFieldId } from '../utils/field/frozen-field';
 import { setViewFrozenField } from './view';
 import { AIViewTable } from '../types/ai-table';
 
+// addField、removeField、setField(含widths，fieldStatTypes)
+
 export function addField(aiTable: AIViewTable, field: AITableField, originId?: string, isDuplicate?: boolean) {
     const operation: AddFieldAction = {
         type: ActionName.AddField,

@@ -3,9 +3,10 @@ import { AITableGridData, AITableLinearRow } from '../types';
 import { AITableRowType } from '../types/row';
 import { AITableFields, AITableRecords } from '@ai-table/utils';
 
+// TODO 只支持 aiTable、aiBuildGroupLinearRowsFn 两个参数足够？！
 export const buildGridLinearRows = (
-    visibleRecords: AITableRecords,
-    isAddingVisible: boolean = true,
+    visibleRecords: AITableRecords, // aiTable.gridData().records
+    isAddingVisible: boolean = true, // aiTable.context.readonly()
     aiTable?: AITable,
     aiBuildGroupLinearRowsFn?: (aiTable: AITable) => AITableLinearRow[] | null
 ): AITableLinearRow[] => {
@@ -18,6 +19,7 @@ export const buildGridLinearRows = (
     return buildNormalLinearRows(visibleRecords, isAddingVisible);
 };
 
+// TODO 只接收 aiTable 即可
 export const buildNormalLinearRows = (visibleRecords: AITableRecords, isAddingVisible: boolean = true): AITableLinearRow[] => {
     let linearRows: AITableLinearRow[] = [];
     let displayRowIndex = 0;
@@ -42,6 +44,7 @@ export const buildNormalLinearRows = (visibleRecords: AITableRecords, isAddingVi
     return linearRows;
 };
 
+// TODO 没有地方调用，删除
 export const buildGridData = (aiTable: AITable, recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
     const fieldOptions = getFieldOptions(aiTable);
     const fields = fieldsValue.map((value) => {

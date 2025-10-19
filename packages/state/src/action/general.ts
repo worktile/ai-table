@@ -142,31 +142,40 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
             break;
         }
     }
-    return {
-        records,
-        fields,
-        views
-    };
+
+    // 不需要？
+    // return {
+    //     records,
+    //     fields,
+    //     views
+    // };
 };
 
 export const GeneralActions = {
     transform(aiTable: AIViewTable, actions: AITableAction[]): void {
+        // 先操作 draft，而不是直接改 aiTable
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
         const views = createDraft(aiTable.views());
         actions.forEach((action) => {
+            // 执行 action
             apply(aiTable, records, fields, views, action);
         });
         const newFields = finishDraft(fields);
         const newRecords = finishDraft(records);
         const newViews = finishDraft(views);
+
+        // 变更检测，唯一修改 aiTable 的 views、fields、records
         if (newFields !== aiTable.fields()) {
+            console.log('⭐️ aiTable.fields changed');
             aiTable.fields.set(newFields);
         }
         if (newRecords !== aiTable.records()) {
+            console.log('⭐️ aiTable.records changed');
             aiTable.records.set(newRecords);
         }
         if (newViews !== aiTable.views()) {
+            console.log('⭐️ aiTable.views changed');
             aiTable.views.set(newViews);
         }
     }

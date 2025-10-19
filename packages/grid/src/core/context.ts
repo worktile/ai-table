@@ -2,6 +2,8 @@ import { Signal, WritableSignal } from '@angular/core';
 import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
 import { AITableFieldOption, AITableReferences } from '@ai-table/utils';
 
+// TODO interface
+// TODO 工具类函数 setPointPosition
 export class RendererContext {
     containerRect: Signal<{ width: number; height: number }>;
     rowHeadWidth: Signal<number>;

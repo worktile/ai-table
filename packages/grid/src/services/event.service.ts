@@ -40,6 +40,7 @@ export class AITableGridEventService {
         this.aiFieldRenderers = aiFieldRenderers;
     }
 
+    // TODO 事件注册
     registerEvents(element: HTMLElement) {
         fromEvent<MouseEvent>(element, 'dblclick', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
