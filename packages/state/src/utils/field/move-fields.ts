@@ -67,7 +67,7 @@ function adjustFrozenFieldAfterMove(
     fieldOptions: { afterFieldId?: string; beforeFieldId?: string }
 ) {
     const fields = aiTable.gridData().fields;
-    const fieldsIndexMap = new Map(fields.map((field, index) => [field._id, index]));
+    const fieldsIndexMap = aiTable.context?.visibleColumnsIndexMap()!;
     const currentFrozenFieldIndex = fieldsIndexMap.get(currentFrozenFieldId)! as number;
 
     if (currentFrozenFieldIndex === -1) {
@@ -86,29 +86,26 @@ function adjustFrozenFieldAfterMove(
     }
 
     const activeViewId = aiTable.activeViewId();
+    let newFrozenFieldId: string | undefined | null = null;
 
     // 最后冻结列拖动到非冻结区或冻结区，冻结列向左移动
     if (sourceIndex === currentFrozenFieldIndex && targetIndex !== currentFrozenFieldIndex) {
         const newFrozenFieldIndex = Math.max(0, currentFrozenFieldIndex - 1);
         if (newFrozenFieldIndex < fields.length && newFrozenFieldIndex !== currentFrozenFieldIndex) {
-            const newFrozenField = fields[newFrozenFieldIndex];
-            ViewActions.setView(
-                aiTable,
-                { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenField._id } },
-                [activeViewId]
-            );
+            newFrozenFieldId = fields[newFrozenFieldIndex]._id;
         } else {
             // 如果没有前一个字段，恢复默认冻结
-            ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: undefined } }, [
-                activeViewId
-            ]);
+            newFrozenFieldId = undefined;
         }
     }
 
     // 冻结区拖动到最后冻结列后面，冻结列是被拖动列
     if (sourceIndex < currentFrozenFieldIndex && targetIndex === currentFrozenFieldIndex) {
-        const newFrozenField = fields[sourceIndex];
-        ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenField._id } }, [
+        newFrozenFieldId = fields[sourceIndex]._id;
+    }
+
+    if (newFrozenFieldId !== null) {
+        ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenFieldId } }, [
             activeViewId
         ]);
     }
