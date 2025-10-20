@@ -13,7 +13,7 @@ import {
 import { checkConditions } from './filter';
 import { sortRecordsByConditions } from './sort';
 import { buildLinearRows, buildSorts } from '../build';
-import { getGroupRecordLength, getParentLinearRowGroups, isSameParentGroup } from '../group';
+import { getGroupRecordLength, isSameParentGroup } from '../group';
 
 function updateWillHiddenRecordIds(
     aiTable: AIViewTable,

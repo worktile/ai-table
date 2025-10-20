@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AITableCellsConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableIconConfig } from '../../../types';
+import { AITableCellsConfig, AITableGroupStatConfig, AITableIconConfig } from '../../../types';
 import { createGroupCells } from '../../creations/create-groups';
 import { generateTargetName } from '../../../utils';
 import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON, AngleDownPath, AngleRightPath } from '../../../constants';

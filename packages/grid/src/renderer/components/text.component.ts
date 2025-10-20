@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import Konva from 'konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
 import {
-    AI_TABLE_OFFSET,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_STYLE,
@@ -16,7 +15,6 @@ import {
 } from '../../constants';
 import { KoEventObject } from '../../angular-konva';
 import { TextConfig } from 'konva/lib/shapes/Text';
-import { Context } from 'konva/lib/Context';
 
 @Component({
     selector: 'ai-table-text',

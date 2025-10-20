@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AITableCellsConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableIconConfig } from '../../../types';
+import { AITableCellsConfig, AITableGroupStatConfig } from '../../../types';
 import { createGroupCells } from '../../creations/create-groups';
-import { AITableIcon } from '../icon.component';
 import { createGroupFieldStats } from '../../creations/create-stats';
 import { AITableFieldStat } from '../field-stat/stat.component';
 

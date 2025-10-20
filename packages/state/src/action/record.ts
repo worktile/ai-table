@@ -7,7 +7,6 @@ import {
     UpdateSystemFieldValue,
     AITableRecord,
     IdPath,
-    AITableViewRecords,
     AITableViewRecord,
     AddRecordOptions,
     UpdateFieldValueOptions,

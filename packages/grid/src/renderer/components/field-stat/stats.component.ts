@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
-import { AITableColumnHeadsConfig, AITableFieldStatConfig, AITableFieldStatsConfig } from '../../../types';
+import { AITableFieldStatConfig, AITableFieldStatsConfig } from '../../../types';
 import { createFieldStats } from '../../creations/create-stats';
 import { AITableFieldStat } from './stat.component';
-import { Colors } from '../../../constants';
 import { KoContainer, KoEventObject } from '../../../angular-konva';
-import { generateTargetName } from '../../../utils';
 
 @Component({
     selector: 'ai-table-column-stats',

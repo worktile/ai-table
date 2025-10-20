@@ -1,11 +1,6 @@
 import { AIRecordFieldIdPath, AITableCoordinate, AITableRowColumnType, AITableSizeMap } from '@ai-table/utils';
 import { AITableCellMetaData } from '../types';
-import {
-    AI_TABLE_CELL_LINE_BORDER,
-    AI_TABLE_FIELD_HEAD_HEIGHT,
-    AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT,
-    AI_TABLE_ROW_HEIGHT
-} from '../constants';
+import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_STAT_CONTAINER_HEIGHT } from '../constants';
 import { AITable } from './types';
 
 /**

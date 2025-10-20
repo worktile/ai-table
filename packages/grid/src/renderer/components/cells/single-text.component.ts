@@ -1,14 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, untracked } from '@angular/core';
 import {
-    AI_TABLE_ACTION_COMMON_RADIUS,
-    AI_TABLE_ACTION_COMMON_RIGHT_PADDING,
-    AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL,
     AI_TABLE_CELL_BORDER,
-    AI_TABLE_CELL_EDIT,
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
@@ -17,24 +12,17 @@ import {
     DEFAULT_FONT_STYLE,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_ELLIPSIS,
-    DEFAULT_TEXT_FILL,
     DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-    DEFAULT_TEXT_WRAP,
-    EditPath
+    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
 } from '../../../constants';
 import { generateTargetName, setExpandCellInfo } from '../../../utils';
-import { AITableActionIconConfig } from '../../../types';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
-import { AITableActionIcon } from '../action-icon.component';
 import { TextConfig } from 'konva/lib/shapes/Text';
-import { drawer } from '../../drawers/drawer';
 import { AITableTextComponent } from '../text.component';
 import { CoverCellBase } from './cover-cell-base';
-import { KoShape, KoContainer, KoEventObject } from '../../../angular-konva';
+import { KoShape, KoContainer } from '../../../angular-konva';
 import Konva from 'konva';
 import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-group';
-import { GroupConfig } from 'konva/lib/Group';
 
 @Component({
     selector: 'ai-table-single-text',

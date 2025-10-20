@@ -11,6 +11,7 @@ import { SelectOptionComponent } from '../../cell-views/select/option.component'
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyFormModule } from 'ngx-tethys/form';
 import { AITableQueries } from '../../../core';
+
 @Component({
     selector: 'select-cell-editor',
     templateUrl: './select-editor.component.html',
