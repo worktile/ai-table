@@ -183,7 +183,7 @@ export const restoreDefaultFrozenColumn = (aiTable: AITable) => {
             ViewActions.setView(
                 viewTable,
                 {
-                    settings: { ...viewTable.viewsMap()[viewTable.activeViewId()].settings, frozen_field_id: field()._id }
+                    settings: { ...viewTable.viewsMap()[viewTable.activeViewId()].settings, frozen_field_id: undefined }
                 },
                 [viewTable.activeViewId()]
             );
