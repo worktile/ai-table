@@ -4,7 +4,7 @@ import { PositionsActions } from '../../action/position';
 import { getCurrentViewPositions, ViewPositionOptions } from '../position-in-view';
 import { buildSetFieldAction } from '../../action/field';
 import { getFrozenFieldId } from './frozen-field';
-import { buildSetViewAction, buildViewFrozenSettings, setViewFrozenField } from '../../action/view';
+import { ViewActions } from '../../action/view';
 
 export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
     const viewPositionOptions: ViewPositionOptions = {
@@ -44,20 +44,19 @@ export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
 
     const sortedSourceFields = sortByViewPosition(sourceFields, activeView!) as AITableViewField[];
     const actions: AITableAction[] = [];
-    const currentFrozenFieldId = getFrozenFieldId(aiTable);
     sortedSourceFields.forEach((field, index) => {
         const action = buildSetFieldAction(aiTable, { positions: { ...field.positions, [activeViewId]: positions[index] } }, [field._id]);
-
-        if (currentFrozenFieldId) {
-            const viewAction = adjustFrozenFieldAfterMove(aiTable, currentFrozenFieldId, field._id, { afterFieldId, beforeFieldId });
-            if (viewAction) {
-                actions.push(viewAction);
-            }
-        }
         if (action) {
             actions.push(action);
         }
     });
+    const currentFrozenFieldId = getFrozenFieldId(aiTable);
+    if (currentFrozenFieldId) {
+        adjustFrozenFieldAfterMove(aiTable, currentFrozenFieldId, sortedSourceFields[0]._id, {
+            afterFieldId,
+            beforeFieldId
+        });
+    }
     aiTable.apply(actions);
 }
 
@@ -69,10 +68,10 @@ function adjustFrozenFieldAfterMove(
 ) {
     const fields = aiTable.gridData().fields;
     const fieldsIndexMap = new Map(fields.map((field, index) => [field._id, index]));
-    const currentFrozenFieldIndex = fields.findIndex((field) => field._id === currentFrozenFieldId);
+    const currentFrozenFieldIndex = fieldsIndexMap.get(currentFrozenFieldId)! as number;
 
     if (currentFrozenFieldIndex === -1) {
-        return null;
+        return;
     }
 
     const { afterFieldId, beforeFieldId } = fieldOptions;
@@ -83,7 +82,7 @@ function adjustFrozenFieldAfterMove(
     } else if (afterFieldId) {
         targetIndex = fieldsIndexMap.get(afterFieldId);
     } else {
-        return null;
+        return;
     }
 
     const activeViewId = aiTable.activeViewId();
@@ -93,20 +92,24 @@ function adjustFrozenFieldAfterMove(
         const newFrozenFieldIndex = Math.max(0, currentFrozenFieldIndex - 1);
         if (newFrozenFieldIndex < fields.length && newFrozenFieldIndex !== currentFrozenFieldIndex) {
             const newFrozenField = fields[newFrozenFieldIndex];
-            const newSettings = buildViewFrozenSettings(aiTable, newFrozenField._id);
-            return buildSetViewAction(aiTable, { settings: newSettings }, [activeViewId]);
+            ViewActions.setView(
+                aiTable,
+                { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenField._id } },
+                [activeViewId]
+            );
         } else {
             // 如果没有前一个字段，恢复默认冻结
-            const newSettings = buildViewFrozenSettings(aiTable, undefined);
-            return buildSetViewAction(aiTable, { settings: newSettings }, [activeViewId]);
+            ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: undefined } }, [
+                activeViewId
+            ]);
         }
     }
 
     // 冻结区拖动到最后冻结列后面，冻结列是被拖动列
     if (sourceIndex < currentFrozenFieldIndex && targetIndex === currentFrozenFieldIndex) {
         const newFrozenField = fields[sourceIndex];
-        const newSettings = buildViewFrozenSettings(aiTable, newFrozenField._id);
-        return buildSetViewAction(aiTable, { settings: newSettings }, [activeViewId]);
+        ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenField._id } }, [
+            activeViewId
+        ]);
     }
-    return null;
 }

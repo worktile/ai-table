@@ -3,7 +3,7 @@ import { Signal } from '@angular/core';
 import { AIViewTable } from '../../types';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../../utils/i18n';
 import { AITableField, AITableSizeMap, AI_TABLE_DEFAULT_MIN_UNFROZEN_WIDTH, AI_TABLE_MIN_FROZEN_COLUMN_COUNT } from '@ai-table/utils';
-import { setViewFrozenField } from '../../action/view';
+import { ViewActions } from '../../action/view';
 
 export function getFrozenFieldId(aiTable: AITable): string | undefined {
     try {
@@ -117,8 +117,13 @@ export const freezeToThisColumn = (aiTable: AITable) => {
         exec: (aiTable: AITable, field: Signal<AITableField>) => {
             const currentField = field();
             const viewTable = aiTable as AIViewTable;
-
-            setViewFrozenField(viewTable, currentField._id);
+            ViewActions.setView(
+                viewTable,
+                {
+                    settings: { ...viewTable.viewsMap()[viewTable.activeViewId()].settings, frozen_field_id: currentField._id }
+                },
+                [viewTable.activeViewId()]
+            );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
             if (aiTable.context?.readonly?.()) {
@@ -175,8 +180,13 @@ export const restoreDefaultFrozenColumn = (aiTable: AITable) => {
         icon: 'frozen',
         exec: (aiTable: AITable, field: Signal<AITableField>) => {
             const viewTable = aiTable as AIViewTable;
-
-            setViewFrozenField(viewTable, undefined);
+            ViewActions.setView(
+                viewTable,
+                {
+                    settings: { ...viewTable.viewsMap()[viewTable.activeViewId()].settings, frozen_field_id: field()._id }
+                },
+                [viewTable.activeViewId()]
+            );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
             if (aiTable.context?.readonly?.()) {
