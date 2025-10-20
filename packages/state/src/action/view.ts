@@ -54,26 +54,8 @@ function removeView(aiTable: AIViewTable, path: [string]) {
     aiTable.apply(operation);
 }
 
-export function setViewFrozenField(aiTable: AIViewTable, frozenFieldId?: string) {
-    const activeViewId = aiTable.activeViewId();
-    const activeView = aiTable.viewsMap()[activeViewId];
-
-    const currentSettings = activeView.settings || {};
-    const newSettings = {
-        ...currentSettings,
-        frozen_field_id: frozenFieldId
-    };
-
-    if (frozenFieldId === undefined) {
-        delete newSettings.frozen_field_id;
-    }
-
-    setView(aiTable, { settings: newSettings }, [activeViewId]);
-}
-
 export const ViewActions = {
     setView,
     addView,
-    removeView,
-    setViewFrozenField
+    removeView
 };

@@ -3,6 +3,8 @@ import { AIViewTable } from '../../types';
 import { PositionsActions } from '../../action/position';
 import { getCurrentViewPositions, ViewPositionOptions } from '../position-in-view';
 import { buildSetFieldAction } from '../../action/field';
+import { getFrozenFieldId } from './frozen-field';
+import { ViewActions } from '../../action/view';
 
 export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
     const viewPositionOptions: ViewPositionOptions = {
@@ -39,6 +41,7 @@ export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
         }
         sourceFields.push(originalFields[index] as AITableViewField);
     });
+
     const sortedSourceFields = sortByViewPosition(sourceFields, activeView!) as AITableViewField[];
     const actions: AITableAction[] = [];
     sortedSourceFields.forEach((field, index) => {
@@ -47,5 +50,63 @@ export function moveFields(aiTable: AIViewTable, options: MoveFieldOptions) {
             actions.push(action);
         }
     });
+    const currentFrozenFieldId = getFrozenFieldId(aiTable);
+    if (currentFrozenFieldId) {
+        adjustFrozenFieldAfterMove(aiTable, currentFrozenFieldId, sortedSourceFields[0]._id, {
+            afterFieldId,
+            beforeFieldId
+        });
+    }
     aiTable.apply(actions);
+}
+
+function adjustFrozenFieldAfterMove(
+    aiTable: AIViewTable,
+    currentFrozenFieldId: string,
+    sourceFieldId: string,
+    fieldOptions: { afterFieldId?: string; beforeFieldId?: string }
+) {
+    const fields = aiTable.gridData().fields;
+    const fieldsIndexMap = aiTable.context?.visibleColumnsIndexMap()!;
+    const currentFrozenFieldIndex = fieldsIndexMap.get(currentFrozenFieldId)! as number;
+
+    if (currentFrozenFieldIndex === -1) {
+        return;
+    }
+
+    const { afterFieldId, beforeFieldId } = fieldOptions;
+    const sourceIndex = fieldsIndexMap.get(sourceFieldId)!;
+    let targetIndex: number | undefined;
+    if (beforeFieldId) {
+        targetIndex = fieldsIndexMap.get(beforeFieldId);
+    } else if (afterFieldId) {
+        targetIndex = fieldsIndexMap.get(afterFieldId);
+    } else {
+        return;
+    }
+
+    const activeViewId = aiTable.activeViewId();
+    let newFrozenFieldId: string | undefined | null = null;
+
+    // 最后冻结列拖动到非冻结区或冻结区，冻结列向左移动
+    if (sourceIndex === currentFrozenFieldIndex && targetIndex !== currentFrozenFieldIndex) {
+        const newFrozenFieldIndex = Math.max(0, currentFrozenFieldIndex - 1);
+        if (newFrozenFieldIndex < fields.length && newFrozenFieldIndex !== currentFrozenFieldIndex) {
+            newFrozenFieldId = fields[newFrozenFieldIndex]._id;
+        } else {
+            // 如果没有前一个字段，恢复默认冻结
+            newFrozenFieldId = undefined;
+        }
+    }
+
+    // 冻结区拖动到最后冻结列后面，冻结列是被拖动列
+    if (sourceIndex < currentFrozenFieldIndex && targetIndex === currentFrozenFieldIndex) {
+        newFrozenFieldId = fields[sourceIndex]._id;
+    }
+
+    if (newFrozenFieldId !== null) {
+        ViewActions.setView(aiTable, { settings: { ...aiTable.viewsMap()[activeViewId].settings, frozen_field_id: newFrozenFieldId } }, [
+            activeViewId
+        ]);
+    }
 }
