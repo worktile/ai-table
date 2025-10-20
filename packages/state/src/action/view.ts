@@ -2,7 +2,7 @@ import { AITableView, ActionName, AddViewAction, RemoveViewAction, SetViewAction
 import { AIViewTable } from '../types/ai-table';
 import { sortViews } from '../utils';
 
-function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
+export function buildSetViewAction(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
     if (view) {
         const properties: Partial<AITableView> = {};
@@ -25,6 +25,14 @@ function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [strin
             newProperties,
             path
         };
+        return operation;
+    }
+    return null;
+}
+
+function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
+    const operation = buildSetViewAction(aiTable, value, path);
+    if (operation) {
         aiTable.apply(operation);
     }
 }
@@ -54,7 +62,7 @@ function removeView(aiTable: AIViewTable, path: [string]) {
     aiTable.apply(operation);
 }
 
-export function setViewFrozenField(aiTable: AIViewTable, frozenFieldId?: string) {
+export function buildViewFrozenSettings(aiTable: AIViewTable, frozenFieldId?: string) {
     const activeViewId = aiTable.activeViewId();
     const activeView = aiTable.viewsMap()[activeViewId];
 
@@ -67,6 +75,13 @@ export function setViewFrozenField(aiTable: AIViewTable, frozenFieldId?: string)
     if (frozenFieldId === undefined) {
         delete newSettings.frozen_field_id;
     }
+    return newSettings;
+}
+
+export function setViewFrozenField(aiTable: AIViewTable, frozenFieldId?: string) {
+    const activeViewId = aiTable.activeViewId();
+
+    const newSettings = buildViewFrozenSettings(aiTable, frozenFieldId);
 
     setView(aiTable, { settings: newSettings }, [activeViewId]);
 }
