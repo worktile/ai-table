@@ -2,7 +2,7 @@ import {
     Actions,
     addView,
     buildRecordsWithWillMoveRecords,
-    buildSetRecordPositionsActon,
+    buildSetRecordPositionsAction,
     insertAtEnd,
     removeView,
     sortRecordsByConditions
@@ -224,7 +224,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         const actions: AITableAction[] = [];
         const positions = insertAtEnd(0, newSortedRecords.length);
         newSortedRecords.forEach((record, index) => {
-            const action = buildSetRecordPositionsActon(aiTable, { [activeView._id]: positions[index] }, [
+            const action = buildSetRecordPositionsAction(aiTable, { [activeView._id]: positions[index] }, [
                 recordsIndexMap.get(record._id)!
             ]);
             actions.push(action);

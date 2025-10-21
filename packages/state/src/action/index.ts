@@ -14,6 +14,6 @@ export const Actions = {
     ...GroupActions
 };
 
-export { buildSetRecordPositionsActon } from './position';
+export { buildSetRecordPositionsAction } from './position';
 
 export { buildSetFieldAction } from './field';

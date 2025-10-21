@@ -1,7 +1,7 @@
 import { shortIdCreator } from '@ai-table/grid';
 import { AITableAction, AITableView, idCreator, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
 import { ViewActions } from '../action/view';
-import { buildSetRecordPositionsActon } from '../action/position';
+import { buildSetRecordPositionsAction } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
@@ -109,7 +109,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
     ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
     const actions: AITableAction[] = [];
     (aiTable.records() as AITableViewRecords).forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [newId]: record.positions[originViewId] }, [index]);
+        const action = buildSetRecordPositionsAction(aiTable, { [newId]: record.positions[originViewId] }, [index]);
         actions.push(action);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
@@ -135,7 +135,7 @@ export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fi
     ViewActions.removeView(aiTable, [activeViewId]);
     const actions: AITableAction[] = [];
     records.forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [activeViewId]: undefined }, [index]);
+        const action = buildSetRecordPositionsAction(aiTable, { [activeViewId]: undefined }, [index]);
         actions.push(action);
     });
     fields.forEach((field) => {

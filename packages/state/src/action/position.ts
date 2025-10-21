@@ -12,7 +12,7 @@ import {
 import { getSortFields, insertAtEnd, sortRecordsByConditions } from '../utils';
 import { buildSetFieldAction } from './field';
 
-export function buildSetRecordPositionsActon(aiTable: AIViewTable, positions: Positions | RemovePositions, path: NumberPath) {
+export function buildSetRecordPositionsAction(aiTable: AIViewTable, positions: Positions | RemovePositions, path: NumberPath) {
     const action: SetRecordPositionAction = {
         type: ActionName.SetRecordPositions,
         positions,
@@ -30,7 +30,7 @@ export function resetAllRecordsPositions(aiTable: AIViewTable) {
     const actions: AITableAction[] = [];
     const positions = insertAtEnd(0, sortedRecords.length);
     sortedRecords.forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [activeView!._id]: positions[index] }, [recordsIndexMap.get(record._id)!]);
+        const action = buildSetRecordPositionsAction(aiTable, { [activeView!._id]: positions[index] }, [recordsIndexMap.get(record._id)!]);
         actions.push(action);
     });
     aiTable.apply(actions);
@@ -53,7 +53,7 @@ export function resetAllFieldsPositions(aiTable: AIViewTable) {
 }
 
 export function setRecordPositions(aiTable: AIViewTable, positions: Positions | RemovePositions, path: NumberPath) {
-    const operation = buildSetRecordPositionsActon(aiTable, positions, path);
+    const operation = buildSetRecordPositionsAction(aiTable, positions, path);
     aiTable.apply(operation);
 }
 
