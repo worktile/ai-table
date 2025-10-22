@@ -38,12 +38,11 @@ export class RecordRowLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const colors = AITable.getColors();
-        const dragOccupyWidth = this.hiddenRowDrag || this.readonly ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
         if (!this.hiddenIndexColumn) {
             this.customRect({
-                x: AI_TABLE_OFFSET + dragOccupyWidth,
+                x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y,
-                width: this.rowHeadWidth - AI_TABLE_OFFSET - dragOccupyWidth,
+                width: this.rowHeadWidth - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 height: rowHeight,
                 fill: indexFill,
                 strokes: {
@@ -55,7 +54,7 @@ export class RecordRowLayout extends Layout {
                 // 设置字体样式，居中绘制行号
                 this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
                 this.text({
-                    x: (this.rowHeadWidth + dragOccupyWidth) / 2,
+                    x: (this.rowHeadWidth + AI_TABLE_ROW_DRAG_ICON_WIDTH) / 2,
                     y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
                     text: String((row as AITableLinearRowRecord).displayIndex),
                     textAlign: DEFAULT_TEXT_ALIGN_CENTER,

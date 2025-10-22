@@ -53,13 +53,7 @@ export class AddRowLayout extends Layout {
         const columnWidth = this.columnWidth;
         const frozenOffset = AI_TABLE_OFFSET;
         const fill = isHoverRow ? this.colors.gray80 : this.colors.transparent;
-        let x = 0;
-        if (this.hiddenIndexColumn) {
-            x = frozenOffset;
-        } else {
-            x = frozenOffset + (this.hiddenRowDrag ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH);
-        }
-
+        const x = frozenOffset + AI_TABLE_ROW_DRAG_ICON_WIDTH;
         this.rect({
             x,
             y: y + AI_TABLE_OFFSET,

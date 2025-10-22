@@ -103,13 +103,12 @@ export class AITableHoverRowHeads {
 
             if (isCheckedRow || isHoverRow) {
                 const iconOffsetY = (AI_TABLE_FIELD_HEAD_HEIGHT - 16) / 2;
-                const dragOccupyWidth = this.hiddenRowDrag() ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
                 operationGroup.iconConfig = {
                     name: generateTargetName({
                         targetName: AI_TABLE_ROW_SELECT_CHECKBOX,
                         recordId
                     }),
-                    x: AI_TABLE_CELL_PADDING + dragOccupyWidth,
+                    x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
                     y: iconOffsetY,
                     type: isCheckedRow ? AITableCheckType.checked : AITableCheckType.unchecked,
                     fill: isCheckedRow || (targetName === AI_TABLE_ROW_SELECT_CHECKBOX && !isCheckedRow) ? Colors.primary : Colors.gray300

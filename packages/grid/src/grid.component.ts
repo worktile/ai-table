@@ -36,9 +36,9 @@ import {
     AI_TABLE_PREVENT_CLEAR_SELECTION_CLASS,
     AI_TABLE_ROW_ADD_BUTTON,
     AI_TABLE_ROW_DRAG,
+    AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
     AI_TABLE_ROW_HEAD,
-    AI_TABLE_ROW_HEAD_WIDTH,
     AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     AI_TABLE_SCROLL_BAR_SIZE,
@@ -417,10 +417,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             rowHeadWidth: computed(() => {
                 const aiFieldConfig = this.aiFieldConfig();
                 let width = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
-                if (aiFieldConfig?.hiddenRowDrag || this.aiReadonly()) {
-                    width = AI_TABLE_ROW_HEAD_WIDTH;
-                }
-                return aiFieldConfig?.hiddenIndexColumn ? 0 : width;
+                return aiFieldConfig?.hiddenIndexColumn ? AI_TABLE_ROW_DRAG_ICON_WIDTH : width;
             }),
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
