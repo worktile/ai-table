@@ -1,6 +1,6 @@
 import { AITableRecord, AITableViewField, AITableViewFields, AITableViewRecord, AITableViewRecords, Positions } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { DEFAULT_INITIAL_GAP, insertAtEnd, insertAtStart, insertBetween } from './position-precision';
+import { insertAtEnd, insertAtStart, insertBetween } from './position-precision';
 import { getMaxPosition } from './view';
 
 export type ViewPositionOptions = { afterItemId?: string; beforeItemId?: string; count?: number };
@@ -103,13 +103,13 @@ export function getCurrentViewPositions<T extends AITableViewRecord | AITableVie
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ) {
-    const { previousPosition, nextPosition } = getPreviousAndNextPosition(aiTable, options, items, itemsMap);
     const count = options.count || 1;
     let positions = [];
     if (items.length === 0) {
         positions = insertAtEnd(0, count);
         return positions;
     }
+    const { previousPosition, nextPosition } = getPreviousAndNextPosition(aiTable, options, items, itemsMap);
     if (options.beforeItemId && previousPosition === null && nextPosition !== null) {
         positions = insertAtStart(nextPosition, count);
     } else if (options.afterItemId && nextPosition === null && previousPosition !== null) {
