@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { StageConfig } from 'konva/lib/Stage';
 import { KoShape, KoContainer } from '../../angular-konva';
 import {
+    AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
@@ -121,23 +122,18 @@ export class AITableFrozenColumnHeads {
         return {
             x: AI_TABLE_OFFSET,
             y: AI_TABLE_OFFSET,
-            width: ctx.rowHeadWidth() || 0,
+            width: ctx.rowHeadWidth() - AI_TABLE_CELL_LINE_BORDER || 0,
             height: this.fieldHeadHeight(),
             fill: Colors.white,
             listening: false
         };
     });
 
-    dragOccupyWidth = computed(() => {
-        const ctx = this.context();
-        return ctx?.aiFieldConfig()?.hiddenRowDrag || this.readonly() ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
-    });
-
     topLineConfig = computed(() => {
         const ctx = this.context();
         if (!ctx) return { points: [0, 0, 0, 0] };
         return {
-            x: AI_TABLE_OFFSET + this.dragOccupyWidth(),
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: AI_TABLE_OFFSET,
             points: [0, 0, ctx.rowHeadWidth(), 0],
             stroke: Colors.gray200,
@@ -150,7 +146,7 @@ export class AITableFrozenColumnHeads {
         const ctx = this.context();
         if (!ctx) return { points: [0, 0, 0, 0] };
         return {
-            x: AI_TABLE_OFFSET + this.dragOccupyWidth(),
+            x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: AI_TABLE_OFFSET,
             points: [ctx.rowHeadWidth(), this.fieldHeadHeight(), 0, this.fieldHeadHeight()],
             stroke: Colors.gray200,
@@ -162,7 +158,7 @@ export class AITableFrozenColumnHeads {
     iconConfig = computed(() => {
         return {
             name: AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
-            x: AI_TABLE_CELL_PADDING + this.dragOccupyWidth(),
+            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH,
             y: (this.fieldHeadHeight() - AI_TABLE_ICON_COMMON_SIZE) / 2,
             type: this.isChecked() ? AITableCheckType.checked : AITableCheckType.unchecked,
             fill:
@@ -177,7 +173,7 @@ export class AITableFrozenColumnHeads {
         const lineHeight = AI_TABLE_TEXT_LINE_HEIGHT;
         const measureText = TextMeasure().measureText(text);
         return {
-            x: AI_TABLE_CELL_PADDING + this.dragOccupyWidth() + measureText.width / 2,
+            x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH + measureText.width / 2,
             y: measureText.height / 2,
             width: measureText.width,
             height: measureText.height,

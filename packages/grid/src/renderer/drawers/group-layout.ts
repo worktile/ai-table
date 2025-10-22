@@ -39,12 +39,11 @@ export class GroupLayout extends Layout {
         const columnWidth = this.columnWidth;
         const { fill: indexFill } = indexStyle || {};
 
-        const dragOccupyWidth = this.hiddenRowDrag || this.readonly ? 0 : AI_TABLE_ROW_DRAG_ICON_WIDTH;
         if (!this.hiddenIndexColumn) {
             this.customRect({
-                x: AI_TABLE_OFFSET + dragOccupyWidth,
+                x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y,
-                width: this.rowHeadWidth - AI_TABLE_OFFSET - dragOccupyWidth,
+                width: this.rowHeadWidth - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 height: rowHeight,
                 fill: indexFill,
                 strokes: {
@@ -54,7 +53,7 @@ export class GroupLayout extends Layout {
             });
             // 第一列单元格
             this.rect({
-                x: AI_TABLE_CELL_PADDING + dragOccupyWidth + 2,
+                x: AI_TABLE_CELL_PADDING + AI_TABLE_ROW_DRAG_ICON_WIDTH + 2,
                 y: this.y + (rowHeight - AI_TABLE_ICON_COMMON_SIZE) / 2,
                 width: AI_TABLE_ICON_COMMON_SIZE,
                 height: AI_TABLE_ICON_COMMON_SIZE,
