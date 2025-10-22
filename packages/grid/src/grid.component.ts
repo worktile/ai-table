@@ -423,33 +423,33 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         });
 
         // ------------------------Observe aiTable changes--------------------------------------
-        effect(() => {
-            console.log('👉🏻 aiTable', this.aiTable);
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.records', this.aiTable.records());
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.fields', this.aiTable.fields());
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.gridData().records', this.aiTable.gridData().records);
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.gridData().fields', this.aiTable.gridData().fields);
-        });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable', this.aiTable);
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.records', this.aiTable.records());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.fields', this.aiTable.fields());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.gridData().records', this.aiTable.gridData().records);
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.gridData().fields', this.aiTable.gridData().fields);
+        // });
         // effect(() => {
         //     console.log('👉🏻 aiTable.gridData().fieldsSizeMap', this.aiTable.gridData().fieldsSizeMap);
         // });
-        effect(() => {
-            console.log('👉🏻 aiTable.recordsMap', this.aiTable.recordsMap());
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.fieldsMap', this.aiTable.fieldsMap());
-        });
-        effect(() => {
-            console.log('👉🏻 aiTable.context', this.aiTable.context);
-        });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.recordsMap', this.aiTable.recordsMap());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.fieldsMap', this.aiTable.fieldsMap());
+        // });
+        // effect(() => {
+        //     console.log('👉🏻 aiTable.context', this.aiTable.context);
+        // });
         // effect(() => {
         //     console.log('👉🏻 aiTable.selection', this.aiTable.selection());
         // });
