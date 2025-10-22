@@ -71,10 +71,21 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
     return getPositions(activeViewId, data, index)[0];
 }
 
-export function getMaxPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
-    return data.reduce((maxPosition, item) => {
-        if (item.positions[activeViewId] > maxPosition) {
-            maxPosition = item.positions[activeViewId];
+export function getMaxPosition(data: AITableViewRecords | AITableViewFields | AITableView[], activeViewId?: string) {
+    const first = data[0] as any;
+    if (first && typeof first === 'object' && 'positions' in first && activeViewId) {
+        return data.reduce((maxPosition, item) => {
+            if (item.positions[activeViewId] > maxPosition) {
+                maxPosition = item.positions[activeViewId];
+            }
+            return maxPosition;
+        }, Number.MIN_SAFE_INTEGER);
+    }
+
+    return (data as AITableView[]).reduce((maxPosition, item, index) => {
+        const pos = typeof item.position === 'number' ? item.position : index;
+        if (pos > maxPosition) {
+            maxPosition = pos;
         }
         return maxPosition;
     }, Number.MIN_SAFE_INTEGER);
