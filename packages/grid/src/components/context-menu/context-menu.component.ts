@@ -1,5 +1,5 @@
-import { NgClass, NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import {
     ThyDropdownAbstractMenu,
     ThyDropdownMenuItemDirective,

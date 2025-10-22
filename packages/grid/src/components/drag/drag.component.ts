@@ -1,17 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    effect,
-    ElementRef,
-    inject,
-    input,
-    Input,
-    OnDestroy,
-    OnInit,
-    output,
-    Renderer2,
-    Signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, input, OnDestroy, OnInit, output, Renderer2 } from '@angular/core';
 import { DragDirection, DragEndData, DragType } from '@ai-table/utils';
 import { MIN_COLUMN_WIDTH } from '../../constants/grid';
 import {

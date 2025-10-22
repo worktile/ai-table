@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoContainer, KoEventObject, KoShape } from '../../../angular-konva';
+import { KoContainer, KoEventObject } from '../../../angular-konva';
 import {
     AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_LINE_BORDER,
@@ -14,13 +14,7 @@ import {
     DEFAULT_FONT_WEIGHT,
     GROUP_STAT_DEFAULT_FONT_SIZE
 } from '../../../constants';
-import {
-    AITableBackgroundConfig,
-    AITableFieldStatConfig,
-    AITableGroupStatConfig,
-    AITableMouseDownType,
-    AITableRowType
-} from '../../../types';
+import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableMouseDownType } from '../../../types';
 import {
     AITableField,
     AITableFieldStatTypeItemInfo,
@@ -35,7 +29,6 @@ import {
     FieldModelMap,
     generateTargetName,
     getI18nTextByKey,
-    TextMeasure,
     transformToCellText
 } from '../../../utils';
 import { AITableIcon } from '../icon.component';

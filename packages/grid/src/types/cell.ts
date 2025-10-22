@@ -1,7 +1,7 @@
 import Konva from 'konva';
-import { AITableLinearRow, AITableLinearRowGroup, AITableLinearRowRecord } from './row';
+import { AITableLinearRow } from './row';
 import { AITable, Coordinate } from '../core';
-import { AITableReferences, AITableField, FieldValue, UpdateFieldValueOptions, AIRecordFieldIdPath } from '@ai-table/utils';
+import { AITableReferences, AITableField, FieldValue, AIRecordFieldIdPath } from '@ai-table/utils';
 import { Colors } from '../constants';
 import { AITableActions } from '../utils';
 

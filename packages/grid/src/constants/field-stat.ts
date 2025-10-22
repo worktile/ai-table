@@ -1,4 +1,4 @@
-import { AITableFieldStatTypeItemInfo, AITableStatType, statCountAll } from '@ai-table/utils';
+import { AITableFieldStatTypeItemInfo, AITableStatType } from '@ai-table/utils';
 import { AITableGridI18nKey } from '../utils/i18n';
 import { statDateRangeOfDays, statDateRangeOfMonths, statEarliestTime, statLatestTime } from '../utils/field-stat';
 

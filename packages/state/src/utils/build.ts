@@ -1,7 +1,7 @@
 import { sortRecordsByConditions } from './record/sort';
 import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
-import { AITableFieldType, AITableRecord, AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
+import { AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../types';
 import { buildFieldStatType } from './field/stat-field';
 import { GroupCalculator } from './group';
@@ -9,13 +9,7 @@ import { unionBy, map } from 'lodash';
 import { buildNormalLinearRows } from '@ai-table/grid';
 import { buildRecordsWithWillMoveRecords } from './record';
 
-export function buildRecordsByView(
-    aiTable: AIViewTable,
-    records: AITableViewRecords,
-    fields: AITableViewFields,
-    activeView: AITableView,
-    sortKeysMap?: Partial<Record<AITableFieldType, string>>
-) {
+export function buildRecordsByView(aiTable: AIViewTable, records: AITableViewRecords, fields: AITableViewFields, activeView: AITableView) {
     const filteredRecords = getFilteredRecords(aiTable, records, fields, activeView);
     const sorts = buildSorts(activeView);
     const renderRecords = buildRecordsWithWillMoveRecords(filteredRecords, aiTable.recordsWillMove());

@@ -7,13 +7,8 @@ import {
     AITableViewField,
     AITableField,
     IdPath,
-    NumberPath,
     AITableFieldStatType
 } from '@ai-table/utils';
-import { isPathEqual } from '../utils';
-import { getFieldPositionInView } from '../utils/field/position-field';
-import { getFrozenFieldId } from '../utils/field/frozen-field';
-import { setViewFrozenField } from './view';
 import { AIViewTable } from '../types/ai-table';
 
 // addField、removeField、setField(含widths，fieldStatTypes)
@@ -33,39 +28,6 @@ export function addField(aiTable: AIViewTable, field: AITableField, originId?: s
         throw new Error(`Field with id ${field._id} already exists.`);
     }
     aiTable.apply(operation);
-}
-
-function adjustFrozenFieldAfterMove(aiTable: AIViewTable, sourceIndex: number, targetIndex: number, currentFrozenFieldId?: string) {
-    if (!currentFrozenFieldId) {
-        return;
-    }
-
-    const fields = aiTable.gridData().fields;
-    const currentFrozenFieldIndex = fields.findIndex((field) => field._id === currentFrozenFieldId);
-
-    if (currentFrozenFieldIndex === -1) {
-        return;
-    }
-
-    // 最后冻结列拖动到非冻结区或冻结区，冻结列向左移动
-    if (sourceIndex === currentFrozenFieldIndex && targetIndex !== currentFrozenFieldIndex) {
-        const newFrozenFieldIndex = Math.max(0, currentFrozenFieldIndex - 1);
-        if (newFrozenFieldIndex < fields.length && newFrozenFieldIndex !== currentFrozenFieldIndex) {
-            const newFrozenField = fields[newFrozenFieldIndex];
-            setViewFrozenField(aiTable, newFrozenField._id);
-        } else {
-            // 如果没有前一个字段，恢复默认冻结
-            setViewFrozenField(aiTable, undefined);
-        }
-        return;
-    }
-
-    // 冻结区拖动到最后冻结列后面，冻结列是被拖动列
-    if (sourceIndex < currentFrozenFieldIndex && targetIndex === currentFrozenFieldIndex) {
-        const newFrozenField = fields[sourceIndex];
-        setViewFrozenField(aiTable, newFrozenField._id);
-        return;
-    }
 }
 
 export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number) {

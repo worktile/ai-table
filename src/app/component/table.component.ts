@@ -212,7 +212,6 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     manualSortRecords() {
         const aiTable = this.tableService.aiTable;
         const activeView = this.tableService.activeView();
-        const sortKeysMap = this.tableService.sortKeysMap;
         const records = this.tableService.records();
         const recordsIndexMap = new Map(records?.map((item, index) => [item._id, index]));
         const sorts = activeView.settings?.sorts!;

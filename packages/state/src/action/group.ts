@@ -1,4 +1,4 @@
-import { ActionName, SetViewAction, AITableView, AITableGroupField, SortDirection, ViewSettings } from '@ai-table/utils';
+import { ActionName, SetViewAction, AITableGroupField, SortDirection, ViewSettings } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { AI_TABLE_GROUP_MAX_LEVEL } from '@ai-table/grid';
 

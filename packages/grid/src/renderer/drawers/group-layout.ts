@@ -1,16 +1,12 @@
 import { AITableFieldType, isEmpty } from '@ai-table/utils';
 import {
-    AI_TABLE_ACTION_COMMON_SIZE,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
-    AI_TABLE_ROW_BLANK_HEIGHT,
-    AI_TABLE_ROW_DRAG_ICON_WIDTH,
-    AngleDownPath,
-    AngleRightPath
+    AI_TABLE_ROW_DRAG_ICON_WIDTH
 } from '../../constants';
 import { AITableCell, AITableLinearRowGroup, AITableRender } from '../../types';
 import { Layout } from './layout-drawer';

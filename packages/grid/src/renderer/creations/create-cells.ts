@@ -8,7 +8,7 @@ import {
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
-import { AITableCellsDrawerConfig, AITableLinearRowGroup, AITableRender, AITableRenderStyle, AITableRowType } from '../../types';
+import { AITableCellsDrawerConfig, AITableLinearRowGroup, AITableRender, AITableRowType } from '../../types';
 import { FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
 import { addRowLayout } from '../drawers/add-row-layout-drawer';
 import { cellDrawer } from '../drawers/cell-drawer';

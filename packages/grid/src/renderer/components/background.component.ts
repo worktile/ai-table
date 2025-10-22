@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, input, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject, KoShapeConfigTypes } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
-import { AI_TABLE_CELL_LINE_BORDER, AI_TABLE_OFFSET, Colors } from '../../constants';
+import { AI_TABLE_OFFSET, Colors } from '../../constants';
 import { AITableBackgroundConfig } from '../../types';
 import { setMouseStyle } from '../../utils';
 import _ from 'lodash';
