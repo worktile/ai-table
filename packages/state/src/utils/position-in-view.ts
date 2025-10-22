@@ -103,12 +103,13 @@ export function getCurrentViewPositions<T extends AITableViewRecord | AITableVie
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ) {
-    if (items.length === 0) {
-        return [DEFAULT_INITIAL_GAP];
-    }
     const { previousPosition, nextPosition } = getPreviousAndNextPosition(aiTable, options, items, itemsMap);
     const count = options.count || 1;
     let positions = [];
+    if (items.length === 0) {
+        positions = insertAtEnd(0, count);
+        return positions;
+    }
     if (options.beforeItemId && previousPosition === null && nextPosition !== null) {
         positions = insertAtStart(nextPosition, count);
     } else if (options.afterItemId && nextPosition === null && previousPosition !== null) {
