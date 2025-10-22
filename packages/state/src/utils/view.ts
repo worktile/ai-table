@@ -1,7 +1,7 @@
 import { shortIdCreator } from '@ai-table/grid';
 import { AITableAction, AITableView, idCreator, AITableViewFields, AITableViewRecords, Positions } from '@ai-table/utils';
 import { ViewActions } from '../action/view';
-import { buildSetRecordPositionsActon } from '../action/position';
+import { buildSetRecordPositionsAction } from '../action/position';
 import { generateCopyName } from './common';
 import { generateNewName } from '@ai-table/grid';
 import { AITableStateI18nKey, getStateI18nTextByKey } from './i18n';
@@ -71,10 +71,21 @@ export function getPosition(data: AITableViewRecords | AITableViewFields, active
     return getPositions(activeViewId, data, index)[0];
 }
 
-export function getMaxPosition(data: AITableViewRecords | AITableViewFields, activeViewId: string) {
-    return data.reduce((maxPosition, item) => {
-        if (item.positions[activeViewId] > maxPosition) {
-            maxPosition = item.positions[activeViewId];
+export function getMaxPosition(data: AITableViewRecords | AITableViewFields | AITableView[], activeViewId?: string) {
+    const first = data[0] as any;
+    if (first && typeof first === 'object' && 'positions' in first && activeViewId) {
+        return data.reduce((maxPosition, item) => {
+            if (item.positions[activeViewId] > maxPosition) {
+                maxPosition = item.positions[activeViewId];
+            }
+            return maxPosition;
+        }, Number.MIN_SAFE_INTEGER);
+    }
+
+    return (data as AITableView[]).reduce((maxPosition, item, index) => {
+        const pos = typeof item.position === 'number' ? item.position : index;
+        if (pos > maxPosition) {
+            maxPosition = pos;
         }
         return maxPosition;
     }, Number.MIN_SAFE_INTEGER);
@@ -109,7 +120,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
     ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
     const actions: AITableAction[] = [];
     (aiTable.records() as AITableViewRecords).forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [newId]: record.positions[originViewId] }, [index]);
+        const action = buildSetRecordPositionsAction(aiTable, { [newId]: record.positions[originViewId] }, [index]);
         actions.push(action);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
@@ -135,7 +146,7 @@ export function removeView(aiTable: AIViewTable, records: AITableViewRecords, fi
     ViewActions.removeView(aiTable, [activeViewId]);
     const actions: AITableAction[] = [];
     records.forEach((record, index) => {
-        const action = buildSetRecordPositionsActon(aiTable, { [activeViewId]: undefined }, [index]);
+        const action = buildSetRecordPositionsAction(aiTable, { [activeViewId]: undefined }, [index]);
         actions.push(action);
     });
     fields.forEach((field) => {

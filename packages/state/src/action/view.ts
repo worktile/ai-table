@@ -1,12 +1,9 @@
 import { AITableView, ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
-import { sortViews } from '../utils';
+import { getMaxPosition, insertAtEnd, insertBetween, sortViews } from '../utils';
+import { PositionsActions } from './position';
 
-// Actons.xxxView
-
-// addView、removeView、setView
-
-function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
+export function buildSetViewAction(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
     const view = aiTable.views().find((item) => item._id === path[0]);
     if (view) {
         const properties: Partial<AITableView> = {};
@@ -29,7 +26,15 @@ function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [strin
             newProperties,
             path
         };
-        aiTable.apply(operation);
+        return operation;
+    }
+    return null;
+}
+
+function setView(aiTable: AIViewTable, value: Partial<AITableView>, path: [string]) {
+    const action = buildSetViewAction(aiTable, value, path);
+    if (action) {
+        aiTable.apply(action);
     }
 }
 
@@ -37,10 +42,35 @@ function addView(aiTable: AIViewTable, originId: string, newView: AITableView, i
     const views = sortViews(aiTable.views());
     const currentIndex = views.findIndex((item) => item._id === originId);
     if (isDuplicate) {
-        const nextIndex = currentIndex + 1;
-        newView.position = ((views[currentIndex]?.position ?? currentIndex) + (views[nextIndex]?.position ?? nextIndex)) / 2;
+        const prev = currentIndex >= 0 ? (views[currentIndex].position ?? currentIndex) : null;
+        const next = currentIndex + 1 < views.length ? (views[currentIndex + 1].position ?? currentIndex + 1) : null;
+
+        let newPos: number;
+        if (prev !== null && next === null) {
+            // 复制最后一个插入最后位置
+            newPos = insertAtEnd(prev, 1)[0];
+        } else if (prev !== null && next !== null) {
+            // 插入中间
+            const result = insertBetween(prev, next, 1);
+            if (result.positions.length) {
+                newPos = result.positions[0];
+            } else {
+                PositionsActions.resetAllViewsPositions(aiTable);
+                const reSort = sortViews(aiTable.views());
+                const idx = reSort.findIndex((item) => item._id === originId);
+                const prev2 = idx >= 0 ? (reSort[idx].position ?? idx) : 0;
+                const next2 = idx + 1 < reSort.length ? (reSort[idx + 1].position ?? idx + 1) : null;
+                newPos = next2 === null ? insertAtEnd(prev2, 1)[0] : insertBetween(prev2, next2, 1).positions[0];
+            }
+        } else {
+            const maxPosition = getMaxPosition(views);
+            newPos = insertAtEnd(maxPosition, 1)[0];
+        }
+
+        newView.position = newPos;
     } else {
-        newView.position = currentIndex + 1;
+        const maxPosition = getMaxPosition(views);
+        newView.position = insertAtEnd(maxPosition, 1)[0];
     }
     const operation: AddViewAction = {
         type: ActionName.AddView,
@@ -61,5 +91,6 @@ function removeView(aiTable: AIViewTable, path: [string]) {
 export const ViewActions = {
     setView,
     addView,
-    removeView
+    removeView,
+    buildSetViewAction
 };
