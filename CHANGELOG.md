@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.2](https://github.com/worktile/ai-table/compare/0.3.1...0.3.2) (2025-10-22)
+
+
+### Bug Fixes
+
+* **positions:** fix error when items is empty #WIK-19159 ([#737](https://github.com/worktile/ai-table/issues/737)) ([8c0e2c4](https://github.com/worktile/ai-table/commit/8c0e2c4f2c406f79f7aeb3aa05d71c3fb513db0a)), closes [#WIK-19159](https://github.com/worktile/ai-table/issues/WIK-19159) [#WIK-19159](https://github.com/worktile/ai-table/issues/WIK-19159) [#WIK-19159](https://github.com/worktile/ai-table/issues/WIK-19159)
+
+
+
 ## [0.3.1](https://github.com/worktile/ai-table/compare/0.3.0...0.3.1) (2025-10-22)
 
 
