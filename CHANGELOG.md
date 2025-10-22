@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.1](https://github.com/worktile/ai-table/compare/0.3.0...0.3.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* #WIK-19169 【AITable】出现筛选提示的时候，左侧线有问题 ([2d3767e](https://github.com/worktile/ai-table/commit/2d3767e80b4eecffdb1f366025647ce70addb496)), closes [#WIK-19169](https://github.com/worktile/ai-table/issues/WIK-19169)
+* **grid:** fix over max limit ([2a90992](https://github.com/worktile/ai-table/commit/2a90992ce4fa953e0943f5291440599cf8126b8d))
+* **state:** #WIK-19160 【AITable】新建一个新表格，复制视图，位置不对 ([e538901](https://github.com/worktile/ai-table/commit/e5389010a32adf8f0188e3452c40aba3df05bd16)), closes [#WIK-19160](https://github.com/worktile/ai-table/issues/WIK-19160)
+* **state:** #WIK-19175 移动列，冻结列自动调整丢失 ([#732](https://github.com/worktile/ai-table/issues/732)) ([cf2c156](https://github.com/worktile/ai-table/commit/cf2c156d00cd564778ca7c837b4687b278a1b491)), closes [#WIK-19175](https://github.com/worktile/ai-table/issues/WIK-19175)
+
+
+### Features
+
+* **grid:** check for duplicate naming and maximum column limits when calling addFields directly ([ad8e579](https://github.com/worktile/ai-table/commit/ad8e579036c7845d290b681f12e0ed8d53732589))
+
+
+
 # [0.3.0](https://github.com/worktile/ai-table/compare/0.2.5...0.3.0) (2025-10-15)
 
 
