@@ -11,7 +11,6 @@ export class RemovePositions {
 
 export interface AITableViewRecord extends AITableRecord {
     positions: Positions;
-    widths?: Record<Id, number>;
 }
 
 export interface AITableViewField extends AITableField {
