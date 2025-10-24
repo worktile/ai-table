@@ -17,7 +17,7 @@ export interface AITableViewRecord extends AITableRecord {
 export interface AITableViewField extends AITableField {
     positions: Positions;
     widths?: Record<Id, number>;
-    fieldStatTypes?: Record<Id, AITableFieldStatType>;
+    stat_types?: Record<Id, AITableFieldStatType>;
 }
 
 export type AITableViewRecords = AITableViewRecord[];
