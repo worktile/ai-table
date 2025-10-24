@@ -35,7 +35,7 @@ export function setFieldWidth(aiTable: AIViewTable, path: IdPath, width: number)
 
 export function setFieldStatType(aiTable: AIViewTable, path: IdPath, statType: AITableFieldStatType) {
     const field = AITableQueries.getField(aiTable, path) as AITableViewField;
-    setField(aiTable, { fieldStatTypes: { ...field.fieldStatTypes, [aiTable.activeViewId()]: statType } }, [field._id]);
+    setField(aiTable, { stat_types: { ...field.stat_types, [aiTable.activeViewId()]: statType } }, [field._id]);
 }
 
 export function removeField(aiTable: AIViewTable, path: IdPath) {
