@@ -152,9 +152,7 @@ export class AITableFieldSetting implements OnInit {
     };
 
     selectFieldType(field: AITableFieldOption) {
-        const fieldsSizeMap = this.aiTable().gridData().fieldsSizeMap;
         this.aiEditField.update((item) => {
-            const width = fieldsSizeMap[item._id] ?? field.width;
             const name = this.isManualInputName() || this.isUpdate() ? item.name : createDefaultFieldName(this.aiTable(), field);
             let settings = field.settings || {};
 
@@ -174,7 +172,7 @@ export class AITableFieldSetting implements OnInit {
                 };
             }
 
-            return { ...item, ...field, width, name, settings };
+            return { ...item, ...field, name, settings };
         });
         setTimeout(() => {
             this.thyPopoverRef.updatePosition();

@@ -7,7 +7,6 @@ import {
     getSharedTypeByData,
     getDataBySharedType,
     YjsAITable,
-    getFieldsSizeMap,
     UndoManagerService,
     sortViews,
     buildLinearRows,
@@ -18,15 +17,7 @@ import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getBasicData } from '../utils/utils';
-import {
-    AITableFieldsSizeMap,
-    AITableFieldType,
-    AITableValue,
-    AITableView,
-    AITableViewFields,
-    AITableViewRecords,
-    SharedType
-} from '@ai-table/utils';
+import { AITableFieldType, AITableValue, AITableView, AITableViewFields, AITableViewRecords, SharedType } from '@ai-table/utils';
 import { scrollToMatchedCell, AITableLinearRow } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
@@ -61,8 +52,6 @@ export class TableService {
 
     fields!: WritableSignal<AITableViewFields>;
 
-    fieldsSizeMap!: WritableSignal<AITableFieldsSizeMap>;
-
     aiTable!: AIViewTable;
 
     provider!: WebsocketProvider | null;
@@ -96,10 +85,6 @@ export class TableService {
         return result;
     });
 
-    renderFieldsSizeMap = computed(() => {
-        return getFieldsSizeMap(this.renderFields(), this.activeView());
-    });
-
     sortedViews = computed(() => {
         return sortViews(this.views());
     });
@@ -110,8 +95,7 @@ export class TableService {
         return () => {
             return {
                 records: this.renderRecords(),
-                fields: this.renderFields(),
-                fieldsSizeMap: this.renderFieldsSizeMap()
+                fields: this.renderFields()
             };
         };
     });
@@ -169,10 +153,6 @@ export class TableService {
         this.fields = signal(fields ?? this.fields());
     }
 
-    buildRenderFieldsSizeMap(fields?: AITableViewFields) {
-        this.fieldsSizeMap = signal(getFieldsSizeMap(fields ?? this.fields(), this.activeView()));
-    }
-
     handleShared(room: string) {
         if (this.provider) {
             this.disconnect();
@@ -190,7 +170,6 @@ export class TableService {
                         this.views.set(data.views);
                         this.setRecords(data.records);
                         this.setFields(data.fields);
-                        this.buildRenderFieldsSizeMap(this.fields());
                         isInitialized = true;
                     } else {
                         applyYjsEvents(this.aiTable, this.sharedType!, events);

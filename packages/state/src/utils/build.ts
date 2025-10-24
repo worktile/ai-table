@@ -3,7 +3,7 @@ import { getFilteredRecords } from './record/filter';
 import { getSortFields } from './field/sort-fields';
 import { AITableView, AITableViewFields, AITableViewRecords } from '@ai-table/utils';
 import { AIViewTable } from '../types';
-import { buildFieldStatType } from './field/stat-field';
+import { buildViewFields } from './field/build-fields';
 import { GroupCalculator } from './group';
 import { unionBy, map } from 'lodash';
 import { buildNormalLinearRows } from '@ai-table/grid';
@@ -18,7 +18,7 @@ export function buildRecordsByView(aiTable: AIViewTable, records: AITableViewRec
 
 export function buildFieldsByView(aiTable: AIViewTable, fields: AITableViewFields, activeView: AITableView) {
     const sortFields = getSortFields(aiTable, fields as AITableViewFields, activeView);
-    return buildFieldStatType(sortFields, activeView);
+    return buildViewFields(sortFields, activeView);
 }
 
 export function buildLinearRows(aiTable: AIViewTable, activeView: AITableView, records: AITableViewRecords) {
