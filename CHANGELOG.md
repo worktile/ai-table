@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.3](https://github.com/worktile/ai-table/compare/0.3.2...0.3.3) (2025-10-24)
+
+
+### Bug Fixes
+
+* **grid:** need to stop events that are not triggered in the ai-table ([5e204b9](https://github.com/worktile/ai-table/commit/5e204b97c0d9e5ea81c24b68d35ffa3c53431f20))
+
+
+
 ## [0.3.2](https://github.com/worktile/ai-table/compare/0.3.1...0.3.2) (2025-10-22)
 
 
