@@ -922,7 +922,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         fromEvent<ClipboardEvent>(document, 'copy')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event: ClipboardEvent) => {
-                if (this.aiReadonly()) {
+                if (this.stopEvent(event)) {
                     return;
                 }
 
@@ -936,14 +936,52 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         fromEvent<ClipboardEvent>(document, 'paste')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event: ClipboardEvent) => {
-                if (this.aiReadonly()) {
+                if (this.stopEvent(event)) {
                     return;
                 }
-
                 const dataTransfer = event.clipboardData;
                 this.pasteCells(dataTransfer);
                 event.preventDefault();
             });
+    }
+
+    private stopEvent(event: KeyboardEvent | ClipboardEvent): boolean {
+        if (this.aiReadonly()) {
+            return true;
+        }
+
+        const focused = document.activeElement;
+        if (!focused) {
+            return true;
+        }
+
+        const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
+        if (!hasAITableGrid) {
+            return true;
+        }
+
+        const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
+        if (!hasSelectedCells) {
+            return true;
+        }
+
+        const editingCell = this.aiTable.editingCell();
+        if (editingCell && editingCell.path) {
+            return true;
+        }
+
+        // 检查事件目标是否是输入框或文本区域
+        const target = event.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            return true;
+        }
+
+        const hasContentEditable = target.contentEditable === 'true';
+        if (hasContentEditable) {
+            return true;
+        }
+
+        return false;
     }
 
     private updateDragSelectState(isDragging: boolean, startCell: AIRecordFieldIdPath | null) {
@@ -1054,38 +1092,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async (event: KeyboardEvent) => {
-                if (this.aiReadonly()) {
-                    return;
-                }
-
-                const focused = document.activeElement;
-                if (!focused) {
-                    return;
-                }
-
-                const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
-                if (!hasAITableGrid) {
-                    return;
-                }
-
-                const hasSelectedCells = this.aiTable.selection().selectedCells.size > 0;
-                if (!hasSelectedCells) {
-                    return;
-                }
-
-                const editingCell = this.aiTable.editingCell();
-                if (editingCell && editingCell.path) {
-                    return;
-                }
-
-                // 检查事件目标是否是输入框或文本区域
-                const target = event.target as HTMLElement;
-                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-                    return;
-                }
-
-                const hasContentEditable = target.contentEditable === 'true';
-                if (hasContentEditable) {
+                if (this.stopEvent(event)) {
                     return;
                 }
 
