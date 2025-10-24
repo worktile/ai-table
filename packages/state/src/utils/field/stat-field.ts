@@ -2,7 +2,7 @@ import { AITableView, AITableViewFields } from '@ai-table/utils';
 
 export function buildFieldStatType(data: AITableViewFields, activeView: AITableView) {
     return data.map((field, index) => {
-        const fieldStatType = field.fieldStatTypes?.[activeView._id];
+        const fieldStatType = field.stat_types?.[activeView._id];
         if (fieldStatType) {
             return {
                 ...field,

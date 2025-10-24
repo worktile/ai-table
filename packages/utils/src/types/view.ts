@@ -11,13 +11,12 @@ export class RemovePositions {
 
 export interface AITableViewRecord extends AITableRecord {
     positions: Positions;
-    widths?: Record<Id, number>;
 }
 
 export interface AITableViewField extends AITableField {
     positions: Positions;
     widths?: Record<Id, number>;
-    fieldStatTypes?: Record<Id, AITableFieldStatType>;
+    stat_types?: Record<Id, AITableFieldStatType>;
 }
 
 export type AITableViewRecords = AITableViewRecord[];
