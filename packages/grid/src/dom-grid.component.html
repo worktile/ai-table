@@ -8,8 +8,8 @@
             #fieldAction
             [attr.fieldId]="field._id"
             [ngClass]="{ highlight: aiTable.selection().selectedFields.has(field._id) }"
-            [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }"
         >
+            <!-- [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }" -->
             <span class="text-truncate">
                 <thy-icon [thyIconName]="field.icon!" class="mr-2 text-muted"></thy-icon>
                 <span>{{ field.name }}</span>
@@ -48,14 +48,8 @@
                         highlight: aiTable.selection().selectedCells.has(record._id) || aiTable.selection().selectedFields.has(field._id),
                         selected: aiTable.selection().selectedCells.get(record._id)?.hasOwnProperty(field._id)
                     }" -->
-                <div
-                    #cell
-                    class="grid-cell"
-                    [attr.type]="[field.type]"
-                    [attr.fieldId]="[field._id]"
-                    [attr.recordId]="[record._id]"
-                    [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }"
-                >
+                <div #cell class="grid-cell" [attr.type]="[field.type]" [attr.fieldId]="[field._id]" [attr.recordId]="[record._id]">
+                    <!-- [ngStyle]="{ width: gridData().fieldsSizeMap[field._id] + 'px' }" -->
                     @switch (field.type) {
                         @case (AITableFieldType.select) {
                             @let fieldValue = record.values[field._id];

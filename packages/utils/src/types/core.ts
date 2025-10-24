@@ -1,4 +1,3 @@
-import { AITableFieldsSizeMap } from './grid';
 import { AITableFieldStatType } from './field';
 
 export type Id = string;
@@ -189,7 +188,6 @@ export type AITableFields = AITableField[];
 export interface AITableValue {
     records: AITableRecords;
     fields: AITableFields;
-    fieldsSizeMap: AITableFieldsSizeMap;
 }
 
 export enum Direction {

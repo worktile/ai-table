@@ -20,7 +20,6 @@ import {
     AddRecordOptions,
     AITableField,
     AITableFields,
-    AITableFieldsSizeMap,
     AITableFieldType,
     AITableRecords,
     AITableReferences,
@@ -50,8 +49,6 @@ export class AITableGridBase implements OnInit {
     aiRecords = model.required<AITableRecords>();
 
     aiFields = model.required<AITableFields>();
-
-    aiFieldsSizeMap = model.required<AITableFieldsSizeMap>();
 
     aiContextMenuItems = input<(aiTable: AITable) => AITableContextMenuItem[]>();
 
@@ -132,8 +129,7 @@ export class AITableGridBase implements OnInit {
         }
         return {
             records: this.aiRecords(),
-            fields: this.aiFields(),
-            fieldsSizeMap: this.aiFieldsSizeMap()
+            fields: this.aiFields()
         };
     });
 
