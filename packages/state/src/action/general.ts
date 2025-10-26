@@ -107,6 +107,7 @@ const apply = (aiTable: AIViewTable, records: AITableViewRecords, fields: AITabl
                 // properties that were previously defined, but are now missing, must be deleted
                 for (const key in action.properties) {
                     if (!action.newProperties.hasOwnProperty(key)) {
+                        console.log('setView action.properties 会执行吗？', key);
                         delete view[<keyof AITableView>key];
                     }
                 }
