@@ -240,6 +240,7 @@ export class AITableGridBase implements OnInit {
     }
 
     private dblClick(event: MouseEvent) {
+        console.log('❌ ? dblClick：', event);
         const cellDom = (event.target as HTMLElement).closest('.grid-cell') as HTMLElement;
         const type = cellDom && (cellDom.getAttribute('type')! as AITableFieldType);
         if (type && DBL_CLICK_EDIT_TYPE.includes(type)) {

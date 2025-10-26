@@ -572,6 +572,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
+        // console.log('事件 stageMousemove：', e);
         if (this.timer) {
             cancelAnimationFrame(this.timer);
         }
@@ -629,6 +630,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMousedown(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageMousedown：', e);
         const mouseEvent = e.event.evt;
         const _targetName = e.event.target.name();
 
@@ -702,6 +704,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageMouseup：', e);
         this.updateDragSelectState(false, null);
         if (this.dragFillState.isDragging) {
             this.performFill(e);
@@ -735,6 +738,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageMouseleave：', e);
         if (!this.isDragSelectionAutoScrolling) {
             this.updateDragSelectState(false, null);
         }
@@ -750,12 +754,14 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageWheel(e: KoEventObject<WheelEvent>) {
+        console.log('事件 stageWheel：', e);
         e.event.evt.preventDefault();
         this.aiTableGridEventService.closeCellEditor();
         this.scrollAction({ deltaX: e.event.evt.deltaX, deltaY: e.event.evt.deltaY, shiftKey: e.event.evt.shiftKey });
     }
 
     stageContextmenu(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageContextmenu：', e);
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
 
@@ -792,6 +798,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageClick(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageClick：', e);
         const targetNameDetail = getDetailByTargetName(e.event.target.name());
         this.aiClick.emit({
             ...e,
@@ -895,6 +902,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
+        console.log('事件 stageDblclick：', e);
         const _targetName = e.event.target.name();
         const targetNameDetail = getDetailByTargetName(_targetName);
         this.aiDbClick.emit({
