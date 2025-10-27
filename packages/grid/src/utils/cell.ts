@@ -2,12 +2,13 @@ import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, 
 import { AITable, getFieldOptionByField } from '../core';
 import { AITableCellInfo, AITableRowType, AITableSelection } from '../types';
 import { AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
+import { helpers } from 'ngx-tethys/util';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
-    const fieldSizeMap = aiTable.gridData().fieldsSizeMap;
+    const fieldsMap = helpers.keyBy(aiTable.gridData().fields, '_id');
     const columnIndicesSizeMap: AITableSizeMap = {};
     fields?.forEach((field, index) => {
-        columnIndicesSizeMap[index] = fieldSizeMap[field._id] ?? (getFieldOptionByField(aiTable, field) as AITableFieldOption).width;
+        columnIndicesSizeMap[index] = fieldsMap[field._id]?.width ?? (getFieldOptionByField(aiTable, field) as AITableFieldOption).width;
     });
     return columnIndicesSizeMap;
 }

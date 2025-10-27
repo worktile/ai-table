@@ -43,20 +43,3 @@ export const buildNormalLinearRows = (visibleRecords: AITableRecords, isAddingVi
     });
     return linearRows;
 };
-
-// TODO 没有地方调用，删除
-export const buildGridData = (aiTable: AITable, recordValue: AITableRecords, fieldsValue: AITableFields): AITableGridData => {
-    const fieldOptions = getFieldOptions(aiTable);
-    const fields = fieldsValue.map((value) => {
-        const fieldOption = fieldOptions.find((item) => item.type === value.type)!;
-        return {
-            ...value,
-            icon: value.icon || fieldOption.icon
-        };
-    });
-    return {
-        type: 'grid',
-        fields,
-        records: recordValue
-    };
-};
