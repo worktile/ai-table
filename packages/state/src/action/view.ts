@@ -91,6 +91,5 @@ function removeView(aiTable: AIViewTable, path: [string]) {
 export const ViewActions = {
     setView,
     addView,
-    removeView,
-    buildSetViewAction
+    removeView
 };
