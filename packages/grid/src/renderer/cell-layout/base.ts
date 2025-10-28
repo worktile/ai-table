@@ -15,7 +15,7 @@ import {
     DEFAULT_FONT_SIZE
 } from '../../constants';
 import { AITableCellItemRenderInfo, AITableCellLayout, AITableRender, AITableSelectField } from '../../types';
-import { AITableField } from '../../../../utils/src';
+import { AITableField } from '@ai-table/utils';
 import { helpers } from 'ngx-tethys/util';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { drawer } from '../drawers/drawer';
