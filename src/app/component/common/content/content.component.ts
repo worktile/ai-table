@@ -41,10 +41,8 @@ import {
 } from '@ai-table/state';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
-import { ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyPopoverModule, ThyPopover } from 'ngx-tethys/popover';
 import { FindPopoverComponent, FindResult } from '../search/find-popover.component';
 import { ThySegment, ThySegmentEvent, ThySegmentItem } from 'ngx-tethys/segment';
@@ -400,10 +398,6 @@ export class DemoTableContent {
         }
     }
 
-    iconRegistry = inject(ThyIconRegistry);
-
-    sanitizer = inject(DomSanitizer);
-
     tableService = inject(TableService);
 
     destroyRef = inject(DestroyRef);
@@ -421,16 +415,9 @@ export class DemoTableContent {
     };
 
     constructor() {
-        this.registryIcon();
         afterNextRender(() => {
             this.bindUndoShortcuts();
         });
-    }
-
-    ngAfterViewInit() {}
-
-    registryIcon() {
-        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
     }
 
     private bindUndoShortcuts() {

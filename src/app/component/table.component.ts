@@ -129,7 +129,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setActiveView(activeViewId);
         this.tableService.initData(views);
         if (!this.activatedRoute.firstChild) {
-            this.router.navigateByUrl(`/${this.tableService.activeViewShortId()}`);
+            this.router.navigateByUrl(`overall/${this.tableService.activeViewShortId()}`);
         }
     }
 
@@ -137,7 +137,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     activeTabChange(data: any) {
         this.tableService.setActiveView(data);
-        this.router.navigateByUrl(`/${this.tableService.activeViewShortId()}`);
+        this.router.navigateByUrl(`overall/${this.tableService.activeViewShortId()}`);
     }
 
     handleShared() {
