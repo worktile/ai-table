@@ -68,6 +68,9 @@ import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } fro
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
 import { getFileThumbnailSvgString } from '../../utils/file';
+import { MultiSelectLayout } from '../cell-layout/fields';
+import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
+import { CellBaseLayout } from '../cell-layout/base';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -224,7 +227,7 @@ export class CellDrawer extends Drawer {
     private renderCellSelect(render: AITableRender, ctx?: any) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
-            this.renderCellMultiSelect(render, ctx);
+            this.renderCellMultiSelect2(render, ctx);
         } else {
             this.renderSingleSelectCell(render, ctx);
         }
@@ -439,6 +442,54 @@ export class CellDrawer extends Drawer {
                 });
             }
         }
+    }
+
+    private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
+        const { x, y, field } = render;
+        let transformValue = this.getValidSelectedValue(field, render.transformValue);
+        if (!transformValue.length) {
+            return;
+        }
+
+        const selectLayout = new MultiSelectLayout(render, {});
+        // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
+        this.renderAtoms({ x, y }, selectLayout);
+    }
+
+    private renderAtoms(position: { x: number; y: number }, cellLayout: CellBaseLayout) {
+        cellLayout.renderAtoms.forEach((atom) => {
+            switch (atom.type) {
+                case AITableRenderAtomType.text:
+                    this.text({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        text: atom.text!,
+                        fillStyle: atom.fillStyle,
+                        fontSize: atom.fontSize
+                    });
+                    break;
+                case AITableRenderAtomType.rect:
+                    this.rect({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        width: atom.width!,
+                        height: atom.height!,
+                        radius: atom.radius,
+                        fill: atom.fillStyle
+                    });
+                    break;
+                case AITableRenderAtomType.circle:
+                    this.arc({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        radius: atom.radius!,
+                        fill: atom.fillStyle
+                    });
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     private renderSingleSelectCell(render: AITableRender, ctx?: any) {

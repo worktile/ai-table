@@ -19,6 +19,13 @@ export const AI_TABLE_FIELD_HEAD = 'AI_TABLE_FIELD_HEAD'; // 属性列头标识
 export const AI_TABLE_FIELD_HEAD_HEIGHT = 44; // 表格字段列头的高度
 export const AI_TABLE_ROW_BLANK_HEIGHT = 43; // 减去边框后真实的行高
 export const AI_TABLE_ROW_HEIGHT = 44; // 默认行高基准
+
+// 行高档位配置
+export const ROW_HEIGHT_LEVELS = {
+    low: 44, // 低档：44px
+    medium: 88, // 中档：88px
+    high: 148 // 高档：148px
+} as const;
 export const AI_TABLE_CELL_ACTIVE_BORDER_WIDTH = 2; // 选中单元格的边框宽度
 export const AI_TABLE_CELL_ATTACHMENT_ADD = 'AI_TABLE_CELL_ATTACHMENT_ADD'; // 附件cell中新增图标名称
 export const AI_TABLE_CELL_ATTACHMENT_FILE = 'AI_TABLE_CELL_ATTACHMENT_FILE'; // 附件cell中文件
@@ -79,7 +86,7 @@ export const AI_TABLE_TAG_PADDING = 12;
 export const AI_TABLE_TAG_FONT_SIZE = 12;
 
 export const AI_TABLE_PIECE_WIDTH = 10;
-export const AI_TABLE_PIECE_RADIUS = 4;
+export const AI_TABLE_PIECE_RADIUS = 2;
 export const AI_TABLE_COMMON_FONT_SIZE = 14;
 export const AI_TABLE_DOT_RADIUS = 5;
 
@@ -107,3 +114,7 @@ export const AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON = 'AI_TABLE_ROW_GROUP_COLLAPSE_B
 export const AI_TABLE_ROW_GROUP_OFFSET = 16;
 
 export const AI_TABLE_SHADOW_DEFAULT_WIDTH = 8;
+
+export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH = 60; // 选项字段项的默认最小宽度
+
+export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING = 4; // 选项字段项的默认行间距

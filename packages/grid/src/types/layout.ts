@@ -14,3 +14,23 @@ export interface AITableLayout {
     readonly?: boolean;
     xIsScroll?: boolean;
 }
+
+export interface AITableCellLayout {
+    x?: number;
+    y?: number;
+    // width?: number;
+    // height?: number;
+    // paddingLeft?: number;
+    // paddingRight?: number;
+    // paddingTop?: number;
+    // paddingBottom?: number;
+    itemOffsetX?: number;
+    minItemWidth?: number;
+}
+
+export interface AITableCellItem {
+    x?: number;
+    y?: number;
+    width: number;
+    height: number;
+}

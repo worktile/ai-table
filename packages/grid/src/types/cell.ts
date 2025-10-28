@@ -4,6 +4,7 @@ import { AITable, Coordinate } from '../core';
 import { AITableReferences, AITableField, FieldValue, AIRecordFieldIdPath } from '@ai-table/utils';
 import { Colors } from '../constants';
 import { AITableActions } from '../utils';
+import { AITableRenderAtom } from './atom';
 
 export interface AITableCellsConfig {
     aiTable: AITable;
@@ -75,4 +76,10 @@ export interface AITableCellInfo {
 export interface AITableCellStyle {
     fill?: string;
     stroke?: string;
+}
+
+export interface AITableCellItemRenderInfo {
+    width: number;
+    height: number;
+    renderAtoms: AITableRenderAtom[];
 }
