@@ -1,13 +1,13 @@
 <div class="d-flex align-items-center">
     <input thyInput [(ngModel)]="room" [disabled]="!!tableService.provider" placeholder="请输入房间号" style="width: 300px" />
-    <a
+    <!-- <a
         thyAction
         class="ml-2"
         [thyIcon]="tableService.provider ? 'unlink-insert' : 'link-insert'"
         href="javascript:;"
         (click)="handleShared()"
         >{{ tableService.provider ? '断开连接' : '连接协同' }}</a
-    >
+    > -->
     <label class="mb-0 ml-2 d-flex align-items-center"
         ><input type="checkbox" [checked]="readonly" (change)="handleReadonlyChange($event)" /><span class="pl-1 pt-1">只读</span></label
     >
@@ -50,7 +50,7 @@
                         <p class="mb-0">
                             <span> {{ item.name }} </span>
                             @if (!readonly) {
-                                <a thySize="xxs" thyAction class="ml-1" thyIcon="more" [thyDropdown]="menu" href="javascript:;"></a>
+                                <!-- <a thySize="xxs" thyAction class="ml-1" thyIcon="more" [thyDropdown]="menu" href="javascript:;"></a> -->
                             }
                         </p>
                     }
@@ -66,7 +66,7 @@
 </thy-tabs>
 
 <thy-dropdown-menu #menu>
-    <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
+    <!-- <a thyDropdownMenuItem href="javascript:;" (click)="updateEditStatus()">
         <span>重命名</span>
     </a>
     <a thyDropdownMenuItem href="javascript:;" (click)="addView('duplicate')">
@@ -74,13 +74,13 @@
     </a>
     <a thyDropdownMenuItem class="remove-icon" href="javascript:;" (click)="removeView()">
         <span>删除</span>
-    </a>
+    </a> -->
 </thy-dropdown-menu>
 
 <ng-template #extra>
-    @if (!readonly) {
+    <!-- @if (!readonly) {
         <thy-action thyIcon="plus" class="cursor-pointer" (click)="addView('add')"></thy-action>
-    }
+    } -->
 </ng-template>
 
 <ng-template #templateSortDialog>
@@ -100,11 +100,11 @@
                     <label thyRadioButton thyLabelText="升序" thyValue="1"></label>
                     <label thyRadioButton thyLabelText="降序" thyValue="-1"></label>
                 </thy-radio-group>
-                <a thyAction thyIcon="trash" href="javascript:;" (click)="deleteSort($index)"></a>
+                <!-- <a thyAction thyIcon="trash" href="javascript:;" (click)="deleteSort($index)"></a> -->
             </div>
         }
         <div style="text-align: center">
-            <a thyAction thyIcon="plus" href="javascript:;" (click)="addSort()">添加</a>
+            <!-- <a thyAction thyIcon="plus" href="javascript:;" (click)="addSort()">添加</a> -->
         </div>
         <div style="text-align: right; margin-top: 10px">
             <button thyButton="primary" thySize="sm" (click)="enterSort()">确定</button>
@@ -126,11 +126,11 @@
                     <label thyRadioButton thyLabelText="升序" thyValue="1"></label>
                     <label thyRadioButton thyLabelText="降序" thyValue="-1"></label>
                 </thy-radio-group>
-                <a thyAction thyIcon="trash" href="javascript:;" (click)="deleteGroup($index)"></a>
+                <!-- <a thyAction thyIcon="trash" href="javascript:;" (click)="deleteGroup($index)"></a> -->
             </div>
         }
-        <div style="text-align: center">
+        <!-- <div style="text-align: center">
             <a thyAction thyIcon="plus" href="javascript:;" (click)="addGroup()">添加</a>
-        </div>
+        </div> -->
     </thy-popover-body>
 </ng-template>

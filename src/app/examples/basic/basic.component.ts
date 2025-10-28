@@ -1,14 +1,27 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AITableGrid } from '@ai-table/grid';
-
 import { AITableFieldType, AITableRecord } from '@ai-table/utils';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
+import { FormsModule } from '@angular/forms';
+import { ThyDropdownModule } from 'ngx-tethys/dropdown';
+import { ThyIconModule, ThyIconRegistry } from 'ngx-tethys/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-basic-table-example',
     templateUrl: './basic.component.html',
     styleUrls: ['./basic.component.scss'],
-    imports: [AITableGrid, ThyPopoverModule],
+    imports: [
+        AITableGrid,
+        ThyPopoverModule,
+        ThyPopoverModule,
+        FormsModule,
+        ThyIconModule,
+        ThyDropdownModule,
+        ThyPopoverModule,
+        FormsModule,
+        AITableGrid
+    ],
     host: {
         class: 'd-block w-100 h-100'
     }
@@ -55,7 +68,17 @@ export class BasicTableExample implements OnInit {
         }
     ]);
 
-    constructor() {}
+    private iconRegistry = inject(ThyIconRegistry);
+
+    private sanitizer = inject(DomSanitizer);
+
+    constructor() {
+        this.registryIcon();
+    }
 
     ngOnInit(): void {}
+
+    registryIcon() {
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+    }
 }

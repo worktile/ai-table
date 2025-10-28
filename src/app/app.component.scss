@@ -1,26 +1,41 @@
+@use 'ngx-tethys/styles/variables.scss';
+
 body {
     overflow: hidden;
 }
-.table-container {
-    display: block;
-    overflow: hidden;
+.app-root {
+    display: flex;
+    flex-direction: row;
     height: 100%;
-    padding-top: 30px;
-    margin-left: 30px;
-    margin-right: 30px;
-    .thy-nav-list {
-        flex: none;
+
+    .menu {
+        width: 200px;
+        border-right: 1px solid variables.$gray-200;
+        padding-top: 30px;
     }
-    .thy-nav-item {
-        display: flex;
-        align-items: center;
-    }
-    .thy-tab-content {
-        // 155 视图 tab 的高度
-        height: calc(100vh - 180px);
-        .table-content {
-            // 44 是操作列的高度
-            height: calc(100% - 44px);
+
+    .table-container {
+        display: block;
+        overflow: hidden;
+        height: 100%;
+        padding-top: 30px;
+        margin-left: 30px;
+        margin-right: 30px;
+        flex: 1;
+        .thy-nav-list {
+            flex: none;
+        }
+        .thy-nav-item {
+            display: flex;
+            align-items: center;
+        }
+        .thy-tab-content {
+            // 155 视图 tab 的高度
+            height: calc(100vh - 180px);
+            .table-content {
+                // 44 是操作列的高度
+                height: calc(100% - 44px);
+            }
         }
     }
 }

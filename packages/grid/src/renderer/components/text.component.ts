@@ -74,9 +74,11 @@ export class AITableTextComponent {
     });
 
     onClick(e: KoEventObject<MouseEvent>) {
+        console.log('👊🏻👊🏻👊🏻 text koClick emit:', e);
         this.koClick.emit(e);
     }
     onMousemove(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 text onMousemove emit:', e);
         this.koMouseMove.emit(e);
     }
 }

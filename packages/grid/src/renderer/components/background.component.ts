@@ -17,7 +17,7 @@ import _ from 'lodash';
                     (koMousemove)="koMousemove($event)"
                     (koMouseenter)="onMouseenter($event)"
                     (koMouseleave)="onMouseleave($event)"
-                    (koClick)="koClick.emit($event)"
+                    (koClick)="onClick($event)"
                 ></ko-rect>
             </ko-group>
             <ko-group>
@@ -150,6 +150,7 @@ export class AITableBackground {
     });
 
     onClick(e: KoEventObject<MouseEvent>) {
+        console.log('👊🏻👊🏻👊🏻 background koClick emit:', e);
         this.koClick.emit(e);
     }
 
@@ -158,18 +159,20 @@ export class AITableBackground {
     }
 
     onMouseenter(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 background onMouseenter emit:', e);
         this.isHover.set(true);
         const { coordinate } = this.config()!;
         setMouseStyle('pointer', coordinate!.container);
         this.koMouseenter.emit(e);
-        this.hover.emit(this.isHover());
+        this.hover.emit(this.isHover()); // TODO
     }
 
     onMouseleave(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 background onMouseleave emit:', e);
         this.isHover.set(false);
         const { coordinate } = this.config()!;
         setMouseStyle('default', coordinate!.container);
         this.koMouseleave.emit(e);
-        this.hover.emit(this.isHover());
+        this.hover.emit(this.isHover()); // TODO
     }
 }

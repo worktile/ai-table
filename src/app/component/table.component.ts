@@ -57,7 +57,7 @@ const initViews: AITableView[] = [
         ThyPopoverModule,
         FormsModule,
         ThyInputDirective,
-        ThyIconModule,
+        // ThyIconModule,
         ThyAction,
         ThyDropdownModule,
         ThyEnterDirective,
@@ -129,7 +129,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
         this.tableService.setActiveView(activeViewId);
         this.tableService.initData(views);
         if (!this.activatedRoute.firstChild) {
-            this.router.navigateByUrl(`/${this.tableService.activeViewShortId()}`);
+            this.router.navigateByUrl(`overall/${this.tableService.activeViewShortId()}`);
         }
     }
 

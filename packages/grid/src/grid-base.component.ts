@@ -147,10 +147,8 @@ export class AITableGridBase implements OnInit {
     ngOnInit(): void {
         console.log('aiRecords', this.aiRecords());
         console.log('aiFields', this.aiFields());
-        console.log('aiFieldsSizeMap', this.aiFieldsSizeMap());
         console.log('aiKeywords', this.aiKeywords());
         console.log('aiReferences', this.aiReferences());
-        console.log('aiFieldSizeMap', this.aiFieldsSizeMap());
         console.log('aiSortKeysMap', this.aiSortKeysMap());
         console.log('aiGetI18nTextByKey', this.aiGetI18nTextByKey());
         console.log('aiPlugins', this.aiPlugins());

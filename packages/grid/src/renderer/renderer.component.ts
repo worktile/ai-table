@@ -424,34 +424,42 @@ export class AITableRenderer {
     });
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koMousemove emit:', e);
         this.koMousemove.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageMousedown(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koMousedown emit:', e);
         this.koMousedown.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koMouseup emit:', e);
         this.koMouseup.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageContextmenu(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koContextmenu emit:', e);
         this.koContextmenu.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageClick(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koClickemit:', e);
         this.koClick.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koDblclick emit:', e);
         this.koDblclick.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koMouseleave emit:', e);
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
     }
 
     stageWheel(e: KoEventObject<WheelEvent>) {
+        // console.log('👊🏻👊🏻👊🏻 renderer koWheel emit:', e);
         this.koWheel.emit(e);
     }
 

@@ -41,41 +41,12 @@ export class AITableGridEventService {
         this.aiFieldRenderers = aiFieldRenderers;
     }
 
-    // TODO 事件注册 删？
+    // TODO
     registerEvents(element: HTMLElement) {
         fromEvent<MouseEvent>(element, 'dblclick', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                console.log('❌ ? dblClickEvent$：', event);
                 this.dblClickEvent$.next(event);
-            });
-
-        fromEvent<MouseEvent>(element, 'mouseover', { passive: true })
-            .pipe(debounceTime(80), takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                console.log('❌ ? mouseoverEvent$：', event);
-                this.mouseoverEvent$.next(event);
-            });
-
-        fromEvent<MouseEvent>(document, 'mouseover', { passive: true })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                console.log('❌ ? globalMouseoverEvent$：', event);
-                this.globalMouseoverEvent$.next(event);
-            });
-
-        fromEvent<MouseEvent>(element, 'mousedown', { passive: true })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                console.log('❌ ? mousedownEvent$：', event);
-                this.mousedownEvent$.next(event);
-            });
-
-        fromEvent<MouseEvent>(document, 'mousedown', { passive: true })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                console.log('❌ ? globalMousedownEvent$：', event);
-                this.globalMousedownEvent$.next(event as MouseEvent);
             });
     }
 

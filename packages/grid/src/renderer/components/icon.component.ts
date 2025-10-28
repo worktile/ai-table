@@ -9,7 +9,7 @@ import { DragType } from '@ai-table/utils';
 @Component({
     selector: 'ai-table-icon',
     template: `
-        <ko-group [config]="groupConfig()" (koClick)="koClick.emit($event)">
+        <ko-group [config]="groupConfig()" (koClick)="onClick($event)">
             <ko-rect [config]="squareShapeConfig()"></ko-rect>
             <ko-path [config]="iconConfig()"></ko-path>
         </ko-group>
@@ -100,4 +100,9 @@ export class AITableIcon {
             listening: false
         };
     });
+
+    onClick(e: KoEventObject<MouseEvent>) {
+        console.log('👊🏻👊🏻👊🏻 icon koClick emit:', e);
+        this.koClick.emit(e);
+    }
 }
