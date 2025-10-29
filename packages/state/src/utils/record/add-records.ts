@@ -6,7 +6,7 @@ import { checkConditions, getDefaultRecordDataByFilter } from './filter';
 import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, AITableRecordCreatedInfo } from '@ai-table/utils';
 import { getParentGroupValuesByGroupId, getPrevRecordIdByAddGroupId } from './common';
 
-export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trackableEntity: AITableRecordCreatedInfo) {
+export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, recordCreatedInfo: AITableRecordCreatedInfo) {
     options = options || {};
     const newRecords: AITableRecord[] = [];
     const activeViewId = aiTable.activeViewId?.();
@@ -38,7 +38,7 @@ export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, trac
             _id: id,
             short_id: newRecordShortIds[index],
             values: newRecordValues,
-            ...trackableEntity
+            ...recordCreatedInfo
         };
         if (needCopyGroupValuesMap) {
             groups?.forEach((group) => {
