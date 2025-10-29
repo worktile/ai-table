@@ -25,9 +25,13 @@ export abstract class CellBaseLayout {
 
     protected renderInfo: AITableRender;
 
-    protected minItemWidth: number = AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH;
+    get minItemWidth() {
+        return AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH;
+    }
 
     abstract getItemRenderInfo(item: any, containerMaxWidth: number): AITableCellItemRenderInfo;
+
+    getAbsoluteItemRenderInfos?: () => AITableCellItemRenderInfo[];
 
     abstract get startY(): number;
 
@@ -61,8 +65,16 @@ export abstract class CellBaseLayout {
         return rows;
     }
 
+    get renderWidth() {
+        return this.renderInfo.columnWidth - 2 * AI_TABLE_CELL_PADDING;
+    }
+
     get moreBgRadius() {
         return AI_TABLE_PIECE_RADIUS;
+    }
+
+    get noMoreItem() {
+        return this.cellLayoutOption.noMoreItem || false;
     }
 
     protected getValidSelectedValue(field: AITableField, transformValue: string[]) {
@@ -78,33 +90,56 @@ export abstract class CellBaseLayout {
 
     layout(): AITableCellItemRenderInfo[] {
         const defaultX = AI_TABLE_CELL_PADDING;
-        const defaultRenderWidth = this.renderInfo.columnWidth - 2 * AI_TABLE_CELL_PADDING;
         let rowIndex = 0;
         let cellX = defaultX;
         let cellY = this.startY;
-        let remainingWidth = defaultRenderWidth;
+        let remainingWidth = this.renderWidth;
 
         for (let index = 0; index < this.items.length; index++) {
             const item = this.items[index];
             const itemRenderInfo = this.getItemRenderInfo(item, remainingWidth);
-            remainingWidth -= itemRenderInfo.width + this.itemOffsetX;
             this.renderItems.push({
                 ...itemRenderInfo,
                 renderAtoms: itemRenderInfo.renderAtoms.map((atom) => this.transformAtomXYToCellXY({ cellX, cellY }, atom))
             });
+            remainingWidth -= itemRenderInfo.width + this.itemOffsetX;
             cellX += itemRenderInfo.width;
             cellX += this.itemOffsetX;
-            if (remainingWidth <= this.minItemWidth) {
-                if (rowIndex + 1 >= this.maxRow) {
+
+            const tmpItemRenderInfo = this.getItemRenderInfo(item, this.renderWidth);
+
+            const minItemWidth = Math.min(this.minItemWidth, tmpItemRenderInfo.width);
+
+            if (remainingWidth <= minItemWidth) {
+                if (rowIndex + 1 < this.maxRow) {
+                    cellY += itemRenderInfo.height + this.lineSpacing;
+                    remainingWidth = this.renderWidth;
+                    cellX = defaultX;
+                    rowIndex++;
+                } else {
                     let hasMore = index + 1 < this.items.length;
-                    let includeLast = remainingWidth + itemRenderInfo.width - this.itemOffsetX - 50 >= this.minItemWidth;
-                    if (hasMore) {
-                        const count = includeLast ? this.items.length - index - 1 : this.items.length - index;
-                        const moreItemRenderInfo = this.getMoreItemRenderInfo(count);
-                        if (!includeLast) {
-                            this.renderItems.pop();
-                            cellX -= itemRenderInfo.width;
+                    if (hasMore && !this.noMoreItem) {
+                        let moreItemRenderInfo = this.getMoreItemRenderInfo(this.items.length - index - 1);
+                        remainingWidth -= moreItemRenderInfo.width;
+                        // 剩余空间小于 0 ，说明没有足够的空间展示 +x
+                        if (remainingWidth < 0) {
+                            const lastItem = this.renderItems.pop()!;
+                            cellX -= lastItem.width;
                             cellX -= this.itemOffsetX;
+                            // 判断原有的展示的最后一个元素缩小 remainingWidth 后，是否大于 最小展示宽度，如果大于，则缩小后展示
+                            if (lastItem.width + remainingWidth >= minItemWidth) {
+                                const newLastItemRenderInfo = this.getItemRenderInfo(item, lastItem.width + remainingWidth);
+                                this.renderItems.push({
+                                    ...newLastItemRenderInfo,
+                                    renderAtoms: newLastItemRenderInfo.renderAtoms.map((atom) =>
+                                        this.transformAtomXYToCellXY({ cellX, cellY }, atom)
+                                    )
+                                });
+                                cellX += newLastItemRenderInfo.width;
+                                cellX += this.itemOffsetX;
+                            } else {
+                                moreItemRenderInfo = this.getMoreItemRenderInfo(this.items.length - index);
+                            }
                         }
                         this.renderItems.push({
                             ...moreItemRenderInfo,
@@ -114,12 +149,11 @@ export abstract class CellBaseLayout {
 
                     break;
                 }
-
-                cellY += itemRenderInfo.height + this.lineSpacing;
-                remainingWidth = defaultRenderWidth;
-                cellX = defaultX;
-                rowIndex++;
             }
+        }
+
+        if (typeof this.getAbsoluteItemRenderInfos === 'function') {
+            this.renderItems.push(...this.getAbsoluteItemRenderInfos());
         }
 
         return this.renderItems;

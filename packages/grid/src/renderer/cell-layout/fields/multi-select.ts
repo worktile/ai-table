@@ -1,6 +1,10 @@
 import {
     AI_TABLE_CELL_MULTI_DOT_RADIUS,
     AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING,
+    AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_DOT_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_PIECE_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_DOT_RADIUS,
     AI_TABLE_OFFSET,
@@ -23,6 +27,22 @@ import { AITableSelectOptionStyle } from '@ai-table/utils';
 export class MultiSelectLayout extends CellBaseLayout {
     constructor(render: AITableRender, cellLayoutOption: AITableCellLayout = {}) {
         super(render, cellLayoutOption);
+    }
+
+    override get minItemWidth() {
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.tag) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH;
+        }
+
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.piece) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_PIECE_MIN_WIDTH;
+        }
+
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.dot) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_DOT_MIN_WIDTH;
+        }
+
+        return AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH;
     }
 
     get startY() {

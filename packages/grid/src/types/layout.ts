@@ -18,14 +18,9 @@ export interface AITableLayout {
 export interface AITableCellLayout {
     x?: number;
     y?: number;
-    // width?: number;
-    // height?: number;
-    // paddingLeft?: number;
-    // paddingRight?: number;
-    // paddingTop?: number;
-    // paddingBottom?: number;
     itemOffsetX?: number;
     minItemWidth?: number;
+    noMoreItem?: boolean;
 }
 
 export interface AITableCellItem {
