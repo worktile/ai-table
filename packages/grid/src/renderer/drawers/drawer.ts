@@ -31,6 +31,7 @@ import {
     AITableWrapTextData
 } from '../../types';
 import { getTextWidth, imageCache, textDataCache, TextMeasure } from '../../utils';
+import { AITableRenderAtom } from '../../types/atom';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();
@@ -1125,6 +1126,12 @@ export class Drawer {
             this.ctx.fill();
         }
         this.ctx.restore();
+    }
+
+    public transformCellXYToRenderXY(renderCoordinate: { x: number; y: number }, cellAtom: AITableRenderAtom) {
+        cellAtom.x = renderCoordinate.x + cellAtom.x;
+        cellAtom.y = renderCoordinate.y + cellAtom.y;
+        return cellAtom;
     }
 }
 

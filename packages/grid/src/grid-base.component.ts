@@ -78,6 +78,8 @@ export class AITableGridBase implements OnInit {
 
     aiFrozenColumnCountFn = input<(containerWidth: number) => number>();
 
+    aiRowHeight = input<'low' | 'medium' | 'high'>('low');
+
     AITableFieldType = AITableFieldType;
 
     AITableSelectOptionStyle = AITableSelectOptionStyle;

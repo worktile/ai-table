@@ -27,6 +27,23 @@
         >
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
         <a thyAction class="mb-2" thyIcon="search" href="javascript:;" (click)="openFindPopover($event)"> 查找 </a>
+        <thy-dropdown-menu #rowHeightMenu>
+            <a thyDropdownMenuItem href="javascript:;" (click)="setRowHeight('low')" [class.active]="tableService.rowHeight() === 'low'">
+                <span>低 (44px)</span>
+            </a>
+            <a
+                thyDropdownMenuItem
+                href="javascript:;"
+                (click)="setRowHeight('medium')"
+                [class.active]="tableService.rowHeight() === 'medium'"
+            >
+                <span>中 (88px)</span>
+            </a>
+            <a thyDropdownMenuItem href="javascript:;" (click)="setRowHeight('high')" [class.active]="tableService.rowHeight() === 'high'">
+                <span>高 (148px)</span>
+            </a>
+        </thy-dropdown-menu>
+        <a thyAction class="mb-2" href="javascript:;" [thyDropdown]="rowHeightMenu">调整行高</a>
     </div>
     <div class="table-content">
         <ai-table-grid
@@ -41,6 +58,7 @@
             [aiKeywords]="tableService.keywords()"
             [aiPlugins]="plugins"
             [aiReferences]="references()"
+            [aiRowHeight]="tableService.rowHeight()"
             (aiAddRecord)="addRecord($event)"
             (aiAddField)="addField($event)"
             (aiMoveField)="dragMoveField($event)"
