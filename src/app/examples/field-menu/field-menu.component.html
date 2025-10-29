@@ -1,0 +1,11 @@
+<p>配置列菜单，编辑列、复制列</p>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiFieldConfig]="fieldConfig()"
+    [aiPlugins]="plugins"
+    (aiTableInitialized)="aiTableInitialized($event)"
+>
+</ai-table-grid>

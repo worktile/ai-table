@@ -13,11 +13,11 @@ export function findNextItemByPosition<T extends AITableViewRecord | AITableView
 ): T | null {
     const viewId = aiTable.activeViewId();
     const targetItem = itemsMap[targetId] as T;
-    const targetPosition = targetItem.positions[viewId] || 0;
+    const targetPosition = targetItem?.positions?.[viewId] || 0;
     let nextItem: T | null = null;
     for (const item of items) {
-        const pos = item.positions[viewId] || 0;
-        if (pos > targetPosition && (nextItem === null || pos < nextItem.positions[viewId])) {
+        const pos = item?.positions?.[viewId] || 0;
+        if (pos > targetPosition && (nextItem === null || pos < nextItem?.positions?.[viewId])) {
             nextItem = item;
         }
     }

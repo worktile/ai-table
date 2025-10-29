@@ -231,9 +231,7 @@ export class DemoTableContent {
                 return [
                     { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {
-                        ...CopyFieldPropertyItem(aiTable, (data: AddFieldOptions) => {
-                            this.addField(data);
-                        }),
+                        ...CopyFieldPropertyItem(aiTable, this.actions),
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
