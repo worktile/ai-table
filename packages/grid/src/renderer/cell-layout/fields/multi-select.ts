@@ -101,6 +101,7 @@ export class MultiSelectLayout extends CellBaseLayout {
                     radius: AI_TABLE_PIECE_RADIUS,
                     fillStyle: Colors.gray100
                 });
+
                 if (optionStyle === AITableSelectOptionStyle.piece) {
                     renderAtoms.push({
                         type: AITableRenderAtomType.rect,
@@ -151,6 +152,31 @@ export class MultiSelectLayout extends CellBaseLayout {
                     x: AI_TABLE_TAG_PADDING,
                     y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
                     fillStyle: Colors.white
+                });
+                break;
+
+            default:
+                itemWidth += 2 * AI_TABLE_TAG_PADDING;
+                textMaxTextWidth = containerMaxWidth - 2 * AI_TABLE_TAG_PADDING;
+                itemX += 2 * AI_TABLE_TAG_PADDING;
+                textAtom = this.getTextAtom(item?.text || '', textMaxTextWidth, fontSize);
+                itemWidth += textAtom.width!;
+
+                renderAtoms.push({
+                    type: AITableRenderAtomType.rect,
+                    x: 0,
+                    y: 0,
+                    width: itemWidth,
+                    height: AI_TABLE_OPTION_ITEM_HEIGHT,
+                    radius: AI_TABLE_PIECE_RADIUS,
+                    fillStyle: Colors.gray100
+                });
+
+                renderAtoms.push({
+                    ...textAtom,
+                    x: AI_TABLE_TAG_PADDING,
+                    y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
+                    fillStyle: fontColor
                 });
                 break;
         }
