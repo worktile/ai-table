@@ -11,7 +11,7 @@ export function findNextItemByPosition<T extends AITableViewRecord | AITableView
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ): T | null {
-    const viewId = aiTable.activeViewId();
+    const viewId = aiTable.activeViewId?.();
     const targetItem = itemsMap[targetId] as T;
     const targetPosition = targetItem.positions[viewId] || 0;
     let nextItem: T | null = null;
@@ -25,11 +25,11 @@ export function findNextItemByPosition<T extends AITableViewRecord | AITableView
 }
 
 export function findMaxItemByPosition<T extends AITableViewRecord | AITableViewField>(aiTable: AIViewTable, items: T[]): T {
-    const viewId = aiTable.activeViewId();
+    const viewId = aiTable.activeViewId?.();
     let maxItem = items[0] as T;
     for (const item of items) {
-        const pos = item.positions[viewId] || 0;
-        if (pos > maxItem.positions[viewId]) {
+        const pos = item?.positions?.[viewId] || 0;
+        if (pos > maxItem?.positions?.[viewId]) {
             maxItem = item;
         }
     }
@@ -42,7 +42,7 @@ export function findPrevItemByPosition<T extends AITableViewRecord | AITableView
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ): T | null {
-    const viewId = aiTable.activeViewId();
+    const viewId = aiTable.activeViewId?.();
     const targetItem = itemsMap[targetId] as T;
     const targetPosition = targetItem.positions[viewId] || 0;
     let prevItem: T | null = null;
@@ -61,7 +61,7 @@ export function getPreviousAndNextPosition<T extends AITableViewRecord | AITable
     items: T[],
     itemsMap: { [key: string]: T extends AITableViewRecord ? AITableRecord : AITableViewField }
 ): { nextPosition: number | null; previousPosition: number | null } {
-    const activeViewId = aiTable.activeViewId();
+    const activeViewId = aiTable.activeViewId?.();
     const { afterItemId, beforeItemId } = options;
     let nextPosition = null;
     let previousPosition = null;
@@ -71,10 +71,10 @@ export function getPreviousAndNextPosition<T extends AITableViewRecord | AITable
         if (!previousItem) {
             throw new Error(`Target item with id ${afterItemId} not found`);
         }
-        previousPosition = previousItem.positions[activeViewId] || 0;
+        previousPosition = previousItem?.positions?.[activeViewId] || 0;
         const nextItem = findNextItemByPosition<T>(aiTable, afterItemId, items, itemsMap);
         if (nextItem !== null) {
-            nextPosition = nextItem.positions[activeViewId] || 0;
+            nextPosition = nextItem?.positions?.[activeViewId] || 0;
         }
     } else if (beforeItemId) {
         const nextItem = itemsMap[beforeItemId] as T;
@@ -82,14 +82,14 @@ export function getPreviousAndNextPosition<T extends AITableViewRecord | AITable
             throw new Error(`Target item with id ${beforeItemId} not found`);
         }
 
-        nextPosition = nextItem.positions[activeViewId] || 0;
+        nextPosition = nextItem?.positions?.[activeViewId] || 0;
         const previousItem = findPrevItemByPosition<T>(aiTable, beforeItemId, items, itemsMap);
         if (previousItem !== null) {
-            previousPosition = previousItem.positions[activeViewId] || 0;
+            previousPosition = previousItem?.positions?.[activeViewId] || 0;
         }
     } else {
         const maxItem = findMaxItemByPosition<T>(aiTable, items);
-        previousPosition = maxItem.positions[activeViewId] || 0;
+        previousPosition = maxItem?.positions?.[activeViewId] || 0;
     }
     return {
         nextPosition,
@@ -136,8 +136,8 @@ export function getNewItemsPosition<T extends AITableViewRecord | AITableViewFie
     if (positions.length === 0) {
         return [];
     }
-    const views = aiTable.views();
-    const activeViewId = aiTable.activeViewId();
+    const views = aiTable.views?.() || [];
+    const activeViewId = aiTable.activeViewId?.();
     const viewsMaxPosition: Record<string, number> = {};
     views.forEach((view) => {
         viewsMaxPosition[view._id] = getMaxPosition(items as AITableViewRecords | AITableViewFields, view._id);
