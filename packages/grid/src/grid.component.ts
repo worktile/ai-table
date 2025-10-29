@@ -40,12 +40,14 @@ import {
     AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+    ROW_HEIGHT_LEVELS,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     AI_TABLE_SCROLL_BAR_SIZE,
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
-    IconPathMap
+    IconPathMap,
+    AI_TABLE_ROW_HEIGHT
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -270,12 +272,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     // TODO 返回的属性超出了 AITableRendererConfig 约束
     rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
+        const currentRowHeight = ROW_HEIGHT_LEVELS[this.aiRowHeight()];
         const coordinate = new Coordinate({
             container: this.containerElement(),
-            rowHeight: AI_TABLE_FIELD_HEAD_HEIGHT,
+            rowHeight: currentRowHeight,
             rowCount: this.linearRows().length,
             columnCount: fields.length,
-            rowInitSize: AI_TABLE_FIELD_HEAD_HEIGHT,
+            rowInitSize: currentRowHeight,
             columnInitSize: this.aiTable.context!.rowHeadWidth(),
             rowIndicesSizeMap: this.rowIndicesMap(),
             columnIndicesSizeMap: getColumnIndicesSizeMap(this.aiTable, fields),
@@ -329,6 +332,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.linearRows().forEach((row, index) => {
             if (row.type === AITableRowType.blank) {
                 rowIndicesMap[index] = 0;
+            }
+
+            if ([AITableRowType.group, AITableRowType.add].includes(row.type)) {
+                rowIndicesMap[index] = AI_TABLE_ROW_HEIGHT;
             }
         });
         // console.log('rowIndicesMap computed：', rowIndicesMap);

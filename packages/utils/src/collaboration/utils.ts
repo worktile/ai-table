@@ -17,7 +17,7 @@ import {
     SyncArrayElement,
     SyncMapElement,
     SystemFieldValues,
-    TrackableEntity,
+    AITableRecordCreatedInfo,
     TransactionOriginInfo
 } from '../types';
 import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from '../constants';
@@ -178,7 +178,7 @@ export const getShortIdBySystemFieldValues = (systemFieldValues: SystemFieldValu
     return systemFieldValues[SystemFieldIndex.ShortId];
 };
 
-export const getTrackableEntityBySystemFieldValues = (systemFieldValues: SystemFieldValues): TrackableEntity => {
+export const getTrackableEntityBySystemFieldValues = (systemFieldValues: SystemFieldValues): AITableRecordCreatedInfo => {
     return {
         created_at: systemFieldValues[SystemFieldIndex.CreatedAt],
         created_by: systemFieldValues[SystemFieldIndex.CreatedBy],

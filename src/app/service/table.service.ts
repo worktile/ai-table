@@ -48,6 +48,8 @@ export class TableService {
 
     maxFields: WritableSignal<number> = signal(500);
 
+    rowHeight: WritableSignal<'low' | 'medium' | 'high'> = signal('low');
+
     records!: WritableSignal<AITableViewRecords>;
 
     fields!: WritableSignal<AITableViewFields>;
@@ -134,6 +136,10 @@ export class TableService {
 
     setMaxFields(maxFields: number) {
         this.maxFields.set(maxFields);
+    }
+
+    setRowHeight(rowHeight: 'low' | 'medium' | 'high') {
+        this.rowHeight.set(rowHeight);
     }
 
     setActiveView(activeViewId: string) {

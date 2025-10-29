@@ -211,18 +211,18 @@ export class AITableRenderer {
     attachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: this.frozenAreaWidth() - 1,
-            clipY: this.coordinate()!.rowInitSize - 1,
+            clipY: AI_TABLE_FIELD_HEAD_HEIGHT - 1,
             clipWidth: this.containerWidth() - this.frozenAreaWidth(),
-            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - AI_TABLE_FIELD_HEAD_HEIGHT
         };
     });
 
     frozenAttachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: 0,
-            clipY: this.coordinate()!.rowInitSize - 1,
+            clipY: AI_TABLE_FIELD_HEAD_HEIGHT - 1,
             clipWidth: this.frozenAreaWidth() + 10,
-            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - AI_TABLE_FIELD_HEAD_HEIGHT
         };
     });
 

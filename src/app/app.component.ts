@@ -1,7 +1,10 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
+import { ThyIconRegistry } from 'ngx-tethys/icon';
+
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet, CdkScrollable, ThyMenu, ThyMenuItem, RouterLink, RouterLinkActive],
@@ -12,4 +15,16 @@ import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {}
+export class AppComponent {
+    private iconRegistry = inject(ThyIconRegistry);
+
+    private sanitizer = inject(DomSanitizer);
+
+    constructor() {
+        this.registryIcon();
+    }
+
+    registryIcon() {
+        this.iconRegistry.addSvgIconSet(this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/defs/svg/sprite.defs.svg'));
+    }
+}

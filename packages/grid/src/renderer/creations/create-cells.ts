@@ -5,6 +5,7 @@ import {
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_ADD_BUTTON,
+    AI_TABLE_ROW_HEIGHT,
     DEFAULT_FONT_STYLE
 } from '../../constants';
 import { AITable, AITableQueries, RendererContext } from '../../core';
@@ -183,7 +184,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowIndex,
                         columnIndex,
                         columnWidth,
-                        rowHeight,
+                        rowHeight: AI_TABLE_ROW_HEIGHT,
                         columnCount,
                         containerWidth: coordinate.containerWidth,
                         rowHeadWidth: context.rowHeadWidth(),

@@ -157,7 +157,7 @@ export const GeneralActions = {
         // 先操作 draft，而不是直接改 aiTable
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
-        const views = createDraft(aiTable.views());
+        const views = createDraft(aiTable.views?.() || []);
         actions.forEach((action) => {
             // 执行 action
             apply(aiTable, records, fields, views, action);
@@ -175,9 +175,9 @@ export const GeneralActions = {
             console.log('⭐️ aiTable.records changed');
             aiTable.records.set(newRecords);
         }
-        if (newViews !== aiTable.views()) {
+        if (newViews !== (aiTable.views?.() || [])) {
             console.log('⭐️ aiTable.views changed');
-            aiTable.views.set(newViews);
+            aiTable.views?.set(newViews);
         }
     }
 };

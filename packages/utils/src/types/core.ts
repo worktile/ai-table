@@ -148,18 +148,6 @@ export type FieldValue =
     | CheckboxFieldValue
     | any;
 
-export interface TrackableEntity {
-    created_at: NumberFieldValue;
-    created_by: string;
-    updated_at: NumberFieldValue;
-    updated_by: string;
-}
-
-export interface UpdateTrackableEntity {
-    updated_at: NumberFieldValue;
-    updated_by: string;
-}
-
 export interface AITableRecord {
     _id: string;
     short_id: string;
@@ -171,8 +159,15 @@ export interface AITableRecord {
     [key: string]: any;
 }
 
+export interface AITableRecordCreatedInfo {
+    created_at: NumberFieldValue;
+    created_by: string;
+    updated_at: NumberFieldValue;
+    updated_by: string;
+}
+
 export interface AITableRecordUpdatedInfo {
-    updated_at: number;
+    updated_at: NumberFieldValue;
     updated_by: string;
 }
 

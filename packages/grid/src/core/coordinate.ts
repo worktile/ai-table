@@ -102,7 +102,7 @@ export class Coordinate {
             lastMeasuredIndex = this.lastColumnIndex;
             cellMetadataMap = this.columnMetaDataMap;
         } else {
-            offset = this.rowInitSize;
+            offset = AI_TABLE_FIELD_HEAD_HEIGHT;
             lastMeasuredIndex = this.lastRowIndex;
             cellMetadataMap = this.rowMetaDataMap;
         }
@@ -127,6 +127,7 @@ export class Coordinate {
                 this.lastRowIndex = index;
             }
         }
+
         return cellMetadataMap[index] || { size: 0, offset: 0 };
     }
 

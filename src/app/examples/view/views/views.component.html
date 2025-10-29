@@ -1,0 +1,56 @@
+<thy-nav class="mb-4" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="sortViews($event)">
+    @for (view of viewService.sortedViews(); let index = $index; track view._id) {
+        @let viewId = view._id;
+        <a
+            thyNavItem
+            cdkDrag
+            cdkDragLockAxis="x"
+            [cdkDragData]="viewId"
+            [cdkDragDisabled]="viewId === editViewId()"
+            class="cursor-pointer"
+            [id]="viewId"
+            [thyNavItemActive]="viewService.activeViewId() === viewId"
+            (click)="viewService.setActiveView(viewId)"
+        >
+            @if (viewId === editViewId()) {
+                <input
+                    thyAutofocus
+                    thyInput
+                    [ngModel]="view.name"
+                    (thyEnter)="updateView()"
+                    (blur)="updateView()"
+                    (ngModelChange)="viewNameChange($event)"
+                />
+            } @else {
+                <p class="mb-0">
+                    <span> {{ view.name }} </span>
+                    <a
+                        thySize="xxs"
+                        thyAction
+                        class="ml-1"
+                        thyIcon="more"
+                        (click)="openViewMenu($event, menu, viewId)"
+                        href="javascript:;"
+                    ></a>
+                </p>
+            }
+        </a>
+    }
+    <ng-template #extra>
+        <a href="javascript:;" thyAction thyIcon="plus" (click)="addView('add')"></a>
+    </ng-template>
+</thy-nav>
+
+<ng-template #menu>
+    <thy-dropdown-menu thyImmediateRender>
+        <a thyDropdownMenuItem href="javascript:;" (click)="renameView(operateViewId)">
+            <span>重命名</span>
+        </a>
+        <a thyDropdownMenuItem href="javascript:;" (click)="addView('duplicate', operateViewId)">
+            <span>复制</span>
+        </a>
+        <a thyDropdownMenuItem href="javascript:;" [thyDisabled]="viewService.views().length === 1" (click)="removeView(operateViewId)">
+            <span>删除</span>
+        </a>
+    </thy-dropdown-menu>
+</ng-template>

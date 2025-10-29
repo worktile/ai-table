@@ -120,7 +120,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
     ViewActions.addView(aiTable, originViewId, newView, type === 'duplicate');
     const actions: AITableAction[] = [];
     (aiTable.records() as AITableViewRecords).forEach((record, index) => {
-        const action = buildSetRecordPositionsAction(aiTable, { [newId]: record.positions[originViewId] }, [index]);
+        const action = buildSetRecordPositionsAction(aiTable, { [newId]: record?.positions?.[originViewId] }, [index]);
         actions.push(action);
     });
     (aiTable.fields() as AITableViewFields).forEach((field) => {
@@ -129,7 +129,7 @@ export function addView(aiTable: AIViewTable, type: 'add' | 'duplicate', viewId?
             {
                 positions: {
                     ...field.positions,
-                    [newId]: field.positions[originViewId]
+                    [newId]: field?.positions?.[originViewId]
                 }
             },
             [field._id]
