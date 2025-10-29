@@ -1,0 +1,13 @@
+<p>添加行、添加列、编辑单元格</p>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiPlugins]="plugins"
+    (aiTableInitialized)="aiTableInitialized($event)"
+    (aiAddRecord)="addRecord($event)"
+    (aiAddField)="addField($event)"
+    (aiUpdateFieldValues)="updateFieldValues($event)"
+>
+</ai-table-grid>

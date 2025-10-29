@@ -51,6 +51,10 @@ function updateWillMoveRecords(
     needUpdateOptions: UpdateFieldValueOptions<unknown>[],
     updatedInfo?: AITableRecordUpdatedInfo
 ) {
+    if (!aiTable.activeViewId?.() || !aiTable.viewsMap?.()) {
+        return;
+    }
+
     const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
     const groups = activeView.settings?.groups ?? [];
     const sorts = activeView.settings?.sorts ?? [];

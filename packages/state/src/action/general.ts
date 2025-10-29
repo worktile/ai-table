@@ -153,7 +153,7 @@ export const GeneralActions = {
     transform(aiTable: AIViewTable, actions: AITableAction[]): void {
         const records = createDraft(aiTable.records()) as AITableViewRecords;
         const fields = createDraft(aiTable.fields()) as AITableViewFields;
-        const views = createDraft(aiTable.views());
+        const views = createDraft(aiTable.views?.() || []) as AITableView[];
         actions.forEach((action) => {
             apply(aiTable, records, fields, views, action);
         });
@@ -166,8 +166,8 @@ export const GeneralActions = {
         if (newRecords !== aiTable.records()) {
             aiTable.records.set(newRecords);
         }
-        if (newViews !== aiTable.views()) {
-            aiTable.views.set(newViews);
+        if (newViews !== (aiTable.views?.() || [])) {
+            aiTable.views?.set(newViews);
         }
     }
 };
