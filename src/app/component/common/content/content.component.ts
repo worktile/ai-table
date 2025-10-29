@@ -502,12 +502,11 @@ export class DemoTableContent {
         this.setValue();
     }
 
-    addRecord(options?: AddRecordOptions) {
+    addRecord(options: AddRecordOptions) {
         console.log('addRecord', options);
         const member = 'member_01';
         const time = getUnixTime(new Date());
-        const trackableEntity = { created_by: member, created_at: time, updated_by: member, updated_at: time };
-        addRecords(this.aiTable, trackableEntity, options);
+        addRecords(this.aiTable, options, { created_by: member, created_at: time, updated_by: member, updated_at: time });
     }
 
     updateFieldValues(options: UpdateFieldValueOptions[]) {

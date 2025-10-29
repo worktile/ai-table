@@ -45,6 +45,11 @@ export function checkConditions(
     if (!record) {
         return false;
     }
+
+    if (!aiTable.activeViewId?.() || !aiTable.viewsMap?.()) {
+        return true;
+    }
+
     if (!filterConditions?.conditions) {
         const conditions = aiTable.viewsMap()[aiTable.activeViewId()].settings?.conditions;
         const conditionLogical = aiTable.viewsMap()[aiTable.activeViewId()].settings?.condition_logical;
