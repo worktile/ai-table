@@ -4,6 +4,7 @@ import { KoShape, KoContainer } from '../../angular-konva';
 import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_FIELD_HEAD_SELECT_CHECKBOX,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_INDEX_FIELD_TEXT,
@@ -92,7 +93,8 @@ export class AITableFrozenColumnHeads {
     fieldHeadHeight = computed(() => {
         const coord = this.coordinate();
         if (!coord) return 0;
-        return coord.rowInitSize;
+        // return coord.rowInitSize;
+        return AI_TABLE_FIELD_HEAD_HEIGHT;
     });
 
     headConfigs = computed(() => {

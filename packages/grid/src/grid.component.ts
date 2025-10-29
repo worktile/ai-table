@@ -46,7 +46,8 @@ import {
     DBL_CLICK_EDIT_TYPE,
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
-    IconPathMap
+    IconPathMap,
+    AI_TABLE_ROW_HEIGHT
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -310,6 +311,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.linearRows().forEach((row, index) => {
             if (row.type === AITableRowType.blank) {
                 rowIndicesMap[index] = 0;
+            }
+
+            if ([AITableRowType.group, AITableRowType.add].includes(row.type)) {
+                rowIndicesMap[index] = AI_TABLE_ROW_HEIGHT;
             }
         });
         return rowIndicesMap;

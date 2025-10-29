@@ -1,10 +1,10 @@
-import { AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../constants';
+import { AI_TABLE_FIELD_HEAD, AI_TABLE_FIELD_HEAD_HEIGHT, AI_TABLE_FIELD_HEAD_MORE, Colors } from '../../constants';
 import { AITableColumnHeadsConfig, AITableFieldHeadConfig } from '../../types';
 
 export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
     const { coordinate, columnStartIndex, columnStopIndex, pointPosition, aiTable } = config;
     const colors = Colors;
-    const { columnCount, rowInitSize: fieldHeadHeight } = coordinate;
+    const { columnCount } = coordinate;
     const { columnIndex: pointColumnIndex, targetName: pointTargetName } = pointPosition;
     const fields = aiTable.gridData().fields;
 
@@ -39,7 +39,7 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
             x,
             y: 0,
             width: columnWidth,
-            height: fieldHeadHeight,
+            height: AI_TABLE_FIELD_HEAD_HEIGHT,
             field,
             stroke: columnIndex === 0 ? colors.transparent : undefined,
             iconVisible: noMoreIcon ? false : iconVisible,
