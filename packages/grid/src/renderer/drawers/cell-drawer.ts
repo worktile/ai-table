@@ -71,6 +71,7 @@ import { getFileThumbnailSvgString } from '../../utils/file';
 import { MultiSelectLayout } from '../cell-layout/fields';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { CellBaseLayout } from '../cell-layout/base';
+import { MemberLayout } from '../cell-layout/fields/member';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -118,7 +119,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.link:
                 return this.renderCellText(render, ctx);
             case AITableFieldType.select:
-                return this.renderCellSelect(render, ctx);
+                return this.renderCellSelect(ctx, render);
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
@@ -130,7 +131,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.member:
             case AITableFieldType.createdBy:
             case AITableFieldType.updatedBy:
-                return this.renderCellMember(render, ctx);
+                return this.renderCellMember2(ctx, render);
             case AITableFieldType.attachment:
                 return this.renderCellAttachment(render, ctx);
             case AITableFieldType.checkbox:
@@ -224,10 +225,10 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellSelect(render: AITableRender, ctx?: any) {
+    private renderCellSelect(ctx: any, render: AITableRender) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
-            this.renderCellMultiSelect2(render, ctx);
+            this.renderCellMultiSelect2(ctx, render);
         } else {
             this.renderSingleSelectCell(render, ctx);
         }
@@ -444,7 +445,7 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
+    private renderCellMultiSelect2(ctx: any, render: AITableRender) {
         const { x, y, field } = render;
         let transformValue = this.getValidSelectedValue(field, render.transformValue);
         if (!transformValue.length) {
@@ -453,10 +454,10 @@ export class CellDrawer extends Drawer {
 
         const selectLayout = new MultiSelectLayout(render, {});
         // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
-        this.renderAtoms({ x, y }, selectLayout);
+        this.renderAtoms(ctx, { x, y }, selectLayout);
     }
 
-    private renderAtoms(position: { x: number; y: number }, cellLayout: CellBaseLayout) {
+    private renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
         cellLayout.renderAtoms.forEach((atom) => {
             switch (atom.type) {
                 case AITableRenderAtomType.text:
@@ -469,6 +470,10 @@ export class CellDrawer extends Drawer {
                     });
                     break;
                 case AITableRenderAtomType.rect:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.rect({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
@@ -477,6 +482,9 @@ export class CellDrawer extends Drawer {
                         radius: atom.radius,
                         fill: atom.fillStyle
                     });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
                     break;
                 case AITableRenderAtomType.circle:
                     this.arc({
@@ -484,6 +492,18 @@ export class CellDrawer extends Drawer {
                         y: position.y + atom.y,
                         radius: atom.radius!,
                         fill: atom.fillStyle
+                    });
+                    break;
+                case AITableRenderAtomType.image:
+                    this.avatar({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        url: atom.url!,
+                        id: atom.uid!,
+                        title: atom.title!,
+                        bgColor: atom.bgColor!,
+                        type: AITableAvatarType.member,
+                        size: AITableAvatarSize.size24
                     });
                     break;
                 default:
@@ -804,6 +824,12 @@ export class CellDrawer extends Drawer {
                 }
             }
         }
+    }
+
+    private renderCellMember2(ctx: any, render: AITableRender) {
+        const { x, y } = render;
+        const memberLayout = new MemberLayout(render, {});
+        this.renderAtoms(ctx, { x, y }, memberLayout);
     }
 
     private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {

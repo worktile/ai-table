@@ -16,4 +16,10 @@ export interface AITableRenderAtom {
     text?: string;
     fontSize?: number;
     fillStyle?: string;
+    alpha?: number;
+    // avatar
+    uid?: string;
+    url?: string;
+    title?: string;
+    bgColor?: string;
 }

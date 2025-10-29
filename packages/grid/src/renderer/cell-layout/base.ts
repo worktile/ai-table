@@ -31,7 +31,7 @@ export abstract class CellBaseLayout {
 
     abstract getItemRenderInfo(item: any, containerMaxWidth: number): AITableCellItemRenderInfo;
 
-    getAbsoluteItemRenderInfos?: () => AITableCellItemRenderInfo[];
+    getAbsoluteItemRenderInfos?(): AITableCellItemRenderInfo[];
 
     abstract get startY(): number;
 
@@ -54,6 +54,10 @@ export abstract class CellBaseLayout {
 
     get field() {
         return this.renderInfo.field;
+    }
+
+    get references() {
+        return this.renderInfo.references;
     }
 
     get itemOffsetX() {
@@ -152,12 +156,10 @@ export abstract class CellBaseLayout {
                             renderAtoms: moreItemRenderInfo.renderAtoms.map((atom) => this.transformAtomXYToCellXY({ cellX, cellY }, atom))
                         });
                     }
-
                     break;
                 }
             }
         }
-
         if (typeof this.getAbsoluteItemRenderInfos === 'function') {
             this.renderItems.push(...this.getAbsoluteItemRenderInfos());
         }

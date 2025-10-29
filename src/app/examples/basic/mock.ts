@@ -184,14 +184,13 @@ export const mockRecords: AITableRecord[] = [
         }
     }
 ];
-
 export const mockReferences: AITableReferences = {
     members: {
         memberUID001: {
             uid: 'memberUID001',
             display_name: '小明',
             display_name_pinyin: 'xiaoming',
-            avatar: 'https://s3.cn-north-1.amazonaws.com.cn/lcavatar/d242cf52-c1d1-4e95-a113-a7d30b0ede74_80x80.png'
+            avatar: 'https://app-pc-alpha-1251945081.cos.ap-nanjing.myqcloud.com/7d9eaab4-eba1-4c87-8cd3-71222a031141_80x80.png'
         },
         memberUID002: {
             uid: 'memberUID002',
