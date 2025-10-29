@@ -112,7 +112,7 @@ export const updateFieldAndValues = (
     }
 };
 
-export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFieldOptions) => void) => {
+export const CopyFieldPropertyItem = (aiTable: AITable, actions: AITableActions) => {
     const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.copyField);
     return {
         type: 'copyFieldProperty',
@@ -137,7 +137,7 @@ export const CopyFieldPropertyItem = (aiTable: AITable, addFieldFn: (data: AddFi
                     name: newFieldName
                 }
             };
-            addFieldFn(fieldOptions);
+            actions.addField(fieldOptions);
         },
         disabled: () => {
             const fieldLength = aiTable.fields()?.length || 0;
