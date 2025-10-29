@@ -3,15 +3,15 @@ import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, TrackableEntity } from '@ai-table/utils';
+import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, AITableRecordCreatedInfo } from '@ai-table/utils';
 import { getParentGroupValuesByGroupId, getPrevRecordIdByAddGroupId } from './common';
 
-export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntity, options?: AddRecordOptions) {
+export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, recordCreatedInfo: AITableRecordCreatedInfo) {
     options = options || {};
     const newRecords: AITableRecord[] = [];
-    const activeViewId = aiTable.activeViewId();
-    const activeView = aiTable.viewsMap()[activeViewId];
-    const groups = activeView.settings?.groups;
+    const activeViewId = aiTable.activeViewId?.();
+    const activeView = aiTable.viewsMap?.()?.[activeViewId];
+    const groups = activeView?.settings?.groups;
     let { originId, isDuplicate, count = 1 } = options;
     const recordCount = aiTable.records().length;
     const maxRecordCount = aiTable.context?.maxRecords();
@@ -38,7 +38,7 @@ export function addRecords(aiTable: AIViewTable, trackableEntity: TrackableEntit
             _id: id,
             short_id: newRecordShortIds[index],
             values: newRecordValues,
-            ...trackableEntity
+            ...recordCreatedInfo
         };
         if (needCopyGroupValuesMap) {
             groups?.forEach((group) => {
@@ -75,15 +75,23 @@ export function getDefaultRecordValues(aiTable: AIViewTable, isDuplicate = false
     if (isDuplicate && recordId) {
         newRecordValues = aiTable.recordsMap()[recordId].values;
     } else {
-        const activeView = aiTable.viewsMap()[aiTable.activeViewId()];
-        const fields = getSortFields(aiTable, aiTable.fields() as AITableViewFields, activeView);
+        let fields = aiTable.fields() as AITableViewFields;
+
+        const activeView = aiTable.viewsMap?.()?.[aiTable.activeViewId?.()];
+        if (activeView) {
+            fields = getSortFields(aiTable, fields, activeView);
+        }
+
         fields.map((field) => {
             const defaultValue = FieldModelMap[field.type].getDefaultValue();
             newRecordValues[field._id] = defaultValue;
         });
-        const { conditions, condition_logical } = activeView.settings || {};
-        if (conditions && conditions.length) {
-            newRecordValues = getDefaultRecordDataByFilter(newRecordValues, conditions, fields, condition_logical);
+
+        if (activeView) {
+            const { conditions, condition_logical } = activeView.settings || {};
+            if (conditions && conditions.length) {
+                newRecordValues = getDefaultRecordDataByFilter(newRecordValues, conditions, fields, condition_logical);
+            }
         }
     }
     return newRecordValues;
