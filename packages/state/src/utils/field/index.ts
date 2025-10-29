@@ -4,3 +4,4 @@ export * from './frozen-field';
 export * from './sort-fields';
 export * from './move-fields';
 export * from './position-field';
+export * from './frozen-field';
