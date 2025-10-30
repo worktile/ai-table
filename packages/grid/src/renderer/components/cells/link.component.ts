@@ -47,7 +47,7 @@ export class AITableCellLink extends CoverCellBase {
             }
 
             textRender = textRender.replace(/\r|\n/g, ' ');
-            const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING + 8;
+            const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
             return {
                 x,
                 y: (44 - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,

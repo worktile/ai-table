@@ -136,7 +136,7 @@ export class AITableCellText extends CoverCellBase {
 
     textMaxWidth = computed(() => {
         const { columnWidth } = this.config()?.render!;
-        return columnWidth - AI_TABLE_CELL_PADDING - AI_TABLE_CELL_PADDING + 8;
+        return columnWidth - AI_TABLE_CELL_PADDING - AI_TABLE_CELL_PADDING;
     });
 
     textString = computed(() => {
