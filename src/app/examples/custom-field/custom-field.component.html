@@ -1,0 +1,15 @@
+<p>自定义可选字段及排序、自定义字段类型</p>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiFieldConfig]="fieldConfig()"
+    [aiPlugins]="plugins"
+    (aiTableInitialized)="aiTableInitialized($event)"
+    (aiAddRecord)="addRecord($event)"
+    (aiAddField)="addField($event)"
+    (aiUpdateFieldValues)="updateFieldValues($event)"
+>
+    <!-- see [aiFieldConfig]="fieldConfig()" -->
+</ai-table-grid>
