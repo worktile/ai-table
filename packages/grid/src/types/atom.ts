@@ -5,6 +5,7 @@ export enum AITableRenderAtomType {
     rect = 'rect',
     circle = 'circle'
 }
+
 export interface AITableRenderAtom {
     type: AITableRenderAtomType;
     x: number;

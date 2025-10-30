@@ -59,7 +59,7 @@ import {
     LOCAL_STORAGE_DATA_MODE
 } from '../../../utils/utils';
 import { getUnixTime } from 'date-fns';
-import { AITableGridI18nKey } from '@ai-table/grid';
+import { AITableGridI18nKey, AITableRowHeight } from '@ai-table/grid';
 import { AITableStateI18nKey } from '@ai-table/state';
 import _ from 'lodash';
 import { filter, fromEvent } from 'rxjs';
@@ -136,6 +136,8 @@ export class MenuAddRecordsComponent {
 })
 export class DemoTableContent {
     private datePickerFormatPipe = new ThyDatePickerFormatPipe();
+
+    aITableRowHeight = AITableRowHeight;
 
     searchKeywords = '';
 
@@ -713,7 +715,7 @@ export class DemoTableContent {
         };
     }
 
-    setRowHeight(level: 'low' | 'medium' | 'high') {
+    setRowHeight(level: AITableRowHeight) {
         this.tableService.setRowHeight(level);
     }
 }
