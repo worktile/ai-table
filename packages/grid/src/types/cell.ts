@@ -79,6 +79,8 @@ export interface AITableCellStyle {
 }
 
 export interface AITableCellItemRenderInfo {
+    x: number;
+    y: number;
     width: number;
     height: number;
     renderAtoms: AITableRenderAtom[];

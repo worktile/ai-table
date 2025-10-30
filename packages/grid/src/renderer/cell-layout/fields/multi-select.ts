@@ -1,6 +1,10 @@
 import {
     AI_TABLE_CELL_MULTI_DOT_RADIUS,
     AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING,
+    AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_DOT_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_PIECE_MIN_WIDTH,
+    AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_DOT_RADIUS,
     AI_TABLE_OFFSET,
@@ -23,6 +27,22 @@ import { AITableSelectOptionStyle } from '@ai-table/utils';
 export class MultiSelectLayout extends CellBaseLayout {
     constructor(render: AITableRender, cellLayoutOption: AITableCellLayout = {}) {
         super(render, cellLayoutOption);
+    }
+
+    override get minItemWidth() {
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.tag) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH;
+        }
+
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.piece) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_PIECE_MIN_WIDTH;
+        }
+
+        if ((this.field as AITableSelectField).settings?.option_style === AITableSelectOptionStyle.dot) {
+            return AI_TABLE_CELL_MULTI_SELECT_ITEM_DOT_MIN_WIDTH;
+        }
+
+        return AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH;
     }
 
     get startY() {
@@ -81,6 +101,7 @@ export class MultiSelectLayout extends CellBaseLayout {
                     radius: AI_TABLE_PIECE_RADIUS,
                     fillStyle: Colors.gray100
                 });
+
                 if (optionStyle === AITableSelectOptionStyle.piece) {
                     renderAtoms.push({
                         type: AITableRenderAtomType.rect,
@@ -131,6 +152,31 @@ export class MultiSelectLayout extends CellBaseLayout {
                     x: AI_TABLE_TAG_PADDING,
                     y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
                     fillStyle: Colors.white
+                });
+                break;
+
+            default:
+                itemWidth += 2 * AI_TABLE_TAG_PADDING;
+                textMaxTextWidth = containerMaxWidth - 2 * AI_TABLE_TAG_PADDING;
+                itemX += 2 * AI_TABLE_TAG_PADDING;
+                textAtom = this.getTextAtom(item?.text || '', textMaxTextWidth, fontSize);
+                itemWidth += textAtom.width!;
+
+                renderAtoms.push({
+                    type: AITableRenderAtomType.rect,
+                    x: 0,
+                    y: 0,
+                    width: itemWidth,
+                    height: AI_TABLE_OPTION_ITEM_HEIGHT,
+                    radius: AI_TABLE_PIECE_RADIUS,
+                    fillStyle: Colors.gray100
+                });
+
+                renderAtoms.push({
+                    ...textAtom,
+                    x: AI_TABLE_TAG_PADDING,
+                    y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
+                    fillStyle: fontColor
                 });
                 break;
         }
