@@ -18,7 +18,7 @@ import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getBasicData } from '../utils/utils';
 import { AITableFieldType, AITableValue, AITableView, AITableViewFields, AITableViewRecords, SharedType } from '@ai-table/utils';
-import { scrollToMatchedCell, AITableLinearRow } from '@ai-table/grid';
+import { scrollToMatchedCell, AITableLinearRow, AITableRowHeight } from '@ai-table/grid';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -48,7 +48,7 @@ export class TableService {
 
     maxFields: WritableSignal<number> = signal(500);
 
-    rowHeight: WritableSignal<'low' | 'medium' | 'high'> = signal('low');
+    rowHeight: WritableSignal<AITableRowHeight> = signal(AITableRowHeight.low);
 
     records!: WritableSignal<AITableViewRecords>;
 
@@ -138,7 +138,7 @@ export class TableService {
         this.maxFields.set(maxFields);
     }
 
-    setRowHeight(rowHeight: 'low' | 'medium' | 'high') {
+    setRowHeight(rowHeight: AITableRowHeight) {
         this.rowHeight.set(rowHeight);
     }
 

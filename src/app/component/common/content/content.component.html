@@ -28,18 +28,28 @@
         <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
         <a thyAction class="mb-2" thyIcon="search" href="javascript:;" (click)="openFindPopover($event)"> 查找 </a>
         <thy-dropdown-menu #rowHeightMenu>
-            <a thyDropdownMenuItem href="javascript:;" (click)="setRowHeight('low')" [class.active]="tableService.rowHeight() === 'low'">
+            <a
+                thyDropdownMenuItem
+                href="javascript:;"
+                (click)="setRowHeight(aITableRowHeight.low)"
+                [class.active]="tableService.rowHeight() === aITableRowHeight.low"
+            >
                 <span>低 (44px)</span>
             </a>
             <a
                 thyDropdownMenuItem
                 href="javascript:;"
-                (click)="setRowHeight('medium')"
-                [class.active]="tableService.rowHeight() === 'medium'"
+                (click)="setRowHeight(aITableRowHeight.medium)"
+                [class.active]="tableService.rowHeight() === aITableRowHeight.medium"
             >
                 <span>中 (88px)</span>
             </a>
-            <a thyDropdownMenuItem href="javascript:;" (click)="setRowHeight('high')" [class.active]="tableService.rowHeight() === 'high'">
+            <a
+                thyDropdownMenuItem
+                href="javascript:;"
+                (click)="setRowHeight(aITableRowHeight.high)"
+                [class.active]="tableService.rowHeight() === aITableRowHeight.high"
+            >
                 <span>高 (148px)</span>
             </a>
         </thy-dropdown-menu>
