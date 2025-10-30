@@ -100,6 +100,8 @@ export abstract class CellBaseLayout {
             const itemRenderInfo = this.getItemRenderInfo(item, remainingWidth);
             this.renderItems.push({
                 ...itemRenderInfo,
+                x: cellX,
+                y: cellY,
                 renderAtoms: itemRenderInfo.renderAtoms.map((atom) => this.transformAtomXYToCellXY({ cellX, cellY }, atom))
             });
             remainingWidth -= itemRenderInfo.width + this.itemOffsetX;
@@ -131,6 +133,8 @@ export abstract class CellBaseLayout {
                                 const newLastItemRenderInfo = this.getItemRenderInfo(item, lastItem.width + remainingWidth);
                                 this.renderItems.push({
                                     ...newLastItemRenderInfo,
+                                    x: cellX,
+                                    y: cellY,
                                     renderAtoms: newLastItemRenderInfo.renderAtoms.map((atom) =>
                                         this.transformAtomXYToCellXY({ cellX, cellY }, atom)
                                     )
@@ -143,6 +147,8 @@ export abstract class CellBaseLayout {
                         }
                         this.renderItems.push({
                             ...moreItemRenderInfo,
+                            x: cellX,
+                            y: cellY,
                             renderAtoms: moreItemRenderInfo.renderAtoms.map((atom) => this.transformAtomXYToCellXY({ cellX, cellY }, atom))
                         });
                     }
