@@ -5,6 +5,7 @@ import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_ROW_BLANK_HEIGHT,
+    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_FAMILY,
@@ -43,7 +44,9 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
                 </ko-group>
             } @else {
                 @if (textConfig()) {
-                    <ai-table-text [config]="textConfig()!"></ai-table-text>
+                    <ko-group>
+                        <ai-table-text [config]="textConfig()!"></ai-table-text>
+                    </ko-group>
                 }
             }
         </ko-group>
@@ -119,7 +122,7 @@ export class AITableCellText extends CoverCellBase {
             wrap: 'char',
             width: this.textMaxWidth(),
             align: DEFAULT_TEXT_ALIGN_LEFT,
-            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+            verticalAlign: 'top',
             fontStyle: DEFAULT_FONT_STYLE,
             ellipsis: DEFAULT_TEXT_ELLIPSIS,
             transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
@@ -133,7 +136,7 @@ export class AITableCellText extends CoverCellBase {
 
     textMaxWidth = computed(() => {
         const { columnWidth } = this.config()?.render!;
-        return columnWidth - AI_TABLE_CELL_PADDING - AI_TABLE_CELL_PADDING;
+        return columnWidth - AI_TABLE_CELL_PADDING - AI_TABLE_CELL_PADDING + 8;
     });
 
     textString = computed(() => {
@@ -153,7 +156,10 @@ export class AITableCellText extends CoverCellBase {
     startY = computed(() => {
         const { y, rowHeight } = this.config()?.render!;
         return (
-            y + (rowHeight - DEFAULT_FONT_SIZE) / 2 - (DEFAULT_FONT_SIZE * (AI_TABLE_TEXT_LINE_HEIGHT - 1)) / 2 + AI_TABLE_CELL_LINE_BORDER
+            y +
+            (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE) / 2 -
+            (DEFAULT_FONT_SIZE * (AI_TABLE_TEXT_LINE_HEIGHT - 1)) / 2 +
+            AI_TABLE_CELL_LINE_BORDER
         );
     });
 
@@ -165,6 +171,7 @@ export class AITableCellText extends CoverCellBase {
             if (isUndefinedOrNull(textRender)) {
                 return;
             }
+            const { height } = this.expandTextBounds();
 
             return {
                 x,
@@ -179,6 +186,8 @@ export class AITableCellText extends CoverCellBase {
                 width: this.textMaxWidth(),
                 fillStyle: Colors.primary,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+                verticalAlign: 'top',
+                height,
                 listening: true,
                 ellipsis: true,
                 zIndex
@@ -195,11 +204,13 @@ export class AITableCellText extends CoverCellBase {
             if (isUndefinedOrNull(textRender)) {
                 return;
             }
+
             return {
                 x,
-                y,
+                y: this.startY(),
+                verticalAlign: 'top',
                 text: textRender,
-                wrap: 'none',
+                wrap: 'char',
                 width: this.textMaxWidth(),
                 fillStyle: Colors.primary,
                 height: rowHeight + AI_TABLE_CELL_LINE_BORDER * 2,

@@ -51,7 +51,8 @@ import {
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
-    Unchecked
+    Unchecked,
+    AI_TABLE_ROW_HEIGHT
 } from '../../constants';
 import { AITable } from '../../core';
 import {
@@ -71,6 +72,7 @@ import { getFileThumbnailSvgString } from '../../utils/file';
 import { MultiSelectLayout } from '../cell-layout/fields';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { CellBaseLayout } from '../cell-layout/base';
+import Konva from 'konva';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -99,7 +101,7 @@ export class CellDrawer extends Drawer {
 
     // 单元格渲染
     public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined) {
-        const { field, cellValue, aiTable, columnWidth } = render;
+        const { field, cellValue, aiTable, columnWidth, x, y } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
         if (!fieldMethod.isValid(cellValue)) {
@@ -111,6 +113,8 @@ export class CellDrawer extends Drawer {
             return customFieldRender(render, this);
         }
 
+        let cellLayout: CellBaseLayout | null | undefined;
+
         switch (fieldType) {
             case AITableFieldType.text:
             case AITableFieldType.richText:
@@ -118,7 +122,8 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.link:
                 return this.renderCellText(render, ctx);
             case AITableFieldType.select:
-                return this.renderCellSelect(render, ctx);
+                cellLayout = this.renderCellSelect(render, ctx);
+                break;
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
@@ -137,6 +142,9 @@ export class CellDrawer extends Drawer {
                 return this.renderCellCheckbox(render, ctx);
             default:
                 return null;
+        }
+        if (cellLayout) {
+            this.renderAtoms({ x, y }, cellLayout);
         }
     }
 
@@ -159,7 +167,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, field, columnWidth, style, isGroupFirstRender } = render;
+        const { x, y, transformValue, field, columnWidth, rowHeight, style, isGroupFirstRender } = render;
         if (isUndefinedOrNull(transformValue)) {
             return;
         }
@@ -184,6 +192,7 @@ export class CellDrawer extends Drawer {
         const renderX = textAlign === DEFAULT_TEXT_ALIGN_RIGHT ? x + columnWidth - AI_TABLE_CELL_PADDING : x + AI_TABLE_CELL_PADDING;
         const renderY = y + AI_TABLE_ROW_BLANK_HEIGHT / 2;
         const textDecoration = DEFAULT_TEXT_DECORATION;
+        const maxRow = Math.floor((rowHeight - (AI_TABLE_ROW_HEIGHT - DEFAULT_TEXT_LINE_HEIGHT) / 2) / DEFAULT_TEXT_LINE_HEIGHT);
 
         if (isNumberField) {
             renderText = numberFormat(Number(renderText));
@@ -211,7 +220,7 @@ export class CellDrawer extends Drawer {
                 y: renderY,
                 text: renderText,
                 maxWidth: textMaxWidth,
-                maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
+                maxRow,
                 lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
                 textAlign,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
@@ -227,9 +236,9 @@ export class CellDrawer extends Drawer {
     private renderCellSelect(render: AITableRender, ctx?: any) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
-            this.renderCellMultiSelect2(render, ctx);
+            return this.renderCellMultiSelect2(render, ctx);
         } else {
-            this.renderSingleSelectCell(render, ctx);
+            return this.renderSingleSelectCell(render, ctx);
         }
     }
 
@@ -445,15 +454,12 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
-        const { x, y, field } = render;
+        const { field } = render;
         let transformValue = this.getValidSelectedValue(field, render.transformValue);
         if (!transformValue.length) {
             return;
         }
-
-        const selectLayout = new MultiSelectLayout(render, {});
-        // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
-        this.renderAtoms({ x, y }, selectLayout);
+        return new MultiSelectLayout(render, {});
     }
 
     private renderAtoms(position: { x: number; y: number }, cellLayout: CellBaseLayout) {
@@ -584,6 +590,7 @@ export class CellDrawer extends Drawer {
 
             ctx.restore();
         }
+        return null;
     }
 
     private renderCellDate(render: AITableRender, ctx?: any) {

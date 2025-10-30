@@ -47,20 +47,15 @@ export class AITableCellLink extends CoverCellBase {
             }
 
             textRender = textRender.replace(/\r|\n/g, ' ');
-            const fontWeight = style?.fontWeight;
-            const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
-            const { text, textWidth } = drawer.textEllipsis({
-                text: textRender,
-                maxWidth: textMaxWidth,
-                fontWeight
-            });
-
+            const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING + 8;
             return {
                 x,
-                y: (rowHeight - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
-                text,
-                wrap: 'none',
-                width: textWidth,
+                y: (44 - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
+                text: textRender,
+                wrap: 'char',
+                width: textMaxWidth,
+                verticalAlign: 'top',
+                height: rowHeight,
                 fillStyle: Colors.primary,
                 fill: Colors.primary,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
