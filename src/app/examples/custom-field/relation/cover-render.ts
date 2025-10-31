@@ -19,14 +19,13 @@ import {
     CoverCellBase,
     setExpandCellInfo
 } from '@ai-table/grid';
-import { getRelationItemsConfigs } from './render';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import {
     TARGET_NAME_CELL_MORE_COUNT,
     TARGET_NAME_CELL_RELATION_DELETE,
     TARGET_NAME_CELL_RELATION_ADD,
-    RelationHeaderType,
+    RelationOptionStyle,
     RelationKonvaConfig,
     RelationConfig,
     RelationFieldType
@@ -36,7 +35,7 @@ import { CommonModule } from '@angular/common';
 @Component({
     selector: 'ai-table-relation',
     template: `
-        <ko-group>
+        <!-- <ko-group>
             @if (onlyDisplayBorder()) {
                 @if (expandBorderConfig()) {
                     <ko-rect [config]="expandBorderConfig()!"></ko-rect>
@@ -133,7 +132,7 @@ import { CommonModule } from '@angular/common';
                     }
                 </ko-group>
             }
-        </ko-group>
+        </ko-group> -->
     `,
     imports: [CommonModule, KoShape, KoContainer, AITableActionIcon, AITableTextComponent, AITableScrollableGroup],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -141,224 +140,224 @@ import { CommonModule } from '@angular/common';
 export class RelationCoverCell extends CoverCellBase {
     constructor() {
         super();
-        effect(() => {
-            const height = this.renderHeight();
-            if (this.isExpand()) {
-                untracked(() => {
-                    const { render, aiTable } = this.config()!;
-                    const { columnWidth } = render;
-                    setExpandCellInfo(aiTable, { width: columnWidth, height });
-                });
-            }
-        });
+        // effect(() => {
+        //     const height = this.renderHeight();
+        //     if (this.isExpand()) {
+        //         untracked(() => {
+        //             const { render, aiTable } = this.config()!;
+        //             const { columnWidth } = render;
+        //             setExpandCellInfo(aiTable, { width: columnWidth, height });
+        //         });
+        //     }
+        // });
     }
 
-    readonly renderHeight = computed(() => {
-        const { totalHeight } = this.relationRenderConfig();
-        return Math.min(totalHeight, 148);
-    });
+    // readonly renderHeight = computed(() => {
+    //     const { totalHeight } = this.relationRenderConfig();
+    //     return Math.min(totalHeight, 148);
+    // });
 
-    readonly expandBorderConfig = computed(() => {
-        const { render, isExpand } = this.config()!;
-        const { columnWidth } = render;
-        if (isExpand) {
-            return {
-                width: columnWidth - AI_TABLE_CELL_BORDER / 2,
-                height: this.renderHeight(),
-                stroke: Colors.primary,
-                strokeWidth: 2,
-                listening: false
-            };
-        }
-        return null;
-    });
+    // readonly expandBorderConfig = computed(() => {
+    //     const { render, isExpand } = this.config()!;
+    //     const { columnWidth } = render;
+    //     if (isExpand) {
+    //         return {
+    //             width: columnWidth - AI_TABLE_CELL_BORDER / 2,
+    //             height: this.renderHeight(),
+    //             stroke: Colors.primary,
+    //             strokeWidth: 2,
+    //             listening: false
+    //         };
+    //     }
+    //     return null;
+    // });
 
-    readonly expandContainer = computed(() => {
-        const { render, field, recordId, isExpand } = this.config()!;
-        const { columnWidth } = render;
-        if (isExpand) {
-            return {
-                name: generateTargetName({
-                    targetName: AI_TABLE_CELL,
-                    fieldId: field._id,
-                    recordId,
-                    mouseStyle: 'default'
-                }),
-                width: columnWidth,
-                height: this.renderHeight(),
-                fill: Colors.white,
-                listening: true
-            };
-        }
-        return null;
-    });
+    // readonly expandContainer = computed(() => {
+    //     const { render, field, recordId, isExpand } = this.config()!;
+    //     const { columnWidth } = render;
+    //     if (isExpand) {
+    //         return {
+    //             name: generateTargetName({
+    //                 targetName: AI_TABLE_CELL,
+    //                 fieldId: field._id,
+    //                 recordId,
+    //                 mouseStyle: 'default'
+    //             }),
+    //             width: columnWidth,
+    //             height: this.renderHeight(),
+    //             fill: Colors.white,
+    //             listening: true
+    //         };
+    //     }
+    //     return null;
+    // });
 
-    readonly scrollConfig = computed<ScrollableGroupConfig>(() => {
-        const { render } = this.config()!;
-        const { columnWidth } = render;
-        const { totalHeight } = this.relationRenderConfig();
+    // readonly scrollConfig = computed<ScrollableGroupConfig>(() => {
+    //     const { render } = this.config()!;
+    //     const { columnWidth } = render;
+    //     const { totalHeight } = this.relationRenderConfig();
 
-        return {
-            width: columnWidth,
-            height: this.renderHeight(),
-            contentWidth: columnWidth,
-            contentHeight: totalHeight,
-            scrollbarSize: 9,
-            scrollbarColor: Colors.gray700,
-            x: 0,
-            y: 0,
-            listening: true,
-            verticalScrollbar: true,
-            horizontalScrollbar: true,
-            contentNotScrollbar: false
-        };
-    });
+    //     return {
+    //         width: columnWidth,
+    //         height: this.renderHeight(),
+    //         contentWidth: columnWidth,
+    //         contentHeight: totalHeight,
+    //         scrollbarSize: 9,
+    //         scrollbarColor: Colors.gray700,
+    //         x: 0,
+    //         y: 0,
+    //         listening: true,
+    //         verticalScrollbar: true,
+    //         horizontalScrollbar: true,
+    //         contentNotScrollbar: false
+    //     };
+    // });
 
-    readonly relationRenderConfig = computed(() => {
-        const { render, field, readonly, isExpand } = this.config()!;
-        render.transformValue = render.transformValue || [];
-        let headerType = RelationHeaderType.icon;
-        if (field.type === RelationFieldType.relationObjective) {
-            headerType = RelationHeaderType.tag;
-        }
-        const { relationItems, moreCount, addActionConfig, totalHeight } = getRelationItemsConfigs(
-            {
-                ...render,
-                x: AI_TABLE_OFFSET,
-                y: AI_TABLE_OFFSET
-            },
-            drawer,
-            {
-                showAddAction: !readonly,
-                showClose: !readonly && isExpand,
-                multilineRow: isExpand,
-                headerType
-            }
-        );
-        return {
-            relationItems,
-            moreCount,
-            addActionConfig,
-            totalHeight
-        };
-    });
+    // readonly relationRenderConfig = computed(() => {
+    //     const { render, field, readonly, isExpand } = this.config()!;
+    //     render.transformValue = render.transformValue || [];
+    //     let headerType = RelationOptionStyle.icon;
+    //     if (field.type === RelationFieldType.relationObjective) {
+    //         headerType = RelationOptionStyle.tag;
+    //     }
+    //     const { relationItems, moreCount, addActionConfig, totalHeight } = getRelationItemsConfigs(
+    //         {
+    //             ...render,
+    //             x: AI_TABLE_OFFSET,
+    //             y: AI_TABLE_OFFSET
+    //         },
+    //         drawer,
+    //         {
+    //             showAddAction: !readonly,
+    //             showClose: !readonly && isExpand,
+    //             multilineRow: isExpand,
+    //             headerType
+    //         }
+    //     );
+    //     return {
+    //         relationItems,
+    //         moreCount,
+    //         addActionConfig,
+    //         totalHeight
+    //     };
+    // });
 
-    readonly moreCount = computed<{
-        bgRect: RectConfig;
-        text: TextConfig;
-    } | null>(() => {
-        const { render, aiTable, field, recordId, readonly } = this.config()!;
-        const { rowHeight } = render;
-        const moreCount = this.relationRenderConfig().moreCount;
-        if (moreCount) {
-            return {
-                bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
-                    name: generateTargetName({
-                        targetName: AI_TABLE_CELL,
-                        fieldId: field._id,
-                        recordId,
-                        source: TARGET_NAME_CELL_MORE_COUNT,
-                        mouseStyle: 'pointer'
-                    }),
-                    listening: true
-                }),
-                text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
-            };
-        }
-        return null;
-    });
+    // readonly moreCount = computed<{
+    //     bgRect: RectConfig;
+    //     text: TextConfig;
+    // } | null>(() => {
+    //     const { render, aiTable, field, recordId, readonly } = this.config()!;
+    //     const { rowHeight } = render;
+    //     const moreCount = this.relationRenderConfig().moreCount;
+    //     if (moreCount) {
+    //         return {
+    //             bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
+    //                 name: generateTargetName({
+    //                     targetName: AI_TABLE_CELL,
+    //                     fieldId: field._id,
+    //                     recordId,
+    //                     source: TARGET_NAME_CELL_MORE_COUNT,
+    //                     mouseStyle: 'pointer'
+    //                 }),
+    //                 listening: true
+    //             }),
+    //             text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
+    //         };
+    //     }
+    //     return null;
+    // });
 
-    readonly relations = computed<RelationKonvaConfig[]>(() => {
-        const { render, aiTable, field, recordId, readonly, coordinate } = this.config()!;
-        const { rowHeight } = render;
-        const { relationItems } = this.relationRenderConfig();
-        if (relationItems?.length > 0) {
-            const items = relationItems.map((relationItem: RelationConfig) => {
-                const { relationInfo } = relationItem;
-                const relationConfig: RelationKonvaConfig = {
-                    bgRect: {
-                        ...aiTableRectConfigToKonvaConfig(relationItem.bgRect!, {
-                            name: generateTargetName({
-                                targetName: AI_TABLE_CELL,
-                                fieldId: field._id,
-                                recordId,
-                                mouseStyle: readonly ? 'default' : 'pointer',
-                                source: relationInfo?._id
-                            }),
-                            listening: true
-                        }),
-                        relationInfo: relationInfo!
-                    },
-                    relationInfo: relationItem.relationInfo!
-                };
-                if (relationItem.whole_identifier) {
-                    relationConfig.whole_identifier = aiTableTextConfigToKonvaConfig(relationItem.whole_identifier, rowHeight);
-                }
-                if (relationItem.title) {
-                    relationConfig.title = aiTableTextConfigToKonvaConfig(relationItem.title, rowHeight);
-                }
+    // readonly relations = computed<RelationKonvaConfig[]>(() => {
+    //     const { render, aiTable, field, recordId, readonly, coordinate } = this.config()!;
+    //     const { rowHeight } = render;
+    //     const { relationItems } = this.relationRenderConfig();
+    //     if (relationItems?.length > 0) {
+    //         const items = relationItems.map((relationItem: RelationConfig) => {
+    //             const { relationInfo } = relationItem;
+    //             const relationConfig: RelationKonvaConfig = {
+    //                 bgRect: {
+    //                     ...aiTableRectConfigToKonvaConfig(relationItem.bgRect!, {
+    //                         name: generateTargetName({
+    //                             targetName: AI_TABLE_CELL,
+    //                             fieldId: field._id,
+    //                             recordId,
+    //                             mouseStyle: readonly ? 'default' : 'pointer',
+    //                             source: relationInfo?._id
+    //                         }),
+    //                         listening: true
+    //                     }),
+    //                     relationInfo: relationInfo!
+    //                 },
+    //                 relationInfo: relationItem.relationInfo!
+    //             };
+    //             if (relationItem.whole_identifier) {
+    //                 relationConfig.whole_identifier = aiTableTextConfigToKonvaConfig(relationItem.whole_identifier, rowHeight);
+    //             }
+    //             if (relationItem.title) {
+    //                 relationConfig.title = aiTableTextConfigToKonvaConfig(relationItem.title, rowHeight);
+    //             }
 
-                if (relationItem.icon) {
-                    relationConfig.icon = aiTableImageConfigToKonvaConfig(relationItem.icon, {
-                        listening: false
-                    });
-                }
-                if (relationItem?.tag) {
-                    relationConfig.tag = {
-                        bgRect: aiTableRectConfigToKonvaConfig(relationItem.tag.bgRect, {
-                            name: generateTargetName({
-                                targetName: AI_TABLE_CELL,
-                                fieldId: field._id,
-                                recordId,
-                                source: TARGET_NAME_CELL_MORE_COUNT,
-                                mouseStyle: 'pointer'
-                            }),
-                            listening: false
-                        }),
-                        text: aiTableTextConfigToKonvaConfig(relationItem.tag.text, rowHeight)
-                    };
-                }
-                if (relationItem?.closeActionConfig && !readonly) {
-                    relationConfig.closeActionConfig = {
-                        ...relationItem?.closeActionConfig,
-                        coordinate,
-                        readonly,
-                        listening: true,
-                        name: generateTargetName({
-                            targetName: AI_TABLE_CELL,
-                            fieldId: field._id,
-                            recordId,
-                            source: TARGET_NAME_CELL_RELATION_DELETE,
-                            mouseStyle: readonly ? 'default' : 'pointer'
-                        }),
-                        source: relationInfo
-                    };
-                }
-                return relationConfig;
-            });
-            return items;
-        }
-        return [];
-    });
+    //             if (relationItem.icon) {
+    //                 relationConfig.icon = aiTableImageConfigToKonvaConfig(relationItem.icon, {
+    //                     listening: false
+    //                 });
+    //             }
+    //             if (relationItem?.tag) {
+    //                 relationConfig.tag = {
+    //                     bgRect: aiTableRectConfigToKonvaConfig(relationItem.tag.bgRect, {
+    //                         name: generateTargetName({
+    //                             targetName: AI_TABLE_CELL,
+    //                             fieldId: field._id,
+    //                             recordId,
+    //                             source: TARGET_NAME_CELL_MORE_COUNT,
+    //                             mouseStyle: 'pointer'
+    //                         }),
+    //                         listening: false
+    //                     }),
+    //                     text: aiTableTextConfigToKonvaConfig(relationItem.tag.text, rowHeight)
+    //                 };
+    //             }
+    //             if (relationItem?.closeActionConfig && !readonly) {
+    //                 relationConfig.closeActionConfig = {
+    //                     ...relationItem?.closeActionConfig,
+    //                     coordinate,
+    //                     readonly,
+    //                     listening: true,
+    //                     name: generateTargetName({
+    //                         targetName: AI_TABLE_CELL,
+    //                         fieldId: field._id,
+    //                         recordId,
+    //                         source: TARGET_NAME_CELL_RELATION_DELETE,
+    //                         mouseStyle: readonly ? 'default' : 'pointer'
+    //                     }),
+    //                     source: relationInfo
+    //                 };
+    //             }
+    //             return relationConfig;
+    //         });
+    //         return items;
+    //     }
+    //     return [];
+    // });
 
-    readonly addActionConfig = computed<AITableActionIconConfig | null>(() => {
-        const { coordinate, field, recordId, readonly } = this.config()!;
-        const { addActionConfig } = this.relationRenderConfig();
-        if (!addActionConfig) {
-            return null;
-        }
-        return {
-            ...addActionConfig,
-            coordinate,
-            readonly,
-            listening: true,
-            name: generateTargetName({
-                targetName: AI_TABLE_CELL,
-                fieldId: field._id,
-                recordId,
-                source: TARGET_NAME_CELL_RELATION_ADD,
-                mouseStyle: readonly ? 'default' : 'pointer'
-            })
-        };
-    });
+    // readonly addActionConfig = computed<AITableActionIconConfig | null>(() => {
+    //     const { coordinate, field, recordId, readonly } = this.config()!;
+    //     const { addActionConfig } = this.relationRenderConfig();
+    //     if (!addActionConfig) {
+    //         return null;
+    //     }
+    //     return {
+    //         ...addActionConfig,
+    //         coordinate,
+    //         readonly,
+    //         listening: true,
+    //         name: generateTargetName({
+    //             targetName: AI_TABLE_CELL,
+    //             fieldId: field._id,
+    //             recordId,
+    //             source: TARGET_NAME_CELL_RELATION_ADD,
+    //             mouseStyle: readonly ? 'default' : 'pointer'
+    //         })
+    //     };
+    // });
 }
