@@ -462,10 +462,6 @@ export class CellDrawer extends Drawer {
             return;
         }
         return new MultiSelectLayout(render, {});
-
-        // const selectLayout = new MultiSelectLayout(render, {});
-        // // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
-        // this.renderAtoms(ctx, { x, y }, selectLayout);
     }
 
     private renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
