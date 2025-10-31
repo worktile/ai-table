@@ -74,8 +74,7 @@ export const AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT = 8; // 成员头像与成
 
 export const AI_TABLE_FILE_ICON_ITEM_HEIGHT = 20; // 文件字段项高度
 export const AI_TABLE_FILE_ICON_SIZE = 20; // 文件图标大小
-export const AI_TABLE_CELL_FIELD_ITEM_HEIGHT = 8; // 文件字段项右边距
-export const AI_TABLE_FIELD_ITEM_MARGIN_RIGHT = 8; // 文件图标之间的间距
+export const AI_TABLE_FILE_ITEM_MARGIN_RIGHT = 8; // 文件图标之间的间距
 
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
