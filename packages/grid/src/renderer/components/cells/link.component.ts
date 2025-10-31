@@ -47,13 +47,19 @@ export class AITableCellLink extends CoverCellBase {
             }
 
             textRender = textRender.replace(/\r|\n/g, ' ');
+            const fontWeight = style?.fontWeight;
             const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
+            const { textWidth } = drawer.textEllipsis({
+                text: textRender,
+                maxWidth: textMaxWidth,
+                fontWeight
+            });
             return {
                 x,
                 y: (44 - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
                 text: textRender,
                 wrap: 'char',
-                width: textMaxWidth,
+                width: textWidth,
                 verticalAlign: 'top',
                 height: rowHeight,
                 fillStyle: Colors.primary,
