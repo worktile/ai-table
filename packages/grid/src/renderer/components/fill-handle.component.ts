@@ -53,8 +53,8 @@ export class AITableFillHandle {
             expandRecordId === recordId && expandFieldId === fieldId && aiTable.expendCell()?.height
                 ? aiTable.expendCell()?.height
                     ? aiTable.expendCell()!.height! + AI_TABLE_CELL_LINE_BORDER
-                    : AI_TABLE_ROW_HEIGHT
-                : AI_TABLE_ROW_HEIGHT;
+                    : coordinate.rowInitSize
+                : coordinate.rowInitSize;
         return {
             x: columnOffset + columnWidth - width / 2 + AI_TABLE_OFFSET,
             y: rowOffset + cellHeight - height + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
