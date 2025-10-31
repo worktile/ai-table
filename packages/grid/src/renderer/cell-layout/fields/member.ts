@@ -46,12 +46,10 @@ export class MemberLayout extends CellBaseLayout {
             const textAtom = this.getTextAtom(`+${count}`, undefined, FONT_SIZE_SM);
             itemWidth += textAtom.width!;
             renderAtoms.push({
-                type: AITableRenderAtomType.rect,
-                x: lastItem.x,
-                y: lastItem.y,
-                width: AITableAvatarSize.size24,
-                height: AITableAvatarSize.size24,
-                radius: 24,
+                type: AITableRenderAtomType.circle,
+                x: lastItem.x + AITableAvatarSize.size24 / 2,
+                y: lastItem.y + AITableAvatarSize.size24 / 2,
+                radius: AITableAvatarSize.size24 / 2,
                 fillStyle: Colors.black,
                 alpha: 0.3
             });
@@ -63,8 +61,8 @@ export class MemberLayout extends CellBaseLayout {
             });
             return [
                 {
-                    x: 0,
-                    y: 0,
+                    x: lastItem.x,
+                    y: lastItem.y,
                     width: itemWidth,
                     height: AITableAvatarSize.size24,
                     renderAtoms
@@ -88,7 +86,7 @@ export class MemberLayout extends CellBaseLayout {
         const { uid, display_name, avatar } = userInfo;
         if (hasText) {
             renderAtoms.push({
-                type: AITableRenderAtomType.image,
+                type: AITableRenderAtomType.avatar,
                 uid,
                 url: avatar,
                 x: 0,
@@ -108,7 +106,7 @@ export class MemberLayout extends CellBaseLayout {
             });
         } else {
             renderAtoms.push({
-                type: AITableRenderAtomType.image,
+                type: AITableRenderAtomType.avatar,
                 uid,
                 url: avatar,
                 x: 0,

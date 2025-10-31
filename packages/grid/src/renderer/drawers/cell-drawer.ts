@@ -487,14 +487,21 @@ export class CellDrawer extends Drawer {
                     }
                     break;
                 case AITableRenderAtomType.circle:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.arc({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
                         radius: atom.radius!,
                         fill: atom.fillStyle
                     });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
                     break;
-                case AITableRenderAtomType.image:
+                case AITableRenderAtomType.avatar:
                     this.avatar({
                         x: position.x + atom.x,
                         y: position.y + atom.y,

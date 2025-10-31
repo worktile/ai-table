@@ -3,7 +3,8 @@ export enum AITableRenderAtomType {
     image = 'image',
     patch = 'patch',
     rect = 'rect',
-    circle = 'circle'
+    circle = 'circle',
+    avatar = 'avatar'
 }
 
 export interface AITableRenderAtom {
