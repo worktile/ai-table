@@ -1,11 +1,11 @@
-import { Colors } from '../constants';
+import { AI_TABLE_TEXT_LINE_HEIGHT, Colors } from '../constants';
 
 export const DEFAULT_FONT_SIZE = 14;
 export const GROUP_STAT_DEFAULT_FONT_SIZE = 12;
 export const DEFAULT_FONT_FAMILY =
     '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Helvetica Neue,Noto Sans,Noto Sans CJK SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif';
 export const DEFAULT_FONT_STYLE = 'normal';
-export const DEFAULT_TEXT_LINE_HEIGHT = 25.76;
+export const DEFAULT_TEXT_LINE_HEIGHT = DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT;
 export const DEFAULT_TEXT_FILL = Colors.gray800;
 export const DEFAULT_FONT_WEIGHT = 'normal';
 export const DEFAULT_TEXT_WRAP = 'none';

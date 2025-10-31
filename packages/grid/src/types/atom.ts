@@ -23,4 +23,5 @@ export interface AITableRenderAtom {
     url?: string;
     title?: string;
     bgColor?: string;
+    image?: string;
 }
