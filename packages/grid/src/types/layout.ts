@@ -21,6 +21,7 @@ export interface AITableCellLayout {
     itemOffsetX?: number;
     minItemWidth?: number;
     noMoreItem?: boolean;
+    renderWidth?: number;
 }
 
 export interface AITableCellItem {

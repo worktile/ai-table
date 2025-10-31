@@ -45,16 +45,16 @@ export class MemberLayout extends CellBaseLayout {
             itemWidth += textAtom.width!;
             renderAtoms.push({
                 type: AITableRenderAtomType.circle,
-                x: lastItem.x + AITableAvatarSize.size24 / 2,
-                y: lastItem.y + AITableAvatarSize.size24 / 2,
+                x: lastItem.x! + AITableAvatarSize.size24 / 2,
+                y: lastItem.y! + AITableAvatarSize.size24 / 2,
                 radius: AITableAvatarSize.size24 / 2,
                 fillStyle: Colors.black,
                 alpha: 0.3
             });
             renderAtoms.push({
                 ...textAtom,
-                x: lastItem.x + (AITableAvatarSize.size24 - textAtom.width!) / 2,
-                y: lastItem.y + (AITableAvatarSize.size24 - FONT_SIZE_SM) / 2,
+                x: lastItem.x! + (AITableAvatarSize.size24 - textAtom.width!) / 2,
+                y: lastItem.y! + (AITableAvatarSize.size24 - FONT_SIZE_SM) / 2,
                 fillStyle: Colors.white
             });
             return [

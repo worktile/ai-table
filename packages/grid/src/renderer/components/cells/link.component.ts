@@ -3,6 +3,7 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_SIZE
@@ -50,7 +51,7 @@ export class AITableCellLink extends CoverCellBase {
             const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
             return {
                 x,
-                y: (44 - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
+                y: (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
                 text: textRender,
                 wrap: 'char',
                 width: textMaxWidth,

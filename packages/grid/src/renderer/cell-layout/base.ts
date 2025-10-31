@@ -15,7 +15,7 @@ import { helpers } from 'ngx-tethys/util';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { drawer } from '../drawers/drawer';
 
-export abstract class CellBaseLayout {
+export abstract class CellBaseLayout<T extends AITableCellItemRenderInfo = AITableCellItemRenderInfo> {
     protected cellLayoutOption: AITableCellLayout;
 
     protected renderInfo: AITableRender;
@@ -24,7 +24,7 @@ export abstract class CellBaseLayout {
         return AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH;
     }
 
-    abstract getItemRenderInfo(item: any, containerMaxWidth: number): AITableCellItemRenderInfo;
+    abstract getItemRenderInfo(item: any, containerMaxWidth: number): T | null;
 
     getAbsoluteItemRenderInfos?(): AITableCellItemRenderInfo[];
 
@@ -65,7 +65,7 @@ export abstract class CellBaseLayout {
     }
 
     get renderWidth() {
-        return this.renderInfo.columnWidth - 2 * AI_TABLE_CELL_PADDING;
+        return this.cellLayoutOption.renderWidth || this.renderInfo.columnWidth - 2 * AI_TABLE_CELL_PADDING;
     }
 
     get moreBgRadius() {
@@ -97,6 +97,9 @@ export abstract class CellBaseLayout {
         for (let index = 0; index < this.items.length; index++) {
             const item = this.items[index];
             const itemRenderInfo = this.getItemRenderInfo(item, remainingWidth);
+            if (!itemRenderInfo) {
+                continue;
+            }
             this.renderItems.push({
                 ...itemRenderInfo,
                 x: cellX,
@@ -107,7 +110,7 @@ export abstract class CellBaseLayout {
             cellX += itemRenderInfo.width;
             cellX += this.itemOffsetX;
 
-            const tmpItemRenderInfo = this.getItemRenderInfo(item, this.renderWidth);
+            const tmpItemRenderInfo = this.getItemRenderInfo(item, this.renderWidth)!;
 
             const minItemWidth = Math.min(this.minItemWidth, tmpItemRenderInfo.width);
 
@@ -129,7 +132,7 @@ export abstract class CellBaseLayout {
                             cellX -= this.itemOffsetX;
                             // 判断原有的展示的最后一个元素缩小 remainingWidth 后，是否大于 最小展示宽度，如果大于，则缩小后展示
                             if (lastItem.width + remainingWidth >= minItemWidth) {
-                                const newLastItemRenderInfo = this.getItemRenderInfo(item, lastItem.width + remainingWidth);
+                                const newLastItemRenderInfo = this.getItemRenderInfo(item, lastItem.width + remainingWidth)!;
                                 this.renderItems.push({
                                     ...newLastItemRenderInfo,
                                     x: cellX,

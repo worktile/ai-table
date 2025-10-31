@@ -48,7 +48,7 @@ export const ticketIconSvg =
 export const closeIconSvg =
     '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fit="" height="1em" width="1em" preserveAspectRatio="xMidYMid meet" focusable="false"><g id="ahgaction/close" stroke-width="1" fill-rule="evenodd"><path d="M7.456 7.456V-.115h1.2v7.571h7.572v1.2H8.656v7.572h-1.2V8.656H-.115v-1.2h7.571z" id="ahg形状结合" transform="rotate(45 8.056 8.056)"></path></g></svg>';
 
-export const RELATION_FIELD_DEFAULT_WIDTH = 180;
+export const RELATION_FIELD_DEFAULT_WIDTH = 380;
 
 export const RELATION_FIELD_MIN_WIDTH = 245;
 
@@ -92,4 +92,15 @@ export interface RelationKonvaConfig extends ShapeConfig {
     whole_identifier?: TextConfig;
     title?: TextConfig | null;
     relationInfo: RelationInfo;
+}
+
+export function hexToRgba(hex: string, opacity: number = 1) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }

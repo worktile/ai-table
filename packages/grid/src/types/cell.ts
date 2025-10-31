@@ -78,9 +78,10 @@ export interface AITableCellStyle {
     stroke?: string;
 }
 
-export interface AITableCellItemRenderInfo {
-    x: number;
-    y: number;
+export interface AITableCellItemRenderInfo<TSource = any> {
+    x?: number;
+    y?: number;
+    source?: TSource;
     width: number;
     height: number;
     renderAtoms: AITableRenderAtom[];

@@ -162,7 +162,6 @@ export class RelationCellLayout extends CellBaseLayout {
         });
 
         // whole identifier
-        itemWidth += spaceBetweenIconAndText + identifierAtom.width! + spaceBetweenIconAndText;
         renderAtoms.push({
             ...identifierAtom,
             x: AI_TABLE_TAG_PADDING + tagWidth + spaceBetweenIconAndText,
