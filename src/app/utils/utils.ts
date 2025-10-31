@@ -944,7 +944,7 @@ export function getReferences(): AITableCustomReferences {
                 uid: 'member_01',
                 display_name: 'admin',
                 display_name_pinyin: 'admin',
-                avatar: 'https://s3.cn-north-1.amazonaws.com.cn/lcavatar/d242cf52-c1d1-4e95-a113-a7d30b0ede74_80x80.png'
+                avatar: 'https://app-pc-alpha-1251945081.cos.ap-nanjing.myqcloud.com/7d9eaab4-eba1-4c87-8cd3-71222a031141_80x80.png'
             },
             member_02: {
                 uid: 'member_02',
@@ -1096,7 +1096,17 @@ export function getBasicData() {
                 values: {
                     'column-text': '这是一个单行文本字段示例',
                     'column-select': ['option_1'],
-                    'column-checkbox': true
+                    'column-checkbox': true,
+                    'column-members': [
+                        'member_02',
+                        'member_03',
+                        'member_04',
+                        'member_05',
+                        'member_06',
+                        'member_07',
+                        'member_08'
+                    ],
+                    'column-member': ['member_01']
                 }
             },
             {
@@ -1110,7 +1120,9 @@ export function getBasicData() {
                 values: {
                     'column-text': '第二行的文本内容',
                     'column-select': ['option_2'],
-                    'column-checkbox': false
+                    'column-checkbox': false,
+                    'column-members': [],
+                    'column-member': []
                 }
             },
             {
@@ -1124,7 +1136,9 @@ export function getBasicData() {
                 values: {
                     'column-text': '第三行的文本内容',
                     'column-select': ['option_3'],
-                    'column-checkbox': true
+                    'column-checkbox': true,
+                    'column-members': [],
+                    'column-member': []
                 }
             }
         ],
@@ -1180,6 +1194,30 @@ export function getBasicData() {
                     view1: 65536 * 2,
                     view2: 65536 * 2
                 }
+            },
+            {
+                _id: 'column-members',
+                name: '成员',
+                positions: {
+                    view1: 65536 * 3,
+                    view2: 65536 * 3
+                },
+                settings: {
+                    is_multiple: true
+                },
+                type: AITableFieldType.member
+            },
+            {
+                _id: 'column-member',
+                name: '单成员',
+                positions: {
+                    view1: 65536 * 4,
+                    view2: 65536 * 4
+                },
+                settings: {
+                    is_multiple: false
+                },
+                type: AITableFieldType.member
             }
         ]
     };
