@@ -8,6 +8,7 @@ import { TableViewExample } from './examples/view/view.component';
 import { TableGroupExample } from './examples/group/group.component';
 import { TableFilterExample } from './examples/filter/filter.component';
 import { TableSortExample } from './examples/sort/sort.component';
+import { TableCustomFieldExample } from './examples/custom-field/custom-field.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,10 @@ export const routes: Routes = [
     {
         path: 'field-menu',
         component: TableFieldMenuExample
+    },
+    {
+        path: 'custom-field',
+        component: TableCustomFieldExample
     },
     {
         path: 'view',
