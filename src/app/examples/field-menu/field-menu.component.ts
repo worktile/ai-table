@@ -47,10 +47,10 @@ export class TableFieldMenuExample {
 
     plugins = [withState];
 
-    // 配置列菜单
     fieldConfig = computed<AIFieldConfig>(() => {
         const readonly = this.readonly();
         return {
+            // 配置列菜单
             fieldMenus: (aiTable: AITable) => {
                 return [
                     { ...EditFieldPropertyItem(aiTable as AIViewTable, this.actions, this.references()), hidden: () => readonly } as any,

@@ -72,7 +72,7 @@ import { getFileThumbnailSvgString } from '../../utils/file';
 import { MultiSelectLayout } from '../cell-layout/fields';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { CellBaseLayout } from '../cell-layout/base';
-import Konva from 'konva';
+import { MemberLayout } from '../cell-layout/fields/member';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -122,7 +122,7 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.link:
                 return this.renderCellText(render, ctx);
             case AITableFieldType.select:
-                cellLayout = this.renderCellSelect(render, ctx);
+                cellLayout = this.renderCellSelect(ctx, render);
                 break;
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
@@ -135,7 +135,8 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.member:
             case AITableFieldType.createdBy:
             case AITableFieldType.updatedBy:
-                return this.renderCellMember(render, ctx);
+                cellLayout = this.renderCellMember2(ctx, render);
+                break;
             case AITableFieldType.attachment:
                 return this.renderCellAttachment(render, ctx);
             case AITableFieldType.checkbox:
@@ -144,7 +145,7 @@ export class CellDrawer extends Drawer {
                 return null;
         }
         if (cellLayout) {
-            this.renderAtoms({ x, y }, cellLayout);
+            this.renderAtoms(ctx, { x, y }, cellLayout as CellBaseLayout);
         }
     }
 
@@ -233,7 +234,7 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellSelect(render: AITableRender, ctx?: any) {
+    private renderCellSelect(ctx: any, render: AITableRender) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
             return this.renderCellMultiSelect2(render, ctx);
@@ -455,14 +456,19 @@ export class CellDrawer extends Drawer {
 
     private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
         const { field } = render;
+
         let transformValue = this.getValidSelectedValue(field, render.transformValue);
         if (!transformValue.length) {
             return;
         }
         return new MultiSelectLayout(render, {});
+
+        // const selectLayout = new MultiSelectLayout(render, {});
+        // // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
+        // this.renderAtoms(ctx, { x, y }, selectLayout);
     }
 
-    private renderAtoms(position: { x: number; y: number }, cellLayout: CellBaseLayout) {
+    private renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
         cellLayout.renderAtoms.forEach((atom) => {
             switch (atom.type) {
                 case AITableRenderAtomType.text:
@@ -475,6 +481,10 @@ export class CellDrawer extends Drawer {
                     });
                     break;
                 case AITableRenderAtomType.rect:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.rect({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
@@ -483,13 +493,35 @@ export class CellDrawer extends Drawer {
                         radius: atom.radius,
                         fill: atom.fillStyle
                     });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
                     break;
                 case AITableRenderAtomType.circle:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.arc({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
                         radius: atom.radius!,
                         fill: atom.fillStyle
+                    });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
+                    break;
+                case AITableRenderAtomType.avatar:
+                    this.avatar({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        url: atom.url!,
+                        id: atom.uid!,
+                        title: atom.title!,
+                        bgColor: atom.bgColor!,
+                        type: AITableAvatarType.member,
+                        size: AITableAvatarSize.size24
                     });
                     break;
                 default:
@@ -811,6 +843,11 @@ export class CellDrawer extends Drawer {
                 }
             }
         }
+    }
+
+    private renderCellMember2(ctx: any, render: AITableRender) {
+        const { x, y } = render;
+        return new MemberLayout(render, {});
     }
 
     private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
