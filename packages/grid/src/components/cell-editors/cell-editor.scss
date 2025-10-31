@@ -14,6 +14,7 @@
     .form-control {
         border: 2px solid variables.$primary;
         min-height: 45px;
+        height: 100%;
         border-radius: 0;
         padding-top: cellEditorVariables.$cell-editor-padding-top;
         padding-bottom: cellEditorVariables.$cell-editor-padding-top;
@@ -23,6 +24,7 @@
 
 .text-cell-editor {
     display: block;
+    height: 100%;
     textarea {
         border: none;
         line-height: 24px;
@@ -43,17 +45,66 @@
         border: 2px solid variables.$primary;
         outline: none;
     }
-    .thy-select .select-control-multiple .select-option {
-        font-size: variables.$font-size-sm;
+    .thy-select {
+        height: 100%;
+        .select-control-multiple .select-option {
+            font-size: variables.$font-size-sm;
+        }
+        .select-control-arrow,
+        .select-control-clear {
+            top: cellEditorVariables.$cell-editor-padding-top;
+            transform: none;
+        }
     }
 }
 
 .number-cell-editor {
     .thy-input-number {
+        border: 2px solid variables.$primary;
+        border-radius: 0;
         .input-number-handler-wrap {
             height: calc(100% - 4px);
             top: 2px;
             right: 2px;
+        }
+        .form-control {
+            border: 0;
+            height: 45px;
+        }
+    }
+}
+
+.date-cell-editor {
+    thy-picker {
+        border: 2px solid variables.$primary;
+        border-radius: 0;
+        display: block;
+        height: 100%;
+        .thy-calendar-picker {
+            height: 100%;
+        }
+        .form-control {
+            border: 0;
+            height: 45px;
+        }
+        .thy-calendar-picker-icon {
+            top: cellEditorVariables.$cell-editor-padding-top + 6;
+            transform: none;
+        }
+    }
+}
+
+.ai-table-link-editor {
+    .thy-input-group {
+        border: 2px solid variables.$primary;
+        border-radius: 0;
+        align-items: start;
+        .form-control {
+            border: 0;
+            height: 45px;
+        }
+        .input-group-suffix {
+            margin-top: cellEditorVariables.$cell-editor-padding-top;
         }
     }
 }

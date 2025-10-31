@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
+import { ROW_HEIGHT_LEVELS } from '@ai-table/grid';
 
 @Component({
     selector: 'text-cell-editor',
@@ -27,7 +28,6 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 })
 export class TextCellEditorComponent extends AbstractEditCellEditor<string> implements AfterViewInit {
     private render2 = inject(Renderer2);
-    private maxHeight = 148;
 
     private minHeight = 24;
 
@@ -47,11 +47,10 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     updateStyle() {
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
         if (textarea) {
-            this.render2.setStyle(textarea, 'height', 'auto');
             const scrollHeight = textarea.scrollHeight;
-            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, this.maxHeight)) + 4;
+            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high)) + 4;
 
-            this.render2.setStyle(textarea, 'max-height', `${this.maxHeight}px`);
+            this.render2.setStyle(textarea, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
             this.render2.setStyle(textarea, 'height', `${newHeight}px`);
             this.render2.setStyle(textarea, 'resize', 'none');
         }
