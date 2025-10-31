@@ -526,8 +526,8 @@ export class CellDrawer extends Drawer {
                         x: position.x + atom.x,
                         y: position.y + atom.y,
                         url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(atom.image!)}`,
-                        width: AI_TABLE_FILE_ICON_SIZE,
-                        height: AI_TABLE_FILE_ICON_SIZE
+                        width: atom.width!,
+                        height: atom.height!
                     });
                     break;
                 default:
