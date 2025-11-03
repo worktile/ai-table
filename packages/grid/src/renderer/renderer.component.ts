@@ -229,9 +229,9 @@ export class AITableRenderer {
     frozenCoverAttachGroupConfig = computed<Partial<StageConfig>>(() => {
         return {
             clipX: 0,
-            clipY: this.coordinate()!.rowInitSize + 1,
+            clipY: AI_TABLE_FIELD_HEAD_HEIGHT + 1,
             clipWidth: this.frozenAreaWidth(),
-            clipHeight: this.gridContainerHeight() - this.coordinate()!.rowInitSize
+            clipHeight: this.gridContainerHeight() - AI_TABLE_FIELD_HEAD_HEIGHT
         };
     });
 

@@ -96,7 +96,7 @@ export class AITableCellProgress extends CoverCellBase {
             x: x - groupOffset - AI_TABLE_CELL_PADDING + AI_TABLE_CELL_BORDER / 2,
             y: y + AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET,
             width: coordinate.getColumnWidth(columnIndex) - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) * 2 + AI_TABLE_CELL_BORDER / 2,
-            height: AI_TABLE_ROW_BLANK_HEIGHT - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET),
+            height: coordinate.rowHeight - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) - 1,
             fill: bgColor,
             stroke: bgColor,
             name: generateTargetName({

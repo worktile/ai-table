@@ -16,8 +16,6 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
-    AI_TABLE_FIELD_ITEM_MARGIN_RIGHT,
-    AI_TABLE_FILE_ICON_ITEM_HEIGHT,
     AI_TABLE_FILE_ICON_SIZE,
     AI_TABLE_MEMBER_AVATAR_SIZE,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
@@ -51,7 +49,8 @@ import {
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
-    Unchecked
+    Unchecked,
+    AI_TABLE_ROW_HEIGHT
 } from '../../constants';
 import { AITable } from '../../core';
 import {
@@ -71,6 +70,8 @@ import { getFileThumbnailSvgString } from '../../utils/file';
 import { MultiSelectLayout } from '../cell-layout/fields';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
 import { CellBaseLayout } from '../cell-layout/base';
+import { MemberLayout } from '../cell-layout/fields/member';
+import { AttachmentLayout } from '../cell-layout/fields/attachment';
 
 /**
  * 处理和渲染表格单元格的内容
@@ -97,9 +98,8 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    // 单元格渲染
     public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined) {
-        const { field, cellValue, aiTable, columnWidth } = render;
+        const { field, cellValue, aiTable, columnWidth, x, y } = render;
         const fieldType = field.type;
         const fieldMethod = FieldModelMap[fieldType];
         if (!fieldMethod.isValid(cellValue)) {
@@ -108,8 +108,10 @@ export class CellDrawer extends Drawer {
 
         const customFieldRender = aiTable.context?.aiFieldConfig()?.customFields?.[fieldType]?.render;
         if (customFieldRender) {
-            return customFieldRender(render, this);
+            return customFieldRender(render, ctx, this);
         }
+
+        let cellLayout: CellBaseLayout | null | undefined;
 
         switch (fieldType) {
             case AITableFieldType.text:
@@ -118,7 +120,8 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.link:
                 return this.renderCellText(render, ctx);
             case AITableFieldType.select:
-                return this.renderCellSelect(render, ctx);
+                cellLayout = this.renderCellSelect(ctx, render);
+                break;
             case AITableFieldType.date:
             case AITableFieldType.createdAt:
             case AITableFieldType.updatedAt:
@@ -130,18 +133,23 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.member:
             case AITableFieldType.createdBy:
             case AITableFieldType.updatedBy:
-                return this.renderCellMember(render, ctx);
+                cellLayout = this.renderCellMember2(ctx, render);
+                break;
             case AITableFieldType.attachment:
-                return this.renderCellAttachment(render, ctx);
+                cellLayout = this.renderCellAttachment2(render);
+                break;
             case AITableFieldType.checkbox:
                 return this.renderCellCheckbox(render, ctx);
             default:
                 return null;
         }
+        if (cellLayout) {
+            this.renderAtoms(ctx, { x, y }, cellLayout as CellBaseLayout);
+        }
     }
 
     private renderCellCheckbox(render: AITableRender, ctx?: any) {
-        const { x, y, field, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
+        const { x, y, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
         if (isCoverCell) {
             return;
         }
@@ -159,7 +167,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellText(render: AITableRender, ctx?: any) {
-        const { x, y, transformValue, field, columnWidth, style, isGroupFirstRender } = render;
+        const { x, y, transformValue, field, columnWidth, rowHeight, style, isGroupFirstRender } = render;
         if (isUndefinedOrNull(transformValue)) {
             return;
         }
@@ -168,7 +176,7 @@ export class CellDrawer extends Drawer {
         if (renderText == null) {
             return;
         }
-        // const isSingleLine = !columnWidth;
+
         const isSingleLine = true;
         const isTextField = fieldType === AITableFieldType.text || fieldType === AITableFieldType.richText;
         const isNumberField = fieldType === AITableFieldType.number;
@@ -184,6 +192,7 @@ export class CellDrawer extends Drawer {
         const renderX = textAlign === DEFAULT_TEXT_ALIGN_RIGHT ? x + columnWidth - AI_TABLE_CELL_PADDING : x + AI_TABLE_CELL_PADDING;
         const renderY = y + AI_TABLE_ROW_BLANK_HEIGHT / 2;
         const textDecoration = DEFAULT_TEXT_DECORATION;
+        const maxRow = Math.floor((rowHeight - (AI_TABLE_ROW_HEIGHT - DEFAULT_TEXT_LINE_HEIGHT) / 2) / DEFAULT_TEXT_LINE_HEIGHT);
 
         if (isNumberField) {
             renderText = numberFormat(Number(renderText));
@@ -211,7 +220,7 @@ export class CellDrawer extends Drawer {
                 y: renderY,
                 text: renderText,
                 maxWidth: textMaxWidth,
-                maxRow: AI_TABLE_CELL_MAX_ROW_COUNT,
+                maxRow,
                 lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
                 textAlign,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
@@ -224,12 +233,12 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellSelect(render: AITableRender, ctx?: any) {
+    private renderCellSelect(ctx: any, render: AITableRender) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
-            this.renderCellMultiSelect2(render, ctx);
+            return this.renderCellMultiSelect2(render, ctx);
         } else {
-            this.renderSingleSelectCell(render, ctx);
+            return this.renderSingleSelectCell(render, ctx);
         }
     }
 
@@ -445,18 +454,16 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
-        const { x, y, field } = render;
+        const { field } = render;
+
         let transformValue = this.getValidSelectedValue(field, render.transformValue);
         if (!transformValue.length) {
             return;
         }
-
-        const selectLayout = new MultiSelectLayout(render, {});
-        // TODO: 后续每个字段不需要单独调用，全部字段迁移后，统一调用 renderAtoms 方法
-        this.renderAtoms({ x, y }, selectLayout);
+        return new MultiSelectLayout(render, {});
     }
 
-    private renderAtoms(position: { x: number; y: number }, cellLayout: CellBaseLayout) {
+    public renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
         cellLayout.renderAtoms.forEach((atom) => {
             switch (atom.type) {
                 case AITableRenderAtomType.text:
@@ -469,6 +476,10 @@ export class CellDrawer extends Drawer {
                     });
                     break;
                 case AITableRenderAtomType.rect:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.rect({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
@@ -477,13 +488,45 @@ export class CellDrawer extends Drawer {
                         radius: atom.radius,
                         fill: atom.fillStyle
                     });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
                     break;
                 case AITableRenderAtomType.circle:
+                    if (atom.alpha) {
+                        ctx.save();
+                        ctx.globalAlpha = atom.alpha;
+                    }
                     this.arc({
                         x: position.x + atom.x,
                         y: position.y + atom.y,
                         radius: atom.radius!,
                         fill: atom.fillStyle
+                    });
+                    if (atom.alpha) {
+                        ctx.restore();
+                    }
+                    break;
+                case AITableRenderAtomType.avatar:
+                    this.avatar({
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        url: atom.url!,
+                        id: atom.uid!,
+                        title: atom.title!,
+                        bgColor: atom.bgColor!,
+                        type: AITableAvatarType.member,
+                        size: AITableAvatarSize.size24
+                    });
+                    break;
+                case AITableRenderAtomType.image:
+                    this.image({
+                        name: atom.title || Math.random().toString(),
+                        x: position.x + atom.x,
+                        y: position.y + atom.y,
+                        url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(atom.image!)}`,
+                        width: atom.width!,
+                        height: atom.height!
                     });
                     break;
                 default:
@@ -584,6 +627,7 @@ export class CellDrawer extends Drawer {
 
             ctx.restore();
         }
+        return null;
     }
 
     private renderCellDate(render: AITableRender, ctx?: any) {
@@ -806,55 +850,18 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellAttachment(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive } = render;
+    private renderCellMember2(ctx: any, render: AITableRender) {
+        const { x, y } = render;
+        return new MemberLayout(render, {});
+    }
+
+    private renderCellAttachment2(render: AITableRender) {
+        const { transformValue } = render;
         if (isUndefinedOrNull(transformValue)) {
             return;
         }
 
-        const fileIconSize = AI_TABLE_FILE_ICON_SIZE;
-        const itemHeight = AI_TABLE_FILE_ICON_ITEM_HEIGHT;
-        const isOperating = isActive;
-
-        let currentX = AI_TABLE_CELL_PADDING;
-        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - itemHeight) / 2;
-        const itemOtherWidth = fileIconSize + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-        const maxTextWidth = isOperating
-            ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
-            : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
-
-        const listCount = transformValue.length;
-        for (let index = 0; index < listCount; index++) {
-            const attachmentInfo = references?.attachments[transformValue[index]];
-            if (!attachmentInfo) continue;
-            const { title, addition } = attachmentInfo;
-            const itemWidth = AI_TABLE_FILE_ICON_SIZE + AI_TABLE_FIELD_ITEM_MARGIN_RIGHT;
-            currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
-            let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
-            if (index === 0 && isOperating) {
-                const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
-                realMaxTextWidth = operatingMaxWidth;
-            }
-            if (columnWidth != null) {
-                // 在非活动状态下，当超出列宽时，不会渲染后续内容
-                if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
-                    break;
-                }
-            }
-            const svgString = getFileThumbnailSvgString(addition?.ext);
-            const img = new Image();
-            img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
-            if (ctx) {
-                this.image({
-                    name: img.src,
-                    x: x + currentX,
-                    y: y + currentY,
-                    url: img.src,
-                    width: AI_TABLE_FILE_ICON_SIZE,
-                    height: AI_TABLE_FILE_ICON_SIZE
-                });
-            }
-        }
+        return new AttachmentLayout(render);
     }
 }
 

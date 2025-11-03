@@ -12,7 +12,11 @@ import {
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { AITableCustomReferences } from '../../types/grid';
 
-export function renderRelationCell(render: AITableRender<AITableCustomReferences>, drawer: CellDrawer) {
+export function renderRelationCell(
+    render: AITableRender<AITableCustomReferences>,
+    ctx: CanvasRenderingContext2D | undefined,
+    drawer: CellDrawer
+) {
     const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive, style } = render;
     if (isUndefinedOrNull(transformValue)) {
         return;

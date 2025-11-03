@@ -51,7 +51,7 @@ export class AITableTextComponent {
             fontFamily = DEFAULT_FONT_FAMILY,
             ...rest
         } = this.config();
-        return {
+        const result = {
             x,
             y,
             width,
@@ -71,6 +71,7 @@ export class AITableTextComponent {
             fontFamily,
             ...rest
         };
+        return result;
     });
 
     onClick(e: KoEventObject<MouseEvent>) {

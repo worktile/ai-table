@@ -74,8 +74,7 @@ export const AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT = 8; // 成员头像与成
 
 export const AI_TABLE_FILE_ICON_ITEM_HEIGHT = 20; // 文件字段项高度
 export const AI_TABLE_FILE_ICON_SIZE = 20; // 文件图标大小
-export const AI_TABLE_CELL_FIELD_ITEM_HEIGHT = 8; // 文件字段项右边距
-export const AI_TABLE_FIELD_ITEM_MARGIN_RIGHT = 8; // 文件图标之间的间距
+export const AI_TABLE_FILE_ITEM_MARGIN_RIGHT = 8; // 文件图标之间的间距
 
 export const AI_TABLE_OPTION_ITEM_PADDING = 10; // 选项按钮间距
 export const AI_TABLE_OPTION_ITEM_HEIGHT = 24;
@@ -115,6 +114,12 @@ export const AI_TABLE_ROW_GROUP_OFFSET = 16;
 
 export const AI_TABLE_SHADOW_DEFAULT_WIDTH = 8;
 
-export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH = 60; // 选项字段项的默认最小宽度
+export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH = 60;
 
-export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING = 4; // 选项字段项的默认行间距
+export const AI_TABLE_CELL_MULTI_SELECT_ITEM_TAG_MIN_WIDTH = 40;
+
+export const AI_TABLE_CELL_MULTI_SELECT_ITEM_PIECE_MIN_WIDTH = 55;
+
+export const AI_TABLE_CELL_MULTI_SELECT_ITEM_DOT_MIN_WIDTH = 55;
+
+export const AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING = 4;

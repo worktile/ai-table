@@ -30,6 +30,32 @@ export const mockFields: AITableField[] = [
                 }
             ]
         }
+    },
+    {
+        _id: 'fieldId_select_multiple',
+        name: '爱好',
+        type: AITableFieldType.select,
+        settings: {
+            is_multiple: true,
+            option_style: AITableSelectOptionStyle.tag,
+            options: [
+                {
+                    text: '篮球',
+                    _id: 'multipleOptionId001',
+                    bg_color: '#5dcfff'
+                },
+                {
+                    text: '跑步',
+                    _id: 'multipleOptionId002',
+                    bg_color: '#ffcd5d'
+                },
+                {
+                    text: '游泳',
+                    _id: 'multipleOptionId003',
+                    bg_color: '#77C386'
+                }
+            ]
+        }
     }
 ];
 
@@ -44,7 +70,8 @@ export const mockRecords: AITableRecord[] = [
         values: {
             fieldId_text: '小明',
             fieldId_number: 19,
-            fieldId_select: ['singleOptionId001']
+            fieldId_select: ['singleOptionId001'],
+            fieldId_select_multiple: ['multipleOptionId002', 'multipleOptionId003']
         }
     },
     {
@@ -57,7 +84,8 @@ export const mockRecords: AITableRecord[] = [
         values: {
             fieldId_text: '小红',
             fieldId_number: 18,
-            fieldId_select: ['singleOptionId002']
+            fieldId_select: ['singleOptionId002'],
+            fieldId_select_multiple: ['multipleOptionId001']
         }
     },
     {

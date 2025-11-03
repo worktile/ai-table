@@ -3,7 +3,8 @@ export enum AITableRenderAtomType {
     image = 'image',
     patch = 'patch',
     rect = 'rect',
-    circle = 'circle'
+    circle = 'circle',
+    avatar = 'avatar'
 }
 
 export interface AITableRenderAtom {
@@ -16,4 +17,11 @@ export interface AITableRenderAtom {
     text?: string;
     fontSize?: number;
     fillStyle?: string;
+    alpha?: number;
+    // avatar
+    uid?: string;
+    url?: string;
+    title?: string;
+    bgColor?: string;
+    image?: string;
 }

@@ -6,6 +6,7 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_ADD_BUTTON,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
     Colors
@@ -66,7 +67,7 @@ export class AITableAddField {
                 this.config().coordinate.containerWidth - this.x() < this.btnWidth
                     ? this.btnWidth
                     : this.config().coordinate.containerWidth - this.x(),
-            height: this.config().coordinate.rowInitSize,
+            height: AI_TABLE_FIELD_HEAD_HEIGHT,
             stroke: Colors.gray200,
             strokeWidth: 1,
             listening: true,
@@ -76,7 +77,7 @@ export class AITableAddField {
 
     addIconConfig = computed<AITableIconConfig>(() => {
         const { readonly, maxFields, aiTable } = this.config();
-        const offsetY = (this.config().coordinate.rowInitSize - AI_TABLE_ICON_COMMON_SIZE) / 2;
+        const offsetY = (AI_TABLE_FIELD_HEAD_HEIGHT - AI_TABLE_ICON_COMMON_SIZE) / 2;
         return {
             x: AI_TABLE_CELL_PADDING,
             y: offsetY,

@@ -3,6 +3,7 @@ import {
     AI_TABLE_CELL_PADDING,
     AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
     AI_TABLE_FIELD_HEAD_MORE,
+    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_SIZE
@@ -49,18 +50,19 @@ export class AITableCellLink extends CoverCellBase {
             textRender = textRender.replace(/\r|\n/g, ' ');
             const fontWeight = style?.fontWeight;
             const textMaxWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
-            const { text, textWidth } = drawer.textEllipsis({
+            const { textWidth } = drawer.textEllipsis({
                 text: textRender,
                 maxWidth: textMaxWidth,
                 fontWeight
             });
-
             return {
                 x,
-                y: (rowHeight - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
-                text,
-                wrap: 'none',
+                y: (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
+                text: textRender,
+                wrap: 'char',
                 width: textWidth,
+                verticalAlign: 'top',
+                height: rowHeight,
                 fillStyle: Colors.primary,
                 fill: Colors.primary,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,

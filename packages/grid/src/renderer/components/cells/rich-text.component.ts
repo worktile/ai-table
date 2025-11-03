@@ -6,8 +6,10 @@ import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_EDIT,
     AI_TABLE_CELL_PADDING,
+    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
+    DEFAULT_FONT_SIZE,
     EditPath
 } from '../../../constants';
 import { generateTargetName } from '../../../utils';
@@ -42,20 +44,14 @@ export class AITableCellRichText extends CoverCellBase {
                 return;
             }
             textRender = textRender.replace(/\r|\n/g, ' ');
-            const fontWeight = style?.fontWeight;
             const textMaxWidth = columnWidth - AI_TABLE_CELL_PADDING - AI_TABLE_ACTION_COMMON_RIGHT_PADDING - AI_TABLE_ACTION_COMMON_SIZE;
-            const { text, textWidth } = drawer.textEllipsis({
-                text: textRender,
-                maxWidth: textMaxWidth,
-                fontWeight
-            });
-
             return {
                 x,
-                y,
-                text,
-                wrap: 'none',
-                width: textWidth,
+                y: (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE * AI_TABLE_TEXT_LINE_HEIGHT) / 2,
+                text: textRender,
+                verticalAlign: 'top',
+                wrap: 'char',
+                width: textMaxWidth,
                 fillStyle: Colors.primary,
                 height: rowHeight + 2,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
@@ -70,7 +66,7 @@ export class AITableCellRichText extends CoverCellBase {
     iconConfig = computed<AITableActionIconConfig>(() => {
         const { coordinate, render, field, recordId, readonly } = this.config()!;
         const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_ACTION_COMMON_RIGHT_PADDING;
-        const offsetY = (coordinate.rowInitSize - AI_TABLE_ACTION_COMMON_SIZE) / 2;
+        const offsetY = (AI_TABLE_ROW_HEIGHT - AI_TABLE_ACTION_COMMON_SIZE) / 2;
 
         return {
             coordinate,
