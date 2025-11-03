@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
-import { ROW_HEIGHT_LEVELS } from '@ai-table/grid';
+import { ROW_HEIGHT_LEVELS } from '../../../constants';
 
 @Component({
     selector: 'text-cell-editor',
