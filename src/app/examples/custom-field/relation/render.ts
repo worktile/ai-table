@@ -16,9 +16,9 @@ import {
 } from '@ai-table/grid';
 import { isUndefinedOrNull } from 'ngx-tethys/util';
 import { AITableReferences } from '@ai-table/utils';
-import { AITableCustomReferences, RelationFieldType, RelationInfo } from './types';
+import { AITableCustomReferences, RelationInfo, RelationFieldType } from './types';
 
-export function renderRelationCell(
+export function relationCellRender(
     render: AITableRender<AITableReferences>,
     ctx: CanvasRenderingContext2D | undefined,
     drawer: CellDrawer
@@ -58,12 +58,23 @@ export class RelationCellLayout extends CellBaseLayout {
         const item = references?.[fieldType]?.[value] as RelationInfo;
         const fontSize = AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE;
         const fontColor = Colors.gray700;
-
+        const spaceWidth = 4;
         let textMaxTextWidth: number = containerMaxWidth - 2 * AI_TABLE_TAG_PADDING;
-        const textAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
+        const titleAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
         const iconSize = 14;
-        const spaceBetweenIconAndText = 4;
-        let itemWidth = AI_TABLE_TAG_PADDING + (iconSize + spaceBetweenIconAndText) + textAtom.width! + AI_TABLE_TAG_PADDING;
+        const iconWidth = iconSize + spaceWidth;
+
+        let identifierWidth = 0;
+        let identifierAtom: AITableRenderAtom | undefined;
+        if (item.whole_identifier) {
+            identifierAtom = this.getTextAtom(item.whole_identifier, textMaxTextWidth, fontSize);
+            identifierWidth = identifierAtom.width! + spaceWidth;
+        }
+
+        const titleWidth = titleAtom.width!;
+
+        let itemWidth = AI_TABLE_TAG_PADDING + iconWidth + identifierWidth + titleWidth + AI_TABLE_TAG_PADDING;
+
         let renderAtoms: AITableRenderAtom[] = [];
 
         // background tag
@@ -87,10 +98,20 @@ export class RelationCellLayout extends CellBaseLayout {
             image: references.svgMap?.[item._id] || ''
         });
 
-        // text
+        // whole identifier
+        if (identifierAtom) {
+            renderAtoms.push({
+                ...identifierAtom,
+                x: AI_TABLE_TAG_PADDING + iconWidth,
+                y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
+                fillStyle: fontColor
+            });
+        }
+
+        // title
         renderAtoms.push({
-            ...textAtom,
-            x: AI_TABLE_TAG_PADDING + iconSize + spaceBetweenIconAndText,
+            ...titleAtom,
+            x: AI_TABLE_TAG_PADDING + iconWidth + identifierWidth,
             y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
             fillStyle: fontColor
         });
@@ -108,7 +129,7 @@ export class RelationCellLayout extends CellBaseLayout {
         const item = references?.[fieldType]?.[value] as RelationInfo;
         const fontSize = AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE;
         const fontColor = Colors.gray700;
-        const spaceBetweenIconAndText = 4;
+        const spaceWidth = 4;
 
         let renderAtoms: AITableRenderAtom[] = [];
         let textMaxTextWidth: number = containerMaxWidth - 2 * AI_TABLE_TAG_PADDING;
@@ -117,21 +138,13 @@ export class RelationCellLayout extends CellBaseLayout {
         const tagPadding = 10;
         const tagHeight = 16;
         const tagTextAtom: AITableRenderAtom = this.getTextAtom(`O${item.number}`, textMaxTextWidth, fontSize);
-        const tagWidth = tagPadding + tagTextAtom.width! + tagPadding;
-        // whole identifier
-        const identifierAtom: AITableRenderAtom = this.getTextAtom(item.whole_identifier, textMaxTextWidth, fontSize);
-        const identifierWidth = identifierAtom.width!;
-        // text
-        const textAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
-        const textWidth = textAtom.width!;
-
+        const tagSize = tagPadding + tagTextAtom.width! + tagPadding;
+        const tagWidth = tagSize + spaceWidth;
+        // title
+        const titleAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
+        const titleWidth = titleAtom.width!;
         // background tag
-        let itemWidth =
-            AI_TABLE_TAG_PADDING +
-            tagWidth +
-            (spaceBetweenIconAndText + identifierWidth) +
-            (spaceBetweenIconAndText + textWidth) +
-            AI_TABLE_TAG_PADDING;
+        let itemWidth = AI_TABLE_TAG_PADDING + tagWidth + titleWidth + AI_TABLE_TAG_PADDING;
 
         // background tag
         renderAtoms.push({
@@ -149,7 +162,7 @@ export class RelationCellLayout extends CellBaseLayout {
             type: AITableRenderAtomType.rect,
             x: AI_TABLE_TAG_PADDING,
             y: (AI_TABLE_OPTION_ITEM_HEIGHT - tagHeight) / 2,
-            width: tagWidth,
+            width: tagSize,
             height: tagHeight,
             radius: AI_TABLE_OPTION_ITEM_RADIUS,
             fillStyle: hexToRgba(item.color!, 0.1)
@@ -161,18 +174,10 @@ export class RelationCellLayout extends CellBaseLayout {
             fillStyle: item.color!
         });
 
-        // whole identifier
+        // title
         renderAtoms.push({
-            ...identifierAtom,
-            x: AI_TABLE_TAG_PADDING + tagWidth + spaceBetweenIconAndText,
-            y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
-            fillStyle: fontColor
-        });
-
-        // text
-        renderAtoms.push({
-            ...textAtom,
-            x: AI_TABLE_TAG_PADDING + tagWidth + spaceBetweenIconAndText + identifierAtom.width! + spaceBetweenIconAndText,
+            ...titleAtom,
+            x: AI_TABLE_TAG_PADDING + tagWidth,
             y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
             fillStyle: fontColor
         });
@@ -185,7 +190,7 @@ export class RelationCellLayout extends CellBaseLayout {
     }
 }
 
-function hexToRgba(hex: string, opacity: number = 1) {
+export function hexToRgba(hex: string, opacity: number = 1) {
     hex = hex.replace('#', '');
     if (hex.length === 3) {
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];

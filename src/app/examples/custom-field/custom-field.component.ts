@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { AITable, AITableGrid } from '@ai-table/grid';
+import { AI_TABLE_CELL, AITable, AITableGrid, expandCell, KoEventObjectOutput } from '@ai-table/grid';
 import {
     AITableRecord,
     AITableField,
@@ -46,7 +46,18 @@ export class TableCustomFieldExample {
         };
     });
 
-    filterAndSortFieldOptions = (fieldOptions: AITableFieldOption[]) => {
+    // 进入编辑状态
+    dbClick(e: KoEventObjectOutput<MouseEvent>) {
+        const { targetName, fieldId, recordId } = e.targetNameDetail;
+        if (targetName === AI_TABLE_CELL) {
+            const field = this.aiTable.fieldsMap()[fieldId!];
+            if ([RelationFieldType.relationTicket, RelationFieldType.relationObjective].includes(field?.type as RelationFieldType)) {
+                expandCell(this.aiTable, [recordId!, fieldId!]);
+            }
+        }
+    }
+
+    private filterAndSortFieldOptions = (fieldOptions: AITableFieldOption[]) => {
         const fieldOptionMap = new Map<string, AITableFieldOption>();
         fieldOptions.forEach((fieldOption) => {
             const isMultiple = (fieldOption?.settings as any)?.['is_multiple'];

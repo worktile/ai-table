@@ -5,7 +5,7 @@ import {
     RELATION_FIELD_DEFAULT_WIDTH,
     RELATION_FIELD_MIN_WIDTH,
     AITableCustomReferences,
-    renderRelationCell,
+    relationCellRender,
     RelationCoverCell,
     ticketIconSvg,
     closeIconSvg
@@ -25,7 +25,7 @@ export const mockCustomFields = {
             minWidth: RELATION_FIELD_MIN_WIDTH
         },
         fieldModel: new RelationField(),
-        render: renderRelationCell,
+        render: relationCellRender,
         coverRender: RelationCoverCell
     },
     [RelationFieldType.relationObjective]: {
@@ -38,19 +38,19 @@ export const mockCustomFields = {
             minWidth: RELATION_FIELD_MIN_WIDTH
         },
         fieldModel: new RelationField(),
-        render: renderRelationCell,
+        render: relationCellRender,
         coverRender: RelationCoverCell
     }
 };
 
 export const mockFields: AITableField[] = [
     {
-        _id: 'fieldId_relation_ticket',
-        ...mockCustomFields[RelationFieldType.relationTicket].fieldOption
-    },
-    {
         _id: 'fieldId_relation_objective',
         ...mockCustomFields[RelationFieldType.relationObjective].fieldOption
+    },
+    {
+        _id: 'fieldId_relation_ticket',
+        ...mockCustomFields[RelationFieldType.relationTicket].fieldOption
     }
 ];
 
@@ -106,14 +106,12 @@ export const mockReferences: AITableCustomReferences = {
     [RelationFieldType.relationObjective]: {
         objectiveId001: {
             _id: 'objectiveId001',
-            whole_identifier: 'OBJC-001',
             title: '目标1',
             number: 1,
             color: '#FA8888'
         },
         objectiveId002: {
             _id: 'objectiveId002',
-            whole_identifier: 'OBJC-002',
             title: '目标2',
             number: 2,
             color: '#84E17E'
