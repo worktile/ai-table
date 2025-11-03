@@ -30,9 +30,3 @@ export interface AITableCellItem {
     width: number;
     height: number;
 }
-
-export enum AITableRowHeight {
-    low = 'low',
-    medium = 'medium',
-    high = 'high'
-}

@@ -10,11 +10,16 @@ import {
     AITableViewRecord,
     AddRecordOptions,
     UpdateFieldValueOptions,
-    AITableSystemFieldValueOption
+    AITableSystemFieldValueOption,
+    AITableRowHeightType,
+    AITableAction,
+    SetViewAction,
+    ViewSettings
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { getNewItemsPosition, ViewPositionOptions } from '../utils/position-in-view';
 import { PositionsActions } from './position';
+import { buildSetViewAction } from './view';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
     let operations: UpdateFieldValueAction[] = [];
@@ -104,10 +109,31 @@ export function removeRecord(aiTable: AIViewTable, path: IdPath) {
     aiTable.apply(operation);
 }
 
+export function setRecordHeightType(aiTable: AIViewTable, recordHeightType: AITableRowHeightType) {
+    const viewId = aiTable.activeViewId();
+    const view = aiTable.views().find((v) => v._id === viewId);
+    if (!view) return;
+
+    const currentSettings = view.settings || {};
+    const newSettings: ViewSettings = {
+        ...currentSettings,
+        record_height_type: recordHeightType
+    };
+
+    const operation: SetViewAction = {
+        type: ActionName.SetView,
+        properties: { settings: currentSettings },
+        newProperties: { settings: newSettings },
+        path: [viewId]
+    };
+    aiTable.apply(operation);
+}
+
 export const RecordActions = {
     addRecord,
     addRecords,
     removeRecord,
     updateFieldValues,
-    updateSystemFieldValues
+    updateSystemFieldValues,
+    setRecordHeightType
 };
