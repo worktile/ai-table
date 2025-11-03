@@ -98,7 +98,6 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    // 单元格渲染
     public renderCell(render: AITableRender, ctx: CanvasRenderingContext2D | undefined) {
         const { field, cellValue, aiTable, columnWidth, x, y } = render;
         const fieldType = field.type;
@@ -109,7 +108,7 @@ export class CellDrawer extends Drawer {
 
         const customFieldRender = aiTable.context?.aiFieldConfig()?.customFields?.[fieldType]?.render;
         if (customFieldRender) {
-            return customFieldRender(render, this);
+            return customFieldRender(render, ctx, this);
         }
 
         let cellLayout: CellBaseLayout | null | undefined;
@@ -150,7 +149,7 @@ export class CellDrawer extends Drawer {
     }
 
     private renderCellCheckbox(render: AITableRender, ctx?: any) {
-        const { x, y, field, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
+        const { x, y, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
         if (isCoverCell) {
             return;
         }
@@ -177,7 +176,7 @@ export class CellDrawer extends Drawer {
         if (renderText == null) {
             return;
         }
-        // const isSingleLine = !columnWidth;
+
         const isSingleLine = true;
         const isTextField = fieldType === AITableFieldType.text || fieldType === AITableFieldType.richText;
         const isNumberField = fieldType === AITableFieldType.number;
@@ -464,7 +463,7 @@ export class CellDrawer extends Drawer {
         return new MultiSelectLayout(render, {});
     }
 
-    private renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
+    public renderAtoms(ctx: any, position: { x: number; y: number }, cellLayout: CellBaseLayout) {
         cellLayout.renderAtoms.forEach((atom) => {
             switch (atom.type) {
                 case AITableRenderAtomType.text:

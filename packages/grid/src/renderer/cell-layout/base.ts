@@ -2,17 +2,12 @@ import { isArray } from 'lodash';
 import {
     AI_TABLE_CELL_MULTI_ITEM_DEFAULT_MIN_WIDTH,
     AI_TABLE_CELL_PADDING,
-    AI_TABLE_FIELD_HEAD_HEIGHT,
-    AI_TABLE_OPTION_ITEM_FONT_SIZE,
     AI_TABLE_OPTION_ITEM_HEIGHT,
     AI_TABLE_OPTION_ITEM_PADDING,
-    AI_TABLE_OPTION_ITEM_RADIUS,
     AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_PIECE_RADIUS,
-    AI_TABLE_ROW_HEIGHT,
     AI_TABLE_TAG_PADDING,
-    Colors,
-    DEFAULT_FONT_SIZE
+    Colors
 } from '../../constants';
 import { AITableCellItemRenderInfo, AITableCellLayout, AITableRender, AITableSelectField } from '../../types';
 import { AITableField } from '@ai-table/utils';

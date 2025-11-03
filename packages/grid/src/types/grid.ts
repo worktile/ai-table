@@ -45,7 +45,7 @@ export interface AITableSelection {
 export interface AITableCustomFieldConfig<TR extends AITableReferences = AITableReferences> {
     fieldOption?: AITableFieldOption;
     fieldModel?: FieldOperable<unknown, unknown>;
-    render?: (render: AITableRender<TR>, drawer: CellDrawer) => any;
+    render?: (render: AITableRender<TR>, ctx: CanvasRenderingContext2D | undefined, drawer: CellDrawer) => any;
     coverRender?: Constructor<CoverCellBase>;
 }
 

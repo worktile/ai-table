@@ -2,17 +2,15 @@ import {
     AI_TABLE_CELL_MEMBER_ITEM_PADDING,
     AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
-    AI_TABLE_OPTION_ITEM_RADIUS,
     FONT_SIZE_SM,
-    AI_TABLE_PIECE_RADIUS,
     AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TAG_PADDING,
     Colors
 } from '../../../constants';
-import { AITableAvatarSize, AITableCellItemRenderInfo, AITableCellLayout, AITableRender, AITableSelectField } from '../../../types';
+import { AITableAvatarSize, AITableCellItemRenderInfo, AITableCellLayout, AITableRender } from '../../../types';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../../types/atom';
 import { CellBaseLayout } from '../base';
-import { AITableSelectOptionStyle, MemberSettings } from '@ai-table/utils';
+import { MemberSettings } from '@ai-table/utils';
 import { getAvatarBgColor, getAvatarShortName } from '../../../utils';
 
 export class MemberLayout extends CellBaseLayout {

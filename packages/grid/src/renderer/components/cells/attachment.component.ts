@@ -8,14 +8,11 @@ import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_ATTACHMENT_ADD,
     AI_TABLE_CELL_PADDING,
-    AI_TABLE_FILE_ITEM_MARGIN_RIGHT,
     AI_TABLE_FILE_ICON_SIZE,
-    AI_TABLE_OFFSET,
-    AI_TABLE_ROW_BLANK_HEIGHT,
     Colors,
     AI_TABLE_ROW_HEIGHT
 } from '../../../constants';
-import { generateTargetName, getFileThumbnailSvgString } from '../../../utils';
+import { generateTargetName } from '../../../utils';
 import { AITableActionIconConfig, AITableAttachmentConfig } from '../../../types';
 import { AITableFieldType } from '@ai-table/utils';
 import { AITableActionIcon } from '../action-icon.component';
