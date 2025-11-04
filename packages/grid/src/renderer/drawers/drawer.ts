@@ -244,6 +244,7 @@ export class Drawer {
     }
 
     // 换行文本绘制
+    // @deprecated 使用 wrapTextWithKonva 代替
     public wrapText(options: AITableWrapText) {
         const {
             x,
