@@ -1,4 +1,12 @@
-import { AITableView, ActionName, AddViewAction, RemoveViewAction, SetViewAction } from '@ai-table/utils';
+import {
+    AITableRowHeightType,
+    AITableView,
+    ActionName,
+    AddViewAction,
+    RemoveViewAction,
+    SetViewAction,
+    ViewSettings
+} from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { getMaxPosition, insertAtEnd, insertBetween, sortViews } from '../utils';
 import { PositionsActions } from './position';
@@ -88,8 +96,29 @@ function removeView(aiTable: AIViewTable, path: [string]) {
     aiTable.apply(operation);
 }
 
+function setRecordHeightType(aiTable: AIViewTable, recordHeightType: AITableRowHeightType) {
+    const viewId = aiTable.activeViewId();
+    const view = aiTable.views().find((v) => v._id === viewId);
+    if (!view) return;
+
+    const currentSettings = view.settings || {};
+    const newSettings: ViewSettings = {
+        ...currentSettings,
+        record_height_type: recordHeightType
+    };
+
+    const operation: SetViewAction = {
+        type: ActionName.SetView,
+        properties: { settings: currentSettings },
+        newProperties: { settings: newSettings },
+        path: [viewId]
+    };
+    aiTable.apply(operation);
+}
+
 export const ViewActions = {
     setView,
     addView,
-    removeView
+    removeView,
+    setRecordHeightType
 };
