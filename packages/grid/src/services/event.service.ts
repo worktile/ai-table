@@ -186,7 +186,8 @@ export class AITableGridEventService {
                 recordId: recordId,
                 references,
                 aiTable: aiTable,
-                isSelectAll: options.isSelectAll
+                isSelectAll: options.isSelectAll,
+                rowHeight: offsetOriginPosition.height
             },
             panelClass: 'grid-cell-editor',
             outsideClosable: fieldType === AITableFieldType.link ? true : false,

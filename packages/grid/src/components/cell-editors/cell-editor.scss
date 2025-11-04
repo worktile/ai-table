@@ -3,6 +3,14 @@
 @use './link/link-editor.component.scss';
 
 .grid-cell-editor {
+    border: 2px solid variables.$primary;
+    &:has(.text-cell-editor) {
+        border: none;
+        .form-control {
+            // 特殊处理文本框border在输入框上
+            border: 2px solid variables.$primary;
+        }
+    }
     .thy-popover-container {
         box-shadow: none;
         border: none;
@@ -12,8 +20,9 @@
         padding: 0;
     }
     .form-control {
-        border: 2px solid variables.$primary;
+        border: none;
         min-height: 45px;
+        height: 100%; // 默认输入框高度 100%
         border-radius: 0;
         padding-top: cellEditorVariables.$cell-editor-padding-top;
         padding-bottom: cellEditorVariables.$cell-editor-padding-top;
@@ -24,7 +33,6 @@
 .text-cell-editor {
     display: block;
     textarea {
-        border: none;
         line-height: 24px;
         resize: none;
         scrollbar-width: none;
@@ -40,11 +48,19 @@
 
 .select-cell-editor {
     .thy-select-custom:focus .form-control-custom:not(.disabled) {
-        border: 2px solid variables.$primary;
+        border: none;
         outline: none;
     }
-    .thy-select .select-control-multiple .select-option {
-        font-size: variables.$font-size-sm;
+    .thy-select {
+        height: 100%; // 控制弹出的option位置
+        .select-control-multiple .select-option {
+            font-size: variables.$font-size-sm;
+        }
+        .select-control-arrow,
+        .select-control-clear {
+            top: cellEditorVariables.$cell-editor-padding-top;
+            transform: none;
+        }
     }
 }
 
@@ -54,6 +70,39 @@
             height: calc(100% - 4px);
             top: 2px;
             right: 2px;
+        }
+        .form-control {
+            height: 45px; // 控制输入框显示在上方
+        }
+    }
+}
+
+.date-cell-editor {
+    thy-picker {
+        display: block;
+        height: 100%; // 控制弹出的picker位置
+        .thy-calendar-picker {
+            height: 100%; // 控制弹出的picker位置
+        }
+        .form-control {
+            height: 45px; // 控制日期显示在上方
+        }
+        .thy-calendar-picker-icon,
+        .thy-calendar-picker-clear {
+            top: cellEditorVariables.$cell-editor-padding-top + 6;
+            transform: none;
+        }
+    }
+}
+
+.ai-table-link-editor {
+    .thy-input-group {
+        align-items: start;
+        .form-control {
+            height: 45px; // 控制输入框显示在上方
+        }
+        .input-group-suffix {
+            margin-top: cellEditorVariables.$cell-editor-padding-top;
         }
     }
 }
