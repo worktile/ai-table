@@ -57,25 +57,29 @@ export class RelationCellLayout extends CellBaseLayout {
         const fieldType = this.field.type as keyof AITableCustomReferences;
         const item = references?.[fieldType]?.[value] as RelationInfo;
         const fontSize = AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE;
-        const fontColor = Colors.gray700;
         const spaceWidth = 4;
         let textMaxTextWidth: number = containerMaxWidth - 2 * AI_TABLE_TAG_PADDING;
-        const titleAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
+
+        // icon
         const iconSize = 14;
         const iconWidth = iconSize + spaceWidth;
 
+        // identifier
+        const identifierMaxTextWidth = textMaxTextWidth - iconWidth;
         let identifierWidth = 0;
         let identifierAtom: AITableRenderAtom | undefined;
-        if (item.whole_identifier) {
-            identifierAtom = this.getTextAtom(item.whole_identifier, textMaxTextWidth, fontSize);
+        if (item?.whole_identifier) {
+            identifierAtom = this.getTextAtom(item.whole_identifier, identifierMaxTextWidth, fontSize);
             identifierWidth = identifierAtom.width! + spaceWidth;
         }
 
+        // title
+        const titleMaxTextWidth = textMaxTextWidth - iconWidth - identifierWidth;
+        const titleAtom: AITableRenderAtom = this.getTextAtom(item.title || '', titleMaxTextWidth, fontSize);
         const titleWidth = titleAtom.width!;
 
-        let itemWidth = AI_TABLE_TAG_PADDING + iconWidth + identifierWidth + titleWidth + AI_TABLE_TAG_PADDING;
-
         let renderAtoms: AITableRenderAtom[] = [];
+        const itemWidth = AI_TABLE_TAG_PADDING + iconWidth + identifierWidth + titleWidth + AI_TABLE_TAG_PADDING;
 
         // background tag
         renderAtoms.push({
@@ -85,8 +89,10 @@ export class RelationCellLayout extends CellBaseLayout {
             width: itemWidth,
             height: AI_TABLE_OPTION_ITEM_HEIGHT,
             radius: AI_TABLE_PIECE_RADIUS,
-            fillStyle: Colors.gray100
-        });
+            fillStyle: Colors.gray100,
+            fill: Colors.gray100,
+            attr: 'bgRect'
+        } as AITableRenderAtom);
 
         // option style icon
         renderAtoms.push({
@@ -95,8 +101,9 @@ export class RelationCellLayout extends CellBaseLayout {
             y: (AI_TABLE_OPTION_ITEM_HEIGHT - iconSize) / 2,
             width: iconSize,
             height: iconSize,
-            image: references.svgMap?.[item._id] || ''
-        });
+            image: references.svgMap?.[item._id] || '',
+            attr: 'icon'
+        } as AITableRenderAtom);
 
         // whole identifier
         if (identifierAtom) {
@@ -104,21 +111,28 @@ export class RelationCellLayout extends CellBaseLayout {
                 ...identifierAtom,
                 x: AI_TABLE_TAG_PADDING + iconWidth,
                 y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
-                fillStyle: fontColor
-            });
+                fillStyle: Colors.gray600,
+                fontSize,
+                attr: 'identifier'
+            } as AITableRenderAtom);
         }
 
         // title
-        renderAtoms.push({
-            ...titleAtom,
-            x: AI_TABLE_TAG_PADDING + iconWidth + identifierWidth,
-            y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
-            fillStyle: fontColor
-        });
+        if (titleAtom.width! > 0) {
+            renderAtoms.push({
+                ...titleAtom,
+                x: AI_TABLE_TAG_PADDING + iconWidth + identifierWidth,
+                y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
+                fillStyle: Colors.gray800,
+                fontSize,
+                attr: 'title'
+            } as AITableRenderAtom);
+        }
 
         return {
             width: itemWidth,
             height: AI_TABLE_OPTION_ITEM_HEIGHT,
+            source: references[fieldType]?.[value],
             renderAtoms
         } as AITableCellItemRenderInfo;
     }
@@ -137,11 +151,13 @@ export class RelationCellLayout extends CellBaseLayout {
         // option style tag
         const tagPadding = 10;
         const tagHeight = 16;
-        const tagTextAtom: AITableRenderAtom = this.getTextAtom(`O${item.number}`, textMaxTextWidth, fontSize);
+        const tagTextMaxTextWidth = textMaxTextWidth;
+        const tagTextAtom: AITableRenderAtom = this.getTextAtom(`O${item.number}`, tagTextMaxTextWidth, fontSize);
         const tagSize = tagPadding + tagTextAtom.width! + tagPadding;
         const tagWidth = tagSize + spaceWidth;
         // title
-        const titleAtom: AITableRenderAtom = this.getTextAtom(item?.title || '', textMaxTextWidth, fontSize);
+        const titleMaxTextWidth = textMaxTextWidth - tagWidth;
+        const titleAtom: AITableRenderAtom = this.getTextAtom(item.title || '', titleMaxTextWidth, fontSize);
         const titleWidth = titleAtom.width!;
         // background tag
         let itemWidth = AI_TABLE_TAG_PADDING + tagWidth + titleWidth + AI_TABLE_TAG_PADDING;
@@ -154,8 +170,10 @@ export class RelationCellLayout extends CellBaseLayout {
             width: itemWidth,
             height: AI_TABLE_OPTION_ITEM_HEIGHT,
             radius: AI_TABLE_PIECE_RADIUS,
-            fillStyle: Colors.gray100
-        });
+            fillStyle: Colors.gray100,
+            fill: Colors.gray100,
+            attr: 'bgRect'
+        } as AITableRenderAtom);
 
         // option style tag
         renderAtoms.push({
@@ -165,27 +183,36 @@ export class RelationCellLayout extends CellBaseLayout {
             width: tagSize,
             height: tagHeight,
             radius: AI_TABLE_OPTION_ITEM_RADIUS,
-            fillStyle: hexToRgba(item.color!, 0.1)
-        });
+            fillStyle: hexToRgba(item.color!, 0.1),
+            fill: hexToRgba(item.color!, 0.1),
+            attr: 'tag.bgRect'
+        } as AITableRenderAtom);
         renderAtoms.push({
             ...tagTextAtom,
             x: AI_TABLE_TAG_PADDING + tagPadding,
             y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
-            fillStyle: item.color!
-        });
+            fillStyle: item.color!,
+            fontSize,
+            attr: 'tag.text'
+        } as AITableRenderAtom);
 
         // title
-        renderAtoms.push({
-            ...titleAtom,
-            x: AI_TABLE_TAG_PADDING + tagWidth,
-            y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
-            fillStyle: fontColor
-        });
+        if (titleAtom.width! > 0) {
+            renderAtoms.push({
+                ...titleAtom,
+                x: AI_TABLE_TAG_PADDING + tagWidth,
+                y: (AI_TABLE_OPTION_ITEM_HEIGHT - fontSize) / 2,
+                fillStyle: fontColor,
+                fontSize,
+                attr: 'title'
+            } as AITableRenderAtom);
+        }
 
         return {
             width: itemWidth,
             height: AI_TABLE_OPTION_ITEM_HEIGHT,
-            renderAtoms
+            renderAtoms,
+            source: references[fieldType]?.[value]
         } as AITableCellItemRenderInfo;
     }
 }

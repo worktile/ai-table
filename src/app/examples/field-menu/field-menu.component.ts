@@ -24,12 +24,11 @@ import {
 } from '@ai-table/state';
 import { mockRecords, mockFields, mockReferences } from './mock';
 import { getUnixTime } from 'date-fns';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
 
 @Component({
     selector: 'app-table-field-menu-example',
     templateUrl: './field-menu.component.html',
-    imports: [AITableGrid, ThyPopoverModule],
+    imports: [AITableGrid],
     host: {
         class: 'd-block w-100 h-100'
     }

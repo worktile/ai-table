@@ -71,7 +71,7 @@ export const mockRecords: AITableRecord[] = [
             fieldId_text: '小明',
             fieldId_number: 19,
             fieldId_select: ['singleOptionId001'],
-            fieldId_select_multiple: ['multipleOptionId002', 'multipleOptionId003']
+            fieldId_select_multiple: ['multipleOptionId001', 'multipleOptionId002', 'multipleOptionId003']
         }
     },
     {

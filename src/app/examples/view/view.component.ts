@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ViewsExample } from './views/views.component';
 import { ViewService } from './view.service';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { AITable, AITableField, AITableRecord, AITableReferences } from '@ai-table/utils';
 import { AITableGrid } from '@ai-table/grid';
 import { AIViewTable, withState } from '@ai-table/state';
@@ -11,7 +10,7 @@ import { mockFields, mockRecords, mockReferences } from './mock';
 @Component({
     selector: 'app-table-view-example',
     templateUrl: './view.component.html',
-    imports: [ViewsExample, AITableGrid, ThyPopoverModule],
+    imports: [ViewsExample, AITableGrid],
     providers: [ViewService],
     host: {
         class: 'd-block w-100 h-100'

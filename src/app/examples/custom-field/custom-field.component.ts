@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AI_TABLE_CELL, AITable, AITableGrid, expandCell, KoEventObjectOutput } from '@ai-table/grid';
 import {
     AITableRecord,
@@ -12,14 +12,15 @@ import {
 } from '@ai-table/utils';
 import { mockRecords, mockFields, mockReferences, mockCustomFields, RelationFieldType } from './mock';
 import { AITableRecordCreatedInfo, AddRecordOptions } from '@ai-table/utils';
-import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { addFields, addRecords, updateFieldValues, Actions, AIViewTable, withState } from '@ai-table/state';
 import { getUnixTime } from 'date-fns';
+import { TARGET_NAME_CELL_MORE_COUNT, TARGET_NAME_CELL_RELATION_ADD, TARGET_NAME_CELL_RELATION_DELETE } from './relation';
+import { ThyMessageService } from 'ngx-tethys/message';
 
 @Component({
     selector: 'app-table-custom-field-example',
     templateUrl: './custom-field.component.html',
-    imports: [AITableGrid, ThyPopoverModule],
+    imports: [AITableGrid],
     host: {
         class: 'd-block w-100 h-100'
     }
@@ -35,6 +36,8 @@ export class TableCustomFieldExample {
 
     plugins = [withState];
 
+    private message = inject(ThyMessageService);
+
     readonly fieldConfig = computed(() => {
         return {
             //自定义可选字段及排序
@@ -46,13 +49,34 @@ export class TableCustomFieldExample {
         };
     });
 
-    // 进入编辑状态
     dbClick(e: KoEventObjectOutput<MouseEvent>) {
         const { targetName, fieldId, recordId } = e.targetNameDetail;
         if (targetName === AI_TABLE_CELL) {
             const field = this.aiTable.fieldsMap()[fieldId!];
             if ([RelationFieldType.relationTicket, RelationFieldType.relationObjective].includes(field?.type as RelationFieldType)) {
+                // 进入编辑状态
                 expandCell(this.aiTable, [recordId!, fieldId!]);
+            }
+        }
+    }
+
+    onClick(e: KoEventObjectOutput<MouseEvent>) {
+        const { targetName, recordId, fieldId, source } = e.targetNameDetail;
+        if (targetName === AI_TABLE_CELL) {
+            const field = this.aiTable.fieldsMap()[fieldId!];
+            if ([RelationFieldType.relationTicket, RelationFieldType.relationObjective].includes(field?.type as RelationFieldType)) {
+                const operationRelation = (content: string) => {
+                    this.message.info(content);
+                };
+
+                if (source === TARGET_NAME_CELL_RELATION_ADD) {
+                    operationRelation('添加关联');
+                } else if (source === TARGET_NAME_CELL_MORE_COUNT) {
+                    expandCell(this.aiTable, [recordId!, fieldId!]);
+                } else if (source === TARGET_NAME_CELL_RELATION_DELETE) {
+                    operationRelation('删除关联');
+                } else {
+                }
             }
         }
     }

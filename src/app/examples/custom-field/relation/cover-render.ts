@@ -34,7 +34,12 @@ import {
     AI_TABLE_ACTION_COMMON_RIGHT_PADDING,
     AI_TABLE_CELL_MULTI_ITEM_MARGIN_LEFT,
     AITableRect,
-    AITableRender
+    AITableRender,
+    AITableRenderAtom,
+    AITableRenderStyle,
+    DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
+    AITableRenderAtomType,
+    AI_TABLE_ROW_HEIGHT
 } from '@ai-table/grid';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { TextConfig } from 'konva/lib/shapes/Text';
@@ -48,11 +53,14 @@ import {
     RelationFieldType,
     closeIconPath,
     RelationMoreCountInfo,
-    AITableCustomReferences
+    AITableCustomReferences,
+    RelationInfo
 } from './types';
 import { hexToRgba } from './render';
 import { AITableReferences } from '@ai-table/utils';
 import { CommonModule } from '@angular/common';
+import { RelationCellLayout } from './render';
+import { ImageConfig } from 'konva/lib/shapes/Image';
 
 @Component({
     selector: 'ai-table-relation',
@@ -110,40 +118,54 @@ import { CommonModule } from '@angular/common';
                         </ko-group>
                     } @else {
                         <ko-group>
-                            @for (relation of relations(); track relation.relationInfo._id) {
+                            @for (relation of coverRelations(); track relation.relationInfo?._id || $index) {
                                 <ko-group>
-                                    <ko-group>
-                                        <ko-rect [config]="relation.bgRect"></ko-rect>
-                                    </ko-group>
-                                    <ko-group>
-                                        @if (relation.icon) {
-                                            <ko-image [config]="relation.icon"></ko-image>
-                                        }
-                                        @if (relation.tag) {
+                                    @if (relation.relationInfo) {
+                                        @if (relation.bgRect) {
                                             <ko-group>
-                                                <ko-rect [config]="relation.tag.bgRect"></ko-rect>
-                                            </ko-group>
-                                            <ko-group>
-                                                <ai-table-text [config]="relation.tag.text"></ai-table-text>
+                                                <ko-rect [config]="relation.bgRect"></ko-rect>
                                             </ko-group>
                                         }
-                                        <ai-table-text [config]="relation.whole_identifier!"></ai-table-text>
-                                        @if (relation.title) {
-                                            <ai-table-text [config]="relation.title"></ai-table-text>
+                                        <ko-group>
+                                            @if (relation.icon) {
+                                                <ko-image [config]="relation.icon"></ko-image>
+                                            }
+                                            @if (relation.tag) {
+                                                @if (relation.tag.bgRect) {
+                                                    <ko-group>
+                                                        <ko-rect [config]="relation.tag.bgRect"></ko-rect>
+                                                    </ko-group>
+                                                }
+                                                @if (relation.tag.text) {
+                                                    <ko-group>
+                                                        <ai-table-text [config]="relation.tag.text"></ai-table-text>
+                                                    </ko-group>
+                                                }
+                                            }
+                                            @if (relation.identifier) {
+                                                <ai-table-text [config]="relation.identifier"></ai-table-text>
+                                            }
+                                            @if (relation.title) {
+                                                <ai-table-text [config]="relation.title"></ai-table-text>
+                                            }
+                                            @if (relation.closeActionConfig) {
+                                                <ai-table-action-icon [config]="relation.closeActionConfig"></ai-table-action-icon>
+                                            }
+                                        </ko-group>
+                                    } @else {
+                                        @if (relation.moreCount) {
+                                            @if (relation.moreCount.bgRect) {
+                                                <ko-group>
+                                                    <ko-rect [config]="relation.moreCount.bgRect"></ko-rect>
+                                                </ko-group>
+                                            }
+                                            @if (relation.moreCount.text) {
+                                                <ko-group>
+                                                    <ai-table-text [config]="relation.moreCount.text"></ai-table-text>
+                                                </ko-group>
+                                            }
                                         }
-                                        @if (relation.closeActionConfig) {
-                                            <ai-table-action-icon [config]="relation.closeActionConfig"></ai-table-action-icon>
-                                        }
-                                    </ko-group>
-                                </ko-group>
-                            }
-
-                            @if (moreCount()) {
-                                <ko-group>
-                                    <ko-rect [config]="moreCount()!.bgRect"></ko-rect>
-                                </ko-group>
-                                <ko-group>
-                                    <ai-table-text [config]="moreCount()!.text"></ai-table-text>
+                                    }
                                 </ko-group>
                             }
 
@@ -264,33 +286,8 @@ export class RelationCoverCell extends CoverCellBase {
         };
     });
 
-    readonly moreCount = computed<{
-        bgRect: RectConfig;
-        text: TextConfig;
-    } | null>(() => {
-        const { render, aiTable, field, recordId, readonly } = this.config()!;
-        const { rowHeight } = render;
-        const moreCount = this.relationRenderConfig().moreCount;
-        if (moreCount) {
-            return {
-                bgRect: aiTableRectConfigToKonvaConfig(moreCount.bgRect, {
-                    name: generateTargetName({
-                        targetName: AI_TABLE_CELL,
-                        fieldId: field._id,
-                        recordId,
-                        source: TARGET_NAME_CELL_MORE_COUNT,
-                        mouseStyle: 'pointer'
-                    }),
-                    listening: true
-                }),
-                text: aiTableTextConfigToKonvaConfig(moreCount.text, rowHeight)
-            };
-        }
-        return null;
-    });
-
     readonly relations = computed<RelationKonvaConfig[]>(() => {
-        const { render, aiTable, field, recordId, readonly, coordinate } = this.config()!;
+        const { render, field, recordId, readonly, coordinate } = this.config()!;
         const { rowHeight } = render;
         const { relationItems } = this.relationRenderConfig();
         if (relationItems?.length > 0) {
@@ -362,6 +359,166 @@ export class RelationCoverCell extends CoverCellBase {
         return [];
     });
 
+    readonly coverRelations = computed(() => {
+        const { render, field, recordId, readonly, coordinate } = this.config()!;
+        const { rowHeight, style, columnWidth } = render;
+        if (render) {
+            const relationCellLayout = new RelationCellLayout(render, {
+                renderWidth: columnWidth - 2 * AI_TABLE_CELL_PADDING - AI_TABLE_ACTION_COMMON_SIZE
+            });
+            const items = relationCellLayout.renderItems.map((item) => {
+                const atoms = item.renderAtoms as (AITableRenderAtom & { attr: string })[];
+                const name = generateTargetName({
+                    targetName: AI_TABLE_CELL,
+                    fieldId: field._id,
+                    recordId,
+                    mouseStyle: readonly ? 'default' : 'pointer',
+                    source: item.source?._id
+                });
+
+                let bgRect: RectConfig | undefined;
+                let icon: ImageConfig | undefined;
+                let identifier: TextConfig | undefined;
+                let title: TextConfig | undefined;
+                let tag:
+                    | {
+                          bgRect?: RectConfig;
+                          text?: TextConfig;
+                      }
+                    | undefined;
+                let closeActionConfig: AITableActionIconConfig | undefined;
+                let relationInfo: RelationInfo = item.source as RelationInfo;
+                let moreCount:
+                    | {
+                          bgRect?: RectConfig;
+                          text?: TextConfig;
+                      }
+                    | undefined;
+
+                atoms.forEach((atom: AITableRenderAtom & { attr: string }) => {
+                    atom.y += 0.5;
+                    atom.x += 0.5;
+                    if (atom.attr === 'bgRect') {
+                        const rectConfig = atom as AITableRect;
+                        const options = {
+                            name,
+                            listening: true
+                        };
+
+                        const konvaConfig = aiTableRectConfigToKonvaConfig(rectConfig, options);
+                        const cleanedConfig = Object.fromEntries(
+                            Object.entries(konvaConfig).filter(([_, v]) => v !== undefined)
+                        ) as RectConfig;
+
+                        bgRect = {
+                            ...cleanedConfig,
+                            relationInfo: relationInfo
+                        };
+                    } else if (atom.attr === 'icon') {
+                        const imageConfig = {
+                            ...atom,
+                            url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(atom.image!)}`
+                        };
+
+                        icon = {
+                            ...aiTableImageConfigToKonvaConfig(imageConfig, { listening: false })
+                        };
+                    } else if (atom.attr === 'tag.bgRect') {
+                        const rectConfig = atom as AITableRect;
+                        const options = {
+                            name: generateTargetName({
+                                targetName: AI_TABLE_CELL,
+                                fieldId: field._id,
+                                recordId,
+                                source: TARGET_NAME_CELL_MORE_COUNT,
+                                mouseStyle: 'pointer'
+                            }),
+                            listening: false
+                        };
+
+                        const tagKonvaConfig = aiTableRectConfigToKonvaConfig(rectConfig, options);
+                        const cleanedTagConfig = Object.fromEntries(
+                            Object.entries(tagKonvaConfig).filter(([_, v]) => v !== undefined)
+                        ) as RectConfig;
+
+                        tag = {
+                            ...(tag || {}),
+                            bgRect: cleanedTagConfig
+                        };
+                    } else if (atom.attr === 'tag.text') {
+                        const textConfig = this.getTextConfig(atom, style);
+                        tag = {
+                            ...(tag || {}),
+                            text: {
+                                ...aiTableTextConfigToKonvaConfig(textConfig, rowHeight)
+                            }
+                        };
+                    } else if (atom.attr === 'identifier') {
+                        const textConfig = this.getTextConfig(atom, style);
+                        identifier = {
+                            ...aiTableTextConfigToKonvaConfig(textConfig, rowHeight)
+                        };
+                    } else if (atom.attr === 'title') {
+                        const textConfig = this.getTextConfig(atom, style);
+                        title = {
+                            ...aiTableTextConfigToKonvaConfig(textConfig, rowHeight)
+                        };
+                    } else {
+                        // more count
+                        if (atom.type === AITableRenderAtomType.rect) {
+                            const rectConfig = { ...atom, fill: atom.fillStyle } as AITableRect;
+                            const options = {
+                                name: generateTargetName({
+                                    targetName: AI_TABLE_CELL,
+                                    fieldId: field._id,
+                                    recordId,
+                                    source: TARGET_NAME_CELL_MORE_COUNT,
+                                    mouseStyle: 'pointer'
+                                }),
+                                listening: false
+                            };
+
+                            const konvaConfig = aiTableRectConfigToKonvaConfig(rectConfig, options);
+                            const cleanedConfig = Object.fromEntries(
+                                Object.entries(konvaConfig).filter(([_, v]) => v !== undefined)
+                            ) as RectConfig;
+
+                            moreCount = {
+                                ...(moreCount || {}),
+                                bgRect: cleanedConfig
+                            };
+                        } else if (atom.type === AITableRenderAtomType.text) {
+                            const textConfig = this.getTextConfig(atom, style);
+                            moreCount = {
+                                ...(moreCount || {}),
+                                text: {
+                                    ...aiTableTextConfigToKonvaConfig(textConfig, rowHeight)
+                                }
+                            };
+                        }
+                    }
+                });
+
+                return {
+                    bgRect,
+                    icon,
+                    identifier,
+                    title,
+                    tag,
+                    relationInfo,
+                    moreCount,
+                    closeActionConfig,
+                    name,
+                    coordinate
+                };
+            });
+
+            return items;
+        }
+
+        return [];
+    });
+
     readonly addActionConfig = computed<AITableActionIconConfig | null>(() => {
         const { coordinate, field, recordId, readonly } = this.config()!;
         const { addActionConfig } = this.relationRenderConfig();
@@ -382,6 +539,20 @@ export class RelationCoverCell extends CoverCellBase {
             })
         };
     });
+
+    private getTextConfig(atom: AITableRenderAtom, style: AITableRenderStyle) {
+        const textConfig = {
+            ...atom,
+            textAlign: style?.textAlign || DEFAULT_TEXT_ALIGN_LEFT,
+            fontWeight: style?.fontWeight || DEFAULT_FONT_WEIGHT,
+            textDecoration: DEFAULT_TEXT_DECORATION,
+            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
+            wrap: 'char',
+            ellipsis: true
+        } as AITableText;
+
+        return textConfig;
+    }
 }
 
 export function getRelationItemsConfigs(
@@ -710,7 +881,7 @@ export function getRelationItemsConfigs(
     }
 
     const offsetX = render.columnWidth - AI_TABLE_ACTION_COMMON_SIZE - AI_TABLE_ACTION_COMMON_RIGHT_PADDING;
-    const offsetY = (rowHeight - AI_TABLE_ACTION_COMMON_SIZE) / 2;
+    const offsetY = (AI_TABLE_ROW_HEIGHT - AI_TABLE_ACTION_COMMON_SIZE) / 2;
 
     const addActionConfig: Partial<AITableActionIconConfig> = {
         x: offsetX,
