@@ -67,6 +67,8 @@ export interface AITableText extends AITableGraph {
     verticalAlign?: 'top' | 'middle' | 'bottom';
     fontWeight?: AITableFontWeight;
     textDecoration?: 'underline' | 'line-through' | 'none';
+    wrap?: 'char' | 'word' | 'none';
+    ellipsis?: boolean;
 }
 
 export interface AITableWrapText extends AITableText {

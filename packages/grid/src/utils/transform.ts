@@ -15,7 +15,9 @@ export function aiTableTextConfigToKonvaConfig(textConfig: AITableText, rowHeigh
         align: textConfig.textAlign,
         height: 0,
         verticalAlign: textConfig.verticalAlign,
-        textDecoration: textConfig.textDecoration
+        textDecoration: textConfig.textDecoration,
+        wrap: textConfig.wrap,
+        ellipsis: textConfig.ellipsis
     };
     return result;
 }
