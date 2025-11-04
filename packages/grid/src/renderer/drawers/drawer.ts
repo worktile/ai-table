@@ -836,7 +836,7 @@ export class Drawer {
         let match: RegExpExecArray | null;
         for (let n = 1; n < arr.length; n++) {
             let str = arr[n];
-            let c = str.charAt(0);
+            let c = str?.charAt(0);
             str = str.slice(1);
 
             coords.length = 0;

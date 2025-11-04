@@ -13,7 +13,7 @@ function camelize(str: string): string {
 }
 
 function capitalizeFirstLetter(string: string): string {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string?.charAt(0)?.toUpperCase() + string?.slice(1);
 }
 
 export function getName(componentTag: string): string {
