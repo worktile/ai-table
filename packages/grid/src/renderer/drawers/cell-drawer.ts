@@ -50,7 +50,8 @@ import {
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
     Unchecked,
-    AI_TABLE_ROW_HEIGHT
+    AI_TABLE_ROW_HEIGHT,
+    AI_TABLE_TEXT_LINE_HEIGHT
 } from '../../constants';
 import { AITable } from '../../core';
 import {
@@ -215,13 +216,14 @@ export class CellDrawer extends Drawer {
                 });
             }
         } else {
-            this.wrapText({
+            this.wrapTextWithKonva({
                 x: renderX,
                 y: renderY,
+                maxHeight: rowHeight,
                 text: renderText,
                 maxWidth: textMaxWidth,
                 maxRow,
-                lineHeight: DEFAULT_TEXT_LINE_HEIGHT,
+                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 textAlign,
                 verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
                 fillStyle: fieldType === AITableFieldType.link && !isGroupFirstRender ? Colors.primary : color,
