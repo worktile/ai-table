@@ -109,31 +109,10 @@ export function removeRecord(aiTable: AIViewTable, path: IdPath) {
     aiTable.apply(operation);
 }
 
-export function setRecordHeightType(aiTable: AIViewTable, recordHeightType: AITableRowHeightType) {
-    const viewId = aiTable.activeViewId();
-    const view = aiTable.views().find((v) => v._id === viewId);
-    if (!view) return;
-
-    const currentSettings = view.settings || {};
-    const newSettings: ViewSettings = {
-        ...currentSettings,
-        record_height_type: recordHeightType
-    };
-
-    const operation: SetViewAction = {
-        type: ActionName.SetView,
-        properties: { settings: currentSettings },
-        newProperties: { settings: newSettings },
-        path: [viewId]
-    };
-    aiTable.apply(operation);
-}
-
 export const RecordActions = {
     addRecord,
     addRecords,
     removeRecord,
     updateFieldValues,
-    updateSystemFieldValues,
-    setRecordHeightType
+    updateSystemFieldValues
 };
