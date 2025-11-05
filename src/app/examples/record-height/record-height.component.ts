@@ -1,21 +1,20 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ViewsExample, ViewService } from './views';
 import { AITable, AITableField, AITableRecord, AITableReferences } from '@ai-table/utils';
 import { AITableGrid } from '@ai-table/grid';
-import { AIViewTable, withState } from '@ai-table/state';
+import { AIViewTable, withState, Actions } from '@ai-table/state';
 import { helpers } from 'ngx-tethys/util';
+import { AITableRecordHeightType } from '@ai-table/utils';
+import { TableRecordHeightSetterExample } from './height-setter/height-setter.component';
+import { ViewService } from '../view/views';
 import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
 
 @Component({
-    selector: 'app-table-view-example',
-    templateUrl: './view.component.html',
-    imports: [ViewsExample, AITableGrid],
-    providers: [ViewService],
-    host: {
-        class: 'd-block w-100 h-100'
-    }
+    selector: 'ai-table-record-height',
+    templateUrl: './record-height.component.html',
+    imports: [AITableGrid, TableRecordHeightSetterExample],
+    providers: [ViewService]
 })
-export class TableViewExample {
+export class TableRecordHeightExample {
     private viewService = inject(ViewService);
 
     aiTable!: AIViewTable;
@@ -27,6 +26,11 @@ export class TableViewExample {
     references = signal<AITableReferences>(mockReferences);
 
     plugins = [withState];
+
+    readonly recordHeight = computed(() => {
+        // Look: get record_height_type from current view settings
+        return this.viewService.activeView()?.settings?.record_height_type || AITableRecordHeightType.low;
+    });
 
     aiTableInitialized(aiTable: AITable) {
         this.aiTable = aiTable as AIViewTable;
@@ -40,5 +44,10 @@ export class TableViewExample {
 
         this.viewService.setViews(mockViews);
         this.viewService.setActiveView(mockViews[0]._id);
+    }
+
+    recordHeightChange(height: AITableRecordHeightType) {
+        // Look: update record_height_type in view settings
+        Actions.setRecordHeightType(this.aiTable, height);
     }
 }

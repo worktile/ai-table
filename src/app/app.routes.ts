@@ -9,6 +9,7 @@ import { TableGroupExample } from './examples/group/group.component';
 import { TableFilterExample } from './examples/filter/filter.component';
 import { TableSortExample } from './examples/sort/sort.component';
 import { TableCustomFieldExample } from './examples/custom-field/custom-field.component';
+import { TableRecordHeightExample } from './examples/record-height/record-height.component';
 
 export const routes: Routes = [
     {
@@ -57,5 +58,9 @@ export const routes: Routes = [
     {
         path: 'group',
         component: TableGroupExample
+    },
+    {
+        path: 'record-height',
+        component: TableRecordHeightExample
     }
 ];

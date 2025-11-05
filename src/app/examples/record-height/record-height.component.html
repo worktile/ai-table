@@ -1,0 +1,18 @@
+<p>行高</p>
+
+<app-record-height-setter
+    class="d-block mb-2"
+    [recordHeight]="recordHeight()"
+    (recordHeightChange)="recordHeightChange($event)"
+></app-record-height-setter>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiPlugins]="plugins"
+    [aiRecordHeight]="recordHeight()"
+    (aiTableInitialized)="aiTableInitialized($event)"
+>
+    <!-- Look：[aiRecordHeight]="recordHeight()" -->
+</ai-table-grid>
