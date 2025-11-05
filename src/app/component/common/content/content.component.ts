@@ -81,7 +81,7 @@ import {
     FieldValue,
     AITableUtilsI18nText,
     SetFieldStatTypeOptions,
-    AITableRowHeightType
+    AITableRecordHeightType
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -138,7 +138,7 @@ export class MenuAddRecordsComponent {
 export class DemoTableContent {
     private datePickerFormatPipe = new ThyDatePickerFormatPipe();
 
-    aITableRowHeight = AITableRowHeightType;
+    aITableRowHeight = AITableRecordHeightType;
 
     searchKeywords = '';
 
@@ -716,7 +716,7 @@ export class DemoTableContent {
         };
     }
 
-    setRowHeight(level: AITableRowHeightType) {
+    setRowHeight(level: AITableRecordHeightType) {
         this.tableService.setRowHeight(level);
     }
 }
