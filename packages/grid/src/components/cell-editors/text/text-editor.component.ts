@@ -38,10 +38,11 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     ngAfterViewInit() {
-        setTimeout(() => {
+        // 解决闪烁线问题
+        queueMicrotask(() => {
             this.updateStyle();
             this.handleSelectAll();
-        }, 0);
+        });
     }
 
     updateStyle() {

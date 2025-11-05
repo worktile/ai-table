@@ -4,7 +4,7 @@
 
 .grid-cell-editor {
     border: 2px solid variables.$primary;
-    &:has(.text-cell-editor) {
+    &:has(.text-cell-editor, .select-cell-editor) {
         border: none;
         .form-control {
             // 特殊处理文本框border在输入框上
@@ -48,7 +48,7 @@
 
 .select-cell-editor {
     .thy-select-custom:focus .form-control-custom:not(.disabled) {
-        border: none;
+        border: 2px solid variables.$primary;
         outline: none;
     }
     .thy-select {
