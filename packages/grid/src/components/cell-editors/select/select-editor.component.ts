@@ -33,10 +33,6 @@ import { ROW_HEIGHT_LEVELS } from '../../../constants';
     ]
 })
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> implements AfterViewInit {
-    private render2 = inject(Renderer2);
-
-    private minHeight = 24;
-
     selectOptions = computed(() => {
         return this.field().settings.options;
     });
@@ -96,20 +92,8 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
     }
 
     updateStyle() {
-        const formControl = this.elementRef.nativeElement.querySelector('.form-control') as HTMLElement;
-        if (formControl) {
-            this.render2.setStyle(formControl, 'height', 'auto');
-            queueMicrotask(() => {
-                // 获取的 scrollHeight 高度需要减去 paddingTop，否则过高
-                const paddingTop = parseInt(getComputedStyle(formControl).paddingTop, 10);
-                // 重新计算选择内容后的高度
-                const scrollHeight = Math.max(formControl.scrollHeight - paddingTop, this.rowHeight());
-                const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
-
-                this.render2.setStyle(formControl, 'height', `${newHeight}px`);
-                this.render2.setStyle(formControl, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
-                this.thyPopoverRef?.updatePosition();
-            });
-        }
+        this.adjustElementHeight('.form-control', true, () => {
+            this.thyPopoverRef?.updatePosition();
+        });
     }
 }

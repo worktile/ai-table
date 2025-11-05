@@ -27,10 +27,6 @@ import { ROW_HEIGHT_LEVELS } from '../../../constants';
     }
 })
 export class TextCellEditorComponent extends AbstractEditCellEditor<string> implements AfterViewInit {
-    private render2 = inject(Renderer2);
-
-    private minHeight = 24;
-
     isSelectAll = input(false);
 
     constructor() {
@@ -46,16 +42,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     updateStyle() {
-        const textarea = this.elementRef.nativeElement.querySelector('textarea');
-        if (textarea) {
-            this.render2.setStyle(textarea, 'height', 'auto');
-            const scrollHeight = Math.max(textarea.scrollHeight, this.rowHeight());
-            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
-
-            this.render2.setStyle(textarea, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
-            this.render2.setStyle(textarea, 'height', `${newHeight}px`);
-            this.render2.setStyle(textarea, 'resize', 'none');
-        }
+        this.adjustElementHeight('textarea', false);
     }
 
     handleSelectAll() {
