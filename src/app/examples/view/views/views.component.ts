@@ -7,12 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyEnterDirective, ThyAutofocusDirective } from 'ngx-tethys/shared';
 import { ThyDropdownMenuComponent, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
-import { ViewService } from '../view.service';
+import { ViewService } from './view.service';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { ThyPopover } from 'ngx-tethys/popover';
 
 @Component({
-    selector: 'app-views-example',
+    selector: 'views-example',
     templateUrl: './views.component.html',
     imports: [
         ThyNav,

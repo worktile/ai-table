@@ -1,7 +1,7 @@
 import { sortViews } from '@ai-table/state';
 import { AITableView, AITableViews, Id } from '@ai-table/utils';
 import { computed, Injectable, signal } from '@angular/core';
-import { mockViews } from './mock';
+import { mockViews } from '../../view/mock';
 
 @Injectable()
 export class ViewService {

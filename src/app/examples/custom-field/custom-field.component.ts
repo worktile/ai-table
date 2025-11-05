@@ -8,7 +8,8 @@ import {
     AITableFieldOption,
     AITableRecordUpdatedInfo,
     UpdateFieldValueOptions,
-    AddFieldOptions
+    AddFieldOptions,
+    AITableRowHeightType
 } from '@ai-table/utils';
 import { mockRecords, mockFields, mockReferences, mockCustomFields, RelationFieldType } from './mock';
 import { AITableRecordCreatedInfo, AddRecordOptions } from '@ai-table/utils';
@@ -35,6 +36,8 @@ export class TableCustomFieldExample {
     references = signal<AITableReferences>(mockReferences);
 
     plugins = [withState];
+
+    aITableRowHeightType = AITableRowHeightType;
 
     private message = inject(ThyMessageService);
 

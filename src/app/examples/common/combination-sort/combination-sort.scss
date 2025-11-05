@@ -1,0 +1,17 @@
+@use 'ngx-tethys/styles/variables.scss';
+
+.combination-sort-item {
+    border-radius: 4px;
+    .draggable-icon {
+        visibility: hidden;
+    }
+    &:hover {
+        .draggable-icon {
+            visibility: visible;
+        }
+    }
+    .thy-checkbox {
+        pointer-events: none;
+        user-select: none;
+    }
+}
