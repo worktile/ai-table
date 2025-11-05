@@ -63,7 +63,7 @@ import { RelationCellLayout } from './render';
 import { ImageConfig } from 'konva/lib/shapes/Image';
 
 @Component({
-    selector: 'ai-table-relation',
+    selector: 'app-table-custom-field-relation',
     template: `
         <ko-group>
             @if (onlyDisplayBorder()) {

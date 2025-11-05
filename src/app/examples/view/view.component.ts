@@ -1,11 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ViewsExample } from './views/views.component';
-import { ViewService } from './view.service';
+import { ViewsExample, ViewService } from './views';
 import { AITable, AITableField, AITableRecord, AITableReferences } from '@ai-table/utils';
 import { AITableGrid } from '@ai-table/grid';
 import { AIViewTable, withState } from '@ai-table/state';
 import { helpers } from 'ngx-tethys/util';
-import { mockFields, mockRecords, mockReferences } from './mock';
+import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
 
 @Component({
     selector: 'app-table-view-example',
@@ -38,5 +37,8 @@ export class TableViewExample {
         this.aiTable.viewsMap = computed(() => {
             return helpers.keyBy(this.viewService.views(), '_id');
         });
+
+        this.viewService.setViews(mockViews);
+        this.viewService.setActiveView(mockViews[0]._id);
     }
 }
