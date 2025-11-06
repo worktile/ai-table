@@ -60,26 +60,26 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
         this.thyPopoverRef?.close();
     }
 
-    protected adjustElementHeight(selector: string, needsSubtractPadding: boolean = false, onHeightAdjusted?: () => void) {
+    /**
+     * 调整高度
+     * @param selector 选择器
+     * @param isSetHeight 是否判断滚动高度小于行高才设置高度，否则使用自动高度（多选内容需要自动撑开，当内容高度不够行高以行高为准）
+     * @param onHeightAdjusted
+     */
+    protected adjustElementHeight(selector: string, isSetHeight: boolean, onHeightAdjusted?: () => void) {
         const element = this.elementRef.nativeElement.querySelector(selector) as HTMLElement;
         if (element) {
-            // 先设置为 auto 以计算实际内容高度
+            // 先设置为 auto 计算实际内容高度
             this.render2.setStyle(element, 'height', 'auto');
 
             queueMicrotask(() => {
                 let scrollHeight = element.scrollHeight;
+                const newHeight = Math.max(ROW_HEIGHT_LEVELS.low, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
 
-                // 如果需要，减去 padding 以避免过高
-                if (needsSubtractPadding) {
-                    const paddingTop = parseInt(getComputedStyle(element).paddingTop, 10);
-                    scrollHeight = Math.max(scrollHeight - paddingTop, this.rowHeight());
-                } else {
-                    scrollHeight = Math.max(scrollHeight, this.rowHeight());
+                if (isSetHeight || scrollHeight < this.rowHeight()) {
+                    this.render2.setStyle(element, 'height', `${Math.max(newHeight, this.rowHeight())}px`);
                 }
 
-                const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
-
-                this.render2.setStyle(element, 'height', `${newHeight}px`);
                 this.render2.setStyle(element, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
 
                 onHeightAdjusted?.();

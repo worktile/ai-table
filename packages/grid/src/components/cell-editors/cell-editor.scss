@@ -21,7 +21,7 @@
     }
     .form-control {
         border: none;
-        min-height: 45px;
+        min-height: calc(45px - 4px);
         height: 100%; // 默认输入框高度 100%
         border-radius: 0;
         padding-top: cellEditorVariables.$cell-editor-padding-top;
@@ -72,7 +72,7 @@
             right: 2px;
         }
         .form-control {
-            height: 45px; // 控制输入框显示在上方
+            height: calc(45px - 4px); // 控制输入框显示在上方
         }
     }
 }
@@ -85,7 +85,7 @@
             height: 100%; // 控制弹出的picker位置
         }
         .form-control {
-            height: 45px; // 控制日期显示在上方
+            height: calc(45px - 4px); // 控制日期显示在上方
         }
         .thy-calendar-picker-icon,
         .thy-calendar-picker-clear {
@@ -99,7 +99,7 @@
     .thy-input-group {
         align-items: start;
         .form-control {
-            height: 45px; // 控制输入框显示在上方
+            height: calc(45px - 4px); // 控制输入框显示在上方
         }
         .input-group-suffix {
             margin-top: cellEditorVariables.$cell-editor-padding-top;

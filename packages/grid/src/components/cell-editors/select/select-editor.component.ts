@@ -11,7 +11,6 @@ import { SelectOptionComponent } from '../../cell-views/select/option.component'
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
 import { ThyFormModule } from 'ngx-tethys/form';
 import { AITableQueries } from '../../../core';
-import { ROW_HEIGHT_LEVELS } from '../../../constants';
 
 @Component({
     selector: 'select-cell-editor',
@@ -92,7 +91,7 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
     }
 
     updateStyle() {
-        this.adjustElementHeight('.form-control', true, () => {
+        this.adjustElementHeight('.form-control', false, () => {
             this.thyPopoverRef?.updatePosition();
         });
     }

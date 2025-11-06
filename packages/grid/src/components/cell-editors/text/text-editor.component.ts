@@ -42,7 +42,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     updateStyle() {
-        this.adjustElementHeight('textarea', false);
+        this.adjustElementHeight('textarea', true);
     }
 
     handleSelectAll() {
