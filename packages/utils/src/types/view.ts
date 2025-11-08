@@ -74,7 +74,7 @@ export interface AITableGroupOptions {
 }
 
 export interface AITableRecordHeightOptions {
-    record_height_type?: AITableRowHeightType;
+    record_height_type?: AITableRecordHeightType;
 }
 
 export type AITableViews = AITableView[];
@@ -108,7 +108,7 @@ export enum SortDirection {
     descending = -1
 }
 
-export enum AITableRowHeightType {
+export enum AITableRecordHeightType {
     low = 'low',
     medium = 'medium',
     high = 'high'

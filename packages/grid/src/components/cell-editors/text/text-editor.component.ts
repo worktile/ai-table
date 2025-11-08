@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
-import { ROW_HEIGHT_LEVELS } from '../../../constants';
+import { AI_TABLE_RECORD_HEIGHT_LEVELS } from '../../../constants';
 
 @Component({
     selector: 'text-cell-editor',
@@ -48,10 +48,10 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         const textarea = this.elementRef.nativeElement.querySelector('textarea');
         if (textarea) {
             this.render2.setStyle(textarea, 'height', 'auto');
-            const scrollHeight = Math.max(textarea.scrollHeight, this.rowHeight());
-            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
+            const scrollHeight = Math.max(textarea.scrollHeight, this.recordHeight());
+            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, AI_TABLE_RECORD_HEIGHT_LEVELS.high));
 
-            this.render2.setStyle(textarea, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
+            this.render2.setStyle(textarea, 'max-height', `${AI_TABLE_RECORD_HEIGHT_LEVELS.high}px`);
             this.render2.setStyle(textarea, 'height', `${newHeight}px`);
             this.render2.setStyle(textarea, 'resize', 'none');
         }

@@ -1,3 +1,5 @@
+import { AITableRecordHeightType } from '@ai-table/utils';
+
 export const AI_TABLE_ACTION_COMMON_SIZE = 32; // 表格图标action背景的通用尺寸
 export const AI_TABLE_ACTION_COMMON_RADIUS = 4; // 表格图标action背景的radius通用尺寸
 export const AI_TABLE_ACTION_COMMON_RIGHT_PADDING = 6; // 表格图标action右侧padding尺寸
@@ -21,10 +23,10 @@ export const AI_TABLE_ROW_BLANK_HEIGHT = 43; // 减去边框后真实的行高
 export const AI_TABLE_ROW_HEIGHT = 44; // 默认行高基准
 
 // 行高档位配置
-export const ROW_HEIGHT_LEVELS = {
-    low: 44, // 低档：44px
-    medium: 88, // 中档：88px
-    high: 148 // 高档：148px
+export const AI_TABLE_RECORD_HEIGHT_LEVELS = {
+    [AITableRecordHeightType.low]: 44, // 低档：44px
+    [AITableRecordHeightType.medium]: 88, // 中档：88px
+    [AITableRecordHeightType.high]: 148 // 高档：148px
 } as const;
 export const AI_TABLE_CELL_ACTIVE_BORDER_WIDTH = 2; // 选中单元格的边框宽度
 export const AI_TABLE_CELL_ATTACHMENT_ADD = 'AI_TABLE_CELL_ATTACHMENT_ADD'; // 附件cell中新增图标名称
