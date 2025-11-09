@@ -1,16 +1,9 @@
 import { AITableField, AITableFilterCondition, AITableReferences, FieldBase, FieldOptions, FieldValue } from '@ai-table/utils';
-import { AITable } from '../../core';
 
 export interface FieldOperable<TFC = string, TCV extends FieldValue = FieldValue> extends FieldBase {
     isMeetFilter(condition: AITableFilterCondition<TFC>, cellValue: TCV, options?: FieldOptions): boolean;
 
-    compare(
-        cellValue1: TCV,
-        cellValue2: TCV,
-        references: AITableReferences,
-        sortKey: string | undefined,
-        options: { aiTable: AITable; field: AITableField }
-    ): number;
+    compare(cellValue1: TCV, cellValue2: TCV, references: AITableReferences, sortKey: string | undefined, options: FieldOptions): number;
 
     toFieldValue(
         plainText: string,

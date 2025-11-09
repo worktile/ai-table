@@ -1,10 +1,10 @@
 <p>行高</p>
 
-<app-record-height-setter
+<app-record-height-selector
     class="d-block mb-2"
     [recordHeight]="recordHeight()"
     (recordHeightChange)="recordHeightChange($event)"
-></app-record-height-setter>
+></app-record-height-selector>
 
 <ai-table-grid
     [(aiRecords)]="records"
