@@ -62,7 +62,7 @@ export class TableSortRecordsExample {
         };
     });
 
-    readonly aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
+    readonly buildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
             const renderRecords = buildRecordsByView(
                 this.aiTable,
