@@ -1,0 +1,97 @@
+<a href="javascript:;" thyAction (click)="openViewFilter($event)">
+    <thy-icon thyIconName="filter-line"></thy-icon>
+    筛选
+
+    @let count = conditions().length;
+    @if (count) {
+        <thy-badge thyType="primary" [thyCount]="count" thyTextColor="#6698FF" thyBackgroundColor="#eff4ff" class="ml-2"></thy-badge>
+    }
+</a>
+
+<ng-template #filterPanel>
+    <thy-dialog-header thyTitle="筛选"> </thy-dialog-header>
+    <thy-dialog-body>
+        @for (condition of conditions(); track condition.field_id; let index = $index) {
+            <ng-container *ngTemplateOutlet="conditionTemplate; context: { $implicit: condition, index: index }"></ng-container>
+        }
+
+        @let selectableOptions = fields() | selectableFields: conditions();
+        @if (selectableOptions.length) {
+            <a href="javascript:" (click)="addCondition(selectableOptions[0]._id)"><thy-icon thyIconName="plus"></thy-icon>添加筛选条件</a>
+        }
+    </thy-dialog-body>
+    <thy-dialog-footer thyAlign="right">
+        <button thyButton="link-secondary" (click)="close()">取消</button>
+        <button thyButton="primary" (click)="ok()">确定</button>
+    </thy-dialog-footer>
+</ng-template>
+
+<ng-template #conditionTemplate let-condition let-index="index">
+    <div class="d-flex w-100 mb-4">
+        <ng-container *ngTemplateOutlet="logicTemplate; context: { $implicit: index }"></ng-container>
+        <ng-container *ngTemplateOutlet="fieldTemplate; context: { $implicit: condition, index: index }"></ng-container>
+        <ng-container *ngTemplateOutlet="operationTemplate; context: { $implicit: condition, index: index }"></ng-container>
+        <ng-container *ngTemplateOutlet="valueTemplate; context: { $implicit: condition, index: index }"></ng-container>
+
+        <a
+            class="ml-4"
+            thyAction
+            thyIcon="trash"
+            thyType="danger"
+            href="javascript:;"
+            thyTooltip="删除"
+            (click)="removeCondition(condition)"
+        ></a>
+    </div>
+</ng-template>
+
+<ng-template #logicTemplate let-index>
+    <div class="conditions-logic mr-4">
+        @if (index === 0) {
+            <div class="conditions-logic-when pl-3">当</div>
+        } @else {
+            <thy-select [(ngModel)]="logic" [thyDisabled]="index > 1">
+                @for (logic of logics; track logic.value) {
+                    <thy-option [thyValue]="logic.value" [thyLabelText]="logic.label"> </thy-option>
+                }
+            </thy-select>
+        }
+    </div>
+</ng-template>
+
+<ng-template #fieldTemplate let-condition let-index="index">
+    <thy-select class="mr-4" [ngModel]="condition.field_id" (ngModelChange)="updateConditionFieldId(index, $event)">
+        @for (field of fields() | selectableFields: conditions() : condition.field_id; track field._id) {
+            <thy-option [thyValue]="field._id" [thyLabelText]="field.name"> </thy-option>
+        }
+    </thy-select>
+</ng-template>
+
+<ng-template #operationTemplate let-condition let-index="index">
+    <thy-select class="mr-4" [ngModel]="condition.operation" (ngModelChange)="updateConditionOperation(index, $event)">
+        @for (operation of condition.field_id | fieldOperations: fieldsMap(); track operation) {
+            <thy-option [thyValue]="operation" [thyLabelText]="operationLabelMap[operation]"> </thy-option>
+        }
+    </thy-select>
+</ng-template>
+
+<ng-template #valueTemplate let-condition let-index="index">
+    @if (condition.operation !== AITableFilterOperation.empty && condition.operation !== AITableFilterOperation.exists) {
+        @let fieldType = fieldsMap()[condition.field_id]!.type;
+        @if (fieldType === AITableFieldType.text) {
+            <thy-input [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-input>
+        } @else if (fieldType === AITableFieldType.number) {
+            <thy-input-number [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-input-number>
+        } @else if (fieldType === AITableFieldType.select) {
+            <thy-select [ngModel]="condition.value" [thyMode]="'multiple'" (ngModelChange)="updateConditionValue(index, $event)">
+                @for (option of condition.field_id | fieldOptions: fieldsMap(); track option._id) {
+                    <thy-option [thyValue]="option._id" [thyLabelText]="option.text"> </thy-option>
+                }
+            </thy-select>
+        } @else if (fieldType === AITableFieldType.date) {
+            <thy-date-picker [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-date-picker>
+        } @else {
+            <!-- ... other field types -->
+        }
+    }
+</ng-template>

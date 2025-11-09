@@ -1,11 +1,12 @@
 import {
-    AITableFieldType,
-    AITableViewRecord,
     AITableViewField,
+    AITableFieldType,
+    AITableFilterLogical,
+    AITableFilterOperation,
+    AITableViewRecord,
     AITableReferences,
     AITableSelectOptionStyle,
-    AITableView,
-    SortDirection
+    AITableView
 } from '@ai-table/utils';
 
 export const mockViews: AITableView[] = [
@@ -14,19 +15,27 @@ export const mockViews: AITableView[] = [
         short_id: 'viewShortId001',
         name: '表格视图',
         settings: {
-            // Look：sort settings save here
-            is_keep_sort: true,
-            sorts: [{ sort_by: 'fieldId_select', direction: SortDirection.ascending }]
+            // Look: filter settings save here
+            condition_logical: AITableFilterLogical.or,
+            conditions: [
+                {
+                    field_id: 'fieldId_text',
+                    operation: AITableFilterOperation.contain,
+                    value: '小明'
+                },
+                {
+                    field_id: 'fieldId_number',
+                    operation: AITableFilterOperation.gte,
+                    value: 19
+                }
+            ]
         }
     },
     {
         _id: 'viewId002',
         short_id: 'viewShortId002',
         name: '表格视图 2',
-        settings: {
-            is_keep_sort: false,
-            sorts: []
-        }
+        settings: {}
     }
 ];
 
@@ -79,11 +88,7 @@ export const mockRecords: AITableViewRecord[] = [
             fieldId_number: 19,
             fieldId_select: ['singleOptionId001']
         },
-        // Look： position of record in different views
-        positions: {
-            viewId001: 1,
-            viewId002: 1
-        }
+        positions: {}
     },
     {
         _id: 'recordId002',
@@ -97,10 +102,7 @@ export const mockRecords: AITableViewRecord[] = [
             fieldId_number: 18,
             fieldId_select: ['singleOptionId002']
         },
-        positions: {
-            viewId001: 2,
-            viewId002: 3
-        }
+        positions: {}
     },
     {
         _id: 'recordId003',
@@ -114,10 +116,7 @@ export const mockRecords: AITableViewRecord[] = [
             fieldId_number: 32,
             fieldId_select: ['singleOptionId001']
         },
-        positions: {
-            viewId001: 3,
-            viewId002: 2
-        }
+        positions: {}
     }
 ];
 

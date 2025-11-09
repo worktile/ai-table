@@ -12,8 +12,8 @@ import {
 import { AITableRecordHeightType } from '@ai-table/utils';
 
 @Component({
-    selector: 'app-record-height-setter',
-    templateUrl: './height-setter.component.html',
+    selector: 'app-record-height-selector',
+    templateUrl: './height-selector.component.html',
     imports: [
         ThyIcon,
         ThyAction,
@@ -24,7 +24,7 @@ import { AITableRecordHeightType } from '@ai-table/utils';
         ThyDropdownMenuItemNameDirective
     ]
 })
-export class TableRecordHeightSetterExample {
+export class TableRecordHeightSelectorExample {
     readonly recordHeight = input<AITableRecordHeightType>(AITableRecordHeightType.low);
 
     readonly recordHeightChange = output<AITableRecordHeightType>();

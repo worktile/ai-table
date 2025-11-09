@@ -4,10 +4,9 @@ import {
     AITable,
     AITableAction,
     AITableField,
-    AITableFilterConditions,
     AITableViewRecord,
     AITableReferences,
-    AITableSortOptions,
+    ViewSettings,
     AITableValue,
     AITableViewField,
     AITableSort,
@@ -37,7 +36,7 @@ import { ViewService } from '../view/views';
 export class TableSortRecordsExample {
     aiTable!: AIViewTable;
 
-    fields = signal<AITableField[]>(mockFields);
+    fields = signal<AITableViewField[]>(mockFields);
 
     records = signal<AITableViewRecord[]>(mockRecords);
 
@@ -64,12 +63,7 @@ export class TableSortRecordsExample {
 
     readonly aiBuildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
-            const renderRecords = buildRecordsByView(
-                this.aiTable,
-                this.records(),
-                this.fields() as AITableViewField[],
-                this.viewService.activeView()
-            );
+            const renderRecords = buildRecordsByView(this.aiTable, this.records(), this.fields(), this.viewService.activeView());
 
             // Look：return sorted records
             return {
@@ -97,7 +91,7 @@ export class TableSortRecordsExample {
         const { isKeepSort, sorts } = event;
         const activeView = this.viewService.activeView();
         if (!activeView) return;
-        const settings: Partial<AITableFilterConditions & AITableSortOptions> = {
+        const settings: ViewSettings = {
             ...(activeView.settings || {}),
             is_keep_sort: isKeepSort,
             sorts

@@ -4,14 +4,14 @@ import { AITableGrid } from '@ai-table/grid';
 import { AIViewTable, withState, Actions } from '@ai-table/state';
 import { helpers } from 'ngx-tethys/util';
 import { AITableRecordHeightType } from '@ai-table/utils';
-import { TableRecordHeightSetterExample } from './height-setter/height-setter.component';
+import { TableRecordHeightSelectorExample } from './height-selector/height-selector.component';
 import { ViewService } from '../view/views';
 import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
 
 @Component({
     selector: 'ai-table-record-height',
     templateUrl: './record-height.component.html',
-    imports: [AITableGrid, TableRecordHeightSetterExample],
+    imports: [AITableGrid, TableRecordHeightSelectorExample],
     providers: [ViewService]
 })
 export class TableRecordHeightExample {
