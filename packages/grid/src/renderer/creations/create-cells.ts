@@ -215,7 +215,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         x: realX,
                         y: realY,
                         columnWidth: width,
-                        rowHeight,
+                        rowHeight: AI_TABLE_ROW_HEIGHT,
                         recordId: recordId,
                         field,
                         cellValue,

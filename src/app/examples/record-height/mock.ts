@@ -1,4 +1,32 @@
-import { AITableField, AITableFieldType, AITableRecord, AITableReferences, AITableSelectOptionStyle } from '@ai-table/utils';
+import {
+    AITableField,
+    AITableFieldType,
+    AITableRecord,
+    AITableReferences,
+    AITableRecordHeightType,
+    AITableSelectOptionStyle,
+    AITableView
+} from '@ai-table/utils';
+
+export const mockViews: AITableView[] = [
+    {
+        _id: 'viewId001',
+        short_id: 'viewShortId001',
+        name: '表格视图',
+        settings: {
+            // Look: record_height_type save here
+            record_height_type: AITableRecordHeightType.medium
+        }
+    },
+    {
+        _id: 'viewId002',
+        short_id: 'viewShortId002',
+        name: '表格视图 2',
+        settings: {
+            record_height_type: AITableRecordHeightType.high
+        }
+    }
+];
 
 export const mockFields: AITableField[] = [
     {
@@ -30,32 +58,6 @@ export const mockFields: AITableField[] = [
                 }
             ]
         }
-    },
-    {
-        _id: 'fieldId_select_multiple',
-        name: '爱好',
-        type: AITableFieldType.select,
-        settings: {
-            is_multiple: true,
-            option_style: AITableSelectOptionStyle.tag,
-            options: [
-                {
-                    text: '篮球',
-                    _id: 'multipleOptionId001',
-                    bg_color: '#5dcfff'
-                },
-                {
-                    text: '跑步',
-                    _id: 'multipleOptionId002',
-                    bg_color: '#ffcd5d'
-                },
-                {
-                    text: '游泳',
-                    _id: 'multipleOptionId003',
-                    bg_color: '#77C386'
-                }
-            ]
-        }
     }
 ];
 
@@ -70,8 +72,7 @@ export const mockRecords: AITableRecord[] = [
         values: {
             fieldId_text: '小明',
             fieldId_number: 19,
-            fieldId_select: ['singleOptionId001'],
-            fieldId_select_multiple: ['multipleOptionId001', 'multipleOptionId002', 'multipleOptionId003']
+            fieldId_select: ['singleOptionId001']
         }
     },
     {
@@ -84,8 +85,7 @@ export const mockRecords: AITableRecord[] = [
         values: {
             fieldId_text: '小红',
             fieldId_number: 18,
-            fieldId_select: ['singleOptionId002'],
-            fieldId_select_multiple: ['multipleOptionId001']
+            fieldId_select: ['singleOptionId002']
         }
     },
     {

@@ -3,12 +3,14 @@ import {
     AI_TABLE_OFFSET,
     AI_TABLE_TAG_FONT_SIZE,
     AI_TABLE_TAG_PADDING,
+    AI_TABLE_TEXT_LINE_HEIGHT,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
     DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_DECORATION,
+    DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
     DEFAULT_WRAP_TEXT_MAX_ROW,
@@ -32,6 +34,7 @@ import {
 } from '../../types';
 import { getTextWidth, imageCache, textDataCache, TextMeasure } from '../../utils';
 import { AITableRenderAtom } from '../../types/atom';
+import Konva from 'konva';
 
 // 用于正确地分割字符串，包括表情符号
 export const graphemeSplitter = new GraphemeSplitter();
@@ -241,6 +244,7 @@ export class Drawer {
     }
 
     // 换行文本绘制
+    // @deprecated 使用 wrapTextWithKonva 代替
     public wrapText(options: AITableWrapText) {
         const {
             x,
@@ -356,6 +360,95 @@ export class Drawer {
 
         const res = {
             height: rowCount < maxRow ? offsetY + lineHeight : offsetY,
+            data: resultData
+        };
+
+        textDataCache.set(cacheKey, res);
+        return res;
+    }
+
+    public wrapTextWithKonva(options: AITableWrapText) {
+        const {
+            x,
+            y,
+            text,
+            maxWidth,
+            maxHeight,
+            lineHeight = AI_TABLE_TEXT_LINE_HEIGHT,
+            maxRow = DEFAULT_WRAP_TEXT_MAX_ROW,
+            fontSize = DEFAULT_FONT_SIZE,
+            fillStyle = this.colors.gray800,
+            textAlign = DEFAULT_TEXT_ALIGN_LEFT,
+            verticalAlign = DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
+            fontWeight = DEFAULT_FONT_WEIGHT,
+            textDecoration = DEFAULT_TEXT_DECORATION,
+            fieldType,
+            needDraw = false
+        } = options;
+        let offsetX = 0;
+        const fontStyle = `${fontWeight} ${fontSize}px ${DEFAULT_FONT_FAMILY}`;
+        const baselineOffset = verticalAlign === DEFAULT_TEXT_VERTICAL_ALIGN_TOP ? fontSize / 2 : 0;
+        const fontStyleKey = `${fontWeight}-${fontSize}px`;
+        const isUnderline = textDecoration === 'underline';
+        this.ctx.font = fontStyle;
+        const textRenderer = (textDataList: any[]) => {
+            textDataList.forEach((data) => {
+                const { offsetX, offsetY, text, width, linkUrl } = data;
+                this.ctx.fillText(text, x + offsetX, y + offsetY + baselineOffset);
+                if (linkUrl || isUnderline) {
+                    this.line({
+                        x: x + offsetX,
+                        y: y + offsetY + AI_TABLE_OFFSET,
+                        points: [0, fontSize, width, fontSize],
+                        stroke: fillStyle
+                    });
+                }
+            });
+        };
+
+        if (fillStyle) this.setStyle({ fillStyle });
+        this.ctx.textAlign = textAlign;
+        const cacheKey = `${fontStyleKey}-${maxRow}-${maxWidth || 0}-${maxHeight || 0}-${fieldType}-${text}`;
+        const cacheTextData = textDataCache.get(cacheKey);
+        if (cacheTextData) {
+            if (this.needDraw && needDraw) {
+                textRenderer(cacheTextData.data);
+            }
+            return cacheTextData;
+        }
+
+        const resultData: AITableWrapTextData = [];
+        const height = maxHeight ? maxHeight : maxRow * lineHeight * fontSize;
+        const konvaText = new Konva.Text({
+            text,
+            fontSize,
+            fontFamily: DEFAULT_FONT_FAMILY,
+            lineHeight: 1.84,
+            wrap: 'char',
+            width: maxWidth,
+            height: height,
+            align: textAlign,
+            verticalAlign: 'top',
+            fontStyle: fontStyle,
+            ellipsis: true,
+            transformsEnabled: true,
+            listening: false
+        });
+        konvaText.textArr.forEach((item, index) => {
+            resultData.push({
+                offsetX,
+                offsetY: index * lineHeight * fontSize,
+                width: item.width,
+                text: item.text
+            });
+        });
+
+        if (this.needDraw && needDraw) {
+            textRenderer(resultData);
+        }
+
+        const res = {
+            height: konvaText.getClientRect().height,
             data: resultData
         };
 
@@ -836,7 +929,7 @@ export class Drawer {
         let match: RegExpExecArray | null;
         for (let n = 1; n < arr.length; n++) {
             let str = arr[n];
-            let c = str.charAt(0);
+            let c = str?.charAt(0);
             str = str.slice(1);
 
             coords.length = 0;

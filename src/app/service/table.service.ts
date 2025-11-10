@@ -17,8 +17,17 @@ import { Router } from '@angular/router';
 import { WebsocketProvider } from 'y-websocket';
 import { getProvider } from '../provider';
 import { getBasicData } from '../utils/utils';
-import { AITableFieldType, AITableValue, AITableView, AITableViewFields, AITableViewRecords, SharedType } from '@ai-table/utils';
-import { scrollToMatchedCell, AITableLinearRow, AITableRowHeight } from '@ai-table/grid';
+import {
+    AITableFieldType,
+    AITableRecordHeightType,
+    AITableValue,
+    AITableView,
+    AITableViewFields,
+    AITableViewRecords,
+    SharedType
+} from '@ai-table/utils';
+import { scrollToMatchedCell, AITableLinearRow } from '@ai-table/grid';
+import { Actions } from '@ai-table/state';
 
 export const LOCAL_STORAGE_KEY = 'ai-table-active-view-id';
 const LOCAL_STORAGE_AI_TABLE_SHARED_DATA = 'ai-table-demo-shared-data';
@@ -48,7 +57,7 @@ export class TableService {
 
     maxFields: WritableSignal<number> = signal(500);
 
-    rowHeight: WritableSignal<AITableRowHeight> = signal(AITableRowHeight.low);
+    // rowHeight: WritableSignal<AITableRowHeight> = signal(AITableRowHeight.low);
 
     records!: WritableSignal<AITableViewRecords>;
 
@@ -63,6 +72,12 @@ export class TableService {
     activeViewId: WritableSignal<string> = signal('');
 
     router = inject(Router);
+
+    rowHeight = computed(() => {
+        // return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
+        const activeView = this.activeView();
+        return activeView?.settings?.record_height_type ?? AITableRecordHeightType.low;
+    });
 
     activeView = computed(() => {
         return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
@@ -138,8 +153,8 @@ export class TableService {
         this.maxFields.set(maxFields);
     }
 
-    setRowHeight(rowHeight: AITableRowHeight) {
-        this.rowHeight.set(rowHeight);
+    setRowHeight(rowHeight: AITableRecordHeightType) {
+        Actions.setRecordHeightType(this.aiTable, rowHeight);
     }
 
     setActiveView(activeViewId: string) {

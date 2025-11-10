@@ -1,0 +1,10 @@
+<a href="javascript:;" thyAction [thyIcon]="recordHeightsMap[recordHeight()].icon" thyActiveClass="active" [thyDropdown]="menu"> 行高 </a>
+
+<thy-dropdown-menu #menu>
+    @for (height of recordHeights; track $index) {
+        <a thyDropdownMenuItem href="javascript:;" [class.active]="height.value === recordHeight()" (click)="setRecordHeight(height.value)">
+            <thy-icon [thyIconName]="height.icon"></thy-icon>
+            <span thyDropdownMenuItemName>{{ height.label }}</span>
+        </a>
+    }
+</thy-dropdown-menu>

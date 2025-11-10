@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.4.0-0](https://github.com/worktile/ai-table/compare/0.3.3...0.4.0-0) (2025-11-04)
+
+
+### Bug Fixes
+
+* #WIK-19248 链接-hover点击区域过宽 ([#763](https://github.com/worktile/ai-table/issues/763)) ([ed0880d](https://github.com/worktile/ai-table/commit/ed0880dd9f99dc65e02674a498daac98dc5dd0da)), closes [#WIK-19248](https://github.com/worktile/ai-table/issues/WIK-19248)
+
+
+### Features
+
+* #WIK-19211 ai-table cell支持多行渲染方案 ([#746](https://github.com/worktile/ai-table/issues/746)) ([148331f](https://github.com/worktile/ai-table/commit/148331f7cc4d143589016840b2310f2c0a200ea0)), closes [#WIK-19211](https://github.com/worktile/ai-table/issues/WIK-19211) [#WIK-19211](https://github.com/worktile/ai-table/issues/WIK-19211) [#WIK-19211](https://github.com/worktile/ai-table/issues/WIK-19211)
+* #WIK-19212 表头、分组组行高固定 ([#749](https://github.com/worktile/ai-table/issues/749)) ([eb5d765](https://github.com/worktile/ai-table/commit/eb5d7654ced63b8296c48c8b45a7a401705d7360)), closes [#WIK-19212](https://github.com/worktile/ai-table/issues/WIK-19212)
+* #WIK-19213 行高信息协作保存同步 ([#766](https://github.com/worktile/ai-table/issues/766)) ([f2aaf38](https://github.com/worktile/ai-table/commit/f2aaf382fe2f6e9dac86ec834532de5440314da4)), closes [#WIK-19213](https://github.com/worktile/ai-table/issues/WIK-19213) [#WIK-19213](https://github.com/worktile/ai-table/issues/WIK-19213) [#WIK-19213](https://github.com/worktile/ai-table/issues/WIK-19213)
+* #WIK-19214 文本、链接、数字字段静态和cover渲染支持多行 ([#757](https://github.com/worktile/ai-table/issues/757)) ([33abfb0](https://github.com/worktile/ai-table/commit/33abfb0d9ad39de3280c8735027f587d0888ce87)), closes [#WIK-19214](https://github.com/worktile/ai-table/issues/WIK-19214) [#WIK-19214](https://github.com/worktile/ai-table/issues/WIK-19214) [#WIK-19214](https://github.com/worktile/ai-table/issues/WIK-19214)
+* #WIK-19219 文本、选择、数字、日期、链接dom的多行编辑 ([#764](https://github.com/worktile/ai-table/issues/764)) ([5abc3f3](https://github.com/worktile/ai-table/commit/5abc3f320fc5922030b48488c306e4f5d42c47cf)), closes [#WIK-19219](https://github.com/worktile/ai-table/issues/WIK-19219)
+* #WIK-19220 附件支持多行（hover时的+处理） ([#761](https://github.com/worktile/ai-table/issues/761)) ([3c0ab5a](https://github.com/worktile/ai-table/commit/3c0ab5a3bfba4cf4ed049937e0592f8a0c658a62)), closes [#WIK-19220](https://github.com/worktile/ai-table/issues/WIK-19220)
+* #WIK-19239 cell多行渲染-支持自定义布局元素 ([#755](https://github.com/worktile/ai-table/issues/755)) ([4583e1f](https://github.com/worktile/ai-table/commit/4583e1fd480746512389440de812ff827844c40f)), closes [#WIK-19239](https://github.com/worktile/ai-table/issues/WIK-19239) [#WIK-19239](https://github.com/worktile/ai-table/issues/WIK-19239) [#WIK-19239](https://github.com/worktile/ai-table/issues/WIK-19239) [#WIK-19239](https://github.com/worktile/ai-table/issues/WIK-19239) [#WIK-19239](https://github.com/worktile/ai-table/issues/WIK-19239)
+* #WIK-19243 文本、链接、数字字段-文本类多行cover时与原生canvas换行不一致 ([#768](https://github.com/worktile/ai-table/issues/768)) ([6931e32](https://github.com/worktile/ai-table/commit/6931e32b9eaac8579b375d217410f277078eb691)), closes [#WIK-19243](https://github.com/worktile/ai-table/issues/WIK-19243)
+* #WIK-19246 多行文本cover支持多行渲染 ([#762](https://github.com/worktile/ai-table/issues/762)) ([63190d2](https://github.com/worktile/ai-table/commit/63190d22753214b82fe7fc1fe41921073a88e741)), closes [#WIK-19246](https://github.com/worktile/ai-table/issues/WIK-19246)
+* aiTableTextConfigToKonvaConfig support wrap and ellipsis ([#767](https://github.com/worktile/ai-table/issues/767)) ([0729d4b](https://github.com/worktile/ai-table/commit/0729d4bc87eec6c805e7e48c1ce64ecb8918ae5d))
+* **grid:** add enum AITableRowHeight ([#756](https://github.com/worktile/ai-table/issues/756)) ([91376c1](https://github.com/worktile/ai-table/commit/91376c123f6c0b0b5bb0aae210a27fa210841f2c))
+* **grid:** support custom cell height for progress and rate ([#760](https://github.com/worktile/ai-table/issues/760)) ([5f57498](https://github.com/worktile/ai-table/commit/5f574983fb133580c4985b7320863b0ba7517558))
+* **grid:** the cell content supports adaptive height for custom field render ([#765](https://github.com/worktile/ai-table/issues/765)) ([c0344fe](https://github.com/worktile/ai-table/commit/c0344fe3ce4bc0d5daa093e962660b0500835c8d))
+* **member:** member field renderer support multiple rowHeight ([#758](https://github.com/worktile/ai-table/issues/758)) ([498e72d](https://github.com/worktile/ai-table/commit/498e72d74533a0b5f9207092fd9255a1c01c310c))
+* **state:** support use ai-table-grid without views and add editable example ([#751](https://github.com/worktile/ai-table/issues/751)) ([a039a32](https://github.com/worktile/ai-table/commit/a039a32f6f2a5d7663f34269e60a210c3edca954))
+
+
+
 ## [0.3.3](https://github.com/worktile/ai-table/compare/0.3.2...0.3.3) (2025-10-24)
 
 

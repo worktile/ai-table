@@ -28,7 +28,11 @@ export enum AITableFilterLogical {
     or = 'or'
 }
 
-export type ViewSettings = AITableFilterConditions & AITableSortOptions & AITableFrozenOptions & AITableGroupOptions;
+export type ViewSettings = AITableFilterConditions &
+    AITableSortOptions &
+    AITableFrozenOptions &
+    AITableGroupOptions &
+    AITableRecordHeightOptions;
 
 export interface AITableView {
     _id: string;
@@ -69,6 +73,10 @@ export interface AITableGroupOptions {
     collapsed_group_ids?: string[]; // 折叠的分组ID列表
 }
 
+export interface AITableRecordHeightOptions {
+    record_height_type?: AITableRecordHeightType;
+}
+
 export type AITableViews = AITableView[];
 
 export enum AITableFilterOperation {
@@ -98,4 +106,10 @@ export enum SortDirection {
     default = 0,
     ascending = 1,
     descending = -1
+}
+
+export enum AITableRecordHeightType {
+    low = 'low',
+    medium = 'medium',
+    high = 'high'
 }
