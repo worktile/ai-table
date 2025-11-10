@@ -19,7 +19,7 @@ export function sortRecordsByConditions(aiTable: AITable, records: AITableViewRe
 function compareBySorts(
     record1: AITableViewRecord,
     record2: AITableViewRecord,
-    sorts: any[],
+    sorts: AITableSort[],
     aiTable: AITable,
     sortKeysMap?: Partial<Record<AITableFieldType | string, string>>
 ): number {

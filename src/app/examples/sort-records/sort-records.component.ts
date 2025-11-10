@@ -3,11 +3,9 @@ import { AIFieldConfig, AITableGrid } from '@ai-table/grid';
 import {
     AITable,
     AITableAction,
-    AITableField,
-    AITableFilterConditions,
     AITableViewRecord,
     AITableReferences,
-    AITableSortOptions,
+    ViewSettings,
     AITableValue,
     AITableViewField,
     AITableSort,
@@ -37,7 +35,7 @@ import { ViewService } from '../view/views';
 export class TableSortRecordsExample {
     aiTable!: AIViewTable;
 
-    fields = signal<AITableField[]>(mockFields);
+    fields = signal<AITableViewField[]>(mockFields);
 
     records = signal<AITableViewRecord[]>(mockRecords);
 
@@ -64,12 +62,7 @@ export class TableSortRecordsExample {
 
     readonly buildRenderDataFn: Signal<() => AITableValue> = computed(() => {
         return () => {
-            const renderRecords = buildRecordsByView(
-                this.aiTable,
-                this.records(),
-                this.fields() as AITableViewField[],
-                this.viewService.activeView()
-            );
+            const renderRecords = buildRecordsByView(this.aiTable, this.records(), this.fields(), this.viewService.activeView());
 
             // Look：return sorted records
             return {
@@ -97,19 +90,18 @@ export class TableSortRecordsExample {
         const { isKeepSort, sorts } = event;
         const activeView = this.viewService.activeView();
         if (!activeView) return;
-        const settings: Partial<AITableFilterConditions & AITableSortOptions> = {
-            ...(activeView.settings || {}),
-            is_keep_sort: isKeepSort,
-            sorts
+
+        const oldSettings = activeView.settings || {};
+        const newSettings: ViewSettings = {
+            ...oldSettings,
+            is_keep_sort: sorts.length === 0 ? false : isKeepSort,
+            sorts: sorts
         };
-        if (sorts.length === 0 && settings.is_keep_sort) {
-            settings.is_keep_sort = false;
-        }
 
         // Look：update is_keep_sort and sorts in view settings
-        Actions.setView(this.aiTable, { settings }, [this.viewService.activeViewId()]);
+        Actions.setView(this.aiTable, { settings: newSettings }, [activeView._id]);
 
-        if (!settings.is_keep_sort && settings.sorts?.length) {
+        if (!newSettings.is_keep_sort) {
             this.manualSortRecords();
         }
     }
