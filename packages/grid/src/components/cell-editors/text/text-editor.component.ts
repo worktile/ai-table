@@ -33,6 +33,7 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     override ngOnInit(): void {
+        super.ngOnInit();
         this.applyContainerClass('has-text-cell');
     }
 
