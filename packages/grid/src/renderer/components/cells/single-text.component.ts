@@ -85,7 +85,7 @@ export class AITableCellText extends CoverCellBase {
                 height: this.height(),
                 stroke: Colors.primary,
                 strokeWidth: 2,
-                listening: true
+                listening: false
             };
         }
         return null;

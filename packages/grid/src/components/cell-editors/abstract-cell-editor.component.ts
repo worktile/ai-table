@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input
 import { ThyPopoverRef } from 'ngx-tethys/popover';
 import { AITable, AITableQueries } from '../../core';
 import { AITableField, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
-import { ROW_HEIGHT_LEVELS } from '../../constants';
+import { AI_TABLE_RECORD_HEIGHT_LEVELS } from '../../constants';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -18,7 +18,7 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     @Input({ required: true }) references!: AITableReferences;
 
-    rowHeight = input<number>(ROW_HEIGHT_LEVELS.low);
+    recordHeight = input<number>(AI_TABLE_RECORD_HEIGHT_LEVELS.low);
 
     updateFieldValues = output<UpdateFieldValueOptions<TValue>[]>();
 
@@ -74,13 +74,13 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
             queueMicrotask(() => {
                 let scrollHeight = element.scrollHeight;
-                const newHeight = Math.max(ROW_HEIGHT_LEVELS.low, Math.min(scrollHeight, ROW_HEIGHT_LEVELS.high));
+                const newHeight = Math.max(AI_TABLE_RECORD_HEIGHT_LEVELS.low, Math.min(scrollHeight, AI_TABLE_RECORD_HEIGHT_LEVELS.high));
 
-                if (isSetHeight || scrollHeight < this.rowHeight()) {
-                    this.render2.setStyle(element, 'height', `${Math.max(newHeight, this.rowHeight())}px`);
+                if (isSetHeight || scrollHeight < this.recordHeight()) {
+                    this.render2.setStyle(element, 'height', `${Math.max(newHeight, this.recordHeight())}px`);
                 }
 
-                this.render2.setStyle(element, 'max-height', `${ROW_HEIGHT_LEVELS.high}px`);
+                this.render2.setStyle(element, 'max-height', `${AI_TABLE_RECORD_HEIGHT_LEVELS.high}px`);
 
                 onHeightAdjusted?.();
             });

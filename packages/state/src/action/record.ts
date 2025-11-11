@@ -10,16 +10,11 @@ import {
     AITableViewRecord,
     AddRecordOptions,
     UpdateFieldValueOptions,
-    AITableSystemFieldValueOption,
-    AITableRowHeightType,
-    AITableAction,
-    SetViewAction,
-    ViewSettings
+    AITableSystemFieldValueOption
 } from '@ai-table/utils';
 import { AIViewTable } from '../types/ai-table';
 import { getNewItemsPosition, ViewPositionOptions } from '../utils/position-in-view';
 import { PositionsActions } from './position';
-import { buildSetViewAction } from './view';
 
 export function updateFieldValues(aiTable: AIViewTable, options: UpdateFieldValueOptions[]) {
     let operations: UpdateFieldValueAction[] = [];

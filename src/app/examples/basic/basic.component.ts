@@ -4,7 +4,7 @@ import { AITableRecord, AITableField, AITableReferences } from '@ai-table/utils'
 import { mockRecords, mockFields, mockReferences } from './mock';
 
 @Component({
-    selector: 'app-basic-table-example',
+    selector: 'app-table-basic-example',
     templateUrl: './basic.component.html',
     imports: [AITableGrid],
     host: {

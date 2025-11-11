@@ -1,0 +1,135 @@
+@let count = selectedSorts().length;
+@let hasSorts = !!count;
+
+<a href="javascript:;" thyAction (click)="openViewSort($event)">
+    <thy-icon [thyIconName]="icon()"></thy-icon>
+    {{ title() }}
+    @if (isKeepSort() && hasSorts) {
+        <thy-badge thyType="primary" [thyCount]="count" thyTextColor="#6698FF" thyBackgroundColor="#eff4ff" class="ml-2"></thy-badge>
+    }
+</a>
+
+<ng-template #sortPanel>
+    <thy-dialog-header>
+        <ng-template #dialogHeader>
+            <h3 class="dialog-title">{{ title() }}</h3>
+            @if (hasSorts && showKeepSort()) {
+                <div class="d-flex align-items-center">
+                    <span class="mr-2 font-size-sm">{{ '自动排序' }}</span>
+                    <thy-switch [(ngModel)]="isKeepSort" thySize="xs" (ngModelChange)="keepShortChange()"></thy-switch>
+                </div>
+            }
+        </ng-template>
+    </thy-dialog-header>
+    <thy-dialog-body class="px-2 pt-1" [ngClass]="isKeepSort() ? 'pb-8' : 'pb-0'">
+        <div cdkDropList (cdkDropListDropped)="drop($event)" [class.mb-3]="hasSorts">
+            @for (sort of selectedSorts(); track trackBy(index, sort); let index = $index) {
+                <div class="d-flex align-items-center py-1 mb-2 combination-sort-item" cdkDrag>
+                    <thy-icon thyIconName="drag" class="draggable-icon mr-2 text-muted cursor-pointer"></thy-icon>
+
+                    <thy-select
+                        [ngModel]="sort.sort_by"
+                        class="mr-4"
+                        (ngModelChange)="sortByChange($event, sort)"
+                        [thyEmptyStateText]="'暂无数据'"
+                        [thyShowSearch]="true"
+                    >
+                        @for (option of sort.sort_by! | selectableOptions: fields() : sorts(); track option._id) {
+                            <thy-option
+                                [thyRawValue]="option"
+                                [thyValue]="option._id"
+                                [thyShowOptionCustom]="true"
+                                [thyLabelText]="option.name"
+                            >
+                                <span thyText class="w-100 text-truncate">{{ option?.name }} </span>
+                            </thy-option>
+                        }
+                    </thy-select>
+                    <thy-segment
+                        class="mr-3"
+                        [thyActiveIndex]="sort.direction === SortDirection.ascending ? 0 : 1"
+                        (thySelectChange)="sortDirectionChange($event, sort)"
+                    >
+                        @let type = fieldsMap()[sort.sort_by!]!.type!;
+
+                        @if (
+                            type === AITableFieldType.date ||
+                            type === AITableFieldType.number ||
+                            type === AITableFieldType.rate ||
+                            type === AITableFieldType.progress
+                        ) {
+                            <thy-segment-item [thyValue]="SortDirection.ascending"
+                                >1
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                9
+                            </thy-segment-item>
+                            <thy-segment-item [thyValue]="SortDirection.descending"
+                                >9
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                1
+                            </thy-segment-item>
+                        } @else if (type === AITableFieldType.select) {
+                            <thy-segment-item [thyValue]="SortDirection.ascending">选项正序</thy-segment-item>
+                            <thy-segment-item [thyValue]="SortDirection.descending">选项倒序</thy-segment-item>
+                        } @else if (type === AITableFieldType.checkbox) {
+                            <thy-segment-item [thyValue]="SortDirection.ascending">
+                                <label thyCheckbox [ngModel]="false"></label>
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                <label thyCheckbox [ngModel]="true"></label>
+                            </thy-segment-item>
+                            <thy-segment-item [thyValue]="SortDirection.descending">
+                                <label thyCheckbox [ngModel]="true"></label>
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                <label thyCheckbox [ngModel]="false"></label>
+                            </thy-segment-item>
+                        } @else {
+                            <thy-segment-item [thyValue]="SortDirection.ascending"
+                                >A
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                Z
+                            </thy-segment-item>
+                            <thy-segment-item [thyValue]="SortDirection.descending"
+                                >Z
+                                <thy-icon thyIconName="arrow-right" class="mx-2"></thy-icon>
+                                A
+                            </thy-segment-item>
+                        }
+                    </thy-segment>
+                    <a
+                        thyAction
+                        class="mr-6"
+                        thyIcon="trash"
+                        thyType="danger"
+                        href="javascript:;"
+                        [thyTooltip]="'删除'"
+                        (click)="deleteSortItem(index)"
+                    ></a>
+                </div>
+            }
+        </div>
+        @if (!limitCount() || count < limitCount()) {
+            <thy-select
+                style="width: 176px; margin-left: 24px"
+                [class.mt-1]="!hasSorts"
+                [(ngModel)]="newSortId"
+                [thyEmptyStateText]="'暂无数据'"
+                [thyPlaceHolder]="placeholder()"
+                [thyShowSearch]="true"
+                (ngModelChange)="addSortItem($event)"
+            >
+                @for (option of addableSortFields(); track option._id) {
+                    <thy-option [thyRawValue]="option" [thyValue]="option._id" [thyShowOptionCustom]="true" [thyLabelText]="option.name">
+                        <span thyText class="w-100 text-truncate">{{ option?.name }}</span>
+                    </thy-option>
+                }
+            </thy-select>
+        }
+    </thy-dialog-body>
+
+    @if (!isKeepSort()) {
+        <thy-dialog-footer thyAlign="right">
+            <button class="cancel" thyButton="link-secondary" (click)="close()">取消</button>
+            <button class="confirm" thyButton="primary" (click)="ok()">确定</button>
+        </thy-dialog-footer>
+    }
+</ng-template>

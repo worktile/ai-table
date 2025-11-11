@@ -23,8 +23,8 @@ export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRec
     if (!conditions) {
         return records;
     }
-    const illegalConditions = conditions.filter((item) => item.operation) || [];
-    if (!illegalConditions.length) {
+    const validConditions = conditions.filter((item) => item.operation) || [];
+    if (!validConditions.length) {
         return records;
     }
     const recordsWillHidden = aiTable.recordsWillHidden();
@@ -32,7 +32,7 @@ export function getFilteredRecords(aiTable: AIViewTable, records: AITableViewRec
         if (recordsWillHidden && recordsWillHidden.length && recordsWillHidden.includes(record._id)) {
             return true;
         }
-        return checkConditions(aiTable, fields, record, { conditions: illegalConditions, condition_logical });
+        return checkConditions(aiTable, fields, record, { conditions: validConditions, condition_logical });
     });
 }
 

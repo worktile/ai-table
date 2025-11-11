@@ -1,5 +1,5 @@
 import {
-    AITableRowHeightType,
+    AITableRecordHeightType,
     AITableView,
     ActionName,
     AddViewAction,
@@ -96,7 +96,7 @@ function removeView(aiTable: AIViewTable, path: [string]) {
     aiTable.apply(operation);
 }
 
-function setRecordHeightType(aiTable: AIViewTable, recordHeightType: AITableRowHeightType) {
+function setRecordHeightType(aiTable: AIViewTable, recordHeightType: AITableRecordHeightType) {
     const viewId = aiTable.activeViewId();
     const view = aiTable.views().find((v) => v._id === viewId);
     if (!view) return;

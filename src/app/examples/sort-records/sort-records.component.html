@@ -1,0 +1,22 @@
+<p>行排序（自动排序、非自动排序、拖拽排序）</p>
+
+<app-combination-sort-example
+    class="d-block mb-4"
+    [fields]="fields()"
+    [sorts]="sorts()"
+    [showKeepSort]="true"
+    [isKeepSort]="isKeepSort()"
+    (sortChange)="sortChange($event)"
+></app-combination-sort-example>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiPlugins]="plugins"
+    [aiFieldConfig]="fieldConfig()"
+    [aiBuildRenderDataFn]="buildRenderDataFn()"
+    (aiTableInitialized)="aiTableInitialized($event)"
+    (aiMoveRecords)="dragMoveRecords($event)"
+>
+</ai-table-grid>

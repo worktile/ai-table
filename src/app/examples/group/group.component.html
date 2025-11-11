@@ -1,1 +1,24 @@
 <p>分组</p>
+
+<app-combination-sort-example
+    class="d-block mb-4"
+    [title]="'分组'"
+    [placeholder]="'选择一列进行分组'"
+    [fields]="fields()"
+    [sorts]="groups()"
+    [isKeepSort]="true"
+    [icon]="'group-setup'"
+    [limitCount]="3"
+    (sortChange)="groupsChange($event)"
+></app-combination-sort-example>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiPlugins]="plugins"
+    [aiBuildGroupLinearRowsFn]="buildGroupLinearRowsFn()"
+    (aiTableInitialized)="aiTableInitialized($event)"
+    (aiRowGroupCollapseClick)="toggleGroupCollapse($event)"
+>
+</ai-table-grid>

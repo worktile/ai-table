@@ -40,7 +40,7 @@ import {
     AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
     AI_TABLE_ROW_HEAD,
     AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
-    ROW_HEIGHT_LEVELS,
+    AI_TABLE_RECORD_HEIGHT_LEVELS,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     AI_TABLE_SCROLL_BAR_SIZE,
     DBL_CLICK_EDIT_TYPE,
@@ -255,7 +255,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     rendererConfig: Signal<AITableRendererConfig> = computed(() => {
         const fields = AITable.getVisibleFields(this.aiTable);
-        const currentRowHeight = ROW_HEIGHT_LEVELS[this.aiRowHeight()];
+        const currentRowHeight = AI_TABLE_RECORD_HEIGHT_LEVELS[this.aiRecordHeight()];
         const coordinate = new Coordinate({
             container: this.containerElement(),
             rowHeight: currentRowHeight,

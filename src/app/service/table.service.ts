@@ -19,7 +19,7 @@ import { getProvider } from '../provider';
 import { getBasicData } from '../utils/utils';
 import {
     AITableFieldType,
-    AITableRowHeightType,
+    AITableRecordHeightType,
     AITableValue,
     AITableView,
     AITableViewFields,
@@ -76,7 +76,7 @@ export class TableService {
     rowHeight = computed(() => {
         // return this.views().find((view) => view._id === this.activeViewId()) as AITableView;
         const activeView = this.activeView();
-        return activeView?.settings?.record_height_type ?? AITableRowHeightType.low;
+        return activeView?.settings?.record_height_type ?? AITableRecordHeightType.low;
     });
 
     activeView = computed(() => {
@@ -153,7 +153,7 @@ export class TableService {
         this.maxFields.set(maxFields);
     }
 
-    setRowHeight(rowHeight: AITableRowHeightType) {
+    setRowHeight(rowHeight: AITableRecordHeightType) {
         Actions.setRecordHeightType(this.aiTable, rowHeight);
     }
 

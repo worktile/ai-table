@@ -23,7 +23,7 @@ import {
     AITableFieldType,
     AITableRecords,
     AITableReferences,
-    AITableRowHeightType,
+    AITableRecordHeightType,
     AITableSelectOptionStyle,
     AITableValue,
     MoveFieldOptions,
@@ -79,7 +79,7 @@ export class AITableGridBase implements OnInit {
 
     aiFrozenColumnCountFn = input<(containerWidth: number) => number>();
 
-    aiRowHeight = input<AITableRowHeightType>(AITableRowHeightType.low);
+    aiRecordHeight = input<AITableRecordHeightType>(AITableRecordHeightType.low);
 
     AITableFieldType = AITableFieldType;
 

@@ -7,8 +7,9 @@ import { TableFieldMenuExample } from './examples/field-menu/field-menu.componen
 import { TableViewExample } from './examples/view/view.component';
 import { TableGroupExample } from './examples/group/group.component';
 import { TableFilterExample } from './examples/filter/filter.component';
-import { TableSortExample } from './examples/sort/sort.component';
+import { TableSortRecordsExample } from './examples/sort-records/sort-records.component';
 import { TableCustomFieldExample } from './examples/custom-field/custom-field.component';
+import { TableRecordHeightExample } from './examples/record-height/record-height.component';
 
 export const routes: Routes = [
     {
@@ -51,11 +52,15 @@ export const routes: Routes = [
         component: TableFilterExample
     },
     {
-        path: 'sort',
-        component: TableSortExample
+        path: 'sort-records',
+        component: TableSortRecordsExample
     },
     {
         path: 'group',
         component: TableGroupExample
+    },
+    {
+        path: 'record-height',
+        component: TableRecordHeightExample
     }
 ];
