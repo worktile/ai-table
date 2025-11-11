@@ -49,6 +49,8 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
     }
 
     override ngOnInit(): void {
+        super.ngOnInit();
+        this.applyContainerClass('has-select-cell');
         this.modelValue = computed(() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
             if (!this.isMultiple) {

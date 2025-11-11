@@ -44,6 +44,13 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
         this.modelValue = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
     }
 
+    applyContainerClass(className: string): void {
+        const container = this.elementRef.nativeElement.closest('.grid-cell-editor');
+        if (container) {
+            this.render2.addClass(container, className);
+        }
+    }
+
     update() {
         if (this.modelValue === AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id])) {
             return;
