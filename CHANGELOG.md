@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.4.0-2](https://github.com/worktile/ai-table/compare/0.4.0-1...0.4.0-2) (2025-11-11)
+
+
+### Bug Fixes
+
+* #WIK-19306 行高接入Wiki后编辑态的高度不对 ([#783](https://github.com/worktile/ai-table/issues/783)) ([d50470c](https://github.com/worktile/ai-table/commit/d50470c0f311426b9790d5a78ea537537bd4e1b0)), closes [#WIK-19306](https://github.com/worktile/ai-table/issues/WIK-19306) [#WIK-19306](https://github.com/worktile/ai-table/issues/WIK-19306)
+
+
+
 # [0.4.0-1](https://github.com/worktile/ai-table/compare/0.4.0-0...0.4.0-1) (2025-11-11)
 
 
