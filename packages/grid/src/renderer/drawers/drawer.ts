@@ -391,7 +391,6 @@ export class Drawer {
         const baselineOffset = verticalAlign === DEFAULT_TEXT_VERTICAL_ALIGN_TOP ? fontSize / 2 : 0;
         const fontStyleKey = `${fontWeight}-${fontSize}px`;
         const isUnderline = textDecoration === 'underline';
-        this.ctx.font = `${fontWeight} ${fontSize}px ${fontStyle}`;
         const textRenderer = (textDataList: any[]) => {
             textDataList.forEach((data) => {
                 const { offsetX, offsetY, text, width, linkUrl } = data;
