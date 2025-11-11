@@ -4,7 +4,9 @@
 
 .grid-cell-editor {
     border: 2px solid variables.$primary;
-    &:has(.text-cell-editor, .select-cell-editor) {
+    box-sizing: border-box;
+    &.has-text-cell,
+    &.has-select-cell {
         border: none;
         .form-control {
             // 特殊处理文本框border在输入框上

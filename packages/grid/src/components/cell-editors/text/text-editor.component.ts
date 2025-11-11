@@ -32,6 +32,10 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
         super();
     }
 
+    override ngOnInit(): void {
+        this.applyContainerClass('has-text-cell');
+    }
+
     ngAfterViewInit() {
         // 解决闪烁线问题
         queueMicrotask(() => {
