@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.4.0-1](https://github.com/worktile/ai-table/compare/0.4.0-0...0.4.0-1) (2025-11-11)
+
+
+### Bug Fixes
+
+* #WIK-19261 多选编辑状态高度没有撑开，双击文本编辑和下拉选项闪烁问题 ([#772](https://github.com/worktile/ai-table/issues/772)) ([6750fbf](https://github.com/worktile/ai-table/commit/6750fbf7158630b0844b020f59db27c82cffe1c6)), closes [#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261) [#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261) [xws/#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261)
+* #WIK-19262 单行文本-单击展开内容多时无法滚动 ([#775](https://github.com/worktile/ai-table/issues/775)) ([4b97e9a](https://github.com/worktile/ai-table/commit/4b97e9a7b27ee75f7a837452a26354b57f5c6a1c)), closes [#WIK-19262](https://github.com/worktile/ai-table/issues/WIK-19262)
+* #WIK-19270 设置行高后-分组的内容渲染不对 ([8ad1369](https://github.com/worktile/ai-table/commit/8ad13695450c9ec88b7c5e993e6f6f5f4b9172b4)), closes [#WIK-19270](https://github.com/worktile/ai-table/issues/WIK-19270)
+
+
+
 # [0.4.0-0](https://github.com/worktile/ai-table/compare/0.3.3...0.4.0-0) (2025-11-04)
 
 
