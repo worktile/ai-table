@@ -6,6 +6,7 @@ import {
     AI_TABLE_TEXT_LINE_HEIGHT,
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
+    DEFAULT_FONT_STYLE,
     DEFAULT_FONT_WEIGHT,
     DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
@@ -386,11 +387,11 @@ export class Drawer {
             needDraw = false
         } = options;
         let offsetX = 0;
-        const fontStyle = `${fontWeight} ${fontSize}px ${DEFAULT_FONT_FAMILY}`;
+        const fontStyle = DEFAULT_FONT_STYLE;
         const baselineOffset = verticalAlign === DEFAULT_TEXT_VERTICAL_ALIGN_TOP ? fontSize / 2 : 0;
         const fontStyleKey = `${fontWeight}-${fontSize}px`;
         const isUnderline = textDecoration === 'underline';
-        this.ctx.font = fontStyle;
+        this.ctx.font = `${fontWeight} ${fontSize}px ${fontStyle}`;
         const textRenderer = (textDataList: any[]) => {
             textDataList.forEach((data) => {
                 const { offsetX, offsetY, text, width, linkUrl } = data;
