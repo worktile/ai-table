@@ -4,11 +4,12 @@
 
 .grid-cell-editor {
     border: 2px solid variables.$primary;
-    &:has(.text-cell-editor) {
+    &:has(.text-cell-editor, .select-cell-editor) {
         border: none;
         .form-control {
             // 特殊处理文本框border在输入框上
             border: 2px solid variables.$primary;
+            min-height: 45px; // 文本和选择边框在form-control上控制，不需要额外减去边框
         }
     }
     .thy-popover-container {
@@ -21,7 +22,9 @@
     }
     .form-control {
         border: none;
-        min-height: 45px;
+        min-height: calc(
+            45px - 4px
+        ); // 默认最小高度需要减去边框，否则数组、日期等需要控制高度在顶部显示的组件，低行高的情况下输入框的高度会盖住边框
         height: 100%; // 默认输入框高度 100%
         border-radius: 0;
         padding-top: cellEditorVariables.$cell-editor-padding-top;
@@ -48,7 +51,7 @@
 
 .select-cell-editor {
     .thy-select-custom:focus .form-control-custom:not(.disabled) {
-        border: none;
+        border: 2px solid variables.$primary;
         outline: none;
     }
     .thy-select {
@@ -72,7 +75,7 @@
             right: 2px;
         }
         .form-control {
-            height: 45px; // 控制输入框显示在上方
+            height: calc(45px - 4px); // 控制输入框显示在上方
         }
     }
 }
@@ -85,7 +88,7 @@
             height: 100%; // 控制弹出的picker位置
         }
         .form-control {
-            height: 45px; // 控制日期显示在上方
+            height: calc(45px - 4px); // 控制日期显示在上方
         }
         .thy-calendar-picker-icon,
         .thy-calendar-picker-clear {
@@ -99,7 +102,7 @@
     .thy-input-group {
         align-items: start;
         .form-control {
-            height: 45px; // 控制输入框显示在上方
+            height: calc(45px - 4px); // 控制输入框显示在上方
         }
         .input-group-suffix {
             margin-top: cellEditorVariables.$cell-editor-padding-top;

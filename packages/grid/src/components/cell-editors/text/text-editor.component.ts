@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyAutofocusDirective, ThyEnterDirective } from 'ngx-tethys/shared';
 import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
-import { AI_TABLE_RECORD_HEIGHT_LEVELS } from '../../../constants';
 
 @Component({
     selector: 'text-cell-editor',
@@ -27,10 +26,6 @@ import { AI_TABLE_RECORD_HEIGHT_LEVELS } from '../../../constants';
     }
 })
 export class TextCellEditorComponent extends AbstractEditCellEditor<string> implements AfterViewInit {
-    private render2 = inject(Renderer2);
-
-    private minHeight = 24;
-
     isSelectAll = input(false);
 
     constructor() {
@@ -38,23 +33,15 @@ export class TextCellEditorComponent extends AbstractEditCellEditor<string> impl
     }
 
     ngAfterViewInit() {
-        setTimeout(() => {
+        // 解决闪烁线问题
+        queueMicrotask(() => {
             this.updateStyle();
             this.handleSelectAll();
-        }, 0);
+        });
     }
 
     updateStyle() {
-        const textarea = this.elementRef.nativeElement.querySelector('textarea');
-        if (textarea) {
-            this.render2.setStyle(textarea, 'height', 'auto');
-            const scrollHeight = Math.max(textarea.scrollHeight, this.recordHeight());
-            const newHeight = Math.max(this.minHeight, Math.min(scrollHeight, AI_TABLE_RECORD_HEIGHT_LEVELS.high));
-
-            this.render2.setStyle(textarea, 'max-height', `${AI_TABLE_RECORD_HEIGHT_LEVELS.high}px`);
-            this.render2.setStyle(textarea, 'height', `${newHeight}px`);
-            this.render2.setStyle(textarea, 'resize', 'none');
-        }
+        this.adjustElementHeight('textarea', true);
     }
 
     handleSelectAll() {
