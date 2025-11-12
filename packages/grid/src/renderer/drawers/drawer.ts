@@ -392,6 +392,8 @@ export class Drawer {
         const fontStyleKey = `${fontWeight}-${fontSize}px`;
         const isUnderline = textDecoration === 'underline';
         const textRenderer = (textDataList: any[]) => {
+            this.ctx.font = `${fontWeight} ${fontSize}px ${DEFAULT_FONT_FAMILY}`;
+            this.ctx.textAlign = textAlign;
             textDataList.forEach((data) => {
                 const { offsetX, offsetY, text, width, linkUrl } = data;
                 this.ctx.fillText(text, x + offsetX, y + offsetY + baselineOffset);
@@ -404,6 +406,7 @@ export class Drawer {
                     });
                 }
             });
+            this.ctx.restore();
         };
 
         if (fillStyle) this.setStyle({ fillStyle });
