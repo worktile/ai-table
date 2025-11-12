@@ -59,32 +59,16 @@
                     <span class="font-size-base field-name">{{ field.name }}</span>
 
                     <div class="field-operations" [class.visible]="fieldMenuVisible[field._id]">
-                        <button
-                            thyButton="link-secondary"
-                            thySize="xs"
-                            [thyPopover]="fieldOperationsMenu"
-                            thyTrigger="click"
-                            thyPlacement="bottomRight"
-                            #fieldOperationsMore
-                        >
+                        <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
                             <thy-icon thyIconName="more"></thy-icon>
                         </button>
 
-                        <ng-template #fieldOperationsMenu>
-                            <ng-container *ngIf="fieldOperationsTemplate(); else defaultFieldOperations">
+                        <ng-template #fieldOperationsMenuTemp>
+                            <ng-container *ngIf="fieldOperationsTemplate()">
                                 <ng-container
                                     *ngTemplateOutlet="fieldOperationsTemplate()!; context: { $implicit: { field: field } }"
                                 ></ng-container>
                             </ng-container>
-                            <ng-template #defaultFieldOperations>
-                                <ai-table-field-menu
-                                    [fieldId]="field._id"
-                                    [aiTable]="aiTable()"
-                                    [fieldMenus]="fieldMenus()"
-                                    [origin]="fieldOperationsMoreRef"
-                                    [position]="fieldOperationsMorePosition"
-                                ></ai-table-field-menu>
-                            </ng-template>
                         </ng-template>
                     </div>
                 </div>
@@ -102,7 +86,7 @@
                 </div>
             </div>
             <div class="expand-add-field">
-                <button #addFieldButton thyButton="link-secondary" thySize="md" (click)="addNewField()">
+                <button thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
                     <thy-icon thyIconName="plus"></thy-icon>
                     <span>新增字段</span>
                 </button>

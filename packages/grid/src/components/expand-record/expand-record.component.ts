@@ -13,7 +13,8 @@ import {
     inject,
     input,
     output,
-    signal
+    signal,
+    viewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -38,6 +39,7 @@ import { FieldEditorComponent } from './field-editor.component';
 import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
+import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
 
 @Component({
     selector: 'ai-expand-record',
@@ -58,29 +60,29 @@ import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExpandRecordComponent implements OnInit, OnDestroy {
-    aiTable = input.required<AITable>();
-    recordId = input.required<string>();
-    references = input.required<AITableReferences>();
+    readonly aiTable = input.required<AITable>();
+    readonly recordId = input.required<string>();
+    readonly references = input.required<AITableReferences>();
 
     // 添加字段
-    addField = input<(options: AddFieldOptions) => void>();
+    readonly addField = input<(options: AddFieldOptions) => void>();
 
     // 删除行
-    removeRecord = input<(path: IdPath) => void>();
+    readonly removeRecord = input<(path: IdPath) => void>();
 
     // 字段值更新
-    fieldValueChange = input<(options: UpdateFieldValueOptions[]) => void>();
+    readonly fieldValueChange = input<(options: UpdateFieldValueOptions[]) => void>();
 
     // 自定义字段编辑组件
-    customFieldEditors = input<Record<string, any>>();
+    readonly customFieldEditors = input<Record<string, any>>();
 
     // 自定义更多菜单模板
-    headerMoreMenuTemplate = input<TemplateRef<any>>();
+    readonly headerMoreMenuTemplate = input<TemplateRef<any>>();
 
     // 自定义字段操作模板
-    fieldOperationsTemplate = input<TemplateRef<any>>();
+    readonly fieldOperationsTemplate = input<TemplateRef<any>>();
 
-    recordIdChange = output<string>();
+    readonly recordIdChange = output<string>();
 
     private internalRecordId = signal<string>('');
 
@@ -93,13 +95,7 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     @ViewChild('editorContainer', { read: ViewContainerRef })
     editorContainer!: ViewContainerRef;
 
-    @ViewChild('fieldOperationsMore') fieldOperationsMoreRef!: ElementRef;
-
-    @ViewChild('addFieldButton') addFieldButtonRef!: ElementRef<HTMLElement>;
-
-    get fieldOperationsMorePosition() {
-        return this.fieldOperationsMoreRef.nativeElement.getBoundingClientRect();
-    }
+    readonly fieldOperationsMenuTemp = viewChild<TemplateRef<any>>('fieldOperationsMenuTemp');
 
     private destroy$ = new Subject<void>();
     private slideRef = inject(ThySlideRef, { optional: true });
@@ -213,13 +209,32 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
         this.fieldMenuVisible[fieldId] = false;
     }
 
-    addNewField(): void {
-        const addFieldButtonElement = this.addFieldButtonRef.nativeElement;
+    fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
+        const origin = e.target as HTMLElement;
+        const position = origin.getBoundingClientRect();
+        this.thyPopover.open(
+            this.fieldOperationsTemplate() ? (this.fieldOperationsMenuTemp() as ComponentTypeOrTemplateRef<any>) : AITableFieldMenu,
+            {
+                origin,
+                placement: 'bottomRight',
+                manualClosure: true,
+                initialState: {
+                    aiTable: this.aiTable(),
+                    fieldId,
+                    fieldMenus: this.fieldMenus(),
+                    origin,
+                    position
+                }
+            }
+        );
+    }
+
+    addNewField(e: MouseEvent): void {
+        const origin = e.target as HTMLElement;
         const newField = createDefaultField(this.aiTable(), AITableFieldType.text);
         const popoverRef = this.thyPopover.open(AITableFieldSetting, {
-            origin: addFieldButtonElement,
-            originPosition: addFieldButtonElement.getBoundingClientRect(),
-            placement: 'bottomLeft',
+            origin,
+            placement: 'topLeft',
             manualClosure: true,
             originActiveClass: undefined,
             height: 'auto',

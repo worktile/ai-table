@@ -6,29 +6,29 @@ import { AddFieldOptions, AITableReferences, IdPath, UpdateFieldValueOptions } f
 import { GridControlService } from '../../services/grid-control.service';
 
 export interface ExpandRecordConfig {
-    aiTable: AITable;
+    readonly aiTable: AITable;
 
-    recordId: string;
+    readonly recordId: string;
 
-    references: AITableReferences;
+    readonly references: AITableReferences;
 
     // 添加字段
-    addField: (options: AddFieldOptions) => void;
+    readonly addField: (options: AddFieldOptions) => void;
 
     // 删除行
-    removeRecord: (path: IdPath) => void;
+    readonly removeRecord: (path: IdPath) => void;
 
     // 字段值更新
-    fieldValueChange: (options: UpdateFieldValueOptions[]) => void;
+    readonly fieldValueChange: (options: UpdateFieldValueOptions[]) => void;
 
     // 自定义字段编辑器
-    customFieldEditors?: Record<string, any>;
+    readonly customFieldEditors?: Record<string, any>;
 
     // 头部更多菜单自定义模板
-    headerMoreMenuTemplate?: TemplateRef<any>;
+    readonly headerMoreMenuTemplate?: TemplateRef<any>;
 
     // 字段操作菜单自定义模板
-    fieldOperationsTemplate?: TemplateRef<any>;
+    readonly fieldOperationsTemplate?: TemplateRef<any>;
 }
 
 @Injectable()
