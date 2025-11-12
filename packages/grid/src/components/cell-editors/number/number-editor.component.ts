@@ -11,6 +11,7 @@ import { NumberFieldValue } from '@ai-table/utils';
     template: `<thy-input-number
         class="h-100"
         [thyAutoFocus]="autoFocus()"
+        [thyShowStepControls]="false"
         [(ngModel)]="modelValue"
         (thyEnter)="updateValue()"
         (thyBlur)="updateValue()"
