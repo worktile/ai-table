@@ -30,13 +30,14 @@ import {
     AITableReferences,
     UpdateFieldValueOptions,
     SelectSettings,
-    AddFieldOptions
+    AddFieldOptions,
+    IdPath
 } from '@ai-table/utils';
-import { AIViewTable, Actions } from '@ai-table/state';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
 import { FieldEditorComponent } from './field-editor.component';
 import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
+import { ThyDropdownMenuComponent, ThyDropdownMenuDivider, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 
 @Component({
     selector: 'ai-expand-record',
@@ -48,6 +49,7 @@ import { ThyDivider } from 'ngx-tethys/divider';
         ThyIconModule,
         ThyDivider,
         ThyPopoverModule,
+        ThyDropdownMenuItemDirective,
         FieldEditorComponent,
         AITableFieldMenu
     ],
@@ -60,12 +62,22 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     recordId = input.required<string>();
     references = input.required<AITableReferences>();
 
+    // 添加字段
     addField = input<(options: AddFieldOptions) => void>();
 
+    // 删除行
+    removeRecord = input<(path: IdPath) => void>();
+
+    // 字段值更新
+    fieldValueChange = input<(options: UpdateFieldValueOptions[]) => void>();
+
+    // 自定义字段编辑组件
     customFieldEditors = input<Record<string, any>>();
 
+    // 自定义更多菜单模板
     headerMoreMenuTemplate = input<TemplateRef<any>>();
 
+    // 自定义字段操作模板
     fieldOperationsTemplate = input<TemplateRef<any>>();
 
     recordIdChange = output<string>();
@@ -93,7 +105,6 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     private slideRef = inject(ThySlideRef, { optional: true });
     private gridControl = inject(GridControlService);
     private cdr = inject(ChangeDetectorRef);
-    private elementRef = inject(ElementRef);
     private thyPopover = inject(ThyPopover);
 
     record = computed(() => {
@@ -181,7 +192,7 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     }
 
     deleteRecord(): void {
-        Actions.removeRecord(this.aiTable() as AIViewTable, [this.currentRecordId()]);
+        this.removeRecord()?.([this.currentRecordId()]);
         this.close();
     }
 
@@ -233,7 +244,7 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     }
 
     onFieldValueChange(options: UpdateFieldValueOptions[]): void {
-        Actions.updateFieldValues(this.aiTable() as AIViewTable, options);
+        this.fieldValueChange()?.(options);
     }
 
     private activateField(fieldId: string): void {

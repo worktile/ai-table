@@ -31,11 +31,11 @@
                     ></ng-container>
                 </ng-container>
                 <ng-template #defaultHeaderMenu>
-                    <div class="thy-popover-menu">
-                        <div class="thy-popover-menu-item" (click)="deleteRecord()">
+                    <div class="thy-dropdown-menu">
+                        <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
                             <thy-icon thyIconName="trash"></thy-icon>
                             <span>删除</span>
-                        </div>
+                        </a>
                     </div>
                 </ng-template>
             </ng-template>

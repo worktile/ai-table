@@ -478,7 +478,13 @@ export class DemoTableContent {
                 aiTable: this.aiTable,
                 recordId: e.targetNameDetail.recordId!,
                 references: this.references(),
-                addField: this.addField.bind(this)
+                addField: this.addField.bind(this),
+                removeRecord: (path) => {
+                    Actions.removeRecord(this.aiTable, path);
+                },
+                fieldValueChange: (options) => {
+                    Actions.updateFieldValues(this.aiTable, options);
+                }
             });
         }
     }

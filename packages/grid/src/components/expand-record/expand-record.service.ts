@@ -2,7 +2,7 @@ import { Injectable, inject, TemplateRef } from '@angular/core';
 import { ThySlideService, ThySlideRef } from 'ngx-tethys/slide';
 import { ExpandRecordComponent } from './expand-record.component';
 import { AITable } from '../../core';
-import { AddFieldOptions, AITableReferences } from '@ai-table/utils';
+import { AddFieldOptions, AITableReferences, IdPath, UpdateFieldValueOptions } from '@ai-table/utils';
 import { GridControlService } from '../../services/grid-control.service';
 
 export interface ExpandRecordConfig {
@@ -12,7 +12,14 @@ export interface ExpandRecordConfig {
 
     references: AITableReferences;
 
-    addField?: (options: AddFieldOptions) => void;
+    // 添加字段
+    addField: (options: AddFieldOptions) => void;
+
+    // 删除行
+    removeRecord: (path: IdPath) => void;
+
+    // 字段值更新
+    fieldValueChange: (options: UpdateFieldValueOptions[]) => void;
 
     // 自定义字段编辑器
     customFieldEditors?: Record<string, any>;
@@ -43,6 +50,8 @@ export class ExpandRecordService {
                 recordId: config.recordId,
                 references: config.references,
                 addField: config.addField,
+                removeRecord: config.removeRecord,
+                fieldValueChange: config.fieldValueChange,
                 customFieldEditors: config.customFieldEditors,
                 headerMoreMenuTemplate: config.headerMoreMenuTemplate,
                 fieldOperationsTemplate: config.fieldOperationsTemplate
