@@ -57,6 +57,15 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
 export class AITableCellText extends CoverCellBase {
     static override fieldType = AITableFieldType.text;
 
+    cellName = computed(() => {
+        const { field, recordId } = this.config()?.render!;
+        return generateTargetName({
+            targetName: AI_TABLE_CELL,
+            fieldId: field._id,
+            recordId
+        });
+    });
+
     constructor() {
         super();
         effect(() => {
@@ -108,7 +117,8 @@ export class AITableCellText extends CoverCellBase {
             listening: true,
             verticalScrollbar: true,
             horizontalScrollbar: true,
-            contentNotScrollbar: false
+            contentNotScrollbar: false,
+            bgName: this.cellName()
         };
     });
 
@@ -176,11 +186,7 @@ export class AITableCellText extends CoverCellBase {
             return {
                 x,
                 y: this.startY(),
-                name: generateTargetName({
-                    targetName: AI_TABLE_CELL,
-                    fieldId: field._id,
-                    recordId
-                }),
+                name: this.cellName(),
                 text: textRender,
                 wrap: 'char',
                 width: this.textMaxWidth(),
