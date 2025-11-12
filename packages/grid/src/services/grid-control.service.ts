@@ -59,7 +59,8 @@ export class GridControlService {
     clearActiveCell(): void {
         this.aiTable.selection.set({
             ...this.aiTable.selection(),
-            activeCell: null
+            activeCell: null,
+            selectedRecords: new Set()
         });
     }
 
