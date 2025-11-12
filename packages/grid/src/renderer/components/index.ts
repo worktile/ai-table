@@ -13,6 +13,7 @@ export * from './placeholder-cells.component';
 export * from './text.component';
 export * from './cells';
 export * from './action-icon.component';
+export * from './expand-record-icons.component';
 export * from './cells/cover-cell-base';
 export * from './background.component';
 export * from './shadow.component';

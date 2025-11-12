@@ -47,7 +47,8 @@ import {
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
     IconPathMap,
-    AI_TABLE_ROW_HEIGHT
+    AI_TABLE_ROW_HEIGHT,
+    AI_TABLE_EXPAND_RECORD_ICON
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -112,6 +113,7 @@ import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
+import { GridControlService } from './services/grid-control.service';
 import _ from 'lodash';
 
 @Component({
@@ -820,6 +822,16 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const groupId = targetNameDetail.source;
                 if (groupId) {
                     this.aiRowGroupCollapseClick.emit(groupId!);
+                }
+                break;
+            }
+            case AI_TABLE_EXPAND_RECORD_ICON: {
+                const recordId = targetNameDetail.recordId;
+                if (recordId) {
+                    this.aiClick.emit({
+                        ...e,
+                        targetNameDetail
+                    });
                 }
                 break;
             }

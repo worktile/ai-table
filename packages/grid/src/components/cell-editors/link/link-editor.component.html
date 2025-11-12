@@ -5,7 +5,7 @@
         class="link-input"
         thyInput
         thySize="md"
-        [thyAutofocus]="true"
+        [thyAutofocus]="autoFocus()"
         [(ngModel)]="text"
         (blur)="blur($event)"
         (thyEnter)="updateValue()"

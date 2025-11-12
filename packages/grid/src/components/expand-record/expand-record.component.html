@@ -1,0 +1,112 @@
+<div class="d-flex flex-column ai-expand-record">
+    <div class="d-flex align-items-center justify-content-between px-5 py-4 expand-record-header">
+        <span class="record-title" [title]="recordTitle()">
+            {{ recordTitle() }}
+        </span>
+
+        <div class="record-navigation">
+            <button
+                thyButton="link-secondary"
+                thySize="md"
+                [disabled]="!recordPosition()?.hasPrevious"
+                (click)="previousRecord()"
+                title="上一条"
+            >
+                <thy-icon thyIconName="angle-up"></thy-icon>
+            </button>
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordPosition()?.hasNext" (click)="nextRecord()" title="下一条">
+                <thy-icon thyIconName="angle-down"></thy-icon>
+            </button>
+        </div>
+        <thy-divider [thyVertical]="true"></thy-divider>
+        <div class="header-operations">
+            <button thyButton="link-secondary" thySize="md" [thyPopover]="headerMoreMenu" thyTrigger="click" thyPlacement="bottomRight">
+                <thy-icon thyIconName="list"></thy-icon>
+            </button>
+
+            <ng-template #headerMoreMenu>
+                <ng-container *ngIf="headerMoreMenuTemplate(); else defaultHeaderMenu">
+                    <ng-container
+                        *ngTemplateOutlet="headerMoreMenuTemplate()!; context: { $implicit: { recordId: currentRecordId() } }"
+                    ></ng-container>
+                </ng-container>
+                <ng-template #defaultHeaderMenu>
+                    <div class="thy-popover-menu">
+                        <div class="thy-popover-menu-item" (click)="deleteRecord()">
+                            <thy-icon thyIconName="trash"></thy-icon>
+                            <span>删除</span>
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-template>
+
+            <button thyButton="link-secondary" thySize="md" (click)="close()" title="关闭">
+                <thy-icon thyIconName="close"></thy-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="expand-record-body">
+        <cdk-virtual-scroll-viewport class="field-list-viewport" itemSize="80">
+            <div
+                *cdkVirtualFor="let field of fields()"
+                class="px-5 pt-4 field-item"
+                [class.active]="activeFieldId === field._id"
+                (mouseenter)="showFieldMenu(field._id)"
+                (mouseleave)="hideFieldMenu(field._id)"
+            >
+                <div class="d-flex align-items-center justify-content-between mb-2 field-header">
+                    <span class="font-size-base field-name">{{ field.name }}</span>
+
+                    <div class="field-operations" [class.visible]="fieldMenuVisible[field._id]">
+                        <button
+                            thyButton="link-secondary"
+                            thySize="xs"
+                            [thyPopover]="fieldOperationsMenu"
+                            thyTrigger="click"
+                            thyPlacement="bottomRight"
+                            #fieldOperationsMore
+                        >
+                            <thy-icon thyIconName="more"></thy-icon>
+                        </button>
+
+                        <ng-template #fieldOperationsMenu>
+                            <ng-container *ngIf="fieldOperationsTemplate(); else defaultFieldOperations">
+                                <ng-container
+                                    *ngTemplateOutlet="fieldOperationsTemplate()!; context: { $implicit: { field: field } }"
+                                ></ng-container>
+                            </ng-container>
+                            <ng-template #defaultFieldOperations>
+                                <ai-table-field-menu
+                                    [fieldId]="field._id"
+                                    [aiTable]="aiTable()"
+                                    [fieldMenus]="fieldMenus()"
+                                    [origin]="fieldOperationsMoreRef"
+                                    [position]="fieldOperationsMorePosition"
+                                ></ai-table-field-menu>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="field-editor" (click)="onFieldClick(field._id)">
+                    <ai-field-editor
+                        [aiTable]="aiTable()"
+                        [fieldId]="field._id"
+                        [recordId]="currentRecordId()"
+                        [references]="references()"
+                        [customFieldEditors]="customFieldEditors()"
+                        (updateFieldValues)="onFieldValueChange($event)"
+                    >
+                    </ai-field-editor>
+                </div>
+            </div>
+            <div class="expand-add-field">
+                <button #addFieldButton thyButton="link-secondary" thySize="md" (click)="addNewField()">
+                    <thy-icon thyIconName="plus"></thy-icon>
+                    <span>新增字段</span>
+                </button>
+            </div>
+        </cdk-virtual-scroll-viewport>
+    </div>
+</div>

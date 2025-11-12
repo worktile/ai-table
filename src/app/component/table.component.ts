@@ -33,6 +33,8 @@ import { ThySelect } from 'ngx-tethys/select';
 import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
 import { ThySwitch } from 'ngx-tethys/switch';
 import { getAITAbleDataLocalStorage } from '../utils/utils';
+import { ExpandRecordService, GridControlService } from '@ai-table/grid';
+import { ThySlideService } from 'ngx-tethys/slide';
 
 const initViews: AITableView[] = [
     {
@@ -70,7 +72,7 @@ const initViews: AITableView[] = [
         ThySwitch
     ],
     templateUrl: './table.component.html',
-    providers: [TableService],
+    providers: [TableService, ThySlideService, ExpandRecordService, GridControlService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'

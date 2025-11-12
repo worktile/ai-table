@@ -12,7 +12,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
             placeholder=""
             rows="1"
             thyInput
-            [thyAutofocus]="true"
+            [thyAutofocus]="autoFocus()"
             [(ngModel)]="modelValue"
             (ngModelChange)="valueChange()"
             (thyEnter)="updateValue()"

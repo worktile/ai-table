@@ -20,6 +20,8 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
 
     recordHeight = input<number>(AI_TABLE_RECORD_HEIGHT_LEVELS.low);
 
+    autoFocus = input<boolean>(true);
+
     updateFieldValues = output<UpdateFieldValueOptions<TValue>[]>();
 
     modelValue!: TValue;

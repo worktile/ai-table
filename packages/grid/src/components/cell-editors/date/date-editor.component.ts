@@ -21,7 +21,7 @@ import { DateFieldValue } from '@ai-table/utils';
             [thyShowShortcut]="true"
             [thyHasBackdrop]="false"
             [thyShowTime]="false"
-            [thyOpen]="true"
+            [thyOpen]="autoFocus()"
             thyFormat="yyyy-MM-dd"
         >
         </thy-date-picker>

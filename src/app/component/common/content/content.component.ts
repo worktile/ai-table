@@ -12,7 +12,9 @@ import {
     AITableGridI18nText,
     CheckboxMenuSort,
     scrollToMatchedCell,
-    setCollapseDisabled
+    setCollapseDisabled,
+    AI_TABLE_EXPAND_RECORD_ICON,
+    ExpandRecordService
 } from '@ai-table/grid';
 import {
     Actions,
@@ -405,6 +407,8 @@ export class DemoTableContent {
 
     thyPopover = inject(ThyPopover);
 
+    expandRecordService = inject(ExpandRecordService);
+
     references = signal(getReferences());
 
     dataMode = signal<'default' | 'big-data'>('default');
@@ -469,6 +473,13 @@ export class DemoTableContent {
                     alert('打开工单详情');
                 }
             }
+        } else if (e.targetNameDetail.targetName === AI_TABLE_EXPAND_RECORD_ICON) {
+            this.expandRecordService.open({
+                aiTable: this.aiTable,
+                recordId: e.targetNameDetail.recordId!,
+                references: this.references(),
+                addField: this.addField.bind(this)
+            });
         }
     }
 
