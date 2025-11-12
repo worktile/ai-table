@@ -14,7 +14,8 @@ import {
     scrollToMatchedCell,
     setCollapseDisabled,
     AI_TABLE_EXPAND_RECORD_ICON,
-    ExpandRecordService
+    ExpandRecordService,
+    FieldMenuSource
 } from '@ai-table/grid';
 import {
     Actions,
@@ -232,7 +233,7 @@ export class DemoTableContent {
                     }
                 }
             },
-            fieldMenus: (aiTable: AITable) => {
+            fieldMenus: (aiTable: AITable, source?: FieldMenuSource) => {
                 return [
                     { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {
@@ -240,9 +241,9 @@ export class DemoTableContent {
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
-                    freezeToThisColumn(this.aiTable),
-                    restoreDefaultFrozenColumn(this.aiTable),
-                    { ...DividerMenuItem, hidden: () => readonly },
+                    freezeToThisColumn(this.aiTable, source),
+                    restoreDefaultFrozenColumn(this.aiTable, source),
+                    { ...DividerMenuItem, hidden: () => readonly || source === 'expand-record' },
                     {
                         type: 'sortByAsc',
                         name: (field: AITableField) => {
@@ -266,7 +267,8 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                        hidden: () => source === 'expand-record'
                     },
                     {
                         type: 'sortByDesc',
@@ -291,17 +293,18 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                        hidden: () => source === 'expand-record'
                     },
                     {
                         type: 'filterFields',
                         name: '按本列筛选',
                         icon: 'filter-line',
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
+                        hidden: (aiTable: AITable, field: Signal<AITableField>) => source === 'expand-record',
                         disabled: (aiTable: AITable, field: Signal<AITableField>) => false
                     },
-                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
+                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField || source === 'expand-record' },
                     {
                         ...buildRemoveFieldItem(aiTable, () => {
                             const member = 'member_03';

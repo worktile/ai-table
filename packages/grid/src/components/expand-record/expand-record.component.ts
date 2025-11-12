@@ -37,7 +37,7 @@ import { AITableFieldMenu } from '../field-menu/field-menu.component';
 import { FieldEditorComponent } from './field-editor.component';
 import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
-import { ThyDropdownMenuComponent, ThyDropdownMenuDivider, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
+import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 
 @Component({
     selector: 'ai-expand-record',
@@ -139,7 +139,7 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     fieldMenus = computed(() => {
         const fieldMenusFn = this.aiTable()?.context?.aiFieldConfig()?.fieldMenus;
         if (fieldMenusFn && this.aiTable()) {
-            return fieldMenusFn(this.aiTable());
+            return fieldMenusFn(this.aiTable(), 'expand-record');
         }
         return [];
     });
