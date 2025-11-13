@@ -27,9 +27,6 @@ import {
     AITableReferences,
     UpdateFieldValueOptions,
     SelectSettings,
-    previousRecord,
-    nextRecord,
-    getRecordNavigationInfo,
     AIRecordFieldIdPath
 } from '@ai-table/utils';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
@@ -38,7 +35,16 @@ import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
-import { AITableActions, clearSelection, closeExpendCell, selectCells, setActiveCell } from '../../utils';
+import {
+    AITableActions,
+    clearSelection,
+    closeExpendCell,
+    getRecordNavigationInfo,
+    getNextRecordByActiveCell,
+    getPreviousRecordByActiveCell,
+    selectCells,
+    setActiveCell
+} from '../../utils';
 
 @Component({
     selector: 'ai-record-detail',
@@ -148,7 +154,7 @@ export class RecordDetailComponent implements OnInit {
     }
 
     previousRecord(): void {
-        const prevId = previousRecord(this.aiTable());
+        const prevId = getPreviousRecordByActiveCell(this.aiTable());
         if (prevId) {
             this.internalRecordId.set(prevId);
             this.setSelection(prevId);
@@ -156,7 +162,7 @@ export class RecordDetailComponent implements OnInit {
     }
 
     nextRecord(): void {
-        const nextId = nextRecord(this.aiTable());
+        const nextId = getNextRecordByActiveCell(this.aiTable());
         if (nextId) {
             this.internalRecordId.set(nextId);
             this.setSelection(nextId);
