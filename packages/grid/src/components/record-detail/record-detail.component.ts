@@ -27,10 +27,10 @@ import {
     AITableReferences,
     UpdateFieldValueOptions,
     SelectSettings,
-    setActiveRecord,
     previousRecord,
     nextRecord,
-    getRecordNavigationInfo
+    getRecordNavigationInfo,
+    AIRecordFieldIdPath
 } from '@ai-table/utils';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
 import { DynamicCellEditorComponent } from './dynamic-cell-editor.component';
@@ -38,7 +38,7 @@ import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
-import { AITableActions, clearSelection, closeExpendCell, setActiveCell } from '../../utils';
+import { AITableActions, clearSelection, closeExpendCell, selectCells, setActiveCell } from '../../utils';
 
 @Component({
     selector: 'ai-record-detail',
@@ -139,11 +139,7 @@ export class RecordDetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        setTimeout(() => {
-            // 首次激活cell
-            setActiveRecord(this.aiTable(), this.recordId());
-            setActiveCell(this.aiTable(), [this.recordId(), this.firstField()?._id]);
-        });
+        this.setSelection(this.recordId());
         this.internalRecordId.set(this.recordId());
     }
 
@@ -239,11 +235,12 @@ export class RecordDetailComponent implements OnInit {
         this.actions()?.updateFieldValues?.(options);
     }
 
-    private setSelection(recordId: string) {
+    setSelection(recordId: string) {
         clearSelection(this.aiTable());
         closeExpendCell(this.aiTable());
-        setActiveRecord(this.aiTable(), recordId);
-        setActiveCell(this.aiTable(), [recordId, this.firstField()?._id]);
+        const idPath: AIRecordFieldIdPath = [recordId, this.firstField()?._id];
+        selectCells(this.aiTable(), idPath);
+        setActiveCell(this.aiTable(), idPath);
     }
 
     private activateField(fieldId: string): void {

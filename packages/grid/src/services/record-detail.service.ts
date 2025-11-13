@@ -38,6 +38,10 @@ export class RecordDetailService {
     private config: RecordDetailConfig | null = null;
 
     open(config: RecordDetailConfig): ThySlideRef<RecordDetailComponent> {
+        if (this.isOpen()) {
+            this.currentSlideRef?.componentInstance.setSelection(config.recordId);
+            return this.currentSlideRef!;
+        }
         this.config = config;
         this.currentSlideRef = this.thySlide.open(RecordDetailComponent, {
             origin: config.origin,
