@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal, effect, ViewChild, output, AfterViewInit } from '@angular/core';
-import { KoContainer, KoEventObject } from '../../../angular-konva';
+import { KoContainer, KoEventObject, KoShapeConfigTypes } from '../../../angular-konva';
 import { KoShape } from '../../../angular-konva/components/shape.component';
 import { Colors } from '../../../constants';
 import { RectConfig } from 'konva/lib/shapes/Rect';
@@ -19,6 +19,7 @@ export interface ScrollableGroupConfig {
     verticalScrollbar?: boolean;
     horizontalScrollbar?: boolean;
     contentNotScrollbar?: boolean;
+    bgName?: string;
 }
 
 @Component({
@@ -146,8 +147,8 @@ export class AITableScrollableGroup implements AfterViewInit {
     });
 
     bgConfig = computed(() => {
-        const { x = 0, y = 0, width, height } = this.config();
-        return {
+        const { x = 0, y = 0, width, height, bgName } = this.config();
+        const config: KoShapeConfigTypes = {
             x: 0,
             y: 0,
             fill: Colors.white,
@@ -155,6 +156,10 @@ export class AITableScrollableGroup implements AfterViewInit {
             height,
             listening: true
         };
+        if (bgName) {
+            config.name = bgName;
+        }
+        return config;
     });
 
     // 内容区域配置
