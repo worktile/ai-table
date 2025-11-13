@@ -126,7 +126,7 @@ export const freezeToThisColumn = (aiTable: AITable, source?: FieldMenuSource) =
             );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
-            if (aiTable.context?.readonly?.() || source === 'expand-record') {
+            if (aiTable.context?.readonly?.() || source === 'record-detail') {
                 return true;
             }
 
@@ -189,7 +189,7 @@ export const restoreDefaultFrozenColumn = (aiTable: AITable, source?: FieldMenuS
             );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
-            if (aiTable.context?.readonly?.() || source === 'expand-record') {
+            if (aiTable.context?.readonly?.() || source === 'record-detail') {
                 return true;
             }
 

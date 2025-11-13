@@ -1,5 +1,5 @@
-<div class="d-flex flex-column ai-expand-record">
-    <div class="d-flex align-items-center justify-content-between px-5 py-4 expand-record-header">
+<div class="d-flex flex-column ai-record-detail">
+    <div class="d-flex align-items-center justify-content-between px-5 record-detail-header">
         <span class="record-title" [title]="recordTitle()">
             {{ recordTitle() }}
         </span>
@@ -25,19 +25,18 @@
             </button>
 
             <ng-template #headerMoreMenu>
-                <ng-container *ngIf="headerMoreMenuTemplate(); else defaultHeaderMenu">
+                @if (headerMoreMenuTemplate()) {
                     <ng-container
                         *ngTemplateOutlet="headerMoreMenuTemplate()!; context: { $implicit: { recordId: currentRecordId() } }"
                     ></ng-container>
-                </ng-container>
-                <ng-template #defaultHeaderMenu>
+                } @else {
                     <div class="thy-dropdown-menu">
                         <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
                             <thy-icon thyIconName="trash"></thy-icon>
                             <span>删除</span>
                         </a>
                     </div>
-                </ng-template>
+                }
             </ng-template>
 
             <button thyButton="link-secondary" thySize="md" (click)="close()" title="关闭">
@@ -46,7 +45,7 @@
         </div>
     </div>
 
-    <div class="expand-record-body">
+    <div class="record-detail-body">
         <cdk-virtual-scroll-viewport class="field-list-viewport" itemSize="80">
             <div
                 *cdkVirtualFor="let field of fields()"
@@ -64,17 +63,17 @@
                         </button>
 
                         <ng-template #fieldOperationsMenuTemp>
-                            <ng-container *ngIf="fieldOperationsTemplate()">
+                            @if (fieldOperationsTemplate()) {
                                 <ng-container
                                     *ngTemplateOutlet="fieldOperationsTemplate()!; context: { $implicit: { field: field } }"
                                 ></ng-container>
-                            </ng-container>
+                            }
                         </ng-template>
                     </div>
                 </div>
 
-                <div class="field-editor" (click)="onFieldClick(field._id)">
-                    <ai-field-editor
+                <div class="dynamic-cell-editor" (click)="onFieldClick(field._id)">
+                    <ai-dynamic-cell-editor
                         [aiTable]="aiTable()"
                         [fieldId]="field._id"
                         [recordId]="currentRecordId()"
@@ -82,11 +81,11 @@
                         [customFieldEditors]="customFieldEditors()"
                         (updateFieldValues)="onFieldValueChange($event)"
                     >
-                    </ai-field-editor>
+                    </ai-dynamic-cell-editor>
                 </div>
             </div>
-            <div class="expand-add-field">
-                <button thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
+            <div class="py-4 px-5">
+                <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
                     <thy-icon thyIconName="plus"></thy-icon>
                     <span>新增字段</span>
                 </button>

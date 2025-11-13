@@ -14,7 +14,8 @@ import {
     AddFieldOptions,
     AITableReferences,
     idCreator,
-    SetFieldStatTypeOptions
+    SetFieldStatTypeOptions,
+    IdPath
 } from '@ai-table/utils';
 import { getGroupLastRecordIndex } from '../group';
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -168,6 +169,7 @@ export interface AITableActions {
     setFieldStatType: (data: SetFieldStatTypeOptions) => void;
     addRecord: (data: AddRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
+    removeRecord?: (data: IdPath) => void;
 }
 
 function appendField(aiTable: AITable, originField: AITableField | null, actions: AITableActions) {

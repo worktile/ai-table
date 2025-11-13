@@ -7,14 +7,11 @@ import {
     ViewChild,
     ViewContainerRef,
     ChangeDetectionStrategy,
-    inject,
     ComponentRef,
     computed,
     effect,
-    Injector
+    viewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { AITable, AITableQueries } from '../../core';
 import { GRID_CELL_EDITOR_MAP } from '../cell-editors';
@@ -22,22 +19,22 @@ import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.com
 import { AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
 
 @Component({
-    selector: 'ai-field-editor',
+    selector: 'ai-dynamic-cell-editor',
     standalone: true,
     imports: [CommonModule],
     template: `
-        <div class="ai-field-editor-wrapper">
-            <div *ngIf="!cellValue" class="empty-cell-placeholder">
-                <span class="placeholder-text">空</span>
-            </div>
-
-            <!-- 动态编辑器 -->
+        <div class="ai-dynamic-cell-editor-wrapper">
+            @if (!cellValue()) {
+                <div class="empty-cell-placeholder">
+                    <span class="placeholder-text">空</span>
+                </div>
+            }
             <ng-container #editorHost></ng-container>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FieldEditorComponent implements OnInit, OnDestroy {
+export class DynamicCellEditorComponent implements OnInit, OnDestroy {
     aiTable = input.required<AITable>();
     fieldId = input.required<string>();
     recordId = input.required<string>();
@@ -46,10 +43,8 @@ export class FieldEditorComponent implements OnInit, OnDestroy {
 
     updateFieldValues = output<UpdateFieldValueOptions[]>();
 
-    @ViewChild('editorHost', { read: ViewContainerRef, static: true })
-    editorHost!: ViewContainerRef;
+    readonly editorHost = viewChild('editorHost', { read: ViewContainerRef });
 
-    private destroy$ = new Subject<void>();
     private editorComponentRef?: ComponentRef<any>;
 
     field = computed(() => {
@@ -69,13 +64,9 @@ export class FieldEditorComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit(): void {
-        this.createEditorComponent();
-    }
+    ngOnInit(): void {}
 
     ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
         this.destroyEditorComponent();
     }
 
@@ -86,18 +77,19 @@ export class FieldEditorComponent implements OnInit, OnDestroy {
         const editorComponent = this.getEditorComponent(field.type);
         if (!editorComponent) return;
 
+        const editorHost = this.editorHost();
         try {
-            this.editorHost.clear();
+            editorHost?.clear();
         } catch (error) {}
-        this.editorComponentRef = this.editorHost.createComponent(editorComponent);
+        this.editorComponentRef = editorHost?.createComponent(editorComponent);
 
-        const instance = this.editorComponentRef.instance;
+        const instance = this.editorComponentRef!.instance;
         if (instance instanceof AbstractEditCellEditor) {
-            this.editorComponentRef.setInput('aiTable', this.aiTable());
-            this.editorComponentRef.setInput('fieldId', this.fieldId());
-            this.editorComponentRef.setInput('recordId', this.recordId());
-            this.editorComponentRef.setInput('references', this.references());
-            this.editorComponentRef.setInput('autoFocus', false);
+            this.editorComponentRef!.setInput('aiTable', this.aiTable());
+            this.editorComponentRef!.setInput('fieldId', this.fieldId());
+            this.editorComponentRef!.setInput('recordId', this.recordId());
+            this.editorComponentRef!.setInput('references', this.references());
+            this.editorComponentRef!.setInput('autoFocus', false);
 
             instance.updateFieldValues.subscribe((options: UpdateFieldValueOptions[]) => {
                 this.updateFieldValues.emit(options);

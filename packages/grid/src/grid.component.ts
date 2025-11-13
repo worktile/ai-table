@@ -113,7 +113,6 @@ import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
-import { GridControlService } from './services/grid-control.service';
 import _ from 'lodash';
 
 @Component({
@@ -822,16 +821,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 const groupId = targetNameDetail.source;
                 if (groupId) {
                     this.aiRowGroupCollapseClick.emit(groupId!);
-                }
-                break;
-            }
-            case AI_TABLE_EXPAND_RECORD_ICON: {
-                const recordId = targetNameDetail.recordId;
-                if (recordId) {
-                    this.aiClick.emit({
-                        ...e,
-                        targetNameDetail
-                    });
                 }
                 break;
             }

@@ -2,8 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
-    OnDestroy,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -22,27 +20,28 @@ import { ThyButtonModule } from 'ngx-tethys/button';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThySlideRef } from 'ngx-tethys/slide';
-import { Subject, takeUntil, filter } from 'rxjs';
 import { AITable, AITableQueries, createDefaultField } from '../../core';
-import { GridControlService } from '../../services/grid-control.service';
 import {
     AITableField,
     AITableFieldType,
     AITableReferences,
     UpdateFieldValueOptions,
     SelectSettings,
-    AddFieldOptions,
-    IdPath
+    setActiveRecord,
+    previousRecord,
+    nextRecord,
+    getRecordNavigationInfo
 } from '@ai-table/utils';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
-import { FieldEditorComponent } from './field-editor.component';
+import { DynamicCellEditorComponent } from './dynamic-cell-editor.component';
 import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
+import { AITableActions, clearSelection, closeExpendCell, setActiveCell } from '../../utils';
 
 @Component({
-    selector: 'ai-expand-record',
+    selector: 'ai-record-detail',
     standalone: true,
     imports: [
         CommonModule,
@@ -52,26 +51,18 @@ import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
         ThyDivider,
         ThyPopoverModule,
         ThyDropdownMenuItemDirective,
-        FieldEditorComponent,
-        AITableFieldMenu
+        DynamicCellEditorComponent
     ],
-    templateUrl: './expand-record.component.html',
-    styleUrls: ['./expand-record.component.scss'],
+    templateUrl: './record-detail.component.html',
+    styleUrls: ['./record-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExpandRecordComponent implements OnInit, OnDestroy {
+export class RecordDetailComponent implements OnInit {
     readonly aiTable = input.required<AITable>();
     readonly recordId = input.required<string>();
     readonly references = input.required<AITableReferences>();
 
-    // 添加字段
-    readonly addField = input<(options: AddFieldOptions) => void>();
-
-    // 删除行
-    readonly removeRecord = input<(path: IdPath) => void>();
-
-    // 字段值更新
-    readonly fieldValueChange = input<(options: UpdateFieldValueOptions[]) => void>();
+    readonly actions = input<AITableActions>();
 
     // 自定义字段编辑组件
     readonly customFieldEditors = input<Record<string, any>>();
@@ -92,15 +83,9 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
         return internalId || inputId;
     });
 
-    @ViewChild('editorContainer', { read: ViewContainerRef })
-    editorContainer!: ViewContainerRef;
-
     readonly fieldOperationsMenuTemp = viewChild<TemplateRef<any>>('fieldOperationsMenuTemp');
 
-    private destroy$ = new Subject<void>();
-    private slideRef = inject(ThySlideRef, { optional: true });
-    private gridControl = inject(GridControlService);
-    private cdr = inject(ChangeDetectorRef);
+    private slideRef = inject(ThySlideRef);
     private thyPopover = inject(ThyPopover);
 
     record = computed(() => {
@@ -129,13 +114,13 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     });
 
     recordPosition = computed(() => {
-        return this.gridControl.getRecordPosition(this.currentRecordId());
+        return getRecordNavigationInfo(this.aiTable(), this.currentRecordId());
     });
 
     fieldMenus = computed(() => {
         const fieldMenusFn = this.aiTable()?.context?.aiFieldConfig()?.fieldMenus;
         if (fieldMenusFn && this.aiTable()) {
-            return fieldMenusFn(this.aiTable(), 'expand-record');
+            return fieldMenusFn(this.aiTable(), 'record-detail');
         }
         return [];
     });
@@ -146,23 +131,20 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
 
     constructor() {
         effect(() => {
-            this.internalRecordId.set(this.recordId());
+            const activeCell = this.aiTable().selection().activeCell;
+            if (activeCell) {
+                this.internalRecordId.set(activeCell[0]);
+            }
         });
     }
 
     ngOnInit(): void {
-        this.gridControl.init(this.aiTable());
         setTimeout(() => {
             // 首次激活cell
-            this.gridControl.setActiveRecord(this.recordId());
-            this.gridControl.setActiveCell(this.recordId(), this.firstField()?._id);
+            setActiveRecord(this.aiTable(), this.recordId());
+            setActiveCell(this.aiTable(), [this.recordId(), this.firstField()?._id]);
         });
         this.internalRecordId.set(this.recordId());
-    }
-
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
     }
 
     close(): void {
@@ -170,35 +152,30 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     }
 
     previousRecord(): void {
-        const prevId = this.gridControl.previousRecord();
+        const prevId = previousRecord(this.aiTable());
         if (prevId) {
             this.internalRecordId.set(prevId);
-            this.gridControl.setActiveRecord(prevId);
-            this.gridControl.setActiveCell(prevId, this.firstField()?._id);
+            this.setSelection(prevId);
         }
     }
 
     nextRecord(): void {
-        const nextId = this.gridControl.nextRecord();
+        const nextId = nextRecord(this.aiTable());
         if (nextId) {
             this.internalRecordId.set(nextId);
-            this.gridControl.setActiveRecord(nextId);
-            this.gridControl.setActiveCell(nextId, this.firstField()?._id);
+            this.setSelection(nextId);
         }
     }
 
     deleteRecord(): void {
-        this.removeRecord()?.([this.currentRecordId()]);
+        this.actions()?.removeRecord?.([this.currentRecordId()]);
         this.close();
     }
 
     onFieldClick(fieldId: string): void {
         this.activateField(fieldId);
 
-        // 通知表格同步选中
-        this.gridControl.setActiveCell(this.currentRecordId(), fieldId, {
-            scroll: true
-        });
+        setActiveCell(this.aiTable(), [this.currentRecordId(), fieldId]);
     }
 
     showFieldMenu(fieldId: string): void {
@@ -250,7 +227,7 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
             (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((defaultValue) => {
                 const fields = this.aiTable().gridData().fields;
                 const fieldCount = fields.length;
-                this.addField()?.({
+                this.actions()?.addField?.({
                     originId: fieldCount > 0 ? fields[fields.length - 1]._id : '',
                     defaultValue
                 });
@@ -259,12 +236,18 @@ export class ExpandRecordComponent implements OnInit, OnDestroy {
     }
 
     onFieldValueChange(options: UpdateFieldValueOptions[]): void {
-        this.fieldValueChange()?.(options);
+        this.actions()?.updateFieldValues?.(options);
+    }
+
+    private setSelection(recordId: string) {
+        clearSelection(this.aiTable());
+        closeExpendCell(this.aiTable());
+        setActiveRecord(this.aiTable(), recordId);
+        setActiveCell(this.aiTable(), [recordId, this.firstField()?._id]);
     }
 
     private activateField(fieldId: string): void {
-        this.gridControl.setActiveCell(this.recordId(), fieldId);
-        this.cdr.markForCheck();
+        setActiveCell(this.aiTable(), [this.recordId(), fieldId]);
     }
 
     private formatCellValue(value: any, field: AITableField): string {

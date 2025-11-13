@@ -1,11 +1,14 @@
 @use 'ngx-tethys/styles/variables.scss';
 
-.ai-expand-record {
+.ai-record-detail {
     height: 100%;
     background: variables.$white;
 }
 
-.expand-record-header {
+.record-detail-header {
+    height: 52px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #e8e8e8;
     flex-shrink: 0;
 
@@ -31,7 +34,7 @@
     }
 }
 
-.expand-record-body {
+.record-detail-body {
     flex: 1;
     overflow: hidden;
     padding: 8px 0;
@@ -43,6 +46,7 @@
 
     .field-item {
         .field-header {
+            height: 22px;
             .field-name {
                 color: #666;
             }
@@ -57,21 +61,14 @@
             }
         }
 
-        .field-editor {
+        .dynamic-cell-editor {
             &::ng-deep {
-                .ai-field-editor-wrapper {
+                .ai-dynamic-cell-editor-wrapper {
                     .ai-table-link-editor .link-input-group {
                         border: 1px solid variables.$gray-200;
                     }
                 }
             }
-        }
-    }
-
-    .expand-add-field {
-        padding: 16px 20px;
-        .thy-btn {
-            padding: 0;
         }
     }
 }

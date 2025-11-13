@@ -49,7 +49,7 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
     coverRender?: Constructor<CoverCellBase>;
 }
 
-export type FieldMenuSource = 'grid' | 'expand-record';
+export type FieldMenuSource = 'grid' | 'record-detail';
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;

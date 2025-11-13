@@ -14,8 +14,8 @@ import {
     scrollToMatchedCell,
     setCollapseDisabled,
     AI_TABLE_EXPAND_RECORD_ICON,
-    ExpandRecordService,
-    FieldMenuSource
+    FieldMenuSource,
+    RecordDetailService
 } from '@ai-table/grid';
 import {
     Actions,
@@ -42,7 +42,18 @@ import {
     InsertDownwardRecords,
     AITableStateI18nText
 } from '@ai-table/state';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    input,
+    signal,
+    Signal,
+    ViewContainerRef
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
@@ -84,7 +95,8 @@ import {
     FieldValue,
     AITableUtilsI18nText,
     SetFieldStatTypeOptions,
-    AITableRecordHeightType
+    AITableRecordHeightType,
+    IdPath
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -140,6 +152,8 @@ export class MenuAddRecordsComponent {
 })
 export class DemoTableContent {
     private datePickerFormatPipe = new ThyDatePickerFormatPipe();
+
+    private viewContainerRef = inject(ViewContainerRef);
 
     aITableRowHeight = AITableRecordHeightType;
 
@@ -243,7 +257,7 @@ export class DemoTableContent {
                     { ...DividerMenuItem, hidden: () => readonly },
                     freezeToThisColumn(this.aiTable, source),
                     restoreDefaultFrozenColumn(this.aiTable, source),
-                    { ...DividerMenuItem, hidden: () => readonly || source === 'expand-record' },
+                    { ...DividerMenuItem, hidden: () => readonly || source === 'record-detail' },
                     {
                         type: 'sortByAsc',
                         name: (field: AITableField) => {
@@ -268,7 +282,7 @@ export class DemoTableContent {
                             return null;
                         },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: () => source === 'expand-record'
+                        hidden: () => source === 'record-detail'
                     },
                     {
                         type: 'sortByDesc',
@@ -294,17 +308,17 @@ export class DemoTableContent {
                             return null;
                         },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: () => source === 'expand-record'
+                        hidden: () => source === 'record-detail'
                     },
                     {
                         type: 'filterFields',
                         name: '按本列筛选',
                         icon: 'filter-line',
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: (aiTable: AITable, field: Signal<AITableField>) => source === 'expand-record',
+                        hidden: (aiTable: AITable, field: Signal<AITableField>) => source === 'record-detail',
                         disabled: (aiTable: AITable, field: Signal<AITableField>) => false
                     },
-                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField || source === 'expand-record' },
+                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField || source === 'record-detail' },
                     {
                         ...buildRemoveFieldItem(aiTable, () => {
                             const member = 'member_03';
@@ -353,6 +367,9 @@ export class DemoTableContent {
         },
         addField: (data: AddFieldOptions) => {
             this.addField(data);
+        },
+        removeRecord: (data: IdPath) => {
+            Actions.removeRecord(this.aiTable, data);
         }
     };
 
@@ -410,7 +427,7 @@ export class DemoTableContent {
 
     thyPopover = inject(ThyPopover);
 
-    expandRecordService = inject(ExpandRecordService);
+    recordDetailService = inject(RecordDetailService);
 
     references = signal(getReferences());
 
@@ -477,17 +494,12 @@ export class DemoTableContent {
                 }
             }
         } else if (e.targetNameDetail.targetName === AI_TABLE_EXPAND_RECORD_ICON) {
-            this.expandRecordService.open({
+            this.recordDetailService.open({
+                viewContainerRef: this.viewContainerRef,
                 aiTable: this.aiTable,
                 recordId: e.targetNameDetail.recordId!,
                 references: this.references(),
-                addField: this.addField.bind(this),
-                removeRecord: (path) => {
-                    Actions.removeRecord(this.aiTable, path);
-                },
-                fieldValueChange: (options) => {
-                    Actions.updateFieldValues(this.aiTable, options);
-                }
+                actions: this.actions
             });
         }
     }
