@@ -848,8 +848,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const fieldType = field.type;
         if (DBL_CLICK_EDIT_TYPE.includes(fieldType as AITableFieldType)) {
             setTimeout(() => {
-                // 边框重叠，清除选区
-                clearSelection(this.aiTable);
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
                     viewContainerRef: this.viewContainerRef,
                     container: this.containerElement(),
