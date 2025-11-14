@@ -189,6 +189,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             const offset = this.coordinate().getRowOffset(rowIndex);
             return {
                 top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
+                height: AI_TABLE_RECORD_HEIGHT_LEVELS[this.aiRecordHeight()],
                 left: 0,
                 tooltip
             };
