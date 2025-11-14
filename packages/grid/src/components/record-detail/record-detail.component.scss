@@ -9,7 +9,7 @@
     height: 52px;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid variables.$gray-200;
     flex-shrink: 0;
 
     .record-title {
@@ -48,7 +48,7 @@
         .field-header {
             height: 22px;
             .field-name {
-                color: #666;
+                color: variables.$gray-700;
             }
 
             .field-operations {
