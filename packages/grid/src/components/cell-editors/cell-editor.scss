@@ -101,13 +101,5 @@
 }
 
 .ai-table-link-editor {
-    .thy-input-group {
-        align-items: start;
-        .form-control {
-            height: calc(45px - 4px); // 控制输入框显示在上方
-        }
-        .input-group-suffix {
-            margin-top: cellEditorVariables.$cell-editor-padding-top;
-        }
-    }
+    height: calc(45px - 4px);
 }
