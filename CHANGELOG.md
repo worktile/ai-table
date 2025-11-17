@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.1](https://github.com/worktile/ai-table/compare/0.4.0...0.4.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* #WIK-19348 链接编辑图标位置布局中 ([#792](https://github.com/worktile/ai-table/issues/792)) ([3f12190](https://github.com/worktile/ai-table/commit/3f121907ef92024fd59193248587065125ddee78)), closes [#WIK-19348](https://github.com/worktile/ai-table/issues/WIK-19348)
+
+
+
 # [0.4.0](https://github.com/worktile/ai-table/compare/0.4.0-2...0.4.0) (2025-11-14)
 
 
