@@ -14,7 +14,7 @@ import {
     scrollToMatchedCell,
     setCollapseDisabled,
     AI_TABLE_EXPAND_RECORD_ICON,
-    FieldMenuSource,
+    AITableCommonTriggerSource,
     RecordDetailService
 } from '@ai-table/grid';
 import {
@@ -247,7 +247,7 @@ export class DemoTableContent {
                     }
                 }
             },
-            fieldMenus: (aiTable: AITable, source?: FieldMenuSource) => {
+            fieldMenus: (aiTable: AITable, source?: AITableCommonTriggerSource) => {
                 return [
                     { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {

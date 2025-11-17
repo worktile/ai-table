@@ -17,6 +17,7 @@ import { AITable, AITableQueries } from '../../core';
 import { GRID_CELL_EDITOR_MAP } from '../cell-editors';
 import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.component';
 import { AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AITableCommonTriggerSource } from '../../types';
 
 @Component({
     selector: 'ai-dynamic-cell-editor',
@@ -90,6 +91,7 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
             this.editorComponentRef!.setInput('recordId', this.recordId());
             this.editorComponentRef!.setInput('references', this.references());
             this.editorComponentRef!.setInput('autoFocus', false);
+            this.editorComponentRef!.setInput('source', 'record-detail' as AITableCommonTriggerSource);
 
             instance.updateFieldValues.subscribe((options: UpdateFieldValueOptions[]) => {
                 this.updateFieldValues.emit(options);

@@ -1,4 +1,4 @@
-import { AITable, FieldMenuSource, getColumnIndicesSizeMap } from '@ai-table/grid';
+import { AITable, AITableCommonTriggerSource, getColumnIndicesSizeMap } from '@ai-table/grid';
 import { Signal } from '@angular/core';
 import { AIViewTable } from '../../types';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../../utils/i18n';
@@ -109,7 +109,7 @@ export function calculateAdaptiveFrozenColumnCount(aiTable: AITable, containerWi
     }
 }
 
-export const freezeToThisColumn = (aiTable: AITable, source?: FieldMenuSource) => {
+export const freezeToThisColumn = (aiTable: AITable, source?: AITableCommonTriggerSource) => {
     return {
         type: 'freezeToThisColumn',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.freezeToThisColumn),
@@ -173,7 +173,7 @@ export const freezeToThisColumn = (aiTable: AITable, source?: FieldMenuSource) =
     };
 };
 
-export const restoreDefaultFrozenColumn = (aiTable: AITable, source?: FieldMenuSource) => {
+export const restoreDefaultFrozenColumn = (aiTable: AITable, source?: AITableCommonTriggerSource) => {
     return {
         type: 'restoreDefaultFrozenColumn',
         name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.restoreDefaultFrozenColumn),

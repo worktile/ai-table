@@ -49,14 +49,14 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
     coverRender?: Constructor<CoverCellBase>;
 }
 
-export type FieldMenuSource = 'grid' | 'record-detail';
+export type AITableCommonTriggerSource = 'grid' | 'record-detail';
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;
     hiddenRowDrag?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
-    fieldMenus?: (aiTable: AITable, source?: FieldMenuSource) => AITableFieldMenuItem[];
+    fieldMenus?: (aiTable: AITable, source?: AITableCommonTriggerSource) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
     filterFieldOptions?: (fieldOptions: AITableFieldOption[]) => AITableFieldOption[];
 }
