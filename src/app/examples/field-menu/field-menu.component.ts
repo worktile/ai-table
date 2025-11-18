@@ -26,7 +26,6 @@ import {
 } from '@ai-table/state';
 import { mockRecords, mockFields, mockReferences } from './mock';
 import { getUnixTime } from 'date-fns';
-import { RecordActions } from '../../../../packages/state/src/action/record';
 
 @Component({
     selector: 'app-table-field-menu-example',
