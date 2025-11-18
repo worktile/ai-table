@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, inject, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyEmptyModule } from 'ngx-tethys/empty';
 import { ThySelect, ThySelectModule } from 'ngx-tethys/select';
@@ -31,7 +31,7 @@ import { AITableQueries } from '../../../core';
         ThySelectModule
     ]
 })
-export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> {
+export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> implements AfterViewInit {
     selectOptions = computed(() => {
         return this.field().settings.options;
     });
@@ -49,6 +49,8 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
     }
 
     override ngOnInit(): void {
+        super.ngOnInit();
+        this.applyContainerClass('has-select-cell');
         this.modelValue = computed(() => {
             const value = AITableQueries.getFieldValue(this.aiTable, [this.record()._id, this.field()._id]);
             if (!this.isMultiple) {
@@ -56,6 +58,12 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
             }
             return value || [];
         })();
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.updateStyle();
+        });
     }
 
     onOpenChange(value: boolean) {
@@ -66,6 +74,9 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
 
     onModelChange(event: any) {
         this.updateValueFn();
+        setTimeout(() => {
+            this.updateStyle();
+        });
     }
 
     updateValueFn() {
@@ -79,5 +90,11 @@ export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] |
                 }
             ]);
         }
+    }
+
+    updateStyle() {
+        this.adjustElementHeight('.form-control', false, () => {
+            this.thyPopoverRef?.updatePosition();
+        });
     }
 }

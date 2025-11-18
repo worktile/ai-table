@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.1](https://github.com/worktile/ai-table/compare/0.4.0...0.4.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* #WIK-19348 链接编辑图标位置布局中 ([#792](https://github.com/worktile/ai-table/issues/792)) ([3f12190](https://github.com/worktile/ai-table/commit/3f121907ef92024fd59193248587065125ddee78)), closes [#WIK-19348](https://github.com/worktile/ai-table/issues/WIK-19348)
+
+
+
+# [0.4.0](https://github.com/worktile/ai-table/compare/0.4.0-2...0.4.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* #WIK-19307 双击进入编辑在非文字的区域双击交互异常，没有进入编辑，而是取消选中 ([#785](https://github.com/worktile/ai-table/issues/785)) ([3c6b07c](https://github.com/worktile/ai-table/commit/3c6b07c66db7a335604d289dbf6775b0aec12756)), closes [#WIK-19307](https://github.com/worktile/ai-table/issues/WIK-19307)
+* #WIK-19317 多行文本渲染有问题，字体过小 ([#788](https://github.com/worktile/ai-table/issues/788)) ([01a2b1a](https://github.com/worktile/ai-table/commit/01a2b1a0fa25079bb041137916981afbd155c007)), closes [#WIK-19317](https://github.com/worktile/ai-table/issues/WIK-19317)
+* #WIK-19323 位置不对的黄色提示块，样式需要看下（也要随之变高） ([#789](https://github.com/worktile/ai-table/issues/789)) ([8767890](https://github.com/worktile/ai-table/commit/87678907b8108dc48b218152025f0629313f40be)), closes [#WIK-19323](https://github.com/worktile/ai-table/issues/WIK-19323)
+* #WIK-19337 有分组的情况下，修改单元格内容（单选），界面直接刷新了，未提示位置变动 ([#790](https://github.com/worktile/ai-table/issues/790)) ([ec9262e](https://github.com/worktile/ai-table/commit/ec9262ef4d1b6cfc75843d6a25f7a9fa77a8680b)), closes [#WIK-19337](https://github.com/worktile/ai-table/issues/WIK-19337)
+
+
+### Features
+
+* hidden input number step controls ([#786](https://github.com/worktile/ai-table/issues/786)) ([ddb1a03](https://github.com/worktile/ai-table/commit/ddb1a03f0d3ddf20390765d9cc5ee577f71dc638))
+
+
+
+# [0.4.0-2](https://github.com/worktile/ai-table/compare/0.4.0-1...0.4.0-2) (2025-11-11)
+
+
+### Bug Fixes
+
+* #WIK-19306 行高接入Wiki后编辑态的高度不对 ([#783](https://github.com/worktile/ai-table/issues/783)) ([d50470c](https://github.com/worktile/ai-table/commit/d50470c0f311426b9790d5a78ea537537bd4e1b0)), closes [#WIK-19306](https://github.com/worktile/ai-table/issues/WIK-19306) [#WIK-19306](https://github.com/worktile/ai-table/issues/WIK-19306)
+
+
+
+# [0.4.0-1](https://github.com/worktile/ai-table/compare/0.4.0-0...0.4.0-1) (2025-11-11)
+
+
+### Bug Fixes
+
+* #WIK-19261 多选编辑状态高度没有撑开，双击文本编辑和下拉选项闪烁问题 ([#772](https://github.com/worktile/ai-table/issues/772)) ([6750fbf](https://github.com/worktile/ai-table/commit/6750fbf7158630b0844b020f59db27c82cffe1c6)), closes [#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261) [#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261) [xws/#WIK-19261](https://github.com/worktile/ai-table/issues/WIK-19261)
+* #WIK-19262 单行文本-单击展开内容多时无法滚动 ([#775](https://github.com/worktile/ai-table/issues/775)) ([4b97e9a](https://github.com/worktile/ai-table/commit/4b97e9a7b27ee75f7a837452a26354b57f5c6a1c)), closes [#WIK-19262](https://github.com/worktile/ai-table/issues/WIK-19262)
+* #WIK-19270 设置行高后-分组的内容渲染不对 ([8ad1369](https://github.com/worktile/ai-table/commit/8ad13695450c9ec88b7c5e993e6f6f5f4b9172b4)), closes [#WIK-19270](https://github.com/worktile/ai-table/issues/WIK-19270)
+
+
+
 # [0.4.0-0](https://github.com/worktile/ai-table/compare/0.3.3...0.4.0-0) (2025-11-04)
 
 
