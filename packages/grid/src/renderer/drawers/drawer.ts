@@ -406,7 +406,6 @@ export class Drawer {
                     });
                 }
             });
-            this.ctx.restore();
         };
 
         if (fillStyle) this.setStyle({ fillStyle });

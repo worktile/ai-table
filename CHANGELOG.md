@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.1](https://github.com/worktile/ai-table/compare/0.4.0...0.4.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* #WIK-19348 链接编辑图标位置布局中 ([#792](https://github.com/worktile/ai-table/issues/792)) ([3f12190](https://github.com/worktile/ai-table/commit/3f121907ef92024fd59193248587065125ddee78)), closes [#WIK-19348](https://github.com/worktile/ai-table/issues/WIK-19348)
+
+
+
+# [0.4.0](https://github.com/worktile/ai-table/compare/0.4.0-2...0.4.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* #WIK-19307 双击进入编辑在非文字的区域双击交互异常，没有进入编辑，而是取消选中 ([#785](https://github.com/worktile/ai-table/issues/785)) ([3c6b07c](https://github.com/worktile/ai-table/commit/3c6b07c66db7a335604d289dbf6775b0aec12756)), closes [#WIK-19307](https://github.com/worktile/ai-table/issues/WIK-19307)
+* #WIK-19317 多行文本渲染有问题，字体过小 ([#788](https://github.com/worktile/ai-table/issues/788)) ([01a2b1a](https://github.com/worktile/ai-table/commit/01a2b1a0fa25079bb041137916981afbd155c007)), closes [#WIK-19317](https://github.com/worktile/ai-table/issues/WIK-19317)
+* #WIK-19323 位置不对的黄色提示块，样式需要看下（也要随之变高） ([#789](https://github.com/worktile/ai-table/issues/789)) ([8767890](https://github.com/worktile/ai-table/commit/87678907b8108dc48b218152025f0629313f40be)), closes [#WIK-19323](https://github.com/worktile/ai-table/issues/WIK-19323)
+* #WIK-19337 有分组的情况下，修改单元格内容（单选），界面直接刷新了，未提示位置变动 ([#790](https://github.com/worktile/ai-table/issues/790)) ([ec9262e](https://github.com/worktile/ai-table/commit/ec9262ef4d1b6cfc75843d6a25f7a9fa77a8680b)), closes [#WIK-19337](https://github.com/worktile/ai-table/issues/WIK-19337)
+
+
+### Features
+
+* hidden input number step controls ([#786](https://github.com/worktile/ai-table/issues/786)) ([ddb1a03](https://github.com/worktile/ai-table/commit/ddb1a03f0d3ddf20390765d9cc5ee577f71dc638))
+
+
+
 # [0.4.0-2](https://github.com/worktile/ai-table/compare/0.4.0-1...0.4.0-2) (2025-11-11)
 
 

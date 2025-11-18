@@ -190,6 +190,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             const offset = this.coordinate().getRowOffset(rowIndex);
             return {
                 top: offset - scrollTop - AI_TABLE_FIELD_HEAD_HEIGHT,
+                height: AI_TABLE_RECORD_HEIGHT_LEVELS[this.aiRecordHeight()],
                 left: 0,
                 tooltip
             };
@@ -848,8 +849,6 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         const fieldType = field.type;
         if (DBL_CLICK_EDIT_TYPE.includes(fieldType as AITableFieldType)) {
             setTimeout(() => {
-                // 边框重叠，清除选区
-                clearSelection(this.aiTable);
                 this.aiTableGridEventService.openCellEditor(this.aiTable, {
                     viewContainerRef: this.viewContainerRef,
                     container: this.containerElement(),

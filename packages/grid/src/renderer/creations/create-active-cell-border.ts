@@ -63,16 +63,20 @@ export const createActiveCellBorder = (config: AITableCellsConfig) => {
                     offset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
                 }
 
-                const currentConfig = {
-                    x: x + offset + AI_TABLE_OFFSET,
-                    y: y + AI_TABLE_OFFSET,
-                    width: width - AI_TABLE_CELL_BORDER / 2,
-                    height: rowHeight - AI_TABLE_CELL_BORDER / 2,
-                    strokeWidth: AI_TABLE_CELL_BORDER,
-                    stroke: colors.primary,
-                    fillEnabled: false,
-                    listening: false
-                };
+                let currentConfig: RectConfig | null = null;
+
+                if (!aiTable.editingCell()?.path) {
+                    currentConfig = {
+                        x: x + offset + AI_TABLE_OFFSET,
+                        y: y + AI_TABLE_OFFSET,
+                        width: width - AI_TABLE_CELL_BORDER / 2,
+                        height: rowHeight - AI_TABLE_CELL_BORDER / 2,
+                        strokeWidth: AI_TABLE_CELL_BORDER,
+                        stroke: colors.primary,
+                        fillEnabled: false,
+                        listening: false
+                    };
+                }
 
                 if (isFrozenColumn) {
                     frozenActiveCellBorder = currentConfig;
