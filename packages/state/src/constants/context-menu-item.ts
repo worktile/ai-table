@@ -3,7 +3,7 @@ import { Actions } from '../action';
 import { AIViewTable } from '../types';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
-import { AddRecordOptions } from '@ai-table/utils';
+import { AddRecordOptions, CopyRecordOptions } from '@ai-table/utils';
 
 export const RemoveRecordsItem = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
     return {
@@ -64,6 +64,22 @@ export const InsertDownwardRecords = (aiTable: AITable, actions: AITableActions)
                 addRecordOptions.forGroupId = selectedRecordIds[0];
             }
             actions.addRecord(addRecordOptions);
+        }
+    };
+};
+
+export const CopyRecords = (aiTable: AITable, actions: AITableActions): AITableContextMenuItem => {
+    return {
+        type: 'copyRecords',
+        name: getStateI18nTextByKey(aiTable, AITableStateI18nKey.copyRecords),
+        icon: 'copy',
+        exec: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => {
+            let selectedRecordIds = AITable.getActiveRecordIds(aiTable);
+            const copyRecordOptions: CopyRecordOptions = {
+                afterRecordId: selectedRecordIds[selectedRecordIds.length - 1],
+                recordIds: selectedRecordIds
+            };
+            actions.copyRecords(copyRecordOptions);
         }
     };
 };

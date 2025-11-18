@@ -37,7 +37,9 @@ import {
     moveRecords,
     InsertUpwardRecords,
     InsertDownwardRecords,
-    AITableStateI18nText
+    AITableStateI18nText,
+    copyRecords,
+    CopyRecords
 } from '@ai-table/state';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -81,7 +83,8 @@ import {
     FieldValue,
     AITableUtilsI18nText,
     SetFieldStatTypeOptions,
-    AITableRecordHeightType
+    AITableRecordHeightType,
+    CopyRecordOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 import { CommonModule } from '@angular/common';
@@ -346,6 +349,9 @@ export class DemoTableContent {
         addRecord: (data: AddRecordOptions) => {
             this.addRecord(data);
         },
+        copyRecords: (data: CopyRecordOptions) => {
+            this.copyRecords(data);
+        },
         addField: (data: AddFieldOptions) => {
             this.addField(data);
         }
@@ -382,6 +388,14 @@ export class DemoTableContent {
                 ...DividerMenuItem,
                 disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
                 hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => this.tableService.readonly()
+            },
+            {
+                ...CopyRecords(aiTable, this.actions),
+                disabled: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => false,
+                hidden: (aiTable: AITable, targetName: string, position: { x: number; y: number }) => {
+                    const selectedRecordIds = AITable.getActiveRecordIds(aiTable);
+                    return this.tableService.readonly() || selectedRecordIds.length !== 1;
+                }
             },
             {
                 ...RemoveRecordsItem(aiTable, this.actions),
@@ -508,6 +522,12 @@ export class DemoTableContent {
         const member = 'member_01';
         const time = getUnixTime(new Date());
         addRecords(this.aiTable, options, { created_by: member, created_at: time, updated_by: member, updated_at: time });
+    }
+
+    copyRecords(options: CopyRecordOptions) {
+        const member = 'member_01';
+        const time = getUnixTime(new Date());
+        copyRecords(this.aiTable, options, { created_by: member, created_at: time, updated_by: member, updated_at: time });
     }
 
     updateFieldValues(options: UpdateFieldValueOptions[]) {
