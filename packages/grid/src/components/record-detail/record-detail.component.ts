@@ -45,6 +45,7 @@ import {
     selectCells,
     setActiveCell
 } from '../../utils';
+import { AITableGridCellRenderSchema } from '../../types';
 
 @Component({
     selector: 'ai-record-detail',
@@ -70,8 +71,8 @@ export class RecordDetailComponent implements OnInit {
 
     readonly actions = input<AITableActions>();
 
-    // 自定义字段编辑组件
-    readonly customFieldEditors = input<Record<string, any>>();
+    // 自定义cell编辑组件
+    readonly customCellEditors = input<Record<AITableFieldType | string, AITableGridCellRenderSchema>>();
 
     // 自定义更多菜单模板
     readonly headerMoreMenuTemplate = input<TemplateRef<any>>();

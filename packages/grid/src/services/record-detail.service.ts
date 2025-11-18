@@ -2,10 +2,11 @@ import { Injectable, inject, TemplateRef, ViewContainerRef } from '@angular/core
 import { ThySlideService, ThySlideRef } from 'ngx-tethys/slide';
 import { RecordDetailComponent } from '../components/record-detail/record-detail.component';
 import { AITable } from '../core';
-import { AITableReferences } from '@ai-table/utils';
+import { AITableFieldType, AITableReferences } from '@ai-table/utils';
 import { AITableActions, clearSelection } from '../utils';
 import { fromEvent } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { AITableGridCellRenderSchema } from '../types';
 
 export interface RecordDetailConfig {
     readonly viewContainerRef: ViewContainerRef;
@@ -21,7 +22,7 @@ export interface RecordDetailConfig {
     readonly origin?: HTMLElement;
 
     // 自定义字段编辑器
-    readonly customFieldEditors?: Record<string, any>;
+    readonly customCellEditors?: Record<AITableFieldType | string, AITableGridCellRenderSchema>;
 
     // 头部更多菜单自定义模板
     readonly headerMoreMenuTemplate?: TemplateRef<any>;
@@ -54,7 +55,7 @@ export class RecordDetailService {
                 recordId: config.recordId,
                 references: config.references,
                 actions: config.actions,
-                customFieldEditors: config.customFieldEditors,
+                customCellEditors: config.customCellEditors,
                 headerMoreMenuTemplate: config.headerMoreMenuTemplate,
                 fieldOperationsTemplate: config.fieldOperationsTemplate
             }

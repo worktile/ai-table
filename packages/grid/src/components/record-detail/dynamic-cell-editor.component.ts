@@ -16,8 +16,8 @@ import { CommonModule } from '@angular/common';
 import { AITable, AITableQueries } from '../../core';
 import { GRID_CELL_EDITOR_MAP } from '../cell-editors';
 import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.component';
-import { AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
-import { AITableCommonTriggerSource } from '../../types';
+import { AITableFieldType, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
+import { AITableCommonTriggerSource, AITableGridCellRenderSchema } from '../../types';
 
 @Component({
     selector: 'ai-dynamic-cell-editor',
@@ -40,7 +40,7 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
     fieldId = input.required<string>();
     recordId = input.required<string>();
     references = input.required<AITableReferences>();
-    customFieldEditors = input<Record<string, any>>();
+    customCellEditors = input<Record<AITableFieldType | string, AITableGridCellRenderSchema>>();
 
     updateFieldValues = output<UpdateFieldValueOptions[]>();
 
@@ -107,9 +107,9 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
     }
 
     private getEditorComponent(fieldType: string): any {
-        const customEditors = this.customFieldEditors();
-        if (customEditors && customEditors[fieldType]) {
-            return customEditors[fieldType];
+        const customEditors = this.customCellEditors();
+        if (customEditors && customEditors[fieldType].editor) {
+            return customEditors[fieldType].editor;
         }
 
         return GRID_CELL_EDITOR_MAP[fieldType];
