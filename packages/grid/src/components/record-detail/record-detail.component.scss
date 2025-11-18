@@ -39,19 +39,24 @@
     overflow: hidden;
     padding: 8px 0;
 
-    .field-list-viewport {
+    .cell-list-viewport {
         height: 100%;
         width: 100%;
+        &::ng-deep {
+            .cdk-virtual-scroll-content-wrapper {
+                width: 100%;
+            }
+        }
     }
 
-    .field-item {
-        .field-header {
+    .cell-item {
+        .cell-header {
             height: 22px;
-            .field-name {
+            .cell-name {
                 color: variables.$gray-700;
             }
 
-            .field-operations {
+            .cell-operations {
                 opacity: 0;
                 transition: opacity 0.2s;
 

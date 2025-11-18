@@ -46,18 +46,18 @@
     </div>
 
     <div class="record-detail-body">
-        <cdk-virtual-scroll-viewport class="field-list-viewport" itemSize="80">
+        <cdk-virtual-scroll-viewport class="cell-list-viewport" itemSize="80">
             <div
                 *cdkVirtualFor="let field of fields()"
-                class="px-5 pt-4 field-item"
+                class="px-5 pt-4 cell-item"
                 [class.active]="activeFieldId === field._id"
                 (mouseenter)="showFieldMenu(field._id)"
                 (mouseleave)="hideFieldMenu(field._id)"
             >
-                <div class="d-flex align-items-center justify-content-between mb-2 field-header">
-                    <span class="font-size-base field-name">{{ field.name }}</span>
+                <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
+                    <span class="font-size-base cell-name">{{ field.name }}</span>
 
-                    <div class="field-operations" [class.visible]="fieldMenuVisible[field._id]">
+                    <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
                         <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
                             <thy-icon thyIconName="more"></thy-icon>
                         </button>
