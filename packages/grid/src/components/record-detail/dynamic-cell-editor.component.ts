@@ -108,7 +108,7 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
 
     private getEditorComponent(fieldType: string): any {
         const customEditors = this.customCellEditors();
-        if (customEditors && customEditors[fieldType].editor) {
+        if (customEditors && customEditors[fieldType]?.editor) {
             return customEditors[fieldType].editor;
         }
 
