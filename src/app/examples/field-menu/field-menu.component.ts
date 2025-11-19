@@ -9,7 +9,8 @@ import {
     AddRecordOptions,
     AITableRecordUpdatedInfo,
     AITableRecordCreatedInfo,
-    SetFieldStatTypeOptions
+    SetFieldStatTypeOptions,
+    CopyRecordOptions
 } from '@ai-table/utils';
 import { AIFieldConfig, AITableActions, AITableGrid } from '@ai-table/grid';
 import {
@@ -20,7 +21,8 @@ import {
     addRecords,
     updateFieldValues,
     EditFieldPropertyItem,
-    CopyFieldPropertyItem
+    CopyFieldPropertyItem,
+    copyRecords
 } from '@ai-table/state';
 import { mockRecords, mockFields, mockReferences } from './mock';
 import { getUnixTime } from 'date-fns';
@@ -66,6 +68,9 @@ export class TableFieldMenuExample {
         addField: (data: AddFieldOptions) => {
             this.addField(data);
         },
+        copyRecords: (data: CopyRecordOptions) => {
+            this.copyRecords(data);
+        },
         setField: (field: AITableField) => {
             this.setField(field);
         },
@@ -90,6 +95,18 @@ export class TableFieldMenuExample {
         addFields(this.aiTable, fieldOptions);
     }
 
+    copyRecord(recordOptions: CopyRecordOptions) {
+        const mockMemberUID = Object.keys(mockReferences.members)[0];
+        const mockTime = getUnixTime(new Date());
+        const recordCreatedInfo: AITableRecordCreatedInfo = {
+            created_by: mockMemberUID,
+            created_at: mockTime,
+            updated_by: mockMemberUID,
+            updated_at: mockTime
+        };
+        copyRecords(this.aiTable, recordOptions, recordCreatedInfo);
+    }
+
     setField(field: AITableField) {
         Actions.setField(this.aiTable, field, [field._id]);
     }
@@ -105,6 +122,18 @@ export class TableFieldMenuExample {
         };
 
         addRecords(this.aiTable, recordOptions, recordCreatedInfo);
+    }
+
+    copyRecords(recordOptions: CopyRecordOptions) {
+        const mockMemberUID = Object.keys(mockReferences.members)[0];
+        const mockTime = getUnixTime(new Date());
+        const recordCreatedInfo: AITableRecordCreatedInfo = {
+            created_by: mockMemberUID,
+            created_at: mockTime,
+            updated_by: mockMemberUID,
+            updated_at: mockTime
+        };
+        copyRecords(this.aiTable, recordOptions, recordCreatedInfo);
     }
 
     updateFieldValues(valueOptions: UpdateFieldValueOptions[]) {

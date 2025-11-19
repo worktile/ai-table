@@ -103,6 +103,7 @@ import {
     AITableField,
     AITableFieldOption,
     AITableFieldType,
+    CopyRecordOptions,
     DragEndData,
     DragType,
     SetFieldStatTypeOptions,
@@ -337,6 +338,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         },
         addRecord: (data: AddRecordOptions) => {
             this.addRecord(data);
+        },
+        copyRecords: (data: CopyRecordOptions) => {
+            this.copyRecords(data);
         }
     };
 
