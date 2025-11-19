@@ -25,11 +25,6 @@ import { AITableCommonTriggerSource, AITableGridCellRenderSchema } from '../../t
     imports: [CommonModule],
     template: `
         <div class="ai-dynamic-cell-editor-wrapper">
-            @if (!cellValue()) {
-                <div class="empty-cell-placeholder">
-                    <span class="placeholder-text">空</span>
-                </div>
-            }
             <ng-container #editorHost></ng-container>
         </div>
     `,
