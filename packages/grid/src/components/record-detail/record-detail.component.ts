@@ -40,7 +40,8 @@ import {
     getNextRecordByActiveCell,
     getPreviousRecordByActiveCell,
     selectCells,
-    setActiveCell
+    setActiveCell,
+    transformToCellText
 } from '../../utils';
 import { AITableGridCellRenderSchema } from '../../types';
 
@@ -250,21 +251,20 @@ export class RecordDetailComponent implements OnInit {
 
     private formatCellValue(value: any, field: AITableField): string {
         if (value === null || value === undefined) return '';
-
+        const transformValue = transformToCellText(value, { aiTable: this.aiTable(), field })
         switch (field.type) {
             case AITableFieldType.text:
             case AITableFieldType.richText:
-                return value?.toString() || '';
             case AITableFieldType.number:
-                return value?.toString() || '';
+                return transformValue;
             case AITableFieldType.select:
-                return Array.isArray(value)
-                    ? value.map((v) => (field.settings as SelectSettings)?.options?.find((o) => o._id === v)?.text || v).join(', ')
-                    : value?.text || value;
+                return Array.isArray(transformValue)
+                    ? transformValue.map((v) => (field.settings as SelectSettings)?.options?.find((o) => o._id === v)?.text || v).join(', ')
+                    : transformValue?.text || transformValue;
             case AITableFieldType.date:
-                return value ? new Date(value).toLocaleString() : '';
+                return transformValue ? new Date(transformValue).toLocaleString() : '';
             default:
-                return value?.toString() || '';
+                return transformValue;
         }
     }
 }
