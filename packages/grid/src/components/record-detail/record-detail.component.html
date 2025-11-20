@@ -8,13 +8,13 @@
             <button
                 thyButton="link-secondary"
                 thySize="md"
-                [disabled]="!recordPosition()?.hasPrevious"
+                [disabled]="!recordNavigation()?.hasPrevious"
                 (click)="previousRecord()"
                 title="上一条"
             >
                 <thy-icon thyIconName="angle-up"></thy-icon>
             </button>
-            <button thyButton="link-secondary" thySize="md" [disabled]="!recordPosition()?.hasNext" (click)="nextRecord()" title="下一条">
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()" title="下一条">
                 <thy-icon thyIconName="angle-down"></thy-icon>
             </button>
         </div>
@@ -62,7 +62,7 @@
                             <thy-icon thyIconName="more"></thy-icon>
                         </button>
 
-                        <ng-template #fieldOperationsMenuTemp>
+                        <ng-template #fieldOperationsMenuTemplate>
                             @if (fieldOperationsTemplate()) {
                                 <ng-container
                                     *ngTemplateOutlet="fieldOperationsTemplate()!; context: { $implicit: { field: field } }"
@@ -72,14 +72,14 @@
                     </div>
                 </div>
 
-                <div class="dynamic-cell-editor" (click)="onFieldClick(field._id)">
+                <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
                     <ai-dynamic-cell-editor
                         [aiTable]="aiTable()"
                         [fieldId]="field._id"
                         [recordId]="currentRecordId()"
                         [references]="references()"
                         [customCellEditors]="customCellEditors()"
-                        (updateFieldValues)="onFieldValueChange($event)"
+                        (updateFieldValues)="fieldValueChange($event)"
                     >
                     </ai-dynamic-cell-editor>
                 </div>

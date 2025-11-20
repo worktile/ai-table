@@ -21,13 +21,10 @@ export interface RecordDetailConfig {
 
     readonly origin?: HTMLElement;
 
-    // 自定义字段编辑器
     readonly customCellEditors?: Record<AITableFieldType | string, AITableGridCellRenderSchema>;
 
-    // 头部更多菜单自定义模板
     readonly headerMoreMenuTemplate?: TemplateRef<any>;
 
-    // 字段操作菜单自定义模板
     readonly fieldOperationsTemplate?: TemplateRef<any>;
 }
 

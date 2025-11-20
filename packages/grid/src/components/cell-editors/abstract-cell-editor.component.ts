@@ -4,7 +4,6 @@ import { AITable, AITableQueries } from '../../core';
 import { AITableField, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
 import { AI_TABLE_RECORD_HEIGHT_LEVELS } from '../../constants';
 import { coerceBooleanProperty } from 'ngx-tethys/util';
-import { AITableCommonTriggerSource } from '../../types';
 
 @Component({
     selector: 'abstract-edit-cell',
@@ -23,8 +22,6 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
     recordHeight = input<number>(AI_TABLE_RECORD_HEIGHT_LEVELS.low);
 
     autoFocus = input(true, { transform: coerceBooleanProperty });
-
-    source = input<AITableCommonTriggerSource>('grid');
 
     updateFieldValues = output<UpdateFieldValueOptions<TValue>[]>();
 

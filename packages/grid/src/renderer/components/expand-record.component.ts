@@ -3,16 +3,9 @@ import { KoContainer } from '../../angular-konva';
 import { AITable } from '../../core';
 import { AITableIcon } from './icon.component';
 import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
-import { AITableIconConfig, AITableRowType } from '../../types';
+import { AITableExpandRecordConfig, AITableIconConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import { AI_TABLE_EXPAND_RECORD_ICON } from '../../constants/table';
-
-export interface AITableExpandRecordConfig {
-    aiTable: AITable;
-    coordinate: any;
-    rowStartIndex: number;
-    rowStopIndex: number;
-}
 
 @Component({
     selector: 'ai-table-expand-record',

@@ -14,7 +14,6 @@ import {
     scrollToMatchedCell,
     setCollapseDisabled,
     AI_TABLE_EXPAND_RECORD_ICON,
-    AITableCommonTriggerSource,
     RecordDetailService
 } from '@ai-table/grid';
 import {
@@ -247,7 +246,7 @@ export class DemoTableContent {
                     }
                 }
             },
-            fieldMenus: (aiTable: AITable, source?: AITableCommonTriggerSource) => {
+            fieldMenus: (aiTable: AITable) => {
                 return [
                     { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {
@@ -255,9 +254,9 @@ export class DemoTableContent {
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
-                    freezeToThisColumn(this.aiTable, source),
-                    restoreDefaultFrozenColumn(this.aiTable, source),
-                    { ...DividerMenuItem, hidden: () => readonly || source === 'record-detail' },
+                    freezeToThisColumn(this.aiTable),
+                    restoreDefaultFrozenColumn(this.aiTable),
+                    { ...DividerMenuItem, hidden: () => readonly},
                     {
                         type: 'sortByAsc',
                         name: (field: AITableField) => {
@@ -282,7 +281,6 @@ export class DemoTableContent {
                             return null;
                         },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: () => source === 'record-detail'
                     },
                     {
                         type: 'sortByDesc',
@@ -308,17 +306,33 @@ export class DemoTableContent {
                             return null;
                         },
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: () => source === 'record-detail'
                     },
                     {
                         type: 'filterFields',
                         name: '按本列筛选',
                         icon: 'filter-line',
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: (aiTable: AITable, field: Signal<AITableField>) => source === 'record-detail',
                         disabled: (aiTable: AITable, field: Signal<AITableField>) => false
                     },
-                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField || source === 'record-detail' },
+                    { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
+                    {
+                        ...buildRemoveFieldItem(aiTable, () => {
+                            const member = 'member_03';
+                            const time = new Date().getTime();
+                            return { updated_at: time, updated_by: member };
+                        }),
+                        hidden: () => readonly || onlyOneField
+                    }
+                ];
+            },
+            recordDetailFieldMenus: (aiTable: AITable) => {
+                return [
+                    { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
+                    {
+                        ...CopyFieldPropertyItem(aiTable, this.actions),
+                        hidden: () => readonly
+                    } as any,
+                    { ...DividerMenuItem, hidden: () => readonly },
                     {
                         ...buildRemoveFieldItem(aiTable, () => {
                             const member = 'member_03';

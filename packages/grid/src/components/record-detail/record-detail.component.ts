@@ -71,13 +71,10 @@ export class RecordDetailComponent implements OnInit {
 
     readonly actions = input<AITableActions>();
 
-    // 自定义cell编辑组件
     readonly customCellEditors = input<Record<AITableFieldType | string, AITableGridCellRenderSchema>>();
 
-    // 自定义更多菜单模板
     readonly headerMoreMenuTemplate = input<TemplateRef<any>>();
 
-    // 自定义字段操作模板
     readonly fieldOperationsTemplate = input<TemplateRef<any>>();
 
     readonly recordIdChange = output<string>();
@@ -90,7 +87,7 @@ export class RecordDetailComponent implements OnInit {
         return internalId || inputId;
     });
 
-    readonly fieldOperationsMenuTemp = viewChild<TemplateRef<any>>('fieldOperationsMenuTemp');
+    readonly fieldOperationsMenuTemplate = viewChild<TemplateRef<any>>('fieldOperationsMenuTemplate');
 
     private slideRef = inject(ThySlideRef);
     private thyPopover = inject(ThyPopover);
@@ -120,14 +117,14 @@ export class RecordDetailComponent implements OnInit {
         return this.formatCellValue(cellValue, firstField) || '未命名记录';
     });
 
-    recordPosition = computed(() => {
+    recordNavigation = computed(() => {
         return getRecordNavigationInfo(this.aiTable(), this.currentRecordId());
     });
 
     fieldMenus = computed(() => {
-        const fieldMenusFn = this.aiTable()?.context?.aiFieldConfig()?.fieldMenus;
+        const fieldMenusFn = this.aiTable()?.context?.aiFieldConfig()?.recordDetailFieldMenus;
         if (fieldMenusFn && this.aiTable()) {
-            return fieldMenusFn(this.aiTable(), 'record-detail');
+            return fieldMenusFn(this.aiTable());
         }
         return [];
     });
@@ -175,7 +172,7 @@ export class RecordDetailComponent implements OnInit {
         this.close();
     }
 
-    onFieldClick(fieldId: string): void {
+    fieldClick(fieldId: string): void {
         this.activateField(fieldId);
 
         setActiveCell(this.aiTable(), [this.currentRecordId(), fieldId]);
@@ -193,7 +190,7 @@ export class RecordDetailComponent implements OnInit {
         const origin = e.target as HTMLElement;
         const position = origin.getBoundingClientRect();
         this.thyPopover.open(
-            this.fieldOperationsTemplate() ? (this.fieldOperationsMenuTemp() as ComponentTypeOrTemplateRef<any>) : AITableFieldMenu,
+            this.fieldOperationsTemplate() ? (this.fieldOperationsMenuTemplate() as ComponentTypeOrTemplateRef<any>) : AITableFieldMenu,
             {
                 origin,
                 placement: 'bottomRight',
@@ -238,7 +235,7 @@ export class RecordDetailComponent implements OnInit {
         }
     }
 
-    onFieldValueChange(options: UpdateFieldValueOptions[]): void {
+    fieldValueChange(options: UpdateFieldValueOptions[]): void {
         this.actions()?.updateFieldValues?.(options);
     }
 

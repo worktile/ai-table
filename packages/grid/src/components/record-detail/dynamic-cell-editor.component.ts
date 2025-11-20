@@ -15,9 +15,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { AITable, AITableQueries } from '../../core';
 import { GRID_CELL_EDITOR_MAP } from '../cell-editors';
-import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.component';
 import { AITableFieldType, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
-import { AITableCommonTriggerSource, AITableGridCellRenderSchema } from '../../types';
+import { AITableGridCellRenderSchema } from '../../types';
+import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.component';
 
 @Component({
     selector: 'ai-dynamic-cell-editor',
@@ -55,7 +55,6 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
         effect(() => {
             this.recordId();
             this.fieldId();
-            // 重新创建编辑器
             this.createEditorComponent();
         });
     }
@@ -86,7 +85,6 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
             this.editorComponentRef!.setInput('recordId', this.recordId());
             this.editorComponentRef!.setInput('references', this.references());
             this.editorComponentRef!.setInput('autoFocus', false);
-            this.editorComponentRef!.setInput('source', 'record-detail' as AITableCommonTriggerSource);
 
             instance.updateFieldValues.subscribe((options: UpdateFieldValueOptions[]) => {
                 this.updateFieldValues.emit(options);

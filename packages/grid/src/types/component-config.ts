@@ -173,3 +173,10 @@ export enum AITableMouseDownType {
     Center = 1,
     Right = 2
 }
+
+export interface AITableExpandRecordConfig {
+    aiTable: AITable;
+    coordinate: any;
+    rowStartIndex: number;
+    rowStopIndex: number;
+}
