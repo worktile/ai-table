@@ -11,8 +11,6 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
-import { CdkVirtualForOf, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
 import { ThyButton } from 'ngx-tethys/button';
 import { ThyIcon } from 'ngx-tethys/icon';
 import { ThyPopover, ThyPopoverDirective } from 'ngx-tethys/popover';
@@ -45,17 +43,7 @@ import {
 
 @Component({
     selector: 'ai-record-detail',
-    imports: [
-        CdkVirtualScrollViewport,
-        CdkVirtualForOf,
-        ThyButton,
-        ThyIcon,
-        ThyDivider,
-        ThyPopoverDirective,
-        ThyDropdownMenuItemDirective,
-        DynamicCellEditorComponent,
-        CdkFixedSizeVirtualScroll
-    ],
+    imports: [ThyButton, ThyIcon, ThyDivider, ThyPopoverDirective, ThyDropdownMenuItemDirective, DynamicCellEditorComponent],
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

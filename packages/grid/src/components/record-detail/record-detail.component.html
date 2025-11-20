@@ -40,41 +40,42 @@
     </div>
 
     <div class="record-detail-body">
-        <cdk-virtual-scroll-viewport class="cell-list-viewport" [itemSize]="80">
-            <div
-                *cdkVirtualFor="let field of fields()"
-                class="px-5 pt-4 cell-item"
-                [class.active]="activeFieldId === field._id"
-                (mouseenter)="showFieldMenu(field._id)"
-                (mouseleave)="hideFieldMenu(field._id)"
-            >
-                <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
-                    <span class="font-size-base cell-name">{{ field.name }}</span>
+        <div class="cell-list-viewport">
+            @for (field of fields(); track field._id) {
+                <div
+                    class="px-5 pt-4 cell-item"
+                    [class.active]="activeFieldId === field._id"
+                    (mouseenter)="showFieldMenu(field._id)"
+                    (mouseleave)="hideFieldMenu(field._id)"
+                >
+                    <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
+                        <span class="font-size-base cell-name">{{ field.name }}</span>
 
-                    <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
-                        <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
-                            <thy-icon thyIconName="more"></thy-icon>
-                        </button>
+                        <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
+                            <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
+                                <thy-icon thyIconName="more"></thy-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
+                        <ai-dynamic-cell-editor
+                            [aiTable]="aiTable()"
+                            [fieldId]="field._id"
+                            [recordId]="currentRecordId()"
+                            [references]="references()"
+                            (updateFieldValues)="fieldValueChange($event)"
+                        >
+                        </ai-dynamic-cell-editor>
                     </div>
                 </div>
-
-                <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
-                    <ai-dynamic-cell-editor
-                        [aiTable]="aiTable()"
-                        [fieldId]="field._id"
-                        [recordId]="currentRecordId()"
-                        [references]="references()"
-                        (updateFieldValues)="fieldValueChange($event)"
-                    >
-                    </ai-dynamic-cell-editor>
+                <div class="py-4 px-5">
+                    <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
+                        <thy-icon thyIconName="plus"></thy-icon>
+                        <span>新增字段</span>
+                    </button>
                 </div>
-            </div>
-            <div class="py-4 px-5">
-                <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
-                    <thy-icon thyIconName="plus"></thy-icon>
-                    <span>新增字段</span>
-                </button>
-            </div>
-        </cdk-virtual-scroll-viewport>
+            }
+        </div>
     </div>
 </div>

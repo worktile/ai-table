@@ -36,17 +36,12 @@
 
 .record-detail-body {
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
     padding: 8px 0;
 
     .cell-list-viewport {
         height: 100%;
         width: 100%;
-        &::ng-deep {
-            .cdk-virtual-scroll-content-wrapper {
-                width: 100%;
-            }
-        }
     }
 
     .cell-item {
