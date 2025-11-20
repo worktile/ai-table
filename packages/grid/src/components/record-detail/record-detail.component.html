@@ -25,18 +25,12 @@
             </button>
 
             <ng-template #headerMoreMenu>
-                @if (headerMoreMenuTemplate()) {
-                    <ng-container
-                        *ngTemplateOutlet="headerMoreMenuTemplate()!; context: { $implicit: { recordId: currentRecordId() } }"
-                    ></ng-container>
-                } @else {
-                    <div class="thy-dropdown-menu">
-                        <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
-                            <thy-icon thyIconName="trash"></thy-icon>
-                            <span>删除</span>
-                        </a>
-                    </div>
-                }
+                <div class="thy-dropdown-menu">
+                    <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
+                        <thy-icon thyIconName="trash"></thy-icon>
+                        <span>删除</span>
+                    </a>
+                </div>
             </ng-template>
 
             <button thyButton="link-secondary" thySize="md" (click)="close()" title="关闭">
@@ -61,14 +55,6 @@
                         <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
                             <thy-icon thyIconName="more"></thy-icon>
                         </button>
-
-                        <ng-template #fieldOperationsMenuTemplate>
-                            @if (fieldOperationsTemplate()) {
-                                <ng-container
-                                    *ngTemplateOutlet="fieldOperationsTemplate()!; context: { $implicit: { field: field } }"
-                                ></ng-container>
-                            }
-                        </ng-template>
                     </div>
                 </div>
 
@@ -78,7 +64,6 @@
                         [fieldId]="field._id"
                         [recordId]="currentRecordId()"
                         [references]="references()"
-                        [customCellEditors]="customCellEditors()"
                         (updateFieldValues)="fieldValueChange($event)"
                     >
                     </ai-dynamic-cell-editor>

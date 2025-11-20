@@ -18,9 +18,15 @@ import { AITableActions, FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
 import { CoverCellBase } from '../renderer';
+import { AbstractEditCellEditor } from '../components';
 
-export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
-    editor?: any;
+export interface AITableGridCellRenderSchema<
+    TR extends AITableReferences = AITableReferences,
+    TEditorValue = unknown,
+    TEditorField extends AITableField = AITableField
+> {
+    editor?: AbstractEditCellEditor<TEditorValue, TEditorField>;
+    recordCellEditor?: AbstractEditCellEditor<TEditorValue, TEditorField>;
     toText?: (field: AITableField, value: FieldValue) => any;
     toFieldValue?: (text: string, value: FieldValue) => any;
 }

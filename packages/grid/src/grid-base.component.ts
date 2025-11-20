@@ -31,7 +31,8 @@ import {
     SetFieldStatTypeOptions,
     SetFieldWidthOptions,
     UpdateFieldValueOptions,
-    CopyRecordOptions
+    CopyRecordOptions,
+    IdPath
 } from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
@@ -95,6 +96,8 @@ export class AITableGridBase implements OnInit {
     aiTableInitialized = output<AITable>();
 
     aiAddRecord = output<AddRecordOptions>();
+
+    aiRemoveRecord = output<IdPath[]>();
 
     aiAddField = output<AddFieldOptions>();
 

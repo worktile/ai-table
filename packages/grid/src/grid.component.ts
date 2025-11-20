@@ -107,6 +107,7 @@ import {
     CopyRecordOptions,
     DragEndData,
     DragType,
+    IdPath,
     SetFieldStatTypeOptions,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
@@ -115,6 +116,7 @@ import { ThyIcon } from 'ngx-tethys/icon';
 import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
 import _ from 'lodash';
+import { RecordDetailService } from './services';
 
 @Component({
     selector: 'ai-table-grid',
@@ -124,7 +126,7 @@ import _ from 'lodash';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService, RecordDetailService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
@@ -148,6 +150,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private notifyService = inject(ThyNotifyService);
 
     private scrollControllerService = inject(AITableScrollControllerService);
+
+    private recordDetailService = inject(RecordDetailService);
 
     private isPopoverOpen = false;
 
@@ -342,6 +346,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         },
         copyRecords: (data: CopyRecordOptions) => {
             this.copyRecords(data);
+        },
+        removeRecord: (data: IdPath) => {
+            this.aiRemoveRecord.emit([data]);
         }
     };
 
@@ -828,6 +835,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     this.aiRowGroupCollapseClick.emit(groupId!);
                 }
                 break;
+            }
+            case AI_TABLE_EXPAND_RECORD_ICON: {
+                this.recordDetailService.open({
+                    viewContainerRef: this.viewContainerRef,
+                    aiTable: this.aiTable,
+                    recordId: targetNameDetail.recordId!,
+                    references: this.aiReferences(),
+                    actions: this.actions
+                });
             }
         }
         return;

@@ -25,7 +25,7 @@
         <a thyAction class="mb-2" thyIcon="redo" href="javascript:;" (click)="redo()" [thyDisabled]="!canRedo()"
             >重做 {{ canRedoCount() }}</a
         >
-        <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecord()">删除行</a>
+        <a thyAction class="mb-2" thyIcon="trash" href="javascript:;" (click)="removeRecordBySelection()">删除行</a>
         <a thyAction class="mb-2" thyIcon="search" href="javascript:;" (click)="openFindPopover($event)"> 查找 </a>
         <thy-dropdown-menu #rowHeightMenu>
             <a
@@ -71,6 +71,7 @@
             [aiRecordHeight]="tableService.rowHeight()"
             (aiAddRecord)="addRecord($event)"
             (aiAddField)="addField($event)"
+            (aiRemoveRecord)="removeRecord($event)"
             (aiCopyRecords)="copyRecords($event)"
             (aiMoveField)="dragMoveField($event)"
             (aiUpdateFieldValues)="updateFieldValues($event)"

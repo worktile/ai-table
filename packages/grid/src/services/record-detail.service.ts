@@ -18,14 +18,6 @@ export interface RecordDetailConfig {
     readonly references: AITableReferences;
 
     readonly actions: AITableActions;
-
-    readonly origin?: HTMLElement;
-
-    readonly customCellEditors?: Record<AITableFieldType | string, AITableGridCellRenderSchema>;
-
-    readonly headerMoreMenuTemplate?: TemplateRef<any>;
-
-    readonly fieldOperationsTemplate?: TemplateRef<any>;
 }
 
 @Injectable()
@@ -42,7 +34,6 @@ export class RecordDetailService {
         }
         this.config = config;
         this.currentSlideRef = this.thySlide.open(RecordDetailComponent, {
-            origin: config.origin,
             from: 'right',
             width: '480px',
             hasBackdrop: false,
@@ -51,10 +42,7 @@ export class RecordDetailService {
                 aiTable: config.aiTable,
                 recordId: config.recordId,
                 references: config.references,
-                actions: config.actions,
-                customCellEditors: config.customCellEditors,
-                headerMoreMenuTemplate: config.headerMoreMenuTemplate,
-                fieldOperationsTemplate: config.fieldOperationsTemplate
+                actions: config.actions
             }
         });
         if (this.currentSlideRef) {
@@ -89,13 +77,11 @@ export class RecordDetailService {
     private isClickInsideTableOrPanel(event: MouseEvent, viewContainerRef: ViewContainerRef): boolean {
         const target = event.target as HTMLElement;
 
-        // 检查是否点击在表格内
-        const tableElement = viewContainerRef.element.nativeElement.querySelector('.ai-table-grid');
+        const tableElement = viewContainerRef.element.nativeElement;
         if (tableElement && tableElement.contains(target)) {
             return true;
         }
 
-        // 检查 CDK overlay 容器（用于处理弹窗、popover）
         const overlayContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = 0; i < overlayContainers.length; i++) {
             if (overlayContainers[i].contains(target)) {

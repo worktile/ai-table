@@ -31,7 +31,6 @@ import { DynamicCellEditorComponent } from './dynamic-cell-editor.component';
 import { AITableFieldSetting } from '../field-setting/field-setting.component';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
-import { ComponentTypeOrTemplateRef } from 'ngx-tethys/core';
 import {
     AITableActions,
     clearSelection,
@@ -43,22 +42,20 @@ import {
     setActiveCell,
     transformToCellText
 } from '../../utils';
-import { AITableGridCellRenderSchema } from '../../types';
 
 @Component({
     selector: 'ai-record-detail',
     imports: [
-    NgTemplateOutlet,
-    CdkVirtualScrollViewport,
-    CdkVirtualForOf,
-    ThyButton,
-    ThyIcon,
-    ThyDivider,
-    ThyPopoverDirective,
-    ThyDropdownMenuItemDirective,
-    DynamicCellEditorComponent,
-    CdkFixedSizeVirtualScroll
-],
+        CdkVirtualScrollViewport,
+        CdkVirtualForOf,
+        ThyButton,
+        ThyIcon,
+        ThyDivider,
+        ThyPopoverDirective,
+        ThyDropdownMenuItemDirective,
+        DynamicCellEditorComponent,
+        CdkFixedSizeVirtualScroll
+    ],
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -68,12 +65,6 @@ export class RecordDetailComponent implements OnInit {
     readonly references = input.required<AITableReferences>();
 
     readonly actions = input<AITableActions>();
-
-    readonly customCellEditors = input<Record<AITableFieldType | string, AITableGridCellRenderSchema>>();
-
-    readonly headerMoreMenuTemplate = input<TemplateRef<any>>();
-
-    readonly fieldOperationsTemplate = input<TemplateRef<any>>();
 
     readonly recordIdChange = output<string>();
 
@@ -187,21 +178,18 @@ export class RecordDetailComponent implements OnInit {
     fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
         const origin = e.target as HTMLElement;
         const position = origin.getBoundingClientRect();
-        this.thyPopover.open(
-            this.fieldOperationsTemplate() ? (this.fieldOperationsMenuTemplate() as ComponentTypeOrTemplateRef<any>) : AITableFieldMenu,
-            {
+        this.thyPopover.open(AITableFieldMenu, {
+            origin,
+            placement: 'bottomRight',
+            manualClosure: true,
+            initialState: {
+                aiTable: this.aiTable(),
+                fieldId,
+                fieldMenus: this.fieldMenus(),
                 origin,
-                placement: 'bottomRight',
-                manualClosure: true,
-                initialState: {
-                    aiTable: this.aiTable(),
-                    fieldId,
-                    fieldMenus: this.fieldMenus(),
-                    origin,
-                    position
-                }
+                position
             }
-        );
+        });
     }
 
     addNewField(e: MouseEvent): void {
@@ -251,7 +239,7 @@ export class RecordDetailComponent implements OnInit {
 
     private formatCellValue(value: any, field: AITableField): string {
         if (value === null || value === undefined) return '';
-        const transformValue = transformToCellText(value, { aiTable: this.aiTable(), field })
+        const transformValue = transformToCellText(value, { aiTable: this.aiTable(), field });
         switch (field.type) {
             case AITableFieldType.text:
             case AITableFieldType.richText:

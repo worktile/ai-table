@@ -72,7 +72,7 @@ const initViews: AITableView[] = [
         ThySwitch
     ],
     templateUrl: './table.component.html',
-    providers: [TableService, ThySlideService, RecordDetailService],
+    providers: [TableService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'

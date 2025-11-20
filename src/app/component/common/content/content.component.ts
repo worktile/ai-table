@@ -155,8 +155,6 @@ export class MenuAddRecordsComponent {
 export class DemoTableContent {
     private datePickerFormatPipe = new ThyDatePickerFormatPipe();
 
-    private viewContainerRef = inject(ViewContainerRef);
-
     aITableRowHeight = AITableRecordHeightType;
 
     searchKeywords = '';
@@ -388,9 +386,6 @@ export class DemoTableContent {
         addField: (data: AddFieldOptions) => {
             this.addField(data);
         },
-        removeRecord: (data: IdPath) => {
-            Actions.removeRecord(this.aiTable, data);
-        }
     };
 
     contextMenuItems = (aiTable: AITable) => {
@@ -454,8 +449,6 @@ export class DemoTableContent {
     destroyRef = inject(DestroyRef);
 
     thyPopover = inject(ThyPopover);
-
-    recordDetailService = inject(RecordDetailService);
 
     references = signal(getReferences());
 
@@ -521,14 +514,6 @@ export class DemoTableContent {
                     alert('打开工单详情');
                 }
             }
-        } else if (e.targetNameDetail.targetName === AI_TABLE_EXPAND_RECORD_ICON) {
-            this.recordDetailService.open({
-                viewContainerRef: this.viewContainerRef,
-                aiTable: this.aiTable,
-                recordId: e.targetNameDetail.recordId!,
-                references: this.references(),
-                actions: this.actions
-            });
         }
     }
 
@@ -591,6 +576,12 @@ export class DemoTableContent {
         addFields(this.aiTable, data);
     }
 
+    removeRecord(data: IdPath[]) {
+        data.forEach(idPath => {
+            Actions.removeRecord(this.aiTable as AIViewTable, idPath);
+        });
+    }
+
     dragMoveField(data: MoveFieldOptions) {
         moveFields(this.aiTable, data);
     }
@@ -647,7 +638,7 @@ export class DemoTableContent {
         this.tableService.setAITable(this.aiTable);
     }
 
-    removeRecord() {
+    removeRecordBySelection() {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
         recordIds.forEach((id) => {
             Actions.removeRecord(this.aiTable, [id]);
