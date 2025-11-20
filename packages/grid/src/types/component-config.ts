@@ -176,7 +176,7 @@ export enum AITableMouseDownType {
 
 export interface AITableExpandRecordConfig {
     aiTable: AITable;
-    coordinate: any;
+    coordinate: Coordinate;
     rowStartIndex: number;
     rowStopIndex: number;
 }

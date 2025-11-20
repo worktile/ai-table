@@ -29,8 +29,6 @@ export class AITableExpandRecord {
 
         const { rowIndex: pointRowIndex } = context.pointPosition();
         const row = context.linearRows()[pointRowIndex];
-
-        // 只有当鼠标在某一行上且该行是 record 时才显示图标
         return pointRowIndex >= rowStartIndex && pointRowIndex <= rowStopIndex && row && row.type === AITableRowType.record;
     });
 
