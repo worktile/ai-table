@@ -12,7 +12,9 @@ import {
     AITableGridI18nText,
     CheckboxMenuSort,
     scrollToMatchedCell,
-    setCollapseDisabled
+    setCollapseDisabled,
+    AI_TABLE_EXPAND_RECORD_ICON,
+    RecordDetailService
 } from '@ai-table/grid';
 import {
     Actions,
@@ -41,7 +43,18 @@ import {
     copyRecords,
     CopyRecords
 } from '@ai-table/state';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    input,
+    signal,
+    Signal,
+    ViewContainerRef
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
@@ -84,6 +97,7 @@ import {
     AITableUtilsI18nText,
     SetFieldStatTypeOptions,
     AITableRecordHeightType,
+    IdPath,
     CopyRecordOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
@@ -243,7 +257,7 @@ export class DemoTableContent {
                     { ...DividerMenuItem, hidden: () => readonly },
                     freezeToThisColumn(this.aiTable),
                     restoreDefaultFrozenColumn(this.aiTable),
-                    { ...DividerMenuItem, hidden: () => readonly },
+                    { ...DividerMenuItem, hidden: () => readonly},
                     {
                         type: 'sortByAsc',
                         name: (field: AITableField) => {
@@ -267,7 +281,7 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
                     },
                     {
                         type: 'sortByDesc',
@@ -292,17 +306,34 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
                     },
                     {
                         type: 'filterFields',
                         name: '按本列筛选',
                         icon: 'filter-line',
                         exec: (aiTable: AITable, field: Signal<AITableField>) => {},
-                        hidden: (aiTable: AITable, field: Signal<AITableField>) => false,
                         disabled: (aiTable: AITable, field: Signal<AITableField>) => false
                     },
                     { ...DividerMenuItem, hidden: () => readonly || onlyOneField },
+                    {
+                        ...buildRemoveFieldItem(aiTable, () => {
+                            const member = 'member_03';
+                            const time = new Date().getTime();
+                            return { updated_at: time, updated_by: member };
+                        }),
+                        hidden: () => readonly || onlyOneField
+                    }
+                ];
+            },
+            recordDetailFieldMenus: (aiTable: AITable) => {
+                return [
+                    { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
+                    {
+                        ...CopyFieldPropertyItem(aiTable, this.actions),
+                        hidden: () => readonly
+                    } as any,
+                    { ...DividerMenuItem, hidden: () => readonly },
                     {
                         ...buildRemoveFieldItem(aiTable, () => {
                             const member = 'member_03';
@@ -354,7 +385,7 @@ export class DemoTableContent {
         },
         addField: (data: AddFieldOptions) => {
             this.addField(data);
-        }
+        },
     };
 
     contextMenuItems = (aiTable: AITable) => {
@@ -545,6 +576,12 @@ export class DemoTableContent {
         addFields(this.aiTable, data);
     }
 
+    removeRecord(data: IdPath[]) {
+        data.forEach(idPath => {
+            Actions.removeRecord(this.aiTable as AIViewTable, idPath);
+        });
+    }
+
     dragMoveField(data: MoveFieldOptions) {
         moveFields(this.aiTable, data);
     }
@@ -601,7 +638,7 @@ export class DemoTableContent {
         this.tableService.setAITable(this.aiTable);
     }
 
-    removeRecord() {
+    removeRecordBySelection() {
         const recordIds = [...this.aiTable.selection().selectedRecords.keys()];
         recordIds.forEach((id) => {
             Actions.removeRecord(this.aiTable, [id]);

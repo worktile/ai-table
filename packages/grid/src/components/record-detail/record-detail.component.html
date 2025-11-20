@@ -1,0 +1,81 @@
+<div class="d-flex flex-column ai-record-detail">
+    <div class="d-flex align-items-center justify-content-between px-5 record-detail-header">
+        <span class="record-title" [title]="recordTitle()">
+            {{ recordTitle() }}
+        </span>
+
+        <div class="record-navigation">
+            <button
+                thyButton="link-secondary"
+                thySize="md"
+                [disabled]="!recordNavigation()?.hasPrevious"
+                (click)="previousRecord()"
+                title="上一条"
+            >
+                <thy-icon thyIconName="angle-up"></thy-icon>
+            </button>
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()" title="下一条">
+                <thy-icon thyIconName="angle-down"></thy-icon>
+            </button>
+        </div>
+        <thy-divider [thyVertical]="true"></thy-divider>
+        <div class="header-operations">
+            <button thyButton="link-secondary" thySize="md" [thyPopover]="headerMoreMenu" thyTrigger="click" thyPlacement="bottomRight">
+                <thy-icon thyIconName="list"></thy-icon>
+            </button>
+
+            <ng-template #headerMoreMenu>
+                <div class="thy-dropdown-menu">
+                    <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
+                        <thy-icon thyIconName="trash"></thy-icon>
+                        <span>删除</span>
+                    </a>
+                </div>
+            </ng-template>
+
+            <button thyButton="link-secondary" thySize="md" (click)="close()" title="关闭">
+                <thy-icon thyIconName="close"></thy-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="record-detail-body">
+        <div class="cell-list-viewport">
+            @for (field of fields(); track field._id) {
+                <div
+                    class="px-5 pt-4 cell-item"
+                    [class.active]="activeFieldId === field._id"
+                    (mouseenter)="showFieldMenu(field._id)"
+                    (mouseleave)="hideFieldMenu(field._id)"
+                >
+                    <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
+                        <span class="font-size-base cell-name">{{ field.name }}</span>
+
+                        <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
+                            <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
+                                <thy-icon thyIconName="more"></thy-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
+                        <ai-dynamic-cell-editor
+                            [aiTable]="aiTable()"
+                            [fieldId]="field._id"
+                            [recordId]="currentRecordId()"
+                            [references]="references()"
+                            (updateFieldValues)="fieldValueChange($event)"
+                        >
+                        </ai-dynamic-cell-editor>
+                    </div>
+                </div>
+                <div class="py-4 px-5">
+                    <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
+                        <thy-icon thyIconName="plus"></thy-icon>
+                        <span>新增字段</span>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -30,6 +30,7 @@ import { createActiveCellBorder } from './creations/create-active-cell-border';
 import { AITableFillHandle } from './components/fill-handle.component';
 import { AITableCoverCellEntry } from './components/cover-cell.component';
 import { AITableFieldStats } from './components/field-stat/stats.component';
+import { AITableExpandRecord } from './components/expand-record.component';
 import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
@@ -66,7 +67,8 @@ Konva.pixelRatio = 2;
         AITableFrozenGroups,
         AITableGroups,
         AITableShadow,
-        AITableFrozenGroups
+        AITableFrozenGroups,
+        AITableExpandRecord
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -373,6 +375,17 @@ export class AITableRenderer {
             actions,
             maxRecords,
             keywordsMatchedCells
+        };
+    });
+
+    expandRecordConfig = computed(() => {
+        const { aiTable, coordinate } = this.config();
+        const { rowStartIndex, rowStopIndex } = this.visibleRangeInfo();
+        return {
+            aiTable,
+            coordinate,
+            rowStartIndex,
+            rowStopIndex
         };
     });
 

@@ -15,6 +15,7 @@ import {
     AITableReferences,
     idCreator,
     SetFieldStatTypeOptions,
+    IdPath,
     CopyRecordOptions
 } from '@ai-table/utils';
 import { getGroupLastRecordIndex } from '../group';
@@ -170,6 +171,7 @@ export interface AITableActions {
     addRecord: (data: AddRecordOptions) => void;
     copyRecords: (data: CopyRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
+    removeRecord?: (data: IdPath) => void;
 }
 
 function appendField(aiTable: AITable, originField: AITableField | null, actions: AITableActions) {
