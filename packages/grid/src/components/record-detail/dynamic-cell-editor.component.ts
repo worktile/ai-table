@@ -12,7 +12,6 @@ import {
     effect,
     viewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AITable, AITableQueries } from '../../core';
 import { GRID_CELL_EDITOR_MAP } from '../cell-editors';
 import { AITableFieldType, AITableReferences, UpdateFieldValueOptions } from '@ai-table/utils';
@@ -21,8 +20,6 @@ import { AbstractEditCellEditor } from '../cell-editors/abstract-cell-editor.com
 
 @Component({
     selector: 'ai-dynamic-cell-editor',
-    standalone: true,
-    imports: [CommonModule],
     template: `
         <div class="ai-dynamic-cell-editor-wrapper">
             <ng-container #editorHost></ng-container>

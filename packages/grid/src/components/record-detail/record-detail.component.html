@@ -46,7 +46,7 @@
     </div>
 
     <div class="record-detail-body">
-        <cdk-virtual-scroll-viewport class="cell-list-viewport" itemSize="80">
+        <cdk-virtual-scroll-viewport class="cell-list-viewport" [itemSize]="80">
             <div
                 *cdkVirtualFor="let field of fields()"
                 class="px-5 pt-4 cell-item"

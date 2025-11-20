@@ -1,11 +1,8 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ViewContainerRef,
     computed,
     effect,
     inject,
@@ -14,11 +11,11 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ThyButtonModule } from 'ngx-tethys/button';
-import { ThyIconModule } from 'ngx-tethys/icon';
-import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { NgTemplateOutlet } from '@angular/common';
+import { CdkVirtualForOf, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
+import { ThyButton } from 'ngx-tethys/button';
+import { ThyIcon } from 'ngx-tethys/icon';
+import { ThyPopover, ThyPopoverDirective } from 'ngx-tethys/popover';
 import { ThySlideRef } from 'ngx-tethys/slide';
 import { AITable, AITableQueries, createDefaultField } from '../../core';
 import {
@@ -49,19 +46,19 @@ import { AITableGridCellRenderSchema } from '../../types';
 
 @Component({
     selector: 'ai-record-detail',
-    standalone: true,
     imports: [
-        CommonModule,
-        ScrollingModule,
-        ThyButtonModule,
-        ThyIconModule,
-        ThyDivider,
-        ThyPopoverModule,
-        ThyDropdownMenuItemDirective,
-        DynamicCellEditorComponent
-    ],
+    NgTemplateOutlet,
+    CdkVirtualScrollViewport,
+    CdkVirtualForOf,
+    ThyButton,
+    ThyIcon,
+    ThyDivider,
+    ThyPopoverDirective,
+    ThyDropdownMenuItemDirective,
+    DynamicCellEditorComponent,
+    CdkFixedSizeVirtualScroll
+],
     templateUrl: './record-detail.component.html',
-    styleUrls: ['./record-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecordDetailComponent implements OnInit {
