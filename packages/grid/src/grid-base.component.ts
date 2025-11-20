@@ -30,7 +30,8 @@ import {
     MoveRecordOptions,
     SetFieldStatTypeOptions,
     SetFieldWidthOptions,
-    UpdateFieldValueOptions
+    UpdateFieldValueOptions,
+    CopyRecordOptions
 } from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
@@ -96,6 +97,8 @@ export class AITableGridBase implements OnInit {
     aiAddRecord = output<AddRecordOptions>();
 
     aiAddField = output<AddFieldOptions>();
+
+    aiCopyRecords = output<CopyRecordOptions>();
 
     aiMoveField = output<MoveFieldOptions>();
 
@@ -175,6 +178,15 @@ export class AITableGridBase implements OnInit {
             return;
         }
         this.aiAddRecord.emit(options || {});
+    }
+
+    copyRecords(options: CopyRecordOptions) {
+        const records = this.aiTable.records();
+        const recordCount = records.length;
+        if (this.aiMaxRecords() && recordCount >= this.aiMaxRecords()!) {
+            return;
+        }
+        this.aiCopyRecords.emit(options);
     }
 
     toggleSelectRecord(recordId: string) {

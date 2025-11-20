@@ -15,7 +15,8 @@ import {
     AITableReferences,
     idCreator,
     SetFieldStatTypeOptions,
-    IdPath
+    IdPath,
+    CopyRecordOptions
 } from '@ai-table/utils';
 import { getGroupLastRecordIndex } from '../group';
 const aiTableAttributePattern = new RegExp(`${aiTableFragmentAttribute}="(.+?)"`, 'm');
@@ -168,6 +169,7 @@ export interface AITableActions {
     setField: (field: AITableField) => void;
     setFieldStatType: (data: SetFieldStatTypeOptions) => void;
     addRecord: (data: AddRecordOptions) => void;
+    copyRecords: (data: CopyRecordOptions) => void;
     addField: (data: AddFieldOptions) => void;
     removeRecord?: (data: IdPath) => void;
 }

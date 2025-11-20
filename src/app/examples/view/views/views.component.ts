@@ -1,6 +1,6 @@
 import { Component, signal, model, inject, TemplateRef } from '@angular/core';
 import { Id, AITableViewRecords, AITableViewFields, AITableView } from '@ai-table/utils';
-import { addView, removeView, Actions, AIViewTable } from '@ai-table/state';
+import { addView, removeView, Actions, AIViewTable, insertAtStart, insertAtEnd, insertBetween } from '@ai-table/state';
 import { ThyNav, ThyNavItemDirective } from 'ngx-tethys/nav';
 import { ThyAction } from 'ngx-tethys/action';
 import { FormsModule } from '@angular/forms';
@@ -71,30 +71,39 @@ export class ViewsExample {
     }
 
     sortViews(event: CdkDragDrop<AITableView[]>) {
+        if (this.viewService.views().some((view) => view.position === null || view.position === undefined)) {
+            Actions.resetAllViewsPositions(this.aiTable());
+        }
+
         const previousIndex = event.previousIndex;
         const currentIndex = event.currentIndex;
         if (previousIndex === currentIndex) {
             return;
         }
 
-        const views = this.viewService.sortedViews();
+        let views = this.viewService.sortedViews();
         if (previousIndex < 0 || previousIndex >= views.length || currentIndex < 0 || currentIndex >= views.length) {
             return;
         }
 
         let newPosition: number;
         if (currentIndex === 0) {
-            const firstViewPosition = views[0]?.position;
-            if (firstViewPosition && firstViewPosition > 0) {
-                newPosition = firstViewPosition! / 2;
-            } else {
-                newPosition = firstViewPosition! - 1;
-            }
+            const firstViewPosition = views[0]?.position ?? currentIndex;
+            newPosition = insertAtStart(firstViewPosition)[0];
         } else if (currentIndex === views.length - 1) {
-            newPosition = views[currentIndex].position! + 1;
+            const lastViewPosition = views[currentIndex].position ?? currentIndex;
+            newPosition = insertAtEnd(lastViewPosition)[0];
         } else {
-            const adjacentIndex = previousIndex > currentIndex ? currentIndex - 1 : currentIndex + 1;
-            newPosition = (views[currentIndex].position! + views[adjacentIndex].position!) / 2;
+            const { prevPosition, nextPosition } = this.getPrevAndNextPosition(previousIndex, currentIndex, views);
+            const result = insertBetween(prevPosition, nextPosition);
+            if (result.positions.length) {
+                newPosition = result.positions[0];
+            } else {
+                Actions.resetAllViewsPositions(this.aiTable());
+                views = this.viewService.sortedViews();
+                const { prevPosition, nextPosition } = this.getPrevAndNextPosition(previousIndex, currentIndex, views);
+                newPosition = insertBetween(nextPosition, prevPosition).positions[0];
+            }
         }
 
         const viewId = event.item.data;
@@ -122,5 +131,18 @@ export class ViewsExample {
             .subscribe(() => {
                 this.operateViewId = '';
             });
+    }
+
+    private getPrevAndNextPosition(previousIndex: number, currentIndex: number, views: AITableView[]) {
+        let prevPosition: number;
+        let nextPosition: number;
+        if (previousIndex > currentIndex) {
+            prevPosition = views[currentIndex - 1].position ?? currentIndex - 1;
+            nextPosition = views[currentIndex].position ?? currentIndex;
+        } else {
+            prevPosition = views[currentIndex].position ?? currentIndex;
+            nextPosition = views[currentIndex + 1].position ?? currentIndex + 1;
+        }
+        return { prevPosition, nextPosition };
     }
 }

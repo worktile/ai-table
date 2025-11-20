@@ -199,6 +199,12 @@ export interface AddRecordOptions {
     forGroupId?: string | null;
 }
 
+export interface CopyRecordOptions {
+    recordIds: string[];
+    afterRecordId?: string;
+    beforeRecordId?: string;
+}
+
 export interface AddFieldOptions {
     defaultValue: Partial<AITableField>;
     direction?: Direction;
