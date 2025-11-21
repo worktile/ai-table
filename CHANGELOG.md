@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.2](https://github.com/worktile/ai-table/compare/0.4.1...0.4.2) (2025-11-21)
+
+
+### Bug Fixes
+
+* #WIK-19392 修复动态创建编辑类型错误，支持 injector 参数，以及弹窗详情每个字段都有新增问题 ([#796](https://github.com/worktile/ai-table/issues/796)) ([8b8b649](https://github.com/worktile/ai-table/commit/8b8b6494af2b3aaef6c8a23a6a6369f9800af5c8)), closes [#WIK-19392](https://github.com/worktile/ai-table/issues/WIK-19392)
+
+
+### Features
+
+* #WIK-19367 ai-table 支持复制行 ([#794](https://github.com/worktile/ai-table/issues/794)) ([9e92416](https://github.com/worktile/ai-table/commit/9e92416014ecfe67803b4c719cb4ca87094820d2)), closes [#WIK-19367](https://github.com/worktile/ai-table/issues/WIK-19367) [#WIK-19367](https://github.com/worktile/ai-table/issues/WIK-19367) [#WIK-19367](https://github.com/worktile/ai-table/issues/WIK-19367)
+* #WIK-19388 详情字段图标渲染，更多图标垂直显示 ([#801](https://github.com/worktile/ai-table/issues/801)) ([8113ec4](https://github.com/worktile/ai-table/commit/8113ec48f6bd2fa1c09c79c8b942813943418bcf)), closes [#WIK-19388](https://github.com/worktile/ai-table/issues/WIK-19388)
+* **grid:** #WIK-19176 支持打开 Record 详情和编辑 ([#787](https://github.com/worktile/ai-table/issues/787)) ([a47368f](https://github.com/worktile/ai-table/commit/a47368fd15a1ab185863e8c8ce3e130e83462475)), closes [#WIK-19176](https://github.com/worktile/ai-table/issues/WIK-19176)
+
+
+
 ## [0.4.1](https://github.com/worktile/ai-table/compare/0.4.0...0.4.1) (2025-11-17)
 
 
