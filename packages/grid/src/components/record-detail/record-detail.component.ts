@@ -38,7 +38,8 @@ import {
     getPreviousRecordByActiveCell,
     selectCells,
     setActiveCell,
-    transformToCellText
+    transformToCellText,
+    getFieldIconPath
 } from '../../utils';
 
 @Component({
@@ -105,6 +106,10 @@ export class RecordDetailComponent implements OnInit {
         }
         return [];
     });
+
+    fieldIconPath(field: AITableField) {
+        return getFieldIconPath(field);
+    }
 
     activeFieldId: string | null = null;
 

@@ -1,21 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import {
-    AttachmentPath,
-    ColumnCheckboxFilledPath,
-    ColumnCalendarFilledPath,
-    ColumnLinkOutlinedPath,
-    ColumnMemberFilledPath,
-    ColumnMultipleFillPath,
-    ColumnNumberFilledPath,
-    ColumnProgressFilledPath,
-    ColumnRatingFilledPath,
-    ColumnRichTextFilledPath,
-    ColumnSelectFilledPath,
-    ColumnTextFilledPath
-} from '../../constants';
-import { AITableFieldType, SelectSettings } from '@ai-table/utils';
 import { AITableFieldTypeIconConfig } from '../../types';
 import { AITableIcon } from './icon.component';
+import { getFieldIconPath } from '../../utils/field';
 
 @Component({
     selector: 'ai-table-field-icon',
@@ -28,46 +14,7 @@ export class AITableFieldIcon {
 
     iconConfig = computed(() => {
         const { field, x, y, width, height, fill, path } = this.config();
-        let data = path;
-        switch (field.type) {
-            case AITableFieldType.text:
-                data = ColumnTextFilledPath;
-                break;
-            case AITableFieldType.richText:
-                data = ColumnRichTextFilledPath;
-                break;
-            case AITableFieldType.select:
-                data = (field.settings as SelectSettings)?.is_multiple ? ColumnMultipleFillPath : ColumnSelectFilledPath;
-                break;
-            case AITableFieldType.date:
-            case AITableFieldType.createdAt:
-            case AITableFieldType.updatedAt:
-                data = ColumnCalendarFilledPath;
-                break;
-            case AITableFieldType.number:
-                data = ColumnNumberFilledPath;
-                break;
-            case AITableFieldType.link:
-                data = ColumnLinkOutlinedPath;
-                break;
-            case AITableFieldType.rate:
-                data = ColumnRatingFilledPath;
-                break;
-            case AITableFieldType.member:
-            case AITableFieldType.createdBy:
-            case AITableFieldType.updatedBy:
-                data = ColumnMemberFilledPath;
-                break;
-            case AITableFieldType.progress:
-                data = ColumnProgressFilledPath;
-                break;
-            case AITableFieldType.attachment:
-                data = AttachmentPath;
-                break;
-            case AITableFieldType.checkbox:
-                data = ColumnCheckboxFilledPath;
-                break;
-        }
+        const data = getFieldIconPath(field) || path;
         return {
             x,
             y,
