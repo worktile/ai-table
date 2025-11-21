@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { AfterViewInit, ChangeDetectionStrategy, Component, computed, inject, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyEmptyModule } from 'ngx-tethys/empty';
@@ -20,16 +20,15 @@ import { AITableQueries } from '../../../core';
         class: 'd-block h-100 select-cell-editor'
     },
     imports: [
-        ThySelect,
-        ThyOption,
-        ThyTooltipModule,
-        SelectOptionComponent,
-        CommonModule,
-        ThyEmptyModule,
-        ThyFormModule,
-        FormsModule,
-        ThySelectModule
-    ]
+    ThySelect,
+    ThyOption,
+    ThyTooltipModule,
+    SelectOptionComponent,
+    ThyEmptyModule,
+    ThyFormModule,
+    FormsModule,
+    ThySelectModule
+]
 })
 export class SelectCellEditorComponent extends AbstractEditCellEditor<string[] | string, AITableSelectField> implements AfterViewInit {
     selectOptions = computed(() => {
