@@ -101,7 +101,7 @@ import {
     CopyRecordOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
-import { CommonModule } from '@angular/common';
+
 import { ThyEnterDirective, ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { renderRelationCell } from '../../../custom-field/relation/render';
 import { AITableCellRelationTicket } from '../../../custom-field/relation/hover-render';
@@ -124,7 +124,7 @@ const AITableI18nText: Record<string, string> = {
 @Component({
     selector: 'ai-table-add-input',
     template: ` <thy-input-number [(ngModel)]="modelValue().value" thyStopPropagation></thy-input-number> `,
-    imports: [ThyInputNumber, CommonModule, FormsModule, ThyStopPropagationDirective],
+    imports: [ThyInputNumber, FormsModule, ThyStopPropagationDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuAddRecordsComponent {

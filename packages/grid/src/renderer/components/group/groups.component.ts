@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AITableCellsConfig, AITableGroupStatConfig } from '../../../types';
 import { createGroupCells } from '../../creations/create-groups';
 import { createGroupFieldStats } from '../../creations/create-stats';
@@ -12,7 +12,7 @@ import { AITableFieldStat } from '../field-stat/stat.component';
             <ai-table-field-stat [config]="groupCell.groupStat!"></ai-table-field-stat>
         }
     `,
-    imports: [CommonModule, AITableFieldStat],
+    imports: [AITableFieldStat],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableGroups {
