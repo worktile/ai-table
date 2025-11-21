@@ -1,4 +1,4 @@
-import { Signal, ViewContainerRef, WritableSignal } from '@angular/core';
+import { Injector, Signal, Type, ViewContainerRef, WritableSignal } from '@angular/core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 import {
@@ -25,8 +25,9 @@ export interface AITableGridCellRenderSchema<
     TEditorValue = unknown,
     TEditorField extends AITableField = AITableField
 > {
-    editor?: AbstractEditCellEditor<TEditorValue, TEditorField>;
-    recordCellEditor?: AbstractEditCellEditor<TEditorValue, TEditorField>;
+    editor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
+    recordCellEditor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
+    recordCellEditorInjector?: Injector;
     toText?: (field: AITableField, value: FieldValue) => any;
     toFieldValue?: (text: string, value: FieldValue) => any;
 }
