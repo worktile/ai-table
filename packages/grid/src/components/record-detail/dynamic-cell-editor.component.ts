@@ -71,7 +71,11 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
         try {
             editorHost?.clear();
         } catch (error) {}
-        this.editorComponentRef = editorHost?.createComponent(editorComponent);
+
+        const fieldRenderers = this.aiTable().context?.aiFieldConfig()?.fieldRenderers;
+        this.editorComponentRef = editorHost?.createComponent(editorComponent, {
+            injector: fieldRenderers?.[field.type]?.recordCellEditorInjector
+        });
 
         const instance = this.editorComponentRef!.instance;
         if (instance instanceof AbstractEditCellEditor) {
@@ -95,7 +99,7 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
     }
 
     private getEditorComponent(fieldType: string): any {
-        const customEditors = this.aiTable().context?.aiFieldConfig()?.fieldRenderers
+        const customEditors = this.aiTable().context?.aiFieldConfig()?.fieldRenderers;
         if (customEditors && customEditors[fieldType]?.recordCellEditor) {
             return customEditors[fieldType].recordCellEditor;
         }
