@@ -1,4 +1,4 @@
-import { AITableFieldType, FieldModelBaseMap } from '@ai-table/utils';
+import { AITableField, AITableFieldType, FieldModelBaseMap, SelectSettings } from '@ai-table/utils';
 import { FieldOperable } from './field-operable';
 import {
     AITable,
@@ -14,6 +14,20 @@ import {
     TextField
 } from './model';
 import { CheckboxField } from './model/checkbox';
+import {
+    ColumnTextFilledPath,
+    ColumnRichTextFilledPath,
+    ColumnMultipleFillPath,
+    ColumnSelectFilledPath,
+    ColumnCalendarFilledPath,
+    ColumnNumberFilledPath,
+    ColumnLinkOutlinedPath,
+    ColumnRatingFilledPath,
+    ColumnMemberFilledPath,
+    ColumnProgressFilledPath,
+    AttachmentPath,
+    ColumnCheckboxFilledPath
+} from '../../constants/icon';
 
 export const FieldModelMap: Record<AITableFieldType | string, FieldOperable<unknown, unknown>> = {
     ...FieldModelBaseMap,
@@ -45,4 +59,48 @@ export function selectField(aiTable: AITable, fieldId: string) {
         activeCell: null,
         selectedEndCell: null
     });
+}
+
+export function getFieldIconPath(field: AITableField) {
+    let data: string | null = null;
+    switch (field.type) {
+        case AITableFieldType.text:
+            data = ColumnTextFilledPath;
+            break;
+        case AITableFieldType.richText:
+            data = ColumnRichTextFilledPath;
+            break;
+        case AITableFieldType.select:
+            data = (field.settings as SelectSettings)?.is_multiple ? ColumnMultipleFillPath : ColumnSelectFilledPath;
+            break;
+        case AITableFieldType.date:
+        case AITableFieldType.createdAt:
+        case AITableFieldType.updatedAt:
+            data = ColumnCalendarFilledPath;
+            break;
+        case AITableFieldType.number:
+            data = ColumnNumberFilledPath;
+            break;
+        case AITableFieldType.link:
+            data = ColumnLinkOutlinedPath;
+            break;
+        case AITableFieldType.rate:
+            data = ColumnRatingFilledPath;
+            break;
+        case AITableFieldType.member:
+        case AITableFieldType.createdBy:
+        case AITableFieldType.updatedBy:
+            data = ColumnMemberFilledPath;
+            break;
+        case AITableFieldType.progress:
+            data = ColumnProgressFilledPath;
+            break;
+        case AITableFieldType.attachment:
+            data = AttachmentPath;
+            break;
+        case AITableFieldType.checkbox:
+            data = ColumnCheckboxFilledPath;
+            break;
+    }
+    return data;
 }

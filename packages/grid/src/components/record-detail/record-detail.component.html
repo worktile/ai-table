@@ -49,11 +49,21 @@
                     (mouseleave)="hideFieldMenu(field._id)"
                 >
                     <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
-                        <span class="font-size-base cell-name">{{ field.name }}</span>
-
+                        <div class="d-flex align-items-center cell-label">
+                            <span class="d-flex align-items-center mr-2 cell-icon">
+                                @if (fieldIconPath(field)) {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 16 16">
+                                        <path [attr.d]="fieldIconPath(field)" fill="currentColor"></path>
+                                    </svg>
+                                }
+                            </span>
+                            <span class="d-flex align-items-center font-size-base field-name">
+                                {{ field.name }}
+                            </span>
+                        </div>
                         <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
                             <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
-                                <thy-icon thyIconName="more"></thy-icon>
+                                <thy-icon thyIconName="more-vertical"></thy-icon>
                             </button>
                         </div>
                     </div>
