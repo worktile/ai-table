@@ -1,9 +1,17 @@
-import { closeExpendCell, FieldModelMap, idsCreator, setSelection, shortIdsCreator } from '@ai-table/grid';
+import { closeExpendCell, FieldModelMap, idsCreator, setSelection, shortIdCreator, shortIdsCreator } from '@ai-table/grid';
 import { AIViewTable } from '../../types';
 import { getSortFields } from '../field/sort-fields';
 import { Actions } from '../../action';
 import { checkConditions, getDefaultRecordDataByFilter } from './filter';
-import { AddRecordOptions, AITableRecord, AITableViewFields, FieldValue, AITableRecordCreatedInfo } from '@ai-table/utils';
+import {
+    AddRecordOptions,
+    AITableRecord,
+    AITableViewFields,
+    FieldValue,
+    AITableRecordCreatedInfo,
+    CopyRecordOptions,
+    idCreator
+} from '@ai-table/utils';
 import { getParentGroupValuesByGroupId, getPrevRecordIdByAddGroupId } from './common';
 
 export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, recordCreatedInfo: AITableRecordCreatedInfo) {
@@ -59,6 +67,33 @@ export function addRecords(aiTable: AIViewTable, options: AddRecordOptions, reco
     }
     Actions.addRecords(aiTable, newRecords, options);
     const recentAddRecord = options.beforeRecordId ? newRecords[newRecords.length - 1] : newRecords[0];
+    const activeRecordId = recentAddRecord._id;
+    const activeFieldId = aiTable.gridData().fields[0]._id;
+    closeExpendCell(aiTable);
+    setSelection(aiTable, {
+        selectedRecords: new Set([]),
+        selectedFields: new Set([]),
+        selectedCells: new Set([`${activeRecordId}:${activeFieldId}`]),
+        activeCell: [activeRecordId, activeFieldId]
+    });
+}
+
+export function copyRecords(aiTable: AIViewTable, options: CopyRecordOptions, recordCreatedInfo: AITableRecordCreatedInfo) {
+    const newRecords: AITableRecord[] = [];
+    (options.recordIds || []).forEach((recordId) => {
+        const record = aiTable.recordsMap()[recordId];
+
+        if (record) {
+            newRecords.push({
+                ...record,
+                ...recordCreatedInfo,
+                _id: idCreator(),
+                short_id: shortIdCreator()
+            });
+        }
+    });
+    Actions.addRecords(aiTable, newRecords, options);
+    const recentAddRecord = newRecords[0];
     const activeRecordId = recentAddRecord._id;
     const activeFieldId = aiTable.gridData().fields[0]._id;
     closeExpendCell(aiTable);

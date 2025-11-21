@@ -126,7 +126,7 @@ export const freezeToThisColumn = (aiTable: AITable) => {
             );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
-            if (aiTable.context?.readonly?.()) {
+            if (aiTable.context?.readonly?.() ) {
                 return true;
             }
 
@@ -189,7 +189,7 @@ export const restoreDefaultFrozenColumn = (aiTable: AITable) => {
             );
         },
         hidden: (aiTable: AITable, field: Signal<AITableField>) => {
-            if (aiTable.context?.readonly?.()) {
+            if (aiTable.context?.readonly?.() ) {
                 return true;
             }
 

@@ -47,7 +47,8 @@ import {
     DEFAULT_POINT_POSITION,
     DEFAULT_SCROLL_STATE,
     IconPathMap,
-    AI_TABLE_ROW_HEIGHT
+    AI_TABLE_ROW_HEIGHT,
+    AI_TABLE_EXPAND_RECORD_ICON
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -103,8 +104,10 @@ import {
     AITableField,
     AITableFieldOption,
     AITableFieldType,
+    CopyRecordOptions,
     DragEndData,
     DragType,
+    IdPath,
     SetFieldStatTypeOptions,
     UpdateFieldValueOptions
 } from '@ai-table/utils';
@@ -114,6 +117,7 @@ import { ComponentMap } from './renderer/components/cells/cells';
 import { AITableScrollControllerService } from './services/scroll-controller.service';
 import _ from 'lodash';
 import { AITableLinearRow } from './types';
+import { RecordDetailService } from './services';
 
 @Component({
     selector: 'ai-table-grid',
@@ -123,7 +127,7 @@ import { AITableLinearRow } from './types';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService, RecordDetailService]
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
@@ -147,6 +151,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private notifyService = inject(ThyNotifyService);
 
     private scrollControllerService = inject(AITableScrollControllerService);
+
+    private recordDetailService = inject(RecordDetailService);
 
     private isPopoverOpen = false;
 
@@ -359,6 +365,12 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         },
         addRecord: (data: AddRecordOptions) => {
             this.addRecord(data);
+        },
+        copyRecords: (data: CopyRecordOptions) => {
+            this.copyRecords(data);
+        },
+        removeRecord: (data: IdPath) => {
+            this.aiRemoveRecord.emit([data]);
         }
     };
 
@@ -907,6 +919,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     this.aiRowGroupCollapseClick.emit(groupId!);
                 }
                 break;
+            }
+            case AI_TABLE_EXPAND_RECORD_ICON: {
+                this.recordDetailService.open({
+                    viewContainerRef: this.viewContainerRef,
+                    aiTable: this.aiTable,
+                    recordId: targetNameDetail.recordId!,
+                    references: this.aiReferences(),
+                    actions: this.actions
+                });
             }
         }
         return;

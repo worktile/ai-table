@@ -11,10 +11,11 @@ import { THY_MESSAGE_DEFAULT_CONFIG_PROVIDER } from 'ngx-tethys/message';
 import { UndoManagerService } from '@ai-table/state';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
+import { ThySlideModule } from 'ngx-tethys/slide';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        importProvidersFrom(BrowserModule, FormsModule, ThyTooltipModule, ThyPopoverModule, ThyDialogModule),
+        importProvidersFrom(BrowserModule, FormsModule, ThyTooltipModule, ThyPopoverModule, ThyDialogModule, ThySlideModule),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideHttpClient(),
         provideAnimations(),

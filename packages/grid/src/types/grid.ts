@@ -1,4 +1,4 @@
-import { Signal, ViewContainerRef, WritableSignal } from '@angular/core';
+import { Injector, Signal, Type, ViewContainerRef, WritableSignal } from '@angular/core';
 import { AITableFieldMenuItem } from './field';
 import { AITableLinearRow } from './row';
 import {
@@ -18,9 +18,16 @@ import { AITableActions, FieldOperable } from '../utils';
 import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
 import { CoverCellBase } from '../renderer';
+import { AbstractEditCellEditor } from '../components';
 
-export interface AITableGridCellRenderSchema<TR extends AITableReferences = AITableReferences> {
-    editor?: any;
+export interface AITableGridCellRenderSchema<
+    TR extends AITableReferences = AITableReferences,
+    TEditorValue = unknown,
+    TEditorField extends AITableField = AITableField
+> {
+    editor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
+    recordCellEditor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
+    recordCellEditorInjector?: Injector;
     toText?: (field: AITableField, value: FieldValue) => any;
     toFieldValue?: (text: string, value: FieldValue) => any;
 }
@@ -55,6 +62,7 @@ export interface AIFieldConfig<TR extends AITableReferences = AITableReferences>
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
+    recordDetailFieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;
     filterFieldOptions?: (fieldOptions: AITableFieldOption[]) => AITableFieldOption[];
 }

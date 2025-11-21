@@ -1,0 +1,74 @@
+@use 'ngx-tethys/styles/variables.scss';
+
+.ai-record-detail {
+    height: 100%;
+    background: variables.$white;
+}
+
+.record-detail-header {
+    height: 52px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid variables.$gray-200;
+    flex-shrink: 0;
+
+    .record-title {
+        flex: 1;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 16px;
+    }
+
+    .record-navigation {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-operations {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.record-detail-body {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 0;
+
+    .cell-list-viewport {
+        height: 100%;
+        width: 100%;
+    }
+
+    .cell-item {
+        .cell-header {
+            height: 22px;
+            .cell-name {
+                color: variables.$gray-700;
+            }
+
+            .cell-operations {
+                opacity: 0;
+                transition: opacity 0.2s;
+
+                &.visible {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .dynamic-cell-editor {
+            &::ng-deep {
+                .ai-dynamic-cell-editor-wrapper {
+                    .ai-table-link-editor .link-input-group {
+                        border: 1px solid variables.$gray-200;
+                    }
+                }
+            }
+        }
+    }
+}

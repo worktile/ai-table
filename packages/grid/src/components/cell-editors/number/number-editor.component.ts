@@ -10,7 +10,7 @@ import { NumberFieldValue } from '@ai-table/utils';
     selector: 'number-cell-editor',
     template: `<thy-input-number
         class="h-100"
-        [thyAutoFocus]="true"
+        [thyAutoFocus]="autoFocus()"
         [thyShowStepControls]="false"
         [(ngModel)]="modelValue"
         (thyEnter)="updateValue()"
