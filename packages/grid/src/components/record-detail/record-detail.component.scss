@@ -46,16 +46,6 @@
     .cell-item {
         .cell-header {
             height: 22px;
-            .cell-label {
-                .cell-icon {
-                    color: variables.$gray-600;
-                    font-size: variables.$font-size-md;
-                    padding-top: 1px;
-                }
-                .cell-name {
-                    color: variables.$gray-700;
-                }
-            }
 
             .cell-operations {
                 opacity: 0;

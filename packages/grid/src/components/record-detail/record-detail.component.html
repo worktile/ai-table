@@ -50,14 +50,14 @@
                 >
                     <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
                         <div class="d-flex align-items-center cell-label">
-                            <span class="d-flex align-items-center mr-2 cell-icon">
+                            <span class="d-flex align-items-center mr-2 text-muted font-size-md">
                                 @if (fieldIconPath(field)) {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 16 16">
                                         <path [attr.d]="fieldIconPath(field)" fill="currentColor"></path>
                                     </svg>
                                 }
                             </span>
-                            <span class="d-flex align-items-center font-size-base field-name">
+                            <span class="d-flex align-items-center font-size-base text-secondary">
                                 {{ field.name }}
                             </span>
                         </div>
