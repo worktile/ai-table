@@ -61,11 +61,13 @@
                                 {{ field.name }}
                             </span>
                         </div>
-                        <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
-                            <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
-                                <thy-icon thyIconName="more-vertical"></thy-icon>
-                            </button>
-                        </div>
+                        @if (!readonly()) {
+                            <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
+                                <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
+                                    <thy-icon thyIconName="more-vertical"></thy-icon>
+                                </button>
+                            </div>
+                        }
                     </div>
 
                     <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
