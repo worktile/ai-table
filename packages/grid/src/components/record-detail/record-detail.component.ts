@@ -59,6 +59,10 @@ export class RecordDetailComponent implements OnInit {
 
     private internalRecordId = signal<string>('');
 
+    readonly = computed(() => {
+        return this.aiTable().context?.readonly?.();
+    });
+
     currentRecordId = computed(() => {
         const inputId = this.recordId();
         const internalId = this.internalRecordId();
