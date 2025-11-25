@@ -14,7 +14,7 @@ import { Layout } from './layout-drawer';
  * 绘制行的布局，通过直接操作 Canvas 提供高效的渲染方法。
  * 它继承自 Layout 类，包含了用于绘制行中单元格（尤其是首列和尾列）的几个方法
  */
-export class RecordRowLayout extends Layout {
+export class RecordLayout extends Layout {
     protected override renderAddFieldBlank({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>): void {
         super.renderAddFieldBlank({ isHoverRow, isCheckedRow });
         const rowHeight = this.rowHeight;
@@ -136,4 +136,4 @@ export class RecordRowLayout extends Layout {
     }
 }
 
-export const recordRowLayout = new RecordRowLayout();
+export const recordLayout = new RecordLayout();

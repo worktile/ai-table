@@ -11,7 +11,7 @@ import {
 import { AITableCell } from '../../types';
 import { Layout } from './layout-drawer';
 
-export class AddRowLayout extends Layout {
+export class AddRecordLayout extends Layout {
     override renderAddFieldBlank({ isHoverRow, isCheckedRow }: Pick<AITableCell, 'isHoverRow' | 'isCheckedRow'>) {
         super.renderAddFieldBlank({ isHoverRow, isCheckedRow });
         const rowHeight = this.rowHeight;
@@ -112,4 +112,4 @@ export class AddRowLayout extends Layout {
     }
 }
 
-export const addRowLayout = new AddRowLayout();
+export const addRecordLayout = new AddRecordLayout();
