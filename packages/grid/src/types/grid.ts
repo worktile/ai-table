@@ -163,19 +163,9 @@ export enum AITableSelectAllState {
 }
 
 export interface AITableRecordDetailConfig {
-    readonly viewContainerRef?: ViewContainerRef;
-
-    readonly aiTable?: AITable;
-
-    readonly recordId?: string;
-
-    readonly references?: AITableReferences;
-
-    readonly actions?: AITableActions;
-
     readonly showIcon?: boolean;
 
-    readonly thySlideConfig?: ThySlideConfig;
+    readonly slideConfig?: ThySlideConfig;
 
-    readonly clickInsideTableOrPanelCallback?: (event: MouseEvent, viewContainerRef: ViewContainerRef) => boolean;
+    readonly canCloseSlideCallback?: (event: MouseEvent, viewContainerRef: ViewContainerRef) => boolean;
 }
