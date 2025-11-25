@@ -76,22 +76,22 @@ export class RecordDetailService {
         return this.currentSlideRef !== null;
     }
 
-    private isClickInsideTableOrPanel(event: MouseEvent, viewContainerRef: ViewContainerRef): boolean {
+    private canCloseSlide(event: MouseEvent, viewContainerRef: ViewContainerRef): boolean {
         const target = event.target as HTMLElement;
 
         const tableElement = viewContainerRef.element.nativeElement;
         if (tableElement && tableElement.contains(target)) {
-            return true;
+            return false;
         }
 
         const overlayContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = 0; i < overlayContainers.length; i++) {
             if (overlayContainers[i].contains(target)) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     private setupDocumentClickListener(config: RecordDetailConfig & AITableRecordDetailConfig): void {
@@ -101,8 +101,8 @@ export class RecordDetailService {
         }
 
         this.clickSubscription = fromEvent<MouseEvent>(document, 'click').subscribe((event) => {
-            const callback = config.canCloseSlideCallback ? config.canCloseSlideCallback : this.isClickInsideTableOrPanel;
-            if (!callback(event, config.viewContainerRef)) {
+            const callback = config.canCloseSlideCallback ? config.canCloseSlideCallback : this.canCloseSlide;
+            if (callback(event, config.viewContainerRef)) {
                 this.close();
             }
         });
