@@ -749,7 +749,11 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
         const { context } = this.aiTable;
         const targetName = targetNameDetail.targetName;
-        if (mouseEvent.button !== AITableMouseDownType.Left || (targetName !== AI_TABLE_FIELD_HEAD_MORE && this.aiReadonly())) return;
+        if (
+            mouseEvent.button !== AITableMouseDownType.Left ||
+            (![AI_TABLE_FIELD_HEAD_MORE, AI_TABLE_EXPAND_RECORD_ICON].includes(targetName!) && this.aiReadonly())
+        )
+            return;
         switch (targetName) {
             case AI_TABLE_ROW_ADD_BUTTON: {
                 clearCoverCell(this.aiTable);

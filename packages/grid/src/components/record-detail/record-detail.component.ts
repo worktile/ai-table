@@ -38,7 +38,8 @@ import {
     getPreviousRecordByActiveCell,
     selectCells,
     setActiveCell,
-    transformToCellText
+    transformToCellText,
+    getFieldIconPath
 } from '../../utils';
 
 @Component({
@@ -57,6 +58,10 @@ export class RecordDetailComponent implements OnInit {
     readonly recordIdChange = output<string>();
 
     private internalRecordId = signal<string>('');
+
+    readonly = computed(() => {
+        return this.aiTable().context?.readonly?.();
+    });
 
     currentRecordId = computed(() => {
         const inputId = this.recordId();
@@ -105,6 +110,10 @@ export class RecordDetailComponent implements OnInit {
         }
         return [];
     });
+
+    fieldIconPath(field: AITableField) {
+        return getFieldIconPath(field);
+    }
 
     activeFieldId: string | null = null;
 

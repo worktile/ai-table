@@ -40,16 +40,12 @@
     padding: 8px 0;
 
     .cell-list-viewport {
-        height: 100%;
         width: 100%;
     }
 
     .cell-item {
         .cell-header {
             height: 22px;
-            .cell-name {
-                color: variables.$gray-700;
-            }
 
             .cell-operations {
                 opacity: 0;
