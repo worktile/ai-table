@@ -1,4 +1,13 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["*.ts"]
+  "include": ["*.ts"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }
