@@ -116,9 +116,9 @@ export class RecordDetailComponent implements OnInit {
 
     activeFieldId: string | null = null;
 
-    fieldMenuVisible: Record<string, boolean> = {};
+    fieldMenuVisible = signal<Record<string, boolean>>({});
 
-    fieldMenuActive: Record<string, boolean> = {};
+    fieldMenuActive = signal<Record<string, boolean>>({});
 
     private fieldMenuPopoverRef: ThyPopoverRef<any> | null = null;
 
@@ -172,20 +172,21 @@ export class RecordDetailComponent implements OnInit {
     }
 
     showFieldMenu(fieldId: string): void {
-        this.fieldMenuVisible[fieldId] = true;
+        this.fieldMenuVisible.set({ [fieldId]: true });
     }
 
     hideFieldMenu(fieldId: string): void {
         if (!this.fieldMenuPopoverRef) {
-            this.fieldMenuVisible[fieldId] = false;
+            this.fieldMenuVisible.set({ [fieldId]: false });
         }
     }
 
     fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
         const origin = e.target as HTMLElement;
         const position = origin.getBoundingClientRect();
-        this.fieldMenuVisible[fieldId] = true;
-        this.fieldMenuActive[fieldId] = true;
+        this.fieldMenuVisible.set({ [fieldId]: true });
+        this.fieldMenuActive.set({ [fieldId]: true });
+        let isSelfClose = false;
         this.fieldMenuPopoverRef = this.thyPopover.open(AITableFieldMenu, {
             origin,
             placement: 'bottomRight',
@@ -197,18 +198,21 @@ export class RecordDetailComponent implements OnInit {
                 origin,
                 position,
                 execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
+                    isSelfClose = true;
                     this.thyPopover.close();
                     data.popoverRef?.beforeClosed().subscribe(() => {
-                        this.fieldMenuVisible[fieldId] = false;
-                        this.fieldMenuActive[fieldId] = false;
+                        this.fieldMenuVisible.set({ [fieldId]: false });
+                        this.fieldMenuActive.set({ [fieldId]: false });
                     });
                 }
             }
         });
         if (this.fieldMenuPopoverRef) {
             this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
-                this.fieldMenuVisible[fieldId] = false;
-                this.fieldMenuActive[fieldId] = false;
+                if (!isSelfClose) {
+                    this.fieldMenuVisible.set({ [fieldId]: false });
+                    this.fieldMenuActive.set({ [fieldId]: false });
+                }
                 this.fieldMenuPopoverRef = null;
             });
         }

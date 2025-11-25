@@ -62,10 +62,10 @@
                             </span>
                         </div>
                         @if (!readonly()) {
-                            <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
+                            <div class="cell-operations" [class.visible]="fieldMenuVisible()[field._id]">
                                 <a
                                     thyAction
-                                    [thyActionActive]="fieldMenuActive[field._id]"
+                                    [thyActionActive]="fieldMenuActive()[field._id]"
                                     href="javascript:;"
                                     (click)="fieldMenuMoreClick($event, field._id)"
                                     ><thy-icon thyIconName="more-vertical"></thy-icon
