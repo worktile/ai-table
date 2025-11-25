@@ -32,7 +32,8 @@ export class RecordDetailService {
                 recordId: config.recordId,
                 references: config.references,
                 actions: config.actions
-            }
+            },
+            ...config.thySlideConfig
         });
         if (this.currentSlideRef) {
             this.currentSlideRef.afterOpened().subscribe(() => {
