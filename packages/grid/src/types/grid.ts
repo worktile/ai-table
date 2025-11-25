@@ -19,6 +19,7 @@ import { CellDrawer } from '../renderer/drawers/cell-drawer';
 import { Constructor } from 'ngx-tethys/core';
 import { CoverCellBase } from '../renderer';
 import { AbstractEditCellEditor } from '../components';
+import { ThySlideConfig } from 'ngx-tethys/slide';
 
 export interface AITableGridCellRenderSchema<
     TR extends AITableReferences = AITableReferences,
@@ -159,4 +160,22 @@ export enum AITableSelectAllState {
     all = 'all',
     partial = 'partial',
     none = 'none'
+}
+
+export interface AITableRecordDetailConfig {
+    readonly viewContainerRef?: ViewContainerRef;
+
+    readonly aiTable?: AITable;
+
+    readonly recordId?: string;
+
+    readonly references?: AITableReferences;
+
+    readonly actions?: AITableActions;
+
+    readonly showIcon?: boolean;
+
+    readonly thySlideConfig?: ThySlideConfig;
+
+    readonly clickInsideTableOrPanelCallback?: (event: MouseEvent, viewContainerRef: ViewContainerRef) => boolean;
 }

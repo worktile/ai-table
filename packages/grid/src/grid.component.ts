@@ -846,7 +846,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     aiTable: this.aiTable,
                     recordId: targetNameDetail.recordId!,
                     references: this.aiReferences(),
-                    actions: this.actions
+                    actions: this.actions,
+                    ...this.aiRecordDetailConfig
                 });
             }
         }

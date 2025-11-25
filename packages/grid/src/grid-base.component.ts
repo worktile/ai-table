@@ -36,7 +36,7 @@ import {
 } from '@ai-table/utils';
 import { AITableGridEventService } from './services/event.service';
 import { AI_TABLE_GRID_FIELD_SERVICE_MAP, AITableGridFieldService } from './services/field.service';
-import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableLinearRow } from './types';
+import { AIFieldConfig, AITableFieldMenuItem, AITableContextMenuItem, AITableLinearRow, AITableRecordDetailConfig } from './types';
 import { AITableFieldSetting } from './components';
 import { KoEventObjectOutput } from './angular-konva';
 import { AITableGridI18nKey } from './utils/i18n';
@@ -82,6 +82,8 @@ export class AITableGridBase implements OnInit {
     aiFrozenColumnCountFn = input<(containerWidth: number) => number>();
 
     aiRecordHeight = input<AITableRecordHeightType>(AITableRecordHeightType.low);
+
+    aiRecordDetailConfig = input<AITableRecordDetailConfig>();
 
     AITableFieldType = AITableFieldType;
 
