@@ -429,6 +429,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.recordDetailService.close();
         this.resizeObserver?.disconnect();
     }
 
@@ -846,7 +847,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                     aiTable: this.aiTable,
                     recordId: targetNameDetail.recordId!,
                     references: this.aiReferences(),
-                    actions: this.actions
+                    actions: this.actions,
+                    ...this.aiRecordDetailConfig()
                 });
             }
         }
