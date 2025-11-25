@@ -1,25 +1,13 @@
 import _ from 'lodash';
 import {
-    AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE,
     AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE_OFFSET,
     AI_TABLE_CELL_EMOJI_PADDING,
     AI_TABLE_CELL_EMOJI_SIZE,
-    AI_TABLE_CELL_MAX_ROW_COUNT,
-    AI_TABLE_CELL_MEMBER_ITEM_HEIGHT,
-    AI_TABLE_CELL_MEMBER_ITEM_PADDING,
-    AI_TABLE_CELL_MULTI_DOT_RADIUS,
-    AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP,
     AI_TABLE_CELL_MULTI_ITEM_MIN_WIDTH,
-    AI_TABLE_CELL_MULTI_PADDING_LEFT,
-    AI_TABLE_CELL_MULTI_PADDING_TOP,
     AI_TABLE_CELL_PADDING,
     AI_TABLE_COMMON_FONT_SIZE,
     AI_TABLE_DOT_RADIUS,
-    AI_TABLE_FILE_ICON_SIZE,
-    AI_TABLE_MEMBER_AVATAR_SIZE,
-    AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
-    AI_TABLE_MIN_TEXT_WIDTH,
     AI_TABLE_OFFSET,
     AI_TABLE_OPTION_ITEM_FONT_SIZE,
     AI_TABLE_OPTION_ITEM_HEIGHT,
@@ -35,7 +23,6 @@ import {
     AI_TABLE_TAG_PADDING,
     AI_TABLE_TEXT_GAP,
     Colors,
-    DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
     DEFAULT_TEXT_ALIGN_LEFT,
@@ -43,10 +30,8 @@ import {
     DEFAULT_TEXT_DECORATION,
     DEFAULT_TEXT_LINE_HEIGHT,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
-    FONT_SIZE_SM,
     AI_TABLE_RATE_MAX,
     StarFill,
-    AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE,
     AI_TABLE_ICON_COMMON_SIZE,
     Check,
     Unchecked,
@@ -54,22 +39,13 @@ import {
     AI_TABLE_TEXT_LINE_HEIGHT
 } from '../../constants';
 import { AITable } from '../../core';
-import {
-    AITableField,
-    AITableFieldType,
-    AITableSelectOptionStyle,
-    MemberSettings,
-    isEmpty,
-    isUndefinedOrNull,
-    numberFormat
-} from '@ai-table/utils';
+import { AITableField, AITableFieldType, AITableSelectOptionStyle, isEmpty, isUndefinedOrNull, numberFormat } from '@ai-table/utils';
 import { AITableAvatarSize, AITableAvatarType, AITableRender, AITableSelectField } from '../../types';
-import { FieldModelMap, getAvatarBgColor, getAvatarShortName, getTextWidth } from '../../utils';
+import { FieldModelMap } from '../../utils';
 import { Drawer } from './drawer';
 import { helpers } from 'ngx-tethys/util';
-import { getFileThumbnailSvgString } from '../../utils/file';
 import { MultiSelectLayout } from '../cell-layout/fields';
-import { AITableRenderAtom, AITableRenderAtomType } from '../../types/atom';
+import { AITableRenderAtomType } from '../../types/atom';
 import { CellBaseLayout } from '../cell-layout/base';
 import { MemberLayout } from '../cell-layout/fields/member';
 import { AttachmentLayout } from '../cell-layout/fields/attachment';
@@ -134,13 +110,13 @@ export class CellDrawer extends Drawer {
             case AITableFieldType.member:
             case AITableFieldType.createdBy:
             case AITableFieldType.updatedBy:
-                cellLayout = this.renderCellMember2(ctx, render);
+                cellLayout = this.renderCellMember(render);
                 break;
             case AITableFieldType.attachment:
-                cellLayout = this.renderCellAttachment2(render);
+                cellLayout = this.renderCellAttachment(render);
                 break;
             case AITableFieldType.checkbox:
-                return this.renderCellCheckbox(render, ctx);
+                return this.renderCellCheckbox(render);
             default:
                 return null;
         }
@@ -149,7 +125,7 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellCheckbox(render: AITableRender, ctx?: any) {
+    private renderCellCheckbox(render: AITableRender) {
         const { x, y, columnWidth, transformValue, isCoverCell, isGroupFirstRender } = render;
         if (isCoverCell) {
             return;
@@ -238,7 +214,7 @@ export class CellDrawer extends Drawer {
     private renderCellSelect(ctx: any, render: AITableRender) {
         const { field } = render;
         if ((field as AITableSelectField).settings?.is_multiple) {
-            return this.renderCellMultiSelect2(render, ctx);
+            return this.renderCellMultiSelect(render);
         } else {
             return this.renderSingleSelectCell(render, ctx);
         }
@@ -249,213 +225,7 @@ export class CellDrawer extends Drawer {
         return (transformValue || []).filter((optionId: string) => !!fieldOptionsMap[optionId]);
     }
 
-    private renderCellMultiSelect(render: AITableRender, ctx?: any) {
-        const { x, y, field, columnWidth } = render;
-        let transformValue = this.getValidSelectedValue(field, render.transformValue);
-        if (!transformValue.length) {
-            return;
-        }
-
-        let currentX = x + AI_TABLE_CELL_PADDING;
-        const maxContainerWidth = columnWidth - 2 * AI_TABLE_CELL_PADDING;
-        const optionStyle = (field as AITableSelectField).settings.option_style;
-        const fontStyle = `${DEFAULT_FONT_WEIGHT} ${AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE}px ${DEFAULT_FONT_FAMILY}`;
-        const isDotOrPiece = optionStyle === AITableSelectOptionStyle.dot || optionStyle === AITableSelectOptionStyle.piece;
-
-        let totalWidth = 0;
-        const cellItemInfoMap = new Map();
-        let drawableIndex = 0;
-        transformValue.forEach((optionId, index) => {
-            const item = (field as AITableSelectField).settings.options?.find((option) => option._id === optionId);
-            const textWidth = getTextWidth(ctx, item?.text as string, fontStyle);
-            totalWidth += textWidth + 2 * AI_TABLE_CELL_PADDING;
-            if (index < transformValue.length - 1) {
-                totalWidth += AI_TABLE_CELL_MULTI_PADDING_LEFT;
-            }
-            if (isDotOrPiece) {
-                totalWidth += AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT;
-            }
-            if (totalWidth < maxContainerWidth || totalWidth === maxContainerWidth) {
-                drawableIndex = index;
-            }
-            cellItemInfoMap.set(optionId, { textWidth, item, offset: totalWidth });
-        });
-
-        const baseWidth = AI_TABLE_MIN_TEXT_WIDTH + AI_TABLE_CELL_PADDING * 2;
-        const minWidth = isDotOrPiece ? baseWidth + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT : baseWidth;
-
-        if (transformValue[drawableIndex + 1]) {
-            const { offset: currentOffset } = cellItemInfoMap.get(transformValue[drawableIndex]);
-            const canDrawerNext = maxContainerWidth - currentOffset > minWidth;
-            drawableIndex = canDrawerNext ? drawableIndex + 1 : drawableIndex;
-            // 上面过程是  没有 +数字  的情况下最大能放几个；
-            const number = transformValue.length - (drawableIndex + 1);
-
-            if (number > 0) {
-                // 说明有 +数字，重新计算
-                const circleWidth = getTextWidth(ctx, `+{number}`, fontStyle) + 2 * AI_TABLE_CELL_PADDING;
-                const max = maxContainerWidth - AI_TABLE_CELL_MULTI_PADDING_LEFT - circleWidth;
-                // 如果当前已经超出了，看是否能容下当前的，不能就减去  1；
-                const currentItemHasOver = currentOffset > max;
-                if (currentItemHasOver) {
-                    const lastOffset = drawableIndex === 0 ? 0 : cellItemInfoMap.get(transformValue[drawableIndex - 1]);
-                    drawableIndex = max - lastOffset > minWidth ? drawableIndex : drawableIndex - 1;
-                } else {
-                    // 还有剩余空间, 看是否能多渲染一个
-                    drawableIndex = max - currentOffset > minWidth ? drawableIndex + 1 : drawableIndex;
-                }
-            }
-        }
-
-        const circleText = `+${transformValue.length - (drawableIndex + 1)}`;
-        const circleWidth =
-            transformValue.length - (drawableIndex + 1) > 0 ? getTextWidth(ctx, circleText, fontStyle) + 2 * AI_TABLE_CELL_PADDING : 0;
-        // 剩余空间
-        let remainSpace = maxContainerWidth - circleWidth - (circleWidth > 0 ? AI_TABLE_CELL_MULTI_PADDING_LEFT : 0);
-
-        for (let index = 0; index < transformValue.length; index++) {
-            const optionId = transformValue[index];
-            const bgConfig = {
-                x: currentX,
-                y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
-                height: AI_TABLE_OPTION_ITEM_HEIGHT,
-                radius: AI_TABLE_PIECE_RADIUS,
-                fill: Colors.gray100,
-                width: 0
-            };
-
-            const commonItem = (optionStyle: AITableSelectOptionStyle, shape: string) => {
-                const baseWidth = isDotOrPiece
-                    ? AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT + AI_TABLE_CELL_PADDING * 2
-                    : AI_TABLE_CELL_PADDING * 2;
-                if (remainSpace < minWidth) {
-                    return;
-                }
-                const { textWidth, item } = cellItemInfoMap.get(optionId);
-                const completeWidth = baseWidth + textWidth;
-                if (index !== transformValue.length - 1) {
-                    remainSpace -= AI_TABLE_CELL_MULTI_PADDING_LEFT;
-                }
-                const bgWidth = remainSpace > completeWidth ? completeWidth : remainSpace;
-                bgConfig.width = bgWidth;
-                if (isDotOrPiece) {
-                    this.rect(bgConfig);
-                    if (shape === 'rect') {
-                        this.rect({
-                            x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                            y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2,
-                            width: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
-                            height: AI_TABLE_CELL_MULTI_DOT_RADIUS * 2,
-                            radius: AI_TABLE_PIECE_RADIUS,
-                            fill: item?.bg_color ?? item?.color ?? Colors.primary
-                        });
-                    } else if (shape === 'arc') {
-                        this.arc({
-                            x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                            y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_CELL_MULTI_DOT_RADIUS * 2) / 2 + AI_TABLE_CELL_MULTI_DOT_RADIUS,
-                            radius: AI_TABLE_CELL_MULTI_DOT_RADIUS,
-                            fill: item?.bg_color ?? item?.color ?? Colors.primary
-                        });
-                    }
-
-                    this.text({
-                        x: bgConfig.x + AI_TABLE_CELL_PADDING + AI_TABLE_CELL_MULTI_DOT_RADIUS * 2 + AI_TABLE_CELL_MULTI_PADDING_LEFT,
-                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE) / 2,
-                        text: this.textEllipsis({
-                            text: item.text,
-                            maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
-                        }).text,
-                        fillStyle: Colors.gray700,
-                        fontSize: AI_TABLE_OPTION_MULTI_ITEM_FONT_SIZE
-                    });
-                } else if (optionStyle === AITableSelectOptionStyle.tag) {
-                    this.tag({
-                        x: bgConfig.x,
-                        y: bgConfig.y,
-                        width: bgConfig.width,
-                        text: this.textEllipsis({
-                            text: item.text,
-                            maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_TAG_FONT_SIZE
-                        }).text,
-                        radius: AI_TABLE_OPTION_ITEM_RADIUS,
-                        fontSize: AI_TABLE_TAG_FONT_SIZE,
-                        height: bgConfig.height,
-                        color: Colors.white,
-                        padding: AI_TABLE_CELL_PADDING,
-                        background: item?.bg_color ?? item?.color ?? Colors.primary
-                    });
-                } else {
-                    this.rect(bgConfig);
-                    this.text({
-                        x: bgConfig.x + AI_TABLE_CELL_PADDING,
-                        y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_TAG_FONT_SIZE) / 2,
-                        text: this.textEllipsis({
-                            text: item.text,
-                            maxWidth: bgWidth - baseWidth,
-                            fontSize: AI_TABLE_TAG_FONT_SIZE
-                        }).text,
-                        fillStyle: Colors.gray700,
-                        fontSize: AI_TABLE_TAG_FONT_SIZE
-                    });
-                }
-                const currentWidth = bgConfig.width;
-                remainSpace -= currentWidth;
-                currentX += currentWidth + AI_TABLE_CELL_MULTI_PADDING_LEFT;
-            };
-
-            switch (optionStyle) {
-                case AITableSelectOptionStyle.dot:
-                    commonItem(AITableSelectOptionStyle.dot, 'arc');
-                    break;
-                case AITableSelectOptionStyle.piece:
-                    commonItem(AITableSelectOptionStyle.piece, 'rect');
-                    break;
-                case AITableSelectOptionStyle.tag:
-                    commonItem(AITableSelectOptionStyle.tag, '');
-                    break;
-                default:
-                    commonItem(AITableSelectOptionStyle.text, '');
-                    break;
-            }
-        }
-
-        if (circleWidth > 0) {
-            if (optionStyle === AITableSelectOptionStyle.tag) {
-                this.tag({
-                    x: currentX,
-                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
-                    width: circleWidth,
-                    height: AI_TABLE_OPTION_ITEM_HEIGHT,
-                    text: circleText,
-                    background: Colors.gray100,
-                    color: Colors.gray700,
-                    radius: AI_TABLE_OPTION_ITEM_RADIUS,
-                    padding: AI_TABLE_CELL_PADDING,
-                    fontSize: AI_TABLE_TAG_FONT_SIZE
-                });
-            } else {
-                this.rect({
-                    x: currentX,
-                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_OPTION_ITEM_HEIGHT) / 2,
-                    width: circleWidth,
-                    height: AI_TABLE_OPTION_ITEM_HEIGHT,
-                    fill: Colors.gray100,
-                    radius: AI_TABLE_PIECE_RADIUS
-                });
-                this.text({
-                    x: currentX + AI_TABLE_CELL_PADDING,
-                    y: y + (AI_TABLE_ROW_BLANK_HEIGHT - AI_TABLE_TAG_FONT_SIZE) / 2,
-                    text: circleText,
-                    fillStyle: Colors.gray700,
-                    fontSize: AI_TABLE_TAG_FONT_SIZE
-                });
-            }
-        }
-    }
-
-    private renderCellMultiSelect2(render: AITableRender, ctx?: any) {
+    private renderCellMultiSelect(render: AITableRender) {
         const { field } = render;
 
         let transformValue = this.getValidSelectedValue(field, render.transformValue);
@@ -736,128 +506,11 @@ export class CellDrawer extends Drawer {
         }
     }
 
-    private renderCellMember(render: AITableRender, ctx?: CanvasRenderingContext2D | undefined) {
-        const { references, x, y, field, transformValue, rowHeight, columnWidth, isActive } = render;
-        if (!transformValue?.length || !references) {
-            return;
-        }
-        const settings = field.settings as MemberSettings;
-        const avatarSize = AI_TABLE_MEMBER_AVATAR_SIZE;
-        const itemHeight = AI_TABLE_CELL_MEMBER_ITEM_HEIGHT;
-        const isOperating = isActive;
-        const isMultiple = settings?.is_multiple;
-
-        let currentX = AI_TABLE_CELL_PADDING;
-        let currentY = (AI_TABLE_ROW_BLANK_HEIGHT - avatarSize) / 2;
-        const itemOtherWidth = avatarSize + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
-        const maxHeight = isActive ? 130 - AI_TABLE_CELL_MULTI_PADDING_TOP : rowHeight - AI_TABLE_CELL_MULTI_PADDING_TOP;
-        const maxTextWidth = isOperating
-            ? columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth - AI_TABLE_CELL_DELETE_ITEM_BUTTON_SIZE - 12
-            : columnWidth - 2 * AI_TABLE_CELL_PADDING - itemOtherWidth;
-
-        const listCount = transformValue.length;
-        let isOverflow = false;
-
-        for (let index = 0; index < listCount; index++) {
-            const userInfo = references?.members[transformValue[index]];
-            if (!userInfo) continue;
-
-            const { uid, display_name, avatar } = userInfo;
-            const itemWidth = AITableAvatarSize.size24 + (isMultiple ? AI_TABLE_CELL_MEMBER_ITEM_PADDING : 0);
-
-            currentX = AI_TABLE_CELL_PADDING + index * itemWidth;
-
-            let realMaxTextWidth = maxTextWidth < 0 ? 0 : maxTextWidth;
-            if (index === 0 && isOperating) {
-                const operatingMaxWidth = maxTextWidth - (AI_TABLE_CELL_ADD_ITEM_BUTTON_SIZE + 4);
-                // item No space to display, then perform a line feed
-                if (operatingMaxWidth <= 20) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                    currentY += AI_TABLE_OPTION_ITEM_HEIGHT + AI_TABLE_CELL_MULTI_ITEM_MARGIN_TOP;
-                } else {
-                    realMaxTextWidth = operatingMaxWidth;
-                }
-            }
-
-            let isMore = currentX + itemWidth > columnWidth - 2 * AI_TABLE_CELL_PADDING;
-            if (columnWidth != null) {
-                // 在非活动状态下，当超出列宽时，不会渲染后续内容
-                if (currentX >= columnWidth - 2 * AI_TABLE_CELL_PADDING) {
-                    break;
-                }
-                // 如果不是非活动状态的最后一行，则换行渲染溢出内容
-                if (currentX > columnWidth - 2 * AI_TABLE_CELL_PADDING) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                }
-                if (currentX + itemWidth > columnWidth - AI_TABLE_CELL_PADDING) {
-                    currentX = AI_TABLE_CELL_PADDING;
-                    currentY += itemHeight;
-                }
-                if (currentY >= maxHeight) {
-                    isOverflow = true;
-                }
-            }
-
-            if (ctx) {
-                this.avatar({
-                    x: x + currentX,
-                    y: y + currentY,
-                    url: avatar!,
-                    id: uid!,
-                    title: getAvatarShortName(display_name),
-                    bgColor: getAvatarBgColor(display_name!),
-                    type: AITableAvatarType.member,
-                    size: AITableAvatarSize.size24
-                });
-
-                // 在非多选模式下显示名称
-                if (!isMultiple) {
-                    const textX = x + currentX + AITableAvatarSize.size24 + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
-                    this.text({
-                        x: textX,
-                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
-                        text: this.textEllipsis({
-                            text: display_name || '',
-                            maxWidth: maxTextWidth,
-                            fontSize: AI_TABLE_COMMON_FONT_SIZE
-                        }).text,
-                        fillStyle: this.colors.gray800,
-                        fontSize: AI_TABLE_COMMON_FONT_SIZE,
-                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
-                    });
-                }
-
-                if (isMore) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.3;
-                    this.rect({
-                        x: x + currentX,
-                        y: y + currentY,
-                        width: AITableAvatarSize.size24,
-                        height: AITableAvatarSize.size24,
-                        radius: 24,
-                        fill: this.colors.black
-                    });
-                    ctx.restore();
-                    this.text({
-                        x: x + currentX + FONT_SIZE_SM / 2,
-                        y: y + AI_TABLE_ROW_BLANK_HEIGHT / 2,
-                        fillStyle: this.colors.white,
-                        fontSize: FONT_SIZE_SM,
-                        text: `+${listCount - index - 1}`,
-                        verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
-                    });
-                }
-            }
-        }
-    }
-
-    private renderCellMember2(ctx: any, render: AITableRender) {
-        const { x, y } = render;
+    private renderCellMember(render: AITableRender) {
         return new MemberLayout(render, {});
     }
 
-    private renderCellAttachment2(render: AITableRender) {
+    private renderCellAttachment(render: AITableRender) {
         const { transformValue } = render;
         if (isUndefinedOrNull(transformValue)) {
             return;
