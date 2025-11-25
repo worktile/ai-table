@@ -32,11 +32,10 @@ export class GroupLayout extends Layout {
     private renderFirstCell(render: AITableRender, config: AITableCell<AITableLinearRowGroup>) {
         if (!this.isFirst) return;
         const { row, indexStyle } = config;
-        const { _id: recordId, type, depth = 0, groupValue, fieldId, isCollapsed } = row;
+        const { _id: groupValue, fieldId } = row;
         const { field, style, aiTable } = render;
         const y = this.y;
         const rowHeight = this.rowHeight;
-        const columnWidth = this.columnWidth;
         const { fill: indexFill } = indexStyle || {};
 
         if (!this.hiddenIndexColumn) {
@@ -86,7 +85,7 @@ export class GroupLayout extends Layout {
         }
     }
 
-    private renderCommonCellBorder({ style }: Pick<AITableCell, 'style'>) {
+    private renderCommonCell({ style }: Pick<AITableCell, 'style'>) {
         const { fill, stroke } = style || {};
         const colors = AITable.getColors();
 
@@ -114,7 +113,7 @@ export class GroupLayout extends Layout {
     render(render: AITableRender, config: AITableCell<AITableLinearRowGroup>) {
         const { style, isHoverRow, isCheckedRow } = config;
         this.renderFirstCell(render, config);
-        this.renderCommonCellBorder({ style });
+        this.renderCommonCell({ style });
         this.renderLastCell({ style, isHoverRow, isCheckedRow });
         this.renderFrozenShadow();
     }
