@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AITableCellsConfig, AITableGroupStatConfig, AITableIconConfig } from '../../../types';
 import { createGroupCells } from '../../creations/create-groups';
 import { generateTargetName } from '../../../utils';
@@ -19,7 +19,7 @@ import { KoEventObject } from '../../../angular-konva';
             <ai-table-field-stat [config]="groupCell.groupStat!"></ai-table-field-stat>
         }
     `,
-    imports: [CommonModule, AITableIcon, AITableFieldStat],
+    imports: [AITableIcon, AITableFieldStat],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableFrozenGroups {
