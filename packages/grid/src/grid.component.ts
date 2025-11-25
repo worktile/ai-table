@@ -429,6 +429,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.recordDetailService.close();
         this.resizeObserver?.disconnect();
     }
 
