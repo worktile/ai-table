@@ -163,7 +163,7 @@ export enum AITableSelectAllState {
 }
 
 export interface AITableRecordDetailConfig {
-    readonly showIcon?: boolean;
+    readonly showExpandIcon?: boolean;
 
     readonly slideConfig?: ThySlideConfig;
 
