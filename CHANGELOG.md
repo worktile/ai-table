@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.3](https://github.com/worktile/ai-table/compare/0.4.2...0.4.3) (2025-11-25)
+
+
+### Bug Fixes
+
+* #WIK-19414 只读模式无法弹出详情，新增字段没有隐藏 ([#803](https://github.com/worktile/ai-table/issues/803)) ([7483c5a](https://github.com/worktile/ai-table/commit/7483c5a72e09ea4d6545d6be9f606b6907048b77)), closes [#WIK-19414](https://github.com/worktile/ai-table/issues/WIK-19414)
+
+
+### Features
+
+* upgrade angular to 20 ([#800](https://github.com/worktile/ai-table/issues/800)) ([9579664](https://github.com/worktile/ai-table/commit/95796647f5af02e5983cab7a66775f234108fe99))
+
+
+
 ## [0.4.2](https://github.com/worktile/ai-table/compare/0.4.1...0.4.2) (2025-11-21)
 
 
