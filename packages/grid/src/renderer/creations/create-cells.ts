@@ -11,9 +11,9 @@ import {
 import { AITable, AITableQueries, RendererContext } from '../../core';
 import { AITableCellsDrawerConfig, AITableLinearRowGroup, AITableRender, AITableRowType } from '../../types';
 import { FieldModelMap, getCellHorizontalPosition, getCoverCell } from '../../utils';
-import { addRowLayout } from '../drawers/add-row-layout-drawer';
+import { addRecordLayout } from '../drawers/add-record-layout';
 import { cellDrawer } from '../drawers/cell-drawer';
-import { recordRowLayout } from '../drawers/record-row-layout-drawer';
+import { recordLayout } from '../drawers/record-layout';
 import { groupLayout } from '../drawers/group-layout';
 
 /**
@@ -32,8 +32,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
 
     // 初始化绘图上下文, 为后续的绘制操作做准备
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
-    addRowLayout.initCtx(ctx as CanvasRenderingContext2D);
-    recordRowLayout.initCtx(ctx as CanvasRenderingContext2D);
+    addRecordLayout.initCtx(ctx as CanvasRenderingContext2D);
+    recordLayout.initCtx(ctx as CanvasRenderingContext2D);
     groupLayout.initCtx(ctx as CanvasRenderingContext2D);
 
     const coverCell = getCoverCell(aiTable);
@@ -70,7 +70,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                 case AITableRowType.add: {
                     const isHoverRow = isHover && targetName === AI_TABLE_ROW_ADD_BUTTON;
                     const isCheckedRow = aiTable.selection().selectedRecords.has(row._id);
-                    addRowLayout.init({
+                    addRecordLayout.init({
                         x,
                         y,
                         rowIndex,
@@ -85,7 +85,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         readonly: aiTable.context?.readonly?.(),
                         frozenColumnCount
                     });
-                    addRowLayout.render({
+                    addRecordLayout.render({
                         isHoverRow,
                         isCheckedRow,
                         isDisabled: maxRecords ? aiTable.records().length >= maxRecords : false
@@ -99,7 +99,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     let background = getCellBackground(cell, isHover, targetName, aiTable);
                     let indexBackground = getIndexCellBackground(cell, isHover, targetName, aiTable);
 
-                    recordRowLayout.init({
+                    recordLayout.init({
                         x,
                         y,
                         rowIndex,
@@ -115,7 +115,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         frozenColumnCount,
                         xIsScroll
                     });
-                    recordRowLayout.render({
+                    recordLayout.render({
                         row,
                         style: { fill: background },
                         indexStyle: { fill: indexBackground },
