@@ -43,6 +43,7 @@ import {
 } from '../../utils';
 import { ThyAction } from 'ngx-tethys/action';
 import { AITableFieldMenuItem } from '../../types/field';
+import { IconPathMap } from '../../constants';
 
 @Component({
     selector: 'ai-record-detail',
@@ -111,7 +112,7 @@ export class RecordDetailComponent implements OnInit {
     });
 
     fieldIconPath(field: AITableField) {
-        return getFieldIconPath(field);
+        return getFieldIconPath(field) || IconPathMap[field.icon!];
     }
 
     activeFieldId: string | null = null;
