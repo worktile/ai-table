@@ -95,10 +95,7 @@ export class RecordDetailComponent implements OnInit {
 
     i18nTexts = computed(() => ({
         recordUntitled: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.recordUntitled),
-        previousRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.previousRecord),
-        nextRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.nextRecord),
         deleteRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.deleteRecord),
-        close: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.close),
         addField: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.addField)
     }));
 

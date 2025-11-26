@@ -55,10 +55,7 @@ export enum AITableGridI18nKey {
     stat = 'stat',
     emptyGroup = 'emptyGroup',
     recordUntitled = 'recordUntitled',
-    previousRecord = 'previousRecord',
-    nextRecord = 'nextRecord',
     deleteRecord = 'deleteRecord',
-    close = 'close',
     addField = 'addField'
 }
 
@@ -117,10 +114,7 @@ export const AITableGridI18nText = {
     [AITableGridI18nKey.stat]: '统计',
     [AITableGridI18nKey.emptyGroup]: '(空)',
     [AITableGridI18nKey.recordUntitled]: '未命名记录',
-    [AITableGridI18nKey.previousRecord]: '上一条',
-    [AITableGridI18nKey.nextRecord]: '下一条',
     [AITableGridI18nKey.deleteRecord]: '删除',
-    [AITableGridI18nKey.close]: '关闭',
     [AITableGridI18nKey.addField]: '新增字段'
 };
 

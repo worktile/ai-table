@@ -5,22 +5,10 @@
         </span>
 
         <div class="record-navigation">
-            <button
-                thyButton="link-secondary"
-                thySize="md"
-                [disabled]="!recordNavigation()?.hasPrevious"
-                (click)="previousRecord()"
-                [title]="i18nTexts().previousRecord"
-            >
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasPrevious" (click)="previousRecord()">
                 <thy-icon thyIconName="angle-up"></thy-icon>
             </button>
-            <button
-                thyButton="link-secondary"
-                thySize="md"
-                [disabled]="!recordNavigation()?.hasNext"
-                (click)="nextRecord()"
-                [title]="i18nTexts().nextRecord"
-            >
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()">
                 <thy-icon thyIconName="angle-down"></thy-icon>
             </button>
         </div>
@@ -39,7 +27,7 @@
                 </div>
             </ng-template>
 
-            <button thyButton="link-secondary" thySize="md" (click)="close()" [title]="i18nTexts().close">
+            <button thyButton="link-secondary" thySize="md" (click)="close()">
                 <thy-icon thyIconName="close"></thy-icon>
             </button>
         </div>
