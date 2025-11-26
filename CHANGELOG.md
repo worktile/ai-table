@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.4](https://github.com/worktile/ai-table/compare/0.4.3...0.4.4) (2025-11-26)
+
+
+### Bug Fixes
+
+* 修复canCloseSlide 逻辑错误 ([#811](https://github.com/worktile/ai-table/issues/811)) ([4004ab3](https://github.com/worktile/ai-table/commit/4004ab351445e7c5b8e16ea9e27bcb88e56dba6e))
+* 详情字段更多菜单显示更新问题 ([#810](https://github.com/worktile/ai-table/issues/810)) ([1d7af02](https://github.com/worktile/ai-table/commit/1d7af02a919133b8fd443fb323f0c8867f86811a))
+
+
+### Features
+
+* #WIK-19418 详情弹窗优化字段颜色、更多action ([#809](https://github.com/worktile/ai-table/issues/809)) ([214caac](https://github.com/worktile/ai-table/commit/214caacadc114af55e0ffc7fefe98e60cea3a3c2)), closes [#WIK-19418](https://github.com/worktile/ai-table/issues/WIK-19418)
+* #WIK-19431 支持打开详情配置参数，主要支持 Silde 配置等 ([#808](https://github.com/worktile/ai-table/issues/808)) ([f98a827](https://github.com/worktile/ai-table/commit/f98a827dbfe76b24e19c844d9c307022454a9711)), closes [#WIK-19431](https://github.com/worktile/ai-table/issues/WIK-19431) [#WIK-19431](https://github.com/worktile/ai-table/issues/WIK-19431)
+
+
+
 ## [0.4.3](https://github.com/worktile/ai-table/compare/0.4.2...0.4.3) (2025-11-25)
 
 
