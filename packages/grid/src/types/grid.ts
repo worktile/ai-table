@@ -168,4 +168,6 @@ export interface AITableRecordDetailConfig {
     readonly slideConfig?: ThySlideConfig;
 
     readonly canCloseSlideCallback?: (event: MouseEvent, viewContainerRef: ViewContainerRef) => boolean;
+
+    readonly transformTitleValue?: (value: any, field: AITableField) => string;
 }

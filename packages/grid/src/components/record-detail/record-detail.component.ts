@@ -22,7 +22,8 @@ import {
     AITableReferences,
     UpdateFieldValueOptions,
     SelectSettings,
-    AIRecordFieldIdPath
+    AIRecordFieldIdPath,
+    AttachmentFieldValue
 } from '@ai-table/utils';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
 import { DynamicCellEditorComponent } from './dynamic-cell-editor.component';
@@ -56,6 +57,8 @@ export class RecordDetailComponent implements OnInit {
     readonly references = input.required<AITableReferences>();
 
     readonly actions = input<AITableActions>();
+
+    readonly transformTitleValue = input<(value: any, field: AITableField) => string>();
 
     readonly recordIdChange = output<string>();
 
@@ -95,6 +98,9 @@ export class RecordDetailComponent implements OnInit {
         if (!firstField) return '未命名记录';
 
         const cellValue = AITableQueries.getFieldValue(this.aiTable(), [this.currentRecordId(), firstField._id]);
+        if (this.transformTitleValue()) {
+            return this.transformTitleValue()!(cellValue, firstField) || '未命名记录';
+        }
         return this.formatCellValue(cellValue, firstField) || '未命名记录';
     });
 
@@ -267,16 +273,18 @@ export class RecordDetailComponent implements OnInit {
         if (value === null || value === undefined) return '';
         const transformValue = transformToCellText(value, { aiTable: this.aiTable(), field });
         switch (field.type) {
-            case AITableFieldType.text:
-            case AITableFieldType.richText:
-            case AITableFieldType.number:
-                return transformValue;
             case AITableFieldType.select:
                 return Array.isArray(transformValue)
                     ? transformValue.map((v) => (field.settings as SelectSettings)?.options?.find((o) => o._id === v)?.text || v).join(', ')
                     : transformValue?.text || transformValue;
-            case AITableFieldType.date:
-                return transformValue ? new Date(transformValue).toLocaleString() : '';
+            case AITableFieldType.link:
+                return transformValue?.text || transformValue;
+            case AITableFieldType.attachment:
+                const references = this.references();
+                const values = (transformValue as AttachmentFieldValue)
+                    .map((item) => references.attachments?.[item])
+                    .filter((item) => !!item);
+                return values.map((item) => item.title).join(', ');
             default:
                 return transformValue;
         }

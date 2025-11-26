@@ -43,7 +43,8 @@ export class RecordDetailService {
                 aiTable: config.aiTable,
                 recordId: config.recordId,
                 references: config.references,
-                actions: config.actions
+                actions: config.actions,
+                transformTitleValue: config.transformTitleValue
             },
             ...config.slideConfig
         });
