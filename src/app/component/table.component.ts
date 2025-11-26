@@ -19,9 +19,7 @@ import {
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
-import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
 import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective, ThyEnterDirective, ThyOption } from 'ngx-tethys/shared';
@@ -33,8 +31,6 @@ import { ThySelect } from 'ngx-tethys/select';
 import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
 import { ThySwitch } from 'ngx-tethys/switch';
 import { getAITAbleDataLocalStorage } from '../utils/utils';
-import { RecordDetailService } from '@ai-table/grid';
-import { ThySlideService } from 'ngx-tethys/slide';
 
 const initViews: AITableView[] = [
     {
@@ -53,14 +49,11 @@ const initViews: AITableView[] = [
     selector: 'demo-ai-table',
     imports: [
         RouterOutlet,
-        ThyAction,
         ThyTabs,
         ThyTab,
         ThyPopoverModule,
         FormsModule,
         ThyInputDirective,
-        // ThyIconModule,
-        ThyAction,
         ThyDropdownModule,
         ThyEnterDirective,
         ThyAutofocusDirective,
