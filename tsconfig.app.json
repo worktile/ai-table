@@ -3,26 +3,26 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "outDir": "./out-tsc/app",
-        "types": [],
-        "paths": {
-            "@ai-table/grid": [
-                "./packages/grid/src/index"
-            ],
-            "@ai-table/state": [
-                "./packages/state/src/public-api"
-            ],
-            "@ai-table/utils": [
-                "./packages/utils/src/index"
-            ]
-        },
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "module": "es2020",
-        "lib": [
-            "es2022",
-            "dom"
+      "outDir": "./out-tsc/app",
+      "types": [],
+      "paths": {
+        "@ai-table/grid": [
+          "./packages/grid/src/index"
+        ],
+        "@ai-table/state": [
+          "./packages/state/src/public-api"
+        ],
+        "@ai-table/utils": [
+          "./packages/utils/src/index"
         ]
+      },
+      "moduleResolution": "bundler",
+      "importHelpers": true,
+      "module": "es2020",
+      "lib": [
+        "es2022",
+        "dom"
+      ]
     },
     "files": [
         "src/main.ts"

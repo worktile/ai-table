@@ -12,9 +12,7 @@ import {
     AITableGridI18nText,
     CheckboxMenuSort,
     scrollToMatchedCell,
-    setCollapseDisabled,
-    AI_TABLE_EXPAND_RECORD_ICON,
-    RecordDetailService
+    setCollapseDisabled
 } from '@ai-table/grid';
 import {
     Actions,
@@ -101,7 +99,7 @@ import {
     CopyRecordOptions
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
-import { CommonModule } from '@angular/common';
+
 import { ThyEnterDirective, ThyStopPropagationDirective } from 'ngx-tethys/shared';
 import { renderRelationCell } from '../../../custom-field/relation/render';
 import { AITableCellRelationTicket } from '../../../custom-field/relation/hover-render';
@@ -124,7 +122,7 @@ const AITableI18nText: Record<string, string> = {
 @Component({
     selector: 'ai-table-add-input',
     template: ` <thy-input-number [(ngModel)]="modelValue().value" thyStopPropagation></thy-input-number> `,
-    imports: [ThyInputNumber, CommonModule, FormsModule, ThyStopPropagationDirective],
+    imports: [ThyInputNumber, FormsModule, ThyStopPropagationDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuAddRecordsComponent {
@@ -257,7 +255,7 @@ export class DemoTableContent {
                     { ...DividerMenuItem, hidden: () => readonly },
                     freezeToThisColumn(this.aiTable),
                     restoreDefaultFrozenColumn(this.aiTable),
-                    { ...DividerMenuItem, hidden: () => readonly},
+                    { ...DividerMenuItem, hidden: () => readonly },
                     {
                         type: 'sortByAsc',
                         name: (field: AITableField) => {
@@ -281,7 +279,7 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {
                         type: 'sortByDesc',
@@ -306,7 +304,7 @@ export class DemoTableContent {
                             }
                             return null;
                         },
-                        exec: (aiTable: AITable, field: Signal<AITableField>) => {},
+                        exec: (aiTable: AITable, field: Signal<AITableField>) => {}
                     },
                     {
                         type: 'filterFields',
@@ -385,7 +383,7 @@ export class DemoTableContent {
         },
         addField: (data: AddFieldOptions) => {
             this.addField(data);
-        },
+        }
     };
 
     contextMenuItems = (aiTable: AITable) => {
@@ -577,7 +575,7 @@ export class DemoTableContent {
     }
 
     removeRecord(data: IdPath[]) {
-        data.forEach(idPath => {
+        data.forEach((idPath) => {
             Actions.removeRecord(this.aiTable as AIViewTable, idPath);
         });
     }

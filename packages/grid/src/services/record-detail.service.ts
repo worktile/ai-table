@@ -7,6 +7,7 @@ import { AITableActions, clearSelection } from '../utils';
 import { fromEvent } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { AITableGridCellRenderSchema } from '../types';
+import { AITableRecordDetailConfig } from '../types';
 
 export interface RecordDetailConfig {
     readonly viewContainerRef: ViewContainerRef;
@@ -25,11 +26,11 @@ export class RecordDetailService {
     private thySlide = inject(ThySlideService);
     private currentSlideRef: ThySlideRef<RecordDetailComponent> | null = null;
     private clickSubscription: Subscription | null = null;
-    private config: RecordDetailConfig | null = null;
+    private config: (RecordDetailConfig & AITableRecordDetailConfig) | null = null;
 
-    open(config: RecordDetailConfig): ThySlideRef<RecordDetailComponent> {
+    open(config: RecordDetailConfig & AITableRecordDetailConfig): ThySlideRef<RecordDetailComponent> {
         if (this.isOpen()) {
-            this.currentSlideRef?.componentInstance.setSelection(config.recordId);
+            this.currentSlideRef?.componentInstance.setSelection(config.recordId!);
             return this.currentSlideRef!;
         }
         this.config = config;
@@ -43,7 +44,8 @@ export class RecordDetailService {
                 recordId: config.recordId,
                 references: config.references,
                 actions: config.actions
-            }
+            },
+            ...config.slideConfig
         });
         if (this.currentSlideRef) {
             this.currentSlideRef.afterOpened().subscribe(() => {
@@ -65,7 +67,7 @@ export class RecordDetailService {
         }
         this.currentSlideRef = null;
         if (this.config) {
-            clearSelection(this.config.aiTable);
+            clearSelection(this.config.aiTable!);
             this.config = null;
         }
     }
@@ -74,32 +76,33 @@ export class RecordDetailService {
         return this.currentSlideRef !== null;
     }
 
-    private isClickInsideTableOrPanel(event: MouseEvent, viewContainerRef: ViewContainerRef): boolean {
+    private canCloseSlide(event: MouseEvent, viewContainerRef: ViewContainerRef): boolean {
         const target = event.target as HTMLElement;
 
         const tableElement = viewContainerRef.element.nativeElement;
         if (tableElement && tableElement.contains(target)) {
-            return true;
+            return false;
         }
 
         const overlayContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = 0; i < overlayContainers.length; i++) {
             if (overlayContainers[i].contains(target)) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
-    private setupDocumentClickListener(config: RecordDetailConfig): void {
+    private setupDocumentClickListener(config: RecordDetailConfig & AITableRecordDetailConfig): void {
         if (this.clickSubscription) {
             this.clickSubscription.unsubscribe();
             this.clickSubscription = null;
         }
 
         this.clickSubscription = fromEvent<MouseEvent>(document, 'click').subscribe((event) => {
-            if (!this.isClickInsideTableOrPanel(event, config.viewContainerRef)) {
+            const callback = config.canCloseSlideCallback ? config.canCloseSlideCallback : this.canCloseSlide;
+            if (callback(event, config.viewContainerRef)) {
                 this.close();
             }
         });

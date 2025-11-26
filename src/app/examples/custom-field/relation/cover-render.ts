@@ -58,7 +58,7 @@ import {
 } from './types';
 import { hexToRgba } from './render';
 import { AITableReferences } from '@ai-table/utils';
-import { CommonModule } from '@angular/common';
+
 import { RelationCellLayout } from './render';
 import { ImageConfig } from 'konva/lib/shapes/Image';
 
@@ -178,7 +178,7 @@ import { ImageConfig } from 'konva/lib/shapes/Image';
             }
         </ko-group>
     `,
-    imports: [CommonModule, KoShape, KoContainer, AITableActionIcon, AITableTextComponent, AITableScrollableGroup],
+    imports: [KoShape, KoContainer, AITableActionIcon, AITableTextComponent, AITableScrollableGroup],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationCoverCell extends CoverCellBase {

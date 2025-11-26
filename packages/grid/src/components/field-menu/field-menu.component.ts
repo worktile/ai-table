@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, computed, input, output } from '@angular/core';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
@@ -6,6 +6,7 @@ import { AITableField } from '@ai-table/utils';
 import { AITableFieldMenuItem } from '../../types/field';
 import { NgClass, NgComponentOutlet } from '@angular/common';
 import { AITable } from '../../core';
+import { ThyPopoverRef } from 'ngx-tethys/popover';
 
 @Component({
     selector: 'ai-table-field-menu',
@@ -27,6 +28,8 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
 
     @Input() position!: { x: number; y: number };
 
+    execMenuCallback = input<(data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => void>();
+
     field = computed(() => {
         return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
     });
@@ -34,9 +37,13 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     getCustomComponent(menu: AITableFieldMenuItem) {
         return menu.customComponent?.(this.aiTable, this.field()!);
     }
+
     execute(menu: AITableFieldMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
-            menu.exec && menu.exec(this.aiTable, this.field, this.origin, this.position);
+            if (menu.exec) {
+                const popoverRef = menu.exec(this.aiTable, this.field, this.origin, this.position);
+                this.execMenuCallback()?.({ menu, popoverRef });
+            }
         }
     }
 

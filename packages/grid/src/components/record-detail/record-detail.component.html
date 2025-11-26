@@ -40,10 +40,10 @@
     </div>
 
     <div class="record-detail-body">
-        <div class="cell-list-viewport">
+        <div class="px-8 cell-list-viewport">
             @for (field of fields(); track field._id) {
                 <div
-                    class="px-5 pt-4 cell-item"
+                    class="pt-4 cell-item"
                     [class.active]="activeFieldId === field._id"
                     (mouseenter)="showFieldMenu(field._id)"
                     (mouseleave)="hideFieldMenu(field._id)"
@@ -57,15 +57,21 @@
                                     </svg>
                                 }
                             </span>
-                            <span class="d-flex align-items-center font-size-base text-secondary">
+                            <span class="d-flex align-items-center font-size-base">
                                 {{ field.name }}
                             </span>
                         </div>
-                        <div class="cell-operations" [class.visible]="fieldMenuVisible[field._id]">
-                            <button thyButton="link-secondary" thySize="xs" (click)="fieldMenuMoreClick($event, field._id)">
-                                <thy-icon thyIconName="more-vertical"></thy-icon>
-                            </button>
-                        </div>
+                        @if (!readonly()) {
+                            <div class="cell-operations" [class.visible]="fieldMenuVisible()[field._id]">
+                                <a
+                                    thyAction
+                                    [thyActionActive]="fieldMenuActive()[field._id]"
+                                    href="javascript:;"
+                                    (click)="fieldMenuMoreClick($event, field._id)"
+                                    ><thy-icon thyIconName="more-vertical"></thy-icon
+                                ></a>
+                            </div>
+                        }
                     </div>
 
                     <div class="dynamic-cell-editor" (click)="fieldClick(field._id)">
@@ -82,10 +88,12 @@
             }
         </div>
         <div class="py-4 px-5">
-            <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
-                <thy-icon thyIconName="plus"></thy-icon>
-                <span>新增字段</span>
-            </button>
+            @if (!readonly()) {
+                <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
+                    <thy-icon thyIconName="plus"></thy-icon>
+                    <span>新增字段</span>
+                </button>
+            }
         </div>
     </div>
 </div>

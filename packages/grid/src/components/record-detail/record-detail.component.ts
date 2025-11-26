@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ThyButton } from 'ngx-tethys/button';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { ThyPopover, ThyPopoverDirective } from 'ngx-tethys/popover';
+import { ThyPopover, ThyPopoverDirective, ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThySlideRef } from 'ngx-tethys/slide';
 import { AITable, AITableQueries, createDefaultField } from '../../core';
 import {
@@ -41,10 +41,12 @@ import {
     transformToCellText,
     getFieldIconPath
 } from '../../utils';
+import { ThyAction } from 'ngx-tethys/action';
+import { AITableFieldMenuItem } from '../../types/field';
 
 @Component({
     selector: 'ai-record-detail',
-    imports: [ThyButton, ThyIcon, ThyDivider, ThyPopoverDirective, ThyDropdownMenuItemDirective, DynamicCellEditorComponent],
+    imports: [ThyButton, ThyAction, ThyIcon, ThyDivider, ThyPopoverDirective, ThyDropdownMenuItemDirective, DynamicCellEditorComponent],
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -59,6 +61,10 @@ export class RecordDetailComponent implements OnInit {
 
     private internalRecordId = signal<string>('');
 
+    readonly = computed(() => {
+        return this.aiTable().context?.readonly?.();
+    });
+
     currentRecordId = computed(() => {
         const inputId = this.recordId();
         const internalId = this.internalRecordId();
@@ -66,9 +72,6 @@ export class RecordDetailComponent implements OnInit {
     });
 
     readonly fieldOperationsMenuTemplate = viewChild<TemplateRef<any>>('fieldOperationsMenuTemplate');
-
-    private slideRef = inject(ThySlideRef);
-    private thyPopover = inject(ThyPopover);
 
     record = computed(() => {
         return this.aiTable().recordsMap()[this.currentRecordId()];
@@ -113,7 +116,15 @@ export class RecordDetailComponent implements OnInit {
 
     activeFieldId: string | null = null;
 
-    fieldMenuVisible: Record<string, boolean> = {};
+    fieldMenuVisible = signal<Record<string, boolean>>({});
+
+    fieldMenuActive = signal<Record<string, boolean>>({});
+
+    private fieldMenuPopoverRef: ThyPopoverRef<any> | null = null;
+
+    private slideRef = inject(ThySlideRef);
+
+    private thyPopover = inject(ThyPopover);
 
     constructor() {
         effect(() => {
@@ -161,17 +172,22 @@ export class RecordDetailComponent implements OnInit {
     }
 
     showFieldMenu(fieldId: string): void {
-        this.fieldMenuVisible[fieldId] = true;
+        this.fieldMenuVisible.set({ [fieldId]: true });
     }
 
     hideFieldMenu(fieldId: string): void {
-        this.fieldMenuVisible[fieldId] = false;
+        if (!this.fieldMenuPopoverRef) {
+            this.fieldMenuVisible.set({ [fieldId]: false });
+        }
     }
 
     fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
         const origin = e.target as HTMLElement;
         const position = origin.getBoundingClientRect();
-        this.thyPopover.open(AITableFieldMenu, {
+        this.fieldMenuVisible.set({ [fieldId]: true });
+        this.fieldMenuActive.set({ [fieldId]: true });
+        let isSelfClose = false;
+        this.fieldMenuPopoverRef = this.thyPopover.open(AITableFieldMenu, {
             origin,
             placement: 'bottomRight',
             manualClosure: true,
@@ -180,9 +196,26 @@ export class RecordDetailComponent implements OnInit {
                 fieldId,
                 fieldMenus: this.fieldMenus(),
                 origin,
-                position
+                position,
+                execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
+                    isSelfClose = true;
+                    this.thyPopover.close();
+                    data.popoverRef?.beforeClosed().subscribe(() => {
+                        this.fieldMenuVisible.set({ [fieldId]: false });
+                        this.fieldMenuActive.set({ [fieldId]: false });
+                    });
+                }
             }
         });
+        if (this.fieldMenuPopoverRef) {
+            this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
+                if (!isSelfClose) {
+                    this.fieldMenuVisible.set({ [fieldId]: false });
+                    this.fieldMenuActive.set({ [fieldId]: false });
+                }
+                this.fieldMenuPopoverRef = null;
+            });
+        }
     }
 
     addNewField(e: MouseEvent): void {

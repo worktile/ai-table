@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, output, signal, computed, inject, DestroyRef, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ThyPopoverModule, ThyPopoverRef, ThyPopover } from 'ngx-tethys/popover';
 import { ThyInput, ThyInputDirective } from 'ngx-tethys/input';
@@ -113,7 +113,7 @@ export interface FindResult {
             }
         `
     ],
-    imports: [CommonModule, FormsModule, ThyPopoverModule, ThyInput, ThyButtonModule, ThyIconModule, ThyEnterDirective],
+    imports: [FormsModule, ThyPopoverModule, ThyInput, ThyButtonModule, ThyIconModule, ThyEnterDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FindPopoverComponent {

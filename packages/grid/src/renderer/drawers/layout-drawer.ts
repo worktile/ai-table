@@ -10,7 +10,7 @@ import { Drawer } from './drawer';
 /**
  * 用于处理表格行或单元格的布局和绘制。
  * 它提供了基本的布局信息（如位置、大小等），并定义了常用的绘图方法（如渲染缩进区域、添加新字段的空白区域等）。
- * 该类继承自 Drawer，并被其他更具体的布局类（如 RecordRowLayout）扩展和使用
+ * 该类继承自 Drawer，并被其他更具体的布局类（如 RecordLayout）扩展和使用
  */
 export class Layout extends Drawer {
     // 定义当前单元格或行的位置
