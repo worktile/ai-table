@@ -53,7 +53,10 @@ export enum AITableGridI18nKey {
     selectedRecordsCount = 'selectedRecordsCount',
     selectedCellsCount = 'selectedCellsCount',
     stat = 'stat',
-    emptyGroup = 'emptyGroup'
+    emptyGroup = 'emptyGroup',
+    recordUntitled = 'recordUntitled',
+    deleteRecord = 'deleteRecord',
+    addField = 'addField'
 }
 
 export const AITableGridI18nText = {
@@ -109,7 +112,10 @@ export const AITableGridI18nText = {
     [AITableGridI18nKey.selectedRecordsCount]: '已经选择 {count} 条记录',
     [AITableGridI18nKey.selectedCellsCount]: '已经选择 {count} 个单元格',
     [AITableGridI18nKey.stat]: '统计',
-    [AITableGridI18nKey.emptyGroup]: '(空)'
+    [AITableGridI18nKey.emptyGroup]: '(空)',
+    [AITableGridI18nKey.recordUntitled]: '未命名记录',
+    [AITableGridI18nKey.deleteRecord]: '删除',
+    [AITableGridI18nKey.addField]: '新增字段'
 };
 
 export const getDefaultI18nTextByKey = (key: AITableGridI18nKey): string => {

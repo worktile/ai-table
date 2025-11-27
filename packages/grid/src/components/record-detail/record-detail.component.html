@@ -5,16 +5,10 @@
         </span>
 
         <div class="record-navigation">
-            <button
-                thyButton="link-secondary"
-                thySize="md"
-                [disabled]="!recordNavigation()?.hasPrevious"
-                (click)="previousRecord()"
-                title="上一条"
-            >
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasPrevious" (click)="previousRecord()">
                 <thy-icon thyIconName="angle-up"></thy-icon>
             </button>
-            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()" title="下一条">
+            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()">
                 <thy-icon thyIconName="angle-down"></thy-icon>
             </button>
         </div>
@@ -28,12 +22,12 @@
                 <div class="thy-dropdown-menu">
                     <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
                         <thy-icon thyIconName="trash"></thy-icon>
-                        <span>删除</span>
+                        <span>{{ i18nTexts().deleteRecord }}</span>
                     </a>
                 </div>
             </ng-template>
 
-            <button thyButton="link-secondary" thySize="md" (click)="close()" title="关闭">
+            <button thyButton="link-secondary" thySize="md" (click)="close()">
                 <thy-icon thyIconName="close"></thy-icon>
             </button>
         </div>
@@ -91,7 +85,7 @@
             @if (!readonly()) {
                 <button class="p-0" thyButton="link-secondary" thySize="md" (click)="addNewField($event)">
                     <thy-icon thyIconName="plus"></thy-icon>
-                    <span>新增字段</span>
+                    <span>{{ i18nTexts().addField }}</span>
                 </button>
             }
         </div>

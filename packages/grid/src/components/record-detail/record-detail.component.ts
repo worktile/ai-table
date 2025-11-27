@@ -40,10 +40,13 @@ import {
     selectCells,
     setActiveCell,
     transformToCellText,
-    getFieldIconPath
+    getFieldIconPath,
+    getI18nTextByKey
 } from '../../utils';
 import { ThyAction } from 'ngx-tethys/action';
 import { AITableFieldMenuItem } from '../../types/field';
+import { IconPathMap } from '../../constants';
+import { AITableGridI18nKey } from '../../utils/i18n';
 
 @Component({
     selector: 'ai-record-detail',
@@ -93,15 +96,21 @@ export class RecordDetailComponent implements OnInit {
         return fields[fields.length - 1];
     });
 
+    i18nTexts = computed(() => ({
+        recordUntitled: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.recordUntitled),
+        deleteRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.deleteRecord),
+        addField: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.addField)
+    }));
+
     recordTitle = computed(() => {
         const firstField = this.firstField();
-        if (!firstField) return '未命名记录';
+        if (!firstField) return this.i18nTexts().recordUntitled;
 
         const cellValue = AITableQueries.getFieldValue(this.aiTable(), [this.currentRecordId(), firstField._id]);
         if (this.transformTitleValue()) {
-            return this.transformTitleValue()!(cellValue, firstField) || '未命名记录';
+            return this.transformTitleValue()!(cellValue, firstField) || this.i18nTexts().recordUntitled;
         }
-        return this.formatCellValue(cellValue, firstField) || '未命名记录';
+        return this.formatCellValue(cellValue, firstField) || this.i18nTexts().recordUntitled;
     });
 
     recordNavigation = computed(() => {
@@ -117,7 +126,7 @@ export class RecordDetailComponent implements OnInit {
     });
 
     fieldIconPath(field: AITableField) {
-        return getFieldIconPath(field);
+        return getFieldIconPath(field) || IconPathMap[field.icon!];
     }
 
     activeFieldId: string | null = null;
