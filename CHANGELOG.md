@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.2-1](https://github.com/worktile/ai-table/compare/0.4.2-0...0.4.2-1) (2025-11-27)
+
+
+### Bug Fixes
+
+* #WIK-19432 【Prod】下拉多选超出高度后再删除重写添加最大高度未清除导致无法查看更多内容 ([#821](https://github.com/worktile/ai-table/issues/821)) ([dc4b941](https://github.com/worktile/ai-table/commit/dc4b94111f27a1ea4544c144a7d269f592153a7c)), closes [#WIK-19432](https://github.com/worktile/ai-table/issues/WIK-19432)
+
+
+
 ## [0.4.2-0](https://github.com/worktile/ai-table/compare/0.4.1...0.4.2-0) (2025-11-27)
 
 
