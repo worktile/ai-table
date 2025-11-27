@@ -41,18 +41,7 @@ import {
     copyRecords,
     CopyRecords
 } from '@ai-table/state';
-import {
-    afterNextRender,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    inject,
-    input,
-    signal,
-    Signal,
-    ViewContainerRef
-} from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { ThyDatePickerFormatPipe } from 'ngx-tethys/date-picker';
@@ -96,7 +85,8 @@ import {
     SetFieldStatTypeOptions,
     AITableRecordHeightType,
     IdPath,
-    CopyRecordOptions
+    CopyRecordOptions,
+    CheckboxFieldValue
 } from '@ai-table/utils';
 import { ThyInputNumber } from 'ngx-tethys/input-number';
 
@@ -189,6 +179,15 @@ export class DemoTableContent {
                 }
             },
             fieldRenderers: {
+                [AITableFieldType.checkbox]: {
+                    toText: (field: AITableField, value: CheckboxFieldValue) => {
+                        if (isUndefinedOrNull(value)) {
+                            return '未命名记录';
+                        } else {
+                            return value ? '勾选' : '未勾选';
+                        }
+                    }
+                },
                 [AITableFieldType.date]: {
                     toText: (field: AITableField, value: DateFieldValue) => {
                         if (isUndefinedOrNull(value)) {

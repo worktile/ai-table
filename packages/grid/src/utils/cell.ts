@@ -2,7 +2,8 @@ import { AIRecordFieldIdPath, AITableField, AITableFieldOption, AITableSizeMap, 
 import { AITable, getFieldOptionByField } from '../core';
 import { AITableCellInfo, AITableRowType, AITableSelection } from '../types';
 import { AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_ROW_GROUP_OFFSET } from '../constants';
-import { helpers } from 'ngx-tethys/util';
+import { helpers, isUndefinedOrNull } from 'ngx-tethys/util';
+import { FieldModelMap } from './field';
 
 export function getColumnIndicesSizeMap(aiTable: AITable, fields: AITableField[]) {
     const fieldsMap = helpers.keyBy(aiTable.gridData().fields, '_id');
@@ -35,24 +36,31 @@ export function getCellHorizontalPosition(options: { columnWidth: number; column
     };
 }
 
-export function transformToCellText<T = any>(cellValue: FieldValue, options: FieldOptions): T | null {
-    const { aiTable, field } = options;
+export function transformToCellText(cellValue: FieldValue, options: FieldOptions): string {
+    const { aiTable, field, references } = options;
     const fieldRenderers = aiTable?.context?.aiFieldConfig()?.fieldRenderers;
+
     if (!fieldRenderers || !field) {
         return cellValue;
     }
 
+    let cellText: string;
     const toText = fieldRenderers[field.type]?.toText;
-    if (!toText) {
-        return cellValue;
+    if (toText) {
+        cellText = toText(field, cellValue);
+        return cellText;
     }
 
-    const cellText = toText(field, cellValue);
-    if (cellText == null) {
-        return cellValue;
+    if (!isUndefinedOrNull(cellValue)) {
+        const fieldModel = FieldModelMap[field.type];
+        const transformValue = fieldModel.cellFullText(cellValue, field, references);
+        if (transformValue?.length) {
+            cellText = transformValue.join(', ');
+            return cellText;
+        }
     }
 
-    return cellText;
+    return cellValue;
 }
 
 /**

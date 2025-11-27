@@ -1,8 +1,10 @@
 import { AITableField, AITableRecord, AITableRecords, AITableStatType } from './core';
+import { AITableReferences } from './grid';
 
 export interface FieldOptions {
     aiTable?: any;
     field?: AITableField;
+    references?: AITableReferences;
 }
 
 export interface FieldStatOptions extends FieldOptions {

@@ -21,8 +21,9 @@ import {
     AITableFieldType,
     AITableReferences,
     UpdateFieldValueOptions,
-    SelectSettings,
-    AIRecordFieldIdPath
+    AIRecordFieldIdPath,
+    isUndefinedOrNull,
+    FieldOptions
 } from '@ai-table/utils';
 import { AITableFieldMenu } from '../field-menu/field-menu.component';
 import { DynamicCellEditorComponent } from './dynamic-cell-editor.component';
@@ -46,10 +47,20 @@ import { ThyAction } from 'ngx-tethys/action';
 import { AITableFieldMenuItem } from '../../types/field';
 import { IconPathMap } from '../../constants';
 import { AITableGridI18nKey } from '../../utils/i18n';
+import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 
 @Component({
     selector: 'ai-record-detail',
-    imports: [ThyButton, ThyAction, ThyIcon, ThyDivider, ThyPopoverDirective, ThyDropdownMenuItemDirective, DynamicCellEditorComponent],
+    imports: [
+        ThyButton,
+        ThyAction,
+        ThyIcon,
+        ThyDivider,
+        ThyPopoverDirective,
+        ThyDropdownMenuItemDirective,
+        DynamicCellEditorComponent,
+        ThyFlexibleText
+    ],
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -100,11 +111,22 @@ export class RecordDetailComponent implements OnInit {
     }));
 
     recordTitle = computed(() => {
-        const firstField = this.firstField();
-        if (!firstField) return this.i18nTexts().recordUntitled;
+        let title = this.i18nTexts().recordUntitled;
 
-        const cellValue = AITableQueries.getFieldValue(this.aiTable(), [this.currentRecordId(), firstField._id]);
-        return this.formatCellValue(cellValue, firstField) || this.i18nTexts().recordUntitled;
+        const field = this.firstField();
+        if (field) {
+            const cellValue = AITableQueries.getFieldValue(this.aiTable(), [this.currentRecordId(), field._id]);
+            if (!isUndefinedOrNull(cellValue)) {
+                const options: FieldOptions = {
+                    aiTable: this.aiTable(),
+                    field,
+                    references: this.references()
+                };
+                title = transformToCellText(cellValue, options);
+            }
+        }
+
+        return title;
     });
 
     recordNavigation = computed(() => {
@@ -270,24 +292,5 @@ export class RecordDetailComponent implements OnInit {
 
     private activateField(fieldId: string): void {
         setActiveCell(this.aiTable(), [this.recordId(), fieldId]);
-    }
-
-    private formatCellValue(value: any, field: AITableField): string {
-        if (value === null || value === undefined) return '';
-        const transformValue = transformToCellText(value, { aiTable: this.aiTable(), field });
-        switch (field.type) {
-            case AITableFieldType.text:
-            case AITableFieldType.richText:
-            case AITableFieldType.number:
-                return transformValue;
-            case AITableFieldType.select:
-                return Array.isArray(transformValue)
-                    ? transformValue.map((v) => (field.settings as SelectSettings)?.options?.find((o) => o._id === v)?.text || v).join(', ')
-                    : transformValue?.text || transformValue;
-            case AITableFieldType.date:
-                return transformValue ? new Date(transformValue).toLocaleString() : '';
-            default:
-                return transformValue;
-        }
     }
 }
