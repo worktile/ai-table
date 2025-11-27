@@ -86,6 +86,8 @@ export abstract class AbstractEditCellEditor<TValue, TFieldType extends AITableF
                 if (isSetHeight || scrollHeight < this.recordHeight()) {
                     this.render2.setStyle(element, 'height', `${Math.max(newHeight, this.recordHeight())}px`);
                     this.render2.setStyle(element, 'max-height', `${AI_TABLE_RECORD_HEIGHT_LEVELS.high}px`);
+                } else {
+                    this.render2.setStyle(element, 'max-height', 'none');
                 }
 
                 onHeightAdjusted?.();
