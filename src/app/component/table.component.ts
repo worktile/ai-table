@@ -97,7 +97,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     hiddenRowDrag = false;
 
-    hiddenExpandRecord = true;
+    hiddenExpandRecord = this.tableService.hiddenExpandRecord();
 
     group = false;
 
@@ -124,6 +124,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     private thyPopover = inject(ThyPopover);
 
     ngOnInit(): void {
+        this.hiddenExpandRecord = this.tableService.hiddenExpandRecord();
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         const aiTableData = getAITAbleDataLocalStorage();
         const views = ((aiTableData && aiTableData.views) || initViews) as AITableView[];
