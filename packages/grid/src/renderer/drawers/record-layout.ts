@@ -1,8 +1,10 @@
 import {
+    AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_FIELD_ADD_BUTTON_WIDTH,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
     DEFAULT_FONT_SIZE
 } from '../../constants';
 import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from '../../constants/text';
@@ -34,55 +36,47 @@ export class RecordLayout extends Layout {
         if (!this.isFirst) return;
         const { fill } = style || {};
         const { fill: indexFill } = indexStyle || {};
+        const x = AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH;
         const y = this.y;
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
-        const colors = AITable.getColors();
+        const width = this.rowHeadWidth - x + columnWidth;
+        const indexWidth = this.hiddenExpandRecord ? this.rowHeadWidth - x : this.rowHeadWidth - x - AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
+        this.rect({
+            x: x + indexWidth,
+            y: y + AI_TABLE_OFFSET,
+            width: width - indexWidth,
+            height: rowHeight - AI_TABLE_OFFSET * 2,
+            fill
+        });
+
+        // 底部边框
+        this.line({
+            x: x,
+            y: y,
+            points: [0, rowHeight, width, rowHeight],
+            stroke: this.colors.gray200
+        });
         if (!this.hiddenIndexColumn) {
-            this.customRect({
-                x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
-                y,
-                width: this.rowHeadWidth - AI_TABLE_OFFSET - AI_TABLE_ROW_DRAG_ICON_WIDTH,
-                height: rowHeight,
-                fill: indexFill,
-                strokes: {
-                    right: colors.gray200,
-                    bottom: colors.gray200
-                }
+            // 垂直边框
+            this.line({
+                x: x,
+                y: y,
+                points: [indexWidth, 0, indexWidth, rowHeight],
+                stroke: this.colors.gray200
             });
+
             if (this.readonly || (!isCheckedRow && !isHoverRow)) {
                 // 设置字体样式，居中绘制行号
                 this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
                 this.text({
-                    x: (this.rowHeadWidth + AI_TABLE_ROW_DRAG_ICON_WIDTH) / 2,
+                    x: x + indexWidth / 2 - AI_TABLE_CELL_LINE_BORDER,
                     y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
                     text: String((row as AITableLinearRowRecord).displayIndex),
                     textAlign: DEFAULT_TEXT_ALIGN_CENTER,
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
                 });
             }
-            // 第一列单元格
-            this.rect({
-                x: this.rowHeadWidth,
-                y,
-                width: columnWidth + AI_TABLE_OFFSET,
-                height: rowHeight,
-                fill: fill,
-                stroke: colors.gray200
-            });
-        } else {
-            // 第一列单元格
-            this.customRect({
-                x: this.rowHeadWidth,
-                y,
-                width: columnWidth + AI_TABLE_OFFSET,
-                height: rowHeight,
-                fill: fill,
-                strokes: {
-                    right: colors.gray200,
-                    bottom: colors.gray200
-                }
-            });
         }
 
         if (this.isLast) {

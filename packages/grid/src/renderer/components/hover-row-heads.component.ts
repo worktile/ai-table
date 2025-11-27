@@ -7,6 +7,7 @@ import {
     AI_TABLE_ROW_DRAG,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     Colors
 } from '../../constants';
@@ -89,13 +90,16 @@ export class AITableHoverRowHeads {
             }
 
             let operationGroup: { recordId: string; y: number; bgConfig: any; iconConfig?: any; dragConfig?: any };
+            const bgWidth = aiTable.context?.aiFieldConfig()?.hiddenExpandRecord
+                ? context.rowHeadWidth() + 1
+                : context.rowHeadWidth() - AI_TABLE_ROW_HEAD_EXPAND_WIDTH + 1;
 
             operationGroup = {
                 recordId,
                 y: coordinate.getRowOffset(rowIndex),
                 bgConfig: {
                     name: generateTargetName({ targetName: AI_TABLE_ROW_HEAD, recordId }),
-                    width: context.rowHeadWidth() + 1,
+                    width: bgWidth,
                     height: coordinate.rowHeight,
                     fill: Colors.transparent
                 }

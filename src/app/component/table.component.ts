@@ -97,6 +97,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     hiddenRowDrag = false;
 
+    hiddenExpandRecord = true;
+
     group = false;
 
     activeViewName!: string;
@@ -159,6 +161,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleHiddenRowDragChange(e: any) {
         this.hiddenRowDrag = e.target.checked;
         this.tableService.setHiddenRowDrag(e.target.checked);
+    }
+
+    handleHiddenExpandRecordChange(e: any) {
+        this.hiddenExpandRecord = e.target.checked;
+        this.tableService.setHiddenExpandRecord(e.target.checked);
     }
 
     handleMaxRecordsChange() {

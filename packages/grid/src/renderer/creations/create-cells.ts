@@ -30,6 +30,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
 
     const xIsScroll = aiTable!.context!.scrollState().scrollLeft > 0;
 
+    const hiddenExpandRecord = !!aiTable.context?.aiFieldConfig()?.hiddenExpandRecord;
+
     // 初始化绘图上下文, 为后续的绘制操作做准备
     cellDrawer.initCtx(ctx as CanvasRenderingContext2D);
     addRecordLayout.initCtx(ctx as CanvasRenderingContext2D);
@@ -82,6 +84,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        hiddenExpandRecord,
                         readonly: aiTable.context?.readonly?.(),
                         frozenColumnCount
                     });
@@ -111,6 +114,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        hiddenExpandRecord,
                         readonly: aiTable.context?.readonly?.(),
                         frozenColumnCount,
                         xIsScroll
@@ -190,6 +194,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         rowHeadWidth: context.rowHeadWidth(),
                         hiddenIndexColumn: !!context.aiFieldConfig()?.hiddenIndexColumn,
                         hiddenRowDrag: !!context.aiFieldConfig()?.hiddenRowDrag,
+                        hiddenExpandRecord,
                         readonly: aiTable.context?.readonly?.(),
                         frozenColumnCount,
                         xIsScroll

@@ -162,6 +162,7 @@ export class DemoTableContent {
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             hiddenRowDrag: this.tableService.hiddenRowDrag(),
+            hiddenExpandRecord: this.tableService.hiddenExpandRecord(),
             customFields: {
                 [AITableCustomFieldType.customDemo]: {
                     fieldOption: {

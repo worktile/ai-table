@@ -215,6 +215,8 @@ export class Drawer {
         if (strokes) {
             const { top, right, bottom, left } = strokes;
             // 上边框
+            this.ctx.fillRect(x, y, width, height);
+
             this.ctx.beginPath();
             this.setStyle({ strokeStyle: top ?? this.colors.transparent });
             this.ctx.moveTo(x, y);

@@ -36,8 +36,7 @@ export class GroupLayout extends Layout {
         const { field, style, aiTable } = render;
         const y = this.y;
         const rowHeight = this.rowHeight;
-        const { fill: indexFill } = indexStyle || {};
-
+        const { fill: indexFill } = indexStyle || { fill: this.colors.white };
         if (!this.hiddenIndexColumn) {
             this.customRect({
                 x: AI_TABLE_OFFSET + AI_TABLE_ROW_DRAG_ICON_WIDTH,
@@ -113,7 +112,7 @@ export class GroupLayout extends Layout {
     render(render: AITableRender, config: AITableCell<AITableLinearRowGroup>) {
         const { style, isHoverRow, isCheckedRow } = config;
         this.renderFirstCell(render, config);
-        this.renderCommonCell({ style });
+        this.renderCommonCell({ style: { fill: this.colors.transparent } });
         this.renderLastCell({ style, isHoverRow, isCheckedRow });
         this.renderFrozenShadow();
     }
