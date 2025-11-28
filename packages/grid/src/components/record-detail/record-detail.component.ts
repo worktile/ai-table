@@ -196,10 +196,8 @@ export class RecordDetailComponent implements OnInit {
         this.close();
     }
 
-    fieldClick(fieldId: string): void {
-        this.activateField(fieldId);
-
-        setActiveCell(this.aiTable(), [this.currentRecordId(), fieldId]);
+    cellClick(fieldId: string): void {
+        this.activateCell(fieldId);
     }
 
     showFieldMenu(fieldId: string): void {
@@ -284,13 +282,13 @@ export class RecordDetailComponent implements OnInit {
 
     setSelection(recordId: string) {
         clearSelection(this.aiTable());
-        closeExpendCell(this.aiTable());
         const idPath: AIRecordFieldIdPath = [recordId, this.firstField()?._id];
         selectCells(this.aiTable(), idPath);
         setActiveCell(this.aiTable(), idPath);
     }
 
-    private activateField(fieldId: string): void {
+    private activateCell(fieldId: string): void {
+        clearSelection(this.aiTable());
         setActiveCell(this.aiTable(), [this.recordId(), fieldId]);
     }
 }
