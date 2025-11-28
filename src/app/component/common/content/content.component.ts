@@ -12,7 +12,8 @@ import {
     AITableGridI18nText,
     CheckboxMenuSort,
     scrollToMatchedCell,
-    setCollapseDisabled
+    setCollapseDisabled,
+    AITableRecordDetailConfig
 } from '@ai-table/grid';
 import {
     Actions,
@@ -341,6 +342,12 @@ export class DemoTableContent {
                     }
                 ];
             }
+        };
+    });
+
+    aiRecordDetailConfig: Signal<AITableRecordDetailConfig> = computed(() => {
+        return {
+            showExpandIcon: this.tableService.showExpandIcon()
         };
     });
 

@@ -1,22 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoContainer } from '../../angular-konva';
-import { AITable } from '../../core';
-import { AITableIcon } from './icon.component';
-import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
-import { AITableExpandRecordConfig, AITableIconConfig, AITableRowType } from '../../types';
+import { AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
+import { AITableActionIconConfig, AITableExpandRecordConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
-import { AI_TABLE_EXPAND_RECORD_ICON } from '../../constants/table';
+import {
+    AI_TABLE_ACTION_COMMON_RADIUS,
+    AI_TABLE_ACTION_COMMON_SIZE,
+    AI_TABLE_EXPAND_RECORD_ICON,
+    AI_TABLE_FIELD_HEAD_HEIGHT,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH
+} from '../../constants/table';
+import { AITableActionIcon } from './action-icon.component';
 
 @Component({
     selector: 'ai-table-expand-record',
     template: `
         <ko-group>
             @if (shouldShowIcon()) {
-                <ai-table-icon [config]="expandIconConfig()"></ai-table-icon>
+                <ai-table-action-icon [config]="expandIconConfig()"></ai-table-action-icon>
             }
         </ko-group>
     `,
-    imports: [KoContainer, AITableIcon],
+    imports: [KoContainer, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableExpandRecord {
@@ -27,38 +32,38 @@ export class AITableExpandRecord {
         const context = aiTable.context;
         if (!context) return false;
 
+        if (!context.recordDetailConfig?.()?.showExpandIcon) return false;
+
         const { rowIndex: pointRowIndex } = context.pointPosition();
         const row = context.linearRows()[pointRowIndex];
         return pointRowIndex >= rowStartIndex && pointRowIndex <= rowStopIndex && row && row.type === AITableRowType.record;
     });
 
-    expandIconConfig = computed<AITableIconConfig>(() => {
-        const { aiTable, coordinate } = this.config();
+    expandIconConfig = computed<AITableActionIconConfig>(() => {
+        const { coordinate, aiTable } = this.config()!;
         const context = aiTable.context!;
         const { rowIndex: pointRowIndex } = context.pointPosition();
-        const rowHeight = coordinate.rowHeight;
-        const firstColumnWidth = coordinate.getColumnWidth(0);
-        const firstColumnOffset = coordinate.getColumnOffset(0);
-
-        const y = coordinate.getRowOffset(pointRowIndex) + AI_TABLE_OFFSET;
-        const iconSize = AI_TABLE_ICON_COMMON_SIZE;
-        const padding = 8;
-        const x = firstColumnOffset + firstColumnWidth - iconSize - padding;
         const row = context.linearRows()[pointRowIndex];
         const recordId = row?._id;
 
+        const firstColumnOffset = coordinate.getColumnOffset(0);
+        const y = coordinate.getRowOffset(pointRowIndex) + AI_TABLE_OFFSET;
         return {
-            x,
-            y: y + (rowHeight - iconSize) / 2,
+            coordinate,
+            name: generateTargetName({
+                targetName: AI_TABLE_EXPAND_RECORD_ICON,
+                recordId,
+                mouseStyle: 'pointer'
+            }),
+            x: firstColumnOffset - AI_TABLE_ROW_HEAD_EXPAND_WIDTH + (AI_TABLE_ROW_HEAD_EXPAND_WIDTH - AI_TABLE_ACTION_COMMON_SIZE) / 2,
+            y: y + (AI_TABLE_FIELD_HEAD_HEIGHT - AI_TABLE_ACTION_COMMON_SIZE) / 2,
             data: ExpandRecordPath,
             fill: Colors.gray600,
-            name: recordId
-                ? generateTargetName({
-                      targetName: AI_TABLE_EXPAND_RECORD_ICON,
-                      recordId: recordId,
-                      mouseStyle: 'pointer'
-                  })
-                : undefined
+            hoverFill: Colors.primary,
+            backgroundWidth: AI_TABLE_ACTION_COMMON_SIZE,
+            backgroundHeight: AI_TABLE_ACTION_COMMON_SIZE,
+            cornerRadius: AI_TABLE_ACTION_COMMON_RADIUS,
+            listening: true
         };
     });
 }

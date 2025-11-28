@@ -97,6 +97,8 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
 
     hiddenRowDrag = false;
 
+    showExpandIcon = this.tableService.showExpandIcon();
+
     group = false;
 
     activeViewName!: string;
@@ -122,6 +124,7 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     private thyPopover = inject(ThyPopover);
 
     ngOnInit(): void {
+        this.showExpandIcon = this.tableService.showExpandIcon();
         let activeViewId = localStorage.getItem(`${LOCAL_STORAGE_KEY}`);
         const aiTableData = getAITAbleDataLocalStorage();
         const views = ((aiTableData && aiTableData.views) || initViews) as AITableView[];
@@ -159,6 +162,11 @@ export class DemoTable implements OnInit, AfterViewInit, OnDestroy {
     handleHiddenRowDragChange(e: any) {
         this.hiddenRowDrag = e.target.checked;
         this.tableService.setHiddenRowDrag(e.target.checked);
+    }
+
+    handleShowExpandIconChange(e: any) {
+        this.showExpandIcon = e.target.checked;
+        this.tableService.setShowExpandIcon(e.target.checked);
     }
 
     handleMaxRecordsChange() {

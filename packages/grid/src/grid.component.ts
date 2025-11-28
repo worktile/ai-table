@@ -48,7 +48,9 @@ import {
     DEFAULT_SCROLL_STATE,
     IconPathMap,
     AI_TABLE_ROW_HEIGHT,
-    AI_TABLE_EXPAND_RECORD_ICON
+    AI_TABLE_EXPAND_RECORD_ICON,
+    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -173,6 +175,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
         return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     });
+
+    private showExpandIcon = computed(() => !!this.aiRecordDetailConfig()?.showExpandIcon);
 
     hasContainerRect = computed(() => {
         return this.containerRect().width > 0 && this.containerRect().height > 0;
@@ -438,8 +442,15 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             containerRect: this.containerRect,
             rowHeadWidth: computed(() => {
                 const aiFieldConfig = this.aiFieldConfig();
-                let width = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
-                return aiFieldConfig?.hiddenIndexColumn ? AI_TABLE_ROW_DRAG_ICON_WIDTH : width;
+                const showExpandIcon = this.showExpandIcon();
+                let width = AI_TABLE_ROW_DRAG_ICON_WIDTH;
+                if (showExpandIcon) {
+                    width += AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
+                }
+                if (!aiFieldConfig?.hiddenIndexColumn) {
+                    width += AI_TABLE_ROW_HEAD_WIDTH;
+                }
+                return width;
             }),
             linearRows: this.linearRows,
             visibleColumnsIndexMap: this.visibleColumnsIndexMap,
@@ -457,7 +468,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
             groupCollapseDisabled: signal(false),
-            readonly: this.aiReadonly
+            readonly: this.aiReadonly,
+            recordDetailConfig: this.aiRecordDetailConfig
         });
     }
 

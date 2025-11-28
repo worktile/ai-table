@@ -66,6 +66,8 @@ export interface AITableFieldHeadConfig {
     iconVisible?: boolean;
     isSelected?: boolean;
     isHoverIcon?: boolean;
+    isFirstHead?: boolean;
+    showExpandIcon?: boolean;
 }
 
 export interface AITableFieldStatConfig {
