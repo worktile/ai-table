@@ -107,8 +107,8 @@ export class AITableRenderer {
         return this.config()?.aiTable.context?.aiFieldConfig()?.hiddenIndexColumn;
     });
 
-    hiddenExpandRecord = computed(() => {
-        return this.config()?.aiTable.context?.aiFieldConfig()?.hiddenExpandRecord;
+    showExpandRecordIcon = computed(() => {
+        return !!this.config()?.aiTable.context?.aiFieldConfig()?.showExpandRecordIcon;
     });
 
     coordinate = computed(() => {

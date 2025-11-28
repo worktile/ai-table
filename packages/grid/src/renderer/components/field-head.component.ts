@@ -78,9 +78,9 @@ export class AITableFieldHead {
     });
 
     bgConfig = computed(() => {
-        const { field, width, height, stroke, isSelected, iconVisible, isFirstHead, isHiddenExpandRecord } = this.config();
-        const bgWidth = isFirstHead && !isHiddenExpandRecord ? width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH : width;
-        const bgX = isFirstHead && !isHiddenExpandRecord ? AI_TABLE_OFFSET - AI_TABLE_ROW_HEAD_EXPAND_WIDTH : AI_TABLE_OFFSET;
+        const { field, width, height, stroke, isSelected, iconVisible, isFirstHead, showExpandRecordIcon } = this.config();
+        const bgWidth = isFirstHead && showExpandRecordIcon ? width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH : width;
+        const bgX = isFirstHead && showExpandRecordIcon ? AI_TABLE_OFFSET - AI_TABLE_ROW_HEAD_EXPAND_WIDTH : AI_TABLE_OFFSET;
         return {
             x: bgX,
             y: AI_TABLE_OFFSET,

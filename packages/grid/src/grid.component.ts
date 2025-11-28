@@ -49,7 +49,8 @@ import {
     IconPathMap,
     AI_TABLE_ROW_HEIGHT,
     AI_TABLE_EXPAND_RECORD_ICON,
-    AI_TABLE_ROW_HEAD_WIDTH
+    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH
 } from './constants';
 import { Coordinate, RendererContext, AITable, AITableDragState, getDefaultFieldOptions } from './core';
 import { AITableGridBase } from './grid-base.component';
@@ -173,6 +174,21 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         }
 
         return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
+    });
+
+    private aiFieldConfigWithDefaults = computed(() => {
+        const config = this.aiFieldConfig();
+        const showExpandRecordIcon = config?.showExpandRecordIcon ?? this.aiRecordDetailConfig()?.showExpandIcon ?? false;
+        if (config) {
+            if (config.showExpandRecordIcon === showExpandRecordIcon) {
+                return config;
+            }
+            return {
+                ...config,
+                showExpandRecordIcon
+            };
+        }
+        return showExpandRecordIcon ? { showExpandRecordIcon } : undefined;
     });
 
     hasContainerRect = computed(() => {
@@ -438,10 +454,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.aiTable.context = new RendererContext({
             containerRect: this.containerRect,
             rowHeadWidth: computed(() => {
-                const aiFieldConfig = this.aiFieldConfig();
+                const aiFieldConfig = this.aiFieldConfigWithDefaults();
                 let width = AI_TABLE_ROW_DRAG_ICON_WIDTH;
-                if (!aiFieldConfig?.hiddenExpandRecord) {
-                    width += AI_TABLE_ROW_HEAD_WIDTH;
+                if (aiFieldConfig?.showExpandRecordIcon) {
+                    width += AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
                 }
                 if (!aiFieldConfig?.hiddenIndexColumn) {
                     width += AI_TABLE_ROW_HEAD_WIDTH;
@@ -456,7 +472,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             scrollState: signal(DEFAULT_SCROLL_STATE),
             frozenColumnCount: this.frozenColumnCount,
             references: this.aiReferences,
-            aiFieldConfig: this.aiFieldConfig,
+            aiFieldConfig: this.aiFieldConfigWithDefaults,
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords,

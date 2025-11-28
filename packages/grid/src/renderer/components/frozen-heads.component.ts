@@ -11,6 +11,8 @@ import {
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors
 } from '../../constants';
@@ -202,11 +204,28 @@ export class AITableFrozenColumnHeads {
         const ctx = this.context();
         if (!coord || !ctx) return [];
 
-        const width = ctx.aiFieldConfig()?.hiddenExpandRecord
-            ? coord.frozenColumnWidth + AI_TABLE_OFFSET
-            : coord.frozenColumnWidth + AI_TABLE_OFFSET;
+        const showExpandRecordIcon = !!ctx.aiFieldConfig()?.showExpandRecordIcon;
+        const width = showExpandRecordIcon
+            ? coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_EXPAND_WIDTH + AI_TABLE_ROW_HEAD_WIDTH
+            : coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_WIDTH;
 
         const lines = [
+            // index 竖线
+            {
+                x: 0,
+                y: AI_TABLE_OFFSET,
+                points: [
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    0,
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    this.fieldHeadHeight()
+                ],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            },
+            // 上边界线
             {
                 x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y: AI_TABLE_OFFSET,
@@ -216,6 +235,7 @@ export class AITableFrozenColumnHeads {
                 listening: false,
                 zIndex: 10
             },
+            // 下边界线
             {
                 x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y: AI_TABLE_OFFSET,
@@ -224,24 +244,29 @@ export class AITableFrozenColumnHeads {
                 strokeWidth: 1,
                 listening: false,
                 zIndex: 10
-            }
-        ];
-        if (!ctx.aiFieldConfig()?.hiddenExpandRecord && !ctx.aiFieldConfig()?.hiddenIndexColumn) {
-            lines.push({
-                x: 0,
+            },
+            {
+                x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y: AI_TABLE_OFFSET,
-                points: [
-                    ctx.rowHeadWidth() - AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
-                    0,
-                    ctx.rowHeadWidth() - AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
-                    this.fieldHeadHeight()
-                ],
+                points: [width, 0, width, this.fieldHeadHeight()],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
                 listening: false,
                 zIndex: 10
-            });
-        }
+            }
+        ];
+
+        // const indexX = showExpandRecordIcon?
+        lines.push({
+            x: 0,
+            y: AI_TABLE_OFFSET,
+            points: [AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH, 0, AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH, this.fieldHeadHeight()],
+            stroke: Colors.gray200,
+            strokeWidth: 1,
+            listening: false,
+            zIndex: 10
+        });
+
         return lines;
     });
 }

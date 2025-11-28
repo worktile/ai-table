@@ -41,7 +41,8 @@ export class RecordLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const width = this.rowHeadWidth - x + columnWidth;
-        const indexWidth = this.hiddenExpandRecord ? this.rowHeadWidth - x : this.rowHeadWidth - x - AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
+        const expandWidth = this.showExpandRecordIcon ? AI_TABLE_ROW_HEAD_EXPAND_WIDTH : 0;
+        const indexWidth = this.rowHeadWidth - x - expandWidth;
         this.rect({
             x: x + indexWidth,
             y: y + AI_TABLE_OFFSET,
@@ -63,6 +64,13 @@ export class RecordLayout extends Layout {
                 x: x,
                 y: y,
                 points: [indexWidth, 0, indexWidth, rowHeight],
+                stroke: this.colors.gray200
+            });
+            // 右垂直边框
+            this.line({
+                x: x + indexWidth + expandWidth + columnWidth + AI_TABLE_OFFSET,
+                y: y,
+                points: [0, 0, 0, rowHeight],
                 stroke: this.colors.gray200
             });
 

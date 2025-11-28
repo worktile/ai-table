@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KoContainer } from '../../angular-konva';
-import { AITable } from '../../core';
-import { AITableIcon } from './icon.component';
-import { AI_TABLE_ICON_COMMON_SIZE, AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
-import { AITableActionIconConfig, AITableExpandRecordConfig, AITableIconConfig, AITableRowType } from '../../types';
+import { AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
+import { AITableActionIconConfig, AITableExpandRecordConfig, AITableRowType } from '../../types';
 import { generateTargetName } from '../../utils';
 import {
     AI_TABLE_ACTION_COMMON_RADIUS,
     AI_TABLE_ACTION_COMMON_SIZE,
-    AI_TABLE_CELL,
     AI_TABLE_EXPAND_RECORD_ICON,
     AI_TABLE_FIELD_HEAD_HEIGHT,
     AI_TABLE_ROW_HEAD_EXPAND_WIDTH
@@ -34,6 +31,8 @@ export class AITableExpandRecord {
         const { aiTable, rowStartIndex, rowStopIndex } = this.config();
         const context = aiTable.context;
         if (!context) return false;
+
+        if (!context.aiFieldConfig()?.showExpandRecordIcon) return false;
 
         const { rowIndex: pointRowIndex } = context.pointPosition();
         const row = context.linearRows()[pointRowIndex];

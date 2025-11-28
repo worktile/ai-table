@@ -35,7 +35,7 @@ export class Layout extends Drawer {
 
     protected hiddenIndexColumn = false;
 
-    protected hiddenExpandRecord = false;
+    protected showExpandRecordIcon = false;
 
     protected hiddenRowDrag?: boolean = false;
 
@@ -55,7 +55,7 @@ export class Layout extends Drawer {
         containerWidth,
         rowHeadWidth,
         hiddenIndexColumn,
-        hiddenExpandRecord,
+        showExpandRecordIcon,
         hiddenRowDrag,
         readonly,
         frozenColumnCount,
@@ -71,7 +71,7 @@ export class Layout extends Drawer {
         this.containerWidth = containerWidth;
         this.rowHeadWidth = rowHeadWidth;
         this.hiddenIndexColumn = hiddenIndexColumn;
-        this.hiddenExpandRecord = hiddenExpandRecord;
+        this.showExpandRecordIcon = showExpandRecordIcon;
         this.hiddenRowDrag = hiddenRowDrag;
         this.readonly = readonly;
         this.frozenColumnCount = frozenColumnCount;

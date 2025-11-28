@@ -59,7 +59,7 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;
-    hiddenExpandRecord?: boolean;
+    showExpandRecordIcon?: boolean;
     hiddenRowDrag?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
