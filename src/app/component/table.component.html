@@ -22,6 +22,11 @@
         ></label
     >
     <label class="mb-0 ml-2 d-flex align-items-center"
+        ><input type="checkbox" [checked]="showExpandIcon" (change)="handleShowExpandIconChange($event)" /><span class="pl-1 pt-1"
+            >显示行展开图标</span
+        ></label
+    >
+    <label class="mb-0 ml-2 d-flex align-items-center"
         ><span class="pr-1 pt-1">最大列数</span
         ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxFields" (change)="handleMaxFieldsChange()"
     /></label>

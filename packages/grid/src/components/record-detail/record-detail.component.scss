@@ -1,5 +1,9 @@
 @use 'ngx-tethys/styles/variables.scss';
 
+.ai-expand-record-slide {
+    white-space: normal;
+}
+
 .ai-record-detail {
     height: 100%;
     background: variables.$white;

@@ -154,6 +154,7 @@ export interface AITableContext {
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
     groupCollapseDisabled: WritableSignal<boolean>;
     readonly?: Signal<boolean>;
+    recordDetailConfig: Signal<AITableRecordDetailConfig | undefined>;
 }
 
 export enum AITableSelectAllState {

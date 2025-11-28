@@ -11,6 +11,7 @@ import {
     AI_TABLE_FIELD_HEAD_TEXT_MIN_WIDTH,
     AI_TABLE_ICON_COMMON_SIZE,
     AI_TABLE_OFFSET,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors,
     DEFAULT_FONT_SIZE,
@@ -77,15 +78,17 @@ export class AITableFieldHead {
     });
 
     bgConfig = computed(() => {
-        const { field, width, height, stroke, isSelected, iconVisible } = this.config();
+        const { field, width, height, stroke, isSelected, iconVisible, isFirstHead, showExpandIcon } = this.config();
+        const bgWidth = isFirstHead && showExpandIcon ? width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH : width;
+        const bgX = isFirstHead && showExpandIcon ? AI_TABLE_OFFSET - AI_TABLE_ROW_HEAD_EXPAND_WIDTH : AI_TABLE_OFFSET;
         return {
-            x: AI_TABLE_OFFSET,
+            x: bgX,
             y: AI_TABLE_OFFSET,
             name: generateTargetName({
                 targetName: AI_TABLE_FIELD_HEAD,
                 fieldId: field._id
             }),
-            width: width,
+            width: bgWidth,
             height: height,
             fill: isSelected ? Colors.headSelectedBgColor : iconVisible ? Colors.gray80 : Colors.white,
             stroke: stroke || Colors.gray200,

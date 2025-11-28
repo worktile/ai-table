@@ -10,6 +10,9 @@ import {
     AI_TABLE_INDEX_FIELD_TEXT,
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH,
+    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
     AI_TABLE_TEXT_LINE_HEIGHT,
     Colors
 } from '../../constants';
@@ -23,12 +26,7 @@ import { TextMeasure } from '../../utils';
 @Component({
     selector: 'ai-table-frozen-column-heads',
     template: `
-        <ko-rect [config]="headBgConfig()"></ko-rect>
         @if (!hiddenIndexColumn()) {
-            <ko-rect [config]="dragHeadBgConfig()"></ko-rect>
-            <ko-rect [config]="numberHeadBgConfig()"></ko-rect>
-            <ko-line [config]="topLineConfig()"></ko-line>
-            <ko-line [config]="bottomLineConfig()"></ko-line>
             <ko-group>
                 @if (!readonly()) {
                     <ai-table-icon [config]="iconConfig()"></ai-table-icon>
@@ -36,13 +34,13 @@ import { TextMeasure } from '../../utils';
                     <ai-table-text [config]="textConfig()"></ai-table-text>
                 }
             </ko-group>
-        } @else {
-            @for (lineConfig of cellLinesConfig(); track $index) {
-                <ko-line [config]="lineConfig"></ko-line>
-            }
         }
+
         @for (config of headConfigs(); track $index) {
             <ai-table-field-head [config]="config"></ai-table-field-head>
+        }
+        @for (lineConfig of cellLinesConfig(); track $index) {
+            <ko-line [config]="lineConfig"></ko-line>
         }
     `,
     imports: [KoShape, AITableFieldHead, AITableIcon, AITableTextComponent, KoContainer],
@@ -205,34 +203,66 @@ export class AITableFrozenColumnHeads {
         const coord = this.coordinate();
         const ctx = this.context();
         if (!coord || !ctx) return [];
-        return [
+
+        const showExpandIcon = !!ctx.recordDetailConfig?.()?.showExpandIcon;
+        let width = showExpandIcon
+            ? coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_EXPAND_WIDTH + AI_TABLE_ROW_HEAD_WIDTH
+            : coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_WIDTH;
+
+        if (ctx.aiFieldConfig()?.hiddenIndexColumn) {
+            width -= AI_TABLE_ROW_HEAD_WIDTH;
+        }
+
+        const lines = [
+            // 上边界线
             {
-                x: ctx.rowHeadWidth(),
+                x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y: AI_TABLE_OFFSET,
-                points: [0, 0, coord.frozenColumnWidth + AI_TABLE_OFFSET, 0],
+                points: [0, 0, width, 0],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            },
+            // 下边界线
+            {
+                x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
+                y: AI_TABLE_OFFSET,
+                points: [0, this.fieldHeadHeight(), width, this.fieldHeadHeight()],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
                 listening: false,
                 zIndex: 10
             },
             {
-                x: ctx.rowHeadWidth(),
+                x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
                 y: AI_TABLE_OFFSET,
-                points: [coord.frozenColumnWidth + AI_TABLE_OFFSET, 0, coord.frozenColumnWidth + AI_TABLE_OFFSET, this.fieldHeadHeight()],
-                stroke: Colors.gray200,
-                strokeWidth: 1,
-                listening: false,
-                zIndex: 10
-            },
-            {
-                x: ctx.rowHeadWidth(),
-                y: AI_TABLE_OFFSET,
-                points: [0, this.fieldHeadHeight(), coord.frozenColumnWidth + AI_TABLE_OFFSET, this.fieldHeadHeight()],
+                points: [width, 0, width, this.fieldHeadHeight()],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
                 listening: false,
                 zIndex: 10
             }
         ];
+
+        if (!ctx.aiFieldConfig()?.hiddenIndexColumn) {
+            // index 竖线
+            lines.push({
+                x: 0,
+                y: AI_TABLE_OFFSET,
+                points: [
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    0,
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    this.fieldHeadHeight()
+                ],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            });
+        }
+
+        return lines;
     });
 }

@@ -53,6 +53,8 @@ export class TableService {
 
     hiddenRowDrag: WritableSignal<boolean> = signal(false);
 
+    showExpandIcon: WritableSignal<boolean> = signal(false);
+
     maxRecords: WritableSignal<number> = signal(500);
 
     maxFields: WritableSignal<number> = signal(500);
@@ -143,6 +145,10 @@ export class TableService {
 
     setHiddenRowDrag(hiddenRowDrag: boolean) {
         this.hiddenRowDrag.set(hiddenRowDrag);
+    }
+
+    setShowExpandIcon(showExpandIcon: boolean) {
+        this.showExpandIcon.set(showExpandIcon);
     }
 
     setMaxRecords(maxRecords: number) {
