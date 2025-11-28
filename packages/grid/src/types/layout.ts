@@ -9,7 +9,7 @@ export interface AITableLayout {
     containerWidth: number;
     rowHeadWidth: number;
     hiddenIndexColumn: boolean;
-    showExpandRecordIcon: boolean;
+    showExpandIcon: boolean;
     frozenColumnCount: number;
     hiddenRowDrag?: boolean;
     readonly?: boolean;

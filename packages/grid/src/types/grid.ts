@@ -59,7 +59,6 @@ export interface AITableCustomFieldConfig<TR extends AITableReferences = AITable
 
 export interface AIFieldConfig<TR extends AITableReferences = AITableReferences> {
     hiddenIndexColumn?: boolean;
-    showExpandRecordIcon?: boolean;
     hiddenRowDrag?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
     fieldSettingComponent?: any;
@@ -155,6 +154,7 @@ export interface AITableContext {
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
     groupCollapseDisabled: WritableSignal<boolean>;
     readonly?: Signal<boolean>;
+    recordDetailConfig: Signal<AITableRecordDetailConfig | undefined>;
 }
 
 export enum AITableSelectAllState {

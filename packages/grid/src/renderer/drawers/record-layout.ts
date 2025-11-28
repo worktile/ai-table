@@ -41,7 +41,7 @@ export class RecordLayout extends Layout {
         const rowHeight = this.rowHeight;
         const columnWidth = this.columnWidth;
         const width = this.rowHeadWidth - x + columnWidth;
-        const expandWidth = this.showExpandRecordIcon ? AI_TABLE_ROW_HEAD_EXPAND_WIDTH : 0;
+        const expandWidth = this.showExpandIcon ? AI_TABLE_ROW_HEAD_EXPAND_WIDTH : 0;
         const indexWidth = this.rowHeadWidth - x - expandWidth;
         this.rect({
             x: x + indexWidth,
@@ -85,6 +85,14 @@ export class RecordLayout extends Layout {
                     verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
                 });
             }
+        } else {
+            // 右垂直边框
+            this.line({
+                x: x + expandWidth + columnWidth + AI_TABLE_OFFSET,
+                y: y,
+                points: [0, 0, 0, rowHeight],
+                stroke: this.colors.gray200
+            });
         }
 
         if (this.isLast) {

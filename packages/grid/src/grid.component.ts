@@ -176,20 +176,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         return AI_TABLE_MIN_FROZEN_COLUMN_COUNT;
     });
 
-    private aiFieldConfigWithDefaults = computed(() => {
-        const config = this.aiFieldConfig();
-        const showExpandRecordIcon = config?.showExpandRecordIcon ?? this.aiRecordDetailConfig()?.showExpandIcon ?? false;
-        if (config) {
-            if (config.showExpandRecordIcon === showExpandRecordIcon) {
-                return config;
-            }
-            return {
-                ...config,
-                showExpandRecordIcon
-            };
-        }
-        return showExpandRecordIcon ? { showExpandRecordIcon } : undefined;
-    });
+    private showExpandIcon = computed(() => !!this.aiRecordDetailConfig()?.showExpandIcon);
 
     hasContainerRect = computed(() => {
         return this.containerRect().width > 0 && this.containerRect().height > 0;
@@ -454,9 +441,10 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
         this.aiTable.context = new RendererContext({
             containerRect: this.containerRect,
             rowHeadWidth: computed(() => {
-                const aiFieldConfig = this.aiFieldConfigWithDefaults();
+                const aiFieldConfig = this.aiFieldConfig();
+                const showExpandIcon = this.showExpandIcon();
                 let width = AI_TABLE_ROW_DRAG_ICON_WIDTH;
-                if (aiFieldConfig?.showExpandRecordIcon) {
+                if (showExpandIcon) {
                     width += AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
                 }
                 if (!aiFieldConfig?.hiddenIndexColumn) {
@@ -472,7 +460,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             scrollState: signal(DEFAULT_SCROLL_STATE),
             frozenColumnCount: this.frozenColumnCount,
             references: this.aiReferences,
-            aiFieldConfig: this.aiFieldConfigWithDefaults,
+            aiFieldConfig: this.aiFieldConfig,
             scrollAction: this.scrollAction,
             maxFields: this.aiMaxFields,
             maxRecords: this.aiMaxRecords,
@@ -480,7 +468,8 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             fieldOptions: this.fieldOptions,
             fieldOptionMap: this.fieldOptionMap,
             groupCollapseDisabled: signal(false),
-            readonly: this.aiReadonly
+            readonly: this.aiReadonly,
+            recordDetailConfig: this.aiRecordDetailConfig
         });
     }
 

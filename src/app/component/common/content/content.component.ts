@@ -12,7 +12,8 @@ import {
     AITableGridI18nText,
     CheckboxMenuSort,
     scrollToMatchedCell,
-    setCollapseDisabled
+    setCollapseDisabled,
+    AITableRecordDetailConfig
 } from '@ai-table/grid';
 import {
     Actions,
@@ -162,7 +163,6 @@ export class DemoTableContent {
         return {
             hiddenIndexColumn: this.tableService.hiddenIndexColumn(),
             hiddenRowDrag: this.tableService.hiddenRowDrag(),
-            showExpandRecordIcon: this.tableService.showExpandRecordIcon(),
             customFields: {
                 [AITableCustomFieldType.customDemo]: {
                     fieldOption: {
@@ -342,6 +342,12 @@ export class DemoTableContent {
                     }
                 ];
             }
+        };
+    });
+
+    aiRecordDetailConfig: Signal<AITableRecordDetailConfig> = computed(() => {
+        return {
+            showExpandIcon: this.tableService.showExpandIcon()
         };
     });
 

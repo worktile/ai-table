@@ -1,5 +1,13 @@
 import { Signal, WritableSignal } from '@angular/core';
-import { AIFieldConfig, AITableContext, AITableLinearRow, AITablePointPosition, AITableScrollState, ScrollActionOptions } from '../types';
+import {
+    AIFieldConfig,
+    AITableContext,
+    AITableLinearRow,
+    AITablePointPosition,
+    AITableRecordDetailConfig,
+    AITableScrollState,
+    ScrollActionOptions
+} from '../types';
 import { AITableFieldOption, AITableReferences } from '@ai-table/utils';
 
 export class RendererContext {
@@ -22,6 +30,7 @@ export class RendererContext {
     fieldOptionMap: Signal<Map<string, AITableFieldOption>>;
     groupCollapseDisabled: WritableSignal<boolean>;
     readonly?: Signal<boolean>;
+    recordDetailConfig: Signal<AITableRecordDetailConfig | undefined>;
 
     constructor(options: AITableContext) {
         const {
@@ -43,7 +52,8 @@ export class RendererContext {
             fieldOptions,
             fieldOptionMap,
             groupCollapseDisabled,
-            readonly
+            readonly,
+            recordDetailConfig
         } = options;
         this.containerRect = containerRect;
         this.rowHeadWidth = rowHeadWidth;
@@ -64,6 +74,7 @@ export class RendererContext {
         this.groupCollapseDisabled = groupCollapseDisabled;
         this.readonly = readonly;
         this.groupStatContainerWidthMap = groupStatContainerWidthMap;
+        this.recordDetailConfig = recordDetailConfig;
     }
 
     setPointPosition(position: Partial<AITablePointPosition>) {

@@ -46,7 +46,7 @@ export const createColumnHeads = (config: AITableColumnHeadsConfig) => {
             isSelected,
             isHoverIcon,
             isFirstHead: columnIndex === 0,
-            showExpandRecordIcon: !!aiTable.context?.aiFieldConfig()?.showExpandRecordIcon
+            showExpandIcon: !!aiTable.context?.recordDetailConfig?.()?.showExpandIcon
         };
 
         fieldHeads.push(fieldHead);

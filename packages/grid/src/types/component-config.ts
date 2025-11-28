@@ -67,7 +67,7 @@ export interface AITableFieldHeadConfig {
     isSelected?: boolean;
     isHoverIcon?: boolean;
     isFirstHead?: boolean;
-    showExpandRecordIcon?: boolean;
+    showExpandIcon?: boolean;
 }
 
 export interface AITableFieldStatConfig {

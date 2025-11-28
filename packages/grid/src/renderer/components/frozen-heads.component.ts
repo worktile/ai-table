@@ -204,27 +204,16 @@ export class AITableFrozenColumnHeads {
         const ctx = this.context();
         if (!coord || !ctx) return [];
 
-        const showExpandRecordIcon = !!ctx.aiFieldConfig()?.showExpandRecordIcon;
-        const width = showExpandRecordIcon
+        const showExpandIcon = !!ctx.recordDetailConfig?.()?.showExpandIcon;
+        let width = showExpandIcon
             ? coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_EXPAND_WIDTH + AI_TABLE_ROW_HEAD_WIDTH
             : coord.frozenColumnWidth + AI_TABLE_OFFSET + AI_TABLE_ROW_HEAD_WIDTH;
 
+        if (ctx.aiFieldConfig()?.hiddenIndexColumn) {
+            width -= AI_TABLE_ROW_HEAD_WIDTH;
+        }
+
         const lines = [
-            // index 竖线
-            {
-                x: 0,
-                y: AI_TABLE_OFFSET,
-                points: [
-                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
-                    0,
-                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
-                    this.fieldHeadHeight()
-                ],
-                stroke: Colors.gray200,
-                strokeWidth: 1,
-                listening: false,
-                zIndex: 10
-            },
             // 上边界线
             {
                 x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
@@ -256,16 +245,23 @@ export class AITableFrozenColumnHeads {
             }
         ];
 
-        // const indexX = showExpandRecordIcon?
-        lines.push({
-            x: 0,
-            y: AI_TABLE_OFFSET,
-            points: [AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH, 0, AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH, this.fieldHeadHeight()],
-            stroke: Colors.gray200,
-            strokeWidth: 1,
-            listening: false,
-            zIndex: 10
-        });
+        if (!ctx.aiFieldConfig()?.hiddenIndexColumn) {
+            // index 竖线
+            lines.push({
+                x: 0,
+                y: AI_TABLE_OFFSET,
+                points: [
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    0,
+                    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
+                    this.fieldHeadHeight()
+                ],
+                stroke: Colors.gray200,
+                strokeWidth: 1,
+                listening: false,
+                zIndex: 10
+            });
+        }
 
         return lines;
     });

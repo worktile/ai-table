@@ -32,7 +32,7 @@ export class AITableExpandRecord {
         const context = aiTable.context;
         if (!context) return false;
 
-        if (!context.aiFieldConfig()?.showExpandRecordIcon) return false;
+        if (!context.recordDetailConfig?.()?.showExpandIcon) return false;
 
         const { rowIndex: pointRowIndex } = context.pointPosition();
         const row = context.linearRows()[pointRowIndex];

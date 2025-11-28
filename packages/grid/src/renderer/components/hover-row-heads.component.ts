@@ -90,8 +90,8 @@ export class AITableHoverRowHeads {
             }
 
             let operationGroup: { recordId: string; y: number; bgConfig: any; iconConfig?: any; dragConfig?: any };
-            const showExpandRecordIcon = !!aiTable.context?.aiFieldConfig()?.showExpandRecordIcon;
-            const bgWidth = showExpandRecordIcon ? context.rowHeadWidth() - AI_TABLE_ROW_HEAD_EXPAND_WIDTH + 1 : context.rowHeadWidth() + 1;
+            const showExpandIcon = !!aiTable.context?.recordDetailConfig?.()?.showExpandIcon;
+            const bgWidth = showExpandIcon ? context.rowHeadWidth() - AI_TABLE_ROW_HEAD_EXPAND_WIDTH + 1 : context.rowHeadWidth() + 1;
 
             operationGroup = {
                 recordId,
