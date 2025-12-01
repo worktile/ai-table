@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.5](https://github.com/worktile/ai-table/compare/0.4.4...0.4.5) (2025-12-01)
+
+
+### Bug Fixes
+
+* #WIK-19432 【Prod】多选下拉超过最大高度后无法显示更多数据 ([#815](https://github.com/worktile/ai-table/issues/815)) ([1071552](https://github.com/worktile/ai-table/commit/10715522f43353671d7695a041d4c0844bdba434)), closes [#WIK-19432](https://github.com/worktile/ai-table/issues/WIK-19432)
+* #WIK-19432 【Prod】下拉多选超出高度后再删除重写添加最大高度未清除导致无法查看更多内容 ([#821](https://github.com/worktile/ai-table/issues/821)) ([d744017](https://github.com/worktile/ai-table/commit/d744017c2e1164e9739b065b981ae6280824c3e6)), closes [#WIK-19432](https://github.com/worktile/ai-table/issues/WIK-19432)
+* #WIK-19458 【列填充手柄】行详情-激活了新的单元格，列填充手柄没有更新到新激活的单元格右下角 ([#824](https://github.com/worktile/ai-table/issues/824)) ([d1c74f7](https://github.com/worktile/ai-table/commit/d1c74f71cc42cce9beed2c555808116e7d4a9b59)), closes [#WIK-19458](https://github.com/worktile/ai-table/issues/WIK-19458)
+* #WIK-19475 行展开按钮显示不出来 ([#825](https://github.com/worktile/ai-table/issues/825)) ([3e65c7c](https://github.com/worktile/ai-table/commit/3e65c7c00ec36ce3f600fc05b278c9313b1ea850)), closes [#WIK-19475](https://github.com/worktile/ai-table/issues/WIK-19475)
+* 覆盖slide默认不换行为换行 ([#823](https://github.com/worktile/ai-table/issues/823)) ([c4dcfb9](https://github.com/worktile/ai-table/commit/c4dcfb9cca97c82f66a2553bb05e899bb8c49c10))
+* WIK-19415关联字段图标没有显示 ([#813](https://github.com/worktile/ai-table/issues/813)) ([c78ac4e](https://github.com/worktile/ai-table/commit/c78ac4e9008ccaec75d1454226b6fe6a23f15dde))
+
+
+### Features
+
+* #WIK-19380 弹窗详情多语言 ([#816](https://github.com/worktile/ai-table/issues/816)) ([28d9317](https://github.com/worktile/ai-table/commit/28d931750570d87d71e6447151138d5dd1f54098)), closes [#WIK-19380](https://github.com/worktile/ai-table/issues/WIK-19380)
+* #WIK-19381 展开图标固定渲染在最左侧 ([#819](https://github.com/worktile/ai-table/issues/819)) ([2018ffc](https://github.com/worktile/ai-table/commit/2018ffc54ce4d1bb7b066a95b10c8b157be4e2dd)), closes [#WIK-19381](https://github.com/worktile/ai-table/issues/WIK-19381)
+* **grid:** generate record detail title by transformToCellText function ([#818](https://github.com/worktile/ai-table/issues/818)) ([3f3013a](https://github.com/worktile/ai-table/commit/3f3013ad0a91aa7ccace20bf7d448e994b422d92))
+
+
+
 ## [0.4.4](https://github.com/worktile/ai-table/compare/0.4.3...0.4.4) (2025-11-26)
 
 
