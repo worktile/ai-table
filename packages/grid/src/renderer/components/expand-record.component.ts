@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { KoContainer } from '../../angular-konva';
 import { AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
 import { AITableActionIconConfig, AITableBackgroundConfig, AITableExpandRecordConfig, AITableRowType } from '../../types';
-import { generateTargetName } from '../../utils';
+import { AITable, generateTargetName } from '../../utils';
 import {
     AI_TABLE_ACTION_COMMON_RADIUS,
     AI_TABLE_ACTION_COMMON_SIZE,
@@ -13,7 +13,7 @@ import {
 } from '../../constants/table';
 import { AITableActionIcon } from './action-icon.component';
 import { AITableBackground } from './background.component';
-import { AITableFieldType } from '../../../../utils/src';
+import { AITableFieldType } from '@ai-table/utils';
 
 @Component({
     selector: 'ai-table-expand-record',
@@ -39,15 +39,19 @@ export class AITableExpandRecord {
         const y = coordinate.getRowOffset(pointRowIndex) + AI_TABLE_OFFSET;
         const rowHeight = coordinate.getRowHeight(pointRowIndex);
         const firstField = aiTable.gridData().fields[0];
+        const row = context.linearRows()[pointRowIndex];
+        const recordId = row?._id;
         const isRateOrProgress = firstField?.type === AITableFieldType.rate || firstField?.type === AITableFieldType.progress;
         const isFirstColumn = columnIndex === 0;
+        const activeCell = aiTable.selection()?.activeCell;
+        const isWhiteBg = isRateOrProgress && isFirstColumn && (!activeCell || activeCell?.[0] === recordId);
         return {
             coordinate,
             x: firstColumnOffset - AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
             y: y,
             width: AI_TABLE_ROW_HEAD_EXPAND_WIDTH + AI_TABLE_CELL_LINE_BORDER * 2 + AI_TABLE_OFFSET,
             height: rowHeight,
-            fill: isRateOrProgress && isFirstColumn ? Colors.white : Colors.transparent,
+            fill: isWhiteBg ? Colors.white : Colors.transparent,
             hoverFill: Colors.transparent,
             listening: true
         };
