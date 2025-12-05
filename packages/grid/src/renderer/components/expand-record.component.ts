@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { KoContainer } from '../../angular-konva';
 import { AI_TABLE_OFFSET, ExpandRecordPath, Colors } from '../../constants';
 import { AITableActionIconConfig, AITableBackgroundConfig, AITableExpandRecordConfig, AITableRowType } from '../../types';
-import { AITable, generateTargetName } from '../../utils';
+import { AITable, generateTargetName, getFieldIconPath } from '../../utils';
 import {
     AI_TABLE_ACTION_COMMON_RADIUS,
     AI_TABLE_ACTION_COMMON_SIZE,
@@ -44,7 +44,9 @@ export class AITableExpandRecord {
         const isRateOrProgress = firstField?.type === AITableFieldType.rate || firstField?.type === AITableFieldType.progress;
         const isFirstColumn = columnIndex === 0;
         const activeCell = aiTable.selection()?.activeCell;
-        const isWhiteBg = isRateOrProgress && isFirstColumn && (!activeCell || activeCell?.[0] === recordId);
+        const fieldId = aiTable.gridData().fields[0]._id;
+        const isWhiteBg =
+            isRateOrProgress && isFirstColumn && (!activeCell || (activeCell?.[0] === recordId && activeCell?.[1] === fieldId));
         return {
             coordinate,
             x: firstColumnOffset - AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
