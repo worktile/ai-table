@@ -1,4 +1,4 @@
-import { AI_TABLE_CELL, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET, Colors } from '../constants';
+import { AI_TABLE_CELL, AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET, Colors } from '../constants';
 import { AITable } from '../core';
 import { AITableCellsConfig, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
@@ -41,7 +41,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
             }
 
             // 当前行的 Y 轴偏移量，并根据列宽和列索引获取单元格的水平位置（宽度和偏移量）
-            const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET * 2;
+            const y = coordinate.getRowOffset(rowIndex) + AI_TABLE_OFFSET;
             let { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
                 columnWidth,
                 columnIndex,
@@ -52,7 +52,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                 offset += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
             }
 
-            const height = rowHeight;
+            const height = rowHeight - AI_TABLE_OFFSET;
             configs.unshift({
                 key: `placeholder-cell-${fieldId}-${recordId}`,
                 name: generateTargetName({
@@ -60,9 +60,9 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                     fieldId,
                     recordId
                 }),
-                x: x + offset,
-                y,
-                width,
+                x: x,
+                y: y,
+                width: columnWidth - AI_TABLE_CELL_LINE_BORDER,
                 height,
                 fill: Colors.transparent,
                 strokeEnabled: false,
