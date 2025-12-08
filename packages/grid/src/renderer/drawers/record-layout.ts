@@ -59,6 +59,13 @@ export class RecordLayout extends Layout {
             stroke: this.colors.gray200
         });
         if (!this.hiddenIndexColumn) {
+            this.rect({
+                x: x,
+                y: y + AI_TABLE_OFFSET,
+                width: indexWidth,
+                height: rowHeight - AI_TABLE_OFFSET * 2,
+                fill: indexFill
+            });
             // 垂直边框
             this.line({
                 x: x,
