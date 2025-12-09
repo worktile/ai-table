@@ -12,7 +12,8 @@ import {
     Colors,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_WEIGHT,
-    GROUP_STAT_DEFAULT_FONT_SIZE
+    GROUP_STAT_DEFAULT_FONT_SIZE,
+    AI_TABLE_ROW_HEAD_EXPAND_WIDTH
 } from '../../../constants';
 import { AITableBackgroundConfig, AITableFieldStatConfig, AITableGroupStatConfig, AITableMouseDownType } from '../../../types';
 import {
@@ -179,6 +180,10 @@ export class AITableFieldStat {
                     config.x = -AI_TABLE_OFFSET;
                     config.width = config.width + AI_TABLE_OFFSET;
                     config.borders = [false, true, false, true];
+                    if (aiTable.context?.recordDetailConfig?.()?.showExpandIcon) {
+                        config.width = config.width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
+                        config.x = config.x - AI_TABLE_ROW_HEAD_EXPAND_WIDTH;
+                    }
                 }
                 config.stroke = Colors.gray200;
                 config.strokeWidth = AI_TABLE_CELL_LINE_BORDER;
