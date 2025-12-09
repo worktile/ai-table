@@ -250,7 +250,8 @@ export class RecordDetailComponent implements OnInit {
     addNewField(e: MouseEvent): void {
         const origin = e.target as HTMLElement;
         const newField = createDefaultField(this.aiTable(), AITableFieldType.text);
-        const popoverRef = this.thyPopover.open(AITableFieldSetting, {
+        const component = this.aiTable().context?.aiFieldConfig()?.fieldSettingComponent ?? AITableFieldSetting;
+        const popoverRef = this.thyPopover.open(component, {
             origin,
             placement: 'topLeft',
             manualClosure: true,
