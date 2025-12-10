@@ -297,9 +297,6 @@ export class RecordDetailComponent implements OnInit {
         switch (field.type) {
             case AITableFieldType.text:
                 return value === '';
-            case AITableFieldType.richText:
-            case AITableFieldType.select:
-                return Array.isArray(value) ? value.length === 0 : isUndefinedOrNull(value);
             default:
                 return (Array.isArray(value) && value.length === 0) || isUndefinedOrNull(value);
         }
