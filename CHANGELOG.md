@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.6](https://github.com/worktile/ai-table/compare/0.4.5...0.4.6) (2025-12-10)
+
+
+### Bug Fixes
+
+* #WIK-19476 【评分、进度】评分、进度在第一列时，评分和进度的交互处理 ([#827](https://github.com/worktile/ai-table/issues/827)) ([75064f8](https://github.com/worktile/ai-table/commit/75064f8506a4a50223299b4a395b040fee9bd0f7)), closes [#WIK-19476](https://github.com/worktile/ai-table/issues/WIK-19476)
+* #WIK-19506 单元格鼠标在移入 hover 和 移出切换时有时候会失效（进度、评分、其它类型） ([#828](https://github.com/worktile/ai-table/issues/828)) ([7720fb7](https://github.com/worktile/ai-table/commit/7720fb7a922c4a2969e7d6a65202e0abc002cee0)), closes [#WIK-19506](https://github.com/worktile/ai-table/issues/WIK-19506)
+* #WIK-19519 在有行展开功能时，底部统计的索引列分隔符位置不对 ([#829](https://github.com/worktile/ai-table/issues/829)) ([9902c3b](https://github.com/worktile/ai-table/commit/9902c3b680d9340fb06b59c02bbb6140cd2aab01)), closes [#WIK-19519](https://github.com/worktile/ai-table/issues/WIK-19519)
+* #WIK-19540 unnamed record not displayed ([#831](https://github.com/worktile/ai-table/issues/831)) ([14e6c09](https://github.com/worktile/ai-table/commit/14e6c091724d040703125e3ea7ae9acd05f0175e)), closes [#WIK-19540](https://github.com/worktile/ai-table/issues/WIK-19540)
+
+
+### Features
+
+* #WIK-19457 【下拉多选设置】行详情-添加多选字段，弹框中需要展示 数据项的配置 ([#830](https://github.com/worktile/ai-table/issues/830)) ([23c405b](https://github.com/worktile/ai-table/commit/23c405be30c6a27449edd754be471327b08eeca9)), closes [#WIK-19457](https://github.com/worktile/ai-table/issues/WIK-19457)
+
+
+
 ## [0.4.5](https://github.com/worktile/ai-table/compare/0.4.4...0.4.5) (2025-12-01)
 
 
