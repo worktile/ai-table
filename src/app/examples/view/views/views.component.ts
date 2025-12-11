@@ -50,6 +50,7 @@ export class ViewsExample {
 
     updateView() {
         this.editViewId.set(null);
+
         const { activeView } = this.viewService;
         if (this.editingViewName && this.editingViewName !== activeView()?.name) {
             Actions.setView(this.aiTable(), { name: this.editingViewName }, [activeView()?._id as string]);
