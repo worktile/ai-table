@@ -14,6 +14,7 @@ import {
 import { AIViewTable, addFields, addRecords, updateFieldValues, withState } from '@ai-table/state';
 import { mockRecords, mockFields, mockReferences } from './mock';
 import { getUnixTime } from 'date-fns';
+
 @Component({
     selector: 'app-table-editable-example',
     templateUrl: './editable.component.html',
