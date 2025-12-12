@@ -1,5 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { KoShape, KoEventObject } from '../../../angular-konva';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
 import { generateTargetName } from '../../../utils';
@@ -277,7 +276,13 @@ export class AITableCellProgress extends CoverCellBase {
         const { scrollLeft } = aiTable.context!.scrollState();
         const pointPosition = aiTable.context!.pointPosition();
         const { columnIndex } = pointPosition;
-        const columnLeftX = coordinate.getColumnOffset(columnIndex) - scrollLeft + AI_TABLE_OFFSET;
+
+        let columnLeftX = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET;
+
+        const isInFrozenColumn = columnIndex < aiTable.context!.frozenColumnCount();
+        if (!isInFrozenColumn) {
+            columnLeftX = coordinate.getColumnOffset(columnIndex) + AI_TABLE_OFFSET - scrollLeft;
+        }
 
         const stage = e.event.target.getStage();
         if (!stage) return;
