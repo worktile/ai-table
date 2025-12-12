@@ -1,7 +1,6 @@
 import {
     AITableFilterCondition,
     AITableFilterOperation,
-    FieldOptions,
     AITableField,
     AITableFieldType,
     CheckboxFieldValue,
@@ -11,13 +10,8 @@ import {
 } from '@ai-table/utils';
 import { FieldOperable } from '../field-operable';
 import { compareNumber, isMeetFilter } from '../operate';
-import { transformToCellText } from '../../cell';
 
 export class CheckboxField extends CheckboxFieldBase implements FieldOperable<string, CheckboxFieldValue> {
-    override transformCellValue(cellValue: FieldValue, options: FieldOptions) {
-        return transformToCellText(cellValue, options);
-    }
-
     isMeetFilter(condition: AITableFilterCondition<string>, cellValue: CheckboxFieldValue) {
         if (cellValue === null) {
             if (condition.operation === AITableFilterOperation.empty) {
