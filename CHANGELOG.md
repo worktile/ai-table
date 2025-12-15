@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.7](https://github.com/worktile/ai-table/compare/0.4.6...0.4.7) (2025-12-15)
+
+
+### Bug Fixes
+
+* **grid:** should not override checkbox transformCellValue to string ([#836](https://github.com/worktile/ai-table/issues/836)) ([60ff43a](https://github.com/worktile/ai-table/commit/60ff43a3bf778e370ba43800772945f2f700c555))
+* **grid:** when the progress is in frozen column, after scrolling the non-frozen area a certain distance to the left and click progress, the result is inaccurate ([#837](https://github.com/worktile/ai-table/issues/837)) ([d287e12](https://github.com/worktile/ai-table/commit/d287e12f6b7e1563c7622a3ee0be1c4e6b77278c))
+
+
+
 ## [0.4.6](https://github.com/worktile/ai-table/compare/0.4.5...0.4.6) (2025-12-10)
 
 
