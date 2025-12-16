@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { NgClass } from '@angular/common';
+import { NgClass, CommonModule } from '@angular/common';
 import {
     Component,
     computed,
@@ -40,7 +40,7 @@ import * as _ from 'lodash';
     name: 'selectableOptions',
     standalone: true
 })
-class SelectableOptionsExamplePipe implements PipeTransform {
+export class SelectableOptionsExamplePipe implements PipeTransform {
     transform(sortBy: Id, fields: AITableField[], sorts: AITableSort[]): AITableField[] {
         const sortsMap = helpers.keyBy(sorts, 'sort_by');
         return fields.filter((field) => field._id === sortBy || !sortsMap[field._id]);
@@ -65,6 +65,7 @@ class SelectableOptionsExamplePipe implements PipeTransform {
         FormsModule,
         ThyOption,
         NgClass,
+        CommonModule,
         SelectableOptionsExamplePipe,
         CdkDropList,
         CdkDrag,

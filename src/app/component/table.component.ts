@@ -23,7 +23,7 @@ import { ThyAction } from 'ngx-tethys/action';
 import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyInputDirective } from 'ngx-tethys/input';
-import { ThyPopover, ThyPopoverModule } from 'ngx-tethys/popover';
+import { ThyPopover, ThyPopoverHeader, ThyPopoverBody, ThyPopoverDirective } from 'ngx-tethys/popover';
 import { ThyAutofocusDirective, ThyEnterDirective, ThyOption } from 'ngx-tethys/shared';
 import { ThyTab, ThyTabs } from 'ngx-tethys/tabs';
 import { WebsocketProvider } from 'y-websocket';
@@ -33,8 +33,6 @@ import { ThySelect } from 'ngx-tethys/select';
 import { ThyRadioButton, ThyRadioGroup } from 'ngx-tethys/radio';
 import { ThySwitch } from 'ngx-tethys/switch';
 import { getAITAbleDataLocalStorage } from '../utils/utils';
-import { RecordDetailService } from '@ai-table/grid';
-import { ThySlideService } from 'ngx-tethys/slide';
 
 const initViews: AITableView[] = [
     {
@@ -56,7 +54,6 @@ const initViews: AITableView[] = [
         ThyAction,
         ThyTabs,
         ThyTab,
-        ThyPopoverModule,
         FormsModule,
         ThyInputDirective,
         ThyIconModule,
@@ -69,7 +66,10 @@ const initViews: AITableView[] = [
         ThyOption,
         ThyRadioGroup,
         ThyRadioButton,
-        ThySwitch
+        ThySwitch,
+        ThyPopoverBody,
+        ThyPopoverHeader,
+        ThyPopoverDirective
     ],
     templateUrl: './table.component.html',
     providers: [TableService],

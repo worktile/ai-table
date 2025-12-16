@@ -1,13 +1,10 @@
-import { Component, ChangeDetectionStrategy, input, output, signal, computed, inject, DestroyRef, ElementRef } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, output, signal, computed, inject, DestroyRef, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ThyPopoverModule, ThyPopoverRef, ThyPopover } from 'ngx-tethys/popover';
-import { ThyInput, ThyInputDirective } from 'ngx-tethys/input';
+import { ThyPopoverModule, ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyInput } from 'ngx-tethys/input';
 import { ThyButtonModule } from 'ngx-tethys/button';
 import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyEnterDirective } from 'ngx-tethys/shared';
-import { fromEvent, filter } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import _ from 'lodash';
 
 export interface FindResult {
