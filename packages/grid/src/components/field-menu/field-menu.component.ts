@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, computed, input } from '@angular/core';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
@@ -41,6 +41,7 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     execute(menu: AITableFieldMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
             if (menu.exec) {
+                console.log('========>AITableFieldMenu menu.exec origin:', this.origin);
                 const popoverRef = menu.exec(this.aiTable, this.field, this.origin, this.position);
                 this.execMenuCallback()?.({ menu, popoverRef });
             }

@@ -42,21 +42,21 @@ export const EditFieldPropertyItem = (aiTable: AITable, actions: AITableActions,
     ) => {
         const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
         const copyField: AITableField = _.cloneDeep(field());
-        if (origin && position) {
-            const popoverRef = fieldService?.editFieldProperty(aiTable, {
-                field: copyField,
-                references,
-                isUpdate: true,
-                origin: origin!,
-                position
+        // if (origin && position) {
+        const popoverRef = fieldService?.editFieldProperty(aiTable, {
+            field: copyField,
+            references,
+            isUpdate: true,
+            origin: origin!,
+            position
+        });
+        if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+            (popoverRef.componentInstance as AITableFieldSetting).setField.subscribe(({ fieldOptions }) => {
+                updateFieldAndValues(aiTable, references, actions, fieldOptions);
             });
-            if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
-                (popoverRef.componentInstance as AITableFieldSetting).setField.subscribe(({ fieldOptions }) => {
-                    updateFieldAndValues(aiTable, references, actions, fieldOptions);
-                });
-            }
-            return popoverRef;
         }
+        return popoverRef;
+        // }
         return undefined;
     }
 });

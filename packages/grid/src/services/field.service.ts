@@ -37,6 +37,7 @@ export class AITableGridFieldService {
         });
     }
 
+    // 和 origin 有关？？？
     openFieldMenu(aiTable: AITable, options: AITableFieldMenuOptions) {
         const { origin, editOrigin, position, fieldId, fieldMenus } = options;
         const ref = this.thyPopover.open(AITableFieldMenu, {

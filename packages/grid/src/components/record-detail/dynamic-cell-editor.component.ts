@@ -4,7 +4,6 @@ import {
     output,
     OnInit,
     OnDestroy,
-    ViewChild,
     ViewContainerRef,
     ChangeDetectionStrategy,
     ComponentRef,

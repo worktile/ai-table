@@ -3,6 +3,7 @@ import {
     Component,
     OnInit,
     TemplateRef,
+    ViewContainerRef,
     computed,
     effect,
     inject,
@@ -66,10 +67,14 @@ import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 })
 export class RecordDetailComponent implements OnInit {
     readonly aiTable = input.required<AITable>();
+
     readonly recordId = input.required<string>();
+
     readonly references = input.required<AITableReferences>();
 
     readonly actions = input<AITableActions>();
+
+    readonly viewContainerRef = inject(ViewContainerRef);
 
     readonly recordIdChange = output<string>();
 
@@ -133,6 +138,7 @@ export class RecordDetailComponent implements OnInit {
         return getRecordNavigationInfo(this.aiTable(), this.currentRecordId());
     });
 
+    //
     fieldMenus = computed(() => {
         const fieldMenusFn = this.aiTable()?.context?.aiFieldConfig()?.recordDetailFieldMenus;
         if (fieldMenusFn && this.aiTable()) {
@@ -206,6 +212,7 @@ export class RecordDetailComponent implements OnInit {
 
     hideFieldMenu(fieldId: string): void {
         if (!this.fieldMenuPopoverRef) {
+            //  这里导致的 ？？？？
             this.fieldMenuVisible.set({ [fieldId]: false });
         }
     }
@@ -213,13 +220,15 @@ export class RecordDetailComponent implements OnInit {
     fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
         const origin = e.target as HTMLElement;
         const position = origin.getBoundingClientRect();
-        this.fieldMenuVisible.set({ [fieldId]: true });
-        this.fieldMenuActive.set({ [fieldId]: true });
-        let isSelfClose = false;
+        // this.fieldMenuVisible.set({ [fieldId]: true });
+        // this.fieldMenuActive.set({ [fieldId]: true });
+        // let isSelfClose = false;
+
         this.fieldMenuPopoverRef = this.thyPopover.open(AITableFieldMenu, {
+            // viewContainerRef: this.viewContainerRef,
             origin,
             placement: 'bottomRight',
-            manualClosure: true,
+            // manualClosure: true,
             initialState: {
                 aiTable: this.aiTable(),
                 fieldId,
@@ -227,24 +236,24 @@ export class RecordDetailComponent implements OnInit {
                 origin,
                 position,
                 execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
-                    isSelfClose = true;
-                    this.thyPopover.close();
-                    data.popoverRef?.beforeClosed().subscribe(() => {
-                        this.fieldMenuVisible.set({ [fieldId]: false });
-                        this.fieldMenuActive.set({ [fieldId]: false });
-                    });
+                    // isSelfClose = true;
+                    // this.thyPopover.close();
+                    // data.popoverRef?.beforeClosed().subscribe(() => {
+                    //     this.fieldMenuVisible.set({ [fieldId]: false });
+                    //     this.fieldMenuActive.set({ [fieldId]: false });
+                    // });
                 }
             }
         });
-        if (this.fieldMenuPopoverRef) {
-            this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
-                if (!isSelfClose) {
-                    this.fieldMenuVisible.set({ [fieldId]: false });
-                    this.fieldMenuActive.set({ [fieldId]: false });
-                }
-                this.fieldMenuPopoverRef = null;
-            });
-        }
+        // if (this.fieldMenuPopoverRef) {
+        //     this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
+        //         if (!isSelfClose) {
+        //             this.fieldMenuVisible.set({ [fieldId]: false });
+        //             this.fieldMenuActive.set({ [fieldId]: false });
+        //         }
+        //         this.fieldMenuPopoverRef = null;
+        //     });
+        // }
     }
 
     addNewField(e: MouseEvent): void {

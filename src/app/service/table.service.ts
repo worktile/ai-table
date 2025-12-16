@@ -53,7 +53,7 @@ export class TableService {
 
     hiddenRowDrag: WritableSignal<boolean> = signal(false);
 
-    showExpandIcon: WritableSignal<boolean> = signal(false);
+    showExpandIcon: WritableSignal<boolean> = signal(true);
 
     maxRecords: WritableSignal<number> = signal(500);
 

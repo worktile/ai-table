@@ -128,7 +128,7 @@ import { RecordDetailService } from './services';
         class: 'ai-table-grid'
     },
     imports: [AITableRenderer, AITableDragComponent, ThyTooltipDirective, ThyIcon],
-    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService, RecordDetailService]
+    providers: [AITableGridEventService, AITableGridFieldService, AITableScrollControllerService, RecordDetailService] //
 })
 export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     private viewContainerRef = inject(ViewContainerRef);
@@ -433,7 +433,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.recordDetailService.close();
+        // this.recordDetailService.close(); //
         this.resizeObserver?.disconnect();
     }
 
