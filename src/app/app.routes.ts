@@ -10,6 +10,7 @@ import { TableFilterExample } from './examples/filter/filter.component';
 import { TableSortRecordsExample } from './examples/sort-records/sort-records.component';
 import { TableCustomFieldExample } from './examples/custom-field/custom-field.component';
 import { TableRecordHeightExample } from './examples/record-height/record-height.component';
+import { TableRecordDetailExample } from './examples/record-detail/record-detail.component';
 
 export const routes: Routes = [
     {
@@ -42,6 +43,10 @@ export const routes: Routes = [
     {
         path: 'custom-field',
         component: TableCustomFieldExample
+    },
+    {
+        path: 'record-detail',
+        component: TableRecordDetailExample
     },
     {
         path: 'view',

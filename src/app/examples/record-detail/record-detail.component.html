@@ -1,0 +1,10 @@
+<p>行详情</p>
+
+<ai-table-grid
+    [(aiRecords)]="records"
+    [(aiFields)]="fields"
+    [aiReferences]="references()"
+    [aiRecordDetailConfig]="recordDetailConfig"
+    (aiTableInitialized)="aiTableInitialized($event)"
+>
+</ai-table-grid>
