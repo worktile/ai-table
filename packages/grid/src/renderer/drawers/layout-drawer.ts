@@ -31,6 +31,8 @@ export class Layout extends Drawer {
 
     protected frozenColumnCount = 0;
 
+    protected groupOffset?: number = 0;
+
     protected rowHeadWidth = AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH;
 
     protected hiddenIndexColumn = false;
@@ -59,7 +61,8 @@ export class Layout extends Drawer {
         hiddenRowDrag,
         readonly,
         frozenColumnCount,
-        xIsScroll
+        xIsScroll,
+        groupOffset
     }: AITableLayout) {
         this.x = x;
         this.y = y;
@@ -76,6 +79,7 @@ export class Layout extends Drawer {
         this.readonly = readonly;
         this.frozenColumnCount = frozenColumnCount;
         this.xIsScroll = xIsScroll;
+        this.groupOffset = groupOffset;
     }
 
     // 当前单元格是否是行的第一列
