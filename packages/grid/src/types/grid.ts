@@ -28,7 +28,6 @@ export interface AITableGridCellRenderSchema<
 > {
     editor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
     recordCellEditor?: Type<AbstractEditCellEditor<TEditorValue, TEditorField>>;
-    recordCellEditorInjector?: Injector;
     toText?: (field: AITableField, value: FieldValue) => any;
     toFieldValue?: (text: string, value: FieldValue) => any;
 }

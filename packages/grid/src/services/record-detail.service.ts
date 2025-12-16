@@ -38,6 +38,7 @@ export class RecordDetailService {
             from: 'right',
             width: '480px',
             hasBackdrop: false,
+            viewContainerRef: config.viewContainerRef,
             panelClass: 'ai-expand-record-slide',
             initialState: {
                 aiTable: config.aiTable,

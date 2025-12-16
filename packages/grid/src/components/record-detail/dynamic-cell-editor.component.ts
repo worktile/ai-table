@@ -73,9 +73,7 @@ export class DynamicCellEditorComponent implements OnInit, OnDestroy {
         } catch (error) {}
 
         const fieldRenderers = this.aiTable().context?.aiFieldConfig()?.fieldRenderers;
-        this.editorComponentRef = editorHost?.createComponent(editorComponent, {
-            injector: fieldRenderers?.[field.type]?.recordCellEditorInjector
-        });
+        this.editorComponentRef = editorHost?.createComponent(editorComponent, {});
 
         const instance = this.editorComponentRef!.instance;
         if (instance instanceof AbstractEditCellEditor) {
