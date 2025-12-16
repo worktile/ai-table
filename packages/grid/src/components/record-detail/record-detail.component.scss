@@ -48,17 +48,20 @@
     }
 
     .cell-item {
+        .field-action {
+            display: none;
+            &.active {
+                display: block;
+            }
+        }
+        &:hover {
+            .field-action {
+                display: block;
+            }
+        }
+
         .cell-header {
             height: 22px;
-
-            .cell-operations {
-                opacity: 0;
-                transition: opacity 0.2s;
-
-                &.visible {
-                    opacity: 1;
-                }
-            }
         }
 
         .dynamic-cell-editor {
