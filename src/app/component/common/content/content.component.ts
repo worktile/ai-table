@@ -744,8 +744,8 @@ export class DemoTableContent {
             placement: 'bottomLeft',
             backdropClosable: false,
             hasBackdrop: false,
-            offset: 8,
-            manualClosure: true
+            offset: 8
+            // manualClosure: true
         });
         if (this.findPopoverRef) {
             const componentInstance = this.findPopoverRef.componentInstance;

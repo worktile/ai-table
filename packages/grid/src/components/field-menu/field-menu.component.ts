@@ -30,6 +30,8 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
 
     execMenuCallback = input<(data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => void>();
 
+    beforeOpenCallback = input<() => void>();
+
     field = computed(() => {
         return this.aiTable.fields().find((item) => item._id === this.fieldId)!;
     });
@@ -41,6 +43,7 @@ export class AITableFieldMenu extends ThyDropdownAbstractMenu {
     execute(menu: AITableFieldMenuItem) {
         if ((menu.disabled && !menu.disabled(this.aiTable, this.field)) || !menu.disabled) {
             if (menu.exec) {
+                this.beforeOpenCallback()?.();
                 const popoverRef = menu.exec(this.aiTable, this.field, this.origin, this.position);
                 this.execMenuCallback()?.({ menu, popoverRef });
             }

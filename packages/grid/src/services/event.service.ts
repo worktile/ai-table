@@ -112,7 +112,7 @@ export class AITableGridEventService {
             panelClass: 'grid-cell-editor',
             outsideClosable: false,
             hasBackdrop: false,
-            manualClosure: true,
+            // manualClosure: true,
             animationDisabled: true,
             autoAdaptive: true
         });
@@ -192,7 +192,7 @@ export class AITableGridEventService {
             panelClass: 'grid-cell-editor',
             outsideClosable: fieldType === AITableFieldType.link ? true : false,
             hasBackdrop: false,
-            manualClosure: true,
+            // manualClosure: true,
             animationDisabled: true,
             autoAdaptive: true
         });

@@ -20,11 +20,12 @@ export class AITableGridFieldService {
     editFieldProperty(aiTable: AITable, options: AITableEditFieldOptions) {
         const { field, isUpdate, origin, position, references } = options;
         const component = this.aiFieldConfig?.fieldSettingComponent ?? AITableFieldSetting;
+        this.thyPopover.closeAll();
         return this.thyPopover.open(component, {
             origin,
             originPosition: position,
             placement: 'bottomLeft',
-            manualClosure: true,
+            // manualClosure: true,
             originActiveClass: undefined,
             height: 'auto',
             panelClass: 'ai-table-field-setting-panel',

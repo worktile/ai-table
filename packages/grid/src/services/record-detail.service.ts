@@ -10,15 +10,15 @@ import { AITableGridCellRenderSchema } from '../types';
 import { AITableRecordDetailConfig } from '../types';
 
 export interface RecordDetailConfig {
-    readonly viewContainerRef: ViewContainerRef;
+    readonly viewContainerRef?: ViewContainerRef;
 
-    readonly aiTable: AITable;
+    readonly aiTable?: AITable;
 
-    readonly recordId: string;
+    readonly recordId?: string;
 
-    readonly references: AITableReferences;
+    readonly references?: AITableReferences;
 
-    readonly actions: AITableActions;
+    readonly actions?: AITableActions;
 }
 
 @Injectable()
@@ -28,35 +28,38 @@ export class RecordDetailService {
     private clickSubscription: Subscription | null = null;
     private config: (RecordDetailConfig & AITableRecordDetailConfig) | null = null;
 
-    open(config: RecordDetailConfig & AITableRecordDetailConfig): ThySlideRef<RecordDetailComponent> {
-        if (this.isOpen()) {
-            this.currentSlideRef?.componentInstance.setSelection(config.recordId!);
-            return this.currentSlideRef!;
-        }
-        this.config = config;
-        this.currentSlideRef = this.thySlide.open(RecordDetailComponent, {
+    // : ThySlideRef<RecordDetailComponent>
+    open(config: RecordDetailConfig & AITableRecordDetailConfig) {
+        // if (this.isOpen()) {
+        //     this.currentSlideRef?.componentInstance.setSelection(config.recordId!);
+        //     return this.currentSlideRef!;
+        // }
+        // this.config = config;
+        // this.currentSlideRef =
+        this.thySlide.open(RecordDetailComponent, {
+            viewContainerRef: config.viewContainerRef,
             from: 'right',
             width: '480px',
-            hasBackdrop: false,
-            panelClass: 'ai-expand-record-slide',
+            // hasBackdrop: false,
+            // panelClass: 'ai-expand-record-slide',
             initialState: {
                 aiTable: config.aiTable,
                 recordId: config.recordId,
                 references: config.references,
                 actions: config.actions
-            },
-            ...config.slideConfig
+            }
+            // ...config.slideConfig
         });
-        if (this.currentSlideRef) {
-            this.currentSlideRef.afterOpened().subscribe(() => {
-                this.setupDocumentClickListener(config);
-            });
-            this.currentSlideRef.afterClosed().subscribe(() => {
-                this.close();
-            });
-        }
+        // if (this.currentSlideRef) {
+        //     this.currentSlideRef.afterOpened().subscribe(() => {
+        //         this.setupDocumentClickListener(config);
+        //     });
+        //     this.currentSlideRef.afterClosed().subscribe(() => {
+        //         this.close();
+        //     });
+        // }
 
-        return this.currentSlideRef;
+        // return this.currentSlideRef;
     }
 
     close(): void {
@@ -94,17 +97,17 @@ export class RecordDetailService {
         return true;
     }
 
-    private setupDocumentClickListener(config: RecordDetailConfig & AITableRecordDetailConfig): void {
-        if (this.clickSubscription) {
-            this.clickSubscription.unsubscribe();
-            this.clickSubscription = null;
-        }
+    // private setupDocumentClickListener(config: RecordDetailConfig & AITableRecordDetailConfig): void {
+    //     if (this.clickSubscription) {
+    //         this.clickSubscription.unsubscribe();
+    //         this.clickSubscription = null;
+    //     }
 
-        this.clickSubscription = fromEvent<MouseEvent>(document, 'click').subscribe((event) => {
-            const callback = config.canCloseSlideCallback ? config.canCloseSlideCallback : this.canCloseSlide;
-            if (callback(event, config.viewContainerRef)) {
-                this.close();
-            }
-        });
-    }
+    //     this.clickSubscription = fromEvent<MouseEvent>(document, 'click').subscribe((event) => {
+    //         const callback = config.canCloseSlideCallback ? config.canCloseSlideCallback : this.canCloseSlide;
+    //         if (callback(event, config.viewContainerRef)) {
+    //             this.close();
+    //         }
+    //     });
+    // }
 }
