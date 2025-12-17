@@ -36,13 +36,8 @@
     <div class="record-detail-body">
         <div class="px-8 cell-list-viewport">
             @for (field of fields(); track field._id) {
-                <div
-                    class="pt-4 cell-item"
-                    [class.active]="activeFieldId === field._id"
-                    (mouseenter)="showFieldMenu(field._id)"
-                    (mouseleave)="hideFieldMenu(field._id)"
-                >
-                    <div class="d-flex align-items-center justify-content-between mb-2 cell-header">
+                <div class="pt-4 cell-item" [class.active]="activeFieldId === field._id">
+                    <div #fieldMenuOrigin class="d-flex align-items-center justify-content-between mb-2 cell-header">
                         <div class="d-flex align-items-center cell-label">
                             <span class="d-flex align-items-center mr-2 text-muted font-size-md">
                                 @if (fieldIconPath(field)) {
@@ -56,15 +51,14 @@
                             </span>
                         </div>
                         @if (!readonly()) {
-                            <div class="cell-operations" [class.visible]="fieldMenuVisible()[field._id]">
-                                <a
-                                    thyAction
-                                    [thyActionActive]="fieldMenuActive()[field._id]"
-                                    href="javascript:;"
-                                    (click)="fieldMenuMoreClick($event, field._id)"
-                                    ><thy-icon thyIconName="more-vertical"></thy-icon
-                                ></a>
-                            </div>
+                            <a
+                                class="field-action"
+                                thyAction
+                                [thyActionActive]="fieldMenuActive()[field._id]"
+                                href="javascript:;"
+                                (click)="fieldMenuMoreClick($event, field._id, fieldMenuOrigin)"
+                                ><thy-icon thyIconName="more-vertical"></thy-icon
+                            ></a>
                         }
                     </div>
 
