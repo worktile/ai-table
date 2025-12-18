@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.8](https://github.com/worktile/ai-table/compare/0.4.7...0.4.8) (2025-12-18)
+
+
+### Bug Fixes
+
+* #WIK-19633 cellAdapterComponent去除recordCellEditorInjector参数 ([#840](https://github.com/worktile/ai-table/issues/840)) ([79f7b54](https://github.com/worktile/ai-table/commit/79f7b5477f5fa5eb9b7edb9a1eeefcf729175a05)), closes [#WIK-19633](https://github.com/worktile/ai-table/issues/WIK-19633)
+* #WIK-19641 【RC】表格统计行数字的求和、最大值、最小值不生效 ([#842](https://github.com/worktile/ai-table/issues/842)) ([63c44a5](https://github.com/worktile/ai-table/commit/63c44a55d3b055b050d32ef27825bf46fe8e375e)), closes [#WIK-19641](https://github.com/worktile/ai-table/issues/WIK-19641)
+* **grid:** fix record detail field menu open #WIK-19389 ([#841](https://github.com/worktile/ai-table/issues/841)) ([f04f1db](https://github.com/worktile/ai-table/commit/f04f1db5af8a8af6d59e26d11e546536c2d1981f)), closes [#WIK-19389](https://github.com/worktile/ai-table/issues/WIK-19389)
+
+
+
 ## [0.4.7](https://github.com/worktile/ai-table/compare/0.4.6...0.4.7) (2025-12-15)
 
 
