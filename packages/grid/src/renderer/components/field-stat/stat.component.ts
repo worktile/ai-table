@@ -242,8 +242,7 @@ export class AITableFieldStat {
             aiTable,
             getFieldValue: (record: AITableRecord, options: FieldOptions) => {
                 const { aiTable, field } = options;
-                const cellValue = AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
-                return transformToCellText(cellValue, options);
+                return AITableQueries.getFieldValue(aiTable, [record._id, field!._id]);
             }
         };
     });
