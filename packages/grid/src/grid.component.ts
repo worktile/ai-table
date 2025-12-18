@@ -39,7 +39,6 @@ import {
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_GROUP_COLLAPSE_BUTTON,
     AI_TABLE_ROW_HEAD,
-    AI_TABLE_ROW_HEAD_WIDTH_AND_DRAG_ICON_WIDTH,
     AI_TABLE_RECORD_HEIGHT_LEVELS,
     AI_TABLE_ROW_SELECT_CHECKBOX,
     AI_TABLE_SCROLL_BAR_SIZE,
@@ -90,8 +89,7 @@ import {
     clearCoverCell,
     setActiveCell,
     setSelection,
-    setExpandCellInfo,
-    clearSelection
+    setExpandCellInfo
 } from './utils';
 import { getMousePosition } from './utils/position';
 import { AITableDragComponent } from './components/drag/drag.component';

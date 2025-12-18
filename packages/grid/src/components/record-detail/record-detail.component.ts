@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ThyButton } from 'ngx-tethys/button';
 import { ThyIcon } from 'ngx-tethys/icon';
-import { ThyPopover, ThyPopoverDirective, ThyPopoverRef } from 'ngx-tethys/popover';
+import { ThyPopover, ThyPopoverRef } from 'ngx-tethys/popover';
 import { ThySlideRef } from 'ngx-tethys/slide';
 import { AITable, AITableQueries, createDefaultField } from '../../core';
 import {
@@ -33,7 +33,6 @@ import { ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import {
     AITableActions,
     clearSelection,
-    closeExpendCell,
     getRecordNavigationInfo,
     getNextRecordByActiveCell,
     getPreviousRecordByActiveCell,
@@ -48,6 +47,7 @@ import { AITableFieldMenuItem } from '../../types/field';
 import { IconPathMap } from '../../constants';
 import { AITableGridI18nKey } from '../../utils/i18n';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
+import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
 
 @Component({
     selector: 'ai-record-detail',
@@ -56,8 +56,9 @@ import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
         ThyAction,
         ThyIcon,
         ThyDivider,
-        ThyPopoverDirective,
+        ThyDropdownDirective,
         ThyDropdownMenuItemDirective,
+        ThyDropdownMenuComponent,
         DynamicCellEditorComponent,
         ThyFlexibleText
     ],

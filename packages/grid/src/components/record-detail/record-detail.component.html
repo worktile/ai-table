@@ -5,31 +5,34 @@
         </span>
 
         <div class="record-navigation">
-            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasPrevious" (click)="previousRecord()">
-                <thy-icon thyIconName="angle-up"></thy-icon>
-            </button>
-            <button thyButton="link-secondary" thySize="md" [disabled]="!recordNavigation()?.hasNext" (click)="nextRecord()">
-                <thy-icon thyIconName="angle-down"></thy-icon>
-            </button>
+            <a thyAction href="javascript:;" [thyDisabled]="!recordNavigation()?.hasPrevious" (click)="previousRecord()"
+                ><thy-icon thyIconName="angle-up"></thy-icon
+            ></a>
+
+            <a thyAction href="javascript:;" [thyDisabled]="!recordNavigation()?.hasNext" (click)="nextRecord()"
+                ><thy-icon thyIconName="angle-down"></thy-icon
+            ></a>
         </div>
-        <thy-divider [thyVertical]="true"></thy-divider>
+        <thy-divider [thyVertical]="true" thyColor="light"></thy-divider>
         <div class="header-operations">
-            <button thyButton="link-secondary" thySize="md" [thyPopover]="headerMoreMenu" thyTrigger="click" thyPlacement="bottomRight">
-                <thy-icon thyIconName="list"></thy-icon>
-            </button>
+            <a
+                thyAction
+                thyActiveClass="active"
+                href="javascript:;"
+                [thyDropdown]="headerMoreMenu"
+                thyTrigger="click"
+                thyPlacement="bottomRight"
+                ><thy-icon thyIconName="list"></thy-icon
+            ></a>
 
-            <ng-template #headerMoreMenu>
-                <div class="thy-dropdown-menu">
-                    <a thyDropdownMenuItem href="javascript:;" (click)="deleteRecord()">
-                        <thy-icon thyIconName="trash"></thy-icon>
-                        <span>{{ i18nTexts().deleteRecord }}</span>
-                    </a>
-                </div>
-            </ng-template>
+            <thy-dropdown-menu #headerMoreMenu>
+                <a thyDropdownMenuItem [thyDisabled]="readonly()" href="javascript:;" (click)="deleteRecord()">
+                    <thy-icon thyIconName="trash"></thy-icon>
+                    <span>{{ i18nTexts().deleteRecord }}</span>
+                </a>
+            </thy-dropdown-menu>
 
-            <button thyButton="link-secondary" thySize="md" (click)="close()">
-                <thy-icon thyIconName="close"></thy-icon>
-            </button>
+            <a thyAction href="javascript:;" (click)="close()"><thy-icon thyIconName="close"></thy-icon></a>
         </div>
     </div>
 
