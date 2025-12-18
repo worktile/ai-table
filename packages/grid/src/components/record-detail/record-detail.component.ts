@@ -147,8 +147,6 @@ export class RecordDetailComponent implements OnInit {
 
     activeFieldId: string | null = null;
 
-    fieldMenuVisible = signal<Record<string, boolean>>({});
-
     fieldMenuActive = signal<Record<string, boolean>>({});
 
     private fieldMenuPopoverRef: ThyPopoverRef<any> | null = null;
@@ -200,37 +198,23 @@ export class RecordDetailComponent implements OnInit {
         this.activateCell(fieldId);
     }
 
-    showFieldMenu(fieldId: string): void {
-        this.fieldMenuVisible.set({ [fieldId]: true });
-    }
-
-    hideFieldMenu(fieldId: string): void {
-        if (!this.fieldMenuPopoverRef) {
-            this.fieldMenuVisible.set({ [fieldId]: false });
-        }
-    }
-
-    fieldMenuMoreClick(e: MouseEvent, fieldId: string) {
-        const origin = e.target as HTMLElement;
-        const position = origin.getBoundingClientRect();
-        this.fieldMenuVisible.set({ [fieldId]: true });
+    fieldMenuMoreClick(e: Event, fieldId: string, fieldMenuOrigin: HTMLDivElement) {
+        const origin = e.currentTarget as HTMLElement;
+        const position = fieldMenuOrigin.getBoundingClientRect();
         this.fieldMenuActive.set({ [fieldId]: true });
         let isSelfClose = false;
         this.fieldMenuPopoverRef = this.thyPopover.open(AITableFieldMenu, {
             origin,
             placement: 'bottomRight',
-            manualClosure: true,
             initialState: {
                 aiTable: this.aiTable(),
                 fieldId,
                 fieldMenus: this.fieldMenus(),
-                origin,
+                origin: fieldMenuOrigin,
                 position,
                 execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
                     isSelfClose = true;
-                    this.thyPopover.close();
                     data.popoverRef?.beforeClosed().subscribe(() => {
-                        this.fieldMenuVisible.set({ [fieldId]: false });
                         this.fieldMenuActive.set({ [fieldId]: false });
                     });
                 }
@@ -239,7 +223,6 @@ export class RecordDetailComponent implements OnInit {
         if (this.fieldMenuPopoverRef) {
             this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
                 if (!isSelfClose) {
-                    this.fieldMenuVisible.set({ [fieldId]: false });
                     this.fieldMenuActive.set({ [fieldId]: false });
                 }
                 this.fieldMenuPopoverRef = null;

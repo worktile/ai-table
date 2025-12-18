@@ -1,12 +1,11 @@
-import { Injectable, inject, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Injectable, inject, ViewContainerRef } from '@angular/core';
 import { ThySlideService, ThySlideRef } from 'ngx-tethys/slide';
 import { RecordDetailComponent } from '../components/record-detail/record-detail.component';
 import { AITable } from '../core';
-import { AITableFieldType, AITableReferences } from '@ai-table/utils';
+import { AITableReferences } from '@ai-table/utils';
 import { AITableActions, clearSelection } from '../utils';
 import { fromEvent } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { AITableGridCellRenderSchema } from '../types';
 import { AITableRecordDetailConfig } from '../types';
 
 export interface RecordDetailConfig {

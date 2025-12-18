@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, computed, input } from '@angular/core';
 import { ThyDivider } from 'ngx-tethys/divider';
 import { ThyDropdownAbstractMenu, ThyDropdownMenuItemDirective } from 'ngx-tethys/dropdown';
 import { ThyIcon } from 'ngx-tethys/icon';
