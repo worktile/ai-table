@@ -20,12 +20,11 @@ import { AITableFieldType } from '@ai-table/utils';
     template: `
         <ko-group>
             @if (shouldShowIcon()) {
-                <ai-table-background [config]="backgroundConfig()"></ai-table-background>
                 <ai-table-action-icon [config]="expandIconConfig()"></ai-table-action-icon>
             }
         </ko-group>
     `,
-    imports: [KoContainer, AITableActionIcon, AITableBackground],
+    imports: [KoContainer, AITableActionIcon],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AITableExpandRecord {

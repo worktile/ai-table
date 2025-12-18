@@ -14,6 +14,7 @@ export interface AITableLayout {
     hiddenRowDrag?: boolean;
     readonly?: boolean;
     xIsScroll?: boolean;
+    groupOffset?: number;
 }
 
 export interface AITableCellLayout {

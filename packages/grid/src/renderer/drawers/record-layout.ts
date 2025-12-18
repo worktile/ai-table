@@ -5,6 +5,7 @@ import {
     AI_TABLE_OFFSET,
     AI_TABLE_ROW_DRAG_ICON_WIDTH,
     AI_TABLE_ROW_HEAD_EXPAND_WIDTH,
+    Colors,
     DEFAULT_FONT_SIZE
 } from '../../constants';
 import { DEFAULT_TEXT_ALIGN_CENTER, DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE } from '../../constants/text';
@@ -42,11 +43,13 @@ export class RecordLayout extends Layout {
         const columnWidth = this.columnWidth;
         const width = this.rowHeadWidth - x + columnWidth;
         const expandWidth = this.showExpandIcon ? AI_TABLE_ROW_HEAD_EXPAND_WIDTH : 0;
-        const indexWidth = this.rowHeadWidth - x - expandWidth;
+        const indexWidth = this.rowHeadWidth - x;
+        const groupOffset = this.groupOffset ?? 0;
+
         this.rect({
-            x: x + indexWidth,
+            x: x + indexWidth + groupOffset,
             y: y + AI_TABLE_OFFSET,
-            width: width - indexWidth,
+            width: width - indexWidth - groupOffset,
             height: rowHeight - AI_TABLE_OFFSET * 2,
             fill
         });
@@ -62,7 +65,7 @@ export class RecordLayout extends Layout {
             this.rect({
                 x: x,
                 y: y + AI_TABLE_OFFSET,
-                width: indexWidth,
+                width: indexWidth + groupOffset,
                 height: rowHeight - AI_TABLE_OFFSET * 2,
                 fill: indexFill
             });
@@ -70,12 +73,12 @@ export class RecordLayout extends Layout {
             this.line({
                 x: x,
                 y: y,
-                points: [indexWidth, 0, indexWidth, rowHeight],
+                points: [indexWidth - expandWidth, 0, indexWidth - expandWidth, rowHeight],
                 stroke: this.colors.gray200
             });
             // 右垂直边框
             this.line({
-                x: x + indexWidth + expandWidth + columnWidth + AI_TABLE_OFFSET,
+                x: x + indexWidth + columnWidth + AI_TABLE_OFFSET,
                 y: y,
                 points: [0, 0, 0, rowHeight],
                 stroke: this.colors.gray200
@@ -85,7 +88,7 @@ export class RecordLayout extends Layout {
                 // 设置字体样式，居中绘制行号
                 this.setStyle({ fontSize: DEFAULT_FONT_SIZE });
                 this.text({
-                    x: x + indexWidth / 2 - AI_TABLE_CELL_LINE_BORDER,
+                    x: x + (indexWidth - expandWidth) / 2 - AI_TABLE_CELL_LINE_BORDER,
                     y: y + AI_TABLE_FIELD_HEAD_HEIGHT / 2,
                     text: String((row as AITableLinearRowRecord).displayIndex),
                     textAlign: DEFAULT_TEXT_ALIGN_CENTER,

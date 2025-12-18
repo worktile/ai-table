@@ -101,6 +101,12 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                     const cell: AIRecordFieldIdPath = [recordId, fieldId];
                     let background = getCellBackground(cell, isHover, targetName, aiTable);
                     let indexBackground = getIndexCellBackground(cell, isHover, targetName, aiTable);
+                    const { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
+                        columnIndex,
+                        columnWidth,
+                        columnCount,
+                        depth
+                    });
 
                     recordLayout.init({
                         x,
@@ -117,7 +123,8 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         showExpandIcon,
                         readonly: aiTable.context?.readonly?.(),
                         frozenColumnCount,
-                        xIsScroll
+                        xIsScroll,
+                        groupOffset: columnWidth - width
                     });
                     recordLayout.render({
                         row,
@@ -126,12 +133,7 @@ export const createCells = (config: AITableCellsDrawerConfig) => {
                         isHoverRow: isHoverRecord(isHover, targetName),
                         isCheckedRow: isSelectedRecord(recordId, aiTable)
                     });
-                    const { width, offset, isGroupAndFirstColumn } = getCellHorizontalPosition({
-                        columnIndex,
-                        columnWidth,
-                        columnCount,
-                        depth
-                    });
+
                     let realX = x + offset + AI_TABLE_OFFSET;
                     if (isGroupAndFirstColumn) {
                         realX += AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
