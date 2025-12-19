@@ -51,7 +51,7 @@ export class AITableFrozenColumnHeads {
 
     textMeasure = TextMeasure();
 
-    selectAllStatus = signal<AITableSelectAllState>(AITableSelectAllState.none);
+    emptyRecordsSelectAllStatus = signal<AITableSelectAllState>(AITableSelectAllState.none);
 
     coordinate = computed(() => {
         const config = this.config();
@@ -82,7 +82,7 @@ export class AITableFrozenColumnHeads {
             return false;
         }
         if (config.aiTable?.records().length === 0) {
-            return this.selectAllStatus() === AITableSelectAllState.all;
+            return this.emptyRecordsSelectAllStatus() === AITableSelectAllState.all;
         }
 
         const selectedRecords = config.aiTable.selection().selectedRecords;
@@ -275,8 +275,8 @@ export class AITableFrozenColumnHeads {
 
     selectAllClick(e: KoEventObject<MouseEvent>) {
         if (this.config()?.aiTable?.records().length === 0) {
-            this.selectAllStatus.set(
-                this.selectAllStatus() === AITableSelectAllState.all ? AITableSelectAllState.none : AITableSelectAllState.all
+            this.emptyRecordsSelectAllStatus.set(
+                this.emptyRecordsSelectAllStatus() === AITableSelectAllState.all ? AITableSelectAllState.none : AITableSelectAllState.all
             );
         }
     }
