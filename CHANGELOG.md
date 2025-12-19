@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.9](https://github.com/worktile/ai-table/compare/0.4.8...0.4.9) (2025-12-19)
+
+
+### Bug Fixes
+
+* #WIK-19268 【AItable】表格所有行都删除后，全选图标不能取消选中 ([#846](https://github.com/worktile/ai-table/issues/846)) ([dde8241](https://github.com/worktile/ai-table/commit/dde8241f26fdabf3a34fff5773fbf28e0051aa0a)), closes [#WIK-19268](https://github.com/worktile/ai-table/issues/WIK-19268)
+* #WIK-19520 【表格】框选多个单元格前面详情按钮那列不应被选中 ([#839](https://github.com/worktile/ai-table/issues/839)) ([13790bd](https://github.com/worktile/ai-table/commit/13790bddd5087bb6a48b5ee2e482b55a61898c8b)), closes [#WIK-19520](https://github.com/worktile/ai-table/issues/WIK-19520)
+* **grid:** change record detail title padding to 32px #WIK-19610 ([#844](https://github.com/worktile/ai-table/issues/844)) ([97e0d23](https://github.com/worktile/ai-table/commit/97e0d23e7ddba9a42865d92dbe3b4eaf362a8e15)), closes [#WIK-19610](https://github.com/worktile/ai-table/issues/WIK-19610)
+* **grid:** fix record detail header action #WIK-19621 ([#845](https://github.com/worktile/ai-table/issues/845)) ([920f97b](https://github.com/worktile/ai-table/commit/920f97b6e2f732a2a2d13fc40a87042dcaf0ab75)), closes [#WIK-19621](https://github.com/worktile/ai-table/issues/WIK-19621)
+
+
+
 ## [0.4.8](https://github.com/worktile/ai-table/compare/0.4.7...0.4.8) (2025-12-18)
 
 
