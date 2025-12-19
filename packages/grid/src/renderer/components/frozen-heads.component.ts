@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { StageConfig } from 'konva/lib/Stage';
-import { KoShape, KoContainer } from '../../angular-konva';
+import { KoShape, KoContainer, KoEventObject } from '../../angular-konva';
 import {
     AI_TABLE_CELL_LINE_BORDER,
     AI_TABLE_CELL_PADDING,
@@ -29,7 +29,7 @@ import { TextMeasure } from '../../utils';
         @if (!hiddenIndexColumn()) {
             <ko-group>
                 @if (!readonly()) {
-                    <ai-table-icon [config]="iconConfig()"></ai-table-icon>
+                    <ai-table-icon [config]="iconConfig()" (koClick)="selectAllClick($event)"></ai-table-icon>
                 } @else {
                     <ai-table-text [config]="textConfig()"></ai-table-text>
                 }
@@ -50,6 +50,8 @@ export class AITableFrozenColumnHeads {
     config = input.required<AITableColumnHeadsConfig>();
 
     textMeasure = TextMeasure();
+
+    selectAllStatus = signal<AITableSelectAllState>(AITableSelectAllState.none);
 
     coordinate = computed(() => {
         const config = this.config();
@@ -76,7 +78,12 @@ export class AITableFrozenColumnHeads {
 
     isChecked = computed(() => {
         const config = this.config();
-        if (!config) return false;
+        if (!config) {
+            return false;
+        }
+        if (config.aiTable?.records().length === 0) {
+            return this.selectAllStatus() === AITableSelectAllState.all;
+        }
 
         const selectedRecords = config.aiTable.selection().selectedRecords;
         const selectedAllState =
@@ -265,4 +272,12 @@ export class AITableFrozenColumnHeads {
 
         return lines;
     });
+
+    selectAllClick(e: KoEventObject<MouseEvent>) {
+        if (this.config()?.aiTable?.records().length === 0) {
+            this.selectAllStatus.set(
+                this.selectAllStatus() === AITableSelectAllState.all ? AITableSelectAllState.none : AITableSelectAllState.all
+            );
+        }
+    }
 }
