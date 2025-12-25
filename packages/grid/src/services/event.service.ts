@@ -195,7 +195,7 @@ export class AITableGridEventService {
             manualClosure: true,
             animationDisabled: true,
             autoAdaptive: true
-        });
+        }) ?? null;
 
         if (this.cellEditorPopoverRef) {
             const wheelEvent = fromEvent<WheelEvent>(

@@ -28,9 +28,9 @@ export class RecordDetailService {
     private config: (RecordDetailConfig & AITableRecordDetailConfig) | null = null;
 
     open(config: RecordDetailConfig & AITableRecordDetailConfig): ThySlideRef<RecordDetailComponent> {
-        if (this.isOpen()) {
-            this.currentSlideRef?.componentInstance.setSelection(config.recordId!);
-            return this.currentSlideRef!;
+        if (this.isOpen() && this.currentSlideRef) {
+            this.currentSlideRef.componentInstance.setSelection(config.recordId!);
+            return this.currentSlideRef;
         }
         this.config = config;
         this.currentSlideRef = this.thySlide.open(RecordDetailComponent, {
@@ -46,7 +46,7 @@ export class RecordDetailService {
                 actions: config.actions
             },
             ...config.slideConfig
-        });
+        }) ?? null;
         if (this.currentSlideRef) {
             this.currentSlideRef.afterOpened().subscribe(() => {
                 this.setupDocumentClickListener(config);
@@ -56,6 +56,9 @@ export class RecordDetailService {
             });
         }
 
+        if (!this.currentSlideRef) {
+            throw new Error('Failed to open slide');
+        }
         return this.currentSlideRef;
     }
 
