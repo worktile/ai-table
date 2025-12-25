@@ -121,16 +121,16 @@ export class ViewsExample {
     openViewMenu(event: MouseEvent, menu: TemplateRef<HTMLElement>, viewId: Id) {
         event.stopPropagation();
         this.operateViewId = viewId;
-        this.thyPopover
-            .open(menu, {
-                origin: event.target as HTMLElement,
-                placement: 'bottomLeft',
-                insideClosable: true
-            })
-            .afterClosed()
-            .subscribe(() => {
+        const ref = this.thyPopover?.open(menu, {
+            origin: event.target as HTMLElement,
+            placement: 'bottomLeft',
+            insideClosable: true
+        });
+        if (ref) {
+            ref.afterClosed().subscribe(() => {
                 this.operateViewId = '';
             });
+        }
     }
 
     private getPrevAndNextPosition(previousIndex: number, currentIndex: number, views: AITableView[]) {

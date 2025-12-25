@@ -220,7 +220,7 @@ export class RecordDetailComponent implements OnInit {
                     });
                 }
             }
-        });
+        }) ?? null;
         if (this.fieldMenuPopoverRef) {
             this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
                 if (!isSelfClose) {

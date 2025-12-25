@@ -483,17 +483,19 @@ export class AITableFieldStat {
             }
         });
 
-        ref.componentInstance.menuClick.subscribe((event: { menu: AITableFieldStatTypeItemInfo; field: AITableField }) => {
-            this.isActive.set(false);
-            actions.setFieldStatType({
-                path: [field._id],
-                statType: event.menu.type
+        if (ref) {
+            ref.componentInstance.menuClick.subscribe((event: { menu: AITableFieldStatTypeItemInfo; field: AITableField }) => {
+                this.isActive.set(false);
+                actions.setFieldStatType({
+                    path: [field._id],
+                    statType: event.menu.type
+                });
             });
-        });
 
-        ref.afterClosed().subscribe(() => {
-            this.isActive.set(false);
-            this.hover.emit(false);
-        });
+            ref.afterClosed().subscribe(() => {
+                this.isActive.set(false);
+                this.hover.emit(false);
+            });
+        }
     }
 }
