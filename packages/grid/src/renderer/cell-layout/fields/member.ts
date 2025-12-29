@@ -2,10 +2,10 @@ import {
     AI_TABLE_CELL_MEMBER_ITEM_PADDING,
     AI_TABLE_CELL_MULTI_ITEM_DEFAULT_LINE_SPACING,
     AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT,
-    FONT_SIZE_SM,
     AI_TABLE_ROW_BLANK_HEIGHT,
     AI_TABLE_TAG_PADDING,
-    Colors
+    Colors,
+    DEFAULT_FONT_SIZE
 } from '../../../constants';
 import { AITableAvatarSize, AITableCellItemRenderInfo, AITableCellLayout, AITableRender } from '../../../types';
 import { AITableRenderAtom, AITableRenderAtomType } from '../../../types/atom';
@@ -41,7 +41,7 @@ export class MemberLayout extends CellBaseLayout {
             const count = this.items.length - renderItems.length;
             const renderAtoms: AITableRenderAtom[] = [];
             let itemWidth = 2 * AI_TABLE_TAG_PADDING;
-            const textAtom = this.getTextAtom(`+${count}`, undefined, FONT_SIZE_SM);
+            const textAtom = this.getTextAtom(`+${count}`, undefined, DEFAULT_FONT_SIZE);
             itemWidth += textAtom.width!;
             renderAtoms.push({
                 type: AITableRenderAtomType.circle,
@@ -54,7 +54,7 @@ export class MemberLayout extends CellBaseLayout {
             renderAtoms.push({
                 ...textAtom,
                 x: lastItem.x! + (AITableAvatarSize.size24 - textAtom.width!) / 2,
-                y: lastItem.y! + (AITableAvatarSize.size24 - FONT_SIZE_SM) / 2,
+                y: lastItem.y! + (AITableAvatarSize.size24 - DEFAULT_FONT_SIZE) / 2,
                 fillStyle: Colors.white
             });
             return [
@@ -94,12 +94,12 @@ export class MemberLayout extends CellBaseLayout {
             });
             const textX = AITableAvatarSize.size24 + AI_TABLE_MEMBER_ITEM_AVATAR_MARGIN_RIGHT;
             const textWidth = containerMaxWidth - textX;
-            const textAtom = this.getTextAtom(display_name || '', textWidth, FONT_SIZE_SM);
+            const textAtom = this.getTextAtom(display_name || '', textWidth, DEFAULT_FONT_SIZE);
             renderAtoms.push({
                 ...textAtom,
                 type: AITableRenderAtomType.text,
                 x: textX,
-                y: (AITableAvatarSize.size24 - FONT_SIZE_SM) / 2,
+                y: (AITableAvatarSize.size24 - DEFAULT_FONT_SIZE) / 2,
                 width: textWidth
             });
         } else {
