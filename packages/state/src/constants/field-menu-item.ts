@@ -5,7 +5,8 @@ import {
     AITableFieldSetting,
     AITableQueries,
     FieldModelMap,
-    isSystemField
+    isSystemField,
+    createDefaultField
 } from '@ai-table/grid';
 import { ElementRef, Signal } from '@angular/core';
 import _ from 'lodash';
@@ -16,6 +17,7 @@ import { AITableStateI18nKey, getStateI18nTextByKey } from '../utils/i18n';
 import {
     AddFieldOptions,
     AITableField,
+    AITableFieldType,
     AITableReferences,
     FieldValue,
     MemberSettings,
@@ -138,6 +140,104 @@ export const CopyFieldPropertyItem = (aiTable: AITable, actions: AITableActions)
                 }
             };
             actions.addField(fieldOptions);
+        },
+        disabled: () => {
+            const fieldLength = aiTable.fields()?.length || 0;
+            const maxFields = aiTable.context?.maxFields();
+            return maxFields ? fieldLength >= maxFields : false;
+        }
+    };
+};
+
+export const AddFieldBeforeItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.addFieldBefore);
+    return {
+        type: 'addFieldBefore',
+        name,
+        icon: 'left-insert',
+        exec: (
+            aiTable: AIViewTable,
+            field: Signal<AITableField>,
+            origin?: HTMLElement | ElementRef<any>,
+            position?: { x: number; y: number }
+        ) => {
+            const fields = aiTable.fields() || [];
+            const maxFields = aiTable.context?.maxFields();
+            if (maxFields && fields.length >= maxFields) {
+                return;
+            }
+            const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
+            const defaultField = createDefaultField(aiTable, AITableFieldType.text);
+            const targetFieldId = field()._id;
+            if (origin && position) {
+                const popoverRef = fieldService?.editFieldProperty(aiTable, {
+                    field: defaultField,
+                    references,
+                    isUpdate: false,
+                    origin: origin!,
+                    position
+                });
+                if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+                    (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((fieldValue) => {
+                        const fieldOptions: AddFieldOptions = {
+                            beforeItemId: targetFieldId,
+                            defaultValue: fieldValue
+                        };
+                        actions.addField(fieldOptions);
+                    });
+                }
+                return popoverRef;
+            }
+            return undefined;
+        },
+        disabled: () => {
+            const fieldLength = aiTable.fields()?.length || 0;
+            const maxFields = aiTable.context?.maxFields();
+            return maxFields ? fieldLength >= maxFields : false;
+        }
+    };
+};
+
+export const AddFieldAfterItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.addFieldAfter);
+    return {
+        type: 'addFieldAfter',
+        name,
+        icon: 'right-insert',
+        exec: (
+            aiTable: AIViewTable,
+            field: Signal<AITableField>,
+            origin?: HTMLElement | ElementRef<any>,
+            position?: { x: number; y: number }
+        ) => {
+            const fields = aiTable.fields() || [];
+            const maxFields = aiTable.context?.maxFields();
+            if (maxFields && fields.length >= maxFields) {
+                return;
+            }
+            const fieldService = AI_TABLE_GRID_FIELD_SERVICE_MAP.get(aiTable);
+            const defaultField = createDefaultField(aiTable, AITableFieldType.text);
+            const targetFieldId = field()._id;
+            if (origin && position) {
+                const popoverRef = fieldService?.editFieldProperty(aiTable, {
+                    field: defaultField,
+                    references,
+                    isUpdate: false,
+                    origin: origin!,
+                    position
+                });
+                if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+                    (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((fieldValue) => {
+                        const fieldOptions: AddFieldOptions = {
+                            afterItemId: targetFieldId,
+                            defaultValue: fieldValue
+                        };
+                        actions.addField(fieldOptions);
+                    });
+                }
+                return popoverRef;
+            }
+            return undefined;
         },
         disabled: () => {
             const fieldLength = aiTable.fields()?.length || 0;

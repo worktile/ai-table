@@ -211,6 +211,8 @@ export interface AddFieldOptions {
     isDuplicate?: boolean;
     originId?: string;
     count?: number;
+    beforeItemId?: string;
+    afterItemId?: string;
 }
 
 export interface UpdateFieldValueOptions<T = unknown> {
