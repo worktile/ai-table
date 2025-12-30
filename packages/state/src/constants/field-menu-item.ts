@@ -149,10 +149,10 @@ export const CopyFieldPropertyItem = (aiTable: AITable, actions: AITableActions)
     };
 };
 
-export const InsertColumnLeftItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
-    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertColumnLeft);
+export const AddFieldBeforeItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.addFieldBefore);
     return {
-        type: 'insertColumnLeft',
+        type: 'addFieldBefore',
         name,
         icon: 'left-insert',
         exec: (
@@ -198,10 +198,10 @@ export const InsertColumnLeftItem = (aiTable: AITable, actions: AITableActions, 
     };
 };
 
-export const InsertColumnRightItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
-    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.insertColumnRight);
+export const AddFieldAfterItem = (aiTable: AITable, actions: AITableActions, references: AITableReferences) => {
+    const name = getStateI18nTextByKey(aiTable, AITableStateI18nKey.addFieldAfter);
     return {
-        type: 'insertColumnRight',
+        type: 'addFieldAfter',
         name,
         icon: 'right-insert',
         exec: (

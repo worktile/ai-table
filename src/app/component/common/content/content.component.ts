@@ -29,8 +29,8 @@ import {
     DividerMenuItem,
     EditFieldPropertyItem,
     CopyFieldPropertyItem,
-    InsertColumnLeftItem,
-    InsertColumnRightItem,
+    AddFieldBeforeItem,
+    AddFieldAfterItem,
     PasteCellsItem,
     RemoveRecordsItem,
     updateFieldValues,
@@ -256,11 +256,11 @@ export class DemoTableContent {
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
                     {
-                        ...InsertColumnLeftItem(aiTable, this.actions, this.references()),
+                        ...AddFieldBeforeItem(aiTable, this.actions, this.references()),
                         hidden: () => readonly
                     } as any,
                     {
-                        ...InsertColumnRightItem(aiTable, this.actions, this.references()),
+                        ...AddFieldAfterItem(aiTable, this.actions, this.references()),
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
