@@ -26,7 +26,11 @@ export function addFields(aiTable: AIViewTable, options: AddFieldOptions) {
     }
 
     const viewPositionOptions: ViewPositionOptions = { count: options.count || 1 };
-    if (isDuplicate) {
+    if (options.beforeItemId) {
+        viewPositionOptions.beforeItemId = options.beforeItemId;
+    } else if (options.afterItemId) {
+        viewPositionOptions.afterItemId = options.afterItemId;
+    } else if (isDuplicate) {
         viewPositionOptions.afterItemId = originId;
     }
     let positions = getNewItemsPosition(

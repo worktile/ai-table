@@ -29,6 +29,8 @@ import {
     DividerMenuItem,
     EditFieldPropertyItem,
     CopyFieldPropertyItem,
+    InsertColumnLeftItem,
+    InsertColumnRightItem,
     PasteCellsItem,
     RemoveRecordsItem,
     updateFieldValues,
@@ -250,6 +252,15 @@ export class DemoTableContent {
                     { ...EditFieldPropertyItem(aiTable, this.actions, this.references()), hidden: () => readonly } as any,
                     {
                         ...CopyFieldPropertyItem(aiTable, this.actions),
+                        hidden: () => readonly
+                    } as any,
+                    { ...DividerMenuItem, hidden: () => readonly },
+                    {
+                        ...InsertColumnLeftItem(aiTable, this.actions, this.references()),
+                        hidden: () => readonly
+                    } as any,
+                    {
+                        ...InsertColumnRightItem(aiTable, this.actions, this.references()),
                         hidden: () => readonly
                     } as any,
                     { ...DividerMenuItem, hidden: () => readonly },
