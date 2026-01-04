@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.5.0](https://github.com/worktile/ai-table/compare/0.4.9...0.5.0) (2026-01-04)
+
+
+### Bug Fixes
+
+* #WIK-19417 【AItable】成员名字字号不对，字号小了，应该是14px ([#849](https://github.com/worktile/ai-table/issues/849)) ([a424aa1](https://github.com/worktile/ai-table/commit/a424aa11bfef92a2fc3f452b3b4f3abe4cc97fff)), closes [#WIK-19417](https://github.com/worktile/ai-table/issues/WIK-19417)
+
+
+### Features
+
+* #WIK-19703 【AITable】表格列更多操作：向左/右插入列 ([#850](https://github.com/worktile/ai-table/issues/850)) ([6f34205](https://github.com/worktile/ai-table/commit/6f34205f40d746e01b273cc283983b46404cdc96)), closes [#WIK-19703](https://github.com/worktile/ai-table/issues/WIK-19703) [#WIK-19703](https://github.com/worktile/ai-table/issues/WIK-19703) [#WIK-19703](https://github.com/worktile/ai-table/issues/WIK-19703)
+
+
+
 ## [0.4.9](https://github.com/worktile/ai-table/compare/0.4.8...0.4.9) (2025-12-19)
 
 
