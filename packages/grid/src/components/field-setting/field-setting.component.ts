@@ -44,6 +44,7 @@ import * as _ from 'lodash';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../utils/i18n';
 import { AITable, createDefaultFieldName, getFieldOptionByField, getFieldOptions } from '../../core';
 import { getOptionsByFieldAndRecords } from '../../utils';
+import { AITableFieldSettingBase } from './field-setting-base.component';
 
 @Component({
     selector: 'ai-table-field-setting',
@@ -82,20 +83,8 @@ import { getOptionsByFieldAndRecords } from '../../utils';
         `
     ]
 })
-export class AITableFieldSetting implements OnInit {
-    aiEditField = model.required<AITableField>();
-
-    readonly aiTable = input.required<AITable>();
-
+export class AITableFieldSetting extends AITableFieldSettingBase implements OnInit {
     readonly aiExternalTemplate = input<TemplateRef<any> | null>(null);
-
-    readonly aiReferences = input<AITableReferences>();
-
-    readonly isUpdate = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    readonly addField = output<AITableField>();
-
-    readonly setField = output<{ fieldOptions: SetFieldOptions; isSwitchType: boolean }>();
 
     readonly selectedFieldOption = computed(() => {
         return getFieldOptionByField(this.aiTable(), this.aiEditField())!;
@@ -131,13 +120,8 @@ export class AITableFieldSetting implements OnInit {
 
     private isManualInputName = signal(false);
 
-    private originField?: AITableField;
-
-    protected thyPopoverRef = inject(ThyPopoverRef<AITableFieldSetting>);
-
-    ngOnInit(): void {
-        this.originField = this.aiEditField();
-
+    override ngOnInit(): void {
+        super.ngOnInit();
         this.isMultipleMember =
             this.aiEditField().type === AITableFieldType.member && !!(this.aiEditField().settings as MemberSettings)?.is_multiple;
     }
@@ -179,22 +163,6 @@ export class AITableFieldSetting implements OnInit {
         }, 0);
     }
 
-    editFieldProperty() {
-        if (this.isUpdate()) {
-            const originFieldType = this.originField?.type;
-            this.setField.emit({
-                fieldOptions: {
-                    field: this.aiEditField(),
-                    path: [this.aiEditField()._id]
-                },
-                isSwitchType: !!originFieldType && this.aiEditField().type !== originFieldType
-            });
-        } else {
-            this.addField.emit(this.aiEditField());
-        }
-        this.thyPopoverRef.close();
-    }
-
     multipleMemberChange() {
         this.aiEditField.set({
             ...this.aiEditField(),
@@ -212,10 +180,6 @@ export class AITableFieldSetting implements OnInit {
 
     nameChange(event: Event) {
         this.isManualInputName.set(true);
-    }
-
-    cancel() {
-        this.thyPopoverRef.close();
     }
 
     i18nTexts = computed(() => {

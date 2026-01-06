@@ -20,6 +20,7 @@ import { Constructor } from 'ngx-tethys/core';
 import { CoverCellBase } from '../renderer';
 import { AbstractEditCellEditor } from '../components';
 import { ThySlideConfig } from 'ngx-tethys/slide';
+import { AITableFieldSettingBase } from '../components/field-setting/field-setting-base.component';
 
 export interface AITableGridCellRenderSchema<
     TR extends AITableReferences = AITableReferences,
@@ -60,7 +61,7 @@ export interface AIFieldConfig<TR extends AITableReferences = AITableReferences>
     hiddenIndexColumn?: boolean;
     hiddenRowDrag?: boolean;
     fieldRenderers?: Partial<Record<AITableFieldType | string, AITableGridCellRenderSchema<TR>>>;
-    fieldSettingComponent?: any;
+    fieldSettingComponent?: Type<AITableFieldSettingBase>;
     fieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     recordDetailFieldMenus?: (aiTable: AITable) => AITableFieldMenuItem[];
     customFields?: Partial<Record<string, AITableCustomFieldConfig<TR>>>;

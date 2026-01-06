@@ -52,7 +52,7 @@ export const EditFieldPropertyItem = (aiTable: AITable, actions: AITableActions,
                 origin: origin!,
                 position
             });
-            if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+            if (popoverRef && fieldService) {
                 (popoverRef.componentInstance as AITableFieldSetting).setField.subscribe(({ fieldOptions }) => {
                     updateFieldAndValues(aiTable, references, actions, fieldOptions);
                 });
@@ -177,7 +177,7 @@ export const AddFieldBeforeItem = (aiTable: AITable, actions: AITableActions, re
                     origin: origin!,
                     position
                 });
-                if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+                if (popoverRef && fieldService) {
                     (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((fieldValue) => {
                         const fieldOptions: AddFieldOptions = {
                             beforeItemId: targetFieldId,
@@ -226,7 +226,7 @@ export const AddFieldAfterItem = (aiTable: AITable, actions: AITableActions, ref
                     origin: origin!,
                     position
                 });
-                if (popoverRef && fieldService && !fieldService.aiFieldConfig?.fieldSettingComponent) {
+                if (popoverRef && fieldService) {
                     (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((fieldValue) => {
                         const fieldOptions: AddFieldOptions = {
                             afterItemId: targetFieldId,
