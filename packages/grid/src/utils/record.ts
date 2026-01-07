@@ -29,12 +29,9 @@ export function toggleSelectAllRecords(aiTable: AITable, checked: boolean) {
 
 export function getNextRecordByActiveCell(aiTable: AITable): string | null {
     const records = aiTable.gridData().records;
-    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap()!;
     const currentId = aiTable.selection().activeCell?.[0];
-
     if (!currentId) return null;
-
-    const currentIndex = visibleRowsIndexMap.get(currentId) || 0;
+    const currentIndex = records.findIndex((item) => item._id === currentId);
     if (currentIndex === -1 || currentIndex === records.length - 1) {
         return null;
     }
@@ -45,12 +42,9 @@ export function getNextRecordByActiveCell(aiTable: AITable): string | null {
 
 export function getPreviousRecordByActiveCell(aiTable: AITable): string | null {
     const records = aiTable.gridData().records;
-    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap()!;
     const currentId = aiTable.selection().activeCell?.[0];
-
     if (!currentId) return null;
-
-    const currentIndex = visibleRowsIndexMap.get(currentId) || 0;
+    const currentIndex = records.findIndex((item) => item._id === currentId);
     if (currentIndex <= 0) {
         return null;
     }
@@ -61,9 +55,7 @@ export function getPreviousRecordByActiveCell(aiTable: AITable): string | null {
 
 export function getRecordNavigationInfo(aiTable: AITable, recordId: string) {
     const records = aiTable.gridData().records;
-    const visibleRowsIndexMap = aiTable.context!.visibleRowsIndexMap()!;
-    const index = visibleRowsIndexMap.get(recordId) || 0;
-
+    const index = records.findIndex((item) => item._id === recordId);
     if (index === -1) return null;
 
     return {
