@@ -6,6 +6,7 @@ export * from './cell-editors/select/select-editor.component';
 export * from './cell-editors/text/text-editor.component';
 export * from './cell-views/select/option.component';
 export * from './field-setting/field-setting.component';
+export * from './field-setting/field-setting-base.component';
 export * from './context-menu/context-menu.component';
 export * from './menu-checkbox-sort/checkbox-menu-sort.component';
 export * from './record-detail';

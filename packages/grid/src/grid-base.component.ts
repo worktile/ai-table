@@ -214,7 +214,7 @@ export class AITableGridBase implements OnInit {
             position,
             references: this.aiReferences()
         });
-        if (popoverRef && !this.aiFieldConfig()?.fieldSettingComponent) {
+        if (popoverRef) {
             (popoverRef.componentInstance as AITableFieldSetting).addField.subscribe((defaultValue) => {
                 const fields = this.gridData().fields;
                 const fieldCount = fields.length;
