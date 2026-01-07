@@ -26,7 +26,13 @@
             ></a>
 
             <thy-dropdown-menu #headerMoreMenu>
-                <a thyDropdownMenuItem [thyDisabled]="readonly()" href="javascript:;" (click)="deleteRecord()">
+                <a
+                    class="ai-table-record-detail-remove"
+                    thyDropdownMenuItem
+                    [thyDisabled]="readonly()"
+                    href="javascript:;"
+                    (click)="deleteRecord()"
+                >
                     <thy-icon thyIconName="trash"></thy-icon>
                     <span>{{ i18nTexts().deleteRecord }}</span>
                 </a>
