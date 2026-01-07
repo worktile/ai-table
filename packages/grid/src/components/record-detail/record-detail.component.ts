@@ -187,16 +187,14 @@ export class RecordDetailComponent {
     previousRecord(): void {
         const prevId = getPreviousRecordByActiveCell(this.aiTable());
         if (prevId) {
-            this.internalRecordId.set(prevId);
-            this.setSelection(prevId);
+            this.updateRecordId(prevId);
         }
     }
 
     nextRecord(): void {
         const nextId = getNextRecordByActiveCell(this.aiTable());
         if (nextId) {
-            this.internalRecordId.set(nextId);
-            this.setSelection(nextId);
+            this.updateRecordId(nextId);
         }
     }
 
