@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.2](https://github.com/worktile/ai-table/compare/0.5.1...0.5.2) (2026-01-07)
+
+
+### Bug Fixes
+
+* #WIK-19709 右键复制粘贴操作没有效果 ([#856](https://github.com/worktile/ai-table/issues/856)) ([c69aeae](https://github.com/worktile/ai-table/commit/c69aeae595d3d8d886d53b43a03814229a533ef3)), closes [#WIK-19709](https://github.com/worktile/ai-table/issues/WIK-19709)
+* #WIK-19732 【aitable】空分组的空字丢失 ([#857](https://github.com/worktile/ai-table/issues/857)) ([40bcf9b](https://github.com/worktile/ai-table/commit/40bcf9b06e460deec4bf1eca2dac9135f79b279c)), closes [#WIK-19732](https://github.com/worktile/ai-table/issues/WIK-19732)
+* **grid:** record detail remove item should hover red ([#853](https://github.com/worktile/ai-table/issues/853)) ([3d1f84e](https://github.com/worktile/ai-table/commit/3d1f84e595ebe6fc3cfd326744b1ec9daf31061e))
+* **grid:** when editing the editor after clicking to expand other record while record detail are open, the record detail data would revert to the data of the first record that was opened #WIK-19728 ([#855](https://github.com/worktile/ai-table/issues/855)) ([9b1669f](https://github.com/worktile/ai-table/commit/9b1669f7bfd6ec0fb7575e729d5eadac1b6cc75c)), closes [#WIK-19728](https://github.com/worktile/ai-table/issues/WIK-19728) [#WIK-19728](https://github.com/worktile/ai-table/issues/WIK-19728) [#WIK-19729](https://github.com/worktile/ai-table/issues/WIK-19729)
+
+
+
 ## [0.5.1](https://github.com/worktile/ai-table/compare/0.5.0...0.5.1) (2026-01-07)
 
 
