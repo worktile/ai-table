@@ -1001,7 +1001,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             return true;
         }
 
-        const hasAITableGrid = focused.querySelector('ai-table-grid') !== null;
+        const hasAITableGrid = focused.closest('ai-table-grid') !== null || focused.closest('.ai-table-prevent-clear-selection') !== null;
         if (!hasAITableGrid) {
             return true;
         }
