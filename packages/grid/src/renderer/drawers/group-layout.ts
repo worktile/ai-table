@@ -33,7 +33,7 @@ export class GroupLayout extends Layout {
         if (!this.isFirst) return;
         const { row, indexStyle } = config;
         const { _id: groupValue, fieldId } = row;
-        const { field, style, aiTable } = render;
+        const { field, style, aiTable, cellValue } = render;
         const y = this.y;
         const rowHeight = this.rowHeight;
         const { fill: indexFill } = indexStyle || { fill: this.colors.white };
@@ -61,7 +61,7 @@ export class GroupLayout extends Layout {
             });
         }
         const iconContainerWidth = AI_TABLE_ICON_COMMON_SIZE + AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE;
-        if (!isEmpty(groupValue) || [AITableFieldType.checkbox, AITableFieldType.progress].includes(field.type as AITableFieldType)) {
+        if (!isEmpty(cellValue) || [AITableFieldType.checkbox, AITableFieldType.progress].includes(field.type as AITableFieldType)) {
             cellDrawer.initStyle(field, style);
             const statContainerWidth = aiTable.context?.groupStatContainerWidthMap()?.get(`${config.row.groupId}:${fieldId}`);
             const widthOffset = statContainerWidth ? statContainerWidth - AI_TABLE_CELL_PADDING : 0;
