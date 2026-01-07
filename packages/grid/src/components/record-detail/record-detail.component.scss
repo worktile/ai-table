@@ -76,3 +76,12 @@
         }
     }
 }
+
+.ai-table-record-detail-remove {
+    &:hover {
+        .thy-icon {
+            color: variables.$danger !important;
+        }
+        color: variables.$danger !important;
+    }
+}
