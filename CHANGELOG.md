@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.1](https://github.com/worktile/ai-table/compare/0.5.0...0.5.1) (2026-01-07)
+
+
+### Features
+
+* #WIK-19717 【AITable】定义相关基类，统一AITableFieldSetting逻辑 ([#852](https://github.com/worktile/ai-table/issues/852)) ([6350216](https://github.com/worktile/ai-table/commit/6350216fee274b7e5740e1eabb1692ff86979a18)), closes [#WIK-19717](https://github.com/worktile/ai-table/issues/WIK-19717)
+
+
+
 # [0.5.0](https://github.com/worktile/ai-table/compare/0.4.9...0.5.0) (2026-01-04)
 
 
