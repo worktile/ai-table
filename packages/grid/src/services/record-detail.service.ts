@@ -29,24 +29,28 @@ export class RecordDetailService {
 
     open(config: RecordDetailConfig & AITableRecordDetailConfig): ThySlideRef<RecordDetailComponent> {
         if (this.isOpen() && this.currentSlideRef) {
-            this.currentSlideRef.componentInstance.setSelection(config.recordId!);
+            const componentInstance = this.currentSlideRef.componentInstance;
+            if (componentInstance && componentInstance.recordId() !== config.recordId) {
+                componentInstance.updateRecordId(config.recordId);
+            }
             return this.currentSlideRef;
         }
         this.config = config;
-        this.currentSlideRef = this.thySlide.open(RecordDetailComponent, {
-            from: 'right',
-            width: '480px',
-            hasBackdrop: false,
-            viewContainerRef: config.viewContainerRef,
-            panelClass: 'ai-expand-record-slide',
-            initialState: {
-                aiTable: config.aiTable,
-                recordId: config.recordId,
-                references: config.references,
-                actions: config.actions
-            },
-            ...config.slideConfig
-        }) ?? null;
+        this.currentSlideRef =
+            this.thySlide.open(RecordDetailComponent, {
+                from: 'right',
+                width: '480px',
+                hasBackdrop: false,
+                viewContainerRef: config.viewContainerRef,
+                panelClass: 'ai-expand-record-slide',
+                initialState: {
+                    aiTable: config.aiTable,
+                    recordId: config.recordId,
+                    references: config.references,
+                    actions: config.actions
+                },
+                ...config.slideConfig
+            }) ?? null;
         if (this.currentSlideRef) {
             this.currentSlideRef.afterOpened().subscribe(() => {
                 this.setupDocumentClickListener(config);

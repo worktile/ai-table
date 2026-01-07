@@ -1,15 +1,16 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    OnInit,
     TemplateRef,
     computed,
     effect,
+    untracked,
     inject,
     input,
     output,
     signal,
-    viewChild
+    viewChild,
+    model
 } from '@angular/core';
 import { ThyButton } from 'ngx-tethys/button';
 import { ThyIcon } from 'ngx-tethys/icon';
@@ -65,9 +66,11 @@ import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropd
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecordDetailComponent implements OnInit {
+export class RecordDetailComponent {
     readonly aiTable = input.required<AITable>();
-    readonly recordId = input.required<string>();
+
+    readonly recordId = model.required<string>();
+
     readonly references = input.required<AITableReferences>();
 
     readonly actions = input<AITableActions>();
@@ -77,7 +80,7 @@ export class RecordDetailComponent implements OnInit {
     private internalRecordId = signal<string>('');
 
     readonly = computed(() => {
-        return this.aiTable().context?.readonly?.();
+        return this.aiTable()?.context?.readonly?.();
     });
 
     currentRecordId = computed(() => {
@@ -158,6 +161,14 @@ export class RecordDetailComponent implements OnInit {
 
     constructor() {
         effect(() => {
+            const recordId = this.recordId();
+            untracked(() => {
+                this.setSelection(recordId);
+                this.internalRecordId.set(recordId);
+            });
+        });
+
+        effect(() => {
             const activeCell = this.aiTable().selection().activeCell;
             if (activeCell) {
                 this.internalRecordId.set(activeCell[0]);
@@ -165,9 +176,8 @@ export class RecordDetailComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {
-        this.setSelection(this.recordId());
-        this.internalRecordId.set(this.recordId());
+    updateRecordId(recordId: string): void {
+        this.recordId.set(recordId);
     }
 
     close(): void {
@@ -177,16 +187,14 @@ export class RecordDetailComponent implements OnInit {
     previousRecord(): void {
         const prevId = getPreviousRecordByActiveCell(this.aiTable());
         if (prevId) {
-            this.internalRecordId.set(prevId);
-            this.setSelection(prevId);
+            this.updateRecordId(prevId);
         }
     }
 
     nextRecord(): void {
         const nextId = getNextRecordByActiveCell(this.aiTable());
         if (nextId) {
-            this.internalRecordId.set(nextId);
-            this.setSelection(nextId);
+            this.updateRecordId(nextId);
         }
     }
 
@@ -204,23 +212,24 @@ export class RecordDetailComponent implements OnInit {
         const position = fieldMenuOrigin.getBoundingClientRect();
         this.fieldMenuActive.set({ [fieldId]: true });
         let isSelfClose = false;
-        this.fieldMenuPopoverRef = this.thyPopover.open(AITableFieldMenu, {
-            origin,
-            placement: 'bottomRight',
-            initialState: {
-                aiTable: this.aiTable(),
-                fieldId,
-                fieldMenus: this.fieldMenus(),
-                origin: fieldMenuOrigin,
-                position,
-                execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
-                    isSelfClose = true;
-                    data.popoverRef?.beforeClosed().subscribe(() => {
-                        this.fieldMenuActive.set({ [fieldId]: false });
-                    });
+        this.fieldMenuPopoverRef =
+            this.thyPopover.open(AITableFieldMenu, {
+                origin,
+                placement: 'bottomRight',
+                initialState: {
+                    aiTable: this.aiTable(),
+                    fieldId,
+                    fieldMenus: this.fieldMenus(),
+                    origin: fieldMenuOrigin,
+                    position,
+                    execMenuCallback: (data: { menu: AITableFieldMenuItem; popoverRef?: ThyPopoverRef<any> }) => {
+                        isSelfClose = true;
+                        data.popoverRef?.beforeClosed().subscribe(() => {
+                            this.fieldMenuActive.set({ [fieldId]: false });
+                        });
+                    }
                 }
-            }
-        }) ?? null;
+            }) ?? null;
         if (this.fieldMenuPopoverRef) {
             this.fieldMenuPopoverRef.beforeClosed().subscribe(() => {
                 if (!isSelfClose) {
