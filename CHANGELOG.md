@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.3](https://github.com/worktile/ai-table/compare/0.5.2...0.5.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* #WIK-19733 【aitable】分组后，出现了没名字的空分组后，详情弹窗都空白了，一直报错 ([#859](https://github.com/worktile/ai-table/issues/859)) ([aa7c4e9](https://github.com/worktile/ai-table/commit/aa7c4e96e9b209f47c82a491084cd587cd638ed6)), closes [#WIK-19733](https://github.com/worktile/ai-table/issues/WIK-19733)
+
+
+
 ## [0.5.2](https://github.com/worktile/ai-table/compare/0.5.1...0.5.2) (2026-01-07)
 
 
