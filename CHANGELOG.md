@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.4](https://github.com/worktile/ai-table/compare/0.5.3...0.5.4) (2026-01-09)
+
+
+### Bug Fixes
+
+* **grid:** should close operation popover after delete field #WIK-19755 ([#861](https://github.com/worktile/ai-table/issues/861)) ([e9b9548](https://github.com/worktile/ai-table/commit/e9b954868a524520f6c5de2ad9c651720ec7ebdd)), closes [#WIK-19755](https://github.com/worktile/ai-table/issues/WIK-19755)
+
+
+
 ## [0.5.3](https://github.com/worktile/ai-table/compare/0.5.2...0.5.3) (2026-01-08)
 
 
