@@ -155,6 +155,8 @@ export class RecordDetailComponent {
 
     private fieldMenuPopoverRef: ThyPopoverRef<any> | null = null;
 
+    private currentPopoverFieldId: string | null = null;
+
     private slideRef = inject(ThySlideRef);
 
     private thyPopover = inject(ThyPopover);
@@ -172,6 +174,18 @@ export class RecordDetailComponent {
             const activeCell = this.aiTable().selection().activeCell;
             if (activeCell) {
                 this.internalRecordId.set(activeCell[0]);
+            }
+        });
+
+        effect(() => {
+            const fields = this.fields();
+            if (this.currentPopoverFieldId && this.fieldMenuPopoverRef) {
+                const fieldExists = fields.some((field) => field._id === this.currentPopoverFieldId);
+                if (!fieldExists) {
+                    this.fieldMenuPopoverRef.close();
+                    this.fieldMenuPopoverRef = null;
+                    this.currentPopoverFieldId = null;
+                }
             }
         });
     }
@@ -211,6 +225,7 @@ export class RecordDetailComponent {
         const origin = e.currentTarget as HTMLElement;
         const position = fieldMenuOrigin.getBoundingClientRect();
         this.fieldMenuActive.set({ [fieldId]: true });
+        this.currentPopoverFieldId = fieldId;
         let isSelfClose = false;
         this.fieldMenuPopoverRef =
             this.thyPopover.open(AITableFieldMenu, {
@@ -236,6 +251,7 @@ export class RecordDetailComponent {
                     this.fieldMenuActive.set({ [fieldId]: false });
                 }
                 this.fieldMenuPopoverRef = null;
+                this.currentPopoverFieldId = null;
             });
         }
     }
