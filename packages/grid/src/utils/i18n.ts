@@ -1,6 +1,10 @@
 import { AITable } from '../core';
 
 export enum AITableGridI18nKey {
+    previousRecord = 'previousRecord',
+    nextRecord = 'nextRecord',
+    more = 'more',
+    close = 'close',
     dataPickerPlaceholder = 'dataPickerPlaceholder',
     linkTooltip = 'linkTooltip',
     invalidLinkFormat = 'invalidLinkFormat',
@@ -60,6 +64,10 @@ export enum AITableGridI18nKey {
 }
 
 export const AITableGridI18nText = {
+    [AITableGridI18nKey.previousRecord]: '上一条',
+    [AITableGridI18nKey.nextRecord]: '下一条',
+    [AITableGridI18nKey.more]: '更多',
+    [AITableGridI18nKey.close]: '关闭',
     [AITableGridI18nKey.dataPickerPlaceholder]: '选择日期',
     [AITableGridI18nKey.linkTooltip]: '链接',
     [AITableGridI18nKey.invalidLinkFormat]: '链接格式不正确',

@@ -49,6 +49,7 @@ import { IconPathMap } from '../../constants';
 import { AITableGridI18nKey } from '../../utils/i18n';
 import { ThyFlexibleText } from 'ngx-tethys/flexible-text';
 import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropdown';
+import { ThyTooltipDirective } from 'ngx-tethys/tooltip';
 
 @Component({
     selector: 'ai-record-detail',
@@ -61,7 +62,8 @@ import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropd
         ThyDropdownMenuItemDirective,
         ThyDropdownMenuComponent,
         DynamicCellEditorComponent,
-        ThyFlexibleText
+        ThyFlexibleText,
+        ThyTooltipDirective
     ],
     templateUrl: './record-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -109,6 +111,10 @@ export class RecordDetailComponent {
     });
 
     i18nTexts = computed(() => ({
+        previousRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.previousRecord),
+        nextRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.nextRecord),
+        more: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.more),
+        close: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.close),
         recordUntitled: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.recordUntitled),
         deleteRecord: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.deleteRecord),
         addField: getI18nTextByKey(this.aiTable(), AITableGridI18nKey.addField)
