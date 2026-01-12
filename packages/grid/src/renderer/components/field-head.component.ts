@@ -79,8 +79,10 @@ export class AITableFieldHead {
 
     bgConfig = computed(() => {
         const { field, width, height, stroke, isSelected, iconVisible, isFirstHead, showExpandIcon } = this.config();
-        const bgWidth = isFirstHead && showExpandIcon ? width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH : width;
-        const bgX = isFirstHead && showExpandIcon ? AI_TABLE_OFFSET - AI_TABLE_ROW_HEAD_EXPAND_WIDTH : AI_TABLE_OFFSET;
+        const shouldExtendLeft = isFirstHead && showExpandIcon && !isSelected;
+        const bgWidth = shouldExtendLeft ? width + AI_TABLE_ROW_HEAD_EXPAND_WIDTH : width;
+        const bgX = shouldExtendLeft ? AI_TABLE_OFFSET - AI_TABLE_ROW_HEAD_EXPAND_WIDTH : AI_TABLE_OFFSET;
+
         return {
             x: bgX,
             y: AI_TABLE_OFFSET,
