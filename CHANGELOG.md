@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.5](https://github.com/worktile/ai-table/compare/0.5.4...0.5.5) (2026-01-12)
+
+
+### Bug Fixes
+
+* **grid:** fix copy and paster shortcuts #WIK-19770 ([#863](https://github.com/worktile/ai-table/issues/863)) ([79158f6](https://github.com/worktile/ai-table/commit/79158f65520651060d669f4714f1e3899bfb2dad)), closes [#WIK-19770](https://github.com/worktile/ai-table/issues/WIK-19770)
+
+
+### Features
+
+* **grid:** background color should extend left when select first field head #WIK-19766 ([#864](https://github.com/worktile/ai-table/issues/864)) ([574e350](https://github.com/worktile/ai-table/commit/574e350c35b560796b2a0b02973aed5a8e24f85d)), closes [#WIK-19766](https://github.com/worktile/ai-table/issues/WIK-19766)
+
+
+
 ## [0.5.4](https://github.com/worktile/ai-table/compare/0.5.3...0.5.4) (2026-01-09)
 
 
