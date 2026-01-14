@@ -101,6 +101,8 @@ export class AITableScrollableGroup implements AfterViewInit {
     scrollX = signal(0);
     scrollY = signal(0);
 
+    private previousBgName: string | undefined;
+
     constructor() {
         // 滚动条延迟隐藏
         effect(() => {
@@ -118,6 +120,16 @@ export class AITableScrollableGroup implements AfterViewInit {
             const scrollX = this.scrollX();
             const scrollY = this.scrollY();
             this.scrollPosition.emit({ scrollX, scrollY });
+        });
+
+        // 监听bgName变化，当cell切换时重置滚动位置
+        effect(() => {
+            const currentBgName = this.config().bgName;
+            if (this.previousBgName !== undefined && this.previousBgName !== currentBgName) {
+                this.scrollX.set(0);
+                this.scrollY.set(0);
+            }
+            this.previousBgName = currentBgName;
         });
     }
 
