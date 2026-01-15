@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal, untracked } from '@angular/core';
 import {
     AI_TABLE_CELL,
     AI_TABLE_CELL_BORDER,
@@ -13,8 +13,7 @@ import {
     DEFAULT_FONT_STYLE,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_ELLIPSIS,
-    DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+    DEFAULT_TEXT_TRANSFORMS_ENABLED
 } from '../../../constants';
 import { generateTargetName, setExpandCellInfo } from '../../../utils';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
@@ -57,6 +56,10 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
 export class AITableCellText extends CoverCellBase {
     static override fieldType = AITableFieldType.text;
 
+    // 缓存文本边界计算结果，避免重复计算
+    private cachedBounds = signal<{ width: number; height: number; x: number; y: number } | null>(null);
+    private cacheKey = signal<string>('');
+
     cellName = computed(() => {
         const { field, recordId } = this.config()?.render!;
         return generateTargetName({
@@ -78,10 +81,81 @@ export class AITableCellText extends CoverCellBase {
                 });
             }
         });
+
+        // 监听展开状态和文本内容变化，异步计算边界
+        effect((cleanup) => {
+            if (!this.isExpand()) {
+                untracked(() => {
+                    this.cachedBounds.set(null);
+                    this.cacheKey.set('');
+                });
+                return;
+            }
+
+            const textRender = this.textString();
+            if (!textRender) {
+                return;
+            }
+
+            const textWidth = this.textMaxWidth();
+            const startY = this.startY();
+            const key = `${textRender}_${textWidth}_${startY}`;
+
+            if (this.cacheKey() === key && this.cachedBounds()) {
+                return;
+            }
+
+            // 立即设置初始值，让 UI 立即响应
+            untracked(() => {
+                const initialHeight = this.config()?.render?.rowHeight || AI_TABLE_ROW_BLANK_HEIGHT;
+                this.cachedBounds.set({
+                    width: textWidth,
+                    height: initialHeight,
+                    x: 0,
+                    y: 0
+                });
+            });
+
+            // 异步计算，不阻塞 UI，展开更流畅
+            const requestAimationFrameId = requestAnimationFrame(() => {
+                if (this.cacheKey() === key) {
+                    return;
+                }
+
+                const tmpText = new Konva.Text({
+                    text: textRender,
+                    fontSize: DEFAULT_FONT_SIZE,
+                    fontFamily: DEFAULT_FONT_FAMILY,
+                    lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+                    wrap: 'char',
+                    width: textWidth,
+                    align: DEFAULT_TEXT_ALIGN_LEFT,
+                    verticalAlign: 'top',
+                    fontStyle: DEFAULT_FONT_STYLE,
+                    ellipsis: DEFAULT_TEXT_ELLIPSIS,
+                    transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
+                    listening: false
+                });
+                const rect = tmpText.getClientRect();
+
+                // 如果不加 untracked，展开的过程会晃眼
+                untracked(() => {
+                    this.cachedBounds.set({
+                        ...rect,
+                        height: rect.height + startY * 2 - AI_TABLE_CELL_LINE_BORDER
+                    });
+                    this.cacheKey.set(key);
+                });
+            });
+
+            cleanup(() => {
+                cancelAnimationFrame(requestAimationFrameId);
+            });
+        });
     }
 
     expandBorderConfig = computed(() => {
-        const { render, field, recordId, readonly, isExpand } = this.config()!;
+        const { render, field, recordId, isExpand } = this.config()!;
         const { columnWidth } = render;
         if (isExpand) {
             return {
@@ -101,15 +175,16 @@ export class AITableCellText extends CoverCellBase {
     });
 
     scrollConfig = computed<ScrollableGroupConfig>(() => {
-        const { render, field, recordId, readonly, isExpand, coordinate } = this.config()!;
+        const { render } = this.config()!;
         const { columnWidth } = render;
-        const { height } = this.expandTextBounds();
+        const bounds = this.expandTextBounds();
+        const contentHeight = bounds?.height || 0;
 
         return {
             width: columnWidth,
             height: this.height(),
             contentWidth: columnWidth, // 内容宽度大于容器宽度，会显示横向滚动条
-            contentHeight: height, // 内容高度大于容器高度，会显示竖向滚动条
+            contentHeight: contentHeight, // 内容高度大于容器高度，会显示竖向滚动条
             scrollbarSize: 9,
             scrollbarColor: Colors.gray700,
             x: 0,
@@ -123,24 +198,22 @@ export class AITableCellText extends CoverCellBase {
     });
 
     expandTextBounds = computed(() => {
-        const textRender = this.textString();
-        const tmpText = new Konva.Text({
-            text: textRender,
-            fontSize: DEFAULT_FONT_SIZE,
-            fontFamily: DEFAULT_FONT_FAMILY,
-            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-            wrap: 'char',
-            width: this.textMaxWidth(),
-            align: DEFAULT_TEXT_ALIGN_LEFT,
-            verticalAlign: 'top',
-            fontStyle: DEFAULT_FONT_STYLE,
-            ellipsis: DEFAULT_TEXT_ELLIPSIS,
-            transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
-            listening: false
-        });
+        if (!this.isExpand()) {
+            return null;
+        }
+
+        const cached = this.cachedBounds();
+        if (cached) {
+            return cached;
+        }
+
+        const textWidth = this.textMaxWidth();
+        const initialHeight = this.config()?.render?.rowHeight || AI_TABLE_ROW_BLANK_HEIGHT;
         return {
-            ...tmpText.getClientRect(),
-            height: tmpText.getClientRect().height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER
+            width: textWidth,
+            height: initialHeight,
+            x: 0,
+            y: 0
         };
     });
 
@@ -164,7 +237,7 @@ export class AITableCellText extends CoverCellBase {
     });
 
     startY = computed(() => {
-        const { y, rowHeight } = this.config()?.render!;
+        const { y } = this.config()?.render!;
         return (
             y +
             (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE) / 2 -
@@ -176,12 +249,13 @@ export class AITableCellText extends CoverCellBase {
     expandTextConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
         if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
+            const { x, zIndex } = render;
             let textRender: string | undefined = this.textString();
             if (isUndefinedOrNull(textRender)) {
                 return;
             }
-            const { height } = this.expandTextBounds();
+            const bounds = this.expandTextBounds();
+            const height = bounds?.height || 0;
 
             return {
                 x,
@@ -205,7 +279,7 @@ export class AITableCellText extends CoverCellBase {
     textConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
         if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
+            const { x, rowHeight, zIndex } = render;
             let textRender: string | undefined = this.textString();
             if (isUndefinedOrNull(textRender)) {
                 return;
