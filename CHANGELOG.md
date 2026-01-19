@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.6](https://github.com/worktile/ai-table/compare/0.5.5...0.5.6) (2026-01-19)
+
+
+### Bug Fixes
+
+* #WIK-19781 【aitable】单元格出现滚动条并滚动到底部后，点击其他文字多的单元格空白 ([#866](https://github.com/worktile/ai-table/issues/866)) ([eceafdc](https://github.com/worktile/ai-table/commit/eceafdc6ecff5ea2ad5736be86c9b4ae57d593de)), closes [#WIK-19781](https://github.com/worktile/ai-table/issues/WIK-19781)
+
+
+
 ## [0.5.5](https://github.com/worktile/ai-table/compare/0.5.4...0.5.5) (2026-01-12)
 
 
