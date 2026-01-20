@@ -1067,10 +1067,20 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     private setContainerRect() {
+        const offsetWidth = this.containerElement().offsetWidth;
+        const offsetHeight = this.containerElement().offsetHeight;
         this.containerRect.set({
-            width: this.containerElement().offsetWidth,
-            height: this.containerElement().offsetHeight
+            width: offsetWidth,
+            height: offsetHeight
         });
+        console.log('setContainerRect, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
+        setTimeout(() => {
+            this.containerRect.set({
+                width: offsetWidth,
+                height: offsetHeight
+            });
+            console.log('setContainerRect（setTimeout）, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
+        }, 1000);
     }
 
     private containerResizeListener() {
