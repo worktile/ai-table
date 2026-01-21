@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
-import { Check, Colors, DEFAULT_ICON_SIZE, RowDragPath, Unchecked } from '../../constants';
+import { Check, Colors, DEFAULT_ICON_SIZE, DEFAULT_TEXT_TRANSFORMS_ENABLED, RowDragPath, Unchecked } from '../../constants';
 import { AITableCheckType, AITableIconConfig } from '../../types';
 import { DragType } from '@ai-table/utils';
 
@@ -64,7 +64,7 @@ export class AITableIcon {
             offsetY,
             rotation,
             fill = Colors.gray600,
-            transformsEnabled = 'position',
+            transformsEnabled = DEFAULT_TEXT_TRANSFORMS_ENABLED,
             disabled
         } = this.config();
 

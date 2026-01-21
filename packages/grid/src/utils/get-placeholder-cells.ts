@@ -1,4 +1,11 @@
-import { AI_TABLE_CELL, AI_TABLE_CELL_LINE_BORDER, AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE, AI_TABLE_OFFSET, Colors } from '../constants';
+import {
+    AI_TABLE_CELL,
+    AI_TABLE_CELL_LINE_BORDER,
+    AI_TABLE_FIELD_HEAD_ICON_GAP_SIZE,
+    AI_TABLE_OFFSET,
+    Colors,
+    DEFAULT_TEXT_TRANSFORMS_ENABLED
+} from '../constants';
 import { AITable } from '../core';
 import { AITableCellsConfig, AITableRowType } from '../types';
 import { getCellHorizontalPosition } from './cell';
@@ -67,7 +74,7 @@ export function getPlaceHolderCellsConfigs(options: AITableCellsConfig) {
                 fill: Colors.transparent,
                 strokeEnabled: false,
                 hitStrokeWidth: 0,
-                transformsEnabled: 'position',
+                transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
                 perfectDrawEnabled: false,
                 shadowEnabled: false
             });
