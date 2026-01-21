@@ -13,8 +13,7 @@ import {
     DEFAULT_FONT_STYLE,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_ELLIPSIS,
-    DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+    DEFAULT_TEXT_TRANSFORMS_ENABLED
 } from '../../../constants';
 import { generateTargetName, setExpandCellInfo } from '../../../utils';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
@@ -81,7 +80,7 @@ export class AITableCellText extends CoverCellBase {
     }
 
     expandBorderConfig = computed(() => {
-        const { render, field, recordId, readonly, isExpand } = this.config()!;
+        const { render, field, recordId, isExpand } = this.config()!;
         const { columnWidth } = render;
         if (isExpand) {
             return {
@@ -101,7 +100,7 @@ export class AITableCellText extends CoverCellBase {
     });
 
     scrollConfig = computed<ScrollableGroupConfig>(() => {
-        const { render, field, recordId, readonly, isExpand, coordinate } = this.config()!;
+        const { render } = this.config()!;
         const { columnWidth } = render;
         const { height } = this.expandTextBounds();
 
@@ -164,7 +163,7 @@ export class AITableCellText extends CoverCellBase {
     });
 
     startY = computed(() => {
-        const { y, rowHeight } = this.config()?.render!;
+        const { y } = this.config()?.render!;
         return (
             y +
             (AI_TABLE_ROW_HEIGHT - DEFAULT_FONT_SIZE) / 2 -
@@ -176,7 +175,7 @@ export class AITableCellText extends CoverCellBase {
     expandTextConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
         if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
+            const { x, zIndex } = render;
             let textRender: string | undefined = this.textString();
             if (isUndefinedOrNull(textRender)) {
                 return;
@@ -205,7 +204,7 @@ export class AITableCellText extends CoverCellBase {
     textConfig = computed<TextConfig | undefined>(() => {
         const render = this.config()?.render;
         if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
+            const { x, rowHeight, zIndex } = render;
             let textRender: string | undefined = this.textString();
             if (isUndefinedOrNull(textRender)) {
                 return;
