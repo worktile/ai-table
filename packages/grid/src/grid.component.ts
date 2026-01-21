@@ -425,6 +425,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     override ngOnInit(): void {
+        console.log('ngOnInit');
         super.ngOnInit();
         this.initContext();
         this.initCustomField();
@@ -433,6 +434,7 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.recordDetailService.close();
         this.resizeObserver?.disconnect();
+        console.log('ngOnDestroy');
     }
 
     private initContext() {
