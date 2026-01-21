@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.8](https://github.com/worktile/ai-table/compare/0.5.7...0.5.8) (2026-01-21)
+
+
+### Reverts
+
+* Revert "feat(init): add log to verify issue which table can not display" ([7fed27c](https://github.com/worktile/ai-table/commit/7fed27c265a3d754d346aa10d4945e26079a5f65))
+
+
+
 ## [0.5.7](https://github.com/worktile/ai-table/compare/0.5.6...0.5.7) (2026-01-20)
 
 
