@@ -34,7 +34,7 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
                     <ko-group #rootGroup>
                         <ai-table-scrollable-group [config]="scrollConfig()" [contentTemplate]="contentGroup" [parentContainer]="rootGroup">
                             <ko-group #contentGroup>
-                                <ai-table-text [config]="expandTextConfig()!"></ai-table-text>
+                                <!-- <ai-table-text [config]="expandTextConfig()!"></ai-table-text> -->
                             </ko-group>
                         </ai-table-scrollable-group>
                     </ko-group>
@@ -45,7 +45,7 @@ import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-gro
             } @else {
                 @if (textConfig()) {
                     <ko-group>
-                        <ai-table-text [config]="textConfig()!"></ai-table-text>
+                        <!-- <ai-table-text [config]="textConfig()!"></ai-table-text> -->
                     </ko-group>
                 }
             }
@@ -122,26 +122,29 @@ export class AITableCellText extends CoverCellBase {
         };
     });
 
+    // 和这有关
     expandTextBounds = computed(() => {
-        const textRender = this.textString();
-        const tmpText = new Konva.Text({
-            text: textRender,
-            fontSize: DEFAULT_FONT_SIZE,
-            fontFamily: DEFAULT_FONT_FAMILY,
-            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-            wrap: 'char',
-            width: this.textMaxWidth(),
-            align: DEFAULT_TEXT_ALIGN_LEFT,
-            verticalAlign: 'top',
-            fontStyle: DEFAULT_FONT_STYLE,
-            ellipsis: DEFAULT_TEXT_ELLIPSIS,
-            transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
-            listening: false
-        });
-        return {
-            ...tmpText.getClientRect(),
-            height: tmpText.getClientRect().height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER
-        };
+        // const textRender = this.textString();
+        // const tmpText = new Konva.Text({
+        //     text: textRender,
+        //     fontSize: DEFAULT_FONT_SIZE,
+        //     fontFamily: DEFAULT_FONT_FAMILY,
+        //     lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+        //     wrap: 'char',
+        //     width: this.textMaxWidth(),
+        //     align: DEFAULT_TEXT_ALIGN_LEFT,
+        //     verticalAlign: 'top',
+        //     fontStyle: DEFAULT_FONT_STYLE,
+        //     ellipsis: DEFAULT_TEXT_ELLIPSIS,
+        //     transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
+        //     listening: false
+        // });
+        // return {
+        //     ...tmpText.getClientRect(),
+        //     height: tmpText.getClientRect().height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER
+        // };
+
+        return { x: 0, y: 0, width: 271.5, height: 1743.16 };
     });
 
     textMaxWidth = computed(() => {
@@ -173,59 +176,90 @@ export class AITableCellText extends CoverCellBase {
         );
     });
 
+    // 和这无关
     expandTextConfig = computed<TextConfig | undefined>(() => {
-        const render = this.config()?.render;
-        if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
-            let textRender: string | undefined = this.textString();
-            if (isUndefinedOrNull(textRender)) {
-                return;
-            }
-            const { height } = this.expandTextBounds();
+        // const render = this.config()?.render;
+        // if (render) {
+        //     const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
+        //     let textRender: string | undefined = this.textString();
+        //     if (isUndefinedOrNull(textRender)) {
+        //         return;
+        //     }
+        //     const { height } = this.expandTextBounds();
 
-            return {
-                x,
-                y: this.startY(),
-                name: this.cellName(),
-                text: textRender,
-                wrap: 'char',
-                width: this.textMaxWidth(),
-                fillStyle: Colors.primary,
-                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-                verticalAlign: 'top',
-                height,
-                listening: true,
-                ellipsis: true,
-                zIndex
-            };
-        }
-        return;
+        //     return {
+        //         x,
+        //         y: this.startY(),
+        //         name: this.cellName(),
+        //         text: textRender,
+        //         wrap: 'char',
+        //         width: this.textMaxWidth(),
+        //         fillStyle: Colors.primary,
+        //         lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+        //         verticalAlign: 'top',
+        //         height,
+        //         listening: true,
+        //         ellipsis: true,
+        //         zIndex
+        //     };
+        // }
+        // return;
+
+        return {
+            x: 14.5,
+            y: 9.12,
+            name: 'AI_TABLE_CELL.696851bfbfe04a082bb673e9.696f4f92b60834d6c4d4e5bc.$.$',
+            text: '打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的',
+            wrap: 'char',
+            width: 271.5,
+            fillStyle: '#6698FF',
+            lineHeight: 1.84,
+            verticalAlign: 'top',
+            height: 1743.16,
+            listening: true,
+            ellipsis: true
+        };
     });
 
+    // 和这无关
     textConfig = computed<TextConfig | undefined>(() => {
-        const render = this.config()?.render;
-        if (render) {
-            const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
-            let textRender: string | undefined = this.textString();
-            if (isUndefinedOrNull(textRender)) {
-                return;
-            }
+        // const render = this.config()?.render;
+        // if (render) {
+        //     const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex } = render;
+        //     let textRender: string | undefined = this.textString();
+        //     if (isUndefinedOrNull(textRender)) {
+        //         return;
+        //     }
 
-            return {
-                x,
-                y: this.startY(),
-                verticalAlign: 'top',
-                text: textRender,
-                wrap: 'char',
-                width: this.textMaxWidth(),
-                fillStyle: Colors.primary,
-                height: rowHeight + AI_TABLE_CELL_LINE_BORDER * 2,
-                lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-                listening: false,
-                ellipsis: true,
-                zIndex
-            };
-        }
-        return;
+        //     return {
+        //         x,
+        //         y: this.startY(),
+        //         verticalAlign: 'top',
+        //         text: textRender,
+        //         wrap: 'char',
+        //         width: this.textMaxWidth(),
+        //         fillStyle: Colors.primary,
+        //         height: rowHeight + AI_TABLE_CELL_LINE_BORDER * 2,
+        //         lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
+        //         listening: false,
+        //         ellipsis: true,
+        //         zIndex
+        //     };
+        // }
+        // return;
+
+        return {
+            x: 14.5,
+            y: 9.12,
+            verticalAlign: 'top',
+            text: '打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的打开打卡当流动的',
+            wrap: 'char',
+            width: 271.5,
+            fillStyle: '#6698FF',
+            height: 46,
+            lineHeight: 1.84,
+            listening: false,
+            ellipsis: true
+        };
     });
 }
