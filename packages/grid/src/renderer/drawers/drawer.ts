@@ -434,7 +434,7 @@ export class Drawer {
             verticalAlign: 'top',
             fontStyle: fontStyle,
             ellipsis: true,
-            transformsEnabled: true,
+            transformsEnabled: 'position',
             listening: false
         });
         konvaText.textArr.forEach((item, index) => {

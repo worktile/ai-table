@@ -56,8 +56,8 @@ export class AITableCellRichText extends CoverCellBase {
                 height: rowHeight + 2,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: false,
-                ellipsis: true,
-                zIndex
+                ellipsis: true
+                // zIndex
             };
         }
         return;

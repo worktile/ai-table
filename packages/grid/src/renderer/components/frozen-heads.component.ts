@@ -201,8 +201,8 @@ export class AITableFrozenColumnHeads {
             stroke: Colors.gray200,
             strokeWidth: this.hiddenIndexColumn() ? 0 : 1,
             fill: Colors.transparent,
-            listening: false,
-            zIndex: 10
+            listening: false
+            // zIndex: 10
         };
     });
 
@@ -228,8 +228,8 @@ export class AITableFrozenColumnHeads {
                 points: [0, 0, width, 0],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
-                listening: false,
-                zIndex: 10
+                listening: false
+                // zIndex: 10
             },
             // 下边界线
             {
@@ -238,8 +238,8 @@ export class AITableFrozenColumnHeads {
                 points: [0, this.fieldHeadHeight(), width, this.fieldHeadHeight()],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
-                listening: false,
-                zIndex: 10
+                listening: false
+                // zIndex: 10
             },
             {
                 x: AI_TABLE_ROW_DRAG_ICON_WIDTH,
@@ -247,8 +247,8 @@ export class AITableFrozenColumnHeads {
                 points: [width, 0, width, this.fieldHeadHeight()],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
-                listening: false,
-                zIndex: 10
+                listening: false
+                // zIndex: 10
             }
         ];
 
@@ -265,8 +265,8 @@ export class AITableFrozenColumnHeads {
                 ],
                 stroke: Colors.gray200,
                 strokeWidth: 1,
-                listening: false,
-                zIndex: 10
+                listening: false
+                // zIndex: 10
             });
         }
 

@@ -612,19 +612,27 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
                 this.handleFieldWidthDragStart(fieldId);
                 return;
             case AI_TABLE_CELL:
-                if (!recordId || !fieldId) return;
-                const startCell: AIRecordFieldIdPath = [recordId, fieldId];
-                this.updateDragSelectState(true, startCell);
-                const [expandRecordId, expandFieldId] = this.aiTable.expendCell()?.path || [null, null];
-                if (expandRecordId !== recordId || expandFieldId !== fieldId) {
-                    const field = this.aiTable.fieldsMap()[fieldId];
-                    closeEditingCell(this.aiTable);
-                    selectCells(this.aiTable, startCell);
-                    closeExpendCell(this.aiTable);
-                    if (field.type === AITableFieldType.text) {
-                        expandCell(this.aiTable, [recordId, fieldId]);
-                    }
-                }
+                // 无济于事
+                // if (!recordId || !fieldId) return;
+                // const startCell: AIRecordFieldIdPath = [recordId, fieldId];
+                // this.updateDragSelectState(true, startCell);
+                // const [expandRecordId, expandFieldId] = this.aiTable.expendCell()?.path || [null, null];
+                // if (expandRecordId !== recordId || expandFieldId !== fieldId) {
+                //     const field = this.aiTable.fieldsMap()[fieldId];
+
+                //     // 有编辑的单元格才关闭
+                //     if (this.aiTable.editingCell()?.path) {
+                //         closeEditingCell(this.aiTable);
+                //     }
+                //     selectCells(this.aiTable, startCell);
+
+                //     if (expandRecordId && expandFieldId) {
+                //         closeExpendCell(this.aiTable);
+                //     }
+                //     if (field.type === AITableFieldType.text) {
+                expandCell(this.aiTable, [recordId!, fieldId!]);
+                // }
+                // }
                 return;
             case AI_TABLE_FILL_HANDLE:
                 if (!recordId || !fieldId) return;
@@ -1073,13 +1081,13 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
             width: offsetWidth,
             height: offsetHeight
         });
-        console.log('setContainerRect, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
+        // console.log('setContainerRect, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
         setTimeout(() => {
             this.containerRect.set({
                 width: offsetWidth,
                 height: offsetHeight
             });
-            console.log('setContainerRect（setTimeout）, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
+            // console.log('setContainerRect（setTimeout）, offsetWidth: ', offsetWidth, 'offsetHeight: ', offsetHeight);
         }, 1000);
     }
 

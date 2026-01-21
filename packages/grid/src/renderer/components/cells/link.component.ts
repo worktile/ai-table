@@ -68,8 +68,8 @@ export class AITableCellLink extends CoverCellBase {
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: true,
                 ellipsis: true,
-                textDecoration: 'underline',
-                zIndex
+                textDecoration: 'underline'
+                // zIndex
             };
         }
         return;

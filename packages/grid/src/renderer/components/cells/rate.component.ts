@@ -63,7 +63,7 @@ export class AITableCellRate extends CoverCellBase {
             height: coordinate.rowHeight - (AI_TABLE_CELL_BORDER + AI_TABLE_OFFSET) - 1,
             fill: bgColor,
             stroke: bgColor,
-            zIndex: 0,
+            // zIndex: 0,
             name: generateTargetName({
                 targetName: AI_TABLE_CELL,
                 fieldId: field._id,

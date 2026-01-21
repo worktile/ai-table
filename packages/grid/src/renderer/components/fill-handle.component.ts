@@ -63,7 +63,7 @@ export class AITableFillHandle {
             fill: Colors.primary,
             stroke: Colors.white,
             strokeWidth: 2,
-            zIndex: 20,
+            // zIndex: 20,
             name: generateTargetName({
                 targetName: AI_TABLE_FILL_HANDLE,
                 fieldId,
