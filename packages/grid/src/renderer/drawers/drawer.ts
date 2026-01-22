@@ -11,6 +11,7 @@ import {
     DEFAULT_TEXT_ALIGN_CENTER,
     DEFAULT_TEXT_ALIGN_LEFT,
     DEFAULT_TEXT_DECORATION,
+    DEFAULT_TEXT_TRANSFORMS_ENABLED,
     DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
     DEFAULT_TEXT_VERTICAL_ALIGN_TOP,
     DEFAULT_WRAP_TEXT_MAX_ROW,
@@ -434,7 +435,7 @@ export class Drawer {
             verticalAlign: 'top',
             fontStyle: fontStyle,
             ellipsis: true,
-            transformsEnabled: true,
+            transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
             listening: false
         });
         konvaText.textArr.forEach((item, index) => {

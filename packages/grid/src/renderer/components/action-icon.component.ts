@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 import { StageConfig } from 'konva/lib/Stage';
 import { KoContainer, KoEventObject } from '../../angular-konva';
 import { KoShape } from '../../angular-konva/components/shape.component';
-import { Check, Colors, DEFAULT_ICON_SIZE, Unchecked } from '../../constants';
+import { Check, Colors, DEFAULT_ICON_SIZE, DEFAULT_TEXT_TRANSFORMS_ENABLED, Unchecked } from '../../constants';
 import { AITableActionIconConfig, AITableCheckType } from '../../types';
 import { setMouseStyle } from '../../utils';
 
@@ -93,7 +93,7 @@ export class AITableActionIcon {
             rotation,
             fill,
             hoverFill: hoverFill,
-            transformsEnabled = 'position'
+            transformsEnabled = DEFAULT_TEXT_TRANSFORMS_ENABLED
         } = this.config();
         fill = fill || Colors.gray600;
         let pathData = data;
