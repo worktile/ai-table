@@ -11,10 +11,12 @@ import {
     DEFAULT_FONT_FAMILY,
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_STYLE,
+    DEFAULT_FONT_WEIGHT,
     DEFAULT_TEXT_ALIGN_LEFT,
-    DEFAULT_TEXT_ELLIPSIS,
-    DEFAULT_TEXT_TRANSFORMS_ENABLED,
-    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE
+    DEFAULT_TEXT_DECORATION,
+    DEFAULT_TEXT_LINE_HEIGHT,
+    DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+    DEFAULT_WRAP_TEXT_MAX_ROW
 } from '../../../constants';
 import { generateTargetName, setExpandCellInfo } from '../../../utils';
 import { AITableFieldType, isUndefinedOrNull } from '@ai-table/utils';
@@ -22,8 +24,8 @@ import { TextConfig } from 'konva/lib/shapes/Text';
 import { AITableTextComponent } from '../text.component';
 import { CoverCellBase } from './cover-cell-base';
 import { KoShape, KoContainer } from '../../../angular-konva';
-import Konva from 'konva';
 import { AITableScrollableGroup, ScrollableGroupConfig } from '../scrollable-group';
+import { drawer } from '../../drawers/drawer';
 
 @Component({
     selector: 'ai-table-single-text',
@@ -124,24 +126,32 @@ export class AITableCellText extends CoverCellBase {
 
     expandTextBounds = computed(() => {
         const textRender = this.textString();
-        const tmpText = new Konva.Text({
-            text: textRender,
+        const render = this.config()?.render;
+        if (!render) {
+            return { height: 0, data: [] };
+        }
+        const { x, y } = render;
+
+        const text = drawer.wrapTextWithKonva({
+            x,
+            y,
+            text: textRender!,
+            maxWidth: this.textMaxWidth(),
             fontSize: DEFAULT_FONT_SIZE,
-            fontFamily: DEFAULT_FONT_FAMILY,
             lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
-            wrap: 'char',
-            width: this.textMaxWidth(),
-            align: DEFAULT_TEXT_ALIGN_LEFT,
-            verticalAlign: 'top',
-            fontStyle: DEFAULT_FONT_STYLE,
-            ellipsis: DEFAULT_TEXT_ELLIPSIS,
-            transformsEnabled: DEFAULT_TEXT_TRANSFORMS_ENABLED,
-            listening: false
+            textAlign: DEFAULT_TEXT_ALIGN_LEFT,
+            verticalAlign: DEFAULT_TEXT_VERTICAL_ALIGN_MIDDLE,
+            fillStyle: Colors.primary,
+            fontWeight: DEFAULT_FONT_WEIGHT,
+            textDecoration: DEFAULT_TEXT_DECORATION,
+            fieldType: AITableFieldType.text,
+            needDraw: false
         });
         return {
-            ...tmpText.getClientRect(),
-            height: tmpText.getClientRect().height + this.startY() * 2 - AI_TABLE_CELL_LINE_BORDER
+            ...text,
+            height: text.height + AI_TABLE_CELL_PADDING + AI_TABLE_CELL_LINE_BORDER
         };
+
     });
 
     textMaxWidth = computed(() => {
@@ -177,27 +187,28 @@ export class AITableCellText extends CoverCellBase {
         const render = this.config()?.render;
         if (render) {
             const { x, y, transformValue, field, columnWidth, rowHeight, style, zIndex, recordId } = render;
-            let textRender: string | undefined = this.textString();
-            if (isUndefinedOrNull(textRender)) {
+            let text: string | undefined = this.textString();
+            if (isUndefinedOrNull(text)) {
                 return;
             }
-            const { height } = this.expandTextBounds();
-
+            const { height, data } = this.expandTextBounds();
+            const textRender = data.map((item) => item.text).join('\n');
             return {
                 x,
                 y: this.startY(),
                 name: this.cellName(),
                 text: textRender,
-                wrap: 'char',
+                wrap: 'none',
                 width: this.textMaxWidth(),
                 fillStyle: Colors.primary,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 verticalAlign: 'top',
                 height,
                 listening: true,
-                ellipsis: true,
+                ellipsis: false,
                 zIndex
             };
+
         }
         return;
     });
@@ -219,7 +230,7 @@ export class AITableCellText extends CoverCellBase {
                 wrap: 'char',
                 width: this.textMaxWidth(),
                 fillStyle: Colors.primary,
-                height: rowHeight + AI_TABLE_CELL_LINE_BORDER * 2,
+                height: rowHeight - AI_TABLE_CELL_PADDING,
                 lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
                 listening: false,
                 ellipsis: true,
