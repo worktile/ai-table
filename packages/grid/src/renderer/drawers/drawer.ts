@@ -378,7 +378,7 @@ export class Drawer {
             maxWidth,
             maxHeight,
             lineHeight = AI_TABLE_TEXT_LINE_HEIGHT,
-            maxRow = DEFAULT_WRAP_TEXT_MAX_ROW,
+            maxRow,
             fontSize = DEFAULT_FONT_SIZE,
             fillStyle = this.colors.gray800,
             textAlign = DEFAULT_TEXT_ALIGN_LEFT,
@@ -412,7 +412,7 @@ export class Drawer {
 
         if (fillStyle) this.setStyle({ fillStyle });
         this.ctx.textAlign = textAlign;
-        const cacheKey = `${fontStyleKey}-${maxRow}-${maxWidth || 0}-${maxHeight || 0}-${fieldType}-${text}`;
+        const cacheKey = `${fontStyleKey}-${(maxRow || 1)}-${maxWidth || 0}-${maxHeight || 0}-${fieldType}-${text}`;
         const cacheTextData = textDataCache.get(cacheKey);
         if (cacheTextData) {
             if (this.needDraw && needDraw) {
@@ -422,12 +422,12 @@ export class Drawer {
         }
 
         const resultData: AITableWrapTextData = [];
-        const height = maxHeight ? maxHeight : maxRow * lineHeight * fontSize;
+        const height = maxHeight ? maxHeight : maxRow ? (maxRow) * lineHeight * fontSize : undefined;
         const konvaText = new Konva.Text({
             text,
             fontSize,
             fontFamily: DEFAULT_FONT_FAMILY,
-            lineHeight: 1.84,
+            lineHeight: AI_TABLE_TEXT_LINE_HEIGHT,
             wrap: 'char',
             width: maxWidth,
             height: height,

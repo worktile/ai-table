@@ -195,7 +195,7 @@ export class CellDrawer extends Drawer {
             this.wrapTextWithKonva({
                 x: renderX,
                 y: renderY,
-                maxHeight: rowHeight,
+                maxHeight: rowHeight - AI_TABLE_CELL_PADDING,
                 text: renderText,
                 maxWidth: textMaxWidth,
                 maxRow,
