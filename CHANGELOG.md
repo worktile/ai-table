@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.9](https://github.com/worktile/ai-table/compare/0.5.8...0.5.9) (2026-01-26)
+
+
+### Bug Fixes
+
+* #WIK-19521 【aitable】排查：点击单元格卡顿（点空白处再点单元格，见附件） ([#872](https://github.com/worktile/ai-table/issues/872)) ([688b556](https://github.com/worktile/ai-table/commit/688b5560f7e794b1501da8f63f0e0b98d3ba5f1a)), closes [#WIK-19521](https://github.com/worktile/ai-table/issues/WIK-19521)
+* **grid:** fix warn Konva warning: true is a not valid value for "transformsEnabled" attribute. The value should be a string. ([#870](https://github.com/worktile/ai-table/issues/870)) ([1d5d7e9](https://github.com/worktile/ai-table/commit/1d5d7e9cabc1b83853192a41a30456793683f116))
+
+
+
 ## [0.5.8](https://github.com/worktile/ai-table/compare/0.5.7...0.5.8) (2026-01-21)
 
 
