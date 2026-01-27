@@ -192,6 +192,15 @@ export class AITableCellText extends CoverCellBase {
                 return;
             }
             const { height, data } = this.expandTextBounds();
+            /**
+             * Konva.Text 中的 wrap 为 none 时，则不进行换行计算处理
+             * Konva.Text 中的 wrap 为 char/word/word-break,并且设置了 width参数时，则会进行计算  根据宽度计算容纳的内容，超过后进行换行
+             * Konva.Text 中的 ellipsis 为 true，并且 wrap为char/word/word-break，设置了width 和 height 参数，则会计算超过的部分进行截断，展示...
+             * 当 渲染的文字内容很多，开启上述运算时就会很耗时（实际是计算耗时，渲染并不耗时）。
+             * 目前的优化方案：
+             * 计算与渲染分离，优先计算出换行的结果并对数据进行缓存。
+             * 渲染时，根据提前计算的结果，使用 \n 拼装计算出的所有行，直接进行渲染。
+             */
             const textRender = data.map((item) => item.text).join('\n');
             return {
                 x,
