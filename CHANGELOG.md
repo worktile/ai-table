@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.6.0-next.1](https://github.com/worktile/ai-table/compare/0.6.0-next.0...0.6.0-next.1) (2026-04-08)
+
+
+### Features
+
+* lru-cache update 11.2.1 ([#881](https://github.com/worktile/ai-table/issues/881)) ([f61029c](https://github.com/worktile/ai-table/commit/f61029cbd223d197f3e58d7904c6fe921acd9648))
+
+
+
 ## [0.5.9](https://github.com/worktile/ai-table/compare/0.5.8...0.5.9) (2026-01-26)
 
 
