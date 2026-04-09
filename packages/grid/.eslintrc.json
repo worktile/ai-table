@@ -5,7 +5,7 @@
         {
             "files": ["*.ts"],
             "parserOptions": {
-                "project": ["packages/core/tsconfig.lib.json", "packages/core/tsconfig.spec.json"],
+                "project": ["packages/grid/tsconfig.json", "packages/grid/tsconfig.spec.json"],
                 "createDefaultProgram": true
             },
             "rules": {

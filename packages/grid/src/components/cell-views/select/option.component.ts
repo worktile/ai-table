@@ -13,7 +13,7 @@ import { AITableSelectField } from '../../../types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'select-option thy-text',
-        '[class.select-option-tag]': 'optionStyle === AITableSelectOptionStyle.tag'
+        '[class.select-option-tag]': 'optionStyle() === AITableSelectOptionStyle.tag'
     },
     imports: [ThyTag, ThyIcon, ThyTooltipModule, ThyDot, ThyFlexibleText]
 })
