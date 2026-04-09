@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.6.0](https://github.com/worktile/ai-table/compare/0.5.9...0.6.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* ix: #WIK-19521 【aitable】排查：点击单元格卡顿，优化方案描述 ([#874](https://github.com/worktile/ai-table/issues/874)) ([41a9c11](https://github.com/worktile/ai-table/commit/41a9c112d2e44b4e419296a8e5f9a024386df0d0)), closes [#WIK-19521](https://github.com/worktile/ai-table/issues/WIK-19521)
+
+
+### Features
+
+* angular update v21 ([a1810fc](https://github.com/worktile/ai-table/commit/a1810fcb22737bdf40da1ee578978b17afc95f37)), closes [#TINFR-3413](https://github.com/worktile/ai-table/issues/TINFR-3413) [#876](https://github.com/worktile/ai-table/issues/876) [#878](https://github.com/worktile/ai-table/issues/878) [#879](https://github.com/worktile/ai-table/issues/879) [#881](https://github.com/worktile/ai-table/issues/881)
+
+
+
 # [0.6.0-next.1](https://github.com/worktile/ai-table/compare/0.6.0-next.0...0.6.0-next.1) (2026-04-08)
 
 
