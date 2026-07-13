@@ -163,6 +163,11 @@
         width: 100%;
         height: 100%;
         position: relative;
+        touch-action: none;
+
+        .konvajs-content {
+            touch-action: none;
+        }
     }
 
     .ai-table-left-background-wrapper {

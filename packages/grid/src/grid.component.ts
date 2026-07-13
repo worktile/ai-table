@@ -133,6 +133,34 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
 
     private isDragSelectionAutoScrolling = false;
 
+    private touchPanState: {
+        isTouching: boolean;
+        lastClientX: number;
+        lastClientY: number;
+        hasMoved: boolean;
+    } = {
+        isTouching: false,
+        lastClientX: 0,
+        lastClientY: 0,
+        hasMoved: false
+    };
+
+    private readonly touchScrollMouseSuppressionMs = 450;
+
+    private ignoreMouseEventsUntil = 0;
+
+    private shouldIgnoreMouseEvents(): boolean {
+        return this.ignoreMouseEventsUntil > Date.now();
+    }
+
+    private ignoreMouseEventsFor(durationMs: number): void {
+        this.ignoreMouseEventsUntil = Date.now() + durationMs;
+    }
+
+    private ignoreMouseEventsAfterTouchScroll(): void {
+        this.ignoreMouseEventsFor(this.touchScrollMouseSuppressionMs);
+    }
+
     private dragSelectState: {
         isDragging: boolean;
         startCell: AIRecordFieldIdPath | null;
@@ -531,6 +559,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMousemove(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         if (this.timer) {
             cancelAnimationFrame(this.timer);
         }
@@ -588,6 +619,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMousedown(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         const mouseEvent = e.event.evt;
         const _targetName = e.event.target.name();
 
@@ -661,6 +695,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageMouseup(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         this.updateDragSelectState(false, null);
         if (this.dragFillState.isDragging) {
             this.performFill(e);
@@ -709,12 +746,68 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageWheel(e: KoEventObject<WheelEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         e.event.evt.preventDefault();
         this.aiTableGridEventService.closeCellEditor();
         this.scrollAction({ deltaX: e.event.evt.deltaX, deltaY: e.event.evt.deltaY, shiftKey: e.event.evt.shiftKey });
     }
 
+    stageTouchstart(e: KoEventObject<TouchEvent>) {
+        const touch = e.event.evt.touches?.[0];
+        if (!touch) {
+            return;
+        }
+        this.touchPanState = {
+            isTouching: true,
+            lastClientX: touch.clientX,
+            lastClientY: touch.clientY,
+            hasMoved: false
+        };
+    }
+
+    stageTouchmove(e: KoEventObject<TouchEvent>) {
+        const touch = e.event.evt.touches?.[0];
+        if (!touch || !this.touchPanState.isTouching) {
+            return;
+        }
+
+        const deltaX = this.touchPanState.lastClientX - touch.clientX;
+        const deltaY = this.touchPanState.lastClientY - touch.clientY;
+
+        this.touchPanState.lastClientX = touch.clientX;
+        this.touchPanState.lastClientY = touch.clientY;
+
+        if (Math.abs(deltaX) < 0.5 && Math.abs(deltaY) < 0.5) {
+            return;
+        }
+
+        e.event.evt.preventDefault();
+        this.aiTableGridEventService.closeCellEditor();
+
+        if (!this.touchPanState.hasMoved && (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2)) {
+            this.touchPanState.hasMoved = true;
+        }
+        if (this.touchPanState.hasMoved) {
+            this.ignoreMouseEventsAfterTouchScroll();
+        }
+
+        this.scrollAction({ deltaX, deltaY, shiftKey: false });
+    }
+
+    stageTouchend(e: KoEventObject<TouchEvent>) {
+        if (this.touchPanState.hasMoved) {
+            this.ignoreMouseEventsAfterTouchScroll();
+        }
+        this.touchPanState.isTouching = false;
+        this.touchPanState.hasMoved = false;
+    }
+
     stageContextmenu(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         const mouseEvent = e.event.evt;
         mouseEvent.preventDefault();
 
@@ -751,6 +844,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageClick(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         const targetNameDetail = getDetailByTargetName(e.event.target.name());
         this.aiClick.emit({
             ...e,
@@ -868,6 +964,9 @@ export class AITableGrid extends AITableGridBase implements OnInit, OnDestroy {
     }
 
     stageDblclick(e: KoEventObject<MouseEvent>) {
+        if (this.shouldIgnoreMouseEvents()) {
+            return;
+        }
         const _targetName = e.event.target.name();
         const targetNameDetail = getDetailByTargetName(_targetName);
         this.aiDbClick.emit({

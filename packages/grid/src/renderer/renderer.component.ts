@@ -91,6 +91,12 @@ export class AITableRenderer {
 
     koMouseleave = output<KoEventObject<MouseEvent>>();
 
+    koTouchstart = output<KoEventObject<TouchEvent>>();
+
+    koTouchmove = output<KoEventObject<TouchEvent>>();
+
+    koTouchend = output<KoEventObject<TouchEvent>>();
+
     onScrollPosition = output<{ scrollX: number; scrollY: number }>();
 
     isHoverStatContainer = signal(false);
@@ -466,6 +472,18 @@ export class AITableRenderer {
 
     stageMouseleave(e: KoEventObject<MouseEvent>) {
         this.koMouseleave.emit(e as KoEventObject<MouseEvent>);
+    }
+
+    stageTouchstart(e: KoEventObject<TouchEvent>) {
+        this.koTouchstart.emit(e as KoEventObject<TouchEvent>);
+    }
+
+    stageTouchmove(e: KoEventObject<TouchEvent>) {
+        this.koTouchmove.emit(e as KoEventObject<TouchEvent>);
+    }
+
+    stageTouchend(e: KoEventObject<TouchEvent>) {
+        this.koTouchend.emit(e as KoEventObject<TouchEvent>);
     }
 
     stageWheel(e: KoEventObject<WheelEvent>) {
