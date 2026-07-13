@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.1](https://github.com/worktile/ai-table/compare/0.6.0...0.6.1) (2026-07-13)
+
+
+### Features
+
+* **grid:** support touch scrolling on iphone #WIK-19998 ([#887](https://github.com/worktile/ai-table/issues/887)) ([867be3e](https://github.com/worktile/ai-table/commit/867be3e062622fceb80059fb8ce0dda7d51aaa2d)), closes [#WIK-19998](https://github.com/worktile/ai-table/issues/WIK-19998)
+
+
+
 # [0.6.0](https://github.com/worktile/ai-table/compare/0.5.9...0.6.0) (2026-04-09)
 
 
