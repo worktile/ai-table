@@ -10,6 +10,9 @@
             (koDblclick)="stageDblclick($event)"
             (koMouseleave)="stageMouseleave($event)"
             (koWheel)="stageWheel($event)"
+            (koTouchstart)="stageTouchstart($event)"
+            (koTouchmove)="stageTouchmove($event)"
+            (koTouchend)="stageTouchend($event)"
         >
             @if (domToolTips().length > 0) {
                 <div

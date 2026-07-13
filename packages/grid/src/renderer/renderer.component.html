@@ -8,6 +8,9 @@
     (koDblclick)="stageDblclick($event)"
     (koMouseleave)="stageMouseleave($event)"
     (koWheel)="stageWheel($event)"
+    (koTouchstart)="stageTouchstart($event)"
+    (koTouchmove)="stageTouchmove($event)"
+    (koTouchend)="stageTouchend($event)"
 >
     <ko-layer>
         <ko-group [config]="gridGroupConfig()">
