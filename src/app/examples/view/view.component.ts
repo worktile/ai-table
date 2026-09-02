@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ViewsExample, ViewService } from './views';
 import { AITable, AITableField, AITableRecord, AITableReferences } from '@ai-table/utils';
 import { AITableGrid } from '@ai-table/grid';
@@ -11,6 +11,7 @@ import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
     templateUrl: './view.component.html',
     imports: [ViewsExample, AITableGrid],
     providers: [ViewService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'
     }

@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AITable } from '../../../../core/types/ai-table';
 import { AITableGridI18nKey, getI18nTextByKey } from '../../../../utils/i18n';
@@ -16,6 +16,7 @@ import { isUrl } from '@ai-table/utils';
 @Component({
     selector: 'link-edit',
     templateUrl: './edit-link.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyStopPropagationDirective, ThyInputDirective, ThyButton, ThyFormSubmitDirective, ThyFormModule]
 })
 export class LinkEditComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AITableGrid } from '@ai-table/grid';
 import { AITableRecord, AITableField, AITableReferences } from '@ai-table/utils';
 import { mockRecords, mockFields, mockReferences } from './mock';
@@ -7,6 +7,7 @@ import { mockRecords, mockFields, mockReferences } from './mock';
     selector: 'app-table-basic-example',
     templateUrl: './basic.component.html',
     imports: [AITableGrid],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'
     }

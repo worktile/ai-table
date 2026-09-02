@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AITableGrid } from '@ai-table/grid';
 import {
     AITable,
@@ -19,6 +19,7 @@ import { getUnixTime } from 'date-fns';
     selector: 'app-table-editable-example',
     templateUrl: './editable.component.html',
     imports: [AITableGrid],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'
     }

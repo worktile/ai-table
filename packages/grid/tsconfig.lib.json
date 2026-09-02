@@ -9,28 +9,22 @@
         "declarationMap": true,
         "inlineSources": true,
         "types": [],
-        "lib": [
-            "dom",
-            "es2022"
-        ],
-        "baseUrl": "../../",
+        "lib": ["dom", "es2022"],
         "paths": {
-            "@ai-table/utils": [
-                "dist/utils"
-            ],
-            "@ai-table/utils/*": [
-                "dist/utils/*"
-            ]
+            "@ai-table/utils": ["../../dist/utils"],
+            "@ai-table/utils/*": ["../../dist/utils/*"]
         }
     },
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        },
         "strictMetadataEmit": true,
         "enableResourceInlining": true
     },
-    "exclude": [
-        "test.ts",
-        "core/**/**",
-        "**/*.spec.ts"
-    ]
+    "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"]
 }

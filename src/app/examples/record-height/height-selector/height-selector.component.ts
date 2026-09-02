@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThyAction } from 'ngx-tethys/action';
 import { helpers } from 'ngx-tethys/util';
@@ -14,6 +14,7 @@ import { AITableRecordHeightType } from '@ai-table/utils';
 @Component({
     selector: 'app-record-height-selector',
     templateUrl: './height-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ThyIcon,
         ThyAction,

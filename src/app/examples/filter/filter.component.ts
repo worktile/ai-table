@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AITable, AITableGrid } from '@ai-table/grid';
 import { AIViewTable, buildRecordsByView, withState, Actions } from '@ai-table/state';
 import {
@@ -22,6 +22,7 @@ import { ViewService } from '../view/views';
     templateUrl: './filter.component.html',
     standalone: true,
     imports: [ConditionSelectorExample, AITableGrid],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ViewService]
 })
 export class TableFilterExample {

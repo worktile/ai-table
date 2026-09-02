@@ -1,5 +1,5 @@
 import { KoShape } from '../../angular-konva';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import { AITableFillHandleConfig } from '../../types';
 import {
     AI_TABLE_CELL_BORDER,
@@ -18,6 +18,7 @@ import { generateTargetName } from '../../utils';
             <ko-rect [config]="handleConfig()"></ko-rect>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [KoShape]
 })
 export class AITableFillHandle {

@@ -1,4 +1,16 @@
-import { Component, inject, input, model, output, computed, viewChild, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+    Component,
+    inject,
+    input,
+    model,
+    output,
+    computed,
+    viewChild,
+    TemplateRef,
+    ViewContainerRef,
+    ChangeDetectionStrategy,
+    linkedSignal
+} from '@angular/core';
 import { ThyButton } from 'ngx-tethys/button';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +50,7 @@ import {
     templateUrl: './condition-selector.component.html',
     styleUrls: ['./condition-selector.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         FormsModule,
@@ -65,7 +78,8 @@ export class ConditionSelectorExample {
 
     readonly logic = model<AITableFilterLogical>(AITableFilterLogical.and);
 
-    readonly conditions = model<AITableFilterCondition[]>([]);
+    readonly conditionsInput = input<AITableFilterCondition[]>([], { alias: 'conditions' });
+    readonly conditions = linkedSignal(this.conditionsInput);
 
     readonly conditionsChange = output<AITableFilterConditions>();
 

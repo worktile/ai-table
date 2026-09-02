@@ -8,26 +8,20 @@
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
-        "lib": [
-            "dom",
-            "ES2022"
-        ],
-        "baseUrl": "../../",
+        "lib": ["dom", "ES2022"],
         "paths": {
-            "@ai-table/grid": [
-                "dist/grid"
-            ],
-            "@ai-table/utils": [
-                "dist/utils"
-            ],
-            "@ai-table/utils/*": [
-                "dist/utils/*"
-            ]
+            "@ai-table/grid": ["../../dist/grid"],
+            "@ai-table/utils": ["../../dist/utils"],
+            "@ai-table/utils/*": ["../../dist/utils/*"]
         }
     },
-    "exclude": [
-        "test.ts",
-        "core/**/**",
-        "**/*.spec.ts"
-    ]
+    "exclude": ["test.ts", "core/**/**", "**/*.spec.ts"],
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
+    }
 }
