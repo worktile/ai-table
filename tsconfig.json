@@ -3,7 +3,6 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "strict": true,
         "noImplicitOverride": true,
@@ -25,22 +24,22 @@
         ],
         "paths": {
             "@ai-table/grid": [
-                "packages/grid/src/public-api"
+                "./packages/grid/src/public-api"
             ],
             "@ai-table/grid/*": [
-                "packages/grid/src/*"
+                "./packages/grid/src/*"
             ],
             "@ai-table/state": [
-                "packages/state/src/public-api"
+                "./packages/state/src/public-api"
             ],
             "@ai-table/state/*": [
-                "packages/state/src/*"
+                "./packages/state/src/*"
             ],
             "@ai-table/utils": [
-                "packages/utils/src/public-api"
+                "./packages/utils/src/public-api"
             ],
             "@ai-table/utils/*": [
-                "packages/utils/src/*"
+                "./packages/utils/src/*"
             ]
         }
     },

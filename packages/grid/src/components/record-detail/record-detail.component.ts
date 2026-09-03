@@ -10,7 +10,7 @@ import {
     output,
     signal,
     viewChild,
-    model
+    linkedSignal
 } from '@angular/core';
 import { ThyButton } from 'ngx-tethys/button';
 import { ThyIcon } from 'ngx-tethys/icon';
@@ -69,7 +69,8 @@ import { ThyDropdownDirective, ThyDropdownMenuComponent } from 'ngx-tethys/dropd
 export class RecordDetailComponent {
     readonly aiTable = input.required<AITable>();
 
-    readonly recordId = model.required<string>();
+    readonly recordIdInput = input.required<string>({ alias: 'recordId' });
+    readonly recordId = linkedSignal(this.recordIdInput);
 
     readonly references = input.required<AITableReferences>();
 

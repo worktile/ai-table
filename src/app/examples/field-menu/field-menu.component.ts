@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import {
     AITable,
     AITableRecord,
@@ -31,6 +31,7 @@ import { getUnixTime } from 'date-fns';
     selector: 'app-table-field-menu-example',
     templateUrl: './field-menu.component.html',
     imports: [AITableGrid],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'
     }

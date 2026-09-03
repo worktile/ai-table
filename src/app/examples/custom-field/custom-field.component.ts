@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AI_TABLE_CELL, AITable, AITableGrid, expandCell, KoEventObjectOutput } from '@ai-table/grid';
 import {
     AITableRecord,
@@ -21,6 +21,7 @@ import { ThyMessageService } from 'ngx-tethys/message';
     selector: 'app-table-custom-field-example',
     templateUrl: './custom-field.component.html',
     imports: [AITableGrid],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'd-block w-100 h-100'
     }

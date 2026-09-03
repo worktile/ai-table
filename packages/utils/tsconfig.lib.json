@@ -3,21 +3,22 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../../dist/utils",
+        "rootDir": "src",
         "target": "es2020",
         "module": "CommonJS",
         "declaration": true,
         "declarationMap": true,
         "inlineSources": true,
         "moduleResolution": "node",
+        "ignoreDeprecations": "6.0",
         "sourceMap": true,
         "strict": true,
-        "baseUrl": ".",
         "paths": {
             "@ai-table/utils": [
-                "src/public-api"
+                "./src/public-api"
             ],
             "@ai-table/utils/*": [
-                "src/*"
+                "./src/*"
             ]
         },
         "lib": [

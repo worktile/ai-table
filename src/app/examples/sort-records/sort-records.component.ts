@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AIFieldConfig, AITableGrid } from '@ai-table/grid';
 import {
     AITable,
@@ -30,6 +30,7 @@ import { ViewService } from '../view/views';
     selector: 'app-table-sort-records-example',
     templateUrl: './sort-records.component.html',
     imports: [AITableGrid, CombinationSortExample],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ViewService]
 })
 export class TableSortRecordsExample {

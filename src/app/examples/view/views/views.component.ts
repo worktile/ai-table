@@ -1,4 +1,4 @@
-import { Component, signal, model, inject, TemplateRef } from '@angular/core';
+import { Component, signal, model, inject, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { Id, AITableViewRecords, AITableViewFields, AITableView } from '@ai-table/utils';
 import { addView, removeView, Actions, AIViewTable, insertAtStart, insertAtEnd, insertBetween } from '@ai-table/state';
 import { ThyNav, ThyNavItemDirective } from 'ngx-tethys/nav';
@@ -14,6 +14,7 @@ import { ThyPopover } from 'ngx-tethys/popover';
 @Component({
     selector: 'app-views-example',
     templateUrl: './views.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ThyNav,
         ThyNavItemDirective,

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AITable, AITableField, AITableRecord, AITableReferences } from '@ai-table/utils';
 import { AITableGrid } from '@ai-table/grid';
 import { AIViewTable, withState, Actions } from '@ai-table/state';
@@ -12,6 +12,7 @@ import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
     selector: 'ai-table-record-height',
     templateUrl: './record-height.component.html',
     imports: [AITableGrid, TableRecordHeightSelectorExample],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ViewService]
 })
 export class TableRecordHeightExample {

@@ -8,7 +8,7 @@ import {
     AITableGroupField,
     ViewSettings
 } from '@ai-table/utils';
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { mockFields, mockRecords, mockReferences, mockViews } from './mock';
 import { AIViewTable, withState, Actions, buildLinearRows } from '@ai-table/state';
 import { CombinationSortExample } from '../common';
@@ -21,6 +21,7 @@ import * as _ from 'lodash';
     selector: 'app-table-group-example',
     templateUrl: './group.component.html',
     imports: [AITableGrid, CombinationSortExample],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ViewService]
 })
 export class TableGroupExample {

@@ -128,10 +128,10 @@
                             <a
                                 class="d-block"
                                 target="_blank"
-                                [href]="record.values[field._id]?.url"
+                                [href]="$safeNavigationMigration(record.values[field._id]?.url)"
                                 thyStopPropagation
                                 thyFlexibleText
-                                [thyTooltipContent]="record.values[field._id]?.text"
+                                [thyTooltipContent]="$safeNavigationMigration(record.values[field._id]?.text)"
                             >
                                 {{ record.values[field._id]?.text }}
                             </a>

@@ -15,7 +15,8 @@ import {
     untracked,
     viewChild,
     ViewContainerRef,
-    WritableSignal
+    WritableSignal,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { Id, AITableField, AITableSort, SortDirection, AITableFieldType } from '@ai-table/utils';
 import { FormsModule } from '@angular/forms';
@@ -51,6 +52,7 @@ class SelectableOptionsExamplePipe implements PipeTransform {
     selector: 'app-combination-sort-example',
     templateUrl: './combination-sort.component.html',
     styleUrls: ['./combination-sort.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ThyDialogBody,
         ThyDialogHeader,
