@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [0.7.0](https://github.com/worktile/ai-table/compare/0.6.1...0.7.0) (2026-09-03)
+
+
+### Features
+
+* upgrade angular to 22 ([#889](https://github.com/worktile/ai-table/issues/889)) ([fd5d186](https://github.com/worktile/ai-table/commit/fd5d186ac9b5b84928b45acc1abdb0f68328d0c2))
+
+
+
 ## [0.6.1](https://github.com/worktile/ai-table/compare/0.6.0...0.6.1) (2026-07-13)
 
 
