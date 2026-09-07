@@ -2,11 +2,12 @@
     [(ngModel)]="modelValue"
     [thyAutoExpand]="autoFocus()"
     [thyAllowClear]="true"
-    [thyPlaceHolder]="''"
+    [thyPlaceholder]="''"
     [thyPreset]="preset()"
     [thyMode]="field().settings.is_multiple ? 'multiple' : ''"
     (ngModelChange)="onModelChange($event)"
     (thyOnExpandStatusChange)="onOpenChange($event)"
+    thySize="lg"
 >
     <ng-template #selectedDisplay let-option>
         <select-option [field]="field()" [displayOption]="option"></select-option>

@@ -32,9 +32,10 @@ export interface FindResult {
                         [(ngModel)]="searchText"
                         (ngModelChange)="search($event)"
                         (thyEnter)="findNext()"
-                        placeholder="输入查找内容"
+                        thyPlaceholder="输入查找内容"
                         class="find-input"
                         autofocus
+                        thySize="lg"
                     >
                         <ng-template #append>
                             <span class="text-muted">{{ showIndex() }}/{{ findResult().total }}</span>

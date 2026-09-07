@@ -1,6 +1,6 @@
 <form thyForm name="createPropertyForm" [thyFormValidatorConfig]="validatorConfig()" thyLayout="vertical">
     <thy-form-group thyLabelRequired [thyLabelText]="i18nTexts().columnName">
-        <thy-input-group>
+        <thy-input-group thySize="lg">
             <input
                 thyInput
                 [thyAutofocus]="true"
@@ -11,6 +11,7 @@
                 required
                 [placeholder]="i18nTexts().columnNamePlaceholder"
                 [thyUniqueCheck]="checkUniqueName"
+                thySize="lg"
             />
             <ng-template #suffix>
                 <thy-input-count></thy-input-count>
@@ -44,7 +45,7 @@
         <ng-container *ngTemplateOutlet="aiExternalTemplate()"></ng-container>
     }
     <thy-form-group-footer thyAlign="right">
-        <button thyButton="link-secondary" (click)="cancel()" thySize="sm">{{ i18nTexts().cancel }}</button>
+        <button thyButton="default" thyAppearance="link" (click)="cancel()" thySize="sm">{{ i18nTexts().cancel }}</button>
         <button thyButton="primary" (thyFormSubmit)="editFieldProperty()" thySize="sm">{{ i18nTexts().confirm }}</button>
     </thy-form-group-footer>
 </form>

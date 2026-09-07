@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center">
-    <input thyInput [(ngModel)]="room" [disabled]="!!tableService.provider" placeholder="请输入房间号" style="width: 300px" />
+    <input thyInput [(ngModel)]="room" [disabled]="!!tableService.provider" placeholder="请输入房间号" style="width: 300px" thySize="lg" />
     <a
         thyAction
         class="ml-2"
@@ -28,14 +28,14 @@
     >
     <label class="mb-0 ml-2 d-flex align-items-center"
         ><span class="pr-1 pt-1">最大列数</span
-        ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxFields" (change)="handleMaxFieldsChange()"
+        ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxFields" (change)="handleMaxFieldsChange()" thySize="lg"
     /></label>
     <label class="mb-0 ml-2 d-flex align-items-center"
         ><span class="pr-1 pt-1">最大行数</span
-        ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxRecords" (change)="handleMaxRecordsChange()"
+        ><input type="number" thyInput style="width: 50px" [(ngModel)]="maxRecords" (change)="handleMaxRecordsChange()" thySize="lg"
     /></label>
-    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateGroupDialog">分组</button>
-    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateSortDialog">排序</button>
+    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateGroupDialog" thySize="lg">分组</button>
+    <button style="margin-left: 8px" thyButton="primary" [thyPopover]="templateSortDialog" thySize="lg">排序</button>
 </div>
 <thy-tabs [thyExtra]="extra" (thyActiveTabChange)="activeTabChange($event)" thySize="sm" [thyActiveTab]="tableService.activeViewId()">
     @for (item of tableService.sortedViews(); let index = $index; track $index) {
@@ -50,6 +50,7 @@
                             (thyEnter)="updateValue()"
                             (blur)="updateValue()"
                             (ngModelChange)="nameChange($event)"
+                            thySize="lg"
                         />
                     } @else {
                         <p class="mb-0">
@@ -96,7 +97,7 @@
         </label>
         @for (sort of tableSorts.sorts; track $index) {
             <div style="display: flex">
-                <thy-select [(ngModel)]="sort.sort_by" (ngModelChange)="changeSortField()" style="width: 140px">
+                <thy-select [(ngModel)]="sort.sort_by" (ngModelChange)="changeSortField()" style="width: 140px" thySize="lg">
                     @for (option of tableFields; track option._id) {
                         <thy-option [thyValue]="option._id" [thyLabelText]="option.name"> </thy-option>
                     }
@@ -122,7 +123,7 @@
     <thy-popover-body style="width: 400px">
         @for (group of tableGroups.groups; track $index) {
             <div style="display: flex">
-                <thy-select [(ngModel)]="group.field_id" (ngModelChange)="changeGroupField()" style="width: 140px">
+                <thy-select [(ngModel)]="group.field_id" (ngModelChange)="changeGroupField()" style="width: 140px" thySize="lg">
                     @for (option of tableFields; track option._id) {
                         <thy-option [thyValue]="option._id" [thyLabelText]="option.name"> </thy-option>
                     }
