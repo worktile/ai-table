@@ -13,7 +13,7 @@ import { DateFieldValue } from '@ai-table/utils';
         <thy-date-picker
             class="h-100"
             thyTimestampPrecision="seconds"
-            [thyPlaceHolder]="placeholder"
+            [thyPlaceholder]="placeholder"
             [ngModel]="modelValue && modelValue.timestamp"
             (ngModelChange)="updateValue($event)"
             (thyOpenChange)="thyOpenChange($event)"
@@ -23,6 +23,7 @@ import { DateFieldValue } from '@ai-table/utils';
             [thyShowTime]="false"
             [thyOpen]="autoFocus()"
             thyFormat="yyyy-MM-dd"
+            thySize="lg"
         >
         </thy-date-picker>
     `,

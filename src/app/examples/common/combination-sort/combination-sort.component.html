@@ -33,6 +33,7 @@
                         (ngModelChange)="sortByChange($event, sort)"
                         [thyEmptyStateText]="'暂无数据'"
                         [thyShowSearch]="true"
+                        thySize="lg"
                     >
                         @for (option of sort.sort_by! | selectableOptions: fields() : sorts(); track option._id) {
                             <thy-option
@@ -113,9 +114,10 @@
                 [class.mt-1]="!hasSorts"
                 [(ngModel)]="newSortId"
                 [thyEmptyStateText]="'暂无数据'"
-                [thyPlaceHolder]="placeholder()"
+                [thyPlaceholder]="placeholder()"
                 [thyShowSearch]="true"
                 (ngModelChange)="addSortItem($event)"
+                thySize="lg"
             >
                 @for (option of addableSortFields(); track option._id) {
                     <thy-option [thyRawValue]="option" [thyValue]="option._id" [thyShowOptionCustom]="true" [thyLabelText]="option.name">
@@ -128,8 +130,8 @@
 
     @if (!isKeepSort()) {
         <thy-dialog-footer thyAlign="right">
-            <button class="cancel" thyButton="link-secondary" (click)="close()">取消</button>
-            <button class="confirm" thyButton="primary" (click)="ok()">确定</button>
+            <button class="cancel" thyButton="default" thyAppearance="link" (click)="close()" thySize="lg">取消</button>
+            <button class="confirm" thyButton="primary" (click)="ok()" thySize="lg">确定</button>
         </thy-dialog-footer>
     }
 </ng-template>

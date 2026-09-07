@@ -8,7 +8,7 @@
         }
         @case (AITableSelectOptionStyle.tag) {
             @if (displayOption.bg_color || displayOption.color || 'default'; as color) {
-                <thy-tag thyTheme="fill" thyShape="pill" [thyColor]="color">
+                <thy-tag thyAppearance="fill" thyShape="pill" [thyColor]="color">
                     @if (displayOption['icon']) {
                         <thy-icon class="text-white" [thyIconName]="displayOption['icon']"></thy-icon>
                     }

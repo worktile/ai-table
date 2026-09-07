@@ -8,14 +8,16 @@
     class="p-5"
 >
     <thy-form-group [thyLabelText]="i18nTexts().linkText">
-        <input thyInput [placeholder]="i18nTexts().textPlaceholder" name="text" [(ngModel)]="text" />
+        <input thyInput [placeholder]="i18nTexts().textPlaceholder" name="text" [(ngModel)]="text" thySize="lg" />
     </thy-form-group>
     <thy-form-group [thyLabelText]="i18nTexts().urlLabel">
-        <input name="url" thyInput [placeholder]="i18nTexts().urlPlaceholder" type="text" [(ngModel)]="url" />
+        <input name="url" thyInput [placeholder]="i18nTexts().urlPlaceholder" type="text" [(ngModel)]="url" thySize="lg" />
     </thy-form-group>
     <thy-form-group-footer thyAlign="right">
         <div class="btn-pair">
-            <button thyStopPropagation thyButton="link-secondary" thySize="sm" (click)="close()">{{ i18nTexts().cancel }}</button>
+            <button thyStopPropagation thyButton="default" thyAppearance="link" thySize="sm" (click)="close()">
+                {{ i18nTexts().cancel }}
+            </button>
             <button thyStopPropagation thyButton="primary" thySize="sm" (thyFormSubmit)="apply(linkForm)">{{ i18nTexts().apply }}</button>
         </div>
     </thy-form-group-footer>

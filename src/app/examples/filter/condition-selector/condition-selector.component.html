@@ -21,8 +21,8 @@
         }
     </thy-dialog-body>
     <thy-dialog-footer thyAlign="right">
-        <button thyButton="link-secondary" (click)="close()">取消</button>
-        <button thyButton="primary" (click)="ok()">确定</button>
+        <button thyButton="default" thyAppearance="link" (click)="close()" thySize="lg">取消</button>
+        <button thyButton="primary" (click)="ok()" thySize="lg">确定</button>
     </thy-dialog-footer>
 </ng-template>
 
@@ -50,7 +50,7 @@
         @if (index === 0) {
             <div class="conditions-logic-when pl-3">当</div>
         } @else {
-            <thy-select [(ngModel)]="logic" [thyDisabled]="index > 1">
+            <thy-select [(ngModel)]="logic" [thyDisabled]="index > 1" thySize="lg">
                 @for (logic of logics; track logic.value) {
                     <thy-option [thyValue]="logic.value" [thyLabelText]="logic.label"> </thy-option>
                 }
@@ -60,7 +60,7 @@
 </ng-template>
 
 <ng-template #fieldTemplate let-condition let-index="index">
-    <thy-select class="mr-4" [ngModel]="condition.field_id" (ngModelChange)="updateConditionFieldId(index, $event)">
+    <thy-select class="mr-4" [ngModel]="condition.field_id" (ngModelChange)="updateConditionFieldId(index, $event)" thySize="lg">
         @for (field of fields() | selectableFields: conditions() : condition.field_id; track field._id) {
             <thy-option [thyValue]="field._id" [thyLabelText]="field.name"> </thy-option>
         }
@@ -68,7 +68,7 @@
 </ng-template>
 
 <ng-template #operationTemplate let-condition let-index="index">
-    <thy-select class="mr-4" [ngModel]="condition.operation" (ngModelChange)="updateConditionOperation(index, $event)">
+    <thy-select class="mr-4" [ngModel]="condition.operation" (ngModelChange)="updateConditionOperation(index, $event)" thySize="lg">
         @for (operation of condition.field_id | fieldOperations: fieldsMap(); track operation) {
             <thy-option [thyValue]="operation" [thyLabelText]="operationLabelMap[operation]"> </thy-option>
         }
@@ -79,17 +79,30 @@
     @if (condition.operation !== AITableFilterOperation.empty && condition.operation !== AITableFilterOperation.exists) {
         @let fieldType = fieldsMap()[condition.field_id]!.type;
         @if (fieldType === AITableFieldType.text) {
-            <thy-input [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-input>
+            <thy-input [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)" thySize="lg"></thy-input>
         } @else if (fieldType === AITableFieldType.number) {
-            <thy-input-number [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-input-number>
+            <thy-input-number
+                [ngModel]="condition.value"
+                (ngModelChange)="updateConditionValue(index, $event)"
+                thySize="lg"
+            ></thy-input-number>
         } @else if (fieldType === AITableFieldType.select) {
-            <thy-select [ngModel]="condition.value" [thyMode]="'multiple'" (ngModelChange)="updateConditionValue(index, $event)">
+            <thy-select
+                [ngModel]="condition.value"
+                [thyMode]="'multiple'"
+                (ngModelChange)="updateConditionValue(index, $event)"
+                thySize="lg"
+            >
                 @for (option of condition.field_id | fieldOptions: fieldsMap(); track option._id) {
                     <thy-option [thyValue]="option._id" [thyLabelText]="option.text"> </thy-option>
                 }
             </thy-select>
         } @else if (fieldType === AITableFieldType.date) {
-            <thy-date-picker [ngModel]="condition.value" (ngModelChange)="updateConditionValue(index, $event)"></thy-date-picker>
+            <thy-date-picker
+                [ngModel]="condition.value"
+                (ngModelChange)="updateConditionValue(index, $event)"
+                thySize="lg"
+            ></thy-date-picker>
         } @else {
             <!-- ... other field types -->
         }

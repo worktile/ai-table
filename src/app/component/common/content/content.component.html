@@ -18,6 +18,7 @@
             (thyEnter)="tableService.setSearchKeywords(searchKeywords)"
             placeholder="搜索"
             style="width: 150px"
+            thySize="lg"
         />
         <a thyAction class="mb-2" thyIcon="undo" href="javascript:;" (click)="undo()" [thyDisabled]="!canUndo()"
             >撤销 {{ canUndoCount() }}</a

@@ -114,7 +114,7 @@ const AITableI18nText: Record<string, string> = {
 
 @Component({
     selector: 'ai-table-add-input',
-    template: ` <thy-input-number [(ngModel)]="modelValue().value" thyStopPropagation></thy-input-number> `,
+    template: ` <thy-input-number [(ngModel)]="modelValue().value" thyStopPropagation thySize="lg"></thy-input-number> `,
     imports: [ThyInputNumber, FormsModule, ThyStopPropagationDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

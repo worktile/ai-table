@@ -17,6 +17,7 @@ import { AbstractEditCellEditor } from '../abstract-cell-editor.component';
             (ngModelChange)="valueChange()"
             (thyEnter)="updateValue()"
             (blur)="updateValue()"
+            thySize="lg"
         ></textarea>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

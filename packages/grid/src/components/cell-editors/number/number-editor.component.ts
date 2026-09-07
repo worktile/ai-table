@@ -15,6 +15,7 @@ import { NumberFieldValue } from '@ai-table/utils';
         [(ngModel)]="modelValue"
         (thyEnter)="updateValue()"
         (thyBlur)="updateValue()"
+        thySize="lg"
     /> `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, ThyEnterDirective, ThyInputNumber],
