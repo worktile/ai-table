@@ -73,15 +73,22 @@ export function translateArrayEvent(sharedType: SharedType, event: Y.YEvent<any>
                     if (isAddOrRemove(targetPath)) {
                         delta.insert?.map((item: Y.Array<any>, index) => {
                             const data = item.toJSON();
+                            if (!Array.isArray(data)) {
+                                return;
+                            }
                             const [systemFieldValues, customFieldValues] = data;
+                            const recordId = getIdBySystemFieldValues(systemFieldValues);
+                            if (!recordId) {
+                                return;
+                            }
                             const sharedFields = sharedType.get('fields')! as Y.Array<SyncMapElement>;
                             const fields = sharedFields.map((fieldElement: SyncMapElement) => {
-                                return { _id: getSharedMapId(fieldElement) };
+                                return fieldElement ? { _id: getSharedMapId(fieldElement) } : undefined;
                             });
                             actions.push({
                                 type: ActionName.AddRecord,
                                 record: {
-                                    _id: getIdBySystemFieldValues(systemFieldValues),
+                                    _id: recordId,
                                     short_id: getShortIdBySystemFieldValues(systemFieldValues),
                                     ...getTrackableEntityBySystemFieldValues(systemFieldValues),
                                     positions: getPositionsBySystemFieldValues(systemFieldValues),

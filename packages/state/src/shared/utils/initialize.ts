@@ -73,14 +73,26 @@ export function toSharedType(
 }
 
 export const getRecordsBySharedJson = (recordJsonArray: SharedRecordJsonType[], fields: AITableViewFields): AITableViewRecords => {
-    return recordJsonArray.map((record: SharedRecordJsonType) => {
+    if (!Array.isArray(recordJsonArray)) {
+        return [];
+    }
+    const records: AITableViewRecords = [];
+    recordJsonArray.forEach((record: SharedRecordJsonType) => {
+        if (!Array.isArray(record)) {
+            return;
+        }
         const [systemFieldValues, customFieldValues] = record;
-        return {
-            _id: getIdBySystemFieldValues(systemFieldValues),
+        const id = getIdBySystemFieldValues(systemFieldValues);
+        if (!id) {
+            return;
+        }
+        records.push({
+            _id: id,
             short_id: getShortIdBySystemFieldValues(systemFieldValues),
             ...getTrackableEntityBySystemFieldValues(systemFieldValues),
             positions: getPositionsBySystemFieldValues(systemFieldValues),
             values: getValuesByCustomFieldValues(customFieldValues, fields)
-        };
+        });
     });
+    return records;
 };

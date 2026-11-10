@@ -24,8 +24,8 @@ import { AI_TABLE_CONTENT_FIELD_NAME, SystemFieldIndex } from '../constants';
 import ObjectID from 'bson-objectid';
 import { isNumber } from 'lodash';
 
-export const getIdBySystemFieldValuesType = (systemFieldValuesType: Y.Array<any>): string => {
-    return systemFieldValuesType.get(SystemFieldIndex.Id)['_id'];
+export const getIdBySystemFieldValuesType = (systemFieldValuesType: Y.Array<any>): string | undefined => {
+    return systemFieldValuesType?.get(SystemFieldIndex.Id)?.['_id'];
 };
 
 export function getSharedMapValueIndex(sharedNodes: Y.Array<SyncMapElement>, id: string) {
@@ -170,8 +170,18 @@ export function flushUpdates(updates: Uint8Array[]): Uint8Array {
     return Y.encodeStateAsUpdate(newDoc);
 }
 
-export const getIdBySystemFieldValues = (systemFieldValues: SystemFieldValues): string => {
-    return systemFieldValues[0]['_id'];
+export const getIdBySystemFieldValues = (systemFieldValues: SystemFieldValues): string | undefined => {
+    if (systemFieldValues == null) {
+        return undefined;
+    }
+    const head = (Array.isArray(systemFieldValues) ? systemFieldValues[SystemFieldIndex.Id] : systemFieldValues) as
+        | { _id?: string }
+        | string
+        | undefined;
+    if (typeof head === 'string') {
+        return head || undefined;
+    }
+    return head?._id;
 };
 
 export const getShortIdBySystemFieldValues = (systemFieldValues: SystemFieldValues): string => {
@@ -197,28 +207,48 @@ export const getPositionsBySystemFieldValues = (systemFieldValues: SystemFieldVa
     return systemFieldValues[SystemFieldIndex.Positions];
 };
 
-export const getValuesByCustomFieldValues = (customFieldValues: CustomFieldValues, fields: Pick<AITableViewField, '_id'>[]) => {
-    const fieldIds = fields.map((item) => item._id);
+export const getValuesByCustomFieldValues = (
+    customFieldValues: CustomFieldValues,
+    fields: Array<Pick<AITableViewField, '_id'> | null | undefined>
+) => {
     const recordValue: Record<string, any> = {};
-    fieldIds.forEach((item, index) => {
-        const value = customFieldValues[index];
-        recordValue[item.toString()] = value === undefined ? null : value;
+    if (!Array.isArray(fields)) {
+        return recordValue;
+    }
+    fields.forEach((item, index) => {
+        if (!item || item._id == null) {
+            return;
+        }
+        const value = Array.isArray(customFieldValues) ? customFieldValues[index] : undefined;
+        recordValue[item._id.toString()] = value === undefined ? null : value;
     });
     return recordValue;
 };
 
 export const getRecordsBySharedJson = (pageId: Id, recordJsonArray: SharedRecordJsonType[], fields: AITableField[]): AITableRecord[] => {
-    return recordJsonArray.map((record: SharedRecordJsonType) => {
+    if (!Array.isArray(recordJsonArray)) {
+        return [];
+    }
+    const records: AITableRecord[] = [];
+    recordJsonArray.forEach((record: SharedRecordJsonType) => {
+        if (!Array.isArray(record)) {
+            return;
+        }
         const [systemFieldValues, customFieldValues] = record;
-        return {
-            _id: getIdBySystemFieldValues(systemFieldValues),
+        const id = getIdBySystemFieldValues(systemFieldValues);
+        if (!id) {
+            return;
+        }
+        records.push({
+            _id: id,
             short_id: getShortIdBySystemFieldValues(systemFieldValues),
             page_id: pageId,
             ...getTrackableEntityBySystemFieldValues(systemFieldValues),
             positions: getPositionsBySystemFieldValues(systemFieldValues),
             values: getValuesByCustomFieldValues(customFieldValues, fields)
-        };
+        });
     });
+    return records;
 };
 
 export const setRecordPositions = (recordSyncElement: RecordSyncElement, newPositions: Positions) => {
