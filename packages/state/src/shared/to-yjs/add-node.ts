@@ -70,7 +70,11 @@ export default function addNode(
                 for (let value of records) {
                     const customFieldValues = value.get(1) as Y.Array<any>;
                     const systemFieldValues = value.get(0);
-                    const recordEntity = aiTable.recordsMap()[getIdBySystemFieldValuesType(systemFieldValues)];
+                    const recordId = getIdBySystemFieldValuesType(systemFieldValues);
+                    const recordEntity = recordId && aiTable.recordsMap()[recordId];
+                    if (!recordEntity) {
+                        continue;
+                    }
                     const newFieldValue = recordEntity.values[action.field._id];
                     // 幽灵单元格，暂不处理交给后端统一处理
                     if (insertIndex <= customFieldValues.length) {
